@@ -9,12 +9,14 @@ import mono.graphics.geo.Rect
  * [endPoint].
  */
 class Rectangle(
-    startPoint: Point,
-    endPoint: Point,
+    var rect: Rect,
     parentId: Int? = null
 ) : AbstractShape(parentId = parentId) {
-    private var rect: Rect =
-        Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top)
+
+    constructor(startPoint: Point, endPoint: Point, parentId: Int? = null) : this(
+        Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
+        parentId
+    )
 
     override fun contains(point: Point): Boolean = point in rect
 }
