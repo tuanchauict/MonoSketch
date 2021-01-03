@@ -14,7 +14,7 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
     val itemCount: Int get() = items.size
 
     fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) {
-        if (shape.parentId != null && shape.parentId != parentId) {
+        if (shape.parentId != null && shape.parentId != id) {
             return
         }
         shape.parentId = id
@@ -28,4 +28,8 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
 
     fun move(shape: AbstractShape, moveActionType: MoveActionType) =
         quickList.move(shape, moveActionType)
+
+    override fun toString(): String {
+        return "Group($id)"
+    }
 }
