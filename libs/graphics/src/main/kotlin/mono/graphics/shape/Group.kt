@@ -13,7 +13,7 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
     val items: Collection<AbstractShape> = quickList
     val itemCount: Int get() = items.size
 
-    fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) {
+    internal fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) {
         if (shape.parentId != null && shape.parentId != id) {
             return
         }
@@ -22,11 +22,11 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
         quickList.add(shape, position)
     }
 
-    fun remove(shape: AbstractShape): AbstractShape? = quickList.remove(shape)
+    internal fun remove(shape: AbstractShape): AbstractShape? = quickList.remove(shape)
 
     override fun contains(point: Point): Boolean = quickList.any { it.contains(point) }
 
-    fun move(shape: AbstractShape, moveActionType: MoveActionType) =
+    internal fun move(shape: AbstractShape, moveActionType: MoveActionType) =
         quickList.move(shape, moveActionType)
 
     override fun toString(): String {
