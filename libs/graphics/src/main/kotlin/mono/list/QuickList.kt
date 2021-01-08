@@ -65,13 +65,13 @@ class QuickList<T : QuickList.Identifier> : Collection<T> {
 
     operator fun get(id: Int): T? = map[id]?.value
 
-    fun move(identifier: Identifier, moveActionType: MoveActionType) {
+    fun move(identifier: Identifier, moveActionType: MoveActionType): Boolean {
         if (size < 2) {
-            return
+            return false
         }
 
-        val node = map[identifier.id] ?: return
-        linkedList.move(node, moveActionType)
+        val node = map[identifier.id] ?: return false
+        return linkedList.move(node, moveActionType)
     }
 
     interface Identifier {
@@ -126,13 +126,13 @@ class QuickList<T : QuickList.Identifier> : Collection<T> {
             tail.pre = head
         }
 
-        fun move(node: Node<T>, moveActionType: MoveActionType) {
+        fun move(node: Node<T>, moveActionType: MoveActionType): Boolean {
             val newPreviousNode = when (moveActionType) {
                 MoveActionType.UP -> node.next
                 MoveActionType.DOWN -> node.pre?.pre
                 MoveActionType.TOP -> tail.pre
                 MoveActionType.BOTTOM -> head
-            } ?: return
+            } ?: return false
             remove(node)
 
             val newNextNode = newPreviousNode.next
@@ -140,6 +140,7 @@ class QuickList<T : QuickList.Identifier> : Collection<T> {
             newNextNode?.pre = node
             node.pre = newPreviousNode
             node.next = newNextNode
+            return true
         }
 
         fun iterator(): Iterator<T> = DoubleLinkedListIterator(head)

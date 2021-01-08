@@ -8,12 +8,29 @@ import mono.list.QuickList
  * Each shape will be assigned an id which is automatically generated or manually assigned. Two
  * shapes which have the same ID will be considered identical regardless the other attributes of
  * each kinds of shape class.
+ *
+ * Each shape's attributes might be changed and [version] reflects the update. To ensure the
+ * [version]'s value is accurate, all properties modifying must be wrapped inside [update].
  */
 abstract class AbstractShape(
     override val id: Int = generateId(),
     internal var parentId: Int? = null
 ) : QuickList.Identifier {
+    var version: Int = 0
+        private set
+
     abstract fun contains(point: Point): Boolean
+
+    /**
+     * Updates properties of the shape by [action]. The [action] returns true if the shape's
+     * properties are changed.
+     */
+    protected fun update(action: () -> Boolean) {
+        val isChanged = action()
+        if (isChanged) {
+            version++
+        }
+    }
 
     companion object {
         private var NEXT_ID: Int = 1
