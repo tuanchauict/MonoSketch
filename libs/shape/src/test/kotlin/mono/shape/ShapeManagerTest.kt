@@ -1,6 +1,8 @@
-package mono.graphics.shape
+package mono.shape
 
 import mono.graphics.geo.Rect
+import mono.shape.shape.Group
+import mono.shape.shape.Rectangle
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

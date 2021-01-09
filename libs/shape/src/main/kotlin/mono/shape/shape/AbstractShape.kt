@@ -1,7 +1,7 @@
-package mono.graphics.shape
+package mono.shape.shape
 
 import mono.graphics.geo.Point
-import mono.list.QuickList
+import mono.shape.list.QuickList
 
 /**
  * An abstract class which is used for defining all kinds of shape which are supported by the app.

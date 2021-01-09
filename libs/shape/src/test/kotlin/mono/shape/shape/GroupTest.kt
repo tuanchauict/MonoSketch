@@ -1,8 +1,8 @@
-package mono.graphics.shape
+package mono.shape.shape
 
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.list.QuickList
+import mono.shape.list.QuickList
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

@@ -1,4 +1,4 @@
-package mono.graphics.shape
+package mono.shape.shape
 
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect

@@ -1,9 +1,9 @@
-package mono.graphics.shape
+package mono.shape.shape
 
 import mono.graphics.geo.Point
-import mono.list.QuickList
-import mono.list.QuickList.AddPosition
-import mono.list.QuickList.MoveActionType
+import mono.shape.list.QuickList
+import mono.shape.list.QuickList.AddPosition
+import mono.shape.list.QuickList.MoveActionType
 
 /**
  * A special shape which manages a collection of shapes.

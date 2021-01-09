@@ -1,6 +1,8 @@
-package mono.graphics.shape
+package mono.shape
 
-import mono.list.QuickList
+import mono.shape.list.QuickList
+import mono.shape.shape.AbstractShape
+import mono.shape.shape.Group
 
 /**
  * A model class which contains all shapes of the app and also defines all shape handling logics.

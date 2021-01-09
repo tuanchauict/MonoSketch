@@ -1,4 +1,4 @@
-package mono.list
+package mono.shape.list
 
 /**
  * A collection which works similar to [LinkedHashMap] by making accessing item fast while keeping
@@ -6,7 +6,7 @@ package mono.list
  * This also supports move up/down/top/bottom of the list for an item as well as adding item into
  * the head or the tail or after an specific item.
  */
-class QuickList<T : QuickList.Identifier> : Collection<T> {
+internal class QuickList<T : QuickList.Identifier> : Collection<T> {
     private val linkedList: DoubleLinkedList<T> = DoubleLinkedList()
     private val map: MutableMap<Int, Node<T>> = mutableMapOf()
 

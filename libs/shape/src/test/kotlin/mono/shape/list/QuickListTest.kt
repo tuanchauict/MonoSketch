@@ -1,6 +1,5 @@
-package mono.graphics.list
+package mono.shape.list
 
-import mono.list.QuickList
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -10,7 +9,7 @@ import kotlin.test.assertTrue
 /**
  * A test for [QuickList]
  */
-class QuickListTest {
+internal class QuickListTest {
     private val target: QuickList<Item> = QuickList()
 
     @Test
