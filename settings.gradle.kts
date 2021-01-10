@@ -1,9 +1,11 @@
 rootProject.name = "MonoFlow"
 
 val moduleMap = mapOf(
-    "graphics" to "libs/graphics",
+    "commons" to "libs/commons",
+    "monoboard" to "libs/monoboard",
     "graphicsgeo" to "libs/graphicsgeo",
-    "shape" to "libs/shape"
+    "shape" to "libs/shape",
+    "monobitmap" to "libs/monobitmap"
 )
 
 moduleMap.entries.forEach { (name, path) ->
