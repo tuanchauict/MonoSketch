@@ -1,7 +1,9 @@
 package mono.graphics.board
 
+import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.graphics.geo.Size
 
 
 internal class PainterBoard(private val bound: Rect) {
@@ -12,6 +14,9 @@ internal class PainterBoard(private val bound: Rect) {
         MutableList(bound.width) { EMPTY_CHAR }
     }
 
+    /**
+     * Force values overlap with [rect] to be [char] regardless they are [EMPTY_CHAR]
+     */
     fun fill(rect: Rect, char: Char) {
         val overlap = bound.getOverlappedRect(rect)
         val (startCol, startRow) = overlap.position - bound.position
@@ -24,24 +29,43 @@ internal class PainterBoard(private val bound: Rect) {
         }
     }
 
-    fun fill(board: PainterBoard) {
-        val overlap = bound.getOverlappedRect(board.bound)
-        val (startCol, startRow) = overlap.position - bound.position
-        val (inStartCol, inStartRow) = overlap.position - board.bound.position
+    /**
+     * Fills with another [PainterBoard].
+     * If a value in input [PainterBoard] is [EMPTY_CHAR], the value in the current board at that
+     * position won't be overlapped.
+     */
+    fun fill(board: PainterBoard) = fillWithMatrix(board.bound.position, board.matrix)
 
+    fun fill(position: Point, bitmap: MonoBitmap) = fillWithMatrix(position, bitmap.matrix)
+
+    private fun fillWithMatrix(position: Point, inMatrix: List<List<Char>>) {
+        if (matrix.isEmpty() || matrix.first().isEmpty()) {
+            return
+        }
+        val inMatrixBound = Rect(position, Size(inMatrix.first().size, inMatrix.size))
+
+        val overlap = bound.getOverlappedRect(inMatrixBound)
+        val (startCol, startRow) = overlap.position - bound.position
+        val (inStartCol, inStartRow) = overlap.position - position
         for (r in 0 until overlap.height) {
             val rowIndex = startRow + r
             val inRowIndex = inStartRow + r
             val row = matrix[rowIndex]
-            val inRow = board.matrix[inRowIndex]
+            val inRow = inMatrix[inRowIndex]
             for (c in 0 until overlap.width) {
                 val colIndex = startCol + c
                 val inColIndex = inStartCol + c
-                row[colIndex] = inRow[inColIndex]
+                val inChar = inRow[inColIndex]
+                if (inChar != EMPTY_CHAR) {
+                    row[colIndex] = inChar
+                }
             }
         }
     }
 
+    /**
+     * Force value at [position] to be [char]
+     */
     operator fun set(position: Point, char: Char) {
         val (columnIndex, rowIndex) = position - bound.position
         if (columnIndex !in validColumnRange || rowIndex !in validRowRange) {
@@ -59,7 +83,7 @@ internal class PainterBoard(private val bound: Rect) {
     }
 
     override fun toString(): String =
-        matrix.joinToString("\n", transform = ::toRowString) + "\n"
+        matrix.joinToString("\n", transform = ::toRowString)
 
     private fun toRowString(chars: List<Char>): String =
         chars.joinToString("") { if (it == EMPTY_CHAR) " " else it.toString() }
