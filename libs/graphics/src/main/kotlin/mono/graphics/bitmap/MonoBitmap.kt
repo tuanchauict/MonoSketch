@@ -17,4 +17,10 @@ class MonoBitmap(val width: Int, val height: Int) {
             matrixInternal[row][column] = char
         }
     }
+
+    override fun toString(): String =
+        matrix.joinToString("\n", transform = ::toRowString)
+
+    private fun toRowString(chars: List<Char>): String =
+        chars.joinToString("") { if (it == EMPTY_CHAR) " " else it.toString() }
 }
