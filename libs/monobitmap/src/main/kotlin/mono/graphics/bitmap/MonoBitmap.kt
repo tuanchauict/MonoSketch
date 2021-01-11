@@ -30,11 +30,10 @@ class MonoBitmap private constructor(val matrix: List<List<Char>>) {
         }
 
         fun fill(rowOffset: Int, columnOffset: Int, bitmap: MonoBitmap) {
-            val bitmapBound = Rect.byLTWH(rowOffset, columnOffset, bitmap.width, bitmap.height)
+            val bitmapBound = Rect.byLTWH(columnOffset, rowOffset, bitmap.width, bitmap.height)
             val overlap = bound.getOverlappedRect(bitmapBound) ?: return
-
             val (startCol, startRow) = overlap.position - bound.position
-            val (inStartCol, inStartRow) = overlap.position
+            val (inStartCol, inStartRow) = overlap.position - bitmapBound.position
             for (r in 0 until overlap.height) {
                 val rowIndex = startRow + r
                 val inRowIndex = inStartRow + r

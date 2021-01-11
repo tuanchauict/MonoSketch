@@ -11,6 +11,7 @@ object RectangleDrawable {
         REPEATABLE_RANGE
     )
 
+    // TODO: Add more kinds of rectangle
     fun toBitmap(rectangle: Rectangle): MonoBitmap =
         NINE_PATCH_0.toBitmap(rectangle.bound.width, rectangle.bound.height)
 }

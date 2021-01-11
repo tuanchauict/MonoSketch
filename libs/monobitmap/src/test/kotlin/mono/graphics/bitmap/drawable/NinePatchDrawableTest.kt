@@ -59,7 +59,7 @@ class NinePatchDrawableTest {
             |   |
             +---+
             """.trimIndent(),
-            target.toBitmap(10, 10).toString()
+            target.toBitmap(5, 5).toString()
         )
     }
 
