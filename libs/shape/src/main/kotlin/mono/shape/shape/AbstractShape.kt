@@ -28,7 +28,7 @@ abstract class AbstractShape(
      * Updates properties of the shape by [action]. The [action] returns true if the shape's
      * properties are changed.
      */
-    protected fun update(action: () -> Boolean) {
+    internal fun update(action: () -> Boolean) {
         val isChanged = action()
         if (isChanged) {
             version++

@@ -5,6 +5,7 @@ import mono.shape.shape.Group
 import mono.shape.shape.Rectangle
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /**
  * A test of [ShapeManager]
@@ -136,5 +137,24 @@ class ShapeManagerTest {
 
         target.ungroup(group)
         assertEquals(listOf(shape0, shape1, shape2, shape3), target.root.items.toList())
+    }
+
+    @Test
+    fun testRecursiveVersionUpdate() {
+        val group0 = Group(null)
+        target.add(group0)
+        val group1 = Group(group0.id)
+        target.add(group1)
+
+        val rootOldVersion = target.root.version
+        val group0OldVersion = group0.version
+        val group1OldVersion = group1.version
+
+        val group2 = Group(group1.id)
+        target.add(group2)
+
+        assertTrue(target.root.version != rootOldVersion)
+        assertTrue(group0.version != group0OldVersion)
+        assertTrue(group1.version != group1OldVersion)
     }
 }
