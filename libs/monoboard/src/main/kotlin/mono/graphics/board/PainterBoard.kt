@@ -19,7 +19,7 @@ internal class PainterBoard(private val bound: Rect) {
      * Force values overlap with [rect] to be [char] regardless they are [EMPTY_CHAR]
      */
     fun fill(rect: Rect, char: Char) {
-        val overlap = bound.getOverlappedRect(rect)
+        val overlap = bound.getOverlappedRect(rect) ?: return
         val (startCol, startRow) = overlap.position - bound.position
 
         for (r in 0 until overlap.height) {
@@ -45,7 +45,7 @@ internal class PainterBoard(private val bound: Rect) {
         }
         val inMatrixBound = Rect(position, Size(inMatrix.first().size, inMatrix.size))
 
-        val overlap = bound.getOverlappedRect(inMatrixBound)
+        val overlap = bound.getOverlappedRect(inMatrixBound) ?: return
         val (startCol, startRow) = overlap.position - bound.position
         val (inStartCol, inStartRow) = overlap.position - position
         for (r in 0 until overlap.height) {

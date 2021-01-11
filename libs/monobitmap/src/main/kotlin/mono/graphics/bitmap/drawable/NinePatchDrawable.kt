@@ -43,17 +43,17 @@ class NinePatchDrawable(
             )
         }
 
-        val bitmap = MonoBitmap(width, height)
+        val builder = MonoBitmap.Builder(width, height)
         val rowIndexes = verticalRepeatableRange?.toIndexes(height, pattern.height)
             ?: (0 until pattern.height).toList()
         val colIndexes = horizontalRepeatableRange?.toIndexes(width, pattern.width)
             ?: (0 until pattern.width).toList()
         for (row in 0 until height) {
             for (col in 0 until width) {
-                bitmap.put(row, col, pattern.getChar(rowIndexes[row], colIndexes[col]))
+                builder.put(row, col, pattern.getChar(rowIndexes[row], colIndexes[col]))
             }
         }
-        return bitmap
+        return builder.toBitmap()
     }
 
     /**

@@ -42,13 +42,13 @@ class PainterBoardTest {
 
     @Test
     fun testFillMonoBitmap() {
-        val bitmap = MonoBitmap(2, 2)
-        bitmap.put(0, 0, 'a')
-        bitmap.put(0, 1, 'b')
+        val builder = MonoBitmap.Builder(2, 2)
+        builder.put(0, 0, 'a')
+        builder.put(0, 1, 'b')
 
         val board = PainterBoard(Rect.byLTWH(0, 0, 3, 3))
         board[Point(2, 2)] = 'x'
-        board.fill(Point(1, 1), bitmap)
+        board.fill(Point(1, 1), builder.toBitmap())
         assertEquals("   \n ab\n  x", board.toString())
     }
 }

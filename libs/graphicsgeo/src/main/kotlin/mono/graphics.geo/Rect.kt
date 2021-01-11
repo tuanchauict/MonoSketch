@@ -18,13 +18,10 @@ data class Rect(val position: Point, val size: Size) {
     operator fun contains(point: Point): Boolean =
         point.left in validHorizontalRange && point.top in validVerticalRange
 
-    fun isOverlapped(rect: Rect): Boolean {
-        val isHorizontalOverlap = !(left > rect.right || right > rect.left)
-        val isVerticalOverlap = !(top <= rect.bottom || bottom <= rect.top)
-        return isHorizontalOverlap && isVerticalOverlap
-    }
-
-    fun getOverlappedRect(rect: Rect): Rect {
+    fun getOverlappedRect(rect: Rect): Rect? {
+        if (!isOverlapped(rect)) {
+            return null
+        }
         val offset = rect.position - position
         val top = max(offset.top, 0)
         val bottom = min(offset.top + rect.height, height) - 1
@@ -36,6 +33,12 @@ data class Rect(val position: Point, val size: Size) {
             right + position.left,
             bottom + position.top
         )
+    }
+
+    private fun isOverlapped(rect: Rect): Boolean {
+        val isHorizontalOverlap = left in rect.left..rect.right || rect.left in left..right
+        val isVerticalOverlap = top in rect.top..rect.bottom || rect.top in top..bottom
+        return isHorizontalOverlap && isVerticalOverlap
     }
 
     companion object {
