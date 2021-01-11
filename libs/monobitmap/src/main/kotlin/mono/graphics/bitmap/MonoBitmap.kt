@@ -1,5 +1,6 @@
 package mono.graphics.bitmap
 
+import mono.common.SpecialCharacters
 import mono.common.SpecialCharacters.EMPTY_CHAR
 import mono.graphics.geo.Rect
 
@@ -35,18 +36,13 @@ class MonoBitmap private constructor(val matrix: List<List<Char>>) {
             val (startCol, startRow) = overlap.position - bound.position
             val (inStartCol, inStartRow) = overlap.position - bitmapBound.position
             for (r in 0 until overlap.height) {
-                val rowIndex = startRow + r
-                val inRowIndex = inStartRow + r
-                val row = matrix[rowIndex]
-                val inRow = bitmap.matrix[inRowIndex]
-                for (c in 0 until overlap.width) {
-                    val colIndex = startCol + c
-                    val inColIndex = inStartCol + c
-                    val inChar = inRow[inColIndex]
-                    if (inChar != EMPTY_CHAR) {
-                        row[colIndex] = inChar
-                    }
-                }
+                SpecialCharacters.copyChars(
+                    src = bitmap.matrix[inStartRow + r],
+                    srcOffset = inStartCol,
+                    dest = matrix[startRow + r],
+                    destOffset = startCol,
+                    length = overlap.width
+                )
             }
         }
 

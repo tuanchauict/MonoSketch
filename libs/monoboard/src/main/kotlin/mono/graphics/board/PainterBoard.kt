@@ -1,6 +1,7 @@
 package mono.graphics.board
 
 import mono.common.SpecialCharacters.EMPTY_CHAR
+import mono.common.SpecialCharacters.copyChars
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -49,18 +50,13 @@ internal class PainterBoard(private val bound: Rect) {
         val (startCol, startRow) = overlap.position - bound.position
         val (inStartCol, inStartRow) = overlap.position - position
         for (r in 0 until overlap.height) {
-            val rowIndex = startRow + r
-            val inRowIndex = inStartRow + r
-            val row = matrix[rowIndex]
-            val inRow = inMatrix[inRowIndex]
-            for (c in 0 until overlap.width) {
-                val colIndex = startCol + c
-                val inColIndex = inStartCol + c
-                val inChar = inRow[inColIndex]
-                if (inChar != EMPTY_CHAR) {
-                    row[colIndex] = inChar
-                }
-            }
+            copyChars(
+                src = inMatrix[inStartRow + r],
+                srcOffset = inStartCol,
+                dest = matrix[startRow + r],
+                destOffset = startCol,
+                length = overlap.width
+            )
         }
     }
 
