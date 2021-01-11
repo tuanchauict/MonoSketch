@@ -1,6 +1,7 @@
 package mono.shape.shape
 
 import mono.graphics.geo.Point
+import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 
 /**
@@ -18,6 +19,8 @@ abstract class AbstractShape(
 ) : QuickList.Identifier {
     var version: Int = 0
         private set
+
+    abstract val bound: Rect
 
     abstract fun contains(point: Point): Boolean
 

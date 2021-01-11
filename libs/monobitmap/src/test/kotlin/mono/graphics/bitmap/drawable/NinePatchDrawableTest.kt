@@ -20,7 +20,6 @@ class NinePatchDrawableTest {
     @Test
     fun testToBitmap_NoRanges() {
         val target = NinePatchDrawable(pattern)
-        println("${target.toBitmap(10, 10)}\n")
         assertEquals(
             """
             +++--~~~++
@@ -33,6 +32,32 @@ class NinePatchDrawableTest {
             |||••   ||
             +++~~---++
             +++~~---++
+            """.trimIndent(),
+            target.toBitmap(10, 10).toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_Range1() {
+        val pattern = NinePatchDrawable.Pattern.fromText(
+            """
+            +-+
+            | |
+            +-+
+            """.trimIndent()
+        )
+        val target = NinePatchDrawable(
+            pattern,
+            RepeatableRange.Repeat(1, 1),
+            RepeatableRange.Repeat(1, 1)
+        )
+        assertEquals(
+            """
+            +---+
+            |   |
+            |   |
+            |   |
+            +---+
             """.trimIndent(),
             target.toBitmap(10, 10).toString()
         )

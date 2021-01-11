@@ -11,7 +11,7 @@ class Rectangle(
     parentId: Int? = null
 ) : AbstractShape(parentId = parentId) {
 
-    var bound: Rect = rect
+    override var bound: Rect = rect
         set(value) = update {
             val isUpdated = field != value
             field = value
