@@ -8,46 +8,19 @@ import kotlin.math.min
 /**
  * A simple 9-patch image which scales image based on repeating points in
  * [horizontalRepeatableRange] and [horizontalRepeatableRange].
- * [horizontalRepeatableRange] and [verticalRepeatableRange] must fit in the size of [pattern].
+ *
  */
-class NinePatchDrawable(
+class NinePatchDrawable internal constructor(
     private val pattern: Pattern,
-    private val horizontalRepeatableRange: RepeatableRange?,
-    private val verticalRepeatableRange: RepeatableRange?
+    private val horizontalRepeatableRange: RepeatableRange =
+        RepeatableRange.Scale(0, pattern.width - 1),
+    private val verticalRepeatableRange: RepeatableRange =
+        RepeatableRange.Scale(0, pattern.height - 1)
 ) {
-
-    init {
-        if (horizontalRepeatableRange?.verify(pattern.width) == false ||
-            verticalRepeatableRange?.verify(pattern.height) == false
-        ) {
-            throw IllegalArgumentException(
-                "Invalid repeat range(s). " +
-                        "Horizontal range must in [0, ${pattern.width}); " +
-                        "vertical range range must in [0, ${pattern.height})"
-            )
-        }
-    }
-
     fun toBitmap(width: Int, height: Int): MonoBitmap {
-        if (horizontalRepeatableRange == null && width != pattern.width) {
-            throw IllegalArgumentException(
-                "Horizontal side is not repeatable. " +
-                        "Width must be ${pattern.width}"
-            )
-        }
-
-        if (verticalRepeatableRange == null && height != pattern.height) {
-            throw IllegalArgumentException(
-                "Vertical side is not repeatable. " +
-                        "Height must be ${pattern.height}"
-            )
-        }
-
         val builder = MonoBitmap.Builder(width, height)
-        val rowIndexes = verticalRepeatableRange?.toIndexes(height, pattern.height)
-            ?: (0 until pattern.height).toList()
-        val colIndexes = horizontalRepeatableRange?.toIndexes(width, pattern.width)
-            ?: (0 until pattern.width).toList()
+        val rowIndexes = verticalRepeatableRange.toIndexes(height, pattern.height)
+        val colIndexes = horizontalRepeatableRange.toIndexes(width, pattern.width)
         for (row in 0 until height) {
             for (col in 0 until width) {
                 builder.put(row, col, pattern.getChar(rowIndexes[row], colIndexes[col]))
@@ -85,50 +58,69 @@ class NinePatchDrawable(
         }
     }
 
-    class RepeatableRange private constructor(
+    /**
+     * The algorithm for repeating the repeated range.
+     */
+    internal sealed class RepeatableRange(
         start: Int,
-        endInclusive: Int,
-        private val strategy: Strategy
+        endInclusive: Int
     ) {
-        private val start: Int = min(start, endInclusive)
+        private val start: Int = max(0, min(start, endInclusive))
         private val endInclusive: Int = max(start, endInclusive)
 
-        private val rangeSize: Int = endInclusive - start + 1
+        /**
+         * Creates a list with size [size] of indexes whole value in range [0, [patternSize]).
+         * If [patternSize] < [endInclusive], [endInclusive] will be used for the index value range.
+         */
+        fun toIndexes(size: Int, patternSize: Int): List<Int> {
+            val adjustedEndInclusive = min(patternSize - 1, endInclusive)
+            val rangeSize = adjustedEndInclusive - start + 1
+            val repeatingLeft = start
+            val repeatingRight = size - (patternSize - adjustedEndInclusive)
 
-        internal fun verify(endExclusive: Int): Boolean = start >= 0 && endInclusive < endExclusive
-
-        internal fun toIndexes(size: Int, patternSize: Int): List<Int> {
-            val left = start
-            val right = size - (patternSize - endInclusive)
-            val repeatedSize = right - left + 1
             return List(size) { index ->
                 when {
-                    index < left -> index
-                    index > right -> endInclusive + index - right
-                    else -> when (strategy) {
-                        Strategy.REPEAT -> left + (index - left) % rangeSize
-                        Strategy.SCALE ->
-                            left + ((index - left).toFloat() / repeatedSize * rangeSize).toInt()
-                    }
+                    index < repeatingLeft -> index
+                    index > repeatingRight -> adjustedEndInclusive + index - repeatingRight
+                    else -> scaleIndex(index, repeatingLeft, repeatingRight, rangeSize)
                 }
             }
         }
 
-        companion object {
-            fun repeat(start: Int, endInclusive: Int) =
-                RepeatableRange(start, endInclusive, Strategy.REPEAT)
+        protected abstract fun scaleIndex(
+            index: Int,
+            minRepeatingIndex: Int,
+            maxRepeatingIndex: Int,
+            rangeSize: Int
+        ): Int
 
-            fun scale(start: Int, endInclusive: Int) =
-                RepeatableRange(start, endInclusive, Strategy.SCALE)
+        /**
+         * The algorithm for repeating the repeated range: `01` -> `00001111`
+         */
+        class Scale(start: Int, endInclusive: Int) : RepeatableRange(start, endInclusive) {
+
+            override fun scaleIndex(
+                index: Int,
+                minRepeatingIndex: Int,
+                maxRepeatingIndex: Int,
+                rangeSize: Int
+            ): Int {
+                val repeatingSize = maxRepeatingIndex - minRepeatingIndex + 1
+                return minRepeatingIndex + (index - minRepeatingIndex) * rangeSize / repeatingSize
+            }
         }
-    }
 
-    /**
-     * The algorithm for repeating the repeated range:
-     * - [Strategy.REPEAT] `01` -> `01010101`
-     * - [Strategy.SCALE] `01` -> `00001111`
-     */
-    private enum class Strategy {
-        SCALE, REPEAT
+        /**
+         * The algorithm for repeating the repeated range: `01` -> `01010101`
+         */
+        class Repeat(start: Int, endInclusive: Int) : RepeatableRange(start, endInclusive) {
+
+            override fun scaleIndex(
+                index: Int,
+                minRepeatingIndex: Int,
+                maxRepeatingIndex: Int,
+                rangeSize: Int
+            ): Int = minRepeatingIndex + (index - minRepeatingIndex) % rangeSize
+        }
     }
 }
