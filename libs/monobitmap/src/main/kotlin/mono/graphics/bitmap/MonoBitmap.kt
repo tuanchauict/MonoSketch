@@ -1,7 +1,7 @@
 package mono.graphics.bitmap
 
-import mono.common.SpecialCharacters
-import mono.common.SpecialCharacters.EMPTY_CHAR
+import mono.common.Characters
+import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.geo.Rect
 
 /**
@@ -16,11 +16,11 @@ class MonoBitmap private constructor(val matrix: List<List<Char>>) {
         matrix.joinToString("\n", transform = ::toRowString)
 
     private fun toRowString(chars: List<Char>): String =
-        chars.joinToString("") { if (it == EMPTY_CHAR) " " else it.toString() }
+        chars.joinToString("") { if (it == TRANSPARENT_CHAR) " " else it.toString() }
 
     class Builder(private val width: Int, private val height: Int) {
         private val matrix: List<MutableList<Char>> = List(height) {
-            MutableList(width) { EMPTY_CHAR }
+            MutableList(width) { TRANSPARENT_CHAR }
         }
         private val bound: Rect = Rect.byLTWH(0, 0, width, height)
 
@@ -36,7 +36,7 @@ class MonoBitmap private constructor(val matrix: List<List<Char>>) {
             val (startCol, startRow) = overlap.position - bound.position
             val (inStartCol, inStartRow) = overlap.position - bitmapBound.position
             for (r in 0 until overlap.height) {
-                SpecialCharacters.copyChars(
+                Characters.copyChars(
                     src = bitmap.matrix[inStartRow + r],
                     srcOffset = inStartCol,
                     dest = matrix[startRow + r],

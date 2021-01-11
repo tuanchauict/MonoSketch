@@ -1,7 +1,7 @@
 package mono.graphics.board
 
-import mono.common.SpecialCharacters.EMPTY_CHAR
-import mono.common.SpecialCharacters.copyChars
+import mono.common.Characters.TRANSPARENT_CHAR
+import mono.common.Characters.copyChars
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -13,11 +13,11 @@ internal class PainterBoard(private val bound: Rect) {
     private val validRowRange = 0 until bound.height
 
     private val matrix: List<MutableList<Char>> = List(bound.height) {
-        MutableList(bound.width) { EMPTY_CHAR }
+        MutableList(bound.width) { TRANSPARENT_CHAR }
     }
 
     /**
-     * Force values overlap with [rect] to be [char] regardless they are [EMPTY_CHAR]
+     * Force values overlap with [rect] to be [char] regardless they are [TRANSPARENT_CHAR]
      */
     fun fill(rect: Rect, char: Char) {
         val overlap = bound.getOverlappedRect(rect) ?: return
@@ -33,7 +33,7 @@ internal class PainterBoard(private val bound: Rect) {
 
     /**
      * Fills with another [PainterBoard].
-     * If a value in input [PainterBoard] is [EMPTY_CHAR], the value in the current board at that
+     * If a value in input [PainterBoard] is [TRANSPARENT_CHAR], the value in the current board at that
      * position won't be overlapped.
      */
     fun fill(board: PainterBoard) = fillWithMatrix(board.bound.position, board.matrix)
@@ -83,5 +83,5 @@ internal class PainterBoard(private val bound: Rect) {
         matrix.joinToString("\n", transform = ::toRowString)
 
     private fun toRowString(chars: List<Char>): String =
-        chars.joinToString("") { if (it == EMPTY_CHAR) " " else it.toString() }
+        chars.joinToString("") { if (it == TRANSPARENT_CHAR) " " else it.toString() }
 }

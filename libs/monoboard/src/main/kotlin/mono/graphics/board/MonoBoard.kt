@@ -1,6 +1,6 @@
 package mono.graphics.board
 
-import mono.common.SpecialCharacters.EMPTY_CHAR
+import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -21,7 +21,7 @@ class MonoBoard(private val unitSize: Size) {
 
     operator fun get(position: Point): Char {
         val boardAddress = toBoardAddress(position.left, position.top)
-        return painterBoards[boardAddress]?.get(position) ?: EMPTY_CHAR
+        return painterBoards[boardAddress]?.get(position) ?: TRANSPARENT_CHAR
     }
 
     private fun getOrCreateOverlappedBoards(rect: Rect): List<PainterBoard> {

@@ -1,11 +1,11 @@
 package mono.common
 
-object SpecialCharacters {
-    const val EMPTY_CHAR: Char = 0.toChar()
+object Characters {
+    const val TRANSPARENT_CHAR: Char = 0.toChar()
 
     /**
      * Copies [length] characters from [src] from [srcOffset] into [dest] from [destOffset].
-     * If the character is [EMPTY_CHAR], ignore.
+     * If the character is [TRANSPARENT_CHAR], ignore.
      */
     fun copyChars(
         src: List<Char>,
@@ -15,7 +15,7 @@ object SpecialCharacters {
         length: Int
     ) {
         src.subList(srcOffset, srcOffset + length).forEachIndexed { index, char ->
-            if (char != EMPTY_CHAR) {
+            if (char != TRANSPARENT_CHAR) {
                 dest[destOffset + index] = char
             }
         }

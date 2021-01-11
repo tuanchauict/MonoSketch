@@ -1,6 +1,6 @@
 package mono.graphics.bitmap.drawable
 
-import mono.common.SpecialCharacters.EMPTY_CHAR
+import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.MonoBitmap
 import kotlin.math.max
 import kotlin.math.min
@@ -52,7 +52,7 @@ class NinePatchDrawable internal constructor(
                 }
                 val width = array.first().length
                 val height = array.size
-                val chars = array.joinToString("").map { if (it == emptyChar) EMPTY_CHAR else it }
+                val chars = array.joinToString("").map { if (it == emptyChar) TRANSPARENT_CHAR else it }
                 return Pattern(width, height, chars)
             }
         }

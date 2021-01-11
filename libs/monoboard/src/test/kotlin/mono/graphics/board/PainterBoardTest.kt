@@ -1,6 +1,6 @@
 package mono.graphics.board
 
-import mono.common.SpecialCharacters.EMPTY_CHAR
+import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -32,7 +32,7 @@ class PainterBoardTest {
         board1.fill(Rect.byLTWH(0, 2, 2, 2), 'b')
         board1.fill(Rect.byLTWH(2, 0, 2, 2), 'c')
         board1.fill(Rect.byLTWH(2, 2, 2, 2), 'd')
-        board1[Point(2,1)] = EMPTY_CHAR
+        board1[Point(2,1)] = TRANSPARENT_CHAR
 
         val board2 = PainterBoard(Rect.byLTWH(1, 1, 3, 2))
         board2[Point(2,1)] = 'x'
