@@ -45,14 +45,19 @@ class NinePatchDrawable internal constructor(
         }
 
         companion object {
-            fun fromText(text: String, delimiters: String = "\n", emptyChar: Char = ' '): Pattern {
-                val array = text.split(delimiters)
+            fun fromText(
+                text: String,
+                delimiter: Char = '\n',
+                transparentChar: Char = ' '
+            ): Pattern {
+                val array = text.split(delimiter)
                 if (array.isEmpty()) {
                     return Pattern(0, 0, emptyList())
                 }
                 val width = array.first().length
                 val height = array.size
-                val chars = array.joinToString("").map { if (it == emptyChar) TRANSPARENT_CHAR else it }
+                val chars = array.joinToString("")
+                    .map { if (it == transparentChar) TRANSPARENT_CHAR else it }
                 return Pattern(width, height, chars)
             }
         }
