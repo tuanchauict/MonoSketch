@@ -71,12 +71,12 @@ internal class PainterBoard(private val bound: Rect) {
         matrix[rowIndex][columnIndex] = char
     }
 
-    operator fun get(position: Point): Char? {
-        val (columnIndex, rowIndex) = position - bound.position
-        if (rowIndex !in validRowRange || columnIndex !in validColumnRange) {
-            return null
-        }
-        return matrix[rowIndex][columnIndex]
+    operator fun get(position: Point): Char? = get(position.left, position.top)
+
+    fun get(left: Int, top: Int): Char? {
+        val columnIndex = left - bound.left
+        val rowIndex = top - bound.top
+        return matrix.getOrNull(rowIndex)?.getOrNull(columnIndex)
     }
 
     override fun toString(): String =
