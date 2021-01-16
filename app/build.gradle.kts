@@ -8,9 +8,8 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-js"))
     testImplementation(kotlin("test-js"))
-    implementation(project(":monoboard"))
+    implementation(project(":htmlcanvas"))
 }
 
 kotlin {
