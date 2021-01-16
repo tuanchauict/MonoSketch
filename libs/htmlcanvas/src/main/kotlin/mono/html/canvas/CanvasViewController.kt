@@ -16,11 +16,11 @@ class CanvasViewController(private val container: HTMLDivElement) {
             val gridCanvas = canvas {
                 attributes["style"] = "width: 100%; height: 100%"
             }
-            gridCanvasViewController = GridCanvasViewController(gridCanvas)
-
             val boardCanvas = canvas {
                 attributes["style"] = "width: 100%; height: 100%"
             }
+
+            gridCanvasViewController = GridCanvasViewController(gridCanvas)
             boardCanvasViewController = BoardCanvasViewController(boardCanvas)
         }
     }
