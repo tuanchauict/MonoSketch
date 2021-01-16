@@ -6,8 +6,8 @@ import org.w3c.dom.Path2D
 internal class GridCanvasViewController(
     canvas: HTMLCanvasElement
 ) : BaseCanvasViewController(canvas) {
-    fun draw() {
-        context.strokeStyle = "#444444"
+    override fun drawInternal() {
+        context.strokeStyle = "#ff0000"
         context.lineWidth = 0.1
         context.stroke(createGridPath())
     }
@@ -18,16 +18,14 @@ internal class GridCanvasViewController(
         val zeroX = offset.left.toDouble()
         val zeroY = offset.top.toDouble()
 
-        val rowCount = (heightPx / cellHeightPx).toInt()
-        for (row in 0..rowCount) {
-            val y = zeroY + cellHeightPx * row
+        for (row in rowRange) {
+            val y = toYPx(row)
             moveTo(zeroX, y)
             lineTo(widthPx, y)
         }
 
-        val colCount = (widthPx / cellWidthPx).toInt()
-        for (col in 0..colCount) {
-            val x = zeroX + cellWidthPx * col
+        for (col in columnRange) {
+            val x = toXPx(col)
             moveTo(x, zeroY)
             lineTo(x, heightPx)
         }

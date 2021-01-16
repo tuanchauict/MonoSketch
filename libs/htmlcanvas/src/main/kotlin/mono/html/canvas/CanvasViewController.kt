@@ -2,6 +2,7 @@ package mono.html.canvas
 
 import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
+import mono.graphics.board.MonoBoard
 import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.GridCanvasViewController
@@ -10,7 +11,7 @@ import org.w3c.dom.HTMLDivElement
 /**
  * A view controller class which renders the board to user.
  */
-class CanvasViewController(private val container: HTMLDivElement) {
+class CanvasViewController(private val container: HTMLDivElement, board: MonoBoard) {
     private lateinit var gridCanvasViewController: GridCanvasViewController
     private lateinit var boardCanvasViewController: BoardCanvasViewController
 
@@ -26,14 +27,12 @@ class CanvasViewController(private val container: HTMLDivElement) {
             }
 
             gridCanvasViewController = GridCanvasViewController(gridCanvas)
-            boardCanvasViewController = BoardCanvasViewController(boardCanvas)
+            boardCanvasViewController = BoardCanvasViewController(boardCanvas, board)
             canvasControllers = listOf(
                 gridCanvasViewController,
                 boardCanvasViewController
             )
         }
-
-        onResize()
     }
 
     fun onResize() {
@@ -42,10 +41,12 @@ class CanvasViewController(private val container: HTMLDivElement) {
         for (controller in canvasControllers) {
             controller.setSize(widthPx, heightPx)
         }
-        forceRedraw()
+        forceDraw()
     }
 
-    private fun forceRedraw() {
-        gridCanvasViewController.draw()
+    private fun forceDraw() {
+        for (controller in canvasControllers) {
+            controller.draw()
+        }
     }
 }
