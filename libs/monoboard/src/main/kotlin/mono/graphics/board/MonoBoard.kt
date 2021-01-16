@@ -10,9 +10,12 @@ import mono.graphics.geo.Size
  * A model class which manages all mono-pixels of the app.
  * This class is to allow infinity drawing.
  */
-class MonoBoard(private val unitSize: Size) {
+class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
 
     private val painterBoards: MutableMap<BoardAddress, PainterBoard> = mutableMapOf()
+
+    internal val boardCount: Int
+        get() = painterBoards.size
 
     fun fill(rect: Rect, char: Char) {
         val affectedBoards = getOrCreateOverlappedBoards(rect)
@@ -24,14 +27,15 @@ class MonoBoard(private val unitSize: Size) {
     fun fill(position: Point, bitmap: MonoBitmap) {
         val rect = Rect.byLTWH(position.left, position.top, bitmap.width, bitmap.height)
         val affectedBoards = getOrCreateOverlappedBoards(rect)
+
         for (board in affectedBoards) {
             board.fill(position, bitmap)
         }
     }
 
-    operator fun set(position: Point, char: Char) {
-        getOrCreateBoard(position.left, position.top)[position] = char
-    }
+    operator fun set(position: Point, char: Char) = set(position.left, position.top, char)
+
+    fun set(left: Int, top: Int, char: Char) = getOrCreateBoard(left, top).set(left, top, char)
 
     operator fun get(position: Point): Char = get(position.left, position.top)
 
@@ -42,9 +46,15 @@ class MonoBoard(private val unitSize: Size) {
 
     private fun getOrCreateOverlappedBoards(rect: Rect): List<PainterBoard> {
         val affectedBoards = mutableListOf<PainterBoard>()
-        for (left in rect.left..rect.right step unitSize.width) {
-            for (top in rect.top..rect.bottom step unitSize.height) {
-                affectedBoards += getOrCreateBoard(left, top)
+
+        val leftIndex = rect.left adjustDivide unitSize.width
+        val rightIndex = rect.right adjustDivide unitSize.width
+        val topIndex = rect.top adjustDivide unitSize.height
+        val bottomIndex = rect.bottom adjustDivide unitSize.height
+
+        for (left in leftIndex..rightIndex) {
+            for (top in topIndex..bottomIndex) {
+                affectedBoards += getOrCreateBoard(left * unitSize.width, top * unitSize.height)
             }
         }
         return affectedBoards
@@ -63,9 +73,31 @@ class MonoBoard(private val unitSize: Size) {
     }
 
     private fun toBoardAddress(left: Int, top: Int): BoardAddress = BoardAddressManager.get(
-        boardRowIndex = top / unitSize.height,
-        boardColIndex = left / unitSize.width
+        boardRowIndex = top adjustDivide unitSize.height,
+        boardColIndex = left adjustDivide unitSize.width
     )
+
+    private infix fun Int.adjustDivide(denominator: Int): Int =
+        if (this > 0 || this % denominator == 0) this / denominator else this / denominator - 1
+
+    override fun toString(): String {
+        val left = painterBoards.keys.minOf { it.col }
+        val right = painterBoards.keys.maxOf { it.col } + 1
+        val top = painterBoards.keys.minOf { it.row }
+        val bottom = painterBoards.keys.maxOf { it.row } + 1
+        val rect = Rect.byLTWH(
+            left = left * unitSize.width,
+            top = top * unitSize.height,
+            width = (right - left) * unitSize.width,
+            height = (bottom - top) * unitSize.height
+        )
+        val painterBoard = PainterBoard(rect)
+
+        painterBoards.values.forEach {
+            painterBoard.fill(it)
+        }
+        return painterBoard.toString()
+    }
 
     internal data class BoardAddress(val row: Int, val col: Int)
 
@@ -84,5 +116,9 @@ class MonoBoard(private val unitSize: Size) {
         fun get(boardRowIndex: Int, boardColIndex: Int): BoardAddress =
             addressMap.getOrPut(boardRowIndex) { mutableMapOf() }
                 .getOrPut(boardColIndex) { BoardAddress(boardRowIndex, boardColIndex) }
+    }
+
+    companion object {
+        val STANDARD_UNIT_SIZE = Size(128, 64)
     }
 }

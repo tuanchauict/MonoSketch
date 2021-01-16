@@ -63,8 +63,11 @@ internal class PainterBoard(private val bound: Rect) {
     /**
      * Force value at [position] to be [char]
      */
-    operator fun set(position: Point, char: Char) {
-        val (columnIndex, rowIndex) = position - bound.position
+    operator fun set(position: Point, char: Char) = set(position.left, position.top, char)
+
+    fun set(left: Int, top: Int, char: Char) {
+        val columnIndex = left - bound.left
+        val rowIndex = top - bound.top
         if (columnIndex !in validColumnRange || rowIndex !in validRowRange) {
             return
         }
