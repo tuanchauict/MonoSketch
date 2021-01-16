@@ -1,6 +1,7 @@
 rootProject.name = "MonoFlow"
 
 val moduleMap = mapOf(
+    "app" to "app",
     "commons" to "libs/commons",
     "monoboard" to "libs/monoboard",
     "graphicsgeo" to "libs/graphicsgeo",

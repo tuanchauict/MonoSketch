@@ -8,8 +8,9 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-js"))
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.2")
+    implementation(project(":monoboard"))
+
     testImplementation(kotlin("test-js"))
 }
 

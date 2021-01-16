@@ -8,11 +8,13 @@ version = "0.0.1"
 repositories {
     jcenter()
     mavenCentral()
+    maven { url = uri("https://dl.bintray.com/kotlin/kotlinx") }
 }
 
 dependencies {
     implementation(kotlin("stdlib-js"))
-    implementation(project(":monoboard"))
+    implementation(project(":app"))
+    implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.7.2")
 
     testImplementation(kotlin("test-js"))
 }
