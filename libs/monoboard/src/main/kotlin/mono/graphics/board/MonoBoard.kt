@@ -1,6 +1,5 @@
 package mono.graphics.board
 
-import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -17,31 +16,33 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     internal val boardCount: Int
         get() = painterBoards.size
 
-    fun fill(rect: Rect, char: Char) {
+    fun fill(rect: Rect, char: Char, highlight: Highlight) {
         val affectedBoards = getOrCreateOverlappedBoards(rect)
         for (board in affectedBoards) {
-            board.fill(rect, char)
+            board.fill(rect, char, highlight)
         }
     }
 
-    fun fill(position: Point, bitmap: MonoBitmap) {
+    fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
         val rect = Rect.byLTWH(position.left, position.top, bitmap.width, bitmap.height)
         val affectedBoards = getOrCreateOverlappedBoards(rect)
 
         for (board in affectedBoards) {
-            board.fill(position, bitmap)
+            board.fill(position, bitmap, highlight)
         }
     }
 
-    operator fun set(position: Point, char: Char) = set(position.left, position.top, char)
+    operator fun set(position: Point, char: Char, highlight: Highlight) =
+        set(position.left, position.top, char, highlight)
 
-    fun set(left: Int, top: Int, char: Char) = getOrCreateBoard(left, top).set(left, top, char)
+    fun set(left: Int, top: Int, char: Char, highlight: Highlight) =
+        getOrCreateBoard(left, top).set(left, top, char, highlight)
 
-    operator fun get(position: Point): Char = get(position.left, position.top)
+    operator fun get(position: Point): Pixel = get(position.left, position.top)
 
-    fun get(left: Int, top: Int): Char {
+    fun get(left: Int, top: Int): Pixel {
         val boardAddress = toBoardAddress(left, top)
-        return painterBoards[boardAddress]?.get(left, top) ?: TRANSPARENT_CHAR
+        return painterBoards[boardAddress]?.get(left, top) ?: Pixel.TRANSPARENT_PIXEL
     }
 
     private fun getOrCreateOverlappedBoards(rect: Rect): List<PainterBoard> {

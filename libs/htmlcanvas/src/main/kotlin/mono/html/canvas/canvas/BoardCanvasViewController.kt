@@ -1,6 +1,5 @@
 package mono.html.canvas.canvas
 
-import mono.common.Characters
 import mono.graphics.board.MonoBoard
 import org.w3c.dom.HTMLCanvasElement
 
@@ -14,9 +13,10 @@ internal class BoardCanvasViewController(
             for (col in columnRange) {
                 val left = col // TODO: correct with board offset
                 val top = row // TODO: correct with board offset
-                val char = board.get(left, top)
-                if (char != Characters.TRANSPARENT_CHAR) {
-                    context.fillText("$char", toXPx(col), toYPx(row))
+                val pixel = board.get(left, top)
+                if (!pixel.isTransparent) {
+                    context.fillStyle = pixel.highlight.paintColor
+                    context.fillText("${pixel.char}", toXPx(col), toYPx(row))
                 }
             }
         }

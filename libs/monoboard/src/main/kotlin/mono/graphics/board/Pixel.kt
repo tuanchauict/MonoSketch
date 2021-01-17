@@ -14,9 +14,18 @@ class Pixel(
     var highlight: Highlight = highlight
         private set
 
+    val isTransparent: Boolean
+        get() = char == TRANSPARENT_CHAR
+
     fun set(char: Char, highlight: Highlight) {
         this.char = char
         this.highlight = highlight
+    }
+
+    override fun toString(): String = if (char == TRANSPARENT_CHAR) " " else char.toString()
+
+    companion object {
+        val TRANSPARENT_PIXEL = Pixel()
     }
 }
 
