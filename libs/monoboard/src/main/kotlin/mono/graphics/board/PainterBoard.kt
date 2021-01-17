@@ -1,12 +1,16 @@
 package mono.graphics.board
 
 import mono.common.Characters.TRANSPARENT_CHAR
+import mono.common.Characters.isTransparent
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 
-
+/**
+ * A model class to manage drawn pixel.
+ * This is where a pixel is represented with its absolute position.
+ */
 internal class PainterBoard(private val bound: Rect) {
     private val validColumnRange = 0 until bound.width
     private val validRowRange = 0 until bound.height
@@ -32,8 +36,8 @@ internal class PainterBoard(private val bound: Rect) {
 
     /**
      * Fills with another [PainterBoard].
-     * If a value in input [PainterBoard] is [TRANSPARENT_CHAR], the value in the current board at that
-     * position won't be overlapped.
+     * If a pixel in input [PainterBoard] is transparent, the value in the current board at that
+     * position won't be overwritten.
      */
     fun fill(board: PainterBoard) {
         val position = board.bound.position
@@ -53,13 +57,18 @@ internal class PainterBoard(private val bound: Rect) {
             val dest = matrix[startRow + r]
 
             src.subList(inStartCol, inStartCol + overlap.width).forEachIndexed { index, pixel ->
-                if (pixel.char != TRANSPARENT_CHAR) {
+                if (!pixel.isTransparent) {
                     dest[startCol + index].set(pixel.char, pixel.highlight)
                 }
             }
         }
     }
 
+    /**
+     * Fills with a bitmap and the highlight state of that bitmap from [position].
+     * If a pixel in input [bitmap] is transparent, the value in the current board at that
+     * position won't be overwritten.
+     */
     fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
         val inMatrix = bitmap.matrix
 
@@ -77,7 +86,7 @@ internal class PainterBoard(private val bound: Rect) {
             val dest = matrix[startRow + r]
 
             src.subList(inStartCol, inStartCol + overlap.width).forEachIndexed { index, char ->
-                if (char != TRANSPARENT_CHAR) {
+                if (!char.isTransparent) {
                     dest[startCol + index].set(char, highlight)
                 }
             }
