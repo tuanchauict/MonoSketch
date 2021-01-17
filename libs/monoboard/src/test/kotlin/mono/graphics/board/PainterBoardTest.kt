@@ -14,28 +14,28 @@ class PainterBoardTest {
     @Test
     fun testFill_inside() {
         val board = PainterBoard(Rect.byLTWH(0, 0, 4, 4))
-        board.fill(Rect.byLTWH(1, 2, 3, 2), '#')
+        board.fill(Rect.byLTWH(1, 2, 3, 2), '#', Highlight.NO)
         assertEquals("    \n    \n ###\n ###", board.toString())
     }
 
     @Test
     fun testFill_Outside() {
         val board = PainterBoard(Rect.byLTWH(1, 1, 4, 4))
-        board.fill(Rect.byLTWH(0, 0, 5, 5), '#')
+        board.fill(Rect.byLTWH(0, 0, 5, 5), '#', Highlight.NO)
         assertEquals("####\n####\n####\n####", board.toString())
     }
 
     @Test
     fun testFillBoard() {
         val board1 = PainterBoard(Rect.byLTWH(0, 0, 4, 4))
-        board1.fill(Rect.byLTWH(0, 0, 2, 2), 'a')
-        board1.fill(Rect.byLTWH(0, 2, 2, 2), 'b')
-        board1.fill(Rect.byLTWH(2, 0, 2, 2), 'c')
-        board1.fill(Rect.byLTWH(2, 2, 2, 2), 'd')
-        board1[Point(2,1)] = TRANSPARENT_CHAR
+        board1.fill(Rect.byLTWH(0, 0, 2, 2), 'a', Highlight.NO)
+        board1.fill(Rect.byLTWH(0, 2, 2, 2), 'b', Highlight.NO)
+        board1.fill(Rect.byLTWH(2, 0, 2, 2), 'c', Highlight.NO)
+        board1.fill(Rect.byLTWH(2, 2, 2, 2), 'd', Highlight.NO)
+        board1.set(Point(2, 1), TRANSPARENT_CHAR, Highlight.NO)
 
         val board2 = PainterBoard(Rect.byLTWH(1, 1, 3, 2))
-        board2[Point(2,1)] = 'x'
+        board2.set(Point(2, 1), 'x', Highlight.NO)
         board2.fill(board1)
         assertEquals("axc\nbdd", board2.toString())
     }
@@ -47,8 +47,8 @@ class PainterBoardTest {
         builder.put(0, 1, 'b')
 
         val board = PainterBoard(Rect.byLTWH(0, 0, 3, 3))
-        board[Point(2, 2)] = 'x'
-        board.fill(Point(1, 1), builder.toBitmap())
+        board.set(Point(2, 2), 'x', Highlight.NO)
+        board.fill(Point(1, 1), builder.toBitmap(), Highlight.NO)
         assertEquals("   \n ab\n  x", board.toString())
     }
 }

@@ -22,7 +22,17 @@ class Pixel(
         this.highlight = highlight
     }
 
-    override fun toString(): String = if (char == TRANSPARENT_CHAR) " " else char.toString()
+    override fun toString(): String = if (isTransparent) " " else char.toString()
+
+    override fun equals(other: Any?): Boolean {
+        return other is Pixel && char == other.char && highlight == other.highlight
+    }
+
+    override fun hashCode(): Int {
+        var result = char.hashCode()
+        result = 31 * result + highlight.hashCode()
+        return result
+    }
 
     companion object {
         val TRANSPARENT_PIXEL = Pixel()

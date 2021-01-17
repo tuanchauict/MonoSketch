@@ -87,7 +87,7 @@ internal class PainterBoard(private val bound: Rect) {
     /**
      * Force value at [position] to be [char] with [highlight]
      */
-    operator fun set(position: Point, char: Char, highlight: Highlight) =
+    fun set(position: Point, char: Char, highlight: Highlight) =
         set(position.left, position.top, char, highlight)
 
     fun set(left: Int, top: Int, char: Char, highlight: Highlight) {

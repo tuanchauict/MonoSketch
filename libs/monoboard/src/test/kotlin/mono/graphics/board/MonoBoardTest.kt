@@ -1,6 +1,5 @@
 package mono.graphics.board
 
-import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -19,12 +18,12 @@ class MonoBoardTest {
         val points = listOf(-300, -256, -128, -100, 0, 100, 128, 256, 300).map { Point(it, it) }
 
         points.forEach {
-            assertEquals(TRANSPARENT_CHAR, target[it])
+            assertEquals(Pixel.TRANSPARENT_PIXEL, target[it])
         }
         val chars = "012345678"
-        chars.forEachIndexed { index, c -> target[points[index]] = c }
+        chars.forEachIndexed { index, c -> target.set(points[index], c, Highlight.NO) }
         chars.forEachIndexed { index, c ->
-            assertEquals(c, target[points[index]])
+            assertEquals(c, target[points[index]].char)
         }
 
         assertEquals(7, target.boardCount)
@@ -33,7 +32,7 @@ class MonoBoardTest {
     @Test
     fun testFill() {
         val target = MonoBoard(Size(5, 5))
-        target.fill(Rect.byLTWH(1, 1, 3, 3), 'A')
+        target.fill(Rect.byLTWH(1, 1, 3, 3), 'A', Highlight.NO)
         assertEquals(
             """     
  AAA 
@@ -43,7 +42,7 @@ class MonoBoardTest {
         )
         assertEquals(1, target.boardCount)
 
-        target.fill(Rect.byLTWH(-3, -3, 3, 3), 'B')
+        target.fill(Rect.byLTWH(-3, -3, 3, 3), 'B', Highlight.NO)
         assertEquals(
             """          
           
@@ -55,10 +54,11 @@ class MonoBoardTest {
       AAA 
       AAA 
           """,
-        target.toString())
+            target.toString()
+        )
         assertEquals(2, target.boardCount)
 
-        target.fill(Rect.byLTWH(-1, 0, 3, 1), 'C')
+        target.fill(Rect.byLTWH(-1, 0, 3, 1), 'C', Highlight.NO)
         assertEquals(
             """          
           

@@ -32,7 +32,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         }
     }
 
-    operator fun set(position: Point, char: Char, highlight: Highlight) =
+    fun set(position: Point, char: Char, highlight: Highlight) =
         set(position.left, position.top, char, highlight)
 
     fun set(left: Int, top: Int, char: Char, highlight: Highlight) =
