@@ -2,8 +2,12 @@ import kotlinx.browser.window
 import mono.app.MonoFlowApplication
 
 fun main() {
+    val application = MonoFlowApplication()
     window.onload = {
-        MonoFlowApplication().onStart()
+        application.onStart()
+    }
+    window.onresize = {
+        application.onResize()
     }
 }
 
