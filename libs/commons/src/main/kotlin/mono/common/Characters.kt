@@ -20,4 +20,7 @@ object Characters {
             }
         }
     }
+
+    val Char.isTransparent: Boolean
+        get() = this == TRANSPARENT_CHAR
 }
