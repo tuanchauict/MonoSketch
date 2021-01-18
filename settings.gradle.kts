@@ -7,7 +7,8 @@ val moduleMap = mapOf(
     "graphicsgeo" to "libs/graphicsgeo",
     "shape" to "libs/shape",
     "monobitmap" to "libs/monobitmap",
-    "htmlcanvas" to "libs/htmlcanvas"
+    "htmlcanvas" to "libs/htmlcanvas",
+    "livedata" to "libs/livedata"
 )
 
 moduleMap.entries.forEach { (name, path) ->
