@@ -8,7 +8,8 @@ val moduleMap = mapOf(
     "shape" to "libs/shape",
     "monobitmap" to "libs/monobitmap",
     "htmlcanvas" to "libs/htmlcanvas",
-    "livedata" to "libs/livedata"
+    "livedata" to "libs/livedata",
+    "lifecycle" to "libs/lifecycle"
 )
 
 moduleMap.entries.forEach { (name, path) ->
