@@ -51,14 +51,7 @@ class CanvasViewController(
         val widthPx = container.clientWidth
         val heightPx = container.clientHeight
         for (controller in canvasControllers) {
-            controller.setSize(widthPx, heightPx)
-        }
-        forceDraw()
-    }
-
-    private fun forceDraw() {
-        for (controller in canvasControllers) {
-            controller.draw()
+            controller.setSizeAndRedraw(widthPx, heightPx)
         }
     }
 }

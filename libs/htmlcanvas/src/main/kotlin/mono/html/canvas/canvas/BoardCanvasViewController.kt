@@ -9,6 +9,7 @@ internal class BoardCanvasViewController(
 ) : BaseCanvasViewController(canvas) {
 
     override fun drawInternal() {
+        val columnRange = this.columnRange
         for (row in rowRange) {
             for (col in columnRange) {
                 val left = col // TODO: correct with board offset

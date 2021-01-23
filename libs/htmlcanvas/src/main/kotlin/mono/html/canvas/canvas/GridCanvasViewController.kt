@@ -13,8 +13,8 @@ internal class GridCanvasViewController(
     }
 
     private fun createGridPath(): Path2D = Path2D().apply {
-        val widthPx = widthPx.toDouble()
-        val heightPx = heightPx.toDouble()
+        val widthPx = canvasSizePx.width.toDouble()
+        val heightPx = canvasSizePx.height.toDouble()
         val zeroX = offset.left.toDouble()
         val zeroY = offset.top.toDouble()
 
