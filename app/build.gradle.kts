@@ -10,6 +10,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test-js"))
     implementation(project(":htmlcanvas"))
+    implementation(project(":livedata"))
 }
 
 kotlin {
