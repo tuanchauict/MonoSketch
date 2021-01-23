@@ -3,15 +3,23 @@ package mono.html.canvas
 import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
 import mono.graphics.board.MonoBoard
+import mono.graphics.geo.Size
 import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.GridCanvasViewController
+import mono.lifecycle.LifecycleOwner
+import mono.livedata.LiveData
 import org.w3c.dom.HTMLDivElement
 
 /**
  * A view controller class which renders the board to user.
  */
-class CanvasViewController(private val container: HTMLDivElement, board: MonoBoard) {
+class CanvasViewController(
+    lifecycleOwner: LifecycleOwner,
+    private val container: HTMLDivElement,
+    board: MonoBoard,
+    windowSizeLiveData: LiveData<Size>
+) {
     private lateinit var gridCanvasViewController: GridCanvasViewController
     private lateinit var boardCanvasViewController: BoardCanvasViewController
 
@@ -33,9 +41,13 @@ class CanvasViewController(private val container: HTMLDivElement, board: MonoBoa
                 boardCanvasViewController
             )
         }
+
+        windowSizeLiveData.observe(lifecycleOwner, isDistinct = true) {
+            updateCanvasSize()
+        }
     }
 
-    fun onResize() {
+    private fun updateCanvasSize() {
         val widthPx = container.clientWidth
         val heightPx = container.clientHeight
         for (controller in canvasControllers) {

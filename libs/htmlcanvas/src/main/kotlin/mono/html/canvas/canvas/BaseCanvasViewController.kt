@@ -58,7 +58,6 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         val metrics = measureText("█")
         val cWidth = metrics.width
         val cHeight = fontSize.toDouble()
-        println("$cWidth $cHeight")
         return cWidth to cHeight
     }
 
