@@ -44,6 +44,5 @@ internal class GridCanvasViewController(
         for (col in boardColumnRange) {
             context.fillText("${abs(col % 10)}", toXPx(col), zeroY)
         }
-
     }
 }
