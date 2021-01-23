@@ -10,7 +10,11 @@ import org.w3c.dom.events.MouseEvent
  * A class to attach and observe mouse events happening on the canvas.
  * All events will be combined into a single live data [mousePointerLiveData].
  */
-class MouseEventObserver(container: HTMLDivElement) {
+class MouseEventObserver(
+    container: HTMLDivElement,
+    private val toBoardLeft: (xPx: Int) -> Int,
+    private val toBoardTop: (yPx: Int) -> Int
+) {
     private val mousePointerMutableLiveData: MutableLiveData<MousePointer> =
         MutableLiveData(MousePointer.Idle)
     val mousePointerLiveData: LiveData<MousePointer> = mousePointerMutableLiveData
@@ -51,7 +55,7 @@ class MouseEventObserver(container: HTMLDivElement) {
         }
     }
 
-    private fun MouseEvent.toPoint(): Point = Point(clientX, clientY)
+    private fun MouseEvent.toPoint(): Point = Point(toBoardLeft(clientX), toBoardTop(clientY))
 }
 
 /**
