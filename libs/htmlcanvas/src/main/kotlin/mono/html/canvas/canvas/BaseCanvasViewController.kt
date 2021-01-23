@@ -75,6 +75,8 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
     }
 
     fun draw() {
+        context.clearRect(0.0, 0.0, canvasSizePx.width.toDouble(), canvasSizePx.height.toDouble())
+
         context.font = font
         context.textAlign = CanvasTextAlign.LEFT
         context.textBaseline = CanvasTextBaseline.TOP

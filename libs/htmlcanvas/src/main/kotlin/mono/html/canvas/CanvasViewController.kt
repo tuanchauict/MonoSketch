@@ -53,6 +53,7 @@ class CanvasViewController(
 
         mousePointerLiveData.distinctUntilChange().observe(lifecycleOwner) {
             println(it)
+            boardCanvasViewController.draw()
         }
 
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {

@@ -6,6 +6,7 @@ import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
+import mono.html.canvas.mouse.MousePointer
 import mono.lifecycle.LifecycleOwner
 import org.w3c.dom.HTMLDivElement
 
@@ -16,13 +17,7 @@ class MonoFlowApplication : LifecycleOwner() {
     private val model: MonoFlowAppModel = MonoFlowAppModel()
 
     private var canvasViewController: CanvasViewController? = null
-    private val monoBoard: MonoBoard = MonoBoard().apply {
-        // TODO: This is for testing. Remove then.
-        fill(Rect.byLTWH(0, 0, 1, 1), '█', Highlight.SELECTED)
-        fill(Rect.byLTWH(1, 1, 10, 10), '|', Highlight.NO)
-        fill(Rect.byLTWH(50, 15, 10, 10), '▒', Highlight.NO)
-        fill(Rect.byLTWH(55, 10, 10, 10), '█', Highlight.SELECTED)
-    }
+    private val monoBoard: MonoBoard = MonoBoard()
 
     /**
      * The entry point for all actions. This is called after window is loaded (`window.onload`)
@@ -38,6 +33,20 @@ class MonoFlowApplication : LifecycleOwner() {
                 model.windowSizeLiveData
             )
         onResize()
+
+        canvasViewController?.mousePointerLiveData?.observe(this) {
+            if (it is MousePointer.Up) {
+                // TODO: This is for testing. Remove then
+                monoBoard.fill(
+                    Rect.byLTRB(
+                        it.mouseDownPoint.left,
+                        it.mouseDownPoint.top,
+                        it.point.left,
+                        it.point.top
+                    ), '+', Highlight.NO
+                )
+            }
+        }
     }
 
     fun onResize() {
