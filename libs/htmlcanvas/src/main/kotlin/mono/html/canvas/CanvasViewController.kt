@@ -8,6 +8,7 @@ import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.GridCanvasViewController
 import mono.html.canvas.mouse.MouseEventObserver
+import mono.html.canvas.mouse.MousePointer
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import org.w3c.dom.HTMLDivElement
@@ -25,6 +26,16 @@ class CanvasViewController(
     private lateinit var boardCanvasViewController: BoardCanvasViewController
 
     private lateinit var canvasControllers: List<BaseCanvasViewController>
+    private val mouseEventController: MouseEventObserver by lazy {
+        MouseEventObserver(
+            container,
+            gridCanvasViewController::toBoardColumn,
+            gridCanvasViewController::toBoardRow
+        )
+    }
+    val mousePointerLiveData: LiveData<MousePointer> by lazy {
+        mouseEventController.mousePointerLiveData
+    }
 
     init {
         container.append {
@@ -39,12 +50,7 @@ class CanvasViewController(
             )
         }
 
-        val mouseEventController = MouseEventObserver(
-            container,
-            gridCanvasViewController::toBoardColumn,
-            gridCanvasViewController::toBoardRow
-        )
-        mouseEventController.mousePointerLiveData.observe(lifecycleOwner, isDistinct = true) {
+        mousePointerLiveData.observe(lifecycleOwner, isDistinct = true) {
             println(it)
         }
 
