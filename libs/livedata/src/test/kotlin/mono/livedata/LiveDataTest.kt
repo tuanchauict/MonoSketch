@@ -1,7 +1,6 @@
 package mono.livedata
 
 import mono.common.setTimeout
-import mono.lifecycle.LifecycleOwner
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -24,30 +23,11 @@ class LiveDataTest {
 
         liveData.value = 2
         assertEquals(2, currentValue)
-        assertEquals(1, count)
+        assertEquals(2, count)
 
         liveData.value = 3
         assertEquals(3, currentValue)
-        assertEquals(2, count)
-    }
-
-    @Test
-    fun test_distinct_validLifecycle() {
-        val liveData = MutableLiveData(1)
-        var currentValue = 100
-        var count = 0
-        liveData.observe(lifecycleOwner, isDistinct = true) {
-            currentValue = it
-            count += 1
-        }
-
-        liveData.value = 2
-        assertEquals(2, currentValue)
-        assertEquals(1, count)
-
-        liveData.value = 2
-        assertEquals(2, currentValue)
-        assertEquals(1, count)
+        assertEquals(3, count)
     }
 
     @Test
@@ -88,13 +68,11 @@ class LiveDataTest {
         assertTrue(liveData.observers.isEmpty())
 
         liveData.value = 10
-        assertEquals(100, currentValue)
-        assertEquals(0, count)
+        assertEquals(1, currentValue)
+        assertEquals(1, count)
 
         liveData.observe(lifecycleOwner) {
         }
         assertTrue(liveData.observers.isEmpty())
     }
-
-    private class MockLifecycleOwner : LifecycleOwner()
 }
