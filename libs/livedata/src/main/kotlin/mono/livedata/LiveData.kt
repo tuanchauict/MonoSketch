@@ -11,7 +11,8 @@ abstract class LiveData<T>(initValue: T) {
     open val value: T
         get() = valueInternal
 
-    private val observers: MutableList<Observer<T>> = mutableListOf()
+    // Visible for testing only
+    internal val observers: MutableList<Observer<T>> = mutableListOf()
 
     /**
      * Observes changes from live data within lifecycle with [lifecycleOwner].
