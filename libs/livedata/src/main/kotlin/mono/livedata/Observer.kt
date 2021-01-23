@@ -7,7 +7,7 @@ import mono.common.setTimeout
  * Observer interface for notifying change.
  */
 interface Observer<T> {
-    fun onChanged(oldValue: T, newValue: T)
+    fun onChanged(newValue: T)
 }
 
 internal fun <T> Observer<T>.distinct(isApplied: Boolean): Observer<T> =
@@ -22,7 +22,7 @@ internal fun <T> Observer<T>.throttle(durationMillis: Int): Observer<T> =
 internal class SimpleObserver<T>(
     private val listener: (T) -> Unit
 ) : Observer<T> {
-    override fun onChanged(oldValue: T, newValue: T) {
+    override fun onChanged(newValue: T) {
         listener(newValue)
     }
 }
@@ -31,9 +31,11 @@ internal class SimpleObserver<T>(
  * An observer which only notify change when state is changed.
  */
 internal class DistinctObserver<T>(private val observer: Observer<T>) : Observer<T> {
-    override fun onChanged(oldValue: T, newValue: T) {
+    private var oldValue: T? = null
+    override fun onChanged(newValue: T) {
         if (oldValue != newValue) {
-            observer.onChanged(oldValue, newValue)
+            observer.onChanged(newValue)
+            oldValue = newValue
         }
     }
 }
@@ -47,23 +49,20 @@ internal class ThrottledObserver<T>(
     private val observer: Observer<T>
 ) : Observer<T> {
     private var currentTimeout: Timeout? = null
-    private var currentOldValue: T? = null
-    private var currentNewValue: T? = null
+    private var currentValue: T? = null
 
-    override fun onChanged(oldValue: T, newValue: T) {
+    override fun onChanged(newValue: T) {
         if (currentTimeout == null) {
-            currentOldValue = oldValue
-            currentNewValue = newValue
+            currentValue = newValue
             currentTimeout = setTimeout(durationMillis) { timeoutTick() }
         } else {
-            currentNewValue = newValue
+            currentValue = newValue
         }
     }
 
     private fun timeoutTick() {
-        val oldValue = currentOldValue ?: return
-        val newValue = currentNewValue ?: return
-        observer.onChanged(oldValue, newValue)
+        val newValue = currentValue ?: return
+        observer.onChanged(newValue)
         currentTimeout = null
     }
 }

@@ -34,14 +34,14 @@ abstract class LiveData<T>(initValue: T) {
         }
         observers.add(liveDataObserver)
         lifecycleOwner.addObserver(lifecycleObserver)
+        liveDataObserver.onChanged(value)
     }
 
     protected fun setValue(value: T) {
-        val oldValue = valueInternal
         valueInternal = value
 
         for (observer in observers) {
-            observer.onChanged(oldValue, value)
+            observer.onChanged(value)
         }
     }
 
@@ -75,7 +75,7 @@ internal class TransformLiveData<T, R>(
 
         liveData.observe(lifecycleOwner) {
             val newValue = transform(it)
-            observer.onChanged(value, newValue)
+            observer.onChanged(newValue)
         }
     }
 }

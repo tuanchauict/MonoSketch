@@ -23,11 +23,11 @@ class LiveDataTest {
 
         liveData.value = 2
         assertEquals(2, currentValue)
-        assertEquals(1, count)
+        assertEquals(2, count)
 
         liveData.value = 3
         assertEquals(3, currentValue)
-        assertEquals(2, count)
+        assertEquals(3, count)
     }
 
     @Test
@@ -42,11 +42,11 @@ class LiveDataTest {
 
         liveData.value = 2
         assertEquals(2, currentValue)
-        assertEquals(1, count)
+        assertEquals(2, count)
 
         liveData.value = 2
         assertEquals(2, currentValue)
-        assertEquals(1, count)
+        assertEquals(2, count)
     }
 
     @Test
@@ -87,8 +87,8 @@ class LiveDataTest {
         assertTrue(liveData.observers.isEmpty())
 
         liveData.value = 10
-        assertEquals(100, currentValue)
-        assertEquals(0, count)
+        assertEquals(1, currentValue)
+        assertEquals(1, count)
 
         liveData.observe(lifecycleOwner) {
         }
