@@ -18,6 +18,7 @@ class MonoFlowApplication : LifecycleOwner() {
     private var canvasViewController: CanvasViewController? = null
     private val monoBoard: MonoBoard = MonoBoard().apply {
         // TODO: This is for testing. Remove then.
+        fill(Rect.byLTWH(0, 0, 1, 1), '█', Highlight.SELECTED)
         fill(Rect.byLTWH(1, 1, 10, 10), '|', Highlight.NO)
         fill(Rect.byLTWH(50, 15, 10, 10), '▒', Highlight.NO)
         fill(Rect.byLTWH(55, 10, 10, 10), '█', Highlight.SELECTED)

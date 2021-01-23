@@ -9,18 +9,15 @@ internal class BoardCanvasViewController(
 ) : BaseCanvasViewController(canvas) {
 
     override fun drawInternal() {
-        val columnRange = this.columnRange
-        for (row in rowRange) {
+        val columnRange = this.boardColumnRange
+        for (row in boardRowRange) {
             for (col in columnRange) {
-                val left = col // TODO: correct with board offset
-                val top = row // TODO: correct with board offset
-                val pixel = board.get(left, top)
+                val pixel = board.get(col, row)
                 if (!pixel.isTransparent) {
                     context.fillStyle = pixel.highlight.paintColor
                     context.fillText("${pixel.char}", toXPx(col), toYPx(row))
                 }
             }
         }
-        context.fillText("This is a sample █", 100.0, 100.0)
     }
 }
