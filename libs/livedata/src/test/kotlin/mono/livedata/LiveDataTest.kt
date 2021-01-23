@@ -1,7 +1,6 @@
 package mono.livedata
 
 import mono.common.setTimeout
-import mono.lifecycle.LifecycleOwner
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -95,6 +94,4 @@ class LiveDataTest {
         }
         assertTrue(liveData.observers.isEmpty())
     }
-
-    private class MockLifecycleOwner : LifecycleOwner()
 }

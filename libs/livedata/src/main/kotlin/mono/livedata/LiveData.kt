@@ -18,7 +18,7 @@ abstract class LiveData<T>(initValue: T) {
      * Observes changes from live data within lifecycle with [lifecycleOwner].
      * Note that if [lifecycleOwner] is stopped, life data won't accept observer.
      */
-    fun observe(
+    open fun observe(
         lifecycleOwner: LifecycleOwner,
         isDistinct: Boolean = false,
         throttleDurationMillis: Int = -1,
@@ -57,3 +57,27 @@ class MutableLiveData<T>(initValue: T) : LiveData<T>(initValue) {
         get() = super.value
         set(value) = setValue(value)
 }
+
+internal class TransformLiveData<T, R>(
+    private val liveData: LiveData<T>,
+    private val transform: (T) -> R
+) : LiveData<R>(transform(liveData.value)) {
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        isDistinct: Boolean,
+        throttleDurationMillis: Int,
+        listener: (R) -> Unit
+    ) {
+        val observer =
+            SimpleObserver(listener).distinct(isDistinct).throttle(throttleDurationMillis)
+        observers.add(observer)
+
+        liveData.observe(lifecycleOwner) {
+            val newValue = transform(it)
+            observer.onChanged(value, newValue)
+        }
+    }
+}
+
+fun <T, R> LiveData<T>.map(transform: (T) -> R): LiveData<R> = TransformLiveData(this, transform)
