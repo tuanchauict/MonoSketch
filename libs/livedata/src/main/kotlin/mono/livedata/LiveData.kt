@@ -18,17 +18,15 @@ abstract class LiveData<T>(initValue: T) {
      * Observes changes from live data within lifecycle with [lifecycleOwner].
      * Note that if [lifecycleOwner] is stopped, life data won't accept observer.
      */
-    open fun observe(
+    fun observe(
         lifecycleOwner: LifecycleOwner,
-        isDistinct: Boolean = false,
         throttleDurationMillis: Int = -1,
         listener: (T) -> Unit
     ) {
         if (lifecycleOwner.isStopped) {
             return
         }
-        val liveDataObserver =
-            SimpleObserver(listener).distinct(isDistinct).throttle(throttleDurationMillis)
+        val liveDataObserver = SimpleObserver(listener).throttle(throttleDurationMillis)
         val lifecycleObserver = OnStopLifecycleObserver {
             observers.remove(liveDataObserver)
         }
@@ -58,26 +56,30 @@ class MutableLiveData<T>(initValue: T) : LiveData<T>(initValue) {
         set(value) = setValue(value)
 }
 
-internal class TransformLiveData<T, R>(
-    private val liveData: LiveData<T>,
+private class TransformLiveData<T, R>(
+    liveData: LiveData<T>,
     private val transform: (T) -> R
 ) : LiveData<R>(transform(liveData.value)) {
 
-    override fun observe(
-        lifecycleOwner: LifecycleOwner,
-        isDistinct: Boolean,
-        throttleDurationMillis: Int,
-        listener: (R) -> Unit
-    ) {
-        val observer =
-            SimpleObserver(listener).distinct(isDistinct).throttle(throttleDurationMillis)
-        observers.add(observer)
+    init {
+        liveData.observe(LiveDataLifecycleOwner()) {
+            setValue(transform(it))
+        }
+    }
+}
 
-        liveData.observe(lifecycleOwner) {
-            val newValue = transform(it)
-            observer.onChanged(newValue)
+private class DistinctOnlyLiveData<T>(liveData: LiveData<T>) : LiveData<T>(liveData.value) {
+    init {
+        liveData.observe(LiveDataLifecycleOwner()) {
+            if (it != value) {
+                setValue(it)
+            }
         }
     }
 }
 
 fun <T, R> LiveData<T>.map(transform: (T) -> R): LiveData<R> = TransformLiveData(this, transform)
+
+fun <T> LiveData<T>.distinctUntilChange(): LiveData<T> = DistinctOnlyLiveData(this)
+
+private class LiveDataLifecycleOwner : LifecycleOwner()

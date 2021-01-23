@@ -31,25 +31,6 @@ class LiveDataTest {
     }
 
     @Test
-    fun test_distinct_validLifecycle() {
-        val liveData = MutableLiveData(1)
-        var currentValue = 100
-        var count = 0
-        liveData.observe(lifecycleOwner, isDistinct = true) {
-            currentValue = it
-            count += 1
-        }
-
-        liveData.value = 2
-        assertEquals(2, currentValue)
-        assertEquals(2, count)
-
-        liveData.value = 2
-        assertEquals(2, currentValue)
-        assertEquals(2, count)
-    }
-
-    @Test
     fun test_throttle_validLifecycle() {
         val liveData = MutableLiveData(1)
         var currentValue = 100

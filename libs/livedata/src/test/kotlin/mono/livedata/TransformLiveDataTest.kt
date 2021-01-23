@@ -32,30 +32,4 @@ class TransformLiveDataTest {
         assertEquals("3", currentValue)
         assertEquals(3, count)
     }
-
-    @Test
-    fun testTransform_distinct() {
-        val liveData = MutableLiveData(1)
-        liveData.observe(lifecycleOwner) {
-            println(">> $it\n")
-        }
-        val transformLiveData = liveData.map { "${it % 2}" }
-
-        var currentValue = ""
-        var count = 0
-        transformLiveData.observe(lifecycleOwner, true) {
-            println(">$it\n")
-            currentValue = it
-            count += 1
-        }
-
-        liveData.value = 3
-        liveData.value = 5
-        assertEquals(1, count)
-        assertEquals("1", currentValue)
-
-        liveData.value = 2
-        assertEquals(2, count)
-        assertEquals("0", currentValue)
-    }
 }

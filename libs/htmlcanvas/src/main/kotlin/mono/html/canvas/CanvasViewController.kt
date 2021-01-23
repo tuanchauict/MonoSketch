@@ -11,6 +11,7 @@ import mono.html.canvas.mouse.MouseEventObserver
 import mono.html.canvas.mouse.MousePointer
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.livedata.distinctUntilChange
 import org.w3c.dom.HTMLDivElement
 
 /**
@@ -50,11 +51,11 @@ class CanvasViewController(
             )
         }
 
-        mousePointerLiveData.observe(lifecycleOwner, isDistinct = true) {
+        mousePointerLiveData.distinctUntilChange().observe(lifecycleOwner) {
             println(it)
         }
 
-        windowSizeLiveData.observe(lifecycleOwner, isDistinct = true) {
+        windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
             updateCanvasSize()
         }
     }
