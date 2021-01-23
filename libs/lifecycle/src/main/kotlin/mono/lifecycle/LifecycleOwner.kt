@@ -9,6 +9,9 @@ abstract class LifecycleOwner {
     internal val lifecycleObservers: MutableList<LifecycleObserver> = mutableListOf()
     private var state: State = State.INITIAL
 
+    val isStopped: Boolean
+        get() = state == State.STOPPED
+
     fun addObserver(lifecycleObserver: LifecycleObserver) {
         if (state == State.STOPPED) {
             return
