@@ -50,10 +50,20 @@ abstract class LiveData<T>(initValue: T) {
     }
 }
 
-class MutableLiveData<T>(initValue: T) : LiveData<T>(initValue) {
+open class MutableLiveData<T>(initValue: T) : LiveData<T>(initValue) {
     override var value: T
         get() = super.value
         set(value) = setValue(value)
+}
+
+class MediatorLiveData<T>(initValue: T) : MutableLiveData<T>(initValue) {
+    private val lifecycleOwner: LifecycleOwner = LiveDataLifecycleOwner()
+
+    fun <S> add(liveData: LiveData<S>, transform: MediatorLiveData<T>.(S) -> Unit) {
+        liveData.observe(lifecycleOwner) {
+            transform(it)
+        }
+    }
 }
 
 private class TransformLiveData<T, R>(
