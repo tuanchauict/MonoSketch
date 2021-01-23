@@ -27,12 +27,8 @@ class CanvasViewController(
 
     init {
         container.append {
-            val gridCanvas = canvas {
-                attributes["style"] = "position: absolute; top: 0; left: 0"
-            }
-            val boardCanvas = canvas {
-                attributes["style"] = "position: absolute; top: 0; left: 0"
-            }
+            val gridCanvas = canvas {}
+            val boardCanvas = canvas {}
 
             gridCanvasViewController = GridCanvasViewController(gridCanvas)
             boardCanvasViewController = BoardCanvasViewController(boardCanvas, board)
