@@ -3,10 +3,10 @@ package mono.app
 import kotlinx.browser.document
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
+import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
-import mono.html.canvas.mouse.MousePointer
 import mono.lifecycle.LifecycleOwner
 import org.w3c.dom.HTMLDivElement
 

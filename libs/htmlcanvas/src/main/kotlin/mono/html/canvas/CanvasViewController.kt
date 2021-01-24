@@ -3,12 +3,12 @@ package mono.html.canvas
 import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
 import mono.graphics.board.MonoBoard
+import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Size
 import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.GridCanvasViewController
 import mono.html.canvas.mouse.MouseEventObserver
-import mono.html.canvas.mouse.MousePointer
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.distinctUntilChange
