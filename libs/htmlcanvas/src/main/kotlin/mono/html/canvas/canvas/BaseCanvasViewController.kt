@@ -18,31 +18,10 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
     private var font: String = ""
     private var fontSize: Int = 0
 
-    private var cellSizePx: SizeF = SizeF(1.0, 1.0)
-    private var canvasSizePx: Size = Size(canvas.width, canvas.height)
-        set(value) {
-            field = value
-            canvas.width = value.width
-            canvas.height = value.height
-        }
-    private var offsetPx: Point = Point(0, 0)
-    private val boardOffsetRow: Int
-        get() = (-offsetPx.top / cellSizePx.height).toInt()
-    private val boardOffsetColumn: Int
-        get() = (-offsetPx.left / cellSizePx.width).toInt()
-
-    protected val boardRowRange: IntRange
-        get() {
-            val rowCount = ceil(canvasSizePx.height / cellSizePx.height).toInt()
-            return boardOffsetRow..(boardOffsetRow + rowCount)
-        }
-    protected val boardColumnRange: IntRange
-        get() {
-            val colCount = ceil(canvasSizePx.width / cellSizePx.width).toInt()
-            return boardOffsetColumn..(boardOffsetColumn + colCount)
-        }
+    internal var drawingInfo: DrawingInfo
 
     init {
+        drawingInfo = DrawingInfo(canvasSizePx = Size(canvas.width, canvas.height))
         setFont(15)
         context.imageSmoothingEnabled = true
     }
@@ -51,18 +30,16 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         this.fontSize = fontSize
         this.font = "normal normal ${fontSize}px monospace"
 
-        cellSizePx = context.getCellSizePx()
+        drawingInfo = drawingInfo.copy(cellSizePx = context.getCellSizePx())
     }
 
     fun setSizeAndRedraw(widthPx: Int, heightPx: Int) {
-        canvasSizePx = Size(widthPx, heightPx)
+        val canvasSizePx = Size(widthPx, heightPx)
+        canvas.width = canvasSizePx.width
+        canvas.height = canvasSizePx.height
+        drawingInfo = drawingInfo.copy(canvasSizePx = Size(widthPx, heightPx))
         draw()
     }
-
-    fun toXPx(column: Int): Double = offsetPx.left + cellSizePx.width * (column + boardOffsetColumn)
-    fun toYPx(row: Int): Double = offsetPx.top + cellSizePx.height * (row + boardOffsetRow)
-    fun toBoardRow(yPx: Int): Int = ((yPx - offsetPx.top) / cellSizePx.height).toInt()
-    fun toBoardColumn(xPx: Int): Int = ((xPx - offsetPx.left) / cellSizePx.width).toInt()
 
     private fun CanvasRenderingContext2D.getCellSizePx(): SizeF {
         context.font = font
@@ -75,7 +52,12 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
     }
 
     fun draw() {
-        context.clearRect(0.0, 0.0, canvasSizePx.width.toDouble(), canvasSizePx.height.toDouble())
+        context.clearRect(
+            x = 0.0,
+            y = 0.0,
+            w = drawingInfo.canvasSizePx.width.toDouble(),
+            h = drawingInfo.canvasSizePx.height.toDouble()
+        )
 
         context.font = font
         context.textAlign = CanvasTextAlign.LEFT
@@ -84,4 +66,24 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
     }
 
     protected abstract fun drawInternal()
+
+    data class DrawingInfo(
+        val offsetPx: Point = Point.ZERO,
+        val cellSizePx: SizeF = SizeF(1.0, 1.0),
+        val canvasSizePx: Size = Size(1, 1)
+    ) {
+        private val boardOffsetRow: Int = (-offsetPx.top / cellSizePx.height).toInt()
+        private val boardOffsetColumn: Int = (-offsetPx.left / cellSizePx.width).toInt()
+        private val rowCount: Int = ceil(canvasSizePx.height / cellSizePx.height).toInt()
+        private val columnCount: Int = ceil(canvasSizePx.width / cellSizePx.width).toInt()
+
+        internal val boardRowRange: IntRange = boardOffsetRow..(boardOffsetRow + rowCount)
+        internal val boardColumnRange: IntRange =
+            boardOffsetColumn..(boardOffsetColumn + columnCount)
+
+        fun toXPx(column: Int): Double = offsetPx.left + cellSizePx.width * column
+        fun toYPx(row: Int): Double = offsetPx.top + cellSizePx.height * row
+        fun toBoardRow(yPx: Int): Int = ((yPx - offsetPx.top) / cellSizePx.height).toInt()
+        fun toBoardColumn(xPx: Int): Int = ((xPx - offsetPx.left) / cellSizePx.width).toInt()
+    }
 }

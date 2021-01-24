@@ -7,5 +7,6 @@ data class Point(val left: Int, val top: Int) {
 
     companion object {
         val INVALID = Point(Int.MIN_VALUE, Int.MIN_VALUE)
+        val ZERO = Point(0, 0)
     }
 }
