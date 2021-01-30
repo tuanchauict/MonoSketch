@@ -8,8 +8,10 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":graphicsgeo"))
+    implementation(kotlin("stdlib-js"))
     implementation(project(":livedata"))
+    implementation(project(":shape"))
+    implementation(project(":monoboard"))
     testImplementation(kotlin("test-js"))
 }
 
