@@ -4,11 +4,14 @@ import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.MousePointer
+import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
+import mono.shape.add
+import mono.shape.command.ChangeBound
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Rectangle
@@ -23,12 +26,14 @@ class MainStateManager(
     private val bitmapManager: MonoBitmapManager,
     private val canvasManager: CanvasViewController
 ) {
+    private var workingParentGroup: Group = shapeManager.root
+    private var focusingShapes: Set<AbstractShape> = emptySet()
 
     init {
-        shapeManager.versionLiveData.distinctUntilChange().observe(lifecycleOwner, 2) {
+        shapeManager.versionLiveData.distinctUntilChange().observe(lifecycleOwner) {
             mainBoard.redraw()
         }
-        mainBoard.onBoardStateChangeLiveData.observe(lifecycleOwner, 2) {
+        mainBoard.onBoardStateChangeLiveData.observe(lifecycleOwner) {
             canvasManager.drawBoard()
         }
 
@@ -54,14 +59,36 @@ class MainStateManager(
             return
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
-        fill(shape.bound.position, bitmap, Highlight.NO)
+        val highlight = if (shape in focusingShapes) Highlight.SELECTED else Highlight.NO
+        fill(shape.bound.position, bitmap, highlight)
     }
 
     private fun addShapeWithMouse(mousePointer: MousePointer) {
-        // TODO: Add on mouse down and modify on mouse move and up
-        if (mousePointer is MousePointer.Up) {
-            val rectangle = Rectangle(mousePointer.mouseDownPoint, mousePointer.point)
-            shapeManager.add(rectangle)
+        when (mousePointer) {
+            is MousePointer.Down -> {
+                val rectangle =
+                    Rectangle(mousePointer.point, mousePointer.point, workingParentGroup.id)
+                focusingShapes = setOf(rectangle)
+                shapeManager.add(rectangle)
+            }
+            is MousePointer.Move ->
+                changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
+            is MousePointer.Up ->
+                changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
+            MousePointer.Idle,
+            is MousePointer.Click -> Unit
+        }
+    }
+
+    private fun changeShapeBound(point1: Point, point2: Point) {
+        val rect = Rect.byLTRB(
+            left = point1.left,
+            top = point1.top,
+            right = point2.left,
+            bottom = point2.top
+        )
+        for (shape in focusingShapes) {
+            shapeManager.execute(ChangeBound(shape, rect))
         }
     }
 }

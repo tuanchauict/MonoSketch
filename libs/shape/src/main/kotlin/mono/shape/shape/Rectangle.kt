@@ -27,5 +27,9 @@ class Rectangle(
         parentId
     )
 
+    override fun setBound(newBound: Rect) {
+        bound = newBound
+    }
+
     override fun contains(point: Point): Boolean = point in bound
 }

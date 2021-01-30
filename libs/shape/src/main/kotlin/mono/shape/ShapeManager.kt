@@ -2,7 +2,11 @@ package mono.shape
 
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
-import mono.shape.list.QuickList
+import mono.shape.command.AddShape
+import mono.shape.command.Command
+import mono.shape.command.GroupShapes
+import mono.shape.command.RemoveShape
+import mono.shape.command.Ungroup
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 
@@ -10,8 +14,7 @@ import mono.shape.shape.Group
  * A model class which contains all shapes of the app and also defines all shape handling logics.
  */
 class ShapeManager {
-    // Visible for testing only
-    internal val root: Group = Group(null)
+    val root: Group = Group(null)
     private val allShapeMap: MutableMap<Int, AbstractShape> = mutableMapOf(root.id to root)
 
     /**
@@ -26,79 +29,32 @@ class ShapeManager {
      */
     val shapes: Collection<AbstractShape> = root.items
 
-    private fun getGroup(shapeId: Int?): Group? =
-        if (shapeId == null) root else allShapeMap[shapeId] as? Group
+    fun execute(command: Command) {
+        val affectedParent = command.getDirectAffectedParent(this) ?: return
+        val allAncestors = affectedParent.getAllAncestors()
+        val currentVersion = affectedParent.version
 
-    fun add(shape: AbstractShape) {
-        getGroup(shape.parentId)?.recursiveUpdate { parent ->
-            parent.add(shape)
-            shape.parentId = parent.id
-            allShapeMap[shape.id] = shape
-        }
-    }
+        command.execute(this, affectedParent)
 
-    fun remove(shape: AbstractShape) {
-        getGroup(shape.parentId)?.recursiveUpdate { parent ->
-            parent.remove(shape)
-            allShapeMap.remove(shape.id)
-            if (parent != root) {
-                when (parent.itemCount) {
-                    1 -> ungroup(parent)
-                    0 -> remove(parent)
-                }
-            }
-        }
-    }
-
-    fun group(sameParentShapes: List<AbstractShape>) {
-        if (sameParentShapes.size < 2) {
-            // No group 1 or 0 items
+        if (currentVersion == affectedParent.version && affectedParent.id in allShapeMap) {
             return
         }
-        val parentId = sameParentShapes.first().parentId
-        if (sameParentShapes.any { it.parentId != parentId }) {
-            // No group cross group items
-            return
-        }
-        getGroup(parentId)?.recursiveUpdate { parent ->
-            val group = Group(parentId)
-            parent.add(group, QuickList.AddPosition.After(sameParentShapes.last()))
-
-            for (shape in sameParentShapes) {
-                parent.remove(shape)
-                shape.parentId = group.id
-                group.add(shape)
-            }
-        }
-    }
-
-    fun ungroup(group: Group) {
-        getGroup(group.parentId)?.recursiveUpdate { parent ->
-            for (shape in group.items.reversed()) {
-                group.remove(shape)
-                shape.parentId = parent.parentId
-                parent.add(shape, QuickList.AddPosition.After(group))
-            }
-            remove(group)
-        }
-    }
-
-    /**
-     * Applies update by [action] to the current group.
-     * If the current group's version is changed, all of its parents' version will be updated too.
-     */
-    private fun Group.recursiveUpdate(action: (Group) -> Unit) {
-        val oldVersion = version
-
-        action(this)
-
-        if (oldVersion == version) {
-            return
-        }
-        for (parent in getAllAncestors()) {
+        for (parent in allAncestors) {
             parent.update { true }
         }
         versionMutableLiveData.value = root.version
+        println("Version $currentVersion ${affectedParent.version}\n")
+    }
+
+    internal fun getGroup(shapeId: Int?): Group? =
+        if (shapeId == null) root else allShapeMap[shapeId] as? Group
+
+    internal fun register(shape: AbstractShape) {
+        allShapeMap[shape.id] = shape
+    }
+
+    internal fun unregister(shape: AbstractShape) {
+        allShapeMap.remove(shape.id)
     }
 
     private fun Group.getAllAncestors(): List<Group> {
@@ -111,3 +67,10 @@ class ShapeManager {
         return result
     }
 }
+
+fun ShapeManager.add(shape: AbstractShape) = execute(AddShape(shape))
+fun ShapeManager.remove(shape: AbstractShape) = execute(RemoveShape(shape))
+fun ShapeManager.group(sameParentShapes: List<AbstractShape>) =
+    execute(GroupShapes(sameParentShapes))
+
+fun ShapeManager.ungroup(group: Group) = execute(Ungroup(group))
