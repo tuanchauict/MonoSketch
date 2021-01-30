@@ -4,6 +4,7 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.command.AddShape
 import mono.shape.command.Command
+import mono.shape.command.RemoveShape
 import mono.shape.list.QuickList
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -29,7 +30,7 @@ class ShapeManager {
     val shapes: Collection<AbstractShape> = root.items
 
     fun execute(command: Command) {
-        val affectedParent = command.getDirectAffectedGroup(this) ?: return
+        val affectedParent = command.getDirectAffectedParent(this) ?: return
         val allAncestors = affectedParent.getAllAncestors()
         val currentVersion = affectedParent.version
 
@@ -53,19 +54,6 @@ class ShapeManager {
 
     internal fun unregister(shape: AbstractShape) {
         allShapeMap.remove(shape.id)
-    }
-
-    fun remove(shape: AbstractShape) {
-        getGroup(shape.parentId)?.recursiveUpdate { parent ->
-            parent.remove(shape)
-            allShapeMap.remove(shape.id)
-            if (parent != root) {
-                when (parent.itemCount) {
-                    1 -> ungroup(parent)
-                    0 -> remove(parent)
-                }
-            }
-        }
     }
 
     fun group(sameParentShapes: List<AbstractShape>) {
@@ -131,3 +119,4 @@ class ShapeManager {
 }
 
 fun ShapeManager.add(shape: AbstractShape) = execute(AddShape(shape))
+fun ShapeManager.remove(shape: AbstractShape) = execute(RemoveShape(shape))
