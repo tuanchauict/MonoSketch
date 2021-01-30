@@ -47,20 +47,6 @@ class MonoFlowApplication : LifecycleOwner() {
         )
 
         onResize()
-
-        canvasViewController.mousePointerLiveData.observe(this) {
-            if (it is MousePointer.Up) {
-                // TODO: This is for testing. Remove then
-                mainBoard.fill(
-                    Rect.byLTRB(
-                        it.mouseDownPoint.left,
-                        it.mouseDownPoint.top,
-                        it.point.left,
-                        it.point.top
-                    ), '+', Highlight.NO
-                )
-            }
-        }
     }
 
     fun onResize() {

@@ -3,6 +3,7 @@ package mono.state
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
+import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
@@ -31,8 +32,11 @@ class MainStateManager(
             canvasManager.drawBoard()
         }
 
+        // TODO: This is for testing
         shapeManager.add(Rectangle(Rect.byLTWH(10, 10, 10, 10)))
         shapeManager.add(Rectangle(Rect.byLTWH(15, 15, 10, 10)))
+
+        canvasManager.mousePointerLiveData.observe(lifecycleOwner, listener = ::addShapeWithMouse)
     }
 
     private fun MonoBoard.redraw() {
@@ -51,5 +55,13 @@ class MainStateManager(
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
         fill(shape.bound.position, bitmap, Highlight.NO)
+    }
+
+    private fun addShapeWithMouse(mousePointer: MousePointer) {
+        // TODO: Add on mouse down and modify on mouse move and up
+        if (mousePointer is MousePointer.Up) {
+            val rectangle = Rectangle(mousePointer.mouseDownPoint, mousePointer.point)
+            shapeManager.add(rectangle)
+        }
     }
 }
