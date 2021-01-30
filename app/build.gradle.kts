@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":htmlcanvas"))
     implementation(project(":graphicsgeo"))
     implementation(project(":livedata"))
+    implementation(project(":statemanager"))
 }
 
 kotlin {
