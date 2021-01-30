@@ -51,13 +51,13 @@ class CanvasViewController(
             )
         }
 
-        mousePointerLiveData.distinctUntilChange().observe(lifecycleOwner) {
-            boardCanvasViewController.draw()
-        }
-
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
             updateCanvasSize()
         }
+    }
+
+    fun drawBoard() {
+        boardCanvasViewController.draw()
     }
 
     private fun updateCanvasSize() {

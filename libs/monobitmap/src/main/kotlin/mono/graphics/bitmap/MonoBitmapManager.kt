@@ -23,7 +23,7 @@ class MonoBitmapManager {
 
         val bitmap = when (shape) {
             is Rectangle -> RectangleDrawable.toBitmap(shape)
-            is Group -> GroupDrawable.toBitmap(this, shape)
+            is Group -> null // No draw group since it change very frequently.
             else -> null
         } ?: return null
         idToBitmapMap[shape.id] = VersionizedBitmap(shape.version, bitmap)

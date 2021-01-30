@@ -8,6 +8,7 @@ val moduleMap = mapOf(
     "shape" to "libs/shape",
     "monobitmap" to "libs/monobitmap",
     "htmlcanvas" to "libs/htmlcanvas",
+    "statemanager" to "libs/statemanager",
     "livedata" to "libs/livedata",
     "lifecycle" to "libs/lifecycle"
 )
