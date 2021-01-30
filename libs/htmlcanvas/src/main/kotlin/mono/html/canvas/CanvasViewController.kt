@@ -1,6 +1,5 @@
 package mono.html.canvas
 
-import kotlinx.html.currentTimeMillis
 import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
 import mono.graphics.board.MonoBoard

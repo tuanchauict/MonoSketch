@@ -32,12 +32,14 @@ class MainStateManager(
 
     init {
         // TODO: This is for testing
-        for (i in 0..300) {
+        for (i in 0..1000) {
             shapeManager.add(Rectangle(Rect.byLTWH(i, 10, 10, 10)))
         }
         shapeManager.versionLiveData.distinctUntilChange().observe(lifecycleOwner) {
             mainBoard.redraw()
+            val t0 = currentTimeMillis()
             canvasManager.drawBoard()
+            println("Draw canvas ${currentTimeMillis() - t0}")
         }
 
         canvasManager.mousePointerLiveData.observe(lifecycleOwner, listener = ::addShapeWithMouse)
@@ -45,8 +47,8 @@ class MainStateManager(
     }
 
     private fun MonoBoard.redraw() {
-        clear(canvasManager.windowBound)
         val t0 = currentTimeMillis()
+        clear(canvasManager.windowBound)
         for (shape in shapeManager.shapes) {
             drawShape(shape)
         }
