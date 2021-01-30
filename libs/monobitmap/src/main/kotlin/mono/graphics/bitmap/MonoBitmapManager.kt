@@ -1,6 +1,5 @@
 package mono.graphics.bitmap
 
-import mono.graphics.bitmap.drawable.GroupDrawable
 import mono.graphics.bitmap.drawable.RectangleDrawable
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
