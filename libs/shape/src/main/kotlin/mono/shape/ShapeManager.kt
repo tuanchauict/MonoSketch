@@ -14,8 +14,7 @@ import mono.shape.shape.Group
  * A model class which contains all shapes of the app and also defines all shape handling logics.
  */
 class ShapeManager {
-    // Visible for testing only
-    internal val root: Group = Group(null)
+    val root: Group = Group(null)
     private val allShapeMap: MutableMap<Int, AbstractShape> = mutableMapOf(root.id to root)
 
     /**
@@ -44,6 +43,7 @@ class ShapeManager {
             parent.update { true }
         }
         versionMutableLiveData.value = root.version
+        println("Version $currentVersion ${affectedParent.version}\n")
     }
 
     internal fun getGroup(shapeId: Int?): Group? =

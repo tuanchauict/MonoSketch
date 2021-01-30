@@ -1,5 +1,6 @@
 package mono.shape.command
 
+import mono.graphics.geo.Rect
 import mono.shape.ShapeManager
 import mono.shape.list.QuickList
 import mono.shape.remove
@@ -48,7 +49,7 @@ class RemoveShape(private val shape: AbstractShape) : Command() {
     }
 }
 
-class GroupShapes(private val sameParentShapes: List<AbstractShape>): Command() {
+class GroupShapes(private val sameParentShapes: List<AbstractShape>) : Command() {
     override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? {
         if (sameParentShapes.size < 2) {
             // No group 1 or 0 items
@@ -86,5 +87,18 @@ class Ungroup(private val group: Group) : Command() {
             parent.add(shape, QuickList.AddPosition.After(group))
         }
         shapeManager.remove(group)
+    }
+}
+
+class ChangeBound(private val target: AbstractShape, private val newBound: Rect) : Command() {
+    override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
+        shapeManager.getGroup(target.parentId)
+
+    override fun execute(shapeManager: ShapeManager, parent: Group) {
+        val currentVersion = target.version
+        target.setBound(newBound)
+        if (currentVersion == target.version) {
+            parent.update { true }
+        }
     }
 }

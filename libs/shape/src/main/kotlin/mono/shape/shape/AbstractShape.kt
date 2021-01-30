@@ -24,6 +24,8 @@ abstract class AbstractShape(
 
     abstract fun contains(point: Point): Boolean
 
+    open fun setBound(newBound: Rect) = Unit
+
     /**
      * Updates properties of the shape by [action]. The [action] returns true if the shape's
      * properties are changed.
