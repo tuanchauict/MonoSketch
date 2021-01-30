@@ -9,6 +9,7 @@ import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.CanvasTextBaseline
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.LEFT
+import org.w3c.dom.MIDDLE
 import org.w3c.dom.TOP
 import kotlin.math.ceil
 
@@ -24,7 +25,6 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
     init {
         drawingInfo = DrawingInfo(canvasSizePx = Size(canvas.width, canvas.height))
         setFont(15)
-        context.imageSmoothingEnabled = true
     }
 
     private fun setFont(fontSize: Int) {
@@ -45,7 +45,7 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
     private fun CanvasRenderingContext2D.getCellSizePx(): SizeF {
         context.font = font
         context.textAlign = CanvasTextAlign.LEFT
-        context.textBaseline = CanvasTextBaseline.TOP
+        context.textBaseline = CanvasTextBaseline.MIDDLE
         val metrics = measureText("█")
         val cWidth = metrics.width
         val cHeight = fontSize.toDouble()
@@ -63,6 +63,7 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         context.font = font
         context.textAlign = CanvasTextAlign.LEFT
         context.textBaseline = CanvasTextBaseline.TOP
+        context.imageSmoothingEnabled = false
         drawInternal()
     }
 

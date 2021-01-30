@@ -1,6 +1,7 @@
 package mono.html.canvas.canvas
 
 import mono.graphics.board.MonoBoard
+import mono.graphics.board.Pixel
 import org.w3c.dom.HTMLCanvasElement
 
 internal class BoardCanvasViewController(
@@ -12,16 +13,15 @@ internal class BoardCanvasViewController(
         for (row in drawingInfo.boardRowRange) {
             val rowYPx = drawingInfo.toYPx(row)
             for (col in drawingInfo.boardColumnRange) {
-                val pixel = board.get(col, row)
-                if (!pixel.isTransparent) {
-                    context.fillStyle = pixel.highlight.paintColor
-                    context.fillText(
-                        "${pixel.char}",
-                        drawingInfo.toXPx(col),
-                        rowYPx
-                    )
-                }
+                drawPixel(board.get(col, row), drawingInfo.toXPx(col), rowYPx)
             }
+        }
+    }
+
+    private fun drawPixel(pixel: Pixel, xPx: Double, yPx: Double) {
+        if (!pixel.isTransparent) {
+            context.fillStyle = pixel.highlight.paintColor
+            context.fillText("${pixel.char}", xPx, yPx)
         }
     }
 }
