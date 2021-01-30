@@ -2,6 +2,7 @@ package mono.shape
 
 import mono.graphics.geo.Rect
 import mono.shape.command.AddShape
+import mono.shape.command.GroupShapes
 import mono.shape.command.RemoveShape
 import mono.shape.command.Ungroup
 import mono.shape.shape.Group
@@ -86,7 +87,7 @@ class ShapeManagerTest {
     }
 
     @Test
-    fun testGroup_invalid() {
+    fun testExecute_Group_invalid() {
         val group = Group(null)
         val shape1 = Rectangle(Rect.ZERO)
         val shape2 = Rectangle(Rect.ZERO, group.id)
@@ -95,16 +96,16 @@ class ShapeManagerTest {
         target.add(shape1)
         target.add(shape2)
 
-        target.group(listOf(shape1))
+        target.execute(GroupShapes(listOf(shape1)))
         assertEquals(listOf(group, shape1), target.root.items.toList())
 
-        target.group(listOf(shape1, shape2))
+        target.execute(GroupShapes(listOf(shape1, shape2)))
         assertEquals(listOf(group, shape1), target.root.items.toList())
         assertEquals(listOf(shape2), group.items.toList())
     }
 
     @Test
-    fun testGroup_valid() {
+    fun testExecute_Group_valid() {
         val shape0 = Rectangle(Rect.ZERO)
         val shape1 = Rectangle(Rect.ZERO)
         val shape2 = Rectangle(Rect.ZERO)
@@ -114,7 +115,7 @@ class ShapeManagerTest {
         target.add(shape1)
         target.add(shape2)
         target.add(shape3)
-        target.group(listOf(shape1, shape2))
+        target.execute(GroupShapes(listOf(shape1, shape2)))
 
         val items = target.root.items.toList()
 
@@ -123,6 +124,8 @@ class ShapeManagerTest {
         assertEquals(shape3, items.last())
         val group = items[1] as Group
         assertEquals(listOf(shape1, shape2), group.items.toList())
+        assertEquals(group, target.getGroup(shapeId = shape1.parentId))
+        assertEquals(group, target.getGroup(shapeId = shape2.parentId))
     }
 
     @Test

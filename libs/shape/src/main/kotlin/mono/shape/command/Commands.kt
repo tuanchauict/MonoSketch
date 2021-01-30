@@ -7,6 +7,11 @@ import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.ungroup
 
+/**
+ * A sealed class which defines common apis for a command. A command must determine direct affected
+ * parent group via [getDirectAffectedParent]. If [getDirectAffectedParent] returns null, the
+ * command won't be executed.
+ */
 sealed class Command {
     internal abstract fun getDirectAffectedParent(shapeManager: ShapeManager): Group?
 
@@ -39,6 +44,33 @@ class RemoveShape(private val shape: AbstractShape) : Command() {
         when (parent.itemCount) {
             1 -> shapeManager.ungroup(parent)
             0 -> shapeManager.remove(parent)
+        }
+    }
+}
+
+class GroupShapes(private val sameParentShapes: List<AbstractShape>): Command() {
+    override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? {
+        if (sameParentShapes.size < 2) {
+            // No group 1 or 0 items
+            return null
+        }
+        val parentId = sameParentShapes.first().parentId
+        if (sameParentShapes.any { it.parentId != parentId }) {
+            // No group cross group items
+            return null
+        }
+        return shapeManager.getGroup(parentId)
+    }
+
+    override fun execute(shapeManager: ShapeManager, parent: Group) {
+        val group = Group(parent.id)
+        parent.add(group, QuickList.AddPosition.After(sameParentShapes.last()))
+        shapeManager.register(group)
+
+        for (shape in sameParentShapes) {
+            parent.remove(shape)
+            shape.parentId = group.id
+            group.add(shape)
         }
     }
 }
