@@ -19,6 +19,14 @@ internal class PainterBoard(private val bound: Rect) {
         List(bound.width) { Pixel() }
     }
 
+    fun clear() {
+        for (row in matrix) {
+            for (cell in row) {
+                cell.reset()
+            }
+        }
+    }
+
     /**
      * Force values overlap with [rect] to be [char] regardless they are [TRANSPARENT_CHAR]
      */

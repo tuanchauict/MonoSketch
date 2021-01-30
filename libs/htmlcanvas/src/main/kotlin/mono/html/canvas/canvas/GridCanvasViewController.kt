@@ -11,38 +11,57 @@ internal class GridCanvasViewController(
         context.strokeStyle = "#ff0000"
         context.lineWidth = 0.1
         context.stroke(createGridPath())
-        // TODO: This is for testing
-        drawAxis()
+
+        if (DEBUG) {
+            drawAxis()
+        }
     }
 
     private fun createGridPath(): Path2D = Path2D().apply {
-        val zeroX = toXPx(boardColumnRange.first)
-        val maxX = toXPx(boardColumnRange.last)
-        val zeroY = toYPx(boardRowRange.first)
-        val maxY = toYPx(boardRowRange.last)
+        val zeroX = drawingInfo.toXPx(drawingInfo.boardColumnRange.first)
+        val maxX = drawingInfo.toXPx(drawingInfo.boardColumnRange.last)
+        val zeroY = drawingInfo.toYPx(drawingInfo.boardRowRange.first)
+        val maxY = drawingInfo.toYPx(drawingInfo.boardRowRange.last)
 
-        for (row in boardRowRange) {
-            val y = toYPx(row)
+        for (row in drawingInfo.boardRowRange) {
+            val y = drawingInfo.toYPx(row)
             moveTo(zeroX, y)
             lineTo(maxX, y)
         }
 
-        for (col in boardColumnRange) {
-            val x = toXPx(col)
+        for (col in drawingInfo.boardColumnRange) {
+            val x = drawingInfo.toXPx(col)
             moveTo(x, zeroY)
             lineTo(x, maxY)
         }
     }
 
     private fun drawAxis() {
-        context.fillStyle = "#aaaaaa"
-        val zeroX = toXPx(boardColumnRange.first)
-        val zeroY = toYPx(boardRowRange.first)
-        for (row in boardRowRange) {
-            context.fillText("${abs(row % 10)}", zeroX, toYPx(row))
+        val zeroX = drawingInfo.toXPx(drawingInfo.boardColumnRange.first)
+        val zeroY = drawingInfo.toYPx(drawingInfo.boardRowRange.first)
+        for (row in drawingInfo.boardRowRange) {
+            context.fillStyle = getAxisFillStyle(row)
+            context.fillText("${abs(row % 10)}", zeroX, drawingInfo.toYPx(row))
         }
-        for (col in boardColumnRange) {
-            context.fillText("${abs(col % 10)}", toXPx(col), zeroY)
+        for (col in drawingInfo.boardColumnRange) {
+            context.fillStyle = getAxisFillStyle(col)
+            context.fillText("${abs(col % 10)}", drawingInfo.toXPx(col), zeroY)
         }
+
+        context.fillStyle = "#ff0000"
+        context.fillText("█", drawingInfo.toXPx(0), drawingInfo.toYPx(0))
+        context.fillStyle = "#ffffff"
+        context.fillText("+", drawingInfo.toXPx(0), drawingInfo.toYPx(0))
+    }
+
+    private fun getAxisFillStyle(index: Int): String {
+        val styleIndex = (index / 10) % AXIS_STYLES.size
+        return AXIS_STYLES[styleIndex]
+    }
+
+    companion object {
+        private val AXIS_STYLES =
+            listOf("#86b3fc", "#ff878d")
+        private const val DEBUG = true
     }
 }

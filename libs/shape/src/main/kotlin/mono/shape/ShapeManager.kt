@@ -1,5 +1,7 @@
 package mono.shape
 
+import mono.livedata.LiveData
+import mono.livedata.MutableLiveData
 import mono.shape.list.QuickList
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -11,6 +13,18 @@ class ShapeManager {
     // Visible for testing only
     internal val root: Group = Group(null)
     private val allShapeMap: MutableMap<Int, AbstractShape> = mutableMapOf(root.id to root)
+
+    /**
+     * Reflect the version of the root through live data. The other components are able to observe
+     * this version to decide update internally.
+     */
+    private val versionMutableLiveData: MutableLiveData<Int> = MutableLiveData(root.version)
+    val versionLiveData: LiveData<Int> = versionMutableLiveData
+
+    /**
+     * All shapes of the app which are sorted by drawing layer order.
+     */
+    val shapes: Collection<AbstractShape> = root.items
 
     private fun getGroup(shapeId: Int?): Group? =
         if (shapeId == null) root else allShapeMap[shapeId] as? Group
@@ -84,6 +98,7 @@ class ShapeManager {
         for (parent in getAllAncestors()) {
             parent.update { true }
         }
+        versionMutableLiveData.value = root.version
     }
 
     private fun Group.getAllAncestors(): List<Group> {

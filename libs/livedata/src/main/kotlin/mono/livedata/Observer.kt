@@ -10,9 +10,6 @@ interface Observer<T> {
     fun onChanged(newValue: T)
 }
 
-internal fun <T> Observer<T>.distinct(isApplied: Boolean): Observer<T> =
-    if (isApplied) DistinctObserver(this) else this
-
 internal fun <T> Observer<T>.throttle(durationMillis: Int): Observer<T> =
     if (durationMillis > 0) ThrottledObserver(durationMillis, this) else this
 
@@ -24,19 +21,6 @@ internal class SimpleObserver<T>(
 ) : Observer<T> {
     override fun onChanged(newValue: T) {
         listener(newValue)
-    }
-}
-
-/**
- * An observer which only notify change when state is changed.
- */
-internal class DistinctObserver<T>(private val observer: Observer<T>) : Observer<T> {
-    private var oldValue: T? = null
-    override fun onChanged(newValue: T) {
-        if (oldValue != newValue) {
-            observer.onChanged(newValue)
-            oldValue = newValue
-        }
     }
 }
 

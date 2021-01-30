@@ -3,12 +3,13 @@ package mono.html.canvas
 import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
 import mono.graphics.board.MonoBoard
+import mono.graphics.geo.MousePointer
+import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.GridCanvasViewController
 import mono.html.canvas.mouse.MouseEventObserver
-import mono.html.canvas.mouse.MousePointer
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.distinctUntilChange
@@ -30,13 +31,16 @@ class CanvasViewController(
     private val mouseEventController: MouseEventObserver by lazy {
         MouseEventObserver(
             container,
-            gridCanvasViewController::toBoardColumn,
-            gridCanvasViewController::toBoardRow
+            gridCanvasViewController.drawingInfo::toBoardColumn,
+            gridCanvasViewController.drawingInfo::toBoardRow
         )
     }
     val mousePointerLiveData: LiveData<MousePointer> by lazy {
         mouseEventController.mousePointerLiveData
     }
+
+    val windowBound: Rect
+        get() = gridCanvasViewController.drawingInfo.bound
 
     init {
         container.append {
@@ -51,13 +55,13 @@ class CanvasViewController(
             )
         }
 
-        mousePointerLiveData.distinctUntilChange().observe(lifecycleOwner) {
-            println(it)
-        }
-
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
             updateCanvasSize()
         }
+    }
+
+    fun drawBoard() {
+        boardCanvasViewController.draw()
     }
 
     private fun updateCanvasSize() {

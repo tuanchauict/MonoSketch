@@ -7,6 +7,7 @@
   <component name="SuppressABINotification">
     <option name="modulesWithSuppressedNotConfigured">
       <set>
+        <option value="MonoFlow.htmlcanvas" />
         <option value="MonoFlow.monobitmap" />
         <option value="MonoFlow.monoboard" />
         <option value="MonoFlow.shape" />

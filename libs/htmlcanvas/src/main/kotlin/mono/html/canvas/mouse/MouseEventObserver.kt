@@ -1,5 +1,6 @@
 package mono.html.canvas.mouse
 
+import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
@@ -32,9 +33,9 @@ class MouseEventObserver(
     private fun setMouseUpPointer(event: MouseEvent) {
         val currentValue = mousePointerLiveData.value
         val clickPoint = event.toPoint()
-        mousePointerMutableLiveData.value = when (mousePointerMutableLiveData.value) {
-            is MousePointer.Down,
-            is MousePointer.Move -> MousePointer.Up(clickPoint)
+        mousePointerMutableLiveData.value = when (currentValue) {
+            is MousePointer.Down -> MousePointer.Up(currentValue.point, clickPoint)
+            is MousePointer.Move -> MousePointer.Up(currentValue.mouseDownPoint, clickPoint)
             is MousePointer.Up,
             is MousePointer.Click,
             MousePointer.Idle -> MousePointer.Idle
@@ -46,9 +47,10 @@ class MouseEventObserver(
     }
 
     private fun setMouseMovePointer(event: MouseEvent) {
-        mousePointerMutableLiveData.value = when (mousePointerMutableLiveData.value) {
-            is MousePointer.Down,
-            is MousePointer.Move -> MousePointer.Move(event.toPoint())
+        val mousePointer = mousePointerLiveData.value
+        mousePointerMutableLiveData.value = when (mousePointer) {
+            is MousePointer.Down -> MousePointer.Move(mousePointer.point, event.toPoint())
+            is MousePointer.Move -> MousePointer.Move(mousePointer.mouseDownPoint, event.toPoint())
             is MousePointer.Up,
             is MousePointer.Click,
             MousePointer.Idle -> MousePointer.Idle
@@ -56,15 +58,4 @@ class MouseEventObserver(
     }
 
     private fun MouseEvent.toPoint(): Point = Point(toBoardLeft(clientX), toBoardTop(clientY))
-}
-
-/**
- * A sealed class which indicates mouse event pointer types.
- */
-sealed class MousePointer {
-    object Idle : MousePointer()
-    data class Down(val point: Point) : MousePointer()
-    data class Move(val point: Point) : MousePointer()
-    data class Up(val point: Point) : MousePointer()
-    data class Click(val point: Point) : MousePointer()
 }
