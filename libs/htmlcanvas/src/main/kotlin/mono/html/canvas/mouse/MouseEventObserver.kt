@@ -27,7 +27,9 @@ class MouseEventObserver(
     }
 
     private fun setMouseDownPointer(event: MouseEvent) {
-        mousePointerMutableLiveData.value = MousePointer.Down(event.toPoint())
+        if (mousePointerLiveData.value == MousePointer.Idle) {
+            mousePointerMutableLiveData.value = MousePointer.Down(event.toPoint())
+        }
     }
 
     private fun setMouseUpPointer(event: MouseEvent) {
