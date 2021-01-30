@@ -4,8 +4,6 @@ import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
-import mono.livedata.LiveData
-import mono.livedata.MutableLiveData
 
 /**
  * A model class which manages all mono-pixels of the app.
@@ -14,8 +12,6 @@ import mono.livedata.MutableLiveData
 class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
 
     private val painterBoards: MutableMap<BoardAddress, PainterBoard> = mutableMapOf()
-    private val onBoardStateChangeMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
-    val onBoardStateChangeLiveData: LiveData<Unit> = onBoardStateChangeMutableLiveData
 
     internal val boardCount: Int
         get() = painterBoards.size
@@ -32,7 +28,6 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         for (board in affectedBoards) {
             board.fill(rect, char, highlight)
         }
-        onBoardStateChangeMutableLiveData.value = Unit
     }
 
     fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
@@ -42,7 +37,6 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         for (board in affectedBoards) {
             board.fill(position, bitmap, highlight)
         }
-        onBoardStateChangeMutableLiveData.value = Unit
     }
 
     fun set(position: Point, char: Char, highlight: Highlight) {
@@ -51,7 +45,6 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
 
     fun set(left: Int, top: Int, char: Char, highlight: Highlight) {
         getOrCreateBoard(left, top).set(left, top, char, highlight)
-        onBoardStateChangeMutableLiveData.value = Unit
     }
 
     operator fun get(position: Point): Pixel = get(position.left, position.top)

@@ -1,5 +1,6 @@
 package mono.state
 
+import kotlinx.html.currentTimeMillis
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
@@ -30,25 +31,26 @@ class MainStateManager(
     private var focusingShapes: Set<AbstractShape> = emptySet()
 
     init {
+        // TODO: This is for testing
+        for (i in 0..300) {
+            shapeManager.add(Rectangle(Rect.byLTWH(i, 10, 10, 10)))
+        }
         shapeManager.versionLiveData.distinctUntilChange().observe(lifecycleOwner) {
             mainBoard.redraw()
-        }
-        mainBoard.onBoardStateChangeLiveData.observe(lifecycleOwner) {
             canvasManager.drawBoard()
         }
 
-        // TODO: This is for testing
-        shapeManager.add(Rectangle(Rect.byLTWH(10, 10, 10, 10)))
-        shapeManager.add(Rectangle(Rect.byLTWH(15, 15, 10, 10)))
-
         canvasManager.mousePointerLiveData.observe(lifecycleOwner, listener = ::addShapeWithMouse)
+        shapeManager.add(Rectangle(Rect.byLTWH(0, 0, 10, 10)))
     }
 
     private fun MonoBoard.redraw() {
         clear(canvasManager.windowBound)
+        val t0 = currentTimeMillis()
         for (shape in shapeManager.shapes) {
             drawShape(shape)
         }
+        println("Redraw delta time = ${currentTimeMillis() - t0}")
     }
 
     private fun MonoBoard.drawShape(shape: AbstractShape) {
