@@ -5,6 +5,7 @@ import mono.livedata.MutableLiveData
 import mono.shape.command.AddShape
 import mono.shape.command.Command
 import mono.shape.command.RemoveShape
+import mono.shape.command.Ungroup
 import mono.shape.list.QuickList
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -78,17 +79,6 @@ class ShapeManager {
         }
     }
 
-    fun ungroup(group: Group) {
-        getGroup(group.parentId)?.recursiveUpdate { parent ->
-            for (shape in group.items.reversed()) {
-                group.remove(shape)
-                shape.parentId = parent.parentId
-                parent.add(shape, QuickList.AddPosition.After(group))
-            }
-            remove(group)
-        }
-    }
-
     /**
      * Applies update by [action] to the current group.
      * If the current group's version is changed, all of its parents' version will be updated too.
@@ -120,3 +110,4 @@ class ShapeManager {
 
 fun ShapeManager.add(shape: AbstractShape) = execute(AddShape(shape))
 fun ShapeManager.remove(shape: AbstractShape) = execute(RemoveShape(shape))
+fun ShapeManager.ungroup(group: Group) = execute(Ungroup(group))

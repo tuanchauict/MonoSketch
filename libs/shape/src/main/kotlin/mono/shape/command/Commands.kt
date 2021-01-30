@@ -5,6 +5,7 @@ import mono.shape.list.QuickList
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
+import mono.shape.ungroup
 
 sealed class Command {
     internal abstract fun getDirectAffectedParent(shapeManager: ShapeManager): Group?
@@ -37,7 +38,21 @@ class RemoveShape(private val shape: AbstractShape) : Command() {
         }
         when (parent.itemCount) {
             1 -> shapeManager.ungroup(parent)
-            0 -> shapeManager.execute(RemoveShape(parent))
+            0 -> shapeManager.remove(parent)
         }
+    }
+}
+
+class Ungroup(private val group: Group) : Command() {
+    override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
+        shapeManager.getGroup(group.parentId)
+
+    override fun execute(shapeManager: ShapeManager, parent: Group) {
+        for (shape in group.items.reversed()) {
+            group.remove(shape)
+            shape.parentId = null
+            parent.add(shape, QuickList.AddPosition.After(group))
+        }
+        shapeManager.remove(group)
     }
 }

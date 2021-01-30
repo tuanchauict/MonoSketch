@@ -3,6 +3,7 @@ package mono.shape
 import mono.graphics.geo.Rect
 import mono.shape.command.AddShape
 import mono.shape.command.RemoveShape
+import mono.shape.command.Ungroup
 import mono.shape.shape.Group
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
@@ -125,7 +126,7 @@ class ShapeManagerTest {
     }
 
     @Test
-    fun testUngroup() {
+    fun testExecute_Ungroup() {
         val group = Group(null)
         val shape0 = Rectangle(Rect.ZERO)
         val shape1 = Rectangle(Rect.ZERO, group.id)
@@ -138,8 +139,10 @@ class ShapeManagerTest {
         target.add(shape2)
         target.add(shape3)
 
-        target.ungroup(group)
+        target.execute(Ungroup(group))
         assertEquals(listOf(shape0, shape1, shape2, shape3), target.root.items.toList())
+        assertEquals(target.root.id, shape1.parentId)
+        assertEquals(target.root.id, shape2.parentId)
     }
 
     @Test
