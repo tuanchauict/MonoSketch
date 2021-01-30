@@ -1,7 +1,6 @@
 package mono.graphics.board
 
 import mono.common.Characters.TRANSPARENT_CHAR
-import mono.common.Characters.isTransparent
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -93,10 +92,8 @@ internal class PainterBoard(private val bound: Rect) {
             val src = inMatrix[inStartRow + r]
             val dest = matrix[startRow + r]
 
-            src.subList(inStartCol, inStartCol + overlap.width).forEachIndexed { index, char ->
-                if (!char.isTransparent) {
-                    dest[startCol + index].set(char, highlight)
-                }
+            src.forEachIndex(inStartCol, inStartCol + overlap.width) { index, char ->
+                dest[startCol + index].set(char, highlight)
             }
         }
     }

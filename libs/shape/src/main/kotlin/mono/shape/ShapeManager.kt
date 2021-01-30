@@ -43,7 +43,6 @@ class ShapeManager {
             parent.update { true }
         }
         versionMutableLiveData.value = root.version
-        println("Version $currentVersion ${affectedParent.version}\n")
     }
 
     internal fun getGroup(shapeId: Int?): Group? =
