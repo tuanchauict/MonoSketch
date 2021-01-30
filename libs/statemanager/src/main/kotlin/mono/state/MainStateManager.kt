@@ -9,6 +9,7 @@ import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
+import mono.shape.add
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Rectangle

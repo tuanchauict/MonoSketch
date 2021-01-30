@@ -1,7 +1,9 @@
 package mono.shape
 
 import mono.graphics.geo.Rect
+import mono.shape.command.AddShape
 import mono.shape.shape.Group
+import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,22 +16,22 @@ class ShapeManagerTest {
     private val target: ShapeManager = ShapeManager()
 
     @Test
-    fun testAdd() {
-        val shape1 = Rectangle(Rect.ZERO)
-        target.add(shape1)
+    fun testExecute_Add() {
+        val shape1 = MockShape(Rect.ZERO)
+        target.execute(AddShape(shape1))
         assertEquals(listOf(shape1), target.root.items.toList())
 
         val group1 = Group(null)
-        target.add(group1)
+        target.execute(AddShape(group1))
         assertEquals(listOf(shape1, group1), target.root.items.toList())
 
-        val shape2 = Rectangle(Rect.ZERO, parentId = group1.id)
-        target.add(shape2)
+        val shape2 = MockShape(Rect.ZERO, parentId = group1.id)
+        target.execute(AddShape(shape2))
         assertEquals(listOf(shape1, group1), target.root.items.toList())
         assertEquals(listOf(shape2), group1.items.toList())
 
-        val shape3 = Rectangle(Rect.ZERO, parentId = 1000)
-        target.add(shape3)
+        val shape3 = MockShape(Rect.ZERO, parentId = 1000)
+        target.execute(AddShape(shape3))
         assertEquals(listOf(shape1, group1), target.root.items.toList())
         assertEquals(listOf(shape2), group1.items.toList())
     }

@@ -2,6 +2,8 @@ package mono.shape
 
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
+import mono.shape.command.AddShape
+import mono.shape.command.Command
 import mono.shape.list.QuickList
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -26,15 +28,31 @@ class ShapeManager {
      */
     val shapes: Collection<AbstractShape> = root.items
 
-    private fun getGroup(shapeId: Int?): Group? =
+    fun execute(command: Command) {
+        val affectedParent = command.getDirectAffectedGroup(this) ?: return
+        val allAncestors = affectedParent.getAllAncestors()
+        val currentVersion = affectedParent.version
+
+        command.execute(this, affectedParent)
+
+        if (currentVersion == affectedParent.version && affectedParent.id in allShapeMap) {
+            return
+        }
+        for (parent in allAncestors) {
+            parent.update { true }
+        }
+        versionMutableLiveData.value = root.version
+    }
+
+    internal fun getGroup(shapeId: Int?): Group? =
         if (shapeId == null) root else allShapeMap[shapeId] as? Group
 
-    fun add(shape: AbstractShape) {
-        getGroup(shape.parentId)?.recursiveUpdate { parent ->
-            parent.add(shape)
-            shape.parentId = parent.id
-            allShapeMap[shape.id] = shape
-        }
+    internal fun register(shape: AbstractShape) {
+        allShapeMap[shape.id] = shape
+    }
+
+    internal fun unregister(shape: AbstractShape) {
+        allShapeMap.remove(shape.id)
     }
 
     fun remove(shape: AbstractShape) {
@@ -111,3 +129,5 @@ class ShapeManager {
         return result
     }
 }
+
+fun ShapeManager.add(shape: AbstractShape) = execute(AddShape(shape))
