@@ -11,8 +11,10 @@ internal class GridCanvasViewController(
         context.strokeStyle = "#ff0000"
         context.lineWidth = 0.1
         context.stroke(createGridPath())
-        // TODO: This is for testing
-        drawAxis()
+
+        if (DEBUG) {
+            drawAxis()
+        }
     }
 
     private fun createGridPath(): Path2D = Path2D().apply {
@@ -35,13 +37,14 @@ internal class GridCanvasViewController(
     }
 
     private fun drawAxis() {
-        context.fillStyle = "#aaaaaa"
         val zeroX = drawingInfo.toXPx(drawingInfo.boardColumnRange.first)
         val zeroY = drawingInfo.toYPx(drawingInfo.boardRowRange.first)
         for (row in drawingInfo.boardRowRange) {
+            context.fillStyle = getAxisFillStyle(row)
             context.fillText("${abs(row % 10)}", zeroX, drawingInfo.toYPx(row))
         }
         for (col in drawingInfo.boardColumnRange) {
+            context.fillStyle = getAxisFillStyle(col)
             context.fillText("${abs(col % 10)}", drawingInfo.toXPx(col), zeroY)
         }
 
@@ -49,5 +52,16 @@ internal class GridCanvasViewController(
         context.fillText("█", drawingInfo.toXPx(0), drawingInfo.toYPx(0))
         context.fillStyle = "#ffffff"
         context.fillText("+", drawingInfo.toXPx(0), drawingInfo.toYPx(0))
+    }
+
+    private fun getAxisFillStyle(index: Int): String {
+        val styleIndex = (index / 10) % AXIS_STYLES.size
+        return AXIS_STYLES[styleIndex]
+    }
+
+    companion object {
+        private val AXIS_STYLES =
+            listOf("#86b3fc", "#ff878d")
+        private const val DEBUG = true
     }
 }
