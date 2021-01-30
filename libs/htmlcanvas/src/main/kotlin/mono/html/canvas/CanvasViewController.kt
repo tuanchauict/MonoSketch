@@ -4,6 +4,7 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.MousePointer
+import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
@@ -37,6 +38,9 @@ class CanvasViewController(
     val mousePointerLiveData: LiveData<MousePointer> by lazy {
         mouseEventController.mousePointerLiveData
     }
+
+    val windowBound: Rect
+        get() = gridCanvasViewController.drawingInfo.bound
 
     init {
         container.append {

@@ -22,6 +22,11 @@ class Pixel(
         this.highlight = highlight
     }
 
+    fun reset() {
+        char = TRANSPARENT_CHAR
+        highlight = Highlight.NO
+    }
+
     override fun toString(): String = if (isTransparent) " " else char.toString()
 
     override fun equals(other: Any?): Boolean {

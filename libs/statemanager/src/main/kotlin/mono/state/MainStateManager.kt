@@ -40,7 +40,7 @@ class MainStateManager(
     }
 
     private fun MonoBoard.redraw() {
-        // TODO: Reset board
+        clear(canvasManager.windowBound)
         for (shape in shapeManager.shapes) {
             drawShape(shape)
         }

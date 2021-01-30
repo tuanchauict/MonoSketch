@@ -1,6 +1,7 @@
 package mono.html.canvas.canvas
 
 import mono.graphics.geo.Point
+import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.graphics.geo.SizeF
 import org.w3c.dom.CanvasRenderingContext2D
@@ -72,6 +73,7 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         val cellSizePx: SizeF = SizeF(1.0, 1.0),
         val canvasSizePx: Size = Size(1, 1)
     ) {
+        val bound: Rect = Rect(offsetPx, canvasSizePx)
         private val boardOffsetRow: Int = (-offsetPx.top / cellSizePx.height).toInt()
         private val boardOffsetColumn: Int = (-offsetPx.left / cellSizePx.width).toInt()
         private val rowCount: Int = ceil(canvasSizePx.height / cellSizePx.height).toInt()

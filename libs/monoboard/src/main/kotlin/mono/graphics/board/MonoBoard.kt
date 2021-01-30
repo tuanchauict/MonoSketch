@@ -20,6 +20,13 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     internal val boardCount: Int
         get() = painterBoards.size
 
+    fun clear(rect: Rect) {
+        val affectedBoards = getOrCreateOverlappedBoards(rect)
+        for (board in affectedBoards) {
+            board.clear()
+        }
+    }
+
     fun fill(rect: Rect, char: Char, highlight: Highlight) {
         val affectedBoards = getOrCreateOverlappedBoards(rect)
         for (board in affectedBoards) {
