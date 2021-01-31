@@ -4,8 +4,6 @@ import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
-import mono.livedata.LiveData
-import mono.livedata.MutableLiveData
 
 /**
  * A model class which manages all mono-pixels of the app.
@@ -14,14 +12,15 @@ import mono.livedata.MutableLiveData
 class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
 
     private val painterBoards: MutableMap<BoardAddress, PainterBoard> = mutableMapOf()
-    private val onBoardStateChangeMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
-    val onBoardStateChangeLiveData: LiveData<Unit> = onBoardStateChangeMutableLiveData
 
     internal val boardCount: Int
         get() = painterBoards.size
 
-    fun clear(rect: Rect) {
-        val affectedBoards = getOrCreateOverlappedBoards(rect)
+    private var windowBound: Rect = Rect.ZERO
+
+    fun clear(windowBound: Rect) {
+        this.windowBound = windowBound
+        val affectedBoards = getOrCreateOverlappedBoards(windowBound, isCreateRequired = false)
         for (board in affectedBoards) {
             board.clear()
         }
@@ -32,7 +31,6 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         for (board in affectedBoards) {
             board.fill(rect, char, highlight)
         }
-        onBoardStateChangeMutableLiveData.value = Unit
     }
 
     fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
@@ -42,7 +40,6 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         for (board in affectedBoards) {
             board.fill(position, bitmap, highlight)
         }
-        onBoardStateChangeMutableLiveData.value = Unit
     }
 
     fun set(position: Point, char: Char, highlight: Highlight) {
@@ -50,8 +47,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     }
 
     fun set(left: Int, top: Int, char: Char, highlight: Highlight) {
-        getOrCreateBoard(left, top).set(left, top, char, highlight)
-        onBoardStateChangeMutableLiveData.value = Unit
+        getOrCreateBoard(left, top)?.set(left, top, char, highlight)
     }
 
     operator fun get(position: Point): Pixel = get(position.left, position.top)
@@ -61,7 +57,10 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         return painterBoards[boardAddress]?.get(left, top) ?: Pixel.TRANSPARENT_PIXEL
     }
 
-    private fun getOrCreateOverlappedBoards(rect: Rect): List<PainterBoard> {
+    private fun getOrCreateOverlappedBoards(
+        rect: Rect,
+        isCreateRequired: Boolean = true
+    ): List<PainterBoard> {
         val affectedBoards = mutableListOf<PainterBoard>()
 
         val leftIndex = rect.left adjustDivide unitSize.width
@@ -71,15 +70,31 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
 
         for (left in leftIndex..rightIndex) {
             for (top in topIndex..bottomIndex) {
-                affectedBoards += getOrCreateBoard(left * unitSize.width, top * unitSize.height)
+                val board = getOrCreateBoard(
+                    left = left * unitSize.width,
+                    top = top * unitSize.height,
+                    isCreateRequired = isCreateRequired
+                )
+                if (board != null) {
+                    affectedBoards += board
+                }
             }
         }
         return affectedBoards
     }
 
-    private fun getOrCreateBoard(left: Int, top: Int): PainterBoard {
+    private fun getOrCreateBoard(
+        left: Int,
+        top: Int,
+        isCreateRequired: Boolean = true
+    ): PainterBoard? {
         val boardAddress = toBoardAddress(left, top)
-        return painterBoards.getOrPut(boardAddress) { createNewBoard(boardAddress) }
+        val board = if (isCreateRequired) {
+            painterBoards.getOrPut(boardAddress) { createNewBoard(boardAddress) }
+        } else {
+            painterBoards[boardAddress]
+        }
+        return board?.takeIf { windowBound.isOverlapped(it.bound) }
     }
 
     private fun createNewBoard(boardAddress: BoardAddress): PainterBoard {
@@ -136,6 +151,6 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     }
 
     companion object {
-        val STANDARD_UNIT_SIZE = Size(128, 64)
+        val STANDARD_UNIT_SIZE = Size(16, 16)
     }
 }

@@ -74,11 +74,14 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         val cellSizePx: SizeF = SizeF(1.0, 1.0),
         val canvasSizePx: Size = Size(1, 1)
     ) {
-        val bound: Rect = Rect(offsetPx, canvasSizePx)
+        val boundPx: Rect = Rect(offsetPx, canvasSizePx)
+
         private val boardOffsetRow: Int = (-offsetPx.top / cellSizePx.height).toInt()
         private val boardOffsetColumn: Int = (-offsetPx.left / cellSizePx.width).toInt()
         private val rowCount: Int = ceil(canvasSizePx.height / cellSizePx.height).toInt()
         private val columnCount: Int = ceil(canvasSizePx.width / cellSizePx.width).toInt()
+
+        val boardBound: Rect = Rect.byLTWH(boardOffsetColumn, boardOffsetRow, columnCount, rowCount)
 
         internal val boardRowRange: IntRange = boardOffsetRow..(boardOffsetRow + rowCount)
         internal val boardColumnRange: IntRange =
