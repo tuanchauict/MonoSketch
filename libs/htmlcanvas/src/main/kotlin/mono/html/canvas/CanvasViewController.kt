@@ -39,8 +39,10 @@ class CanvasViewController(
         mouseEventController.mousePointerLiveData
     }
 
-    val windowBound: Rect
-        get() = gridCanvasViewController.drawingInfo.bound
+    val windowBoundPx: Rect
+        get() = gridCanvasViewController.drawingInfo.boundPx
+    val windowBoardBound: Rect
+        get() = gridCanvasViewController.drawingInfo.boardBound
 
     init {
         container.append {

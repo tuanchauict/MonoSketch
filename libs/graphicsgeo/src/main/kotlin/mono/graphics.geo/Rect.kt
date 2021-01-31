@@ -35,11 +35,13 @@ data class Rect(val position: Point, val size: Size) {
         )
     }
 
-    private fun isOverlapped(rect: Rect): Boolean {
+    fun isOverlapped(rect: Rect): Boolean {
         val isHorizontalOverlap = left in rect.left..rect.right || rect.left in left..right
         val isVerticalOverlap = top in rect.top..rect.bottom || rect.top in top..bottom
         return isHorizontalOverlap && isVerticalOverlap
     }
+
+    override fun toString(): String = "[$left, $top] - [$width x $height]"
 
     companion object {
         val ZERO = byLTWH(0, 0, 0, 0)

@@ -16,8 +16,11 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     internal val boardCount: Int
         get() = painterBoards.size
 
-    fun clear(rect: Rect) {
-        val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = false)
+    private var windowBound: Rect = Rect.ZERO
+
+    fun clear(windowBound: Rect) {
+        this.windowBound = windowBound
+        val affectedBoards = getOrCreateOverlappedBoards(windowBound, isCreateRequired = false)
         for (board in affectedBoards) {
             board.clear()
         }
@@ -80,13 +83,18 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         return affectedBoards
     }
 
-    private fun getOrCreateBoard(left: Int, top: Int, isCreateRequired: Boolean = true): PainterBoard? {
+    private fun getOrCreateBoard(
+        left: Int,
+        top: Int,
+        isCreateRequired: Boolean = true
+    ): PainterBoard? {
         val boardAddress = toBoardAddress(left, top)
-        return if (isCreateRequired) {
+        val board = if (isCreateRequired) {
             painterBoards.getOrPut(boardAddress) { createNewBoard(boardAddress) }
         } else {
             painterBoards[boardAddress]
         }
+        return board?.takeIf { windowBound.isOverlapped(it.bound) }
     }
 
     private fun createNewBoard(boardAddress: BoardAddress): PainterBoard {
@@ -143,6 +151,6 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     }
 
     companion object {
-        val STANDARD_UNIT_SIZE = Size(8, 8)
+        val STANDARD_UNIT_SIZE = Size(16, 16)
     }
 }

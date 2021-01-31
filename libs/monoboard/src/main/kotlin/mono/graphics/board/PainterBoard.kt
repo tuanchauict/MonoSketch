@@ -10,7 +10,7 @@ import mono.graphics.geo.Size
  * A model class to manage drawn pixel.
  * This is where a pixel is represented with its absolute position.
  */
-internal class PainterBoard(private val bound: Rect) {
+internal class PainterBoard(internal val bound: Rect) {
     private val validColumnRange = 0 until bound.width
     private val validRowRange = 0 until bound.height
 
