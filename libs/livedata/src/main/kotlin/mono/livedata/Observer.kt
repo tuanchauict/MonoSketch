@@ -11,7 +11,7 @@ interface Observer<T> {
 }
 
 internal fun <T> Observer<T>.throttle(durationMillis: Int): Observer<T> =
-    if (durationMillis > 0) ThrottledObserver(durationMillis, this) else this
+    if (durationMillis >= 0) ThrottledObserver(durationMillis, this) else this
 
 /**
  * A simple observer which always notify change to [listener] when it receives update.
