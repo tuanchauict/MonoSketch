@@ -1,5 +1,6 @@
 package mono.html.canvas.canvas
 
+import kotlinx.browser.window
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -12,6 +13,7 @@ import org.w3c.dom.LEFT
 import org.w3c.dom.MIDDLE
 import org.w3c.dom.TOP
 import kotlin.math.ceil
+import kotlin.math.max
 
 internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasElement) {
     protected val context: CanvasRenderingContext2D =
@@ -36,8 +38,13 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
 
     fun setSizeAndRedraw(widthPx: Int, heightPx: Int) {
         val canvasSizePx = Size(widthPx, heightPx)
-        canvas.width = canvasSizePx.width
-        canvas.height = canvasSizePx.height
+        val dpr = max(window.devicePixelRatio, 1.0)
+
+        canvas.width = (canvasSizePx.width * dpr).toInt()
+        canvas.height = (canvasSizePx.height * dpr).toInt()
+        canvas.style.width = "${canvasSizePx.width}px"
+        canvas.style.height = "${canvasSizePx.height}px"
+        context.scale(dpr, dpr)
         drawingInfo = drawingInfo.copy(canvasSizePx = Size(widthPx, heightPx))
         draw()
     }

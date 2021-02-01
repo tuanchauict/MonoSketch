@@ -8,8 +8,8 @@ internal class GridCanvasViewController(
     canvas: HTMLCanvasElement
 ) : BaseCanvasViewController(canvas) {
     override fun drawInternal() {
-        context.strokeStyle = "#ff0000"
-        context.lineWidth = 0.1
+        context.strokeStyle = "#d9d9d9"
+        context.lineWidth = 0.25
         context.stroke(createGridPath())
 
         if (DEBUG) {
