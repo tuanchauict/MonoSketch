@@ -12,6 +12,7 @@ import mono.html.canvas.canvas.GridCanvasViewController
 import mono.html.canvas.mouse.MouseEventObserver
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import org.w3c.dom.HTMLDivElement
 
@@ -41,8 +42,10 @@ class CanvasViewController(
 
     val windowBoundPx: Rect
         get() = gridCanvasViewController.drawingInfo.boundPx
-    val windowBoardBound: Rect
-        get() = gridCanvasViewController.drawingInfo.boardBound
+
+    private val windowBoardBoundMutableLiveData: MutableLiveData<Rect> =
+        MutableLiveData(Rect.ZERO)
+    val windowBoardBoundLiveData: LiveData<Rect> = windowBoardBoundMutableLiveData
 
     init {
         container.append {
@@ -66,11 +69,19 @@ class CanvasViewController(
         boardCanvasViewController.draw()
     }
 
+    fun setFont(fontSize: Int) {
+        for (controller in canvasControllers) {
+            controller.setFont(fontSize)
+        }
+        windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
+    }
+
     private fun updateCanvasSize() {
         val widthPx = container.clientWidth
         val heightPx = container.clientHeight
         for (controller in canvasControllers) {
             controller.setSizeAndRedraw(widthPx, heightPx)
         }
+        windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
     }
 }

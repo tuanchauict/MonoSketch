@@ -30,41 +30,51 @@ class MainStateManager(
     private var workingParentGroup: Group = shapeManager.root
     private var focusingShapes: Set<AbstractShape> = emptySet()
 
+    private var windowBoardBound: Rect = Rect.ZERO
+
     init {
         // TODO: This is for testing
         for (i in 0..1000) {
             shapeManager.add(Rectangle(Rect.byLTWH(i, 10, 10, 10)))
         }
+
         canvasManager.mousePointerLiveData
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::addShapeWithMouse)
+        canvasManager.windowBoardBoundLiveData
+            .observe(lifecycleOwner, throttleDurationMillis = 10) {
+                windowBoardBound = it
+                console.warn("Drawing info: window board size $windowBoardBound • " +
+                        "pixel size ${canvasManager.windowBoundPx}")
 
-        shapeManager.versionLiveData.distinctUntilChange()
-            .observe(lifecycleOwner, throttleDurationMillis = 0) {
-                auditPerformance("Redraw") {
-                    mainBoard.redraw()
-                }
-                auditPerformance("Draw canvas") {
-                    canvasManager.drawBoard()
-                }
+                redraw()
             }
 
-        shapeManager.add(Rectangle(Rect.byLTWH(0, 0, 10, 10)))
-        console.warn("Drawing info: window board size ${canvasManager.windowBoardBound}")
-        console.warn("Drawing info: window px size ${canvasManager.windowBoundPx}")
+        shapeManager.versionLiveData
+            .distinctUntilChange()
+            .observe(lifecycleOwner, throttleDurationMillis = 0) {
+                redraw()
+            }
+    }
+
+    private fun redraw() {
+        auditPerformance("Redraw") {
+            mainBoard.redraw()
+        }
+        auditPerformance("Draw canvas") {
+            canvasManager.drawBoard()
+        }
     }
 
     private fun MonoBoard.redraw() {
-        clear(canvasManager.windowBoardBound)
-        for (shape in shapeManager.shapes) {
-            drawShape(shape)
-        }
+        clear(windowBoardBound)
+        drawShape(shapeManager.root)
     }
 
     private fun MonoBoard.drawShape(shape: AbstractShape) {
         if (shape is Group) {
             for (child in shape.items) {
-                drawShape(shape)
+                drawShape(child)
             }
             return
         }
