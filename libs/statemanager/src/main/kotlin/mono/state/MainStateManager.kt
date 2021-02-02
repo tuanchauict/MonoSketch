@@ -1,21 +1,23 @@
 package mono.state
 
 import kotlinx.html.currentTimeMillis
+import mono.common.nullToFalse
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.MousePointer
-import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.add
-import mono.shape.command.ChangeBound
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Rectangle
+import mono.state.command.MouseCommand
+import mono.state.command.CommandEnvironment
+import mono.state.command.CommandType
 
 /**
  * A class which is connect components in the app.
@@ -29,75 +31,76 @@ class MainStateManager(
 ) {
     private var workingParentGroup: Group = shapeManager.root
     private var focusingShapes: Set<AbstractShape> = emptySet()
+    private var windowBoardBound: Rect = Rect.ZERO
+
+    private val environment: CommandEnvironment = CommandEnvironmentImpl(this)
+    private var currentMouseCommand: MouseCommand? = null
+    private var currentCommandType: CommandType = CommandType.ADD_RECTANGLE
+
 
     init {
         // TODO: This is for testing
         for (i in 0..1000) {
             shapeManager.add(Rectangle(Rect.byLTWH(i, 10, 10, 10)))
         }
+
         canvasManager.mousePointerLiveData
             .distinctUntilChange()
-            .observe(lifecycleOwner, listener = ::addShapeWithMouse)
+            .observe(lifecycleOwner, listener = ::onMouseEvent)
+        canvasManager.windowBoardBoundLiveData
+            .observe(lifecycleOwner, throttleDurationMillis = 10) {
+                windowBoardBound = it
+                console.warn(
+                    "Drawing info: window board size $windowBoardBound • " +
+                            "pixel size ${canvasManager.windowBoundPx}"
+                )
 
-        shapeManager.versionLiveData.distinctUntilChange()
-            .observe(lifecycleOwner, throttleDurationMillis = 0) {
-                auditPerformance("Redraw") {
-                    mainBoard.redraw()
-                }
-                auditPerformance("Draw canvas") {
-                    canvasManager.drawBoard()
-                }
+                redraw()
             }
 
-        shapeManager.add(Rectangle(Rect.byLTWH(0, 0, 10, 10)))
-        console.warn("Drawing info: window board size ${canvasManager.windowBoardBound}")
-        console.warn("Drawing info: window px size ${canvasManager.windowBoundPx}")
+        shapeManager.versionLiveData
+            .distinctUntilChange()
+            .observe(lifecycleOwner, throttleDurationMillis = 0) {
+                redraw()
+            }
+    }
+
+    private fun onMouseEvent(mousePointer: MousePointer) {
+        if (mousePointer is MousePointer.Down) {
+            currentMouseCommand =
+                MouseCommand.getCommand(environment, mousePointer, currentCommandType)
+        }
+
+        val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
+        if (isFinished) {
+            currentMouseCommand = null
+        }
+    }
+
+    private fun redraw() {
+        auditPerformance("Redraw") {
+            mainBoard.redraw()
+        }
+        auditPerformance("Draw canvas") {
+            canvasManager.drawBoard()
+        }
     }
 
     private fun MonoBoard.redraw() {
-        clear(canvasManager.windowBoardBound)
-        for (shape in shapeManager.shapes) {
-            drawShape(shape)
-        }
+        clear(windowBoardBound)
+        drawShape(shapeManager.root)
     }
 
     private fun MonoBoard.drawShape(shape: AbstractShape) {
         if (shape is Group) {
             for (child in shape.items) {
-                drawShape(shape)
+                drawShape(child)
             }
             return
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
         val highlight = if (shape in focusingShapes) Highlight.SELECTED else Highlight.NO
         fill(shape.bound.position, bitmap, highlight)
-    }
-
-    private fun addShapeWithMouse(mousePointer: MousePointer) = when (mousePointer) {
-        is MousePointer.Down -> {
-            val rectangle =
-                Rectangle(mousePointer.point, mousePointer.point, workingParentGroup.id)
-            focusingShapes = setOf(rectangle)
-            shapeManager.add(rectangle)
-        }
-        is MousePointer.Move ->
-            changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
-        is MousePointer.Up ->
-            changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
-        MousePointer.Idle,
-        is MousePointer.Click -> Unit
-    }
-
-    private fun changeShapeBound(point1: Point, point2: Point) {
-        val rect = Rect.byLTRB(
-            left = point1.left,
-            top = point1.top,
-            right = point2.left,
-            bottom = point2.top
-        )
-        for (shape in focusingShapes) {
-            shapeManager.execute(ChangeBound(shape, rect))
-        }
     }
 
     private fun auditPerformance(
@@ -112,6 +115,19 @@ class MainStateManager(
         val t0 = currentTimeMillis()
         action()
         println("$objective runtime: ${currentTimeMillis() - t0}")
+    }
+
+    private class CommandEnvironmentImpl(
+        private val stateManager: MainStateManager
+    ) : CommandEnvironment {
+        override val shapeManager: ShapeManager
+            get() = stateManager.shapeManager
+        override val workingParentGroup: Group
+            get() = stateManager.workingParentGroup
+
+        override fun setSelectedShapes(shapes: Set<AbstractShape>) {
+            stateManager.focusingShapes = shapes
+        }
     }
 
     companion object {

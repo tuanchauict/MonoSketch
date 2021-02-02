@@ -29,14 +29,14 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         setFont(15)
     }
 
-    private fun setFont(fontSize: Int) {
+    internal fun setFont(fontSize: Int) {
         this.fontSize = fontSize
         this.font = "normal normal ${fontSize}px monospace"
 
         drawingInfo = drawingInfo.copy(cellSizePx = context.getCellSizePx())
     }
 
-    fun setSizeAndRedraw(widthPx: Int, heightPx: Int) {
+    internal fun setSizeAndRedraw(widthPx: Int, heightPx: Int) {
         val canvasSizePx = Size(widthPx, heightPx)
         val dpr = max(window.devicePixelRatio, 1.0)
 
@@ -59,7 +59,7 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         return SizeF(cWidth, cHeight)
     }
 
-    fun draw() {
+    internal fun draw() {
         context.clearRect(
             x = 0.0,
             y = 0.0,
@@ -76,7 +76,7 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
 
     protected abstract fun drawInternal()
 
-    data class DrawingInfo(
+    internal data class DrawingInfo(
         val offsetPx: Point = Point.ZERO,
         val cellSizePx: SizeF = SizeF(1.0, 1.0),
         val canvasSizePx: Size = Size(1, 1)
