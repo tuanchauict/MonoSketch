@@ -9,12 +9,12 @@ import mono.shape.shape.AbstractShape
 import mono.shape.shape.Rectangle
 
 /**
- * Add new shape with mouse command.
+ * A [MouseCommand] to add new shape.
  */
 internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : MouseCommand {
     private var workingShape: AbstractShape? = null
 
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
+    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
         when (mousePointer) {
             is MousePointer.Down -> {
                 val shape =
@@ -22,19 +22,20 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
                 workingShape = shape
                 environment.setSelectedShapes(setOf(shape))
                 environment.shapeManager.add(shape)
+                false
             }
-            is MousePointer.Move ->
+            is MousePointer.Move -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
+                false
+            }
             is MousePointer.Up -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
                 workingShape = null
-                return true
+                true
             }
             is MousePointer.Click,
-            MousePointer.Idle -> Unit
+            MousePointer.Idle -> true
         }
-        return false
-    }
 
     private fun CommandEnvironment.changeShapeBound(point1: Point, point2: Point) {
         val currentShape = workingShape ?: return
