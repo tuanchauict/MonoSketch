@@ -1,5 +1,6 @@
 package mono.shape
 
+import mono.graphics.geo.Point
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.command.AddShape
@@ -23,11 +24,6 @@ class ShapeManager {
      */
     private val versionMutableLiveData: MutableLiveData<Int> = MutableLiveData(root.version)
     val versionLiveData: LiveData<Int> = versionMutableLiveData
-
-    /**
-     * All shapes of the app which are sorted by drawing layer order.
-     */
-    val shapes: Collection<AbstractShape> = root.items
 
     fun execute(command: Command) {
         val affectedParent = command.getDirectAffectedParent(this) ?: return
@@ -65,6 +61,9 @@ class ShapeManager {
         }
         return result
     }
+
+    fun getShapeWithPoint(focusingGroup: Group, point: Point): AbstractShape? =
+        focusingGroup.items.find { it.contains(point) }
 }
 
 fun ShapeManager.add(shape: AbstractShape) = execute(AddShape(shape))
