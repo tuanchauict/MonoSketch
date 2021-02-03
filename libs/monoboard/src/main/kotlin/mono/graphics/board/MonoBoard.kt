@@ -137,9 +137,9 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         private val addressMap: MutableMap<Int, MutableMap<Int, BoardAddress>> = mutableMapOf()
 
         init {
-            for (rowIndex in -4..4) {
+            for (rowIndex in -4..10) {
                 addressMap[rowIndex] = mutableMapOf()
-                for (colIndex in -4..4) {
+                for (colIndex in -4..16) {
                     addressMap[rowIndex]!![colIndex] = BoardAddress(rowIndex, colIndex)
                 }
             }
