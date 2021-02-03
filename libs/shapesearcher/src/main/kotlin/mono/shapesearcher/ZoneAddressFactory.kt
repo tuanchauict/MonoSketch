@@ -23,9 +23,12 @@ internal object ZoneAddressFactory {
     fun toAddress(row: Int, column: Int): ZoneAddress {
         val rowAddressIndex = toAddressIndex(row)
         val colAddressIndex = toAddressIndex(column)
-        return addressMap.getOrPut(rowAddressIndex) { mutableMapOf() }
-            .getOrPut(colAddressIndex) { ZoneAddress(rowAddressIndex, colAddressIndex) }
+        return get(rowAddressIndex, colAddressIndex)
     }
+
+    fun get(rowAddressIndex: Int, colAddressIndex: Int): ZoneAddress =
+        addressMap.getOrPut(rowAddressIndex) { mutableMapOf() }
+            .getOrPut(colAddressIndex) { ZoneAddress(rowAddressIndex, colAddressIndex) }
 
     fun toAddressIndex(number: Int) = number shr 4
 }
