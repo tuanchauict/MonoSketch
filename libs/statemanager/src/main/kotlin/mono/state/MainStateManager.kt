@@ -15,6 +15,7 @@ import mono.shape.add
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Rectangle
+import mono.shapesearcher.ShapeSearcher
 import mono.state.command.MouseCommand
 import mono.state.command.CommandEnvironment
 import mono.state.command.CommandType
@@ -29,6 +30,8 @@ class MainStateManager(
     private val bitmapManager: MonoBitmapManager,
     private val canvasManager: CanvasViewController
 ) {
+    private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager)
+
     private var workingParentGroup: Group = shapeManager.root
     private var focusingShapes: Set<AbstractShape> = emptySet()
     private var windowBoardBound: Rect = Rect.ZERO
@@ -40,8 +43,8 @@ class MainStateManager(
 
     init {
         // TODO: This is for testing
-        for (i in 0..1000) {
-            shapeManager.add(Rectangle(Rect.byLTWH(i, 10, 10, 10)))
+        for (i in 0..10) {
+            shapeManager.add(Rectangle(Rect.byLTWH(i * 4, i * 4, 16, 16)))
         }
 
         canvasManager.mousePointerLiveData
@@ -87,6 +90,7 @@ class MainStateManager(
     }
 
     private fun MonoBoard.redraw() {
+        shapeSearcher.clear(windowBoardBound)
         clear(windowBoardBound)
         drawShape(shapeManager.root)
     }
@@ -101,6 +105,7 @@ class MainStateManager(
         val bitmap = bitmapManager.getBitmap(shape) ?: return
         val highlight = if (shape in focusingShapes) Highlight.SELECTED else Highlight.NO
         fill(shape.bound.position, bitmap, highlight)
+        shapeSearcher.register(shape)
     }
 
     private fun auditPerformance(
@@ -122,6 +127,8 @@ class MainStateManager(
     ) : CommandEnvironment {
         override val shapeManager: ShapeManager
             get() = stateManager.shapeManager
+        override val shapeSearcher: ShapeSearcher
+            get() = stateManager.shapeSearcher
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 

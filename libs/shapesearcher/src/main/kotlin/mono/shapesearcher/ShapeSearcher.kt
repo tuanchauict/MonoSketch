@@ -9,6 +9,7 @@ import mono.shape.shape.AbstractShape
 
 /**
  * A model class which optimises shapes retrieval from a point.
+ * A shape is only indexed after it's drawn onto the board. Do not use this for pre-draw check.
  */
 class ShapeSearcher(
     private val shapeManager: ShapeManager,

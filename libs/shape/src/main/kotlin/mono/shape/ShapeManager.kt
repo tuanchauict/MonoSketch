@@ -63,9 +63,6 @@ class ShapeManager {
         }
         return result
     }
-
-    fun getShapeWithPoint(focusingGroup: Group, point: Point): AbstractShape? =
-        focusingGroup.items.find { it.contains(point) }
 }
 
 fun ShapeManager.add(shape: AbstractShape) = execute(AddShape(shape))

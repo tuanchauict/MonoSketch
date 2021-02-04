@@ -19,15 +19,12 @@ internal interface MouseCommand {
             mousePointer: MousePointer.Down,
             commandType: CommandType
         ): MouseCommand? {
-            val shape = commandEnvironment.shapeManager.getShapeWithPoint(
-                commandEnvironment.workingParentGroup,
-                mousePointer.point
-            )
+            val shapes = commandEnvironment.shapeSearcher.getShapes(mousePointer.point)
 
-            if (shape != null) {
-                TODO("Add move/edit shape command")
+            if (shapes.isNotEmpty()) {
+                console.log(shapes)
+                return null
             }
-
             return when (commandType) {
                 CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
                 CommandType.IDLE -> null
