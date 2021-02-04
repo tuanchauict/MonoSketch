@@ -44,6 +44,8 @@ class ShapeManager {
     internal fun getGroup(shapeId: Int?): Group? =
         if (shapeId == null) root else allShapeMap[shapeId] as? Group
 
+    fun getShape(shapeId: Int): AbstractShape? = allShapeMap[shapeId]
+
     internal fun register(shape: AbstractShape) {
         allShapeMap[shape.id] = shape
     }

@@ -29,6 +29,8 @@ class MonoBitmapManager {
         return bitmap
     }
 
+    fun hasShape(shape: AbstractShape): Boolean = shape.id in idToBitmapMap
+
     fun invalidate(shape: AbstractShape) {
         idToBitmapMap.remove(shape.id)
     }

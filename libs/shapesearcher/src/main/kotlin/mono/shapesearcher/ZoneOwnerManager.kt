@@ -26,7 +26,6 @@ internal class ZoneOwnersManager {
     }
 
     fun registerOwnerAddresses(ownerId: Int, addresses: Set<ZoneAddress>) {
-        println("> $ownerId $addresses")
         for (address in addresses) {
             zoneToOwnersMap.getOrPut(address) { mutableListOf() }.add(ownerId)
         }
