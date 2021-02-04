@@ -9,8 +9,6 @@ import mono.graphics.geo.Size
  * Create new object via [Builder].
  */
 class MonoBitmap private constructor(val matrix: List<Row>) {
-    val width: Int = matrix.firstOrNull()?.size ?: 0
-    val height: Int = matrix.size
     val size: Size = Size(
         width = matrix.firstOrNull()?.size ?: 0,
         height = matrix.size

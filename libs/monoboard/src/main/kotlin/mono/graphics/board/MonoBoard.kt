@@ -34,7 +34,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     }
 
     fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
-        val rect = Rect.byLTWH(position.left, position.top, bitmap.width, bitmap.height)
+        val rect = Rect(position, bitmap.size)
         val affectedBoards = getOrCreateOverlappedBoards(rect)
 
         for (board in affectedBoards) {
