@@ -11,6 +11,8 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
     val width: Int = matrix.firstOrNull()?.size ?: 0
     val height: Int = matrix.size
 
+    fun get(row: Int, column: Int): Char = matrix.getOrNull(row)?.get(column) ?: TRANSPARENT_CHAR
+
     override fun toString(): String =
         matrix.joinToString("\n")
 
@@ -44,6 +46,11 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
                 }
                 action(cell.index - fromIndex, cell.char)
             }
+        }
+
+        internal fun get(column: Int): Char {
+            val index = sortedCells.binarySearch { it.index.compareTo(column) }
+            return if (index >= 0) sortedCells[index].char else TRANSPARENT_CHAR
         }
 
         override fun toString(): String {

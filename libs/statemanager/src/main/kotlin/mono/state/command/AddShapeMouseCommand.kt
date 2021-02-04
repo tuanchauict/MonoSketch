@@ -1,10 +1,12 @@
 package mono.state.command
 
+import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.add
 import mono.shape.command.ChangeBound
+import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Rectangle
 
@@ -30,6 +32,9 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
             }
             is MousePointer.Up -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
+                if (!workingShape?.isValid().nullToFalse()) {
+                    environment.shapeManager.remove(workingShape)
+                }
                 workingShape = null
                 true
             }

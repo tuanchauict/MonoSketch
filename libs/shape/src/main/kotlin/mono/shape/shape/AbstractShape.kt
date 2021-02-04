@@ -26,6 +26,8 @@ abstract class AbstractShape(
 
     open fun setBound(newBound: Rect) = Unit
 
+    open fun isValid(): Boolean = true
+
     /**
      * Updates properties of the shape by [action]. The [action] returns true if the shape's
      * properties are changed.

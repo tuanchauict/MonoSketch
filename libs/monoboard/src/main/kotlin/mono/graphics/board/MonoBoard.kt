@@ -131,15 +131,15 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         return painterBoard.toString()
     }
 
-    internal data class BoardAddress(val row: Int, val col: Int)
+    private data class BoardAddress(val row: Int, val col: Int)
 
     private object BoardAddressManager {
         private val addressMap: MutableMap<Int, MutableMap<Int, BoardAddress>> = mutableMapOf()
 
         init {
-            for (rowIndex in -4..4) {
+            for (rowIndex in -4..10) {
                 addressMap[rowIndex] = mutableMapOf()
-                for (colIndex in -4..4) {
+                for (colIndex in -4..16) {
                     addressMap[rowIndex]!![colIndex] = BoardAddress(rowIndex, colIndex)
                 }
             }

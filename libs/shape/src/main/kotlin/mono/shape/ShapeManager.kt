@@ -44,6 +44,8 @@ class ShapeManager {
     internal fun getGroup(shapeId: Int?): Group? =
         if (shapeId == null) root else allShapeMap[shapeId] as? Group
 
+    fun getShape(shapeId: Int): AbstractShape? = allShapeMap[shapeId]
+
     internal fun register(shape: AbstractShape) {
         allShapeMap[shape.id] = shape
     }
@@ -61,13 +63,16 @@ class ShapeManager {
         }
         return result
     }
-
-    fun getShapeWithPoint(focusingGroup: Group, point: Point): AbstractShape? =
-        focusingGroup.items.find { it.contains(point) }
 }
 
 fun ShapeManager.add(shape: AbstractShape) = execute(AddShape(shape))
-fun ShapeManager.remove(shape: AbstractShape) = execute(RemoveShape(shape))
+
+fun ShapeManager.remove(shape: AbstractShape?) {
+    if (shape != null) {
+        execute(RemoveShape(shape))
+    }
+}
+
 fun ShapeManager.group(sameParentShapes: List<AbstractShape>) =
     execute(GroupShapes(sameParentShapes))
 

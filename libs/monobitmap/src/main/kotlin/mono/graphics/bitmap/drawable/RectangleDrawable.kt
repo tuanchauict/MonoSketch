@@ -24,7 +24,7 @@ object RectangleDrawable {
     )
 
     private val NINE_PATCH_DOT = NinePatchDrawable(
-        NinePatchDrawable.Pattern.fromText("■")
+        NinePatchDrawable.Pattern.fromText("•")
     )
 
     private val NINE_PATCH_HORIZONTAL_LINE = NinePatchDrawable(
