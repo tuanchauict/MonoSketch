@@ -66,7 +66,13 @@ class ShapeManager {
 }
 
 fun ShapeManager.add(shape: AbstractShape) = execute(AddShape(shape))
-fun ShapeManager.remove(shape: AbstractShape) = execute(RemoveShape(shape))
+
+fun ShapeManager.remove(shape: AbstractShape?) {
+    if (shape != null) {
+        execute(RemoveShape(shape))
+    }
+}
+
 fun ShapeManager.group(sameParentShapes: List<AbstractShape>) =
     execute(GroupShapes(sameParentShapes))
 
