@@ -91,7 +91,7 @@ class MainStateManager(
 
     private fun MonoBoard.redraw() {
         shapeSearcher.clear(windowBoardBound)
-        clear(windowBoardBound)
+        clearAndSetWindow(windowBoardBound)
         drawShape(shapeManager.root)
     }
 
