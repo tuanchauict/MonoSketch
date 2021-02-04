@@ -82,7 +82,7 @@ internal class PainterBoard(internal val bound: Rect) {
         if (matrix.isEmpty() || matrix.first().isEmpty()) {
             return
         }
-        val inMatrixBound = Rect(position, Size(inMatrix.first().size, inMatrix.size))
+        val inMatrixBound = Rect(position, bitmap.size)
 
         val overlap = bound.getOverlappedRect(inMatrixBound) ?: return
         val (startCol, startRow) = overlap.position - bound.position
