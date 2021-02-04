@@ -17,11 +17,11 @@ class RectangleDrawableTest {
         assertEquals(shape.bound.height, bitmap.size.height)
         assertEquals(
             """
-            +---+
+            ┌───┐
             |   |
             |   |
             |   |
-            +---+
+            └───┘
             """.trimIndent(),
             bitmap.toString()
         )
