@@ -9,6 +9,7 @@ import mono.graphics.geo.Size
 import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.GridCanvasViewController
+import mono.html.canvas.canvas.InteractionCanvasViewController
 import mono.html.canvas.mouse.MouseEventObserver
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -27,6 +28,7 @@ class CanvasViewController(
 ) {
     private lateinit var gridCanvasViewController: GridCanvasViewController
     private lateinit var boardCanvasViewController: BoardCanvasViewController
+    private lateinit var interactionCanvasViewController: InteractionCanvasViewController
 
     private lateinit var canvasControllers: List<BaseCanvasViewController>
     private val mouseEventController: MouseEventObserver by lazy {
@@ -51,12 +53,16 @@ class CanvasViewController(
         container.append {
             val gridCanvas = canvas {}
             val boardCanvas = canvas {}
+            val interactionCanvas = canvas { }
 
             gridCanvasViewController = GridCanvasViewController(gridCanvas)
             boardCanvasViewController = BoardCanvasViewController(boardCanvas, board)
+            interactionCanvasViewController = InteractionCanvasViewController(interactionCanvas)
+
             canvasControllers = listOf(
                 gridCanvasViewController,
-                boardCanvasViewController
+                boardCanvasViewController,
+                interactionCanvasViewController
             )
         }
 
@@ -67,6 +73,7 @@ class CanvasViewController(
 
     fun drawBoard() {
         boardCanvasViewController.draw()
+        interactionCanvasViewController.draw()
     }
 
     fun setFont(fontSize: Int) {
