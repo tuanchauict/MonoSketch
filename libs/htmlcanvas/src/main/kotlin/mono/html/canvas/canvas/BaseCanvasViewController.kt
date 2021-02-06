@@ -94,8 +94,8 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         internal val boardColumnRange: IntRange =
             boardOffsetColumn..(boardOffsetColumn + columnCount)
 
-        fun toXPx(column: Int): Double = offsetPx.left + cellSizePx.width * column
-        fun toYPx(row: Int): Double = offsetPx.top + cellSizePx.height * row
+        fun toXPx(column: Double): Double = offsetPx.left + cellSizePx.width * column
+        fun toYPx(row: Double): Double = offsetPx.top + cellSizePx.height * row
         fun toBoardRow(yPx: Int): Int = ((yPx - offsetPx.top) / cellSizePx.height).toInt()
         fun toBoardColumn(xPx: Int): Int = ((xPx - offsetPx.left) / cellSizePx.width).toInt()
     }

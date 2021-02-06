@@ -16,11 +16,10 @@ internal class InteractionCanvasViewController(
 
     override fun drawInternal() {
         val bound = selectedShapesBoundingRect ?: return
-        val offsetPx = drawingInfo.cellSizePx.width
-        val leftPx = drawingInfo.toXPx(bound.left) - offsetPx
-        val topPx = drawingInfo.toYPx(bound.top) - offsetPx
-        val rightPx = drawingInfo.toXPx(bound.right) + offsetPx
-        val bottomPx = drawingInfo.toYPx(bound.bottom) + offsetPx
+        val leftPx = drawingInfo.toXPx(bound.left.toDouble())
+        val topPx = drawingInfo.toYPx(bound.top.toDouble())
+        val rightPx = drawingInfo.toXPx(bound.right + 1.0)
+        val bottomPx = drawingInfo.toYPx(bound.bottom + 1.0)
 
         val path = Path2D().apply {
             moveTo(leftPx, topPx)
