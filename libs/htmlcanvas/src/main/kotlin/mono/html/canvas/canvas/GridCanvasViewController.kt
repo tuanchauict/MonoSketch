@@ -41,11 +41,15 @@ internal class GridCanvasViewController(
         val zeroY = drawingInfo.toYPx(drawingInfo.boardRowRange.first.toDouble())
         for (row in drawingInfo.boardRowRange) {
             context.fillStyle = getAxisFillStyle(row)
-            context.fillText("${abs(row % 10)}", zeroX, drawingInfo.toYPx(row.toDouble()))
+            context.fillText(
+                "${abs(row % 10)}",
+                zeroX + drawingInfo.toXPx(0.05),
+                drawingInfo.toYPx(row.toDouble())
+            )
         }
         for (col in drawingInfo.boardColumnRange) {
             context.fillStyle = getAxisFillStyle(col)
-            context.fillText("${abs(col % 10)}", drawingInfo.toXPx(col.toDouble()), zeroY)
+            context.fillText("${abs(col % 10)}", drawingInfo.toXPx(col + 0.05), zeroY)
         }
 
         context.fillStyle = "#ff0000"
