@@ -33,7 +33,9 @@ class MainStateManager(
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager)
 
     private var workingParentGroup: Group = shapeManager.root
-    private var focusingShapes: Set<AbstractShape> = emptySet()
+
+    private var selectedShapeManager: SelectedShapeManager = SelectedShapeManager(canvasManager)
+
     private var windowBoardBound: Rect = Rect.ZERO
 
     private val environment: CommandEnvironment = CommandEnvironmentImpl(this)
@@ -77,6 +79,7 @@ class MainStateManager(
         val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
         if (isFinished) {
             currentMouseCommand = null
+            redraw()
         }
     }
 
@@ -103,7 +106,8 @@ class MainStateManager(
             return
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
-        val highlight = if (shape in focusingShapes) Highlight.SELECTED else Highlight.NO
+        val highlight =
+            if (shape in selectedShapeManager.selectedShapes) Highlight.SELECTED else Highlight.NO
         fill(shape.bound.position, bitmap, highlight)
         shapeSearcher.register(shape)
     }
@@ -132,9 +136,8 @@ class MainStateManager(
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 
-        override fun setSelectedShapes(shapes: Set<AbstractShape>) {
-            stateManager.focusingShapes = shapes
-        }
+        override fun setSelectedShapes(shapes: Set<AbstractShape>) =
+            stateManager.selectedShapeManager.set(shapes)
     }
 
     companion object {

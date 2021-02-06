@@ -76,6 +76,11 @@ class CanvasViewController(
         interactionCanvasViewController.draw()
     }
 
+    fun drawInteractionBound(bound: Rect?) {
+        interactionCanvasViewController.selectedShapesBoundingRect = bound
+        interactionCanvasViewController.draw()
+    }
+
     fun setFont(fontSize: Int) {
         for (controller in canvasControllers) {
             controller.setFont(fontSize)

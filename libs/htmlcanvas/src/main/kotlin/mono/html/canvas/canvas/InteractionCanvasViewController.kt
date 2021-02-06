@@ -12,7 +12,7 @@ internal class InteractionCanvasViewController(
     canvas: HTMLCanvasElement
 ) : BaseCanvasViewController(canvas) {
 
-    private var selectedShapesBoundingRect: Rect? = Rect.byLTWH(50, 5, 10, 10)
+    var selectedShapesBoundingRect: Rect? = Rect.byLTWH(50, 5, 10, 10)
 
     override fun drawInternal() {
         val bound = selectedShapesBoundingRect ?: return
