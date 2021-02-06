@@ -22,6 +22,7 @@ internal interface MouseCommand {
             val shapes = commandEnvironment.shapeSearcher.getShapes(mousePointer.point)
 
             if (shapes.isNotEmpty()) {
+                commandEnvironment.setSelectedShapes(shapes.last())
                 return null
             }
             return when (commandType) {

@@ -23,7 +23,6 @@ class SelectedShapeManager(private val canvasManager: CanvasViewController) {
         } else {
             null
         }
-        console.log(shapes.firstOrNull()?.bound.toString(), bound.toString())
         canvasManager.drawInteractionBound(bound)
     }
 }

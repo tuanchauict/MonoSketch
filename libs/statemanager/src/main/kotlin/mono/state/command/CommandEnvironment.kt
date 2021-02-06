@@ -13,5 +13,5 @@ internal interface CommandEnvironment {
     val shapeSearcher: ShapeSearcher
     val workingParentGroup: Group
 
-    fun setSelectedShapes(shapes: Set<AbstractShape>)
+    fun setSelectedShapes(vararg shapes: AbstractShape?)
 }
