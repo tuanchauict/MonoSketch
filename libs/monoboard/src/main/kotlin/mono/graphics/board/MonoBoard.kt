@@ -18,7 +18,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
 
     private var windowBound: Rect = Rect.ZERO
 
-    fun clear(windowBound: Rect) {
+    fun clearAndSetWindow(windowBound: Rect) {
         this.windowBound = windowBound
         val affectedBoards = getOrCreateOverlappedBoards(windowBound, isCreateRequired = false)
         for (board in affectedBoards) {
@@ -27,15 +27,15 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     }
 
     fun fill(rect: Rect, char: Char, highlight: Highlight) {
-        val affectedBoards = getOrCreateOverlappedBoards(rect)
+        val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = true)
         for (board in affectedBoards) {
             board.fill(rect, char, highlight)
         }
     }
 
     fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
-        val rect = Rect.byLTWH(position.left, position.top, bitmap.width, bitmap.height)
-        val affectedBoards = getOrCreateOverlappedBoards(rect)
+        val rect = Rect(position, bitmap.size)
+        val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = true)
 
         for (board in affectedBoards) {
             board.fill(position, bitmap, highlight)
@@ -47,7 +47,8 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     }
 
     fun set(left: Int, top: Int, char: Char, highlight: Highlight) {
-        getOrCreateBoard(left, top)?.set(left, top, char, highlight)
+        getOrCreateBoard(left, top, isCreateRequired = true)
+            ?.set(left, top, char, highlight)
     }
 
     operator fun get(position: Point): Pixel = get(position.left, position.top)
@@ -59,7 +60,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
 
     private fun getOrCreateOverlappedBoards(
         rect: Rect,
-        isCreateRequired: Boolean = true
+        isCreateRequired: Boolean
     ): List<PainterBoard> {
         val affectedBoards = mutableListOf<PainterBoard>()
 
@@ -86,7 +87,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
     private fun getOrCreateBoard(
         left: Int,
         top: Int,
-        isCreateRequired: Boolean = true
+        isCreateRequired: Boolean
     ): PainterBoard? {
         val boardAddress = toBoardAddress(left, top)
         val board = if (isCreateRequired) {

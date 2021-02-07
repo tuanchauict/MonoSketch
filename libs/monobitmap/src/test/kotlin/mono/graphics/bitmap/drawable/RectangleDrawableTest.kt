@@ -13,15 +13,15 @@ class RectangleDrawableTest {
     fun testToBitmap() {
         val shape = Rectangle(Rect.byLTWH(10, 10, 5, 5))
         val bitmap = RectangleDrawable.toBitmap(shape)
-        assertEquals(shape.bound.width, bitmap.width)
-        assertEquals(shape.bound.height, bitmap.height)
+        assertEquals(shape.bound.width, bitmap.size.width)
+        assertEquals(shape.bound.height, bitmap.size.height)
         assertEquals(
             """
-            +---+
+            ┌───┐
             |   |
             |   |
             |   |
-            +---+
+            └───┘
             """.trimIndent(),
             bitmap.toString()
         )

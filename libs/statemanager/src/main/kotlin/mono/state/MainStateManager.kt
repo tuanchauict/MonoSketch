@@ -9,6 +9,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
+import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.add
@@ -33,13 +34,16 @@ class MainStateManager(
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager)
 
     private var workingParentGroup: Group = shapeManager.root
-    private var focusingShapes: Set<AbstractShape> = emptySet()
+
+    private var selectedShapeManager: SelectedShapeManager = SelectedShapeManager(canvasManager)
+
     private var windowBoardBound: Rect = Rect.ZERO
 
     private val environment: CommandEnvironment = CommandEnvironmentImpl(this)
     private var currentMouseCommand: MouseCommand? = null
     private var currentCommandType: CommandType = CommandType.ADD_RECTANGLE
 
+    private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
 
     init {
         // TODO: This is for testing
@@ -57,15 +61,18 @@ class MainStateManager(
                     "Drawing info: window board size $windowBoardBound • " +
                             "pixel size ${canvasManager.windowBoundPx}"
                 )
-
-                redraw()
+                requestRedraw()
             }
 
         shapeManager.versionLiveData
             .distinctUntilChange()
             .observe(lifecycleOwner, throttleDurationMillis = 0) {
-                redraw()
+                requestRedraw()
             }
+
+        redrawRequestMutableLiveData.observe(lifecycleOwner, 1) {
+            redraw()
+        }
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
@@ -77,7 +84,12 @@ class MainStateManager(
         val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
         if (isFinished) {
             currentMouseCommand = null
+            requestRedraw()
         }
+    }
+
+    private fun requestRedraw() {
+        redrawRequestMutableLiveData.value = Unit
     }
 
     private fun redraw() {
@@ -91,7 +103,7 @@ class MainStateManager(
 
     private fun MonoBoard.redraw() {
         shapeSearcher.clear(windowBoardBound)
-        clear(windowBoardBound)
+        clearAndSetWindow(windowBoardBound)
         drawShape(shapeManager.root)
     }
 
@@ -103,7 +115,8 @@ class MainStateManager(
             return
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
-        val highlight = if (shape in focusingShapes) Highlight.SELECTED else Highlight.NO
+        val highlight =
+            if (shape in selectedShapeManager.selectedShapes) Highlight.SELECTED else Highlight.NO
         fill(shape.bound.position, bitmap, highlight)
         shapeSearcher.register(shape)
     }
@@ -132,8 +145,9 @@ class MainStateManager(
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 
-        override fun setSelectedShapes(shapes: Set<AbstractShape>) {
-            stateManager.focusingShapes = shapes
+        override fun setSelectedShapes(vararg shapes: AbstractShape?) {
+            stateManager.selectedShapeManager.set(shapes.filterNotNull().toSet())
+            stateManager.requestRedraw()
         }
     }
 

@@ -22,8 +22,8 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
                 val shape =
                     shapeFactory.createShape(mousePointer.point, environment.workingParentGroup.id)
                 workingShape = shape
-                environment.setSelectedShapes(setOf(shape))
                 environment.shapeManager.add(shape)
+                environment.setSelectedShapes()
                 false
             }
             is MousePointer.Move -> {
@@ -34,6 +34,8 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
                 if (!workingShape?.isValid().nullToFalse()) {
                     environment.shapeManager.remove(workingShape)
+                } else {
+                    environment.setSelectedShapes(workingShape)
                 }
                 workingShape = null
                 true

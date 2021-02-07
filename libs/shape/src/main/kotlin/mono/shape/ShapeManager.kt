@@ -1,6 +1,5 @@
 package mono.shape
 
-import mono.graphics.geo.Point
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.command.AddShape

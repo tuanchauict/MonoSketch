@@ -24,7 +24,7 @@ internal class ShapeZoneAddressManager(private val bitmapManager: MonoBitmapMana
         val position = shape.bound.position
         val addresses = mutableSetOf<ZoneAddress>()
         for (ir in bitmap.matrix.indices) {
-            bitmap.matrix[ir].forEachIndex(0, bitmap.width) { ic, _ ->
+            bitmap.matrix[ir].forEachIndex { ic, _ ->
                 val row = ir + position.row
                 val col = ic + position.column
                 val address = ZoneAddressFactory.toAddress(row, col)

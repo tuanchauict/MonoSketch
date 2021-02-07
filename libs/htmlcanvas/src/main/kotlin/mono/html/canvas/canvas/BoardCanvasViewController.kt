@@ -11,9 +11,10 @@ internal class BoardCanvasViewController(
 
     override fun drawInternal() {
         for (row in drawingInfo.boardRowRange) {
-            val rowYPx = drawingInfo.toYPx(row)
+            val rowYPx = drawingInfo.toYPx(row.toDouble())
             for (col in drawingInfo.boardColumnRange) {
-                drawPixel(board.get(col, row), drawingInfo.toXPx(col), rowYPx)
+                val xPx = drawingInfo.toXPx(col + 0.07)
+                drawPixel(board.get(col, row), xPx, rowYPx)
             }
         }
     }

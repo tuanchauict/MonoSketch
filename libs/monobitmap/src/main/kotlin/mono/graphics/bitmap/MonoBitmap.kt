@@ -2,14 +2,17 @@ package mono.graphics.bitmap
 
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.common.Characters.isTransparent
+import mono.graphics.geo.Size
 
 /**
  * A model class to hold the look of a shape after drawing.
  * Create new object via [Builder].
  */
 class MonoBitmap private constructor(val matrix: List<Row>) {
-    val width: Int = matrix.firstOrNull()?.size ?: 0
-    val height: Int = matrix.size
+    val size: Size = Size(
+        width = matrix.firstOrNull()?.size ?: 0,
+        height = matrix.size
+    )
 
     fun get(row: Int, column: Int): Char = matrix.getOrNull(row)?.get(column) ?: TRANSPARENT_CHAR
 
@@ -31,12 +34,16 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
     }
 
     class Row(chars: List<Char>) {
-        val size: Int = chars.size
+        internal val size: Int = chars.size
         private val sortedCells: List<Cell> = chars.mapIndexedNotNull { index, char ->
             if (!char.isTransparent) Cell(index, char) else null
         }
 
-        fun forEachIndex(fromIndex: Int, toExclusiveIndex: Int, action: (Int, Char) -> Unit) {
+        fun forEachIndex(
+            fromIndex: Int = 0,
+            toExclusiveIndex: Int = size,
+            action: (Int, Char) -> Unit
+        ) {
             val foundLow = sortedCells.binarySearch { it.index.compareTo(fromIndex) }
             val low = if (foundLow < 0) -foundLow - 1 else foundLow
             for (index in low until sortedCells.size) {
