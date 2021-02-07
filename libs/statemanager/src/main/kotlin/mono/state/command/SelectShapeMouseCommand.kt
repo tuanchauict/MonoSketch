@@ -23,14 +23,18 @@ internal class SelectShapeMouseCommand : MouseCommand {
                 false
             }
             is MousePointer.Up -> {
-                val shapes = environment.shapeSearcher.getAllShapesInZone(
-                    Rect.byLTRB(
-                        mousePointer.mouseDownPoint.left,
-                        mousePointer.mouseDownPoint.top,
-                        mousePointer.point.left,
-                        mousePointer.point.top
-                    )
+                val area = Rect.byLTRB(
+                    mousePointer.mouseDownPoint.left,
+                    mousePointer.mouseDownPoint.top,
+                    mousePointer.point.left,
+                    mousePointer.point.top
                 )
+
+                val shapes = if (area.width * area.height > 1) {
+                    environment.shapeSearcher.getAllShapesInZone(area)
+                } else {
+                    emptyList()
+                }
                 val selectedShapes = if (mousePointer.isWithShiftKey) {
                     environment.selectedShapeManager.selectedShapes + shapes
                 } else {
