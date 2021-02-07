@@ -1,5 +1,6 @@
 package mono.state
 
+import mono.common.nullToFalse
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
@@ -14,13 +15,25 @@ import mono.shape.shape.AbstractShape
  */
 class SelectedShapeManager(
     private val shapeManager: ShapeManager,
-    private val canvasManager: CanvasViewController
+    private val canvasManager: CanvasViewController,
+    private val requestRedraw: () -> Unit
 ) {
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
 
-    fun set(shapes: Set<AbstractShape>) {
-        selectedShapes = shapes
+    private var bound: Rect? = null
+
+    fun setSelectedShapes(vararg shapes: AbstractShape?) {
+        selectedShapes = shapes.filterNotNull().toSet()
+        updateInteractionBound()
+    }
+
+    fun toggleSelection(shape: AbstractShape) {
+        if (shape in selectedShapes) {
+            selectedShapes -= shape
+        } else {
+            selectedShapes += shape
+        }
         updateInteractionBound()
     }
 
@@ -29,7 +42,7 @@ class SelectedShapeManager(
             shapeManager.remove(shape)
         }
         selectedShapes = emptySet()
-        canvasManager.drawInteractionBound(null, BoundType.NINE_DOTS)
+        updateInteractionBound()
     }
 
     fun moveSelectedShape(offsetRow: Int, offsetCol: Int) {
@@ -43,8 +56,8 @@ class SelectedShapeManager(
         updateInteractionBound()
     }
 
-    private fun updateInteractionBound() {
-        val bound = if (selectedShapes.isNotEmpty()) {
+    fun updateInteractionBound() {
+        bound = if (selectedShapes.isNotEmpty()) {
             Rect.byLTRB(
                 selectedShapes.minOf { it.bound.left },
                 selectedShapes.minOf { it.bound.top },
@@ -55,5 +68,12 @@ class SelectedShapeManager(
             null
         }
         canvasManager.drawInteractionBound(bound, BoundType.NINE_DOTS)
+        requestRedraw()
     }
+
+    fun setSelectionBound(bound: Rect?) {
+        canvasManager.drawInteractionBound(bound, BoundType.SIMPLE_RECTANGLE)
+    }
+
+    fun isInSelectedBound(point: Point): Boolean = bound?.contains(point).nullToFalse()
 }

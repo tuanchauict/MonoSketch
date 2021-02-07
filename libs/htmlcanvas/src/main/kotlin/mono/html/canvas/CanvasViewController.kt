@@ -98,7 +98,8 @@ class CanvasViewController(
         windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
     }
 
-    enum class BoundType {
-        NINE_DOTS, SIMPLE_RECTANGLE
+    enum class BoundType(val boundStyleColor: String, val isDash: Boolean) {
+        NINE_DOTS("#6b6b6b", isDash = false),
+        SIMPLE_RECTANGLE("#858585", isDash = true)
     }
 }

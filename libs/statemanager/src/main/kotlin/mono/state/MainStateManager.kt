@@ -1,7 +1,7 @@
 package mono.state
 
 import kotlinx.html.currentTimeMillis
-import mono.common.Key
+import mono.common.Key.KeyCommand
 import mono.common.nullToFalse
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
@@ -22,6 +22,7 @@ import mono.shapesearcher.ShapeSearcher
 import mono.state.command.MouseCommand
 import mono.state.command.CommandEnvironment
 import mono.state.command.CommandType
+import mono.state.command.MouseCommandFactory
 
 /**
  * A class which is connect components in the app.
@@ -32,7 +33,7 @@ class MainStateManager(
     private val shapeManager: ShapeManager,
     private val bitmapManager: MonoBitmapManager,
     private val canvasManager: CanvasViewController,
-    keyCommandLiveData: LiveData<Key.KeyCommand>,
+    keyCommandLiveData: LiveData<KeyCommand>,
     mousePointerLiveData: LiveData<MousePointer>
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager)
@@ -40,7 +41,7 @@ class MainStateManager(
     private var workingParentGroup: Group = shapeManager.root
 
     private var selectedShapeManager: SelectedShapeManager =
-        SelectedShapeManager(shapeManager, canvasManager)
+        SelectedShapeManager(shapeManager, canvasManager, ::requestRedraw)
 
     private var windowBoardBound: Rect = Rect.ZERO
 
@@ -83,7 +84,7 @@ class MainStateManager(
     private fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.Down) {
             currentMouseCommand =
-                MouseCommand.getCommand(environment, mousePointer, currentCommandType)
+                MouseCommandFactory.getCommand(environment, mousePointer, currentCommandType)
         }
 
         val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
@@ -93,14 +94,22 @@ class MainStateManager(
         }
     }
 
-    private fun onKeyEvent(keyCommand: Key.KeyCommand) {
+    private fun onKeyEvent(keyCommand: KeyCommand) {
         when (keyCommand) {
-            Key.KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
-            Key.KeyCommand.MOVE_DOWN -> selectedShapeManager.moveSelectedShape(1, 0)
-            Key.KeyCommand.MOVE_UP -> selectedShapeManager.moveSelectedShape(-1, 0)
-            Key.KeyCommand.MOVE_LEFT -> selectedShapeManager.moveSelectedShape(0, -1)
-            Key.KeyCommand.MOVE_RIGHT -> selectedShapeManager.moveSelectedShape(0, 1)
-            Key.KeyCommand.IDLE -> Unit
+            KeyCommand.ESC ->
+                if (selectedShapeManager.selectedShapes.isEmpty()) {
+                    currentCommandType = CommandType.IDLE
+                } else {
+                    selectedShapeManager.setSelectedShapes()
+                }
+            KeyCommand.ADD_RECTANGLE -> currentCommandType = CommandType.ADD_RECTANGLE
+
+            KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
+            KeyCommand.MOVE_DOWN -> selectedShapeManager.moveSelectedShape(1, 0)
+            KeyCommand.MOVE_UP -> selectedShapeManager.moveSelectedShape(-1, 0)
+            KeyCommand.MOVE_LEFT -> selectedShapeManager.moveSelectedShape(0, -1)
+            KeyCommand.MOVE_RIGHT -> selectedShapeManager.moveSelectedShape(0, 1)
+            KeyCommand.IDLE -> Unit
         }
     }
 
@@ -156,15 +165,15 @@ class MainStateManager(
     ) : CommandEnvironment {
         override val shapeManager: ShapeManager
             get() = stateManager.shapeManager
+
         override val shapeSearcher: ShapeSearcher
             get() = stateManager.shapeSearcher
+
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 
-        override fun setSelectedShapes(vararg shapes: AbstractShape?) {
-            stateManager.selectedShapeManager.set(shapes.filterNotNull().toSet())
-            stateManager.requestRedraw()
-        }
+        override val selectedShapeManager: SelectedShapeManager
+            get() = stateManager.selectedShapeManager
     }
 
     companion object {
