@@ -96,7 +96,12 @@ class MainStateManager(
 
     private fun onKeyEvent(keyCommand: KeyCommand) {
         when (keyCommand) {
-            KeyCommand.ESC -> currentCommandType = CommandType.IDLE
+            KeyCommand.ESC ->
+                if (selectedShapeManager.selectedShapes.isEmpty()) {
+                    currentCommandType = CommandType.IDLE
+                } else {
+                    selectedShapeManager.setSelectedShapes()
+                }
             KeyCommand.ADD_RECTANGLE -> currentCommandType = CommandType.ADD_RECTANGLE
 
             KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
