@@ -52,16 +52,17 @@ class MouseEventObserver(
     }
 
     private fun setMouseMovePointer(event: MouseEvent) {
-        val mousePointer = mousePointerLiveData.value
-        mousePointerMutableLiveData.value = when (mousePointer) {
+        val newPointer = when (val mousePointer = mousePointerLiveData.value) {
             is MousePointer.Down ->
                 MousePointer.Move(mousePointer.point, event.toPoint(), event.shiftKey)
+                    .takeIf { it.point != mousePointer.point }
             is MousePointer.Move ->
                 MousePointer.Move(mousePointer.mouseDownPoint, event.toPoint(), event.shiftKey)
             is MousePointer.Up,
             is MousePointer.Click,
             MousePointer.Idle -> MousePointer.Idle
-        }
+        } ?: return
+        mousePointerMutableLiveData.value = newPointer
     }
 
     private fun MouseEvent.toPoint(): Point = Point(toBoardLeft(clientX), toBoardTop(clientY))
