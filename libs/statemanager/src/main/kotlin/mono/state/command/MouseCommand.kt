@@ -12,29 +12,28 @@ internal interface MouseCommand {
      * Returns true when the action finishes.
      */
     fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean
+}
 
-    companion object {
-        fun getCommand(
-            commandEnvironment: CommandEnvironment,
-            mousePointer: MousePointer.Down,
-            commandType: CommandType
-        ): MouseCommand? {
-            val shapes = commandEnvironment.shapeSearcher.getShapes(mousePointer.point)
+internal object MouseCommandFactory {
+    fun getCommand(
+        commandEnvironment: CommandEnvironment,
+        mousePointer: MousePointer.Down,
+        commandType: CommandType
+    ): MouseCommand? {
+        val shapes = commandEnvironment.shapeSearcher.getShapes(mousePointer.point)
 
-            if (shapes.isNotEmpty()) {
-                val shape = shapes.last()
-                if (mousePointer.isWithShiftKey) {
-                    commandEnvironment.selectedShapeManager.toggleSelection(shape)
-                } else {
-                    commandEnvironment.selectedShapeManager.set(shape)
-                }
-                return null
+        if (shapes.isNotEmpty()) {
+            val shape = shapes.last()
+            if (mousePointer.isWithShiftKey) {
+                commandEnvironment.selectedShapeManager.toggleSelection(shape)
+            } else {
+                commandEnvironment.selectedShapeManager.set(shape)
             }
-            return when (commandType) {
-                CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
-                CommandType.IDLE -> null
-            }
+            return null
+        }
+        return when (commandType) {
+            CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
+            CommandType.IDLE -> null
         }
     }
 }
-
