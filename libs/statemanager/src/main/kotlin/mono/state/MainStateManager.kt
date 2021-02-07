@@ -1,6 +1,7 @@
 package mono.state
 
 import kotlinx.html.currentTimeMillis
+import mono.common.Key
 import mono.common.nullToFalse
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
@@ -9,6 +10,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
+import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
@@ -29,13 +31,16 @@ class MainStateManager(
     private val mainBoard: MonoBoard,
     private val shapeManager: ShapeManager,
     private val bitmapManager: MonoBitmapManager,
-    private val canvasManager: CanvasViewController
+    private val canvasManager: CanvasViewController,
+    keyCommandLiveData: LiveData<Key.KeyCommand>,
+    mousePointerLiveData: LiveData<MousePointer>
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager)
 
     private var workingParentGroup: Group = shapeManager.root
 
-    private var selectedShapeManager: SelectedShapeManager = SelectedShapeManager(canvasManager)
+    private var selectedShapeManager: SelectedShapeManager =
+        SelectedShapeManager(shapeManager, canvasManager)
 
     private var windowBoardBound: Rect = Rect.ZERO
 
@@ -51,9 +56,11 @@ class MainStateManager(
             shapeManager.add(Rectangle(Rect.byLTWH(i * 4, i * 4, 16, 16)))
         }
 
-        canvasManager.mousePointerLiveData
+        mousePointerLiveData
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::onMouseEvent)
+        keyCommandLiveData.observe(lifecycleOwner, listener = ::onKeyEvent)
+
         canvasManager.windowBoardBoundLiveData
             .observe(lifecycleOwner, throttleDurationMillis = 10) {
                 windowBoardBound = it
@@ -70,9 +77,7 @@ class MainStateManager(
                 requestRedraw()
             }
 
-        redrawRequestMutableLiveData.observe(lifecycleOwner, 1) {
-            redraw()
-        }
+        redrawRequestMutableLiveData.observe(lifecycleOwner, 1) { redraw() }
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
@@ -85,6 +90,17 @@ class MainStateManager(
         if (isFinished) {
             currentMouseCommand = null
             requestRedraw()
+        }
+    }
+
+    private fun onKeyEvent(keyCommand: Key.KeyCommand) {
+        when (keyCommand) {
+            Key.KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
+            Key.KeyCommand.MOVE_DOWN -> selectedShapeManager.moveSelectedShape(1, 0)
+            Key.KeyCommand.MOVE_UP -> selectedShapeManager.moveSelectedShape(-1, 0)
+            Key.KeyCommand.MOVE_LEFT -> selectedShapeManager.moveSelectedShape(0, -1)
+            Key.KeyCommand.MOVE_RIGHT -> selectedShapeManager.moveSelectedShape(0, 1)
+            Key.KeyCommand.IDLE -> Unit
         }
     }
 
