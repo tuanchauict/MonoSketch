@@ -35,4 +35,17 @@ internal class ZoneOwnersManager {
         val address = ZoneAddressFactory.toAddress(point.row, point.column)
         return zoneToOwnersMap[address].orEmpty()
     }
+
+    fun getAllPotentialOwnersInZone(zone: Rect): Set<Int> {
+        val address1 = ZoneAddressFactory.toAddress(zone.top, zone.left)
+        val address2 = ZoneAddressFactory.toAddress(zone.bottom, zone.right)
+        val owners = mutableSetOf<Int>()
+        for (addressRow in address1.row..address2.row) {
+            for (addressCol in address1.column..address2.column) {
+                val address = ZoneAddressFactory.get(addressRow, addressCol)
+                owners += zoneToOwnersMap[address].orEmpty()
+            }
+        }
+        return owners
+    }
 }

@@ -3,7 +3,7 @@ package mono.shapesearcher
 /**
  * A data class to identify address of a zone
  */
-internal data class ZoneAddress(val left: Int, val top: Int)
+internal data class ZoneAddress(val row: Int, val column: Int)
 
 /**
  * A factory of [ZoneAddress].

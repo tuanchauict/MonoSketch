@@ -7,22 +7,46 @@ import mono.graphics.geo.Rect
  * A [MouseCommand] to select shapes.
  */
 internal class SelectShapeMouseCommand : MouseCommand {
-    private var selectionBound: Rect? = null
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
         console.log(mousePointer)
-       return when (mousePointer) {
+        return when (mousePointer) {
             is MousePointer.Down -> false
-            is MousePointer.Move -> false
-            is MousePointer.Up -> false
+            is MousePointer.Move -> {
+                environment.selectedShapeManager.setSelectionBound(
+                    Rect.byLTRB(
+                        mousePointer.mouseDownPoint.left,
+                        mousePointer.mouseDownPoint.top,
+                        mousePointer.point.left,
+                        mousePointer.point.top
+                    )
+                )
+                false
+            }
+            is MousePointer.Up -> {
+                val shapes = environment.shapeSearcher.getAllShapesInZone(
+                    Rect.byLTRB(
+                        mousePointer.mouseDownPoint.left,
+                        mousePointer.mouseDownPoint.top,
+                        mousePointer.point.left,
+                        mousePointer.point.top
+                    )
+                )
+                val selectedShapes = if (mousePointer.isWithShiftKey) {
+                    environment.selectedShapeManager.selectedShapes + shapes
+                } else {
+                    shapes
+                }
+                environment.selectedShapeManager.setSelectedShapes(*selectedShapes.toTypedArray())
+                false
+            }
             is MousePointer.Click -> {
                 val shapes = environment.shapeSearcher.getShapes(mousePointer.point)
-                console.log(shapes)
                 if (shapes.isNotEmpty()) {
                     val shape = shapes.last()
                     if (mousePointer.isWithShiftKey) {
                         environment.selectedShapeManager.toggleSelection(shape)
                     } else {
-                        environment.selectedShapeManager.set(shape)
+                        environment.selectedShapeManager.setSelectedShapes(shape)
                     }
                 }
                 true

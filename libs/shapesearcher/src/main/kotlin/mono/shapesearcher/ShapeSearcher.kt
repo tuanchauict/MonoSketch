@@ -44,4 +44,11 @@ class ShapeSearcher(
             !bitmap.get(bitmapRow, bitmapCol).isTransparent
         }
         .toList()
+
+    fun getAllShapesInZone(bound: Rect): List<AbstractShape> =
+        zoneOwnersManager.getAllPotentialOwnersInZone(bound)
+            .asSequence()
+            .mapNotNull { shapeManager.getShape(it) }
+            .filter { it.bound.isOverlapped(bound) }
+            .toList()
 }
