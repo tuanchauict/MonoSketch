@@ -19,21 +19,8 @@ internal object MouseCommandFactory {
         commandEnvironment: CommandEnvironment,
         mousePointer: MousePointer.Down,
         commandType: CommandType
-    ): MouseCommand? {
-        val shapes = commandEnvironment.shapeSearcher.getShapes(mousePointer.point)
-
-        if (shapes.isNotEmpty()) {
-            val shape = shapes.last()
-            if (mousePointer.isWithShiftKey) {
-                commandEnvironment.selectedShapeManager.toggleSelection(shape)
-            } else {
-                commandEnvironment.selectedShapeManager.set(shape)
-            }
-            return null
-        }
-        return when (commandType) {
-            CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
-            CommandType.IDLE -> null
-        }
+    ): MouseCommand = when (commandType) {
+        CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
+        CommandType.IDLE -> SelectShapeMouseCommand()
     }
 }
