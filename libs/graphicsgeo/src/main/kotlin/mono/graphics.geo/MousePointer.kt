@@ -5,9 +5,24 @@ package mono.graphics.geo
  */
 sealed class MousePointer {
     object Idle : MousePointer()
-    data class Down(val point: Point) : MousePointer()
-    data class Move(val mouseDownPoint: Point, val point: Point) : MousePointer()
-    data class Up(val mouseDownPoint: Point, val point: Point) : MousePointer()
-    data class Click(val point: Point) : MousePointer()
+
+    data class Down(
+        val point: Point,
+        val isWithShiftKey: Boolean
+    ) : MousePointer()
+
+    data class Move(
+        val mouseDownPoint: Point,
+        val point: Point,
+        val isWithShiftKey: Boolean
+    ) : MousePointer()
+
+    data class Up(
+        val mouseDownPoint: Point,
+        val point: Point,
+        val isWithShiftKey: Boolean
+    ) : MousePointer()
+
+    data class Click(val point: Point, val isWithShiftKey: Boolean) : MousePointer()
 }
 

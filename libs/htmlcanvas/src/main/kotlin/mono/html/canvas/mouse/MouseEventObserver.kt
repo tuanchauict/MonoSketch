@@ -28,22 +28,25 @@ class MouseEventObserver(
 
     private fun setMouseDownPointer(event: MouseEvent) {
         if (mousePointerLiveData.value == MousePointer.Idle) {
-            mousePointerMutableLiveData.value = MousePointer.Down(event.toPoint())
+            mousePointerMutableLiveData.value = MousePointer.Down(event.toPoint(), event.shiftKey)
         }
     }
 
     private fun setMouseUpPointer(event: MouseEvent) {
         val currentValue = mousePointerLiveData.value
         val clickPoint = event.toPoint()
+        println("shift ${event.shiftKey}")
         mousePointerMutableLiveData.value = when (currentValue) {
-            is MousePointer.Down -> MousePointer.Up(currentValue.point, clickPoint)
-            is MousePointer.Move -> MousePointer.Up(currentValue.mouseDownPoint, clickPoint)
+            is MousePointer.Down ->
+                MousePointer.Up(currentValue.point, clickPoint, event.shiftKey)
+            is MousePointer.Move ->
+                MousePointer.Up(currentValue.mouseDownPoint, clickPoint, event.shiftKey)
             is MousePointer.Up,
             is MousePointer.Click,
             MousePointer.Idle -> MousePointer.Idle
         }
         if (currentValue is MousePointer.Down) {
-            mousePointerMutableLiveData.value = MousePointer.Click(clickPoint)
+            mousePointerMutableLiveData.value = MousePointer.Click(clickPoint, event.shiftKey)
         }
         mousePointerMutableLiveData.value = MousePointer.Idle
     }
@@ -51,8 +54,10 @@ class MouseEventObserver(
     private fun setMouseMovePointer(event: MouseEvent) {
         val mousePointer = mousePointerLiveData.value
         mousePointerMutableLiveData.value = when (mousePointer) {
-            is MousePointer.Down -> MousePointer.Move(mousePointer.point, event.toPoint())
-            is MousePointer.Move -> MousePointer.Move(mousePointer.mouseDownPoint, event.toPoint())
+            is MousePointer.Down ->
+                MousePointer.Move(mousePointer.point, event.toPoint(), event.shiftKey)
+            is MousePointer.Move ->
+                MousePointer.Move(mousePointer.mouseDownPoint, event.toPoint(), event.shiftKey)
             is MousePointer.Up,
             is MousePointer.Click,
             MousePointer.Idle -> MousePointer.Idle
