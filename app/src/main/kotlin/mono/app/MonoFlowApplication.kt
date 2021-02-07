@@ -25,6 +25,7 @@ class MonoFlowApplication : LifecycleOwner() {
      * The entry point for all actions. This is called after window is loaded (`window.onload`)
      */
     override fun onStartInternal() {
+        val body = document.body ?: return
         val boardCanvasContainer =
             document.getElementById(CONTAINER_ID) as? HTMLDivElement ?: return
 
@@ -34,13 +35,16 @@ class MonoFlowApplication : LifecycleOwner() {
             mainBoard,
             model.windowSizeLiveData
         )
+        val keyCommandController = KeyCommandController(body)
 
         mainStateManager = MainStateManager(
             this,
             mainBoard,
             shapeManager,
             bitmapManager,
-            canvasViewController
+            canvasViewController,
+            keyCommandController.keyCommandLiveData,
+            canvasViewController.mousePointerLiveData
         )
 
         onResize()
