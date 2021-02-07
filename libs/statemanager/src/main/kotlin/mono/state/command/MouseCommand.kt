@@ -19,8 +19,15 @@ internal object MouseCommandFactory {
         commandEnvironment: CommandEnvironment,
         mousePointer: MousePointer.Down,
         commandType: CommandType
-    ): MouseCommand = when (commandType) {
-        CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
-        CommandType.IDLE -> SelectShapeMouseCommand()
+    ): MouseCommand {
+        if (!mousePointer.isWithShiftKey) {
+            if (commandEnvironment.selectedShapeManager.isInSelectedBound(mousePointer.point)) {
+                return MoveShapeMouseCommand(commandEnvironment.selectedShapeManager.selectedShapes)
+            }
+        }
+        return when (commandType) {
+            CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
+            CommandType.IDLE -> SelectShapeMouseCommand()
+        }
     }
 }

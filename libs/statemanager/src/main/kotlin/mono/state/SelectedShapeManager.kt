@@ -1,5 +1,6 @@
 package mono.state
 
+import mono.common.nullToFalse
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
@@ -19,6 +20,8 @@ class SelectedShapeManager(
 ) {
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
+
+    private var bound: Rect? = null
 
     fun setSelectedShapes(vararg shapes: AbstractShape?) {
         selectedShapes = shapes.filterNotNull().toSet()
@@ -53,8 +56,8 @@ class SelectedShapeManager(
         updateInteractionBound()
     }
 
-    private fun updateInteractionBound() {
-        val bound = if (selectedShapes.isNotEmpty()) {
+    fun updateInteractionBound() {
+        bound = if (selectedShapes.isNotEmpty()) {
             Rect.byLTRB(
                 selectedShapes.minOf { it.bound.left },
                 selectedShapes.minOf { it.bound.top },
@@ -71,4 +74,6 @@ class SelectedShapeManager(
     fun setSelectionBound(bound: Rect?) {
         canvasManager.drawInteractionBound(bound, BoundType.SIMPLE_RECTANGLE)
     }
+
+    fun isInSelectedBound(point: Point): Boolean = bound?.contains(point).nullToFalse()
 }
