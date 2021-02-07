@@ -36,6 +36,7 @@ class RemoveShape(private val shape: AbstractShape) : Command() {
         shapeManager.getGroup(shape.parentId)
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
+        // TODO: This hasn't cleaned group's items. Fix this
         parent.remove(shape)
         shapeManager.unregister(shape)
 

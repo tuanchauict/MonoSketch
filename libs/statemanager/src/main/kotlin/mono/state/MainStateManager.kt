@@ -96,6 +96,10 @@ class MainStateManager(
     private fun onKeyEvent(keyCommand: Key.KeyCommand) {
         when (keyCommand) {
             Key.KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
+            Key.KeyCommand.MOVE_DOWN -> selectedShapeManager.moveSelectedShape(1, 0)
+            Key.KeyCommand.MOVE_UP -> selectedShapeManager.moveSelectedShape(-1, 0)
+            Key.KeyCommand.MOVE_LEFT -> selectedShapeManager.moveSelectedShape(0, -1)
+            Key.KeyCommand.MOVE_RIGHT -> selectedShapeManager.moveSelectedShape(0, 1)
             Key.KeyCommand.IDLE -> Unit
         }
     }
