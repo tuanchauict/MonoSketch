@@ -40,7 +40,7 @@ class MainStateManager(
     private var workingParentGroup: Group = shapeManager.root
 
     private var selectedShapeManager: SelectedShapeManager =
-        SelectedShapeManager(shapeManager, canvasManager)
+        SelectedShapeManager(shapeManager, canvasManager, ::requestRedraw)
 
     private var windowBoardBound: Rect = Rect.ZERO
 
@@ -156,15 +156,15 @@ class MainStateManager(
     ) : CommandEnvironment {
         override val shapeManager: ShapeManager
             get() = stateManager.shapeManager
+
         override val shapeSearcher: ShapeSearcher
             get() = stateManager.shapeSearcher
+
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 
-        override fun setSelectedShapes(vararg shapes: AbstractShape?) {
-            stateManager.selectedShapeManager.set(shapes.filterNotNull().toSet())
-            stateManager.requestRedraw()
-        }
+        override val selectedShapeManager: SelectedShapeManager
+            get() = stateManager.selectedShapeManager
     }
 
     companion object {

@@ -14,13 +14,23 @@ import mono.shape.shape.AbstractShape
  */
 class SelectedShapeManager(
     private val shapeManager: ShapeManager,
-    private val canvasManager: CanvasViewController
+    private val canvasManager: CanvasViewController,
+    private val requestRedraw: () -> Unit
 ) {
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
 
-    fun set(shapes: Set<AbstractShape>) {
-        selectedShapes = shapes
+    fun set(vararg shapes: AbstractShape?) {
+        selectedShapes = shapes.filterNotNull().toSet()
+        updateInteractionBound()
+    }
+
+    fun toggleSelection(shape: AbstractShape) {
+        if (shape in selectedShapes) {
+            selectedShapes -= shape
+        } else {
+            selectedShapes += shape
+        }
         updateInteractionBound()
     }
 
@@ -29,7 +39,7 @@ class SelectedShapeManager(
             shapeManager.remove(shape)
         }
         selectedShapes = emptySet()
-        canvasManager.drawInteractionBound(null, BoundType.NINE_DOTS)
+        updateInteractionBound()
     }
 
     fun moveSelectedShape(offsetRow: Int, offsetCol: Int) {
@@ -55,5 +65,6 @@ class SelectedShapeManager(
             null
         }
         canvasManager.drawInteractionBound(bound, BoundType.NINE_DOTS)
+        requestRedraw()
     }
 }

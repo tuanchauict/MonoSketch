@@ -22,7 +22,12 @@ internal interface MouseCommand {
             val shapes = commandEnvironment.shapeSearcher.getShapes(mousePointer.point)
 
             if (shapes.isNotEmpty()) {
-                commandEnvironment.setSelectedShapes(shapes.last())
+                val shape = shapes.last()
+                if (mousePointer.isWithShiftKey) {
+                    commandEnvironment.selectedShapeManager.toggleSelection(shape)
+                } else {
+                    commandEnvironment.selectedShapeManager.set(shape)
+                }
                 return null
             }
             return when (commandType) {
