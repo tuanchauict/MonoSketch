@@ -2,6 +2,7 @@ package mono.state
 
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
+import mono.html.canvas.CanvasViewController.BoundType
 import mono.shape.shape.AbstractShape
 
 /**
@@ -23,6 +24,6 @@ class SelectedShapeManager(private val canvasManager: CanvasViewController) {
         } else {
             null
         }
-        canvasManager.drawInteractionBound(bound)
+        canvasManager.drawInteractionBound(bound, BoundType.NINE_DOTS)
     }
 }

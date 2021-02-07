@@ -76,8 +76,9 @@ class CanvasViewController(
         interactionCanvasViewController.draw()
     }
 
-    fun drawInteractionBound(bound: Rect?) {
+    fun drawInteractionBound(bound: Rect?, boundType: BoundType) {
         interactionCanvasViewController.selectedShapesBoundingRect = bound
+        interactionCanvasViewController.boundType = boundType
         interactionCanvasViewController.draw()
     }
 
@@ -95,5 +96,9 @@ class CanvasViewController(
             controller.setSizeAndRedraw(widthPx, heightPx)
         }
         windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
+    }
+
+    enum class BoundType {
+        NINE_DOTS, SIMPLE_RECTANGLE
     }
 }

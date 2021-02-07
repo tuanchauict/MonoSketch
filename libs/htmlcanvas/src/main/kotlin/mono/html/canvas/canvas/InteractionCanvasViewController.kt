@@ -1,6 +1,7 @@
 package mono.html.canvas.canvas
 
 import mono.graphics.geo.Rect
+import mono.html.canvas.CanvasViewController
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
 
@@ -13,6 +14,7 @@ internal class InteractionCanvasViewController(
 ) : BaseCanvasViewController(canvas) {
 
     var selectedShapesBoundingRect: Rect? = null
+    var boundType: CanvasViewController.BoundType = CanvasViewController.BoundType.NINE_DOTS
 
     override fun drawInternal() {
         val bound = selectedShapesBoundingRect ?: return
@@ -32,6 +34,17 @@ internal class InteractionCanvasViewController(
         context.fillStyle = "#6b6b6b"
         context.stroke(path)
 
+        if (boundType == CanvasViewController.BoundType.NINE_DOTS) {
+            drawDots(leftPx, topPx, rightPx, bottomPx)
+        }
+    }
+
+    private fun drawDots(
+        leftPx: Double,
+        topPx: Double,
+        rightPx: Double,
+        bottomPx: Double
+    ) {
         drawDot(leftPx, topPx)
         drawDot(leftPx, (topPx + bottomPx) / 2.0)
         drawDot(leftPx, bottomPx)
