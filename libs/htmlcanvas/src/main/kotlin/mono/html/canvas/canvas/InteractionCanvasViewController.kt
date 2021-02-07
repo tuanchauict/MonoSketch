@@ -30,8 +30,11 @@ internal class InteractionCanvasViewController(
             lineTo(leftPx, bottomPx)
             closePath()
         }
-        context.strokeStyle = "#6b6b6b"
-        context.fillStyle = "#6b6b6b"
+        context.strokeStyle = boundType.boundStyleColor
+        context.lineWidth = 1.0
+        val lineDash = if (boundType.isDash) arrayOf(8.0, 6.0) else emptyArray()
+        context.setLineDash(lineDash)
+        context.fillStyle = boundType.boundStyleColor
         context.stroke(path)
 
         if (boundType == CanvasViewController.BoundType.NINE_DOTS) {
