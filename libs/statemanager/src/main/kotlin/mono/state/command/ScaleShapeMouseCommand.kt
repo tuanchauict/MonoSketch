@@ -65,6 +65,8 @@ internal class ScaleShapeMouseCommand(
         environment.selectedShapeManager.updateInteractionBound()
     }
 
+    // TODO: This calculation doesn't work well with multiple shape. New size is not scaled
+    //  naturally.
     private fun createNewShapeBound(newBound: Rect, initShapeBound: Rect): Rect? {
         val left = initShapeBound.left * newBound.left / initialBound.left
         val top = initShapeBound.top * newBound.top / initialBound.top
