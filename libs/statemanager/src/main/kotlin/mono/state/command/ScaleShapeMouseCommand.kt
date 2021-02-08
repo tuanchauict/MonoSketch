@@ -48,11 +48,7 @@ internal class ScaleShapeMouseCommand(
             EdgeRelatedPosition.RIGHT_BOTTOM ->
                 Rect.byLTRB(initialBound.left, initialBound.top, point.left, point.top)
         }
-        val newShapeBounds = shapes.mapNotNull {
-            val initShapeBound = initialShapeBounds[it.id] ?: return@mapNotNull null
-            val newShapeBound = createNewShapeBound(newBound, initShapeBound)
-            if (newShapeBound != null) it.id to newShapeBound else null
-        }.toMap()
+        val newShapeBounds = shapes.mapNotNull { createNewShapeBound(newBound, it) }.toMap()
 
         if (newShapeBounds.size < shapes.size) {
             return
@@ -67,14 +63,22 @@ internal class ScaleShapeMouseCommand(
 
     // TODO: This calculation doesn't work well with multiple shape. New size is not scaled
     //  naturally.
-    private fun createNewShapeBound(newBound: Rect, initShapeBound: Rect): Rect? {
+    private fun createNewShapeBound(newBound: Rect, shape: AbstractShape): Pair<Int, Rect>? {
+        val initShapeBound = initialShapeBounds[shape.id] ?: return null
+
         val left = initShapeBound.left * newBound.left / initialBound.left
         val top = initShapeBound.top * newBound.top / initialBound.top
         val right = initShapeBound.right * newBound.right / initialBound.right
         val bottom = initShapeBound.bottom * newBound.bottom / initialBound.bottom
+        console.log(left, right, top, bottom)
         if (left >= right || top >= bottom) {
             return null
         }
-        return Rect.byLTRB(left, top, right, bottom)
+        val newShapeBound = Rect.byLTRB(left, top, right, bottom)
+        return if (shape.isNewBoundAcceptable(newShapeBound)) {
+            shape.id to Rect.byLTRB(left, top, right, bottom)
+        } else {
+            null
+        }
     }
 }
