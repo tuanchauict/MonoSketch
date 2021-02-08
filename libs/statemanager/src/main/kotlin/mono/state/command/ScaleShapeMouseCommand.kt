@@ -32,25 +32,26 @@ internal class ScaleShapeMouseCommand(
     private fun scale(environment: CommandEnvironment, point: Point) {
         val newBound = when (interactionPosition) {
             EdgeRelatedPosition.LEFT_TOP ->
-                Rect.byLTRB(point.left, point.top, initialBound.right, initialBound.bottom)
+                createBound(point.left, point.top, initialBound.right, initialBound.bottom)
             EdgeRelatedPosition.MIDDLE_TOP ->
-                Rect.byLTRB(initialBound.left, point.top, initialBound.right, initialBound.bottom)
+                createBound(initialBound.left, point.top, initialBound.right, initialBound.bottom)
             EdgeRelatedPosition.RIGHT_TOP ->
-                Rect.byLTRB(initialBound.left, point.top, point.left, initialBound.bottom)
+                createBound(initialBound.left, point.top, point.left, initialBound.bottom)
             EdgeRelatedPosition.LEFT_MIDDLE ->
-                Rect.byLTRB(point.left, initialBound.top, initialBound.right, initialBound.bottom)
+                createBound(point.left, initialBound.top, initialBound.right, initialBound.bottom)
             EdgeRelatedPosition.RIGHT_MIDDLE ->
-                Rect.byLTRB(initialBound.left, initialBound.top, point.left, initialBound.bottom)
+                createBound(initialBound.left, initialBound.top, point.left, initialBound.bottom)
             EdgeRelatedPosition.LEFT_BOTTOM ->
-                Rect.byLTRB(point.left, initialBound.top, initialBound.right, point.top)
+                createBound(point.left, initialBound.top, initialBound.right, point.top)
             EdgeRelatedPosition.MIDDLE_BOTTOM ->
-                Rect.byLTRB(initialBound.left, initialBound.top, initialBound.right, point.top)
+                createBound(initialBound.left, initialBound.top, initialBound.right, point.top)
             EdgeRelatedPosition.RIGHT_BOTTOM ->
-                Rect.byLTRB(initialBound.left, initialBound.top, point.left, point.top)
-        }
+                createBound(initialBound.left, initialBound.top, point.left, point.top)
+        } ?: return
         val newShapeBounds = shapes.mapNotNull { createNewShapeBound(newBound, it) }.toMap()
 
         if (newShapeBounds.size < shapes.size) {
+            // Having at least 1 invalid new shape. No scale
             return
         }
 
@@ -70,15 +71,11 @@ internal class ScaleShapeMouseCommand(
         val top = initShapeBound.top * newBound.top / initialBound.top
         val right = initShapeBound.right * newBound.right / initialBound.right
         val bottom = initShapeBound.bottom * newBound.bottom / initialBound.bottom
-        console.log(left, right, top, bottom)
-        if (left >= right || top >= bottom) {
-            return null
-        }
-        val newShapeBound = Rect.byLTRB(left, top, right, bottom)
-        return if (shape.isNewBoundAcceptable(newShapeBound)) {
-            shape.id to Rect.byLTRB(left, top, right, bottom)
-        } else {
-            null
-        }
+
+        val newShapeBound = createBound(left, top, right, bottom) ?: return null
+        return if (shape.isNewBoundAcceptable(newShapeBound)) shape.id to newShapeBound else null
     }
+
+    private fun createBound(left: Int, top: Int, right: Int, bottom: Int): Rect? =
+        if (left < right && top < bottom) Rect.byLTRB(left, top, right, bottom) else null
 }
