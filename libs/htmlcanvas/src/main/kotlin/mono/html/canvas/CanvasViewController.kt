@@ -34,8 +34,7 @@ class CanvasViewController(
     private val mouseEventController: MouseEventObserver by lazy {
         MouseEventObserver(
             container,
-            gridCanvasViewController.drawingInfo::toBoardColumn,
-            gridCanvasViewController.drawingInfo::toBoardRow
+            gridCanvasViewController::drawingInfo
         )
     }
     val mousePointerLiveData: LiveData<MousePointer> by lazy {

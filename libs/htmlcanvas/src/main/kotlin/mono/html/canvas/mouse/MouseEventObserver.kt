@@ -2,6 +2,7 @@ package mono.html.canvas.mouse
 
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
+import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import org.w3c.dom.HTMLDivElement
@@ -11,10 +12,9 @@ import org.w3c.dom.events.MouseEvent
  * A class to attach and observe mouse events happening on the canvas.
  * All events will be combined into a single live data [mousePointerLiveData].
  */
-class MouseEventObserver(
+internal class MouseEventObserver(
     container: HTMLDivElement,
-    private val toBoardLeft: (xPx: Int) -> Int,
-    private val toBoardTop: (yPx: Int) -> Int
+    private val getDrawingInfo: () -> BaseCanvasViewController.DrawingInfo
 ) {
     private val mousePointerMutableLiveData: MutableLiveData<MousePointer> =
         MutableLiveData(MousePointer.Idle)
@@ -28,7 +28,8 @@ class MouseEventObserver(
 
     private fun setMouseDownPointer(event: MouseEvent) {
         if (mousePointerLiveData.value == MousePointer.Idle) {
-            mousePointerMutableLiveData.value = MousePointer.Down(event.toPoint(), event.shiftKey)
+            mousePointerMutableLiveData.value =
+                MousePointer.Down(event.toPoint(), event.toPointPx(), event.shiftKey)
         }
     }
 
@@ -65,5 +66,13 @@ class MouseEventObserver(
         mousePointerMutableLiveData.value = newPointer
     }
 
-    private fun MouseEvent.toPoint(): Point = Point(toBoardLeft(clientX), toBoardTop(clientY))
+    private fun MouseEvent.toPoint(): Point {
+        val drawingInfo = getDrawingInfo()
+        return Point(drawingInfo.toBoardColumn(clientX), drawingInfo.toBoardRow(clientY))
+    }
+
+    private fun MouseEvent.toPointPx(): Point {
+        val drawingInfo = getDrawingInfo()
+        return Point(clientX - drawingInfo.offsetPx.left, clientY - drawingInfo.offsetPx.top)
+    }
 }
