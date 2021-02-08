@@ -20,14 +20,38 @@ internal object MouseCommandFactory {
         mousePointer: MousePointer.Down,
         commandType: CommandType
     ): MouseCommand {
-        if (!mousePointer.isWithShiftKey) {
-            if (commandEnvironment.selectedShapeManager.isInSelectedBound(mousePointer.point)) {
-                return MoveShapeMouseCommand(commandEnvironment.selectedShapeManager.selectedShapes)
-            }
+        val interactionCommand = detectInteractionCommand(commandEnvironment, mousePointer)
+        if (interactionCommand != null) {
+            return interactionCommand
         }
+
         return when (commandType) {
             CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
             CommandType.IDLE -> SelectShapeMouseCommand()
         }
+    }
+
+    private fun detectInteractionCommand(
+        commandEnvironment: CommandEnvironment,
+        mousePointer: MousePointer.Down
+    ): MouseCommand? {
+        val selectedShapes = commandEnvironment.selectedShapeManager.selectedShapes
+        if (selectedShapes.isEmpty()) {
+            return null
+        }
+
+        val interactionPosition = commandEnvironment.getInteractionPosition(mousePointer.pointPx)
+        println(interactionPosition)
+
+        if (interactionPosition != null) {
+            return ScaleShapeMouseCommand(selectedShapes, interactionPosition)
+        }
+
+        if (!mousePointer.isWithShiftKey &&
+            commandEnvironment.selectedShapeManager.isInSelectedBound(mousePointer.point)
+        ) {
+            return MoveShapeMouseCommand(selectedShapes)
+        }
+        return null
     }
 }

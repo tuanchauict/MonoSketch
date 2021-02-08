@@ -36,7 +36,7 @@ internal class MouseEventObserver(
     private fun setMouseUpPointer(event: MouseEvent) {
         val currentValue = mousePointerLiveData.value
         val clickPoint = event.toPoint()
-        println("shift ${event.shiftKey}")
+
         mousePointerMutableLiveData.value = when (currentValue) {
             is MousePointer.Down ->
                 MousePointer.Up(currentValue.point, clickPoint, event.shiftKey)
