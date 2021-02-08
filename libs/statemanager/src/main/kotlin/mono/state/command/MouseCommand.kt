@@ -41,8 +41,6 @@ internal object MouseCommandFactory {
         }
 
         val interactionPosition = commandEnvironment.getInteractionPosition(mousePointer.pointPx)
-        println(interactionPosition)
-
         if (interactionPosition != null) {
             return ScaleShapeMouseCommand(selectedShapes, interactionPosition)
         }
