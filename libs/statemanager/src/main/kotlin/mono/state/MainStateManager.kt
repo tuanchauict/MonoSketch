@@ -6,7 +6,9 @@ import mono.common.nullToFalse
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
+import mono.graphics.geo.EdgeRelatedPosition
 import mono.graphics.geo.MousePointer
+import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
@@ -174,6 +176,9 @@ class MainStateManager(
 
         override val selectedShapeManager: SelectedShapeManager
             get() = stateManager.selectedShapeManager
+
+        override fun getInteractionPosition(point: Point): EdgeRelatedPosition? =
+            stateManager.canvasManager.getInteractionPosition(point)
     }
 
     companion object {

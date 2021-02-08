@@ -1,5 +1,7 @@
 package mono.state.command
 
+import mono.graphics.geo.EdgeRelatedPosition
+import mono.graphics.geo.Point
 import mono.shape.ShapeManager
 import mono.shape.shape.Group
 import mono.shapesearcher.ShapeSearcher
@@ -13,4 +15,6 @@ internal interface CommandEnvironment {
     val shapeSearcher: ShapeSearcher
     val workingParentGroup: Group
     val selectedShapeManager: SelectedShapeManager
+
+    fun getInteractionPosition(point: Point): EdgeRelatedPosition?
 }

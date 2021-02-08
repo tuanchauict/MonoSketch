@@ -3,7 +3,9 @@ package mono.html.canvas
 import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
 import mono.graphics.board.MonoBoard
+import mono.graphics.geo.EdgeRelatedPosition
 import mono.graphics.geo.MousePointer
+import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.html.canvas.canvas.BaseCanvasViewController
@@ -80,6 +82,9 @@ class CanvasViewController(
         interactionCanvasViewController.boundType = boundType
         interactionCanvasViewController.draw()
     }
+
+    fun getInteractionPosition(point: Point): EdgeRelatedPosition? =
+        interactionCanvasViewController.getDotIndex(point)
 
     fun setFont(fontSize: Int) {
         for (controller in canvasControllers) {
