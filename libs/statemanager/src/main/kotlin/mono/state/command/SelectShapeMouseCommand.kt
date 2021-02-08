@@ -7,9 +7,8 @@ import mono.graphics.geo.Rect
  * A [MouseCommand] to select shapes.
  */
 internal class SelectShapeMouseCommand : MouseCommand {
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
-        console.log(mousePointer)
-        return when (mousePointer) {
+    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
+        when (mousePointer) {
             is MousePointer.Down -> false
             is MousePointer.Move -> {
                 environment.selectedShapeManager.setSelectionBound(
@@ -23,14 +22,18 @@ internal class SelectShapeMouseCommand : MouseCommand {
                 false
             }
             is MousePointer.Up -> {
-                val shapes = environment.shapeSearcher.getAllShapesInZone(
-                    Rect.byLTRB(
-                        mousePointer.mouseDownPoint.left,
-                        mousePointer.mouseDownPoint.top,
-                        mousePointer.point.left,
-                        mousePointer.point.top
-                    )
+                val area = Rect.byLTRB(
+                    mousePointer.mouseDownPoint.left,
+                    mousePointer.mouseDownPoint.top,
+                    mousePointer.point.left,
+                    mousePointer.point.top
                 )
+
+                val shapes = if (area.width * area.height > 1) {
+                    environment.shapeSearcher.getAllShapesInZone(area)
+                } else {
+                    emptyList()
+                }
                 val selectedShapes = if (mousePointer.isWithShiftKey) {
                     environment.selectedShapeManager.selectedShapes + shapes
                 } else {
@@ -53,5 +56,4 @@ internal class SelectShapeMouseCommand : MouseCommand {
             }
             MousePointer.Idle -> true
         }
-    }
 }

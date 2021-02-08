@@ -56,8 +56,20 @@ data class Rect(val position: Point, val size: Size) {
             Size(width, height)
         )
 
-        fun byHorizontalLine(left: Int, right: Int, top: Int) = byLTRB(left, top, right, top)
+        fun boundOf(rectangles: Sequence<Rect>): Rect {
+            val firstRect = rectangles.first()
+            var left = firstRect.left
+            var right = firstRect.right
+            var top = firstRect.top
+            var bottom = firstRect.bottom
 
-        fun byVerticalLine(left: Int, top: Int, bottom: Int) = byLTRB(left, top, left, bottom)
+            for (rect in rectangles) {
+                left = min(rect.left, left)
+                right = max(rect.right, right)
+                top = min(rect.top, top)
+                bottom = max(rect.bottom, bottom)
+            }
+            return byLTRB(left, top, right, bottom)
+        }
     }
 }

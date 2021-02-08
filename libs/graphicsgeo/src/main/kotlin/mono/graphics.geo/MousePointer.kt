@@ -8,6 +8,7 @@ sealed class MousePointer {
 
     data class Down(
         val point: Point,
+        val pointPx: Point,
         val isWithShiftKey: Boolean
     ) : MousePointer()
 

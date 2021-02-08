@@ -58,12 +58,8 @@ class SelectedShapeManager(
 
     fun updateInteractionBound() {
         bound = if (selectedShapes.isNotEmpty()) {
-            Rect.byLTRB(
-                selectedShapes.minOf { it.bound.left },
-                selectedShapes.minOf { it.bound.top },
-                selectedShapes.maxOf { it.bound.right },
-                selectedShapes.maxOf { it.bound.bottom }
-            )
+            val rects = selectedShapes.asSequence().map { it.bound }
+            Rect.boundOf(rects)
         } else {
             null
         }
