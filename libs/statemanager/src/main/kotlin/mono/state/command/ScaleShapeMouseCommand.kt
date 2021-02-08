@@ -50,14 +50,8 @@ internal class ScaleShapeMouseCommand(
         }
         val newShapeBounds = shapes.mapNotNull {
             val initShapeBound = initialShapeBounds[it.id] ?: return@mapNotNull null
-            val rect = Rect.byLTRB(
-                left = initShapeBound.left * newBound.left / initialBound.left,
-                top = initShapeBound.top * newBound.top / initialBound.top,
-                right = initShapeBound.right * newBound.right / initialBound.right,
-                bottom = initShapeBound.bottom * newBound.bottom / initialBound.bottom,
-            )
-
-            if (rect.width > 1 && rect.height > 1) it.id to rect else null
+            val newShapeBound = createNewShapeBound(newBound, initShapeBound)
+            if (newShapeBound != null) it.id to newShapeBound else null
         }.toMap()
 
         if (newShapeBounds.size < shapes.size) {
@@ -69,5 +63,16 @@ internal class ScaleShapeMouseCommand(
             environment.shapeManager.execute(ChangeBound(shape, toBeRect))
         }
         environment.selectedShapeManager.updateInteractionBound()
+    }
+
+    private fun createNewShapeBound(newBound: Rect, initShapeBound: Rect): Rect? {
+        val left = initShapeBound.left * newBound.left / initialBound.left
+        val top = initShapeBound.top * newBound.top / initialBound.top
+        val right = initShapeBound.right * newBound.right / initialBound.right
+        val bottom = initShapeBound.bottom * newBound.bottom / initialBound.bottom
+        if (left >= right || top >= bottom) {
+            return null
+        }
+        return Rect.byLTRB(left, top, right, bottom)
     }
 }
