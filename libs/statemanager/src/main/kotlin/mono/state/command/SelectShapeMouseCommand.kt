@@ -7,9 +7,8 @@ import mono.graphics.geo.Rect
  * A [MouseCommand] to select shapes.
  */
 internal class SelectShapeMouseCommand : MouseCommand {
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
-        console.log(mousePointer)
-        return when (mousePointer) {
+    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
+        when (mousePointer) {
             is MousePointer.Down -> false
             is MousePointer.Move -> {
                 environment.selectedShapeManager.setSelectionBound(
@@ -57,5 +56,4 @@ internal class SelectShapeMouseCommand : MouseCommand {
             }
             MousePointer.Idle -> true
         }
-    }
 }
