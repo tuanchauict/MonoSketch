@@ -1,13 +1,14 @@
 package mono.shape.shape
 
-import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+/**
+ * A test for [Group].
+ */
 class GroupTest {
     private val target: Group = Group(100)
 
@@ -60,18 +61,6 @@ class GroupTest {
         target.remove(shape2)
         assertEquals(0, target.itemCount)
         assertTrue(target.items.isEmpty())
-    }
-
-    @Test
-    fun testContains() {
-        val shape1 = Rectangle(Rect.byLTWH(0, 0, 1, 1))
-        val shape2 = Rectangle(Rect.byLTWH(2, 2, 1, 1))
-        target.add(shape1)
-        target.add(shape2)
-
-        assertTrue(target.contains(Point(0, 0)))
-        assertTrue(target.contains(Point(2, 2)))
-        assertFalse(target.contains(Point(-1, -1)))
     }
 
     @Test

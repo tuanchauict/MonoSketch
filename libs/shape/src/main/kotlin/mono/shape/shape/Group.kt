@@ -40,8 +40,6 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
         quickList.remove(shape) != null
     }
 
-    override fun contains(point: Point): Boolean = quickList.any { it.contains(point) }
-
     internal fun move(shape: AbstractShape, moveActionType: MoveActionType) = update {
         quickList.move(shape, moveActionType)
     }

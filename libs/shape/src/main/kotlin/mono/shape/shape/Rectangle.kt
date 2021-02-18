@@ -32,6 +32,4 @@ class Rectangle(
     }
 
     override fun isValid(): Boolean = bound.width > 1 && bound.height > 1
-
-    override fun contains(point: Point): Boolean = point in bound
 }

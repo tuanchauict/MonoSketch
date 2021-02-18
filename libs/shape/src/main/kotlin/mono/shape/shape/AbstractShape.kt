@@ -22,8 +22,6 @@ abstract class AbstractShape(
 
     abstract val bound: Rect
 
-    abstract fun contains(point: Point): Boolean
-
     open fun setBound(newBound: Rect) = Unit
 
     open fun isNewBoundAcceptable(newBound: Rect): Boolean = true
