@@ -2,6 +2,7 @@ package mono.graphics.bitmap.drawable
 
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.MonoBitmap
+import mono.graphics.geo.Size
 import mono.shape.shape.Rectangle
 
 object RectangleDrawable {
@@ -38,14 +39,18 @@ object RectangleDrawable {
     )
 
     // TODO: Add more kinds of rectangle
-    fun toBitmap(rectangle: Rectangle): MonoBitmap {
-        val size = rectangle.bound.size
+    fun toBitmap(size: Size, fillStyle: Rectangle.FillStyle): MonoBitmap {
         val ninepatch = when {
             size.width == 1 && size.height == 1 -> NINE_PATCH_DOT
             size.width == 1 -> NINE_PATCH_VERTICAL_LINE
             size.height == 1 -> NINE_PATCH_HORIZONTAL_LINE
-            else -> NINE_PATCH_0_BLANK
+            else -> fillStyle.toNinePatch()
         }
-        return ninepatch.toBitmap(rectangle.bound.width, rectangle.bound.height)
+        return ninepatch.toBitmap(size.width, size.height)
+    }
+
+    private fun Rectangle.FillStyle.toNinePatch(): NinePatchDrawable = when(this) {
+        Rectangle.FillStyle.STYLE_0_BORDER -> NINE_PATCH_0_BLANK
+        Rectangle.FillStyle.STYLE_0_FILL -> NINE_PATCH_0_FILL
     }
 }

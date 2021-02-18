@@ -32,4 +32,9 @@ class Rectangle(
     }
 
     override fun isValid(): Boolean = bound.width > 1 && bound.height > 1
+
+    enum class FillStyle {
+        STYLE_0_FILL,
+        STYLE_0_BORDER
+    }
 }

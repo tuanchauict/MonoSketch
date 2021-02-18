@@ -4,6 +4,7 @@ import mono.graphics.bitmap.drawable.RectangleDrawable
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Rectangle
+import mono.shape.shape.Rectangle.FillStyle
 
 /**
  * A model class which manages and caches bitmap of shapes.
@@ -21,7 +22,8 @@ class MonoBitmapManager {
         }
 
         val bitmap = when (shape) {
-            is Rectangle -> RectangleDrawable.toBitmap(shape)
+            is Rectangle -> RectangleDrawable.toBitmap(shape.bound.size, FillStyle.STYLE_0_BORDER)
+
             is Group -> null // No draw group since it change very frequently.
             else -> null
         } ?: return null
