@@ -2,6 +2,7 @@ package mono.graphics.bitmap
 
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.common.Characters.isTransparent
+import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 
 /**
@@ -14,12 +15,15 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
         height = matrix.size
     )
 
+    fun isEmpty(): Boolean = size == Size.ZERO
+
     fun get(row: Int, column: Int): Char = matrix.getOrNull(row)?.get(column) ?: TRANSPARENT_CHAR
 
     override fun toString(): String =
         matrix.joinToString("\n")
 
     class Builder(private val width: Int, private val height: Int) {
+        private val bound: Rect = Rect.byLTWH(0, 0, width, height)
         private val matrix: List<MutableList<Char>> = List(height) {
             MutableList(width) { TRANSPARENT_CHAR }
         }
@@ -27,6 +31,28 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
         fun put(row: Int, column: Int, char: Char) {
             if (row in 0 until height && column in 0 until width) {
                 matrix[row][column] = char
+            }
+        }
+
+        fun fill(row: Int, column: Int, bitmap: MonoBitmap) {
+            if (bitmap.isEmpty()) {
+                return
+            }
+            val inMatrix = bitmap.matrix
+
+            val inMatrixBound = Rect.byLTWH(row, column, bitmap.size.width, bitmap.size.height)
+
+            val overlap = bound.getOverlappedRect(inMatrixBound) ?: return
+            val (startCol, startRow) = overlap.position - bound.position
+            val (inStartCol, inStartRow) = overlap.position - inMatrixBound.position
+
+            for (r in 0 until overlap.height) {
+                val src = inMatrix[inStartRow + r]
+                val dest = matrix[startRow + r]
+
+                src.forEachIndex(inStartCol, inStartCol + overlap.width) { index, char ->
+                    dest[startCol + index] = char
+                }
             }
         }
 
