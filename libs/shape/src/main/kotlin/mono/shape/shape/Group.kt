@@ -1,6 +1,5 @@
 package mono.shape.shape
 
-import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 import mono.shape.list.QuickList.AddPosition

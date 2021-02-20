@@ -16,7 +16,11 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     // Text can be auto resized by text
     override var bound: Rect = rect
 
-    var text: String = ""
+    override var extra: Extra = Extra(
+        Rectangle.Extra.DEFAULT,
+        text = ""
+    )
+        private set
 
     constructor(startPoint: Point, endPoint: Point, parentId: Int?) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
@@ -26,4 +30,9 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     init {
         userSettingSize = rect.size
     }
+
+    data class Extra(
+        val boundExtra: Rectangle.Extra?,
+        val text: String
+    )
 }

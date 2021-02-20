@@ -18,6 +18,9 @@ class Rectangle(
             isUpdated
         }
 
+    override var extra: Extra = Extra(FillStyle.STYLE_0_BORDER)
+        private set
+
     /**
      * The content of this shape also includes all vertical/horizontal lines created by [startPoint]
      * and [endPoint].
@@ -32,6 +35,15 @@ class Rectangle(
     }
 
     override fun isValid(): Boolean = bound.width > 1 && bound.height > 1
+
+    /**
+     * A data class which contains extra information of a rectangle.
+     */
+    data class Extra(val fillStyle: FillStyle) {
+        companion object {
+            val DEFAULT = Extra(FillStyle.STYLE_0_BORDER)
+        }
+    }
 
     enum class FillStyle {
         STYLE_0_FILL,

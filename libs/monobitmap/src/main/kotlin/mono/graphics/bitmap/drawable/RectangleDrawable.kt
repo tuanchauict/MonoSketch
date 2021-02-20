@@ -38,13 +38,12 @@ object RectangleDrawable {
         verticalRepeatableRange = NinePatchDrawable.RepeatableRange.Repeat(0, 0)
     )
 
-    // TODO: Add more kinds of rectangle
-    fun toBitmap(size: Size, fillStyle: Rectangle.FillStyle): MonoBitmap {
+    fun toBitmap(size: Size, extra: Rectangle.Extra): MonoBitmap {
         val ninepatch = when {
             size.width == 1 && size.height == 1 -> NINE_PATCH_DOT
             size.width == 1 -> NINE_PATCH_VERTICAL_LINE
             size.height == 1 -> NINE_PATCH_HORIZONTAL_LINE
-            else -> fillStyle.toNinePatch()
+            else -> extra.fillStyle.toNinePatch()
         }
         return ninepatch.toBitmap(size.width, size.height)
     }
