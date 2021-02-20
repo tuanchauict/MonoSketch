@@ -12,7 +12,7 @@ class RectangleDrawableTest {
     @Test
     fun testToBitmap() {
         val shape = Rectangle(Rect.byLTWH(10, 10, 5, 5))
-        val bitmap = RectangleDrawable.toBitmap(shape)
+        val bitmap = RectangleDrawable.toBitmap(shape.bound.size, shape.extra)
         assertEquals(shape.bound.width, bitmap.size.width)
         assertEquals(shape.bound.height, bitmap.size.height)
         assertEquals(
