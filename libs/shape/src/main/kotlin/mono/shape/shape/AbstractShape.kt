@@ -29,6 +29,8 @@ abstract class AbstractShape(
 
     open fun isNewBoundAcceptable(newBound: Rect): Boolean = true
 
+    open fun setExtra(extra: Any) = Unit
+
     open fun isValid(): Boolean = true
 
     /**

@@ -22,6 +22,9 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     )
         private set
 
+    var renderableText: List<String> = emptyList()
+        private set
+
     constructor(startPoint: Point, endPoint: Point, parentId: Int?) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
         parentId
@@ -29,7 +32,46 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
 
     init {
         userSettingSize = rect.size
+        updateRenderableText()
     }
+
+    override fun setExtra(extra: Any) {
+        if (extra !is Extra) {
+            return
+        }
+        this.extra = extra
+        updateRenderableText()
+    }
+
+    private fun updateRenderableText() {
+        val maxCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
+        renderableText = toRenderableText(extra.text, maxCharCount)
+    }
+
+    private fun toRenderableText(text: String, maxCharCount: Int): List<String> =
+        text
+            .split("\n")
+            .fold(mutableListOf(StringBuilder())) { adjustedLines, line ->
+                for (word in line.toStandardizedWords(maxCharCount)) {
+                    val lastLine = adjustedLines.last()
+                    val space = if (lastLine.isNotEmpty()) " " else ""
+                    val newLineLength =
+                        lastLine.length + space.length + word.length
+                    if (newLineLength <= maxCharCount) {
+                        lastLine.append(space).append(word)
+                    } else {
+                        adjustedLines.add(StringBuilder(word))
+                    }
+                }
+                adjustedLines
+            }
+            .map { it.toString() }
+
+    private fun String.toStandardizedWords(maxCharCount: Int): List<String> =
+        split(" ")
+            .flatMap { word ->
+                if (word.length <= maxCharCount) listOf(word) else word.chunked(maxCharCount)
+            }
 
     data class Extra(
         val boundExtra: Rectangle.Extra?,
