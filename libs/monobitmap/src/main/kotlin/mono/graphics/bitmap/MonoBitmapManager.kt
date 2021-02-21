@@ -24,7 +24,7 @@ class MonoBitmapManager {
 
         val bitmap = when (shape) {
             is Rectangle -> RectangleDrawable.toBitmap(shape.bound.size, shape.extra)
-            is Text -> TextDrawable.toBitmap(shape.bound.size, shape.extra)
+            is Text -> TextDrawable.toBitmap(shape.bound.size, shape.renderableText, shape.extra)
 
             is Group -> null // No draw group since it change very frequently.
             else -> null
