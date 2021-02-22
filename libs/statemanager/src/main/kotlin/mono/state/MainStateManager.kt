@@ -49,7 +49,7 @@ class MainStateManager(
 
     private val environment: CommandEnvironment = CommandEnvironmentImpl(this)
     private var currentMouseCommand: MouseCommand? = null
-    private var currentCommandType: CommandType = CommandType.ADD_RECTANGLE
+    private var currentCommandType: CommandType = CommandType.ADD_TEXT
 
     private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
 
@@ -105,6 +105,7 @@ class MainStateManager(
                     selectedShapeManager.setSelectedShapes()
                 }
             KeyCommand.ADD_RECTANGLE -> currentCommandType = CommandType.ADD_RECTANGLE
+            KeyCommand.ADD_TEXT -> currentCommandType = CommandType.ADD_TEXT
 
             KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
             KeyCommand.MOVE_DOWN -> selectedShapeManager.moveSelectedShape(1, 0)

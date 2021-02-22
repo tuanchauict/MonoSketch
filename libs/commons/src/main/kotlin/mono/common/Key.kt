@@ -12,6 +12,7 @@ object Key {
     private const val KEY_ARROW_RIGHT = 39
     private const val KEY_ARROW_DOWN = 40
     private const val KEY_R = 82
+    private const val KEY_T = 84
 
     private val KEYCODE_TO_COMMAND_MAP: Map<Int, KeyCommand> =
         KeyCommand.values().fold(mutableMapOf()) { map, type ->
@@ -34,5 +35,6 @@ object Key {
         MOVE_DOWN(KEY_ARROW_DOWN),
 
         ADD_RECTANGLE(KEY_R),
+        ADD_TEXT(KEY_T)
     }
 }
