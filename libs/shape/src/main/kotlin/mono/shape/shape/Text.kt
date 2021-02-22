@@ -32,6 +32,21 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         updateRenderableText()
     }
 
+    override fun setBound(newBound: Rect) = update {
+        val isUpdated = bound != newBound
+        userSettingSize = newBound.size
+        bound = newBound
+
+        updateRenderableText()
+
+        isUpdated
+    }
+
+    override fun isNewBoundAcceptable(newBound: Rect): Boolean {
+        val minSize = if (extra.boundExtra != null) 3 else 1
+        return newBound.size.width >= minSize && newBound.size.height >= minSize
+    }
+
     override fun setExtra(extra: Any) {
         if (extra !is Extra) {
             return
