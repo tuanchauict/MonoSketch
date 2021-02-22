@@ -1,6 +1,5 @@
 package mono.shape.shape
 
-import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 
 /**
@@ -16,6 +15,4 @@ class MockShape(
             field = value
             isUpdated
         }
-
-    override fun contains(point: Point): Boolean = bound.contains(point)
 }

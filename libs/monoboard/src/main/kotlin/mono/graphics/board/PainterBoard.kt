@@ -77,11 +77,11 @@ internal class PainterBoard(internal val bound: Rect) {
      * position won't be overwritten.
      */
     fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
-        val inMatrix = bitmap.matrix
-
-        if (matrix.isEmpty() || matrix.first().isEmpty()) {
+        if (bitmap.isEmpty()) {
             return
         }
+        val inMatrix = bitmap.matrix
+
         val inMatrixBound = Rect(position, bitmap.size)
 
         val overlap = bound.getOverlappedRect(inMatrixBound) ?: return

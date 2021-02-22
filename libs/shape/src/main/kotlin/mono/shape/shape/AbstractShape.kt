@@ -1,6 +1,5 @@
 package mono.shape.shape
 
-import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 
@@ -19,14 +18,18 @@ abstract class AbstractShape(
 ) : QuickList.Identifier {
     var version: Int = 0
         private set
-
     abstract val bound: Rect
 
-    abstract fun contains(point: Point): Boolean
+    /**
+     * Extra information which is specific to each shape.
+     */
+    open val extra: Any = Unit
 
     open fun setBound(newBound: Rect) = Unit
 
     open fun isNewBoundAcceptable(newBound: Rect): Boolean = true
+
+    open fun setExtra(extra: Any) = Unit
 
     open fun isValid(): Boolean = true
 

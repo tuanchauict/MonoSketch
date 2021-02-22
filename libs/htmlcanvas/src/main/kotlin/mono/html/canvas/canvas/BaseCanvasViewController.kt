@@ -19,7 +19,8 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
     protected val context: CanvasRenderingContext2D =
         canvas.getContext("2d") as CanvasRenderingContext2D
 
-    private var font: String = ""
+    protected var font: String = ""
+    protected var boldFont: String = ""
     private var fontSize: Int = 0
 
     internal var drawingInfo: DrawingInfo
@@ -31,7 +32,8 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
 
     internal fun setFont(fontSize: Int) {
         this.fontSize = fontSize
-        this.font = "normal normal ${fontSize}px monospace"
+        this.font = "normal normal normal ${fontSize}px Courier"
+        this.boldFont = "normal normal 600 ${fontSize}px Courier"
 
         drawingInfo = drawingInfo.copy(cellSizePx = context.getCellSizePx())
     }
@@ -70,11 +72,17 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         context.font = font
         context.textAlign = CanvasTextAlign.LEFT
         context.textBaseline = CanvasTextBaseline.TOP
-        context.imageSmoothingEnabled = false
+        context.imageSmoothingEnabled = true
         drawInternal()
     }
 
     protected abstract fun drawInternal()
+
+    protected fun drawText(text: String, row: Int, column: Int) {
+        val rowYPx = drawingInfo.toYPx(row.toDouble())
+        val xPx = drawingInfo.toXPx(column + 0.05)
+        context.fillText(text, xPx, rowYPx)
+    }
 
     internal data class DrawingInfo(
         val offsetPx: Point = Point.ZERO,

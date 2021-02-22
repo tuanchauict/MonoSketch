@@ -11,18 +11,17 @@ internal class BoardCanvasViewController(
 
     override fun drawInternal() {
         for (row in drawingInfo.boardRowRange) {
-            val rowYPx = drawingInfo.toYPx(row.toDouble())
             for (col in drawingInfo.boardColumnRange) {
-                val xPx = drawingInfo.toXPx(col + 0.07)
-                drawPixel(board.get(col, row), xPx, rowYPx)
+                drawPixel(board.get(col, row), row, col)
             }
         }
     }
 
-    private fun drawPixel(pixel: Pixel, xPx: Double, yPx: Double) {
+    private fun drawPixel(pixel: Pixel, row: Int, column: Int) {
         if (!pixel.isTransparent) {
             context.fillStyle = pixel.highlight.paintColor
-            context.fillText("${pixel.char}", xPx, yPx)
+            context.font = if (pixel.char == '|') boldFont else font
+            drawText(pixel.char.toString(), row, column)
         }
     }
 }

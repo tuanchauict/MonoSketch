@@ -1,6 +1,5 @@
 package mono.shape.shape
 
-import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 import mono.shape.list.QuickList.AddPosition
@@ -39,8 +38,6 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
     internal fun remove(shape: AbstractShape) = update {
         quickList.remove(shape) != null
     }
-
-    override fun contains(point: Point): Boolean = quickList.any { it.contains(point) }
 
     internal fun move(shape: AbstractShape, moveActionType: MoveActionType) = update {
         quickList.move(shape, moveActionType)
