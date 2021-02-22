@@ -3,9 +3,12 @@ package mono.shape.shape
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
+import kotlin.math.max
 
 /**
  * A text shape which contains a bound and a text.
+ *
+ * TODO: Resize bound by text
  */
 class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentId) {
     private var userSettingSize: Size = Size.ZERO
@@ -16,7 +19,7 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     // Text can be auto resized by text
     override var bound: Rect = rect
 
-    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "")
+    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "This is a sample text")
         private set
 
     var renderableText: List<String> = emptyList()
@@ -51,14 +54,19 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         if (extra !is Extra) {
             return
         }
-        this.extra = extra
-        updateRenderableText()
+        update {
+            val isUpdated = this.extra != extra
+            this.extra = extra
+            updateRenderableText()
+
+            isUpdated
+        }
     }
 
     private fun updateRenderableText() {
+        val maxCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
         renderableText = if (extra.text.isNotEmpty()) {
-            val maxCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
-            toRenderableText(extra.text, maxCharCount)
+            toRenderableText(extra.text, max(maxCharCount, 1))
         } else {
             emptyList()
         }
