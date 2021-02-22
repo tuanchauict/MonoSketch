@@ -16,10 +16,7 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     // Text can be auto resized by text
     override var bound: Rect = rect
 
-    override var extra: Extra = Extra(
-        Rectangle.Extra.DEFAULT,
-        text = ""
-    )
+    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "")
         private set
 
     var renderableText: List<String> = emptyList()
@@ -44,8 +41,12 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     }
 
     private fun updateRenderableText() {
-        val maxCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
-        renderableText = toRenderableText(extra.text, maxCharCount)
+        renderableText = if (extra.text.isNotEmpty()) {
+            val maxCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
+            toRenderableText(extra.text, maxCharCount)
+        } else {
+            emptyList()
+        }
     }
 
     private fun toRenderableText(text: String, maxCharCount: Int): List<String> =
