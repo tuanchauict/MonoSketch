@@ -87,7 +87,8 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         }
 
         private fun createRenderableText(): List<String> = text.split("\n")
-            .fold(mutableListOf(StringBuilder())) { adjustedLines, line ->
+            .flatMap  { line ->
+                val adjustedLines = mutableListOf(StringBuilder())
                 for (word in line.toStandardizedWords(maxRowCharCount)) {
                     val lastLine = adjustedLines.last()
                     val space = if (lastLine.isNotEmpty()) " " else ""
