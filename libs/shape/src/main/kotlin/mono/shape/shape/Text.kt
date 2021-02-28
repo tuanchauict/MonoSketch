@@ -22,7 +22,7 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "This is a sample text")
         private set
 
-    var renderableText: List<String> = emptyList()
+    var renderableText: RenderableText = RenderableText.EMPTY
         private set
 
     constructor(startPoint: Point, endPoint: Point, parentId: Int?) : this(
@@ -65,7 +65,7 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
 
     private fun updateRenderableText() {
         val maxCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
-        renderableText = RenderableText(extra.text, max(maxCharCount, 1)).getRenderableText()
+        renderableText = RenderableText(extra.text, max(maxCharCount, 1))
     }
 
     data class Extra(
@@ -105,5 +105,9 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
                 .flatMap { word ->
                     if (word.length <= maxCharCount) listOf(word) else word.chunked(maxCharCount)
                 }
+
+        companion object {
+            val EMPTY = RenderableText("", 0)
+        }
     }
 }
