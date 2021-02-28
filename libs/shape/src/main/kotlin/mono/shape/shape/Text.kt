@@ -65,23 +65,32 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
 
     private fun updateRenderableText() {
         val maxCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
-        renderableText = if (extra.text.isNotEmpty()) {
-            toRenderableText(extra.text, max(maxCharCount, 1))
-        } else {
-            emptyList()
-        }
+        renderableText = RenderableText(extra.text, max(maxCharCount, 1)).getRenderableText()
     }
 
-    private fun toRenderableText(text: String, maxCharCount: Int): List<String> =
-        text
-            .split("\n")
+    data class Extra(
+        val boundExtra: Rectangle.Extra?,
+        val text: String
+    )
+
+    /**
+     * A class to generate renderable text.
+     */
+    class RenderableText(val text: String, val maxRowCharCount: Int) {
+        private var renderableText: List<String>? = null
+        fun getRenderableText(): List<String> {
+            val nonNullRenderableText = renderableText ?: createRenderableText()
+            renderableText = nonNullRenderableText
+            return nonNullRenderableText
+        }
+
+        private fun createRenderableText(): List<String> = text.split("\n")
             .fold(mutableListOf(StringBuilder())) { adjustedLines, line ->
-                for (word in line.toStandardizedWords(maxCharCount)) {
+                for (word in line.toStandardizedWords(maxRowCharCount)) {
                     val lastLine = adjustedLines.last()
                     val space = if (lastLine.isNotEmpty()) " " else ""
-                    val newLineLength =
-                        lastLine.length + space.length + word.length
-                    if (newLineLength <= maxCharCount) {
+                    val newLineLength = lastLine.length + space.length + word.length
+                    if (newLineLength <= maxRowCharCount) {
                         lastLine.append(space).append(word)
                     } else {
                         adjustedLines.add(StringBuilder(word))
@@ -91,14 +100,10 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
             }
             .map { it.toString() }
 
-    private fun String.toStandardizedWords(maxCharCount: Int): List<String> =
-        split(" ")
-            .flatMap { word ->
-                if (word.length <= maxCharCount) listOf(word) else word.chunked(maxCharCount)
-            }
-
-    data class Extra(
-        val boundExtra: Rectangle.Extra?,
-        val text: String
-    )
+        private fun String.toStandardizedWords(maxCharCount: Int): List<String> =
+            split(" ")
+                .flatMap { word ->
+                    if (word.length <= maxCharCount) listOf(word) else word.chunked(maxCharCount)
+                }
+    }
 }
