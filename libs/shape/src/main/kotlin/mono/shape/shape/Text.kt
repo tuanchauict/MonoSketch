@@ -64,8 +64,10 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     }
 
     private fun updateRenderableText() {
-        val maxCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
-        renderableText = RenderableText(extra.text, max(maxCharCount, 1))
+        val maxRowCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
+        if (extra.text != renderableText.text || maxRowCharCount != renderableText.maxRowCharCount) {
+            renderableText = RenderableText(extra.text, max(maxRowCharCount, 1))
+        }
     }
 
     data class Extra(
