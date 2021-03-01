@@ -19,10 +19,10 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     // Text can be auto resized by text
     override var bound: Rect = rect
 
-    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "This is a sample text")
+    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "This\n  is a sample text")
         private set
 
-    var renderableText: List<String> = emptyList()
+    var renderableText: RenderableText = RenderableText.EMPTY
         private set
 
     constructor(startPoint: Point, endPoint: Point, parentId: Int?) : this(
@@ -64,41 +64,58 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     }
 
     private fun updateRenderableText() {
-        val maxCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
-        renderableText = if (extra.text.isNotEmpty()) {
-            toRenderableText(extra.text, max(maxCharCount, 1))
-        } else {
-            emptyList()
+        val maxRowCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
+        if (extra.text != renderableText.text || maxRowCharCount != renderableText.maxRowCharCount) {
+            renderableText = RenderableText(extra.text, max(maxRowCharCount, 1))
         }
     }
-
-    private fun toRenderableText(text: String, maxCharCount: Int): List<String> =
-        text
-            .split("\n")
-            .fold(mutableListOf(StringBuilder())) { adjustedLines, line ->
-                for (word in line.toStandardizedWords(maxCharCount)) {
-                    val lastLine = adjustedLines.last()
-                    val space = if (lastLine.isNotEmpty()) " " else ""
-                    val newLineLength =
-                        lastLine.length + space.length + word.length
-                    if (newLineLength <= maxCharCount) {
-                        lastLine.append(space).append(word)
-                    } else {
-                        adjustedLines.add(StringBuilder(word))
-                    }
-                }
-                adjustedLines
-            }
-            .map { it.toString() }
-
-    private fun String.toStandardizedWords(maxCharCount: Int): List<String> =
-        split(" ")
-            .flatMap { word ->
-                if (word.length <= maxCharCount) listOf(word) else word.chunked(maxCharCount)
-            }
 
     data class Extra(
         val boundExtra: Rectangle.Extra?,
         val text: String
     )
+
+    /**
+     * A class to generate renderable text.
+     */
+    class RenderableText(val text: String, val maxRowCharCount: Int) {
+        private var renderableText: List<String>? = null
+        fun getRenderableText(): List<String> {
+            val nonNullRenderableText = renderableText ?: createRenderableText()
+            renderableText = nonNullRenderableText
+            return nonNullRenderableText
+        }
+
+        private fun createRenderableText(): List<String> {
+            if (maxRowCharCount == 1) {
+                return text.map { it.toString() }
+            }
+            return text.split("\n")
+                .flatMap { line ->
+                    val adjustedLines = mutableListOf(StringBuilder())
+                    for (word in line.toStandardizedWords(maxRowCharCount)) {
+                        val lastLine = adjustedLines.last()
+                        val space = if (lastLine.isNotEmpty()) " " else ""
+                        val newLineLength = lastLine.length + space.length + word.length
+                        if (newLineLength <= maxRowCharCount) {
+                            lastLine.append(space).append(word)
+                        } else {
+                            adjustedLines.add(StringBuilder(word))
+                        }
+                    }
+                    adjustedLines
+                }
+                .map { it.toString() }
+        }
+
+        private fun String.toStandardizedWords(maxCharCount: Int): List<String> =
+            split(" ")
+                .flatMap { word ->
+                    if (word.length <= maxCharCount) listOf(word) else word.chunked(maxCharCount)
+                }
+
+        companion object {
+            val EMPTY = RenderableText("", 0)
+        }
+    }
 }
