@@ -100,27 +100,29 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
             return nonNullRenderableText
         }
 
-        private fun createRenderableText(): List<String> {
+        private fun createRenderableText(): List<String> =
             if (maxRowCharCount == 1) {
-                return text.map { it.toString() }
+                text.map { it.toString() }
+            } else {
+                standardizeLines(text.split("\n"))
             }
-            return text.split("\n")
-                .flatMap { line ->
-                    val adjustedLines = mutableListOf(StringBuilder())
-                    for (word in line.toStandardizedWords(maxRowCharCount)) {
-                        val lastLine = adjustedLines.last()
-                        val space = if (lastLine.isNotEmpty()) " " else ""
-                        val newLineLength = lastLine.length + space.length + word.length
-                        if (newLineLength <= maxRowCharCount) {
-                            lastLine.append(space).append(word)
-                        } else {
-                            adjustedLines.add(StringBuilder(word))
-                        }
+
+        private fun standardizeLines(lines: List<String>): List<String> = lines
+            .flatMap { line ->
+                val adjustedLines = mutableListOf(StringBuilder())
+                for (word in line.toStandardizedWords(maxRowCharCount)) {
+                    val lastLine = adjustedLines.last()
+                    val space = if (lastLine.isNotEmpty()) " " else ""
+                    val newLineLength = lastLine.length + space.length + word.length
+                    if (newLineLength <= maxRowCharCount) {
+                        lastLine.append(space).append(word)
+                    } else {
+                        adjustedLines.add(StringBuilder(word))
                     }
-                    adjustedLines
                 }
-                .map { it.toString() }
-        }
+                adjustedLines
+            }
+            .map { it.toString() }
 
         private fun String.toStandardizedWords(maxCharCount: Int): List<String> =
             split(" ")
