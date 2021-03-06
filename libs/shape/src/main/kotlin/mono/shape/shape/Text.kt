@@ -50,17 +50,19 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         return newBound.size.width >= minSize && newBound.size.height >= minSize
     }
 
-    override fun setExtra(extra: Any) {
-        if (extra !is Extra) {
-            return
+    override fun setExtra(extraUpdater: ExtraUpdater) = update {
+        val newExtra = when (extraUpdater) {
+            is Extra.TextUpdater -> extra.combine(extraUpdater)
+            is Rectangle.Extra.Updater -> extra.combine(extraUpdater)
+            else -> null
         }
-        update {
-            val isUpdated = this.extra != extra
-            this.extra = extra
+        val isUpdated = newExtra != null && newExtra != extra
+        if (newExtra != null) {
+            extra = newExtra
             updateRenderableText()
-
-            isUpdated
         }
+
+        isUpdated
     }
 
     private fun updateRenderableText() {
@@ -73,7 +75,19 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     data class Extra(
         val boundExtra: Rectangle.Extra?,
         val text: String
-    )
+    ) {
+        fun combine(updater: TextUpdater): Extra = Extra(
+            boundExtra,
+            text = updater.text ?: text
+        )
+
+        fun combine(updater: Rectangle.Extra.Updater): Extra = Extra(
+            boundExtra?.combine(updater),
+            text
+        )
+
+        data class TextUpdater(val text: String? = null) : ExtraUpdater
+    }
 
     /**
      * A class to generate renderable text.
