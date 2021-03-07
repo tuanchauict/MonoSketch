@@ -103,3 +103,19 @@ class ChangeBound(private val target: AbstractShape, private val newBound: Rect)
         }
     }
 }
+
+class ChangeExtra(
+    private val target: AbstractShape,
+    private val extraUpdater: AbstractShape.ExtraUpdater
+) : Command() {
+    override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
+        shapeManager.getGroup(target.parentId)
+
+    override fun execute(shapeManager: ShapeManager, parent: Group) {
+        val currentVersion = target.version
+        target.setExtra(extraUpdater)
+        if (currentVersion != target.version) {
+            parent.update { true }
+        }
+    }
+}
