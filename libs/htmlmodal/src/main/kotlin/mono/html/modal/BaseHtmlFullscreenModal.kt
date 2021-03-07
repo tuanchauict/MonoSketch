@@ -17,16 +17,20 @@ import org.w3c.dom.HTMLElement
  * content zone.
  * This class is a [LifecycleOwner].
  */
-abstract class BaseHtmlFullscreenModal : LifecycleOwner() {
+abstract class BaseHtmlFullscreenModal(
+    private val modalContainer: HTMLElement? = document.body,
+) : LifecycleOwner() {
     protected open val isCancelable: Boolean = true
     protected open val contentPosition: ModalPosition =
         ModalPosition(ModalPosition.Horizontal.MIDDLE, ModalPosition.Vertical.MIDDLE)
-    protected open val backgroundRGBAColor: String = "#00000030"
+    protected open val backgroundRGBAColor: String = "#00000010"
 
     private var root: HTMLDivElement? = null
 
+    private var onDismiss: () -> Unit = {}
+
     fun show() {
-        val body = document.body ?: return
+        val body = modalContainer ?: document.body ?: return
         val rootId = generateUniqueModalId()
         body.append {
             div {
@@ -59,6 +63,11 @@ abstract class BaseHtmlFullscreenModal : LifecycleOwner() {
     fun dismiss() {
         onStop()
         root?.remove()
+        onDismiss()
+    }
+
+    fun setOnDismiss(onDismiss: () -> Unit) {
+        this.onDismiss = onDismiss
     }
 
     data class ModalPosition(private val horizontal: Horizontal, private val vertical: Vertical) {

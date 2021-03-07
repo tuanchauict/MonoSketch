@@ -18,14 +18,14 @@ class EditTextDialog(
     private val onTextChange: (newText: String) -> Unit
 ) : BaseHtmlFullscreenModal() {
     override val contentPosition: ModalPosition =
-        ModalPosition(ModalPosition.Horizontal.MIDDLE, ModalPosition.Vertical.BOTTOM)
+        ModalPosition(ModalPosition.Horizontal.MIDDLE, ModalPosition.Vertical.TOP)
 
     override fun initContent(parent: HTMLElement) {
         parent.append {
             div(TEXT_AREA_CONTAINER_CSS_CLASS) {
                 div("$TEXT_AREA_CSS_CLASS $classes") {
                     contentEditable = true
-                    style = "width: 500px; min-height: 60px; max-height: 200px"
+                    style = "width: 500px; min-height: 60px; max-height: 100px"
                 }
             }
         }

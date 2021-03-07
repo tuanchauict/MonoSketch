@@ -17,11 +17,10 @@ html, body {
     left: 0;
 }
 .modal-textarea-container {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
     background: #fff;
+    box-shadow: 0 0px 16px 0 rgba(0,0,0,0.5);
+    overflow: scroll;
     padding: 8px 10px;
-    box-shadow: 0 0px 16px 0 rgba(0,0,0,0.5)
 }
 .modal-textarea-container > .modal-textarea {
     outline: none;
