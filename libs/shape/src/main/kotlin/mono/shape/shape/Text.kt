@@ -19,7 +19,7 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     // Text can be auto resized by text
     override var bound: Rect = rect
 
-    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "This\n  is a sample text")
+    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "")
         private set
 
     var renderableText: RenderableText = RenderableText.EMPTY
@@ -71,6 +71,8 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
             renderableText = RenderableText(extra.text, max(maxRowCharCount, 1))
         }
     }
+
+    override fun isValid(): Boolean = extra.text.isNotEmpty()
 
     data class Extra(
         val boundExtra: Rectangle.Extra?,

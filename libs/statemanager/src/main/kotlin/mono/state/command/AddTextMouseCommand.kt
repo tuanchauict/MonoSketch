@@ -41,15 +41,16 @@ internal class AddTextMouseCommand : MouseCommand {
             }
             is MousePointer.Up -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
-                if (!workingShape?.isValid().nullToFalse()) {
-                    environment.shapeManager.remove(workingShape)
-                } else {
-                    environment.selectedShapeManager.setSelectedShapes(workingShape)
-                }
+                environment.selectedShapeManager.setSelectedShapes(workingShape)
+
                 val dialog = EditTextDialog("monomodal-mono-edit-text", "") {
                     environment.changeText(it)
                 }
                 dialog.setOnDismiss {
+                    if (!workingShape?.isValid().nullToFalse()) {
+                        environment.shapeManager.remove(workingShape)
+                        environment.selectedShapeManager.setSelectedShapes()
+                    }
                     workingShape = null
                 }
                 dialog.show()
@@ -58,6 +59,7 @@ internal class AddTextMouseCommand : MouseCommand {
             is MousePointer.Click,
             MousePointer.Idle -> true
         }
+
 
     private fun CommandEnvironment.changeShapeBound(point1: Point, point2: Point) {
         val currentShape = workingShape ?: return
