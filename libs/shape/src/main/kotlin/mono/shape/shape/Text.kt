@@ -74,6 +74,12 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
 
     override fun isValid(): Boolean = extra.text.isNotEmpty()
 
+    fun isBoundValid(): Boolean {
+        val textBoundWidth = if (extra.boundExtra != null) bound.width - 2 else bound.width
+        val textBoundHeight = if (extra.boundExtra != null) bound.height - 2 else bound.height
+        return textBoundWidth >= 1 && textBoundHeight >= 1
+    }
+
     data class Extra(
         val boundExtra: Rectangle.Extra?,
         val text: String
