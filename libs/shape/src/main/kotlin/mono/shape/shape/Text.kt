@@ -19,7 +19,7 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     // Text can be auto resized by text
     override var bound: Rect = rect
 
-    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "This\n  is a sample text")
+    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "")
         private set
 
     var renderableText: RenderableText = RenderableText.EMPTY
@@ -50,17 +50,19 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         return newBound.size.width >= minSize && newBound.size.height >= minSize
     }
 
-    override fun setExtra(extra: Any) {
-        if (extra !is Extra) {
-            return
+    override fun setExtra(extraUpdater: ExtraUpdater) = update {
+        val newExtra = when (extraUpdater) {
+            is Extra.TextUpdater -> extra.combine(extraUpdater)
+            is Rectangle.Extra.Updater -> extra.combine(extraUpdater)
+            else -> null
         }
-        update {
-            val isUpdated = this.extra != extra
-            this.extra = extra
+        val isUpdated = newExtra != null && newExtra != extra
+        if (newExtra != null) {
+            extra = newExtra
             updateRenderableText()
-
-            isUpdated
         }
+
+        isUpdated
     }
 
     private fun updateRenderableText() {
@@ -70,10 +72,30 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         }
     }
 
+    override fun isValid(): Boolean = extra.text.isNotEmpty()
+
+    fun isBoundValid(): Boolean {
+        val textBoundWidth = if (extra.boundExtra != null) bound.width - 2 else bound.width
+        val textBoundHeight = if (extra.boundExtra != null) bound.height - 2 else bound.height
+        return textBoundWidth >= 1 && textBoundHeight >= 1
+    }
+
     data class Extra(
         val boundExtra: Rectangle.Extra?,
         val text: String
-    )
+    ) {
+        fun combine(updater: TextUpdater): Extra = Extra(
+            boundExtra,
+            text = updater.text ?: text
+        )
+
+        fun combine(updater: Rectangle.Extra.Updater): Extra = Extra(
+            boundExtra?.combine(updater),
+            text
+        )
+
+        data class TextUpdater(val text: String? = null) : ExtraUpdater
+    }
 
     /**
      * A class to generate renderable text.
@@ -86,27 +108,29 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
             return nonNullRenderableText
         }
 
-        private fun createRenderableText(): List<String> {
+        private fun createRenderableText(): List<String> =
             if (maxRowCharCount == 1) {
-                return text.map { it.toString() }
+                text.map { it.toString() }
+            } else {
+                standardizeLines(text.split("\n"))
             }
-            return text.split("\n")
-                .flatMap { line ->
-                    val adjustedLines = mutableListOf(StringBuilder())
-                    for (word in line.toStandardizedWords(maxRowCharCount)) {
-                        val lastLine = adjustedLines.last()
-                        val space = if (lastLine.isNotEmpty()) " " else ""
-                        val newLineLength = lastLine.length + space.length + word.length
-                        if (newLineLength <= maxRowCharCount) {
-                            lastLine.append(space).append(word)
-                        } else {
-                            adjustedLines.add(StringBuilder(word))
-                        }
+
+        private fun standardizeLines(lines: List<String>): List<String> = lines
+            .flatMap { line ->
+                val adjustedLines = mutableListOf(StringBuilder())
+                for (word in line.toStandardizedWords(maxRowCharCount)) {
+                    val lastLine = adjustedLines.last()
+                    val space = if (lastLine.isNotEmpty()) " " else ""
+                    val newLineLength = lastLine.length + space.length + word.length
+                    if (newLineLength <= maxRowCharCount) {
+                        lastLine.append(space).append(word)
+                    } else {
+                        adjustedLines.add(StringBuilder(word))
                     }
-                    adjustedLines
                 }
-                .map { it.toString() }
-        }
+                adjustedLines
+            }
+            .map { it.toString() }
 
         private fun String.toStandardizedWords(maxCharCount: Int): List<String> =
             split(" ")

@@ -40,6 +40,12 @@ class Rectangle(
      * A data class which contains extra information of a rectangle.
      */
     data class Extra(val fillStyle: FillStyle) {
+
+        fun combine(updater: Updater): Extra = Extra(
+            fillStyle = updater.fillStyle ?: fillStyle
+        )
+
+        data class Updater(val fillStyle: FillStyle? = null): ExtraUpdater
         companion object {
             val DEFAULT = Extra(FillStyle.STYLE_0_BORDER)
         }

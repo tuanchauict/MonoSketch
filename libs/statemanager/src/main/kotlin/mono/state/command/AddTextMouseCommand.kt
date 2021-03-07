@@ -4,10 +4,11 @@ import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.html.modal.EditTextDialog
 import mono.shape.add
 import mono.shape.command.ChangeBound
+import mono.shape.command.ChangeExtra
 import mono.shape.remove
-import mono.shape.shape.AbstractShape
 import mono.shape.shape.Text
 
 /**
@@ -19,7 +20,7 @@ import mono.shape.shape.Text
  * TODO: Implement step 2
  */
 internal class AddTextMouseCommand : MouseCommand {
-    private var workingShape: AbstractShape? = null
+    private var workingShape: Text? = null
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
         when (mousePointer) {
             is MousePointer.Down -> {
@@ -38,18 +39,32 @@ internal class AddTextMouseCommand : MouseCommand {
                 false
             }
             is MousePointer.Up -> {
-                environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
-                if (!workingShape?.isValid().nullToFalse()) {
-                    environment.shapeManager.remove(workingShape)
-                } else {
-                    environment.selectedShapeManager.setSelectedShapes(workingShape)
-                }
-                workingShape = null
+                onMouseUp(environment, mousePointer)
                 true
             }
             is MousePointer.Click,
             MousePointer.Idle -> true
         }
+
+    private fun onMouseUp(environment: CommandEnvironment, mousePointer: MousePointer.Up) {
+        environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
+        if (!workingShape?.isBoundValid().nullToFalse()) {
+            environment.shapeManager.remove(workingShape)
+            workingShape = null
+            return
+        }
+        environment.selectedShapeManager.setSelectedShapes(workingShape)
+
+        val dialog = EditTextDialog("monomodal-mono-edit-text") { environment.changeText(it) }
+        dialog.setOnDismiss {
+            if (!workingShape?.isValid().nullToFalse()) {
+                environment.shapeManager.remove(workingShape)
+                environment.selectedShapeManager.setSelectedShapes()
+            }
+            workingShape = null
+        }
+        dialog.show()
+    }
 
     private fun CommandEnvironment.changeShapeBound(point1: Point, point2: Point) {
         val currentShape = workingShape ?: return
@@ -61,5 +76,11 @@ internal class AddTextMouseCommand : MouseCommand {
         )
 
         shapeManager.execute(ChangeBound(currentShape, rect))
+    }
+
+    private fun CommandEnvironment.changeText(text: String) {
+        val currentShape = workingShape ?: return
+        val extraUpdater = Text.Extra.TextUpdater(text)
+        shapeManager.execute(ChangeExtra(currentShape, extraUpdater))
     }
 }

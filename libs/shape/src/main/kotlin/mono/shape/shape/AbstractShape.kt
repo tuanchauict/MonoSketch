@@ -29,7 +29,7 @@ abstract class AbstractShape(
 
     open fun isNewBoundAcceptable(newBound: Rect): Boolean = true
 
-    open fun setExtra(extra: Any) = Unit
+    open fun setExtra(extraUpdater: ExtraUpdater) = Unit
 
     open fun isValid(): Boolean = true
 
@@ -43,6 +43,11 @@ abstract class AbstractShape(
             version++
         }
     }
+
+    /**
+     * An interface which is used for updating extra value.
+     */
+    interface ExtraUpdater
 
     companion object {
         private var NEXT_ID: Int = 1

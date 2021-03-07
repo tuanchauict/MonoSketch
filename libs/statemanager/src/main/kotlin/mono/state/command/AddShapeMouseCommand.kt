@@ -32,10 +32,10 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
             }
             is MousePointer.Up -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
-                if (!workingShape?.isValid().nullToFalse()) {
-                    environment.shapeManager.remove(workingShape)
-                } else {
+                if (workingShape?.isValid().nullToFalse()) {
                     environment.selectedShapeManager.setSelectedShapes(workingShape)
+                } else {
+                    environment.shapeManager.remove(workingShape)
                 }
                 workingShape = null
                 true
