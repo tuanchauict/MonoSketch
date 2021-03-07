@@ -4,8 +4,10 @@ import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.html.modal.EditTextDialog
 import mono.shape.add
 import mono.shape.command.ChangeBound
+import mono.shape.command.ChangeExtra
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Text
@@ -44,7 +46,13 @@ internal class AddTextMouseCommand : MouseCommand {
                 } else {
                     environment.selectedShapeManager.setSelectedShapes(workingShape)
                 }
-                workingShape = null
+                val dialog = EditTextDialog("monomodal-mono-edit-text", "") {
+                    environment.changeText(it)
+                }
+                dialog.setOnDismiss {
+                    workingShape = null
+                }
+                dialog.show()
                 true
             }
             is MousePointer.Click,
@@ -61,5 +69,11 @@ internal class AddTextMouseCommand : MouseCommand {
         )
 
         shapeManager.execute(ChangeBound(currentShape, rect))
+    }
+
+    private fun CommandEnvironment.changeText(text: String) {
+        val currentShape = workingShape ?: return
+        val extraUpdater = Text.Extra.TextUpdater(text)
+        shapeManager.execute(ChangeExtra(currentShape, extraUpdater))
     }
 }
