@@ -2,9 +2,12 @@ package mono.common
 
 /**
  * An utility class to store and perform key-related stuffs.
+ *
+ * TODO: Move this class into another module
  */
 object Key {
-    private const val KEY_ESC = 27
+    const val KEY_ESC = 27
+    const val KEY_ENTER = 13
     private const val KEY_BACKSPACE = 8
     private const val KEY_DELETE = 46
     private const val KEY_ARROW_LEFT = 37
