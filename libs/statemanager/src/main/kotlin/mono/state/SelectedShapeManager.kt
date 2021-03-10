@@ -56,6 +56,11 @@ class SelectedShapeManager(
         updateInteractionBound()
     }
 
+    fun editSelectedShapes() {
+        val singleShape = selectedShapes.singleOrNull() ?: return
+        // TODO: handle action with singleShape
+    }
+
     fun updateInteractionBound() {
         bound = if (selectedShapes.isNotEmpty()) {
             val rects = selectedShapes.asSequence().map { it.bound }

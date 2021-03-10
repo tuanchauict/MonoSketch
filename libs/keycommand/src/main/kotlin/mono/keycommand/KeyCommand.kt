@@ -15,7 +15,9 @@ enum class KeyCommand(vararg val keyCodes: Int) {
     MOVE_DOWN(Key.KEY_ARROW_DOWN),
 
     ADD_RECTANGLE(Key.KEY_R),
-    ADD_TEXT(Key.KEY_T);
+    ADD_TEXT(Key.KEY_T),
+
+    ENTER_EDIT_MODE(Key.KEY_ENTER);
 
     companion object {
         private val KEYCODE_TO_COMMAND_MAP: Map<Int, KeyCommand> =

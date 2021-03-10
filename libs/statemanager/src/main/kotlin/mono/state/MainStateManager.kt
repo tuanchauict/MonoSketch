@@ -108,6 +108,8 @@ class MainStateManager(
             KeyCommand.ADD_TEXT -> currentCommandType = CommandType.ADD_TEXT
 
             KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
+            KeyCommand.ENTER_EDIT_MODE -> selectedShapeManager.editSelectedShapes()
+
             KeyCommand.MOVE_DOWN -> selectedShapeManager.moveSelectedShape(1, 0)
             KeyCommand.MOVE_UP -> selectedShapeManager.moveSelectedShape(-1, 0)
             KeyCommand.MOVE_LEFT -> selectedShapeManager.moveSelectedShape(0, -1)
