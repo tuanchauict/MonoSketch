@@ -1,6 +1,5 @@
-package mono.app
+package mono.keycommand
 
-import mono.keycommand.KeyCommand
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import org.w3c.dom.HTMLElement

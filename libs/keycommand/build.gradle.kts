@@ -10,6 +10,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-js"))
     implementation(project(":commons"))
+    implementation(project(":livedata"))
 
     testImplementation(kotlin("test-js"))
 }
