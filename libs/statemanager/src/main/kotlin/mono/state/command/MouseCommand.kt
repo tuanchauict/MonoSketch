@@ -2,6 +2,7 @@ package mono.state.command
 
 import mono.graphics.geo.MousePointer
 import mono.state.MainStateManager
+import mono.state.command.text.AddTextMouseCommand
 
 /**
  * A strategy interface for mouse interaction command happens on [MainStateManager]
