@@ -10,6 +10,7 @@ import mono.common.Key
 import mono.common.getOnlyElementByClassName
 import mono.common.isCommandKeySupported
 import mono.common.onKeyDown
+import mono.common.setTimeout
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.KeyboardEvent
@@ -45,8 +46,11 @@ class EditTextDialog(
             insertText(text)
         }
         textArea.onKeyDown(action = ::checkKeyCommand)
-        textArea.focus()
-        insertText(initText)
+        // Suspend down a trampoline to let the environment cleans up previous event (like ENTER key)
+        setTimeout(0) {
+            textArea.focus()
+            insertText(initText)
+        }
     }
 
     private fun insertText(text: String) {
