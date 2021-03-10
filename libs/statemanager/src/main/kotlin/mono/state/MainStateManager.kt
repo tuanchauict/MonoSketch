@@ -1,7 +1,6 @@
 package mono.state
 
 import kotlinx.html.currentTimeMillis
-import mono.common.Key.KeyCommand
 import mono.common.nullToFalse
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
@@ -11,6 +10,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
+import mono.keycommand.KeyCommand
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
