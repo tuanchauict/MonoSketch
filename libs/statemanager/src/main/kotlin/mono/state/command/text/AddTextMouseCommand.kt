@@ -56,16 +56,13 @@ internal class AddTextMouseCommand : MouseCommand {
             return
         }
         environment.selectedShapeManager.setSelectedShapes(workingShape)
-
-        val dialog = EditTextDialog("monomodal-mono-edit-text") { environment.changeText(it) }
-        dialog.setOnDismiss {
+        EditTextShapeHelper.showEditTextDialog(environment.shapeManager, workingShape) {
             if (!workingShape?.isValid().nullToFalse()) {
                 environment.shapeManager.remove(workingShape)
                 environment.selectedShapeManager.setSelectedShapes()
             }
             workingShape = null
         }
-        dialog.show()
     }
 
     private fun CommandEnvironment.changeShapeBound(point1: Point, point2: Point) {
