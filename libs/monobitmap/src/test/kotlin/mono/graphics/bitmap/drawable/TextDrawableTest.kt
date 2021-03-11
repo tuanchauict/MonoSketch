@@ -12,8 +12,12 @@ class TextDrawableTest {
     @Test
     fun testToBitmap() {
         val text = Text(Rect.byLTWH(0, 0, 7, 5))
-        text.setExtra(text.extra.copy(text = "012345678\nabc"))
-        val bitmap = TextDrawable.toBitmap(text.bound.size, text.renderableText, text.extra)
+        text.setExtra(Text.Extra.TextUpdater(text = "012345678\nabc"))
+        val bitmap = TextDrawable.toBitmap(
+            text.bound.size,
+            text.renderableText.getRenderableText(),
+            text.extra
+        )
         assertEquals(
             """
                 |┌─────┐
