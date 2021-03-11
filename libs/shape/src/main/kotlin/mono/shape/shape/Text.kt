@@ -54,6 +54,7 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         val newExtra = when (extraUpdater) {
             is Extra.TextUpdater -> extra.combine(extraUpdater)
             is Rectangle.Extra.Updater -> extra.combine(extraUpdater)
+            is Extra.NoBoundUpdater -> extra.combineNoBound()
             else -> null
         }
         val isUpdated = newExtra != null && newExtra != extra
@@ -94,7 +95,11 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
             text
         )
 
+        fun combineNoBound(): Extra = Extra(null, text)
+
         data class TextUpdater(val text: String? = null) : ExtraUpdater
+
+        object NoBoundUpdater : ExtraUpdater
     }
 
     /**
