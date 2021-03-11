@@ -14,4 +14,7 @@ jobs:
         if: failure()
         with:
           name: test-result
-          path: build/reports/tests/
+          path: |
+            build/reports/tests/
+            app/build/reports/tests/
+            libs/**/reports/tests/
