@@ -18,7 +18,7 @@ internal object EditTextShapeHelper {
             return
         }
         val dialog = EditTextDialog("monomodal-mono-edit-text", textShape.extra.text) {
-            val extraUpdater = Text.Extra.TextUpdater(it)
+            val extraUpdater = Text.Extra.Updater.Text(it)
             shapeManager.execute(ChangeExtra(textShape, extraUpdater))
         }
         dialog.setOnDismiss(onFinish)
