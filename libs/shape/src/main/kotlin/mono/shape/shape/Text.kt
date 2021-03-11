@@ -52,8 +52,8 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
 
     override fun setExtra(extraUpdater: ExtraUpdater) = update {
         val newExtra = when (extraUpdater) {
-            is Extra.TextUpdater -> extra.combine(extraUpdater)
-            is Rectangle.Extra.Updater -> extra.combine(extraUpdater)
+            is Rectangle.Extra.Updater -> Extra.Updater.Bound(extraUpdater).combine(extra)
+            is Extra.Updater -> extraUpdater.combine(extra)
             else -> null
         }
         val isUpdated = newExtra != null && newExtra != extra
@@ -84,17 +84,25 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         val boundExtra: Rectangle.Extra?,
         val text: String
     ) {
-        fun combine(updater: TextUpdater): Extra = Extra(
-            boundExtra,
-            text = updater.text ?: text
-        )
+        /**
+         * A sealed class for updating [Extra].
+         */
+        sealed class Updater : ExtraUpdater {
+            abstract fun combine(extra: Extra): Extra
 
-        fun combine(updater: Rectangle.Extra.Updater): Extra = Extra(
-            boundExtra?.combine(updater),
-            text
-        )
+            data class Text(val text: String?) : Updater() {
+                override fun combine(extra: Extra): Extra = extra.copy(text = text ?: extra.text)
+            }
 
-        data class TextUpdater(val text: String? = null) : ExtraUpdater
+            /**
+             * A text updater for updating bound.
+             * If [boundExtraUpdater], [Extra.boundExtra] will be null.
+             */
+            data class Bound(val boundExtraUpdater: Rectangle.Extra.Updater?) : Updater() {
+                override fun combine(extra: Extra): Extra =
+                    extra.copy(boundExtra = boundExtraUpdater?.combine(extra.boundExtra))
+            }
+        }
     }
 
     /**

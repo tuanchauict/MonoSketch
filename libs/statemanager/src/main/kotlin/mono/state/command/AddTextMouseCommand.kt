@@ -80,7 +80,7 @@ internal class AddTextMouseCommand : MouseCommand {
 
     private fun CommandEnvironment.changeText(text: String) {
         val currentShape = workingShape ?: return
-        val extraUpdater = Text.Extra.TextUpdater(text)
+        val extraUpdater = Text.Extra.Updater.Text(text)
         shapeManager.execute(ChangeExtra(currentShape, extraUpdater))
     }
 }
