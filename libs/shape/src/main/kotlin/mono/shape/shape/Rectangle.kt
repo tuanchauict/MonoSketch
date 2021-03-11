@@ -41,11 +41,13 @@ class Rectangle(
      */
     data class Extra(val fillStyle: FillStyle) {
 
-        fun combine(updater: Updater): Extra = Extra(
-            fillStyle = updater.fillStyle ?: fillStyle
-        )
+        data class Updater(val fillStyle: FillStyle? = null) : ExtraUpdater {
+            fun combine(extra: Extra?): Extra =
+                extra?.copy(
+                    fillStyle = fillStyle ?: extra.fillStyle
+                ) ?: Extra(fillStyle ?: FillStyle.STYLE_0_BORDER)
+        }
 
-        data class Updater(val fillStyle: FillStyle? = null): ExtraUpdater
         companion object {
             val DEFAULT = Extra(FillStyle.STYLE_0_BORDER)
         }

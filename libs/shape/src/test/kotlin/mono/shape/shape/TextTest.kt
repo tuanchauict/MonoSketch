@@ -12,8 +12,8 @@ class TextTest {
 
     @Test
     fun testConvertRenderableText() {
-        target.setExtra(Text.Extra.TextUpdater("0 1234 12345\n1   2 3 4 5678901 23"))
-        target.setExtra(Text.Extra.NoBoundUpdater)
+        target.setExtra(Text.Extra.Updater.Text("0 1234 12345\n1   2 3 4 5678901 23"))
+        target.setExtra(Text.Extra.Updater.Bound(null))
         assertEquals(
             listOf("0", "1234", "12345", "1   2", "3 4", "56789", "01 23"),
             target.renderableText.getRenderableText()
