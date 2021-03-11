@@ -1,13 +1,19 @@
 package mono.html.modal
 
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.html.contentEditable
 import kotlinx.html.div
 import kotlinx.html.dom.append
 import kotlinx.html.style
+import mono.common.Key
 import mono.common.getOnlyElementByClassName
+import mono.common.isCommandKeySupported
+import mono.common.onKeyDown
+import mono.common.setTimeout
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.events.KeyboardEvent
 
 /**
  * A concrete class of [BaseHtmlFullscreenModal] for editing text.
@@ -39,16 +45,24 @@ class EditTextDialog(
             val text = it.clipboardData?.getData("text/plain").orEmpty()
             insertText(text)
         }
-        textArea.onkeydown = {
-            it.stopPropagation()
+        textArea.onKeyDown(action = ::checkKeyCommand)
+        // Suspend down a trampoline to let the environment cleans up previous event (like ENTER key)
+        setTimeout(0) {
+            textArea.focus()
+            insertText(initText)
         }
-        textArea.focus()
-        insertText(initText)
     }
 
     private fun insertText(text: String) {
         // TODO: `execCommand` is deprecated. Find a new solution.
         document.execCommand("insertText", false, text)
+    }
+
+    private fun checkKeyCommand(event: KeyboardEvent) {
+        val isWithCommand = if (window.isCommandKeySupported()) event.metaKey else event.ctrlKey
+        if (event.keyCode == Key.KEY_ENTER && isWithCommand || event.keyCode == Key.KEY_ESC) {
+            dismiss()
+        }
     }
 
     companion object {

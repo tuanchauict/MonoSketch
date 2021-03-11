@@ -1,6 +1,7 @@
 package mono.common
 
 import kotlinx.browser.window
+import org.w3c.dom.Window
 
 fun setTimeout(durationMillis: Int, action: () -> Unit): Timeout =
     Timeout(window.setTimeout(action, durationMillis))
@@ -15,3 +16,6 @@ class Timeout internal constructor(private val id: Int) {
 class Interval internal constructor(private val id: Int) {
     fun cancel() = window.clearInterval(id)
 }
+
+fun Window.isCommandKeySupported(): Boolean = navigator.platform.startsWith("Mac")
+

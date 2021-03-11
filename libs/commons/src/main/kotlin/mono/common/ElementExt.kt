@@ -2,6 +2,7 @@ package mono.common
 
 import org.w3c.dom.HTMLCollection
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.get
 
@@ -15,6 +16,15 @@ fun HTMLElement.onClick(isClickThrough: Boolean = false, action: (MouseEvent) ->
     onclick = {
         action(it)
         if (!isClickThrough) {
+            it.stopPropagation()
+        }
+    }
+}
+
+fun HTMLElement.onKeyDown(isPassThrough: Boolean = false, action: (KeyboardEvent) -> Unit) {
+    onkeydown = {
+        action(it)
+        if (!isPassThrough) {
             it.stopPropagation()
         }
     }

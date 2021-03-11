@@ -9,6 +9,8 @@ import mono.shape.ShapeManager
 import mono.shape.command.ChangeBound
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
+import mono.shape.shape.Text
+import mono.state.command.text.EditTextShapeHelper
 
 /**
  * A model class to manage selected shapes and render the selection bound.
@@ -54,6 +56,14 @@ class SelectedShapeManager(
         }
 
         updateInteractionBound()
+    }
+
+    fun editSelectedShapes() {
+        val singleShape = selectedShapes.singleOrNull() ?: return
+        // TODO: handle action with singleShape
+        when (singleShape) {
+            is Text -> EditTextShapeHelper.showEditTextDialog(shapeManager, singleShape)
+        }
     }
 
     fun updateInteractionBound() {

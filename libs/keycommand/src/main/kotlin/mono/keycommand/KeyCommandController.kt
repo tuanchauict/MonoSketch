@@ -1,6 +1,5 @@
-package mono.app
+package mono.keycommand
 
-import mono.common.Key
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import org.w3c.dom.HTMLElement
@@ -10,9 +9,9 @@ import org.w3c.dom.events.KeyboardEvent
  * A controller class to identify command by keyboard.
  */
 class KeyCommandController(private val body: HTMLElement) {
-    private val keyCommandMutableLiveData: MutableLiveData<Key.KeyCommand> =
-        MutableLiveData(Key.KeyCommand.IDLE)
-    val keyCommandLiveData: LiveData<Key.KeyCommand> = keyCommandMutableLiveData
+    private val keyCommandMutableLiveData: MutableLiveData<KeyCommand> =
+        MutableLiveData(KeyCommand.IDLE)
+    val keyCommandLiveData: LiveData<KeyCommand> = keyCommandMutableLiveData
 
     init {
         body.onkeydown = ::updateCommand
@@ -20,11 +19,11 @@ class KeyCommandController(private val body: HTMLElement) {
 
     private fun updateCommand(event: KeyboardEvent) {
         keyCommandMutableLiveData.value = if (event.target == body) {
-            Key.getCommandByKey(event.keyCode)
+            KeyCommand.getCommandByKey(event.keyCode)
         } else {
-            Key.KeyCommand.IDLE
+            KeyCommand.IDLE
         }
         console.log("Key press ${event.code} : ${event.keyCode}")
-        keyCommandMutableLiveData.value = Key.KeyCommand.IDLE
+        keyCommandMutableLiveData.value = KeyCommand.IDLE
     }
 }

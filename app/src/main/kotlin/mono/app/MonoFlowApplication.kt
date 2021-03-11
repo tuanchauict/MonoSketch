@@ -5,6 +5,7 @@ import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
+import mono.keycommand.KeyCommandController
 import mono.lifecycle.LifecycleOwner
 import mono.shape.ShapeManager
 import mono.state.MainStateManager

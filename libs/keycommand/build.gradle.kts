@@ -8,12 +8,11 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test-js"))
-    implementation(project(":htmlcanvas"))
-    implementation(project(":keycommand"))
-    implementation(project(":graphicsgeo"))
+    implementation(kotlin("stdlib-js"))
+    implementation(project(":commons"))
     implementation(project(":livedata"))
-    implementation(project(":statemanager"))
+
+    testImplementation(kotlin("test-js"))
 }
 
 kotlin {

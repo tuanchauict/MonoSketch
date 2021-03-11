@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":monoboard"))
     implementation(project(":htmlcanvas"))
     implementation(project(":htmlmodal"))
+    implementation(project(":keycommand"))
     testImplementation(kotlin("test-js"))
 }
 
