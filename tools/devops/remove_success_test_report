@@ -1,0 +1,23 @@
+#!/bin/sh
+
+remove_test_result_for_success() {
+  index_file="$1/build/reports/tests/test/index.html"
+  if [ ! -f "$index_file" ]; then
+    echo "[$1] DO NOT contain test result. SKIP"
+    return
+  fi
+  test_successful_check=$(cat "$index_file" | grep '<div class="infoBox failures" id="successRate">')
+  if [ -z "$test_successful_check" ]; then
+    echo "[$1] SUCCESS -> REMOVE TEST RESULT $1/build/reports/tests/test"
+     rm -rf "$1/build/reports/tests/test"
+  else
+    echo "[$1] FAILED -> KEEP"
+  fi
+}
+remove_test_result_for_success "."
+remove_test_result_for_success "app"
+for module in libs/*; do
+  if [ -d "$module" ]; then
+    remove_test_result_for_success "$module"
+  fi
+done

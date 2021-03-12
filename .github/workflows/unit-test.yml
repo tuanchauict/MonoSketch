@@ -8,8 +8,11 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
-      - run: ./gradlew test
-      - name: Publish Unit test result
+      - run: ./gradlew test --continue
+      - name: Clean up test result
+        if: failure()
+        run: sh tools/devops/remove_success_test_report
+      - name: Publish test result
         uses: actions/upload-artifact@v2
         if: failure()
         with:
