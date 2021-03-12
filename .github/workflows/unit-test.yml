@@ -8,7 +8,7 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
-      - run: ./gradlew test
+      - run: ./gradlew test --continue
       - name: Clean up test result
         if: failure()
         run: sh tools/devops/remove_success_test_report
