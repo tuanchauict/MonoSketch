@@ -1,0 +1,33 @@
+name: Publish release
+on:
+  push:
+    branches:
+      - main
+      - release/**
+    tags:
+      - release/**
+jobs:
+  bundle_demo_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - run: ./gradlew assemble
+      - run: |
+          mkdir release
+          mkdir release/demo
+          mv build/distributions/* release/demo
+      - name: Publish to monoflowapp.github.io
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@cp_instead_of_deleting
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: 'release'
+          destination-github-username: 'monoflowapp'
+          destination-repository-name: 'monoflowapp.github.io'
+          target-branch: master
+          user-email: tunachauict@gmail.com
+          commit-message: Demo publishing
