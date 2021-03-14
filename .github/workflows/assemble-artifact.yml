@@ -1,5 +1,9 @@
 name: Build artifact
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 jobs:
   assemble:
     runs-on: ubuntu-latest
