@@ -23,4 +23,16 @@ Under construction
         (ascii clip art by ascii.co.uk/art/roadworks)
 ```
 
+Demo: https://monoflowapp.github.io/demo/
+
+Keyboard Command   | Function
+-------------------|---------
+R                  | Draw rectangle
+T                  | Draw text
+DELETE             | Remove selected shape(s)
+ESC                | Deselect, enter select mode
+UP/DOWN/LEFT/RIGHT | Move selected shape(s)
+
+First showcase:
+
 ![](gallery/demo-1.gif)
