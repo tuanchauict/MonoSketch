@@ -17,9 +17,10 @@ import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.add
+import mono.shape.command.ChangeExtra
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
-import mono.shape.shape.Rectangle
+import mono.shape.shape.Text
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.MouseCommand
 import mono.state.command.CommandEnvironment
@@ -49,16 +50,11 @@ class MainStateManager(
 
     private val environment: CommandEnvironment = CommandEnvironmentImpl(this)
     private var currentMouseCommand: MouseCommand? = null
-    private var currentCommandType: CommandType = CommandType.ADD_TEXT
+    private var currentCommandType: CommandType = CommandType.IDLE
 
     private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
 
     init {
-        // TODO: This is for testing
-        for (i in 0..10) {
-            shapeManager.add(Rectangle(Rect.byLTWH(i * 4, i * 4, 16, 16)))
-        }
-
         mousePointerLiveData
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::onMouseEvent)
@@ -81,6 +77,25 @@ class MainStateManager(
             }
 
         redrawRequestMutableLiveData.observe(lifecycleOwner, 1) { redraw() }
+
+        addDemoShape()
+    }
+
+    private fun addDemoShape() {
+        // TODO: This is for testing
+        val commandText = """
+                Keyboard Command   | Function
+                -------------------|----------------------------
+                R                  | Draw rectangle
+                T                  | Draw text
+                DELETE             | Remove selected shape(s)
+                ESC                | Deselect, enter select mode
+                UP/DOWN/LEFT/RIGHT | Move selected shape(s)
+            """.trimIndent()
+        val textShape = Text(Rect.byLTWH(1, 1, 51, 9))
+        shapeManager.add(textShape)
+        val extraUpdater = Text.Extra.Updater.Text(commandText)
+        shapeManager.execute(ChangeExtra(textShape, extraUpdater))
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
