@@ -9,7 +9,10 @@ import mono.shape.ShapeManager
 import mono.shape.command.ChangeBound
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
+import mono.shape.shape.Group
+import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
+import mono.shapebound.ScalableInteractionBound
 import mono.state.command.text.EditTextShapeHelper
 
 /**
@@ -22,8 +25,6 @@ class SelectedShapeManager(
 ) {
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
-
-
 
     private var bound: Rect? = null
 
@@ -69,13 +70,15 @@ class SelectedShapeManager(
     }
 
     fun updateInteractionBound() {
-        bound = if (selectedShapes.isNotEmpty()) {
-            val rects = selectedShapes.asSequence().map { it.bound }
-            Rect.boundOf(rects)
-        } else {
-            null
+        val bounds = selectedShapes.mapNotNull {
+            when (it) {
+                is Rectangle,
+                is Text -> ScalableInteractionBound(it.bound)
+                is Group -> null // TODO: Add new Interaction bound type for Group
+                else -> null
+            }
         }
-        canvasManager.drawSelectionBound(bound, BoundType.NINE_DOTS)
+        canvasManager.drawInteractionBounds(bounds)
         requestRedraw()
     }
 
