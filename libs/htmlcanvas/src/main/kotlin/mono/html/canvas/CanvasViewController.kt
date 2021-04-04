@@ -12,12 +12,14 @@ import mono.graphics.geo.Size
 import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.GridCanvasViewController
+import mono.html.canvas.canvas.InteractionCanvasViewController
 import mono.html.canvas.canvas.SelectionCanvasViewController
 import mono.html.canvas.mouse.MouseEventObserver
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
+import mono.shapebound.InteractionBound
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLDivElement
 
@@ -32,6 +34,7 @@ class CanvasViewController(
 ) {
     private val gridCanvasViewController: GridCanvasViewController
     private val boardCanvasViewController: BoardCanvasViewController
+    private val interactionCanvasViewController: InteractionCanvasViewController
     private val selectionCanvasViewController: SelectionCanvasViewController
 
     private val canvasControllers: List<BaseCanvasViewController>
@@ -49,17 +52,21 @@ class CanvasViewController(
         container.append {
             canvas(CLASS_NAME_GRID) {}
             canvas(CLASS_NAME_BOARD) {}
+            canvas(CLASS_NAME_INTERACTION) {}
             canvas(CLASS_NAME_SELECTION) {}
         }
 
         gridCanvasViewController = GridCanvasViewController(getCanvas(CLASS_NAME_GRID))
         boardCanvasViewController = BoardCanvasViewController(getCanvas(CLASS_NAME_BOARD), board)
+        interactionCanvasViewController =
+            InteractionCanvasViewController(getCanvas(CLASS_NAME_INTERACTION))
         selectionCanvasViewController =
             SelectionCanvasViewController(getCanvas(CLASS_NAME_SELECTION))
 
         canvasControllers = listOf(
             gridCanvasViewController,
             boardCanvasViewController,
+            interactionCanvasViewController,
             selectionCanvasViewController
         )
 
@@ -80,10 +87,16 @@ class CanvasViewController(
 
     fun drawBoard() {
         boardCanvasViewController.draw()
+        interactionCanvasViewController.draw()
         selectionCanvasViewController.draw()
     }
 
-    fun drawInteractionBound(bound: Rect?, boundType: BoundType) {
+    fun drawInteractionBounds(interactionBounds: List<InteractionBound>) {
+        interactionCanvasViewController.interactionBounds = interactionBounds
+        interactionCanvasViewController.draw()
+    }
+
+    fun drawSelectionBound(bound: Rect?, boundType: BoundType) {
         selectionCanvasViewController.selectingBound = bound
         selectionCanvasViewController.boundType = boundType
         selectionCanvasViewController.draw()
@@ -116,6 +129,7 @@ class CanvasViewController(
     companion object {
         private const val CLASS_NAME_GRID = "grid-canvas"
         private const val CLASS_NAME_BOARD = "board-canvas"
+        private const val CLASS_NAME_INTERACTION = "interaction-canvas"
         private const val CLASS_NAME_SELECTION = "selection-canvas"
     }
 }

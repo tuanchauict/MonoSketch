@@ -23,6 +23,8 @@ class SelectedShapeManager(
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
 
+
+
     private var bound: Rect? = null
 
     fun setSelectedShapes(vararg shapes: AbstractShape?) {
@@ -73,12 +75,12 @@ class SelectedShapeManager(
         } else {
             null
         }
-        canvasManager.drawInteractionBound(bound, BoundType.NINE_DOTS)
+        canvasManager.drawSelectionBound(bound, BoundType.NINE_DOTS)
         requestRedraw()
     }
 
     fun setSelectionBound(bound: Rect?) {
-        canvasManager.drawInteractionBound(bound, BoundType.SIMPLE_RECTANGLE)
+        canvasManager.drawSelectionBound(bound, BoundType.SIMPLE_RECTANGLE)
     }
 
     fun isInSelectedBound(point: Point): Boolean = bound?.contains(point).nullToFalse()
