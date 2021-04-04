@@ -11,7 +11,7 @@ import mono.graphics.geo.Size
 import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.GridCanvasViewController
-import mono.html.canvas.canvas.InteractionCanvasViewController
+import mono.html.canvas.canvas.SelectionCanvasViewController
 import mono.html.canvas.mouse.MouseEventObserver
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -30,7 +30,7 @@ class CanvasViewController(
 ) {
     private lateinit var gridCanvasViewController: GridCanvasViewController
     private lateinit var boardCanvasViewController: BoardCanvasViewController
-    private lateinit var interactionCanvasViewController: InteractionCanvasViewController
+    private lateinit var selectionCanvasViewController: SelectionCanvasViewController
 
     private lateinit var canvasControllers: List<BaseCanvasViewController>
     private val mouseEventController: MouseEventObserver by lazy {
@@ -58,12 +58,12 @@ class CanvasViewController(
 
             gridCanvasViewController = GridCanvasViewController(gridCanvas)
             boardCanvasViewController = BoardCanvasViewController(boardCanvas, board)
-            interactionCanvasViewController = InteractionCanvasViewController(interactionCanvas)
+            selectionCanvasViewController = SelectionCanvasViewController(interactionCanvas)
 
             canvasControllers = listOf(
                 gridCanvasViewController,
                 boardCanvasViewController,
-                interactionCanvasViewController
+                selectionCanvasViewController
             )
         }
 
@@ -74,17 +74,17 @@ class CanvasViewController(
 
     fun drawBoard() {
         boardCanvasViewController.draw()
-        interactionCanvasViewController.draw()
+        selectionCanvasViewController.draw()
     }
 
     fun drawInteractionBound(bound: Rect?, boundType: BoundType) {
-        interactionCanvasViewController.selectedShapesBoundingRect = bound
-        interactionCanvasViewController.boundType = boundType
-        interactionCanvasViewController.draw()
+        selectionCanvasViewController.selectingBound = bound
+        selectionCanvasViewController.boundType = boundType
+        selectionCanvasViewController.draw()
     }
 
     fun getInteractionPosition(point: Point): EdgeRelatedPosition? =
-        interactionCanvasViewController.getDotIndex(point)
+        selectionCanvasViewController.getDotIndex(point)
 
     fun setFont(fontSize: Int) {
         for (controller in canvasControllers) {

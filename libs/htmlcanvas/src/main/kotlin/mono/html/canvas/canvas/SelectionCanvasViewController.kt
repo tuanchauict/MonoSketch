@@ -9,14 +9,13 @@ import org.w3c.dom.Path2D
 import kotlin.math.abs
 
 /**
- * A canvas view controller to render the selection rectangle bound and interaction indicators.
- * TODO: Update [selectedShapesBoundingRect] value
+ * A canvas view controller to render the selection rectangle bound indicator.
  */
-internal class InteractionCanvasViewController(
+internal class SelectionCanvasViewController(
     canvas: HTMLCanvasElement
 ) : BaseCanvasViewController(canvas) {
 
-    var selectedShapesBoundingRect: Rect? = null
+    var selectingBound: Rect? = null
     var boundType: CanvasViewController.BoundType = CanvasViewController.BoundType.NINE_DOTS
 
     override fun drawInternal() {
@@ -85,7 +84,7 @@ internal class InteractionCanvasViewController(
     }
 
     private fun getBoundRectPx(): RectD? {
-        val bound = selectedShapesBoundingRect ?: return null
+        val bound = selectingBound ?: return null
         return RectD(
             drawingInfo.toXPx(bound.left.toDouble()),
             drawingInfo.toYPx(bound.top.toDouble()),
