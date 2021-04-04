@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":shape"))
     implementation(project(":shapesearcher"))
     implementation(project(":monoboard"))
+    implementation(project(":shape-interaction-bound"))
     implementation(project(":htmlcanvas"))
     implementation(project(":htmlmodal"))
     implementation(project(":keycommand"))
