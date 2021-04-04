@@ -6,6 +6,7 @@ val moduleMap = mapOf(
     "monoboard" to "libs/monoboard",
     "graphicsgeo" to "libs/graphicsgeo",
     "shape" to "libs/shape",
+    "shape-interaction-bound" to "libs/shape-interaction-bound",
     "shapesearcher" to "libs/shapesearcher",
     "monobitmap" to "libs/monobitmap",
     "htmlcanvas" to "libs/htmlcanvas",
