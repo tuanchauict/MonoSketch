@@ -13,7 +13,11 @@ sealed class InteractionPoint(val shapeId: Int, val left: Double, val top: Doubl
 /**
  * A sealed class for defining all possible scale interaction point types for a shape.
  */
-sealed class ScaleInteractionPoint(shapeId: Int, left: Double, top: Double) : InteractionPoint(shapeId, left, top) {
+sealed class ScaleInteractionPoint(
+    shapeId: Int,
+    left: Double,
+    top: Double
+) : InteractionPoint(shapeId, left, top) {
     abstract fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect
 
     class TopLeft(
