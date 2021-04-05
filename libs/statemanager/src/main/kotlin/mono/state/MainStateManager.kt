@@ -195,10 +195,8 @@ class MainStateManager(
         override val selectedShapeManager: SelectedShapeManager
             get() = stateManager.selectedShapeManager
 
-        override fun getTargetedShapeIdAndInteractionPosition(
-            point: Point
-        ): Pair<Int, InteractionPoint>? =
-            stateManager.canvasManager.getTargetedShapeIdAndInteractionPosition(point)
+        override fun getInteractionPoint(point: Point): InteractionPoint? =
+            stateManager.canvasManager.getInteractionPoint(point)
     }
 
     companion object {

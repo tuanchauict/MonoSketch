@@ -101,8 +101,8 @@ class CanvasViewController(
         selectionCanvasViewController.draw()
     }
 
-    fun getTargetedShapeIdAndInteractionPosition(point: Point): Pair<Int, InteractionPoint>? =
-        interactionCanvasViewController.getTargetedShapeIdAndInteractionPosition(point)
+    fun getInteractionPoint(point: Point): InteractionPoint? =
+        interactionCanvasViewController.getInteractionPoint(point)
 
     fun setFont(fontSize: Int) {
         for (controller in canvasControllers) {

@@ -48,11 +48,11 @@ internal class InteractionCanvasViewController(
         context.fillRect(xPx - dotSizePx / 2, yPx - dotSizePx / 2, dotSizePx, dotSizePx)
     }
 
-    fun getTargetedShapeIdAndInteractionPosition(pointPx: Point): Pair<Int, InteractionPoint>? {
+    fun getInteractionPoint(pointPx: Point): InteractionPoint? {
         for (bound in interactionBounds.reversed()) {
             val closePoint = bound.interactionPoints.lastOrNull { it.isAround(pointPx) }
             if (closePoint != null) {
-                return bound.targetedShapeId to closePoint
+                return closePoint
             }
         }
 
