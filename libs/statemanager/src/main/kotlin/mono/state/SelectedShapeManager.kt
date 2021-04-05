@@ -73,7 +73,7 @@ class SelectedShapeManager(
         val bounds = selectedShapes.mapNotNull {
             when (it) {
                 is Rectangle,
-                is Text -> ScalableInteractionBound(it.bound)
+                is Text -> ScalableInteractionBound(it.id, it.bound)
                 is Group -> null // TODO: Add new Interaction bound type for Group
                 else -> null
             }
