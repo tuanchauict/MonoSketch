@@ -64,7 +64,6 @@ internal object MouseCommandFactory {
         commandEnvironment: CommandEnvironment,
         targetShapeIdToInteractionPoint: Pair<Int, InteractionPoint>?
     ): ScaleShapeMouseCommand? {
-        println("Con heo: $targetShapeIdToInteractionPoint")
         if (targetShapeIdToInteractionPoint == null) {
             return null
         }

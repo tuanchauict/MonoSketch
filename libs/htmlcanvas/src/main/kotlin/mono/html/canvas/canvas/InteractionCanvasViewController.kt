@@ -49,7 +49,6 @@ internal class InteractionCanvasViewController(
     }
 
     fun getTargetedShapeIdAndInteractionPosition(pointPx: Point): Pair<Int, InteractionPoint>? {
-        console.log(pointPx)
         for (bound in interactionBounds.reversed()) {
             val closePoint = bound.interactionPoints.lastOrNull { it.isAround(pointPx) }
             if (closePoint != null) {
@@ -63,7 +62,6 @@ internal class InteractionCanvasViewController(
     private fun InteractionPoint.isAround(pointPx: Point): Boolean {
         val leftPx = drawingInfo.toXPx(left)
         val topPx = drawingInfo.toYPx(top)
-        println("> $leftPx $topPx")
         return abs(leftPx - pointPx.left) < 6 && abs(topPx - pointPx.top) < 6
     }
 }
