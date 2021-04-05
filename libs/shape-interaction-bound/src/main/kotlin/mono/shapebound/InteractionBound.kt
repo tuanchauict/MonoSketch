@@ -5,7 +5,7 @@ import mono.graphics.geo.Rect
 /**
  * A sealed class to define all possible interaction bound types.
  */
-sealed class InteractionBound(val targetedShapeId: Int) {
+sealed class InteractionBound {
     abstract val interactionPoints: List<InteractionPoint>
 }
 
@@ -15,7 +15,7 @@ sealed class InteractionBound(val targetedShapeId: Int) {
 class ScalableInteractionBound(
     targetedShapeId: Int,
     shapeBound: Rect
-) : InteractionBound(targetedShapeId) {
+) : InteractionBound() {
     val left: Double = shapeBound.left.toDouble()
     val top: Double = shapeBound.top.toDouble()
     val right: Double = shapeBound.right + 1.0
