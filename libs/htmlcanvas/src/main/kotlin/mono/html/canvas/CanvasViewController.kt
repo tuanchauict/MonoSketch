@@ -4,7 +4,6 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
 import mono.common.firstOrNull
 import mono.graphics.board.MonoBoard
-import mono.graphics.geo.EdgeRelatedPosition
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -20,6 +19,7 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shapebound.InteractionBound
+import mono.shapebound.InteractionPoint
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLDivElement
 
@@ -102,8 +102,8 @@ class CanvasViewController(
         selectionCanvasViewController.draw()
     }
 
-    fun getInteractionPosition(point: Point): EdgeRelatedPosition? =
-        selectionCanvasViewController.getDotIndex(point)
+    fun getTargetedShapeIdAndInteractionPosition(point: Point): Pair<Int, InteractionPoint>? =
+        interactionCanvasViewController.getTargetedShapeIdAndInteractionPosition(point)
 
     fun setFont(fontSize: Int) {
         for (controller in canvasControllers) {

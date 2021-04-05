@@ -35,9 +35,9 @@ internal class SelectionCanvasViewController(
         context.fillStyle = boundType.boundStyleColor
         context.stroke(path)
 
-        if (boundType == CanvasViewController.BoundType.NINE_DOTS) {
-            drawDots(bound.left, bound.top, bound.right, bound.bottom)
-        }
+//        if (boundType == CanvasViewController.BoundType.NINE_DOTS) {
+//            drawDots(bound.left, bound.top, bound.right, bound.bottom)
+//        }
     }
 
     private fun drawDots(
