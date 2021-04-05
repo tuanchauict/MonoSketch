@@ -5,7 +5,6 @@ import mono.common.nullToFalse
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
-import mono.graphics.geo.EdgeRelatedPosition
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -21,10 +20,11 @@ import mono.shape.command.ChangeExtra
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Text
+import mono.shapebound.InteractionPoint
 import mono.shapesearcher.ShapeSearcher
-import mono.state.command.MouseCommand
 import mono.state.command.CommandEnvironment
 import mono.state.command.CommandType
+import mono.state.command.MouseCommand
 import mono.state.command.MouseCommandFactory
 
 /**
@@ -195,8 +195,10 @@ class MainStateManager(
         override val selectedShapeManager: SelectedShapeManager
             get() = stateManager.selectedShapeManager
 
-        override fun getInteractionPosition(point: Point): EdgeRelatedPosition? =
-            stateManager.canvasManager.getInteractionPosition(point)
+        override fun getTargetedShapeIdAndInteractionPosition(
+            point: Point
+        ): Pair<Int, InteractionPoint>? =
+            stateManager.canvasManager.getTargetedShapeIdAndInteractionPosition(point)
     }
 
     companion object {

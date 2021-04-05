@@ -1,60 +1,46 @@
 package mono.html.canvas.canvas
 
-import mono.graphics.geo.EdgeRelatedPosition
 import mono.graphics.geo.Point
-import mono.graphics.geo.Rect
-import mono.html.canvas.CanvasViewController
+import mono.shapebound.InteractionBound
+import mono.shapebound.InteractionPoint
+import mono.shapebound.ScalableInteractionBound
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
 import kotlin.math.abs
 
 /**
- * A canvas view controller to render the selection rectangle bound and interaction indicators.
- * TODO: Update [selectedShapesBoundingRect] value
+ * A canvas view controller to render the interaction indicators.
  */
 internal class InteractionCanvasViewController(
     canvas: HTMLCanvasElement
 ) : BaseCanvasViewController(canvas) {
 
-    var selectedShapesBoundingRect: Rect? = null
-    var boundType: CanvasViewController.BoundType = CanvasViewController.BoundType.NINE_DOTS
+    var interactionBounds: List<InteractionBound> = emptyList()
 
     override fun drawInternal() {
-        val bound = getBoundRectPx() ?: return
+        context.strokeStyle = "#6b6b6b"
+        context.fillStyle = "#6b6b6b"
 
-        val path = Path2D().apply {
-            moveTo(bound.left, bound.top)
-            lineTo(bound.right, bound.top)
-            lineTo(bound.right, bound.bottom)
-            lineTo(bound.left, bound.bottom)
-            closePath()
-        }
-        context.strokeStyle = boundType.boundStyleColor
-        context.lineWidth = 1.0
-        val lineDash = if (boundType.isDash) arrayOf(8.0, 6.0) else emptyArray()
-        context.setLineDash(lineDash)
-        context.fillStyle = boundType.boundStyleColor
-        context.stroke(path)
-
-        if (boundType == CanvasViewController.BoundType.NINE_DOTS) {
-            drawDots(bound.left, bound.top, bound.right, bound.bottom)
+        for (bound in interactionBounds) {
+            when (bound) {
+                is ScalableInteractionBound -> drawScalableInteractionBound(bound)
+            }
         }
     }
 
-    private fun drawDots(
-        leftPx: Double,
-        topPx: Double,
-        rightPx: Double,
-        bottomPx: Double
-    ) {
-        drawDot(leftPx, topPx)
-        drawDot(leftPx, (topPx + bottomPx) / 2.0)
-        drawDot(leftPx, bottomPx)
-        drawDot(rightPx, topPx)
-        drawDot(rightPx, (topPx + bottomPx) / 2.0)
-        drawDot(rightPx, bottomPx)
-        drawDot((leftPx + rightPx) / 2.0, topPx)
-        drawDot((leftPx + rightPx) / 2.0, bottomPx)
+    private fun drawScalableInteractionBound(bound: ScalableInteractionBound) {
+        val path = Path2D().apply {
+            moveTo(drawingInfo.toXPx(bound.left), drawingInfo.toYPx(bound.top))
+            lineTo(drawingInfo.toXPx(bound.right), drawingInfo.toYPx(bound.top))
+            lineTo(drawingInfo.toXPx(bound.right), drawingInfo.toYPx(bound.bottom))
+            lineTo(drawingInfo.toXPx(bound.left), drawingInfo.toYPx(bound.bottom))
+            closePath()
+        }
+        context.stroke(path)
+
+        for (point in bound.interactionPoints) {
+            drawDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
+        }
     }
 
     private fun drawDot(xPx: Double, yPx: Double) {
@@ -62,45 +48,20 @@ internal class InteractionCanvasViewController(
         context.fillRect(xPx - dotSizePx / 2, yPx - dotSizePx / 2, dotSizePx, dotSizePx)
     }
 
-    fun getDotIndex(pointPx: Point): EdgeRelatedPosition? {
-        val rect = getBoundRectPx() ?: return null
-        return when {
-            pointPx.isAround(rect.left, rect.top) -> EdgeRelatedPosition.LEFT_TOP
-            pointPx.isAround(rect.horizontalMiddle, rect.top) -> EdgeRelatedPosition.MIDDLE_TOP
-            pointPx.isAround(rect.right, rect.top) -> EdgeRelatedPosition.RIGHT_TOP
-
-            pointPx.isAround(rect.left, rect.verticalMiddle) -> EdgeRelatedPosition.LEFT_MIDDLE
-            pointPx.isAround(rect.right, rect.verticalMiddle) -> EdgeRelatedPosition.RIGHT_MIDDLE
-
-            pointPx.isAround(rect.left, rect.bottom) -> EdgeRelatedPosition.LEFT_BOTTOM
-            pointPx.isAround(rect.horizontalMiddle, rect.bottom) -> EdgeRelatedPosition.MIDDLE_BOTTOM
-            pointPx.isAround(rect.right, rect.bottom) -> EdgeRelatedPosition.RIGHT_BOTTOM
-
-            else -> null
+    fun getTargetedShapeIdAndInteractionPosition(pointPx: Point): Pair<Int, InteractionPoint>? {
+        for (bound in interactionBounds.reversed()) {
+            val closePoint = bound.interactionPoints.lastOrNull { it.isAround(pointPx) }
+            if (closePoint != null) {
+                return bound.targetedShapeId to closePoint
+            }
         }
+
+        return null
     }
 
-    private fun Point.isAround(xPx: Double, yPx: Double): Boolean {
-        return abs(left - xPx) < 6 && abs(top - yPx) < 6
-    }
-
-    private fun getBoundRectPx(): RectD? {
-        val bound = selectedShapesBoundingRect ?: return null
-        return RectD(
-            drawingInfo.toXPx(bound.left.toDouble()),
-            drawingInfo.toYPx(bound.top.toDouble()),
-            drawingInfo.toXPx(bound.right + 1.0),
-            drawingInfo.toYPx(bound.bottom + 1.0),
-        )
-    }
-
-    private data class RectD(
-        val left: Double,
-        val top: Double,
-        val right: Double,
-        val bottom: Double
-    ) {
-        val horizontalMiddle: Double = (left + right) / 2
-        val verticalMiddle: Double = (top + bottom) / 2
+    private fun InteractionPoint.isAround(pointPx: Point): Boolean {
+        val leftPx = drawingInfo.toXPx(left)
+        val topPx = drawingInfo.toYPx(top)
+        return abs(leftPx - pointPx.left) < 6 && abs(topPx - pointPx.top) < 6
     }
 }

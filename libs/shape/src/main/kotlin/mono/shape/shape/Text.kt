@@ -45,11 +45,6 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         isUpdated
     }
 
-    override fun isNewBoundAcceptable(newBound: Rect): Boolean {
-        val minSize = if (extra.boundExtra != null) 3 else 1
-        return newBound.size.width >= minSize && newBound.size.height >= minSize
-    }
-
     override fun setExtra(extraUpdater: ExtraUpdater) = update {
         val newExtra = when (extraUpdater) {
             is Rectangle.Extra.Updater -> Extra.Updater.Bound(extraUpdater).combine(extra)

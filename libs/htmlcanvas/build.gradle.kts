@@ -11,6 +11,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.2")
     implementation(project(":monoboard"))
     implementation(project(":livedata"))
+    implementation(project(":shape-interaction-bound"))
 
     testImplementation(kotlin("test-js"))
 }

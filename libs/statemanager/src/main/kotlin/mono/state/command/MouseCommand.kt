@@ -1,6 +1,8 @@
 package mono.state.command
 
 import mono.graphics.geo.MousePointer
+import mono.shapebound.InteractionPoint
+import mono.shapebound.ScaleInteractionPoint
 import mono.state.MainStateManager
 import mono.state.command.text.AddTextMouseCommand
 
@@ -42,16 +44,35 @@ internal object MouseCommandFactory {
             return null
         }
 
-        val interactionPosition = commandEnvironment.getInteractionPosition(mousePointer.pointPx)
-        if (interactionPosition != null) {
-            return ScaleShapeMouseCommand(selectedShapes, interactionPosition)
+        val scaleShapeMouseCommand = createScaleShapeMouseCommandIfValid(
+            commandEnvironment,
+            commandEnvironment.getTargetedShapeIdAndInteractionPosition(mousePointer.pointPx)
+        )
+        if (scaleShapeMouseCommand != null) {
+            return scaleShapeMouseCommand
         }
 
         if (!mousePointer.isWithShiftKey &&
-            commandEnvironment.selectedShapeManager.isInSelectedBound(mousePointer.point)
+            commandEnvironment.selectedShapeManager.isInSelectionBounds(mousePointer.point)
         ) {
             return MoveShapeMouseCommand(selectedShapes)
         }
         return null
+    }
+
+    private fun createScaleShapeMouseCommandIfValid(
+        commandEnvironment: CommandEnvironment,
+        targetShapeIdToInteractionPoint: Pair<Int, InteractionPoint>?
+    ): ScaleShapeMouseCommand? {
+        if (targetShapeIdToInteractionPoint == null) {
+            return null
+        }
+        val (shapeId, interactionPoint) = targetShapeIdToInteractionPoint
+        val shape = commandEnvironment.shapeManager.getShape(shapeId) ?: return null
+        val scaleInteractionPoint = interactionPoint as? ScaleInteractionPoint ?: return null
+        return ScaleShapeMouseCommand(
+            shape,
+            scaleInteractionPoint
+        )
     }
 }

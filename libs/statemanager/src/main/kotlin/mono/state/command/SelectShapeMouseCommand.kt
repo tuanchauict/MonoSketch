@@ -22,6 +22,8 @@ internal class SelectShapeMouseCommand : MouseCommand {
                 false
             }
             is MousePointer.Up -> {
+                environment.selectedShapeManager.setSelectionBound(null)
+
                 val area = Rect.byLTRB(
                     mousePointer.mouseDownPoint.left,
                     mousePointer.mouseDownPoint.top,

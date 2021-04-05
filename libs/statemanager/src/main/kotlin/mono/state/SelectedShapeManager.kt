@@ -1,15 +1,16 @@
 package mono.state
 
-import mono.common.nullToFalse
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
-import mono.html.canvas.CanvasViewController.BoundType
 import mono.shape.ShapeManager
 import mono.shape.command.ChangeBound
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
+import mono.shape.shape.Group
+import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
+import mono.shapebound.ScalableInteractionBound
 import mono.state.command.text.EditTextShapeHelper
 
 /**
@@ -22,8 +23,6 @@ class SelectedShapeManager(
 ) {
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
-
-    private var bound: Rect? = null
 
     fun setSelectedShapes(vararg shapes: AbstractShape?) {
         selectedShapes = shapes.filterNotNull().toSet()
@@ -67,19 +66,21 @@ class SelectedShapeManager(
     }
 
     fun updateInteractionBound() {
-        bound = if (selectedShapes.isNotEmpty()) {
-            val rects = selectedShapes.asSequence().map { it.bound }
-            Rect.boundOf(rects)
-        } else {
-            null
+        val bounds = selectedShapes.mapNotNull {
+            when (it) {
+                is Rectangle,
+                is Text -> ScalableInteractionBound(it.id, it.bound)
+                is Group -> null // TODO: Add new Interaction bound type for Group
+                else -> null
+            }
         }
-        canvasManager.drawInteractionBound(bound, BoundType.NINE_DOTS)
+        canvasManager.drawInteractionBounds(bounds)
         requestRedraw()
     }
 
     fun setSelectionBound(bound: Rect?) {
-        canvasManager.drawInteractionBound(bound, BoundType.SIMPLE_RECTANGLE)
+        canvasManager.drawSelectionBound(bound)
     }
 
-    fun isInSelectedBound(point: Point): Boolean = bound?.contains(point).nullToFalse()
+    fun isInSelectionBounds(point: Point): Boolean = selectedShapes.any { it.bound.contains(point) }
 }

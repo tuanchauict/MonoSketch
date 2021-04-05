@@ -9,14 +9,10 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-js"))
-    implementation(project(":livedata"))
+    implementation(project(":commons"))
+    implementation(project(":graphicsgeo"))
     implementation(project(":shape"))
-    implementation(project(":shapesearcher"))
-    implementation(project(":monoboard"))
-    implementation(project(":shape-interaction-bound"))
-    implementation(project(":htmlcanvas"))
-    implementation(project(":htmlmodal"))
-    implementation(project(":keycommand"))
+
     testImplementation(kotlin("test-js"))
 }
 

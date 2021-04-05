@@ -2,8 +2,8 @@ package mono.html.canvas
 
 import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
+import mono.common.firstOrNull
 import mono.graphics.board.MonoBoard
-import mono.graphics.geo.EdgeRelatedPosition
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -12,11 +12,15 @@ import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.GridCanvasViewController
 import mono.html.canvas.canvas.InteractionCanvasViewController
+import mono.html.canvas.canvas.SelectionCanvasViewController
 import mono.html.canvas.mouse.MouseEventObserver
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
+import mono.shapebound.InteractionBound
+import mono.shapebound.InteractionPoint
+import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLDivElement
 
 /**
@@ -28,20 +32,14 @@ class CanvasViewController(
     board: MonoBoard,
     windowSizeLiveData: LiveData<Size>
 ) {
-    private lateinit var gridCanvasViewController: GridCanvasViewController
-    private lateinit var boardCanvasViewController: BoardCanvasViewController
-    private lateinit var interactionCanvasViewController: InteractionCanvasViewController
+    private val gridCanvasViewController: GridCanvasViewController
+    private val boardCanvasViewController: BoardCanvasViewController
+    private val interactionCanvasViewController: InteractionCanvasViewController
+    private val selectionCanvasViewController: SelectionCanvasViewController
 
-    private lateinit var canvasControllers: List<BaseCanvasViewController>
-    private val mouseEventController: MouseEventObserver by lazy {
-        MouseEventObserver(
-            container,
-            gridCanvasViewController::drawingInfo
-        )
-    }
-    val mousePointerLiveData: LiveData<MousePointer> by lazy {
-        mouseEventController.mousePointerLiveData
-    }
+    private val canvasControllers: List<BaseCanvasViewController>
+
+    val mousePointerLiveData: LiveData<MousePointer>
 
     val windowBoundPx: Rect
         get() = gridCanvasViewController.drawingInfo.boundPx
@@ -52,39 +50,59 @@ class CanvasViewController(
 
     init {
         container.append {
-            val gridCanvas = canvas {}
-            val boardCanvas = canvas {}
-            val interactionCanvas = canvas { }
-
-            gridCanvasViewController = GridCanvasViewController(gridCanvas)
-            boardCanvasViewController = BoardCanvasViewController(boardCanvas, board)
-            interactionCanvasViewController = InteractionCanvasViewController(interactionCanvas)
-
-            canvasControllers = listOf(
-                gridCanvasViewController,
-                boardCanvasViewController,
-                interactionCanvasViewController
-            )
+            canvas(CLASS_NAME_GRID) {}
+            canvas(CLASS_NAME_BOARD) {}
+            canvas(CLASS_NAME_INTERACTION) {}
+            canvas(CLASS_NAME_SELECTION) {}
         }
+
+        gridCanvasViewController = GridCanvasViewController(getCanvas(CLASS_NAME_GRID))
+        boardCanvasViewController = BoardCanvasViewController(getCanvas(CLASS_NAME_BOARD), board)
+        interactionCanvasViewController =
+            InteractionCanvasViewController(getCanvas(CLASS_NAME_INTERACTION))
+        selectionCanvasViewController =
+            SelectionCanvasViewController(getCanvas(CLASS_NAME_SELECTION))
+
+        canvasControllers = listOf(
+            gridCanvasViewController,
+            boardCanvasViewController,
+            interactionCanvasViewController,
+            selectionCanvasViewController
+        )
+
+        val mouseEventController = MouseEventObserver(
+            container,
+            gridCanvasViewController::drawingInfo
+        )
+        mousePointerLiveData = mouseEventController.mousePointerLiveData
 
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
             updateCanvasSize()
         }
     }
 
+    private fun getCanvas(className: String): HTMLCanvasElement {
+        return container.getElementsByClassName(className).firstOrNull()!!
+    }
+
     fun drawBoard() {
         boardCanvasViewController.draw()
         interactionCanvasViewController.draw()
+        selectionCanvasViewController.draw()
     }
 
-    fun drawInteractionBound(bound: Rect?, boundType: BoundType) {
-        interactionCanvasViewController.selectedShapesBoundingRect = bound
-        interactionCanvasViewController.boundType = boundType
+    fun drawInteractionBounds(interactionBounds: List<InteractionBound>) {
+        interactionCanvasViewController.interactionBounds = interactionBounds
         interactionCanvasViewController.draw()
     }
 
-    fun getInteractionPosition(point: Point): EdgeRelatedPosition? =
-        interactionCanvasViewController.getDotIndex(point)
+    fun drawSelectionBound(bound: Rect?) {
+        selectionCanvasViewController.selectingBound = bound
+        selectionCanvasViewController.draw()
+    }
+
+    fun getTargetedShapeIdAndInteractionPosition(point: Point): Pair<Int, InteractionPoint>? =
+        interactionCanvasViewController.getTargetedShapeIdAndInteractionPosition(point)
 
     fun setFont(fontSize: Int) {
         for (controller in canvasControllers) {
@@ -102,8 +120,10 @@ class CanvasViewController(
         windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
     }
 
-    enum class BoundType(val boundStyleColor: String, val isDash: Boolean) {
-        NINE_DOTS("#6b6b6b", isDash = false),
-        SIMPLE_RECTANGLE("#858585", isDash = true)
+    companion object {
+        private const val CLASS_NAME_GRID = "grid-canvas"
+        private const val CLASS_NAME_BOARD = "board-canvas"
+        private const val CLASS_NAME_INTERACTION = "interaction-canvas"
+        private const val CLASS_NAME_SELECTION = "selection-canvas"
     }
 }
