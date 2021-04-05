@@ -6,7 +6,6 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.add
 import mono.shape.command.ChangeBound
-import mono.shape.command.ChangeExtra
 import mono.shape.remove
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
@@ -74,11 +73,5 @@ internal class AddTextMouseCommand : MouseCommand {
         )
 
         shapeManager.execute(ChangeBound(currentShape, rect))
-    }
-
-    private fun CommandEnvironment.changeText(text: String) {
-        val currentShape = workingShape ?: return
-        val extraUpdater = Text.Extra.Updater.Text(text)
-        shapeManager.execute(ChangeExtra(currentShape, extraUpdater))
     }
 }

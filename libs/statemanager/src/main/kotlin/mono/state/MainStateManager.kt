@@ -16,7 +16,7 @@ import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.add
-import mono.shape.command.ChangeExtra
+import mono.shape.command.ChangeText
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Text
@@ -95,8 +95,7 @@ class MainStateManager(
             """.trimIndent()
         val textShape = Text(Rect.byLTWH(1, 1, 51, 9))
         shapeManager.add(textShape)
-        val extraUpdater = Text.Extra.Updater.Text(commandText)
-        shapeManager.execute(ChangeExtra(textShape, extraUpdater))
+        shapeManager.execute(ChangeText(textShape, commandText))
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
