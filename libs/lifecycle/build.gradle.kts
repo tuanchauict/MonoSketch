@@ -12,7 +12,7 @@ dependencies {
 }
 
 kotlin {
-    js(IR) {
+    js(LEGACY) {
         browser {
             binaries.executable()
 

@@ -8,16 +8,21 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test-js"))
     implementation(project(":htmlcanvas"))
     implementation(project(":keycommand"))
+    implementation(project(":lifecycle"))
+    implementation(project(":shape"))
+    implementation(project(":monoboard"))
+    implementation(project(":monobitmap"))
     implementation(project(":graphicsgeo"))
     implementation(project(":livedata"))
     implementation(project(":statemanager"))
+
+    testImplementation(kotlin("test-js"))
 }
 
 kotlin {
-    js(IR) {
+    js(LEGACY) {
         browser {
             testTask {
                 useKarma {

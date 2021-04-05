@@ -8,6 +8,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":commons"))
+    implementation(project(":graphicsgeo"))
     implementation(project(":shape"))
     implementation(project(":monobitmap"))
 
@@ -15,7 +17,7 @@ dependencies {
 }
 
 kotlin {
-    js(IR) {
+    js(LEGACY) {
         browser {
             testTask {
                 useKarma {
