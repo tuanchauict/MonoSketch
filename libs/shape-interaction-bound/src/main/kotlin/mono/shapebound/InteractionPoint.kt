@@ -8,50 +8,82 @@ import mono.graphics.geo.Rect
  *
  * [left] and [top] are the center position of the interaction point, with board-related unit.
  */
-sealed class InteractionPoint(val left: Double, val top: Double)
+sealed class InteractionPoint(val shapeId: Int, val left: Double, val top: Double)
 
 /**
  * A sealed class for defining all possible scale interaction point types for a shape.
  */
-sealed class ScaleInteractionPoint(left: Double, top: Double) : InteractionPoint(left, top) {
+sealed class ScaleInteractionPoint(shapeId: Int, left: Double, top: Double) : InteractionPoint(shapeId, left, top) {
     abstract fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect
 
-    class TopLeft(left: Double, top: Double) : ScaleInteractionPoint(left, top) {
+    class TopLeft(
+        shapeId: Int,
+        left: Double,
+        top: Double
+    ) : ScaleInteractionPoint(shapeId, left, top) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(newPoint.left, newPoint.top, currentBound.right, currentBound.bottom)
     }
 
-    class TopMiddle(left: Double, top: Double) : ScaleInteractionPoint(left, top) {
+    class TopMiddle(
+        shapeId: Int,
+        left: Double,
+        top: Double
+    ) : ScaleInteractionPoint(shapeId, left, top) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, newPoint.top, currentBound.right, currentBound.bottom)
     }
 
-    class TopRight(left: Double, top: Double) : ScaleInteractionPoint(left, top) {
+    class TopRight(
+        shapeId: Int,
+        left: Double,
+        top: Double
+    ) : ScaleInteractionPoint(shapeId, left, top) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, newPoint.top, newPoint.left, currentBound.bottom)
     }
 
-    class MiddleLeft(left: Double, top: Double) : ScaleInteractionPoint(left, top) {
+    class MiddleLeft(
+        shapeId: Int,
+        left: Double,
+        top: Double
+    ) : ScaleInteractionPoint(shapeId, left, top) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(newPoint.left, currentBound.top, currentBound.right, currentBound.bottom)
     }
 
-    class MiddleRight(left: Double, top: Double) : ScaleInteractionPoint(left, top) {
+    class MiddleRight(
+        shapeId: Int,
+        left: Double,
+        top: Double
+    ) : ScaleInteractionPoint(shapeId, left, top) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, currentBound.top, newPoint.left, currentBound.bottom)
     }
 
-    class BottomLeft(left: Double, top: Double) : ScaleInteractionPoint(left, top) {
+    class BottomLeft(
+        shapeId: Int,
+        left: Double,
+        top: Double
+    ) : ScaleInteractionPoint(shapeId, left, top) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(newPoint.left, currentBound.top, currentBound.right, newPoint.top)
     }
 
-    class BottomMiddle(left: Double, top: Double) : ScaleInteractionPoint(left, top) {
+    class BottomMiddle(
+        shapeId: Int,
+        left: Double,
+        top: Double
+    ) : ScaleInteractionPoint(shapeId, left, top) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, currentBound.top, currentBound.right, newPoint.top)
     }
 
-    class BottomRight(left: Double, top: Double) : ScaleInteractionPoint(left, top) {
+    class BottomRight(
+        shapeId: Int,
+        left: Double,
+        top: Double
+    ) : ScaleInteractionPoint(shapeId, left, top) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, currentBound.top, newPoint.left, newPoint.top)
     }

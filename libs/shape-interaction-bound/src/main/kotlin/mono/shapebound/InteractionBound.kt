@@ -25,13 +25,13 @@ class ScalableInteractionBound(
     private val verticalMiddle: Double = (top + bottom) / 2.0
 
     override val interactionPoints: List<ScaleInteractionPoint> = listOf(
-        ScaleInteractionPoint.TopLeft(left, top),
-        ScaleInteractionPoint.TopMiddle(horizontalMiddle, top),
-        ScaleInteractionPoint.TopRight(right, top),
-        ScaleInteractionPoint.MiddleLeft(left, verticalMiddle),
-        ScaleInteractionPoint.MiddleRight(right, verticalMiddle),
-        ScaleInteractionPoint.BottomLeft(left, bottom),
-        ScaleInteractionPoint.BottomMiddle(horizontalMiddle, bottom),
-        ScaleInteractionPoint.BottomRight(right, bottom),
+        ScaleInteractionPoint.TopLeft(targetedShapeId, left, top),
+        ScaleInteractionPoint.TopMiddle(targetedShapeId, horizontalMiddle, top),
+        ScaleInteractionPoint.TopRight(targetedShapeId, right, top),
+        ScaleInteractionPoint.MiddleLeft(targetedShapeId, left, verticalMiddle),
+        ScaleInteractionPoint.MiddleRight(targetedShapeId, right, verticalMiddle),
+        ScaleInteractionPoint.BottomLeft(targetedShapeId, left, bottom),
+        ScaleInteractionPoint.BottomMiddle(targetedShapeId, horizontalMiddle, bottom),
+        ScaleInteractionPoint.BottomRight(targetedShapeId, right, bottom),
     )
 }
