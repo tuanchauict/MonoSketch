@@ -46,7 +46,7 @@ internal object MouseCommandFactory {
 
         val scaleShapeMouseCommand = createScaleShapeMouseCommandIfValid(
             commandEnvironment,
-            commandEnvironment.getTargetedShapeIdAndInteractionPosition(mousePointer.pointPx)
+            commandEnvironment.getInteractionPoint(mousePointer.pointPx)
         )
         if (scaleShapeMouseCommand != null) {
             return scaleShapeMouseCommand
@@ -62,17 +62,14 @@ internal object MouseCommandFactory {
 
     private fun createScaleShapeMouseCommandIfValid(
         commandEnvironment: CommandEnvironment,
-        targetShapeIdToInteractionPoint: Pair<Int, InteractionPoint>?
+        interactionPoint: InteractionPoint?
     ): ScaleShapeMouseCommand? {
-        if (targetShapeIdToInteractionPoint == null) {
+        if (interactionPoint == null) {
             return null
         }
-        val (shapeId, interactionPoint) = targetShapeIdToInteractionPoint
-        val shape = commandEnvironment.shapeManager.getShape(shapeId) ?: return null
+        val shape =
+            commandEnvironment.shapeManager.getShape(interactionPoint.shapeId) ?: return null
         val scaleInteractionPoint = interactionPoint as? ScaleInteractionPoint ?: return null
-        return ScaleShapeMouseCommand(
-            shape,
-            scaleInteractionPoint
-        )
+        return ScaleShapeMouseCommand(shape, scaleInteractionPoint)
     }
 }
