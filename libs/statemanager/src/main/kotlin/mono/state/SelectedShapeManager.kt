@@ -1,6 +1,5 @@
 package mono.state
 
-import mono.common.nullToFalse
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
@@ -24,8 +23,6 @@ class SelectedShapeManager(
 ) {
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
-
-    private var bound: Rect? = null
 
     fun setSelectedShapes(vararg shapes: AbstractShape?) {
         selectedShapes = shapes.filterNotNull().toSet()
@@ -85,5 +82,5 @@ class SelectedShapeManager(
         canvasManager.drawSelectionBound(bound)
     }
 
-    fun isInSelectedBound(point: Point): Boolean = bound?.contains(point).nullToFalse()
+    fun isInSelectionBounds(point: Point): Boolean = selectedShapes.any { it.bound.contains(point) }
 }

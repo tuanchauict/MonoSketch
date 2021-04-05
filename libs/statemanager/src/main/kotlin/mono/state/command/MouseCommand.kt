@@ -53,7 +53,7 @@ internal object MouseCommandFactory {
         }
 
         if (!mousePointer.isWithShiftKey &&
-            commandEnvironment.selectedShapeManager.isInSelectedBound(mousePointer.point)
+            commandEnvironment.selectedShapeManager.isInSelectionBounds(mousePointer.point)
         ) {
             return MoveShapeMouseCommand(selectedShapes)
         }
