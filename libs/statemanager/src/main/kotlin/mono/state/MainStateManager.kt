@@ -16,7 +16,6 @@ import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.add
-import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeText
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
