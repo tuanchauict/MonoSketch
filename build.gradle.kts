@@ -39,3 +39,18 @@ kotlin {
         }
     }
 }
+
+val ktlint = configurations.create("ktlint")
+dependencies {
+    add("ktlint", "com.pinterest:ktlint:0.41.0")
+}
+
+tasks.create("ktlint", JavaExec::class) {
+    description = "Check Kotlin code style."
+    main = "com.pinterest.ktlint.Main"
+    classpath = ktlint
+    args("**/*.kt")
+    // to generate report in checkstyle format prepend following args:
+    // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+    // see https://github.com/pinterest/ktlint#usage for more
+}
