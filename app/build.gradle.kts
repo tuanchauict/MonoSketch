@@ -22,7 +22,7 @@ dependencies {
 }
 
 kotlin {
-    js(IR) {
+    js(LEGACY) {
         browser {
             testTask {
                 useKarma {
