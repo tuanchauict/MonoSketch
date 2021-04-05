@@ -19,7 +19,10 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     // Text can be auto resized by text
     override var bound: Rect = rect
 
-    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT, text = "")
+    var text: String = ""
+        private set
+
+    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT)
         private set
 
     var renderableText: RenderableText = RenderableText.EMPTY
@@ -45,6 +48,13 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         isUpdated
     }
 
+    fun setText(newText: String) = update {
+        val isTextChanged = newText != text
+        text = newText
+        updateRenderableText()
+        isTextChanged
+    }
+
     override fun setExtra(extraUpdater: ExtraUpdater) = update {
         val newExtra = when (extraUpdater) {
             is Rectangle.Extra.Updater -> Extra.Updater.Bound(extraUpdater).combine(extra)
@@ -62,14 +72,14 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
 
     private fun updateRenderableText() {
         val maxRowCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
-        if (extra.text != renderableText.text ||
+        if (text != renderableText.text ||
             maxRowCharCount != renderableText.maxRowCharCount
         ) {
-            renderableText = RenderableText(extra.text, max(maxRowCharCount, 1))
+            renderableText = RenderableText(text, max(maxRowCharCount, 1))
         }
     }
 
-    override fun isValid(): Boolean = extra.text.isNotEmpty()
+    override fun isValid(): Boolean = text.isNotEmpty()
 
     fun isBoundValid(): Boolean {
         val textBoundWidth = if (extra.boundExtra != null) bound.width - 2 else bound.width
@@ -78,18 +88,13 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     }
 
     data class Extra(
-        val boundExtra: Rectangle.Extra?,
-        val text: String
+        val boundExtra: Rectangle.Extra?
     ) {
         /**
          * A sealed class for updating [Extra].
          */
         sealed class Updater : ExtraUpdater {
             abstract fun combine(extra: Extra): Extra
-
-            data class Text(val text: String?) : Updater() {
-                override fun combine(extra: Extra): Extra = extra.copy(text = text ?: extra.text)
-            }
 
             /**
              * A text updater for updating bound.
