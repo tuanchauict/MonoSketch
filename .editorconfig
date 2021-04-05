@@ -1,0 +1,31 @@
+# This file is the top-most EditorConfig file
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 100
+tab_width = 4
+trim_trailing_whitespace = true
+ij_continuation_indent_size = 8
+ij_smart_tabs = false
+
+[{*.kt, *.kts}]
+ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
+# https://github.com/android/kotlin-guides/issues/37
+continuation_indent_size = 4
+ij_continuation_indent_size = 4
+# https://developer.android.com/kotlin/style-guide#import_statements
+# Wildcard imports (of any type) are not allowed.
+ij_kotlin_name_count_to_use_star_import = 2147483647
+ij_kotlin_name_count_to_use_star_import_for_members = 2147483647
+trim_trailing_whitespace = false
+disabled_rules = import-ordering
+
+[{*.yml,*.yaml}]
+indent_size = 2
+ij_yaml_keep_indents_on_empty_lines = false
+ij_yaml_keep_line_breaks = true
