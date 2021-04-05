@@ -8,6 +8,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":commons"))
+    implementation(project(":graphicsgeo"))
     implementation(project(":shape"))
     implementation(project(":monobitmap"))
 
