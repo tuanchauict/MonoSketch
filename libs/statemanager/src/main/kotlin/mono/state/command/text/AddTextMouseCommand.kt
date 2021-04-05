@@ -4,7 +4,6 @@ import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.html.modal.EditTextDialog
 import mono.shape.add
 import mono.shape.command.ChangeBound
 import mono.shape.command.ChangeExtra

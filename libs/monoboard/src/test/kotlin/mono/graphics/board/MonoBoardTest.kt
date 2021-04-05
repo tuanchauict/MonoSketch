@@ -12,6 +12,7 @@ class MonoBoardTest {
     private val target = MonoBoard().apply {
         clearAndSetWindow(Rect.byLTWH(-100, -100, 200, 200))
     }
+
     @Test
     fun testGetSet() {
         val points = listOf(-48, -32, -18, -16, 0, 16, 18, 32, 48).map { Point(it, it) }
@@ -49,7 +50,8 @@ class MonoBoardTest {
                 |                
                 |                
                 |                
-            """.trimMargin(), target.toString()
+            """.trimMargin(),
+            target.toString()
         )
         assertEquals(1, target.boardCount)
 

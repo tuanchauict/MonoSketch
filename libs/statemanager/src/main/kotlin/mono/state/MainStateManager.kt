@@ -65,7 +65,7 @@ class MainStateManager(
                 windowBoardBound = it
                 console.warn(
                     "Drawing info: window board size $windowBoardBound • " +
-                            "pixel size ${canvasManager.windowBoundPx}"
+                        "pixel size ${canvasManager.windowBoundPx}"
                 )
                 requestRedraw()
             }
@@ -83,7 +83,8 @@ class MainStateManager(
 
     private fun addDemoShape() {
         // TODO: This is for testing
-        val commandText = """
+        val commandText =
+            """
                 Keyboard Command   | Function
                 -------------------|----------------------------
                 R                  | Draw rectangle

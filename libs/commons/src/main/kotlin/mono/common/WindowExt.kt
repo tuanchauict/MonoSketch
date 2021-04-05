@@ -18,4 +18,3 @@ class Interval internal constructor(private val id: Int) {
 }
 
 fun Window.isCommandKeySupported(): Boolean = navigator.platform.startsWith("Mac")
-
