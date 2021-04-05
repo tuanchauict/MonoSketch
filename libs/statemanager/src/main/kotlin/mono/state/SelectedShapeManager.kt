@@ -4,7 +4,6 @@ import mono.common.nullToFalse
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
-import mono.html.canvas.CanvasViewController.BoundType
 import mono.shape.ShapeManager
 import mono.shape.command.ChangeBound
 import mono.shape.remove
@@ -83,7 +82,7 @@ class SelectedShapeManager(
     }
 
     fun setSelectionBound(bound: Rect?) {
-        canvasManager.drawSelectionBound(bound, BoundType.SIMPLE_RECTANGLE)
+        canvasManager.drawSelectionBound(bound)
     }
 
     fun isInSelectedBound(point: Point): Boolean = bound?.contains(point).nullToFalse()

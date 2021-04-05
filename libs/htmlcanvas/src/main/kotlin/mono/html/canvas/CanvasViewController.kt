@@ -96,9 +96,8 @@ class CanvasViewController(
         interactionCanvasViewController.draw()
     }
 
-    fun drawSelectionBound(bound: Rect?, boundType: BoundType) {
+    fun drawSelectionBound(bound: Rect?) {
         selectionCanvasViewController.selectingBound = bound
-        selectionCanvasViewController.boundType = boundType
         selectionCanvasViewController.draw()
     }
 
@@ -119,11 +118,6 @@ class CanvasViewController(
             controller.setSizeAndRedraw(widthPx, heightPx)
         }
         windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
-    }
-
-    enum class BoundType(val boundStyleColor: String, val isDash: Boolean) {
-        NINE_DOTS("#6b6b6b", isDash = false),
-        SIMPLE_RECTANGLE("#858585", isDash = true)
     }
 
     companion object {
