@@ -48,7 +48,7 @@ object RectangleDrawable {
         return ninepatch.toBitmap(size.width, size.height)
     }
 
-    private fun Rectangle.FillStyle.toNinePatch(): NinePatchDrawable = when(this) {
+    private fun Rectangle.FillStyle.toNinePatch(): NinePatchDrawable = when (this) {
         Rectangle.FillStyle.STYLE_0_BORDER -> NINE_PATCH_0_BLANK
         Rectangle.FillStyle.STYLE_0_FILL -> NINE_PATCH_0_FILL
     }

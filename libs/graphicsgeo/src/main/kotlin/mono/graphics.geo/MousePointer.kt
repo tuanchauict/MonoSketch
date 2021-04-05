@@ -26,4 +26,3 @@ sealed class MousePointer {
 
     data class Click(val point: Point, val isWithShiftKey: Boolean) : MousePointer()
 }
-
