@@ -63,7 +63,7 @@ internal object LineHelper {
         return mainPoints
     }
 
-    private fun reduce(points: List<Point>): List<Point> {
+    fun reduce(points: List<Point>): List<Point> {
         if (points.size < 2) {
             return points
         }
