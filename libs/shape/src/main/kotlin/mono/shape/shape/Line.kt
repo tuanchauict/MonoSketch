@@ -6,10 +6,10 @@ import mono.shape.shape.line.LineHelper
 
 /**
  * A line shape which connects two end-dots with a collection of straight lines.
- * 
- * A Line shape is defined by two end points which have direction. The inner algorithm will use the 
+ *
+ * A Line shape is defined by two end points which have direction. The inner algorithm will use the
  * defined direction to generate straight lines by creating joint points.
- * Line shapes are able to be modified by moving end points or moving connecting edges. Once the 
+ * Line shapes are able to be modified by moving end points or moving connecting edges. Once the
  * edge is modified, the line won't depend on seeding direction.
  */
 class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
@@ -18,4 +18,18 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
 
     var jointPoints: List<Point> = LineHelper.createJointPoints(listOf(startPoint, endPoint))
         private set
+
+    private var edges: List<Edge> = LineHelper.createEdges(jointPoints)
+
+    internal data class Edge(val id: Int = getId(), val startPoint: Point, val endPoint: Point) {
+
+        companion object {
+            private var lastUsedId: Int = 0
+            fun getId(): Int {
+                val newId = lastUsedId + 1
+                lastUsedId = newId
+                return newId
+            }
+        }
+    }
 }

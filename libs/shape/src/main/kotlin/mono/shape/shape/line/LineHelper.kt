@@ -3,6 +3,7 @@ package mono.shape.shape.line
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.DirectedPoint.Direction
 import mono.graphics.geo.Point
+import mono.shape.shape.Line
 
 /**
  * An utility object for line shape.
@@ -112,4 +113,14 @@ internal object LineHelper {
 
     private fun DirectedPoint.toRightAngleDirection(): Direction =
         if (direction == Direction.HORIZONTAL) Direction.VERTICAL else Direction.HORIZONTAL
+
+    fun createEdges(jointPoints: List<Point>): List<Line.Edge> {
+        val edges = mutableListOf<Line.Edge>()
+        for (i in 0 until jointPoints.lastIndex) {
+            val startPoint = jointPoints[i]
+            val endPoint = jointPoints[i + 1]
+            edges.add(Line.Edge(startPoint = startPoint, endPoint = endPoint))
+        }
+        return edges
+    }
 }
