@@ -11,7 +11,7 @@ import mono.shape.shape.line.LineHelper
  * defined direction to generate straight lines by creating joint points.
  * Line shapes are able to be modified by moving end points or moving connecting edges. Once the
  * edge is modified, the line won't depend on seeding direction.
- * 
+ *
  * First initial line's edges will be decided by the direction inside the two end points
  * Examples
  *
@@ -22,7 +22,7 @@ import mono.shape.shape.line.LineHelper
  * ```
  * x----x
  * ```
- * 
+ *
  * 2. Different line
  * 2.1.
  * Start: (0, 0, Horizontal)
@@ -66,9 +66,7 @@ import mono.shape.shape.line.LineHelper
  *      x
  * ```
  */
-class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
-    private var startPoint: DirectedPoint = startPoint
-    private var endPoint: DirectedPoint = endPoint
+class Line(private var startPoint: DirectedPoint, private var endPoint: DirectedPoint) {
 
     var jointPoints: List<Point> = LineHelper.createJointPoints(listOf(startPoint, endPoint))
         private set
@@ -81,14 +79,14 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
     private var confirmedJointPoints: List<Point> = emptyList()
 
     /**
-     * Move start point or end point to new location decided by [AnchorPointUpdate.anchor] of 
+     * Move start point or end point to new location decided by [AnchorPointUpdate.anchor] of
      * [anchorPointUpdate].
-     * If the line's edges have never been moved, new edges will be decided by new anchor point and 
-     * unaffected point with their direction like at the initial step. 
+     * If the line's edges have never been moved, new edges will be decided by new anchor point and
+     * unaffected point with their direction like at the initial step.
      * Otherwise, the anchor point is just moved to new point.
-     * New point in the middle will be introduced if the new position is not on the same line with 
+     * New point in the middle will be introduced if the new position is not on the same line with
      * the previous containing edge.
-     * 
+     *
      * Examples for moved:
      * Case 1. Line's edges are never moved: see examples in the class doc
      * Case 2. Line's edges have been moved
@@ -101,14 +99,14 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
      * ```
      * +---------------x
      * ```
-     * 
+     *
      * 2.2. Different lines
      * ```
      * +----------+
      *            |
      *            x
      * ```
-     * 
+     *
      */
     fun moveAnchorPoint(anchorPointUpdate: AnchorPointUpdate, isReduceRequired: Boolean) {
         when (anchorPointUpdate.anchor) {
@@ -169,7 +167,7 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
      * Move the targeted edge by [edgeId] to make its line contains [point].
      * During moving edge, two anchor points won't be moved.
      * If [edgeId] is the first or last edge, new edge will be introduced.
-     * 
+     *
      * Examples:
      * 1. Move single edge
      * ```
@@ -181,7 +179,7 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
      * |       |
      * +---o---+
      * ```
-     * 
+     *
      * 2. Move 1st/last edge
      * ```
      * x----o----+       x---------+
@@ -216,13 +214,13 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
      * ```
      * Once the edge is moved successfully, the line becomes independent from direction in the
      * stored in two anchor points.
-     * 
+     *
      * When reduce move is on ([isReduceRequired]), all adjacent edges which are on the same line
      * by the same direction will be merged.
      * For example
      * ```
      * 1-----2-----3   ->   1-----------3
-     * 
+     *
      * 1-----3-----2   ->   1-----3-----2
      * ```
      */
