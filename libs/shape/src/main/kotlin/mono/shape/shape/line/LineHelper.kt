@@ -90,7 +90,7 @@ internal object LineHelper {
         return list
     }
 
-    private fun isOnStraightLine(
+    fun isOnStraightLine(
         p1: Point,
         p2: Point,
         p3: Point,

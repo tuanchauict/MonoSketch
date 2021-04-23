@@ -26,6 +26,61 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
      */
     private var confirmedJointPoints: List<Point> = emptyList()
 
+    fun moveAnchorPoint(anchorPointUpdate: AnchorPointUpdate, isReduceRequired: Boolean) {
+        when (anchorPointUpdate.anchor) {
+            Anchor.START -> startPoint = anchorPointUpdate.point
+            Anchor.END -> endPoint = anchorPointUpdate.point
+        }
+
+        val isEdgeUpdated = confirmedJointPoints.isNotEmpty()
+        val newJointPoints = if (!isEdgeUpdated) {
+            val seedPoints = listOf(startPoint, endPoint)
+            LineHelper.createJointPoints(seedPoints)
+        } else {
+            val newJointPoint = confirmedJointPoints.createNewJointPoint(anchorPointUpdate)
+            confirmedJointPoints.toMutableList().apply {
+                val (anchorIndex, newJointPointIndex) = when (anchorPointUpdate.anchor) {
+                    Anchor.START -> 0 to 1
+                    Anchor.END -> lastIndex to lastIndex
+                }
+                this[anchorIndex] = anchorPointUpdate.point.point
+                if (newJointPoint != null) {
+                    add(newJointPointIndex, newJointPoint)
+                }
+            }
+        }
+
+        updateJointPoints(newJointPoints, isReduceRequired)
+    }
+
+    private fun List<Point>.createNewJointPoint(anchorPointUpdate: AnchorPointUpdate): Point? {
+        val (anchorPointIndex, previousPointIndex) = when (anchorPointUpdate.anchor) {
+            Anchor.START -> 0 to 1
+            Anchor.END -> lastIndex to lastIndex - 1
+        }
+        val anchorEndPoint = get(anchorPointIndex)
+        val previousJointPoint = get(previousPointIndex)
+        val updatePoint = anchorPointUpdate.point.point
+
+        val isOnSameLine = LineHelper.isOnStraightLine(
+            anchorEndPoint,
+            previousJointPoint,
+            updatePoint,
+            isInOrderedRequired = false
+        )
+        if (isOnSameLine) {
+            // No new joint point when they are on the same line regardless order. Just move anchor
+            // point
+            return null
+        }
+
+        return if (isHorizontal(anchorEndPoint, previousJointPoint)) {
+            Point(updatePoint.left, anchorEndPoint.top)
+        } else {
+            Point(anchorEndPoint.left, updatePoint.top)
+        }
+    }
+
     fun moveEdge(edgeId: Int, point: Point, isReduceRequired: Boolean) {
         val edgeIndex = edges.indexOfFirst { it.id == edgeId }
         if (edgeIndex < 0) {
@@ -68,7 +123,7 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
             confirmedJointPoints = jointPoints
         }
     }
-    
+
     private fun updateJointPoints(newJointPoints: List<Point>, isReduceRequired: Boolean) {
         jointPoints = if (isReduceRequired) LineHelper.reduce(newJointPoints) else newJointPoints
         edges = LineHelper.createEdges(jointPoints)
@@ -76,7 +131,7 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
 
     internal data class Edge(val id: Int = getId(), val startPoint: Point, val endPoint: Point) {
 
-        private val isHorizontal: Boolean = startPoint.top == endPoint.top
+        private val isHorizontal: Boolean = isHorizontal(startPoint, endPoint)
 
         fun translate(point: Point): Edge {
             val (newStartPoint, newEndPoint) = if (isHorizontal) {
@@ -95,5 +150,15 @@ class Line(startPoint: DirectedPoint, endPoint: DirectedPoint) {
                 return newId
             }
         }
+    }
+
+    data class AnchorPointUpdate(val anchor: Anchor, val point: DirectedPoint)
+
+    enum class Anchor {
+        START, END
+    }
+
+    companion object {
+        private fun isHorizontal(p1: Point, p2: Point): Boolean = p1.top == p2.top
     }
 }
