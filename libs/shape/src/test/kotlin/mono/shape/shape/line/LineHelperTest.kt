@@ -182,4 +182,118 @@ class LineHelperTest {
             LineHelper.createJointPoints(listOf(p1, p2))
         )
     }
+
+    @Test
+    fun testReduce_noReduced() {
+        // Empty
+        listOf<Point>().let {
+            assertEquals(it, LineHelper.reduce(it))
+        }
+
+        // 1 point
+        listOf(Point(0, 0)).let {
+            assertEquals(it, LineHelper.reduce(it))
+        }
+
+        // 2 points
+        listOf(Point(0, 0), Point(0, 0)).let {
+            assertEquals(it, LineHelper.reduce(it))
+        }
+
+        // Different lines
+        listOf(Point(0, 0), Point(10, 0), Point(10, 10)).let {
+            assertEquals(it, LineHelper.reduce(it))
+        }
+
+        // Same line but not monotonic: horizontal
+        listOf(Point(0, 0), Point(10, 0), Point(5, 0)).let {
+            assertEquals(it, LineHelper.reduce(it))
+        }
+
+        // Same line but not monotonic: vertical
+        listOf(Point(0, 0), Point(0, 10), Point(0, 5)).let {
+            assertEquals(it, LineHelper.reduce(it))
+        }
+    }
+
+    @Test
+    fun testReduce_reduced() {
+        // Same points: Identical
+        assertEquals(
+            listOf(Point(0, 0), Point(0, 0)),
+            LineHelper.reduce(
+                listOf(
+                    Point(0, 0),
+                    Point(0, 0),
+                    Point(0, 0)
+                )
+            )
+        )
+
+        // Same points: Same first
+        assertEquals(
+            listOf(Point(0, 0), Point(10, 0)),
+            LineHelper.reduce(
+                listOf(
+                    Point(0, 0),
+                    Point(0, 0),
+                    Point(0, 0),
+                    Point(0, 0),
+                    Point(10, 0)
+                )
+            )
+        )
+
+        // Same points: Same middle
+        assertEquals(
+            listOf(Point(0, 0), Point(0, 10), Point(10, 10)),
+            LineHelper.reduce(
+                listOf(
+                    Point(0, 0),
+                    Point(0, 10),
+                    Point(0, 10),
+                    Point(0, 10),
+                    Point(0, 10),
+                    Point(10, 10)
+                )
+            )
+        )
+
+        // Same points: Same last
+        assertEquals(
+            listOf(Point(0, 0), Point(10, 0)),
+            LineHelper.reduce(
+                listOf(
+                    Point(0, 0),
+                    Point(10, 0),
+                    Point(10, 0),
+                    Point(10, 0),
+                    Point(10, 0)
+                )
+            )
+        )
+
+        // Monotonic
+        assertEquals(
+            listOf(Point(0, 0), Point(10, 0)),
+            LineHelper.reduce(
+                listOf(Point(0, 0), Point(5, 0), Point(10, 0))
+            )
+        )
+
+        // Monotonic 2
+        assertEquals(
+            listOf(Point(0, 0), Point(10, 0)),
+            LineHelper.reduce(
+                listOf(
+                    Point(0, 0),
+                    Point(2, 0),
+                    Point(4, 0),
+                    Point(6, 0),
+                    Point(8, 0),
+                    Point(10, 0)
+                )
+            )
+        )
+    }
 }
