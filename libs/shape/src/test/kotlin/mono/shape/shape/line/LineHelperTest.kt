@@ -4,6 +4,8 @@ import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 /**
  * A test for [LineHelper].
@@ -295,5 +297,178 @@ class LineHelperTest {
                 )
             )
         )
+    }
+
+    @Test
+    fun testIsOnStraightLine_ordered() {
+        assertFalse(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(2, 0),
+                Point(1, 0)
+            )
+        )
+        assertFalse(
+            LineHelper.isOnStraightLine(
+                Point(2, 0),
+                Point(0, 0),
+                Point(1, 0)
+            )
+        )
+        assertFalse(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(0, 2),
+                Point(0, 1)
+            )
+        )
+        assertFalse(
+            LineHelper.isOnStraightLine(
+                Point(0, 2),
+                Point(0, 0),
+                Point(0, 1)
+            )
+        )
+
+        // Horizontal
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(1, 0),
+                Point(2, 0)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(2, 0),
+                Point(1, 0),
+                Point(0, 0)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(0, 0),
+                Point(1, 0)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(1, 0),
+                Point(1, 0)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(1, 0),
+                Point(1, 0),
+                Point(0, 0)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(1, 0),
+                Point(1, 0),
+                Point(1, 0)
+            )
+        )
+
+        // Vertical
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(0, 1),
+                Point(0, 2)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 2),
+                Point(0, 1),
+                Point(0, 0)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(0, 0),
+                Point(0, 1)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(0, 1),
+                Point(0, 1)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 1),
+                Point(0, 1),
+                Point(0, 0)
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 1),
+                Point(0, 1),
+                Point(0, 1)
+            )
+        )
+    }
+
+    @Test
+    fun testOnStraightLine_notOrdered() {
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(2, 0),
+                Point(1, 0),
+                isInOrderedRequired = false
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(2, 0),
+                Point(0, 0),
+                Point(1, 0),
+                isInOrderedRequired = false
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 0),
+                Point(0, 2),
+                Point(0, 1),
+                isInOrderedRequired = false
+            )
+        )
+        assertTrue(
+            LineHelper.isOnStraightLine(
+                Point(0, 2),
+                Point(0, 0),
+                Point(0, 1),
+                isInOrderedRequired = false
+            )
+        )
+    }
+
+    @Test
+    fun testCreateEdges() {
+        val points = listOf(
+            Point(0, 0),
+            Point(1, 0),
+            Point(1, 1)
+        )
+        val edges = LineHelper.createEdges(points)
+        assertEquals(2, edges.size)
+
+        assertEquals(Point(0, 0), edges[0].startPoint)
+        assertEquals(Point(1, 0), edges[0].endPoint)
+
+        assertEquals(Point(1, 0), edges[1].startPoint)
+        assertEquals(Point(1, 1), edges[1].endPoint)
     }
 }
