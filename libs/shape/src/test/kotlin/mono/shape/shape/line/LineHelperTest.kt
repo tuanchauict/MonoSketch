@@ -67,7 +67,6 @@ class LineHelperTest {
         )
     }
 
-
     @Test
     fun testCreateJointPoints_sameVerticalLine_HH() {
         val p1 = DirectedPoint(DirectedPoint.Direction.HORIZONTAL, 0, 0)
