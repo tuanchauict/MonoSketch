@@ -64,7 +64,7 @@ internal object LineHelper {
     }
 
     fun reduce(points: List<Point>): List<Point> {
-        if (points.size < 2) {
+        if (points.isEmpty()) {
             return points
         }
         val list = mutableListOf<Point>()
