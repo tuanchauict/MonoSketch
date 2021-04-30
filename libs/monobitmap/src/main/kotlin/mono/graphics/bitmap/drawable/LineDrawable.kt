@@ -15,12 +15,37 @@ object LineDrawable {
         for (i in 0 until jointPoints.lastIndex) {
             val point0 = jointPoints[i]
             val point1 = jointPoints[i + 1]
-            
-            val char = if (isHorizontal(point0, point1)) '-' else '|'
+
+            val char = if (isHorizontal(point0, point1)) '─' else '│'
             bitmapBuilder.fill(point0, point1, char)
         }
 
+        for (i in 1 until jointPoints.lastIndex) {
+            val point0 = jointPoints[i - 1]
+            val point1 = jointPoints[i]
+            val point2 = jointPoints[i + 1]
+            
+            val rightAngle = getRightAngle(point0, point1, point2) ?: continue
+            bitmapBuilder.put(point1.row, point1.column, rightAngle.char)
+        }
+
         return bitmapBuilder.toBitmap()
+    }
+
+    private fun getRightAngle(point0: Point, point1: Point, point2: Point): RightAngle? {
+        if (isHorizontal(point0, point1) == isHorizontal(point1, point2)) {
+            // Same line, ignore
+            return null
+        }
+
+        val isLeft = point0.left < point1.left || point2.left < point1.left
+        val isUpper = point0.top < point1.top || point2.top < point1.top
+
+        return if (isLeft) {
+            if (isUpper) RightAngle.UPPER_LEFT else RightAngle.LOWER_LEFT
+        } else {
+            if (isUpper) RightAngle.UPPER_RIGHT else RightAngle.LOWER_RIGHT
+        }
     }
 
     private fun isHorizontal(point1: Point, point2: Point): Boolean = point1.top == point2.top
@@ -44,7 +69,7 @@ object LineDrawable {
             val right = max(point1.left, point2.left)
             val top = min(point1.top, point2.top)
             val bottom = max(point1.top, point2.top)
-            
+
             for (row in top..bottom) {
                 for (column in left..right) {
                     put(row, column, char)
@@ -53,7 +78,7 @@ object LineDrawable {
         }
 
         fun toBitmap(): MonoBitmap = builder.toBitmap()
-        
+
         companion object {
             fun getInstance(jointPoints: List<Point>): BitmapBuilderDecoration {
                 val boundLeft = jointPoints.minOf { it.left }
@@ -67,5 +92,12 @@ object LineDrawable {
                 return BitmapBuilderDecoration(boundLeft, boundTop, boundWidth, boundHeight)
             }
         }
+    }
+
+    private enum class RightAngle(val char: Char) {
+        UPPER_LEFT('┘'),
+        LOWER_LEFT('┐'),
+        UPPER_RIGHT('└'),
+        LOWER_RIGHT('┌');
     }
 }
