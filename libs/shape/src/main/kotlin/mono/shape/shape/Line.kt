@@ -73,6 +73,11 @@ class Line(private var startPoint: DirectedPoint, private var endPoint: Directed
 
     private var edges: List<Edge> = LineHelper.createEdges(jointPoints)
 
+    var anchorCharStart: AnchorChar = AnchorChar('─', '─', '│', '│')
+        private set
+    var anchorCharEnd: AnchorChar = AnchorChar('─', '─', '│', '│')
+        private set
+
     /**
      * A list of joint points which is determined once an edge is updated.
      */
@@ -299,6 +304,10 @@ class Line(private var startPoint: DirectedPoint, private var endPoint: Directed
 
     enum class Anchor {
         START, END
+    }
+
+    data class AnchorChar(val left: Char, val right: Char, val top: Char, val bottom: Char) {
+        constructor(all: Char) : this(all, all, all, all)
     }
 
     companion object {

@@ -2,6 +2,7 @@ package mono.graphics.bitmap.drawable
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
+import mono.shape.shape.Line
 import kotlin.math.max
 import kotlin.math.min
 
@@ -9,8 +10,15 @@ import kotlin.math.min
  * A drawable to draw Line shape to bitmap.
  */
 object LineDrawable {
-    fun toBitmap(jointPoints: List<Point>): MonoBitmap {
+    fun toBitmap(
+        jointPoints: List<Point>,
+        anchorCharStart: Line.AnchorChar,
+        anchorCharEnd: Line.AnchorChar
+    ): MonoBitmap {
         val bitmapBuilder = BitmapBuilderDecoration.getInstance(jointPoints)
+        if (jointPoints.size < 2) {
+            return bitmapBuilder.toBitmap()
+        }
 
         for (i in 0 until jointPoints.lastIndex) {
             val point0 = jointPoints[i]
@@ -24,10 +32,21 @@ object LineDrawable {
             val point0 = jointPoints[i - 1]
             val point1 = jointPoints[i]
             val point2 = jointPoints[i + 1]
-            
+
             val rightAngle = getRightAngle(point0, point1, point2) ?: continue
             bitmapBuilder.put(point1.row, point1.column, rightAngle.char)
         }
+
+        bitmapBuilder.putAnchorPoint(
+            jointPoints[0],
+            jointPoints[1],
+            anchorCharStart
+        )
+        bitmapBuilder.putAnchorPoint(
+            jointPoints[jointPoints.lastIndex],
+            jointPoints[jointPoints.lastIndex - 1],
+            anchorCharEnd
+        )
 
         return bitmapBuilder.toBitmap()
     }
@@ -46,6 +65,19 @@ object LineDrawable {
         } else {
             if (isUpper) RightAngle.UPPER_RIGHT else RightAngle.LOWER_RIGHT
         }
+    }
+
+    private fun BitmapBuilderDecoration.putAnchorPoint(
+        anchor: Point,
+        previousPoint: Point,
+        anchorChar: Line.AnchorChar
+    ) {
+        val anchorChar = if (isHorizontal(anchor, previousPoint)) {
+            if (anchor.left < previousPoint.left) anchorChar.left else anchorChar.right
+        } else {
+            if (anchor.top < previousPoint.top) anchorChar.top else anchorChar.bottom
+        }
+        put(anchor.row, anchor.column, anchorChar)
     }
 
     private fun isHorizontal(point1: Point, point2: Point): Boolean = point1.top == point2.top
