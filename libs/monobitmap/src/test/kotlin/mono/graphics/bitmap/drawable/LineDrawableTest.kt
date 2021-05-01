@@ -18,6 +18,7 @@ class LineDrawableTest {
         val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
         assertEquals("0───1", bitmap.toString())
     }
+
     @Test
     fun testToBitmap_simpleHorizontalLine_reversed() {
         val points = listOf(
@@ -27,7 +28,7 @@ class LineDrawableTest {
         val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
         assertEquals("1───0", bitmap.toString())
     }
-    
+
     @Test
     fun testToBitmap_3StraightHorizontalMonotonicPoints() {
         val points = listOf(
@@ -38,7 +39,7 @@ class LineDrawableTest {
         val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
         assertEquals("0───1", bitmap.toString())
     }
-    
+
     @Test
     fun testToBitmap_3StraightHorizontalMonotonicPoints_reversed() {
         val points = listOf(
@@ -60,7 +61,7 @@ class LineDrawableTest {
         val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
         assertEquals("0─1──", bitmap.toString())
     }
-    
+
     @Test
     fun testToBitmap_3StraightHorizontalNonMonotonicPoints_reversed() {
         val points = listOf(
@@ -70,6 +71,124 @@ class LineDrawableTest {
         )
         val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
         assertEquals("──1─0", bitmap.toString())
+    }
+
+    @Test
+    fun testToBitmap_simpleVerticalLine() {
+        val points = listOf(
+            Point(0, 0),
+            Point(0, 4)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            0
+            │
+            │
+            │
+            1
+            """.trimIndent(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_simpleVerticalLine_reversed() {
+        val points = listOf(
+            Point(0, 4),
+            Point(0, 0)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            1
+            │
+            │
+            │
+            0
+            """.trimIndent(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_3StraightVerticalMonotonicPoints() {
+        val points = listOf(
+            Point(0, 0),
+            Point(0, 2),
+            Point(0, 4)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            0
+            │
+            │
+            │
+            1
+            """.trimIndent(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_3StraightVerticalMonotonicPoints_reversed() {
+        val points = listOf(
+            Point(0, 4),
+            Point(0, 2),
+            Point(0, 0)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            1
+            │
+            │
+            │
+            0
+            """.trimIndent(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_3StraightVerticalNonMonotonicPoints() {
+        val points = listOf(
+            Point(0, 0),
+            Point(0, 4),
+            Point(0, 2)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            0
+            │
+            1
+            │
+            │
+            """.trimIndent(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_3StraightVerticalNonMonotonicPoints_reversed() {
+        val points = listOf(
+            Point(0, 4),
+            Point(0, 0),
+            Point(0, 2)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            │
+            │
+            1
+            │
+            0
+            """.trimIndent(),
+            bitmap.toString()
+        )
     }
 
     companion object {
