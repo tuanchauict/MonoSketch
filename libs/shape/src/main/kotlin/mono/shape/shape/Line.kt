@@ -2,6 +2,7 @@ package mono.shape.shape
 
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
+import mono.graphics.geo.Rect
 import mono.shape.shape.line.LineHelper
 
 /**
@@ -66,7 +67,11 @@ import mono.shape.shape.line.LineHelper
  *      x
  * ```
  */
-class Line(private var startPoint: DirectedPoint, private var endPoint: DirectedPoint) {
+class Line(
+    private var startPoint: DirectedPoint,
+    private var endPoint: DirectedPoint,
+    parentId: Int?
+) : AbstractShape(parentId = parentId) {
 
     var jointPoints: List<Point> = LineHelper.createJointPoints(listOf(startPoint, endPoint))
         private set
@@ -82,6 +87,15 @@ class Line(private var startPoint: DirectedPoint, private var endPoint: Directed
      * A list of joint points which is determined once an edge is updated.
      */
     private var confirmedJointPoints: List<Point> = emptyList()
+
+    override val bound: Rect
+        get() {
+            val left = jointPoints.minOf { it.left }
+            val right = jointPoints.maxOf { it.left }
+            val top = jointPoints.minOf { it.top }
+            val bottom = jointPoints.maxOf { it.top }
+            return Rect.byLTRB(left, top, right, bottom)
+        }
 
     /**
      * Move start point or end point to new location decided by [AnchorPointUpdate.anchor] of

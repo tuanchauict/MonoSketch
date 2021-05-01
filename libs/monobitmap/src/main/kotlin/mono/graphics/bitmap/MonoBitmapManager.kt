@@ -1,9 +1,11 @@
 package mono.graphics.bitmap
 
+import mono.graphics.bitmap.drawable.LineDrawable
 import mono.graphics.bitmap.drawable.RectangleDrawable
 import mono.graphics.bitmap.drawable.TextDrawable
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
+import mono.shape.shape.Line
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 
@@ -28,6 +30,11 @@ class MonoBitmapManager {
                 shape.bound.size,
                 shape.renderableText.getRenderableText(),
                 shape.extra
+            )
+            is Line -> LineDrawable.toBitmap(
+                shape.jointPoints,
+                shape.anchorCharStart,
+                shape.anchorCharEnd
             )
 
             is Group -> null // No draw group since it change very frequently.
