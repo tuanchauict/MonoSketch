@@ -350,7 +350,7 @@ class LineDrawableTest {
             bitmap.toString()
         )
     }
-    
+
     @Test
     fun testToBitmap_anchorChar_leftToRight() {
         val anchorCharStart = Line.AnchorChar('L', 'R', 'T', 'B')
@@ -365,6 +365,7 @@ class LineDrawableTest {
             bitmap.toString()
         )
     }
+
     @Test
     fun testToBitmap_anchorChar_rightToLeft() {
         val anchorCharStart = Line.AnchorChar('L', 'R', 'T', 'B')
@@ -379,7 +380,7 @@ class LineDrawableTest {
             bitmap.toString()
         )
     }
-    
+
     @Test
     fun testToBitmap_anchorChar_topToBottom() {
         val anchorCharStart = Line.AnchorChar('L', 'R', 'T', 'B')
@@ -400,6 +401,7 @@ class LineDrawableTest {
             bitmap.toString()
         )
     }
+
     @Test
     fun testToBitmap_anchorChar_bottomToTop() {
         val anchorCharStart = Line.AnchorChar('L', 'R', 'T', 'B')

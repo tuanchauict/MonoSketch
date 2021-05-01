@@ -22,7 +22,7 @@ dependencies {
     implementation(project(":monobitmap"))
     implementation(project(":htmlmodal"))
     implementation(project(":keycommand"))
-    
+
     testImplementation(kotlin("test-js"))
 }
 

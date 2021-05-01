@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":graphicsgeo"))
     implementation(project(":monobitmap"))
     implementation(kotlin("stdlib-js"))
-    
+
     testImplementation(kotlin("test-js"))
 }
 
