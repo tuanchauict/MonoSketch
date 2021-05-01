@@ -191,6 +191,166 @@ class LineDrawableTest {
         )
     }
 
+    @Test
+    fun testToBitmap_upperLeft() {
+        val points = listOf(
+            Point(0, 4),
+            Point(4, 4),
+            Point(4, 0)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            |    1
+            |    │
+            |    │
+            |    │
+            |0───┘
+            """.trimMargin(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_upperLeft_reversed() {
+        val points = listOf(
+            Point(4, 0),
+            Point(4, 4),
+            Point(0, 4)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            |    0
+            |    │
+            |    │
+            |    │
+            |1───┘
+            """.trimMargin(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_lowerLeft() {
+        val points = listOf(
+            Point(0, 0),
+            Point(4, 0),
+            Point(4, 4)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            |0───┐
+            |    │
+            |    │
+            |    │
+            |    1
+            """.trimMargin(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_lowerLeft_reversed() {
+        val points = listOf(
+            Point(4, 4),
+            Point(4, 0),
+            Point(0, 0)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            |1───┐
+            |    │
+            |    │
+            |    │
+            |    0
+            """.trimMargin(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_upperRight() {
+        val points = listOf(
+            Point(4, 4),
+            Point(0, 4),
+            Point(0, 0)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            |1    
+            |│    
+            |│    
+            |│    
+            |└───0
+            """.trimMargin(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_upperRight_reversed() {
+        val points = listOf(
+            Point(0, 0),
+            Point(0, 4),
+            Point(4, 4)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            |0    
+            |│    
+            |│    
+            |│    
+            |└───1
+            """.trimMargin(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_lowerRight() {
+        val points = listOf(
+            Point(4, 0),
+            Point(0, 0),
+            Point(0, 4)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            |┌───0
+            |│    
+            |│    
+            |│    
+            |1    
+            """.trimMargin(),
+            bitmap.toString()
+        )
+    }
+
+    @Test
+    fun testToBitmap_lowerRight_reversed() {
+        val points = listOf(
+            Point(0, 4),
+            Point(0, 0),
+            Point(4, 0)
+        )
+        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        assertEquals(
+            """
+            |┌───1
+            |│    
+            |│    
+            |│    
+            |0    
+            """.trimMargin(),
+            bitmap.toString()
+        )
+    }
+
     companion object {
         private val ANCHOR_CHAR_START = Line.AnchorChar('0')
         private val ANCHOR_CHAR_END = Line.AnchorChar('1')
