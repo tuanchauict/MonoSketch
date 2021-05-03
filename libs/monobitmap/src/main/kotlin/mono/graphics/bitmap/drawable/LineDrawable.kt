@@ -72,12 +72,12 @@ object LineDrawable {
         previousPoint: Point,
         anchorChar: Line.AnchorChar
     ) {
-        val anchorChar = if (isHorizontal(anchor, previousPoint)) {
+        val char = if (isHorizontal(anchor, previousPoint)) {
             if (anchor.left < previousPoint.left) anchorChar.left else anchorChar.right
         } else {
             if (anchor.top < previousPoint.top) anchorChar.top else anchorChar.bottom
         }
-        put(anchor.row, anchor.column, anchorChar)
+        put(anchor.row, anchor.column, char)
     }
 
     private fun isHorizontal(point1: Point, point2: Point): Boolean = point1.top == point2.top
@@ -121,7 +121,7 @@ object LineDrawable {
                 val boundWidth = boundRight - boundLeft + 1
                 val boundHeight = boundBottom - boundTop + 1
 
-                return BitmapBuilderDecoration(boundLeft, boundTop, boundWidth, boundHeight)
+                return BitmapBuilderDecoration(boundTop, boundLeft, boundWidth, boundHeight)
             }
         }
     }
