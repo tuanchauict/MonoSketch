@@ -127,7 +127,7 @@ class Line(
      * ```
      *
      */
-    fun moveAnchorPoint(anchorPointUpdate: AnchorPointUpdate, isReduceRequired: Boolean) {
+    fun moveAnchorPoint(anchorPointUpdate: AnchorPointUpdate, isReduceRequired: Boolean) = update {
         when (anchorPointUpdate.anchor) {
             Anchor.START -> startPoint = anchorPointUpdate.point
             Anchor.END -> endPoint = anchorPointUpdate.point
@@ -243,17 +243,17 @@ class Line(
      * 1-----3-----2   ->   1-----3-----2
      * ```
      */
-    fun moveEdge(edgeId: Int, point: Point, isReduceRequired: Boolean) {
+    fun moveEdge(edgeId: Int, point: Point, isReduceRequired: Boolean) = update {
         val edgeIndex = edges.indexOfFirst { it.id == edgeId }
         if (edgeIndex < 0) {
-            return
+            return@update false
         }
 
         val edge = edges[edgeIndex]
         val newEdge = edge.translate(point)
 
         if (edge == newEdge) {
-            return
+            return@update false
         }
 
         val newJointPoints = jointPoints.toMutableList()
@@ -280,15 +280,24 @@ class Line(
             }
         }
 
-        updateJointPoints(newJointPoints, isReduceRequired)
+        val isUpdated = updateJointPoints(newJointPoints, isReduceRequired)
+
         if (isReduceRequired) {
             confirmedJointPoints = jointPoints
         }
+        isUpdated
     }
 
-    private fun updateJointPoints(newJointPoints: List<Point>, isReduceRequired: Boolean) {
+    /**
+     * Updates joint points and edges.
+     * Return true if joint points is changed.
+     */
+    private fun updateJointPoints(newJointPoints: List<Point>, isReduceRequired: Boolean): Boolean {
+        val currentJointPoints = jointPoints
         jointPoints = if (isReduceRequired) LineHelper.reduce(newJointPoints) else newJointPoints
         edges = LineHelper.createEdges(jointPoints)
+
+        return currentJointPoints != jointPoints
     }
 
     internal data class Edge(val id: Int = getId(), val startPoint: Point, val endPoint: Point) {
