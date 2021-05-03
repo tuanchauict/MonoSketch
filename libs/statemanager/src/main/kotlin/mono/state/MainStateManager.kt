@@ -121,6 +121,7 @@ class MainStateManager(
                 }
             KeyCommand.ADD_RECTANGLE -> currentCommandType = CommandType.ADD_RECTANGLE
             KeyCommand.ADD_TEXT -> currentCommandType = CommandType.ADD_TEXT
+            KeyCommand.ADD_LINE -> currentCommandType = CommandType.ADD_LINE
 
             KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
             KeyCommand.ENTER_EDIT_MODE -> selectedShapeManager.editSelectedShapes()

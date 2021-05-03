@@ -6,6 +6,7 @@ import mono.shape.list.QuickList
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
+import mono.shape.shape.Line
 import mono.shape.shape.Text
 import mono.shape.ungroup
 
@@ -134,6 +135,24 @@ class ChangeText(
     override fun execute(shapeManager: ShapeManager, parent: Group) {
         val currentVersion = target.version
         target.setText(newText)
+        parent.update { currentVersion != target.version }
+    }
+}
+
+/**
+ * A [Command] for changing Line shape's Anchors.
+ */
+class MoveLineAnchor(
+    private val target: Line,
+    private val anchorPointUpdate: Line.AnchorPointUpdate,
+    private val isReducedRequired: Boolean
+) : Command() {
+    override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
+        shapeManager.getGroup(target.parentId)
+
+    override fun execute(shapeManager: ShapeManager, parent: Group) {
+        val currentVersion = target.version
+        target.moveAnchorPoint(anchorPointUpdate, isReducedRequired)
         parent.update { currentVersion != target.version }
     }
 }

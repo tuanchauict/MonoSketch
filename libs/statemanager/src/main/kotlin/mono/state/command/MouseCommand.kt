@@ -31,6 +31,7 @@ internal object MouseCommandFactory {
         return when (commandType) {
             CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
             CommandType.ADD_TEXT -> AddTextMouseCommand()
+            CommandType.ADD_LINE -> AddLineMouseCommand()
             CommandType.IDLE -> SelectShapeMouseCommand()
         }
     }

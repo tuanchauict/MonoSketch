@@ -25,6 +25,8 @@ data class DirectedPoint(val direction: Direction, val left: Int, val top: Int) 
     val point: Point
         get() = Point(left, top)
 
+    constructor(direction: Direction, point: Point) : this(direction, point.left, point.top)
+
     enum class Direction {
         HORIZONTAL, VERTICAL
     }
