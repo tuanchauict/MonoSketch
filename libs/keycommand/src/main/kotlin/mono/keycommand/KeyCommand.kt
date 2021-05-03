@@ -16,6 +16,7 @@ enum class KeyCommand(vararg val keyCodes: Int) {
 
     ADD_RECTANGLE(Key.KEY_R),
     ADD_TEXT(Key.KEY_T),
+    ADD_LINE(Key.KEY_L),
 
     ENTER_EDIT_MODE(Key.KEY_ENTER);
 
