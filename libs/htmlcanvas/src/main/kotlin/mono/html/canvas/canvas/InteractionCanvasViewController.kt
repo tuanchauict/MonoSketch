@@ -1,8 +1,10 @@
 package mono.html.canvas.canvas
 
+import mono.common.exhaustive
 import mono.graphics.geo.Point
 import mono.shapebound.InteractionBound
 import mono.shapebound.InteractionPoint
+import mono.shapebound.LineInteractionBound
 import mono.shapebound.ScalableInteractionBound
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
@@ -24,7 +26,8 @@ internal class InteractionCanvasViewController(
         for (bound in interactionBounds) {
             when (bound) {
                 is ScalableInteractionBound -> drawScalableInteractionBound(bound)
-            }
+                is LineInteractionBound -> drawLineInteractionBound(bound)
+            }.exhaustive
         }
     }
 
@@ -38,6 +41,12 @@ internal class InteractionCanvasViewController(
         }
         context.stroke(path)
 
+        for (point in bound.interactionPoints) {
+            drawDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
+        }
+    }
+
+    private fun drawLineInteractionBound(bound: LineInteractionBound) {
         for (point in bound.interactionPoints) {
             drawDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
         }

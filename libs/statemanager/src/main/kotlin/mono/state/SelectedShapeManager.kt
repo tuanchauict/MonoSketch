@@ -8,8 +8,10 @@ import mono.shape.command.ChangeBound
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
+import mono.shape.shape.Line
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
+import mono.shapebound.LineInteractionBound
 import mono.shapebound.ScalableInteractionBound
 import mono.state.command.text.EditTextShapeHelper
 
@@ -71,6 +73,12 @@ class SelectedShapeManager(
                 is Rectangle,
                 is Text -> ScalableInteractionBound(it.id, it.bound)
                 is Group -> null // TODO: Add new Interaction bound type for Group
+                is Line -> LineInteractionBound(
+                    it.id,
+                    it.jointPoints.first(),
+                    it.jointPoints.last(),
+                    it.edges
+                )
                 else -> null
             }
         }

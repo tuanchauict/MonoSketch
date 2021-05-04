@@ -76,7 +76,8 @@ class Line(
     var jointPoints: List<Point> = LineHelper.createJointPoints(listOf(startPoint, endPoint))
         private set
 
-    private var edges: List<Edge> = LineHelper.createEdges(jointPoints)
+    var edges: List<Edge> = LineHelper.createEdges(jointPoints)
+        private set
 
     var anchorCharStart: AnchorChar = AnchorChar('─', '─', '│', '│')
         private set
