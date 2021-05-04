@@ -1,7 +1,9 @@
 package mono.state.command
 
 import mono.graphics.geo.MousePointer
+import mono.shape.shape.Line
 import mono.shapebound.InteractionPoint
+import mono.shapebound.LineInteractionPoint
 import mono.shapebound.ScaleInteractionPoint
 import mono.state.MainStateManager
 import mono.state.command.text.AddTextMouseCommand
@@ -45,12 +47,12 @@ internal object MouseCommandFactory {
             return null
         }
 
-        val scaleShapeMouseCommand = createScaleShapeMouseCommandIfValid(
+        val sharpBoundInteractionCommand = createShapeBoundInteractionMouseCommandIfValid(
             commandEnvironment,
             commandEnvironment.getInteractionPoint(mousePointer.pointPx)
         )
-        if (scaleShapeMouseCommand != null) {
-            return scaleShapeMouseCommand
+        if (sharpBoundInteractionCommand != null) {
+            return sharpBoundInteractionCommand
         }
 
         if (!mousePointer.isWithShiftKey &&
@@ -61,16 +63,20 @@ internal object MouseCommandFactory {
         return null
     }
 
-    private fun createScaleShapeMouseCommandIfValid(
+    private fun createShapeBoundInteractionMouseCommandIfValid(
         commandEnvironment: CommandEnvironment,
         interactionPoint: InteractionPoint?
-    ): ScaleShapeMouseCommand? {
+    ): MouseCommand? {
         if (interactionPoint == null) {
             return null
         }
         val shape =
             commandEnvironment.shapeManager.getShape(interactionPoint.shapeId) ?: return null
-        val scaleInteractionPoint = interactionPoint as? ScaleInteractionPoint ?: return null
-        return ScaleShapeMouseCommand(shape, scaleInteractionPoint)
+        return when (interactionPoint) {
+            is ScaleInteractionPoint -> ScaleShapeMouseCommand(shape, interactionPoint)
+            is LineInteractionPoint ->
+                if (shape is Line) LineInteractionMouseCommand(shape, interactionPoint) else null
+            null -> null
+        }
     }
 }
