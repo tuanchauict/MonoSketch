@@ -89,11 +89,12 @@ class MainStateManager(
                 -------------------|----------------------------
                 R                  | Draw rectangle
                 T                  | Draw text
+                L                  | Draw line
                 DELETE             | Remove selected shape(s)
                 ESC                | Deselect, enter select mode
                 UP/DOWN/LEFT/RIGHT | Move selected shape(s)
             """.trimIndent()
-        val textShape = Text(Rect.byLTWH(1, 1, 51, 9))
+        val textShape = Text(Rect.byLTWH(1, 1, 51, 10))
         shapeManager.add(textShape)
         shapeManager.execute(ChangeText(textShape, commandText))
     }
