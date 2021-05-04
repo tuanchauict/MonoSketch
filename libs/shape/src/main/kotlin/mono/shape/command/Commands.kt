@@ -1,5 +1,6 @@
 package mono.shape.command
 
+import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.ShapeManager
 import mono.shape.list.QuickList
@@ -153,6 +154,25 @@ class MoveLineAnchor(
     override fun execute(shapeManager: ShapeManager, parent: Group) {
         val currentVersion = target.version
         target.moveAnchorPoint(anchorPointUpdate, isReducedRequired)
+        parent.update { currentVersion != target.version }
+    }
+}
+
+/**
+ * A [Command] for updating Line shape's edges.
+ */
+class MoveLineEdge(
+    private val target: Line,
+    private val edgeId: Int,
+    private val point: Point,
+    private val isReducedRequired: Boolean
+) : Command() {
+    override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
+        shapeManager.getGroup(target.parentId)
+
+    override fun execute(shapeManager: ShapeManager, parent: Group) {
+        val currentVersion = target.version
+        target.moveEdge(edgeId, point, isReducedRequired)
         parent.update { currentVersion != target.version }
     }
 }

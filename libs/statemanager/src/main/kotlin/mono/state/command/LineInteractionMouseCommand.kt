@@ -4,6 +4,7 @@ import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.MoveLineAnchor
+import mono.shape.command.MoveLineEdge
 import mono.shape.shape.Line
 import mono.shapebound.LineInteractionPoint
 
@@ -27,10 +28,11 @@ internal class LineInteractionMouseCommand(
     }
 
     private fun move(environment: CommandEnvironment, point: Point, isReducedRequired: Boolean) {
-        if (interactionPoint is LineInteractionPoint.Anchor) {
-            moveAnchor(environment, interactionPoint, point, isReducedRequired)
-        } else {
-            moveEdge(environment, point, isReducedRequired)
+        when (interactionPoint) {
+            is LineInteractionPoint.Anchor ->
+                moveAnchor(environment, interactionPoint, point, isReducedRequired)
+            is LineInteractionPoint.Edge ->
+                moveEdge(environment, interactionPoint, point, isReducedRequired)
         }
     }
 
@@ -58,9 +60,18 @@ internal class LineInteractionMouseCommand(
 
     private fun moveEdge(
         environment: CommandEnvironment,
+        interactionPoint: LineInteractionPoint.Edge,
         point: Point,
         isReducedRequired: Boolean
     ) {
-        TODO()
+        environment.shapeManager.execute(
+            MoveLineEdge(
+                lineShape,
+                interactionPoint.edgeId,
+                point,
+                isReducedRequired
+            )
+        )
+        environment.selectedShapeManager.updateInteractionBound()
     }
 }
