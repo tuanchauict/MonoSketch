@@ -14,12 +14,6 @@ data class Point(val left: Int, val top: Int) {
     }
 }
 
-data class PointF(val left: Float, val top: Float) {
-    val row: Float get() = top
-
-    val column: Float get() = left
-}
-
 data class DirectedPoint(val direction: Direction, val left: Int, val top: Int) {
 
     val point: Point
