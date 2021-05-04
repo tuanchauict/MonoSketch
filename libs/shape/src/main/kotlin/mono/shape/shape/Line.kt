@@ -300,6 +300,11 @@ class Line(
 
         return currentJointPoints != jointPoints
     }
+    
+    fun getDirection(anchor: Anchor): DirectedPoint.Direction = when(anchor) {
+        Anchor.START -> startPoint.direction
+        Anchor.END -> endPoint.direction
+    }
 
     data class Edge internal constructor(
         val id: Int = getId(),
