@@ -300,11 +300,17 @@ class Line(
         return currentJointPoints != jointPoints
     }
 
-    internal data class Edge(val id: Int = getId(), val startPoint: Point, val endPoint: Point) {
+    data class Edge internal constructor(
+        val id: Int = getId(),
+        internal val startPoint: Point,
+        internal val endPoint: Point
+    ) {
+        val middleLeft: Double = (startPoint.left + endPoint.left).toDouble() / 2.0
+        val middleTop: Double = (startPoint.top + endPoint.top).toDouble() / 2.0
 
         private val isHorizontal: Boolean = isHorizontal(startPoint, endPoint)
 
-        fun translate(point: Point): Edge {
+        internal fun translate(point: Point): Edge {
             val (newStartPoint, newEndPoint) = if (isHorizontal) {
                 startPoint.copy(top = point.top) to endPoint.copy(top = point.top)
             } else {
@@ -315,7 +321,7 @@ class Line(
 
         companion object {
             private var lastUsedId: Int = 0
-            fun getId(): Int {
+            internal fun getId(): Int {
                 val newId = lastUsedId + 1
                 lastUsedId = newId
                 return newId
