@@ -252,8 +252,8 @@ class Line(
 
         val edge = edges[edgeIndex]
         val newEdge = edge.translate(point)
-
-        if (edge == newEdge) {
+        if (!isReduceRequired && edge == newEdge) {
+            // Skip when reducing is not required and old edge is identical to new edge.
             return@update false
         }
 
@@ -275,17 +275,24 @@ class Line(
             }
             else -> {
                 // Just move affected points
-                val startPointIndex = newJointPoints.indexOf(edge.startPoint)
+                val startPointIndex = newJointPoints.indexOfFirst { it === edge.startPoint }
                 newJointPoints[startPointIndex] = newEdge.startPoint
                 newJointPoints[startPointIndex + 1] = newEdge.endPoint
             }
         }
 
-        val isUpdated = updateJointPoints(newJointPoints, isReduceRequired)
+        val isUpdated = jointPoints != newJointPoints
+        jointPoints = if (isReduceRequired) LineHelper.reduce(newJointPoints) else newJointPoints
+        confirmedJointPoints = jointPoints
 
-        if (isReduceRequired) {
-            confirmedJointPoints = jointPoints
+        val newEdges = LineHelper.createEdges(jointPoints)
+        if (!isReduceRequired) {
+            val newEdgeIndex = if (edgeIndex == 0) 1 else edgeIndex
+            // Reserve current interacted edge's id.
+            newEdges[newEdgeIndex] = newEdges[newEdgeIndex].copy(id = edge.id)
         }
+        edges = newEdges
+
         isUpdated
     }
 

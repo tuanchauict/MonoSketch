@@ -114,7 +114,7 @@ internal object LineHelper {
     private fun DirectedPoint.toRightAngleDirection(): Direction =
         if (direction == Direction.HORIZONTAL) Direction.VERTICAL else Direction.HORIZONTAL
 
-    fun createEdges(jointPoints: List<Point>): List<Line.Edge> {
+    fun createEdges(jointPoints: List<Point>): MutableList<Line.Edge> {
         val edges = mutableListOf<Line.Edge>()
         for (i in 0 until jointPoints.lastIndex) {
             val startPoint = jointPoints[i]
