@@ -14,8 +14,8 @@ jobs:
         run: |
           git fetch origin main:main
           git reset --hard main
+          git pull origin main
           git status
-          git branches
       - name: Create pull request
         uses: peter-evans/create-pull-request@v3
         with:
