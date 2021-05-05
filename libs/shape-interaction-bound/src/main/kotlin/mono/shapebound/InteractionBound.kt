@@ -1,6 +1,8 @@
 package mono.shapebound
 
+import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.shape.Line
 
 /**
  * A sealed class to define all possible interaction bound types.
@@ -34,4 +36,41 @@ class ScalableInteractionBound(
         ScaleInteractionPoint.BottomMiddle(targetedShapeId, horizontalMiddle, bottom),
         ScaleInteractionPoint.BottomRight(targetedShapeId, right, bottom),
     )
+}
+
+/**
+ * A class which defines interaction bound for Line shapes.
+ */
+class LineInteractionBound(
+    targetedShapeId: Int,
+    startPoint: Point,
+    endPoint: Point,
+    edges: List<Line.Edge>
+) : InteractionBound() {
+    override val interactionPoints: List<InteractionPoint>
+
+    init {
+        val anchorPoints = listOf(
+            LineInteractionPoint.Anchor(
+                targetedShapeId,
+                Line.Anchor.START,
+                startPoint
+            ),
+            LineInteractionPoint.Anchor(
+                targetedShapeId,
+                Line.Anchor.END,
+                endPoint
+            )
+        )
+        val middleEdgePoints = edges.map {
+            LineInteractionPoint.Edge(
+                targetedShapeId,
+                it.id,
+                it.middleLeft,
+                it.middleTop
+            )
+        }
+
+        interactionPoints = anchorPoints + middleEdgePoints
+    }
 }

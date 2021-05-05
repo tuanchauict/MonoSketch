@@ -2,6 +2,7 @@ package mono.shapebound
 
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.shape.Line
 
 /**
  * A sealed class for defining all possible interaction point types for a shape and common apis.
@@ -91,4 +92,27 @@ sealed class ScaleInteractionPoint(
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, currentBound.top, newPoint.left, newPoint.top)
     }
+}
+
+/**
+ * A sealed class to define all possible interaction points on Line shapes.
+ */
+sealed class LineInteractionPoint(
+    shapeId: Int,
+    left: Double,
+    top: Double
+) : InteractionPoint(shapeId, left, top) {
+
+    class Anchor(
+        shapeId: Int,
+        val anchor: Line.Anchor,
+        point: Point
+    ) : LineInteractionPoint(shapeId, point.left.toDouble(), point.top.toDouble())
+
+    class Edge(
+        shapeId: Int,
+        val edgeId: Int,
+        left: Double,
+        top: Double
+    ) : LineInteractionPoint(shapeId, left, top)
 }

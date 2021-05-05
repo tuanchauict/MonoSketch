@@ -76,11 +76,15 @@ class Line(
     var jointPoints: List<Point> = LineHelper.createJointPoints(listOf(startPoint, endPoint))
         private set
 
-    private var edges: List<Edge> = LineHelper.createEdges(jointPoints)
+    val reducedJoinPoints: List<Point>
+        get() = LineHelper.reduce(jointPoints)
 
-    var anchorCharStart: AnchorChar = AnchorChar('─', '─', '│', '│')
+    var edges: List<Edge> = LineHelper.createEdges(jointPoints)
         private set
-    var anchorCharEnd: AnchorChar = AnchorChar('─', '─', '│', '│')
+
+    var anchorCharStart: AnchorChar = AnchorChar('─', '─', '|', '|')
+        private set
+    var anchorCharEnd: AnchorChar = AnchorChar('─', '─', '|', '|')
         private set
 
     /**
@@ -150,8 +154,11 @@ class Line(
                 }
             }
         }
+        val isUpdated = newJointPoints != jointPoints
+        jointPoints = if (isReduceRequired) LineHelper.reduce(newJointPoints) else newJointPoints
+        edges = LineHelper.createEdges(jointPoints)
 
-        updateJointPoints(newJointPoints, isReduceRequired)
+        isUpdated
     }
 
     private fun List<Point>.createNewJointPoint(anchorPointUpdate: AnchorPointUpdate): Point? {
@@ -251,8 +258,8 @@ class Line(
 
         val edge = edges[edgeIndex]
         val newEdge = edge.translate(point)
-
-        if (edge == newEdge) {
+        if (!isReduceRequired && edge == newEdge) {
+            // Skip when reducing is not required and old edge is identical to new edge.
             return@update false
         }
 
@@ -274,37 +281,43 @@ class Line(
             }
             else -> {
                 // Just move affected points
-                val startPointIndex = newJointPoints.indexOf(edge.startPoint)
+                val startPointIndex = newJointPoints.indexOfFirst { it === edge.startPoint }
                 newJointPoints[startPointIndex] = newEdge.startPoint
                 newJointPoints[startPointIndex + 1] = newEdge.endPoint
             }
         }
 
-        val isUpdated = updateJointPoints(newJointPoints, isReduceRequired)
+        val isUpdated = jointPoints != newJointPoints
+        jointPoints = if (isReduceRequired) LineHelper.reduce(newJointPoints) else newJointPoints
+        confirmedJointPoints = jointPoints
 
-        if (isReduceRequired) {
-            confirmedJointPoints = jointPoints
+        val newEdges = LineHelper.createEdges(jointPoints)
+        if (!isReduceRequired) {
+            val newEdgeIndex = if (edgeIndex == 0) 1 else edgeIndex
+            // Reserve current interacted edge's id.
+            newEdges[newEdgeIndex] = newEdges[newEdgeIndex].copy(id = edge.id)
         }
+        edges = newEdges
+
         isUpdated
     }
 
-    /**
-     * Updates joint points and edges.
-     * Return true if joint points is changed.
-     */
-    private fun updateJointPoints(newJointPoints: List<Point>, isReduceRequired: Boolean): Boolean {
-        val currentJointPoints = jointPoints
-        jointPoints = if (isReduceRequired) LineHelper.reduce(newJointPoints) else newJointPoints
-        edges = LineHelper.createEdges(jointPoints)
-
-        return currentJointPoints != jointPoints
+    fun getDirection(anchor: Anchor): DirectedPoint.Direction = when (anchor) {
+        Anchor.START -> startPoint.direction
+        Anchor.END -> endPoint.direction
     }
 
-    internal data class Edge(val id: Int = getId(), val startPoint: Point, val endPoint: Point) {
+    data class Edge internal constructor(
+        val id: Int = getId(),
+        internal val startPoint: Point,
+        internal val endPoint: Point
+    ) {
+        val middleLeft: Double = (startPoint.left + endPoint.left).toDouble() / 2.0
+        val middleTop: Double = (startPoint.top + endPoint.top).toDouble() / 2.0
 
         private val isHorizontal: Boolean = isHorizontal(startPoint, endPoint)
 
-        fun translate(point: Point): Edge {
+        internal fun translate(point: Point): Edge {
             val (newStartPoint, newEndPoint) = if (isHorizontal) {
                 startPoint.copy(top = point.top) to endPoint.copy(top = point.top)
             } else {
@@ -315,7 +328,7 @@ class Line(
 
         companion object {
             private var lastUsedId: Int = 0
-            fun getId(): Int {
+            internal fun getId(): Int {
                 val newId = lastUsedId + 1
                 lastUsedId = newId
                 return newId

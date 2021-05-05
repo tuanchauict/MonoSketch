@@ -32,7 +32,7 @@ class MonoBitmapManager {
                 shape.extra
             )
             is Line -> LineDrawable.toBitmap(
-                shape.jointPoints,
+                shape.reducedJoinPoints,
                 shape.anchorCharStart,
                 shape.anchorCharEnd
             )
