@@ -151,8 +151,11 @@ class Line(
                 }
             }
         }
+        val isUpdated = newJointPoints != jointPoints
+        jointPoints = if (isReduceRequired) LineHelper.reduce(newJointPoints) else newJointPoints
+        edges = LineHelper.createEdges(jointPoints)
 
-        updateJointPoints(newJointPoints, isReduceRequired)
+        isUpdated
     }
 
     private fun List<Point>.createNewJointPoint(anchorPointUpdate: AnchorPointUpdate): Point? {
@@ -296,19 +299,7 @@ class Line(
         isUpdated
     }
 
-    /**
-     * Updates joint points and edges.
-     * Return true if joint points is changed.
-     */
-    private fun updateJointPoints(newJointPoints: List<Point>, isReduceRequired: Boolean): Boolean {
-        val currentJointPoints = jointPoints
-        jointPoints = if (isReduceRequired) LineHelper.reduce(newJointPoints) else newJointPoints
-        edges = LineHelper.createEdges(jointPoints)
-
-        return currentJointPoints != jointPoints
-    }
-    
-    fun getDirection(anchor: Anchor): DirectedPoint.Direction = when(anchor) {
+    fun getDirection(anchor: Anchor): DirectedPoint.Direction = when (anchor) {
         Anchor.START -> startPoint.direction
         Anchor.END -> endPoint.direction
     }
