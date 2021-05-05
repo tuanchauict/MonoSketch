@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ secrets.ALPHA_RELEASE_BRANCH }}
+          ref: release/demo-0.0.2
       - name: Reset alpha branch
         run: |
           git fetch origin main:main
@@ -18,6 +18,5 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           title: "[Auto merge] Update alpha release"
-          branch: ${{ secrets.ALPHA_RELEASE_BRANCH }}-auto-merge-alpha
-          base: ${{ secrets.ALPHA_RELEASE_BRANCH }}
-          labels: automated pr
+          branch: auto-merge-alpha-release
+          labels: "automated pr"
