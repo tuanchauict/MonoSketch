@@ -1,0 +1,23 @@
+name: alpha release auto merge
+on:
+  push:
+    branches:
+      - main
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ secrets.ALPHA_RELEASE_BRANCH }}
+      - name: Reset alpha branch
+        run: |
+          git fetch origin main:main
+          git reset --hard main
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: "[Auto merge] Update alpha release"
+          branch: ${{ secrets.ALPHA_RELEASE_BRANCH }}-auto-merge-alpha
+          base: ${{ secrets.ALPHA_RELEASE_BRANCH }}
+          labels: automated pr
