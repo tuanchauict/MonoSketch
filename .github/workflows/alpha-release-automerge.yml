@@ -20,5 +20,4 @@ jobs:
           token: ${{ secrets.API_TOKEN_GITHUB }}
           title: "[Auto merge] Update alpha release"
           branch: auto-merge-alpha
-          base: release/demo-0.0.1
           labels: automated pr
