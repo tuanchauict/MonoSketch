@@ -1,6 +1,5 @@
 package mono.shapebound
 
-import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.shape.Line
 
@@ -42,35 +41,52 @@ class ScalableInteractionBound(
  * A class which defines interaction bound for Line shapes.
  */
 class LineInteractionBound(
-    targetedShapeId: Int,
-    startPoint: Point,
-    endPoint: Point,
-    edges: List<Line.Edge>
+    private val targetedShapeId: Int,
+    private val edges: List<Line.Edge>
 ) : InteractionBound() {
     override val interactionPoints: List<InteractionPoint>
 
     init {
         val anchorPoints = listOf(
-            LineInteractionPoint.Anchor(
-                targetedShapeId,
-                Line.Anchor.START,
-                startPoint
-            ),
-            LineInteractionPoint.Anchor(
-                targetedShapeId,
-                Line.Anchor.END,
-                endPoint
-            )
+            createInteractionAnchor(Line.Anchor.START),
+            createInteractionAnchor(Line.Anchor.END)
         )
         val middleEdgePoints = edges.map {
             LineInteractionPoint.Edge(
                 targetedShapeId,
                 it.id,
-                it.middleLeft,
-                it.middleTop
+                left = it.middleLeft + 0.5,
+                top = it.middleTop + 0.5
             )
         }
 
         interactionPoints = anchorPoints + middleEdgePoints
+    }
+
+    private fun createInteractionAnchor(
+        anchor: Line.Anchor,
+    ): LineInteractionPoint.Anchor {
+        val edge = if (anchor == Line.Anchor.START) edges.first() else edges.last()
+        val (point, anotherPoint) = if (anchor == Line.Anchor.START) {
+            edge.startPoint to edge.endPoint
+        } else {
+            edge.endPoint to edge.startPoint
+        }
+        val horizontalOffset = when {
+            !edge.isHorizontal -> 0.5
+            point.left <= anotherPoint.left -> 0.0
+            else -> 1.0
+        }
+        val verticalOffset = when {
+            edge.isHorizontal -> 0.5
+            point.top <= anotherPoint.top -> 0.0
+            else -> 1.0
+        }
+        return LineInteractionPoint.Anchor(
+            targetedShapeId,
+            anchor,
+            left = point.left + horizontalOffset,
+            top = point.top + verticalOffset
+        )
     }
 }
