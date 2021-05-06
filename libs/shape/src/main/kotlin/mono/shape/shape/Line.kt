@@ -73,7 +73,8 @@ class Line(
     parentId: Int?
 ) : AbstractShape(parentId = parentId) {
 
-    private var jointPoints: List<Point> = LineHelper.createJointPoints(listOf(startPoint, endPoint))
+    private var jointPoints: List<Point> =
+        LineHelper.createJointPoints(listOf(startPoint, endPoint))
 
     val reducedJoinPoints: List<Point>
         get() = LineHelper.reduce(jointPoints)
