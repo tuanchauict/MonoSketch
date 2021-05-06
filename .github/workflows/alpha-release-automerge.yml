@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: release/demo-0.0.1
+          ref: alpha-release
       - name: Reset alpha branch
         run: |
           git fetch origin main:main
@@ -19,6 +19,6 @@ jobs:
         with:
           token: ${{ secrets.API_TOKEN_GITHUB }}
           title: "[Auto merge] Update alpha release"
-          branch: auto-merge-alpha
-          base: release\/demo-0.0.1
-          labels: automated pr
+          branch: auto-merge-alpha-release
+          base: alpha-release
+          labels: "automated pr"
