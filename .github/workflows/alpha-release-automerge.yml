@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: release\/demo-0.0.1
+          ref: release/demo-0.0.1
       - name: Reset alpha branch
         run: |
           git fetch origin main:main
