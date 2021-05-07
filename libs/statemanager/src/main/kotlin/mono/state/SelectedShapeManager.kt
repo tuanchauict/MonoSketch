@@ -32,10 +32,10 @@ class SelectedShapeManager(
     }
 
     fun toggleSelection(shape: AbstractShape) {
-        if (shape in selectedShapes) {
-            selectedShapes -= shape
+        selectedShapes = if (shape in selectedShapes) {
+            selectedShapes - shape
         } else {
-            selectedShapes += shape
+            selectedShapes + shape
         }
         updateInteractionBound()
     }
@@ -73,12 +73,7 @@ class SelectedShapeManager(
                 is Rectangle,
                 is Text -> ScalableInteractionBound(it.id, it.bound)
                 is Group -> null // TODO: Add new Interaction bound type for Group
-                is Line -> LineInteractionBound(
-                    it.id,
-                    it.jointPoints.first(),
-                    it.jointPoints.last(),
-                    it.edges
-                )
+                is Line -> LineInteractionBound(it.id, it.reducedEdges)
                 else -> null
             }
         }

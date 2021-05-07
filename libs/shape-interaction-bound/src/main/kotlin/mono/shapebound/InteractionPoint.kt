@@ -106,8 +106,9 @@ sealed class LineInteractionPoint(
     class Anchor(
         shapeId: Int,
         val anchor: Line.Anchor,
-        point: Point
-    ) : LineInteractionPoint(shapeId, point.left.toDouble(), point.top.toDouble())
+        left: Double,
+        top: Double
+    ) : LineInteractionPoint(shapeId, left, top)
 
     class Edge(
         shapeId: Int,

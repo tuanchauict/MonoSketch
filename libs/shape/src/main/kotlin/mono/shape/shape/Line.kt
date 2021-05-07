@@ -73,14 +73,16 @@ class Line(
     parentId: Int?
 ) : AbstractShape(parentId = parentId) {
 
-    var jointPoints: List<Point> = LineHelper.createJointPoints(listOf(startPoint, endPoint))
-        private set
+    private var jointPoints: List<Point> =
+        LineHelper.createJointPoints(listOf(startPoint, endPoint))
 
     val reducedJoinPoints: List<Point>
         get() = LineHelper.reduce(jointPoints)
 
-    var edges: List<Edge> = LineHelper.createEdges(jointPoints)
-        private set
+    private var edges: List<Edge> = LineHelper.createEdges(jointPoints)
+
+    val reducedEdges: List<Edge>
+        get() = edges.filterNot { it.startPoint == it.endPoint }
 
     var anchorCharStart: AnchorChar = AnchorChar('─', '─', '|', '|')
         private set
@@ -309,13 +311,13 @@ class Line(
 
     data class Edge internal constructor(
         val id: Int = getId(),
-        internal val startPoint: Point,
-        internal val endPoint: Point
+        val startPoint: Point,
+        val endPoint: Point
     ) {
         val middleLeft: Double = (startPoint.left + endPoint.left).toDouble() / 2.0
         val middleTop: Double = (startPoint.top + endPoint.top).toDouble() / 2.0
 
-        private val isHorizontal: Boolean = isHorizontal(startPoint, endPoint)
+        val isHorizontal: Boolean = isHorizontal(startPoint, endPoint)
 
         internal fun translate(point: Point): Edge {
             val (newStartPoint, newEndPoint) = if (isHorizontal) {
