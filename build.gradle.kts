@@ -1,9 +1,17 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
+
 plugins {
     kotlin("js") version "1.4.21-2"
 }
 
 group = "com.monoflow"
 version = "0.0.1"
+
+allprojects { 
+    ext {
+        set("compilerType", KotlinJsCompilerType.LEGACY)
+    }
+}
 
 repositories {
     jcenter()
@@ -21,8 +29,9 @@ dependencies {
     testImplementation(kotlin("test-js"))
 }
 
+val compilerType: KotlinJsCompilerType by ext
 kotlin {
-    js(LEGACY) {
+    js(compilerType) {
         browser {
             binaries.executable()
             webpackTask {
