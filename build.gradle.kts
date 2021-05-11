@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 
 plugins {
-    kotlin("js") version "1.4.21-2"
+    kotlin("js") version "1.5.0"
 }
 
 group = "com.monoflow"
