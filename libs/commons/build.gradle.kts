@@ -12,8 +12,9 @@ dependencies {
     testImplementation(kotlin("test-js"))
 }
 
+val compilerType: org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType by ext
 kotlin {
-    js(LEGACY) {
+    js(compilerType) {
         browser {
             testTask {
                 useKarma {

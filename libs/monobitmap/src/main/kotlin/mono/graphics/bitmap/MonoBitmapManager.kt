@@ -6,6 +6,7 @@ import mono.graphics.bitmap.drawable.TextDrawable
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
+import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 
@@ -38,7 +39,7 @@ class MonoBitmapManager {
             )
 
             is Group -> null // No draw group since it change very frequently.
-            else -> null
+            is MockShape -> null // Only for testing.
         } ?: return null
         idToBitmapMap[shape.id] = VersionizedBitmap(shape.version, bitmap)
         return bitmap

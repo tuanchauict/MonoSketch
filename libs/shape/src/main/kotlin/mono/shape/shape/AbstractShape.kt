@@ -12,7 +12,7 @@ import mono.shape.list.QuickList
  * Each shape's attributes might be changed and [version] reflects the update. To ensure the
  * [version]'s value is accurate, all properties modifying must be wrapped inside [update].
  */
-abstract class AbstractShape(
+sealed class AbstractShape(
     override val id: Int = generateId(),
     internal var parentId: Int? = null
 ) : QuickList.Identifier {
