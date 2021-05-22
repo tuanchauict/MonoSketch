@@ -103,6 +103,23 @@ class Line(
             return Rect.byLTRB(left, top, right, bottom)
         }
 
+    override fun setBound(newBound: Rect) {
+        val left = jointPoints.minOf { it.left }
+        val top = jointPoints.minOf { it.top }
+        val offsetPoint = Point(newBound.left - left, newBound.top - top)
+        if (offsetPoint.left == 0 && offsetPoint.top == 0) {
+            return
+        }
+        update {
+            startPoint += offsetPoint
+            endPoint += offsetPoint
+            jointPoints = jointPoints.map { it + offsetPoint }
+            confirmedJointPoints = confirmedJointPoints.map { it + offsetPoint }
+            edges = LineHelper.createEdges(jointPoints)
+            true
+        }
+    }
+
     /**
      * Move start point or end point to new location decided by [AnchorPointUpdate.anchor] of
      * [anchorPointUpdate].
