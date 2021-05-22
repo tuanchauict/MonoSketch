@@ -1,5 +1,6 @@
 package mono.shape.shape
 
+import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 
@@ -41,6 +42,8 @@ sealed class AbstractShape(
             version++
         }
     }
+
+    open fun contains(point: Point): Boolean = bound.contains(point)
 
     /**
      * An interface which is used for updating extra value.

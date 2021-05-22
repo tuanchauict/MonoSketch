@@ -1,4 +1,4 @@
-package mono.state.command
+package mono.state.command.mouse
 
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
@@ -6,6 +6,7 @@ import mono.graphics.geo.Point
 import mono.shape.add
 import mono.shape.command.MoveLineAnchor
 import mono.shape.shape.Line
+import mono.state.command.CommandEnvironment
 
 internal class AddLineMouseCommand : MouseCommand {
     private var workingShape: Line? = null

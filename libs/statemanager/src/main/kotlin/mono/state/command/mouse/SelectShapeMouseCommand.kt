@@ -1,7 +1,8 @@
-package mono.state.command
+package mono.state.command.mouse
 
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Rect
+import mono.state.command.CommandEnvironment
 
 /**
  * A [MouseCommand] to select shapes.

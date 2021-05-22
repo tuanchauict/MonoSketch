@@ -1,9 +1,10 @@
-package mono.state.command
+package mono.state.command.mouse
 
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.ChangeBound
 import mono.shape.shape.AbstractShape
+import mono.state.command.CommandEnvironment
 
 /**
  * A [MouseCommand] for moving selected shapes.

@@ -1,4 +1,4 @@
-package mono.state.command
+package mono.state.command.mouse
 
 import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
@@ -9,6 +9,7 @@ import mono.shape.command.ChangeBound
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Rectangle
+import mono.state.command.CommandEnvironment
 
 /**
  * A [MouseCommand] to add new shape.

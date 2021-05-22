@@ -85,5 +85,5 @@ class SelectedShapeManager(
         canvasManager.drawSelectionBound(bound)
     }
 
-    fun isInSelectionBounds(point: Point): Boolean = selectedShapes.any { it.bound.contains(point) }
+    fun isInSelectionBounds(point: Point): Boolean = selectedShapes.any { it.contains(point) }
 }
