@@ -1,4 +1,4 @@
-package mono.state.command
+package mono.state.command.mouse
 
 import mono.graphics.geo.MousePointer
 import mono.shape.shape.Line
@@ -6,12 +6,13 @@ import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionPoint
 import mono.shapebound.ScaleInteractionPoint
 import mono.state.MainStateManager
-import mono.state.command.text.AddTextMouseCommand
+import mono.state.command.CommandEnvironment
+import mono.state.command.CommandType
 
 /**
  * A strategy interface for mouse interaction command happens on [MainStateManager]
  */
-internal interface MouseCommand {
+internal sealed interface MouseCommand {
     /**
      * Handles mouse events.
      * Returns true when the action finishes.

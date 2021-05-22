@@ -1,4 +1,4 @@
-package mono.state.command.text
+package mono.state.command.mouse
 
 import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
@@ -9,7 +9,7 @@ import mono.shape.command.ChangeBound
 import mono.shape.remove
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
-import mono.state.command.MouseCommand
+import mono.state.command.text.EditTextShapeHelper
 
 /**
  * A [MouseCommand] to add new text shape.
