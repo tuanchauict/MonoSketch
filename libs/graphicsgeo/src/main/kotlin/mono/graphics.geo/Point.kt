@@ -21,6 +21,9 @@ data class DirectedPoint(val direction: Direction, val left: Int, val top: Int) 
 
     constructor(direction: Direction, point: Point) : this(direction, point.left, point.top)
 
+    operator fun plus(base: Point): DirectedPoint =
+        copy(left = left + base.left, top = top + base.top)
+
     enum class Direction {
         HORIZONTAL, VERTICAL
     }
