@@ -25,7 +25,7 @@ import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.CommandType
 import mono.state.command.mouse.MouseCommand
-import mono.state.command.mouse.MouseCommandFactory
+import mono.state.command.MouseCommandFactory
 
 /**
  * A class which is connect components in the app.
