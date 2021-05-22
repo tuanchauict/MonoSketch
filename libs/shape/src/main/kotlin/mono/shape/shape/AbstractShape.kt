@@ -44,7 +44,7 @@ sealed class AbstractShape(
     }
 
     open fun contains(point: Point): Boolean = bound.contains(point)
-    
+
     /**
      * An interface which is used for updating extra value.
      */

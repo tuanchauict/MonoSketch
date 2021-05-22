@@ -20,4 +20,3 @@ class ChangeText(
         parent.update { currentVersion != target.version }
     }
 }
-

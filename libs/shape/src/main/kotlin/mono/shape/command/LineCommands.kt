@@ -41,4 +41,3 @@ class MoveLineEdge(
         parent.update { currentVersion != target.version }
     }
 }
-
