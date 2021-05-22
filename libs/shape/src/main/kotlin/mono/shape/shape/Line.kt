@@ -309,6 +309,8 @@ class Line(
         Anchor.END -> endPoint.direction
     }
 
+    override fun contains(point: Point): Boolean = edges.any { it.contains(point) }
+
     data class Edge internal constructor(
         val id: Int = getId(),
         val startPoint: Point,
@@ -327,6 +329,9 @@ class Line(
             }
             return copy(startPoint = newStartPoint, endPoint = newEndPoint)
         }
+
+        internal fun contains(point: Point): Boolean =
+            LineHelper.isOnStraightLine(startPoint, point, endPoint, isInOrderedRequired = true)
 
         companion object {
             private var lastUsedId: Int = 0
