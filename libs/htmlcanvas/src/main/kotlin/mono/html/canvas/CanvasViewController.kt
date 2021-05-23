@@ -10,6 +10,7 @@ import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
+import mono.html.canvas.canvas.DrawingInfoController
 import mono.html.canvas.canvas.GridCanvasViewController
 import mono.html.canvas.canvas.InteractionCanvasViewController
 import mono.html.canvas.canvas.SelectionCanvasViewController
@@ -32,6 +33,8 @@ class CanvasViewController(
     board: MonoBoard,
     windowSizeLiveData: LiveData<Size>
 ) {
+    private val drawingInfoController = DrawingInfoController(container)
+    
     private val gridCanvasViewController: GridCanvasViewController
     private val boardCanvasViewController: BoardCanvasViewController
     private val interactionCanvasViewController: InteractionCanvasViewController
@@ -69,6 +72,12 @@ class CanvasViewController(
             interactionCanvasViewController,
             selectionCanvasViewController
         )
+        
+        drawingInfoController.drawingInfoLiveData.distinctUntilChange().observe(lifecycleOwner) {
+            for (canvas in canvasControllers) {
+                canvas.setDrawingInfo(it)
+            }
+        }
 
         val mouseEventController = MouseEventObserver(
             container,
@@ -105,18 +114,14 @@ class CanvasViewController(
         interactionCanvasViewController.getInteractionPoint(point)
 
     fun setFont(fontSize: Int) {
-        for (controller in canvasControllers) {
-            controller.setFont(fontSize)
-        }
+        drawingInfoController.setFont(fontSize)
         windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
     }
 
     private fun updateCanvasSize() {
         val widthPx = container.clientWidth
         val heightPx = container.clientHeight
-        for (controller in canvasControllers) {
-            controller.setSizeAndRedraw(widthPx, heightPx)
-        }
+        drawingInfoController.setSize(widthPx, heightPx)
         windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
     }
 

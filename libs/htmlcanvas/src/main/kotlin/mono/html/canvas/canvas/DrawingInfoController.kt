@@ -39,7 +39,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         setFont(15)
     }
 
-    private fun setFont(fontSize: Int) {
+    fun setFont(fontSize: Int) {
         drawingInfoMutableLiveData.value =
             drawingInfoMutableLiveData.value.copy(
                 cellSizePx = context.getCellSizePx(fontSize),
@@ -49,7 +49,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
             )
     }
 
-    private fun setSize(widthPx: Int, heightPx: Int) {
+    fun setSize(widthPx: Int, heightPx: Int) {
         drawingInfoMutableLiveData.value =
             drawingInfoMutableLiveData.value.copy(canvasSizePx = Size(widthPx, heightPx))
     }
