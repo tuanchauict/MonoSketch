@@ -2,12 +2,20 @@ package mono.html.canvas.canvas
 
 import mono.graphics.board.MonoBoard
 import mono.graphics.board.Pixel
+import mono.lifecycle.LifecycleOwner
+import mono.livedata.LiveData
 import org.w3c.dom.HTMLCanvasElement
 
 internal class BoardCanvasViewController(
+    lifecycleOwner: LifecycleOwner,
     canvas: HTMLCanvasElement,
-    private val board: MonoBoard
+    private val board: MonoBoard,
+    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
 ) : BaseCanvasViewController(canvas) {
+
+    init {
+        drawingInfoLiveData.observe(lifecycleOwner, listener = ::setDrawingInfo)
+    }
 
     override fun drawInternal() {
         for (row in drawingInfo.boardRowRange) {
@@ -20,7 +28,7 @@ internal class BoardCanvasViewController(
     private fun drawPixel(pixel: Pixel, row: Int, column: Int) {
         if (!pixel.isTransparent) {
             context.fillStyle = pixel.highlight.paintColor
-            context.font = if (pixel.char == '|') boldFont else font
+            context.font = if (pixel.char == '|') drawingInfo.boldFont else drawingInfo.font
             drawText(pixel.char.toString(), row, column)
         }
     }

@@ -2,9 +2,11 @@ package mono.html.canvas.mouse
 
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
-import mono.html.canvas.canvas.BaseCanvasViewController
+import mono.html.canvas.canvas.DrawingInfoController
+import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
+import mono.livedata.distinctUntilChange
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.MouseEvent
 
@@ -13,17 +15,26 @@ import org.w3c.dom.events.MouseEvent
  * All events will be combined into a single live data [mousePointerLiveData].
  */
 internal class MouseEventObserver(
+    lifecycleOwner: LifecycleOwner,
     container: HTMLDivElement,
-    private val getDrawingInfo: () -> BaseCanvasViewController.DrawingInfo
+    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
 ) {
     private val mousePointerMutableLiveData: MutableLiveData<MousePointer> =
         MutableLiveData(MousePointer.Idle)
-    val mousePointerLiveData: LiveData<MousePointer> = mousePointerMutableLiveData
+    val mousePointerLiveData: LiveData<MousePointer> =
+        mousePointerMutableLiveData.distinctUntilChange()
+
+    private var drawingInfo: DrawingInfoController.DrawingInfo =
+        drawingInfoLiveData.value
 
     init {
         container.onmousedown = ::setMouseDownPointer
         container.onmouseup = ::setMouseUpPointer
         container.onmousemove = ::setMouseMovePointer
+
+        drawingInfoLiveData.observe(lifecycleOwner) {
+            drawingInfo = it
+        }
     }
 
     private fun setMouseDownPointer(event: MouseEvent) {
@@ -66,13 +77,9 @@ internal class MouseEventObserver(
         mousePointerMutableLiveData.value = newPointer
     }
 
-    private fun MouseEvent.toPoint(): Point {
-        val drawingInfo = getDrawingInfo()
-        return Point(drawingInfo.toBoardColumn(clientX), drawingInfo.toBoardRow(clientY))
-    }
+    private fun MouseEvent.toPoint(): Point =
+        Point(drawingInfo.toBoardColumn(clientX), drawingInfo.toBoardRow(clientY))
 
-    private fun MouseEvent.toPointPx(): Point {
-        val drawingInfo = getDrawingInfo()
-        return Point(clientX - drawingInfo.offsetPx.left, clientY - drawingInfo.offsetPx.top)
-    }
+    private fun MouseEvent.toPointPx(): Point =
+        Point(clientX - drawingInfo.offsetPx.left, clientY - drawingInfo.offsetPx.top)
 }
