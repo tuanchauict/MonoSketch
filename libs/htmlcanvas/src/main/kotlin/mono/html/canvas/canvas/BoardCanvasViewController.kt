@@ -12,7 +12,7 @@ internal class BoardCanvasViewController(
     private val board: MonoBoard,
     drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
 ) : BaseCanvasViewController(canvas) {
-    
+
     init {
         drawingInfoLiveData.observe(lifecycleOwner, listener = ::setDrawingInfo)
     }

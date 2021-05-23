@@ -15,7 +15,7 @@ internal class GridCanvasViewController(
     init {
         drawingInfoLiveData.observe(lifecycleOwner, listener = ::setDrawingInfo)
     }
-    
+
     override fun drawInternal() {
         context.strokeStyle = "#d9d9d9"
         context.lineWidth = 0.25
