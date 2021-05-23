@@ -49,12 +49,12 @@ class CanvasViewController(
     val windowBoardBoundLiveData: LiveData<Rect> = windowBoardBoundMutableLiveData
 
     init {
-        val drawingInfoLifeData = drawingInfoController.drawingInfoLiveData
+        val drawingInfoLiveData = drawingInfoController.drawingInfoLiveData
 
         val mouseEventController = MouseEventObserver(
             lifecycleOwner,
             container,
-            drawingInfoLifeData
+            drawingInfoLiveData
         )
         mousePointerLiveData = mouseEventController.mousePointerLiveData
 
@@ -65,22 +65,28 @@ class CanvasViewController(
             canvas(CLASS_NAME_SELECTION) {}
         }
 
-        gridCanvasViewController = GridCanvasViewController(getCanvas(CLASS_NAME_GRID))
-        boardCanvasViewController = BoardCanvasViewController(getCanvas(CLASS_NAME_BOARD), board)
+        gridCanvasViewController = GridCanvasViewController(
+            lifecycleOwner,
+            getCanvas(CLASS_NAME_GRID),
+            drawingInfoLiveData
+        )
+        boardCanvasViewController = BoardCanvasViewController(
+            lifecycleOwner,
+            getCanvas(CLASS_NAME_BOARD),
+            board,
+            drawingInfoLiveData
+        )
         interactionCanvasViewController = InteractionCanvasViewController(
             lifecycleOwner,
             getCanvas(CLASS_NAME_INTERACTION),
+            drawingInfoLiveData,
             mousePointerLiveData
         )
-        selectionCanvasViewController =
-            SelectionCanvasViewController(getCanvas(CLASS_NAME_SELECTION))
-        
-        drawingInfoController.drawingInfoLiveData.observe(lifecycleOwner) {
-            gridCanvasViewController.setDrawingInfo(it)
-            boardCanvasViewController.setDrawingInfo(it)
-            interactionCanvasViewController.setDrawingInfo(it)
-            selectionCanvasViewController.setDrawingInfo(it)
-        }
+        selectionCanvasViewController = SelectionCanvasViewController(
+            lifecycleOwner,
+            getCanvas(CLASS_NAME_SELECTION),
+            drawingInfoLiveData
+        )
 
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
             updateCanvasSize()

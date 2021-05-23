@@ -1,12 +1,21 @@
 package mono.html.canvas.canvas
 
+import mono.lifecycle.LifecycleOwner
+import mono.livedata.LiveData
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
 import kotlin.math.abs
 
 internal class GridCanvasViewController(
-    canvas: HTMLCanvasElement
+    lifecycleOwner: LifecycleOwner,
+    canvas: HTMLCanvasElement,
+    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
 ) : BaseCanvasViewController(canvas) {
+
+    init {
+        drawingInfoLiveData.observe(lifecycleOwner, listener = ::setDrawingInfo)
+    }
+    
     override fun drawInternal() {
         context.strokeStyle = "#d9d9d9"
         context.lineWidth = 0.25

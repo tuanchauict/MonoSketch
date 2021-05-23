@@ -20,14 +20,16 @@ import kotlin.math.abs
 internal class InteractionCanvasViewController(
     lifecycleOwner: LifecycleOwner,
     canvas: HTMLCanvasElement,
+    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>,
     mousePointerLiveData: LiveData<MousePointer>
 ) : BaseCanvasViewController(canvas) {
 
     var interactionBounds: List<InteractionBound> = emptyList()
-    
+
     private var isMouseMoving: Boolean = false
-    
+
     init {
+        drawingInfoLiveData.observe(lifecycleOwner, listener = ::setDrawingInfo)
         mousePointerLiveData.map { it is MousePointer.Move }.observe(lifecycleOwner) {
             isMouseMoving = it
         }
