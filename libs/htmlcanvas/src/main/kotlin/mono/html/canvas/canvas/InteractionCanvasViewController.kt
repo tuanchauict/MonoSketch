@@ -1,7 +1,11 @@
 package mono.html.canvas.canvas
 
 import mono.common.exhaustive
+import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
+import mono.lifecycle.LifecycleOwner
+import mono.livedata.LiveData
+import mono.livedata.map
 import mono.shapebound.InteractionBound
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
@@ -14,12 +18,25 @@ import kotlin.math.abs
  * A canvas view controller to render the interaction indicators.
  */
 internal class InteractionCanvasViewController(
-    canvas: HTMLCanvasElement
+    lifecycleOwner: LifecycleOwner,
+    canvas: HTMLCanvasElement,
+    mousePointerLiveData: LiveData<MousePointer>
 ) : BaseCanvasViewController(canvas) {
 
     var interactionBounds: List<InteractionBound> = emptyList()
+    
+    private var isMouseMoving: Boolean = false
+    
+    init {
+        mousePointerLiveData.map { it is MousePointer.Move }.observe(lifecycleOwner) {
+            isMouseMoving = it
+        }
+    }
 
     override fun drawInternal() {
+        if (isMouseMoving) {
+            return
+        }
         context.strokeStyle = "#6b6b6b"
         context.fillStyle = "#6b6b6b"
 

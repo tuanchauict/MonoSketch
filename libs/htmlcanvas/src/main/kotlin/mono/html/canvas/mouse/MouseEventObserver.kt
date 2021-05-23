@@ -6,6 +6,7 @@ import mono.html.canvas.canvas.DrawingInfoController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
+import mono.livedata.distinctUntilChange
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.MouseEvent
 
@@ -20,8 +21,9 @@ internal class MouseEventObserver(
 ) {
     private val mousePointerMutableLiveData: MutableLiveData<MousePointer> =
         MutableLiveData(MousePointer.Idle)
-    val mousePointerLiveData: LiveData<MousePointer> = mousePointerMutableLiveData
-    
+    val mousePointerLiveData: LiveData<MousePointer> =
+        mousePointerMutableLiveData.distinctUntilChange()
+
     private var drawingInfo: DrawingInfoController.DrawingInfo =
         drawingInfoLiveData.value
 
@@ -29,7 +31,7 @@ internal class MouseEventObserver(
         container.onmousedown = ::setMouseDownPointer
         container.onmouseup = ::setMouseUpPointer
         container.onmousemove = ::setMouseMovePointer
-        
+
         drawingInfoLiveData.observe(lifecycleOwner) {
             drawingInfo = it
         }

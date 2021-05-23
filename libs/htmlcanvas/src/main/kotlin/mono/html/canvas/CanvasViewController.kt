@@ -34,7 +34,7 @@ class CanvasViewController(
     windowSizeLiveData: LiveData<Size>
 ) {
     private val drawingInfoController = DrawingInfoController(container)
-    
+
     private val gridCanvasViewController: GridCanvasViewController
     private val boardCanvasViewController: BoardCanvasViewController
     private val interactionCanvasViewController: InteractionCanvasViewController
@@ -60,7 +60,7 @@ class CanvasViewController(
             drawingInfoLifeData
         )
         mousePointerLiveData = mouseEventController.mousePointerLiveData
-        
+
         container.append {
             canvas(CLASS_NAME_GRID) {}
             canvas(CLASS_NAME_BOARD) {}
@@ -70,8 +70,11 @@ class CanvasViewController(
 
         gridCanvasViewController = GridCanvasViewController(getCanvas(CLASS_NAME_GRID))
         boardCanvasViewController = BoardCanvasViewController(getCanvas(CLASS_NAME_BOARD), board)
-        interactionCanvasViewController =
-            InteractionCanvasViewController(getCanvas(CLASS_NAME_INTERACTION))
+        interactionCanvasViewController = InteractionCanvasViewController(
+            lifecycleOwner,
+            getCanvas(CLASS_NAME_INTERACTION),
+            mousePointerLiveData
+        )
         selectionCanvasViewController =
             SelectionCanvasViewController(getCanvas(CLASS_NAME_SELECTION))
 
@@ -81,7 +84,7 @@ class CanvasViewController(
             interactionCanvasViewController,
             selectionCanvasViewController
         )
-        
+
         drawingInfoController.drawingInfoLiveData.observe(lifecycleOwner) {
             for (canvas in canvasControllers) {
                 canvas.setDrawingInfo(it)
