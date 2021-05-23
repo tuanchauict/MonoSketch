@@ -79,10 +79,8 @@ class Line(
     val reducedJoinPoints: List<Point>
         get() = LineHelper.reduce(jointPoints)
 
-    private var edges: List<Edge> = LineHelper.createEdges(jointPoints)
-
-    val reducedEdges: List<Edge>
-        get() = edges.filterNot { it.startPoint == it.endPoint }
+    var edges: List<Edge> = LineHelper.createEdges(jointPoints)
+        private set
 
     var anchorCharStart: AnchorChar = AnchorChar('─', '─', '|', '|')
         private set

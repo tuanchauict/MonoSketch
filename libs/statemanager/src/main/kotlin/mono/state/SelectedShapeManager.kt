@@ -73,7 +73,7 @@ class SelectedShapeManager(
                 is Rectangle,
                 is Text -> ScalableInteractionBound(it.id, it.bound)
                 is Group -> null // TODO: Add new Interaction bound type for Group
-                is Line -> LineInteractionBound(it.id, it.reducedEdges)
+                is Line -> LineInteractionBound(it.id, it.edges)
                 else -> null
             }
         }

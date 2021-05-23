@@ -42,23 +42,32 @@ class ScalableInteractionBound(
  */
 class LineInteractionBound(
     private val targetedShapeId: Int,
-    private val edges: List<Line.Edge>
+    edges: List<Line.Edge>
 ) : InteractionBound() {
+    private val reducedEdges: List<Line.Edge>
+
     override val interactionPoints: List<InteractionPoint>
 
     init {
+        val noIdenticalPointsEdges = edges.filterNot { it.startPoint == it.endPoint }
+        reducedEdges = noIdenticalPointsEdges.ifEmpty { listOf(edges.first()) }
+
         val anchorPoints = listOf(
             createInteractionAnchor(Line.Anchor.START),
             createInteractionAnchor(Line.Anchor.END)
         )
-        val middleEdgePoints = edges.map {
-            LineInteractionPoint.Edge(
-                targetedShapeId,
-                it.id,
-                left = it.middleLeft + 0.5,
-                top = it.middleTop + 0.5
-            )
-        }
+        val middleEdgePoints =
+            reducedEdges.mapNotNull {
+                if (it.startPoint == it.endPoint) {
+                    return@mapNotNull null
+                }
+                LineInteractionPoint.Edge(
+                    targetedShapeId,
+                    it.id,
+                    left = it.middleLeft + 0.5,
+                    top = it.middleTop + 0.5
+                )
+            }
 
         interactionPoints = anchorPoints + middleEdgePoints
     }
@@ -66,15 +75,17 @@ class LineInteractionBound(
     private fun createInteractionAnchor(
         anchor: Line.Anchor,
     ): LineInteractionPoint.Anchor {
-        val edge = if (anchor == Line.Anchor.START) edges.first() else edges.last()
-        val (point, anotherPoint) = if (anchor == Line.Anchor.START) {
-            edge.startPoint to edge.endPoint
-        } else {
-            edge.endPoint to edge.startPoint
-        }
+        val edge = if (anchor == Line.Anchor.START) reducedEdges.first() else reducedEdges.last()
+        val (point, anotherPoint) =
+            if (anchor == Line.Anchor.START) {
+                edge.startPoint to edge.endPoint
+            } else {
+                edge.endPoint to edge.startPoint
+            }
         val horizontalOffset = when {
             !edge.isHorizontal -> 0.5
-            point.left <= anotherPoint.left -> 0.0
+            point == anotherPoint -> if (anchor == Line.Anchor.START) 0.0 else 1.0
+            point.left < anotherPoint.left -> 0.0
             else -> 1.0
         }
         val verticalOffset = when {
