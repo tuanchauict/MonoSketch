@@ -8,7 +8,6 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
-import mono.html.canvas.canvas.BaseCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.DrawingInfoController
 import mono.html.canvas.canvas.GridCanvasViewController
@@ -39,8 +38,6 @@ class CanvasViewController(
     private val boardCanvasViewController: BoardCanvasViewController
     private val interactionCanvasViewController: InteractionCanvasViewController
     private val selectionCanvasViewController: SelectionCanvasViewController
-
-    private val canvasControllers: List<BaseCanvasViewController>
 
     val mousePointerLiveData: LiveData<MousePointer>
 
@@ -77,18 +74,12 @@ class CanvasViewController(
         )
         selectionCanvasViewController =
             SelectionCanvasViewController(getCanvas(CLASS_NAME_SELECTION))
-
-        canvasControllers = listOf(
-            gridCanvasViewController,
-            boardCanvasViewController,
-            interactionCanvasViewController,
-            selectionCanvasViewController
-        )
-
+        
         drawingInfoController.drawingInfoLiveData.observe(lifecycleOwner) {
-            for (canvas in canvasControllers) {
-                canvas.setDrawingInfo(it)
-            }
+            gridCanvasViewController.setDrawingInfo(it)
+            boardCanvasViewController.setDrawingInfo(it)
+            interactionCanvasViewController.setDrawingInfo(it)
+            selectionCanvasViewController.setDrawingInfo(it)
         }
 
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
