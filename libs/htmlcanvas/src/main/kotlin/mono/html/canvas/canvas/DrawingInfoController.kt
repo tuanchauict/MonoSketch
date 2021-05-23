@@ -9,6 +9,7 @@ import mono.graphics.geo.Size
 import mono.graphics.geo.SizeF
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
+import mono.livedata.distinctUntilChange
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.CanvasTextBaseline
@@ -26,7 +27,8 @@ internal class DrawingInfoController(container: HTMLDivElement) {
 
     private val drawingInfoMutableLiveData: MutableLiveData<DrawingInfo> =
         MutableLiveData(DrawingInfo())
-    val drawingInfoLiveData: LiveData<DrawingInfo> = drawingInfoMutableLiveData
+    val drawingInfoLiveData: LiveData<DrawingInfo> =
+        drawingInfoMutableLiveData.distinctUntilChange()
 
     init {
         container.append {

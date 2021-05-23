@@ -52,6 +52,15 @@ class CanvasViewController(
     val windowBoardBoundLiveData: LiveData<Rect> = windowBoardBoundMutableLiveData
 
     init {
+        val drawingInfoLifeData = drawingInfoController.drawingInfoLiveData
+
+        val mouseEventController = MouseEventObserver(
+            lifecycleOwner,
+            container,
+            drawingInfoLifeData
+        )
+        mousePointerLiveData = mouseEventController.mousePointerLiveData
+        
         container.append {
             canvas(CLASS_NAME_GRID) {}
             canvas(CLASS_NAME_BOARD) {}
@@ -73,17 +82,11 @@ class CanvasViewController(
             selectionCanvasViewController
         )
         
-        drawingInfoController.drawingInfoLiveData.distinctUntilChange().observe(lifecycleOwner) {
+        drawingInfoController.drawingInfoLiveData.observe(lifecycleOwner) {
             for (canvas in canvasControllers) {
                 canvas.setDrawingInfo(it)
             }
         }
-
-        val mouseEventController = MouseEventObserver(
-            container,
-            gridCanvasViewController::drawingInfo
-        )
-        mousePointerLiveData = mouseEventController.mousePointerLiveData
 
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
             updateCanvasSize()
