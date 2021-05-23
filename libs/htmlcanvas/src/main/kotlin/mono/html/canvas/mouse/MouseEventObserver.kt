@@ -3,6 +3,7 @@ package mono.html.canvas.mouse
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.html.canvas.canvas.BaseCanvasViewController
+import mono.html.canvas.canvas.DrawingInfoController
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import org.w3c.dom.HTMLDivElement
@@ -14,7 +15,7 @@ import org.w3c.dom.events.MouseEvent
  */
 internal class MouseEventObserver(
     container: HTMLDivElement,
-    private val getDrawingInfo: () -> BaseCanvasViewController.DrawingInfo
+    private val getDrawingInfo: () -> DrawingInfoController.DrawingInfo
 ) {
     private val mousePointerMutableLiveData: MutableLiveData<MousePointer> =
         MutableLiveData(MousePointer.Idle)
