@@ -1,12 +1,13 @@
 package mono.html.canvas.canvas
 
-import kotlinx.html.js.canvas
 import kotlinx.html.dom.append
+import kotlinx.html.js.canvas
 import mono.common.firstOrNull
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.graphics.geo.SizeF
+import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextAlign
@@ -23,7 +24,9 @@ import kotlin.math.ceil
 internal class DrawingInfoController(container: HTMLDivElement) {
     private val context: CanvasRenderingContext2D
 
-    private val drawingInfoMutableLiveData: MutableLiveData<DrawingInfo>
+    private val drawingInfoMutableLiveData: MutableLiveData<DrawingInfo> =
+        MutableLiveData(DrawingInfo())
+    val drawingInfoLiveData: LiveData<DrawingInfo> = drawingInfoMutableLiveData
 
     init {
         container.append {
@@ -31,9 +34,8 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         }
         val canvas = container.getElementsByClassName(CLASS_NAME).firstOrNull<HTMLCanvasElement>()!!
         context = canvas.getContext("2d") as CanvasRenderingContext2D
-        drawingInfoMutableLiveData = MutableLiveData(
-            DrawingInfo(canvasSizePx = Size(canvas.width, canvas.height))
-        )
+
+        setSize(canvas.width, canvas.height)
         setFont(15)
     }
 
@@ -45,6 +47,11 @@ internal class DrawingInfoController(container: HTMLDivElement) {
                 boldFont = "normal normal 600 ${fontSize}px Courier",
                 fontSize = fontSize
             )
+    }
+
+    private fun setSize(widthPx: Int, heightPx: Int) {
+        drawingInfoMutableLiveData.value =
+            drawingInfoMutableLiveData.value.copy(canvasSizePx = Size(widthPx, heightPx))
     }
 
     private fun CanvasRenderingContext2D.getCellSizePx(fontSize: Int): SizeF {
