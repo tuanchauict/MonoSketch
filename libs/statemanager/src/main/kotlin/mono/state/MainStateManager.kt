@@ -9,6 +9,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
+import mono.html.toolbar.ActionManager
 import mono.html.toolbar.RetainableActionType
 import mono.keycommand.KeyCommand
 import mono.lifecycle.LifecycleOwner
@@ -43,8 +44,11 @@ class MainStateManager(
 
     private var workingParentGroup: Group = shapeManager.root
 
-    private var selectedShapeManager: SelectedShapeManager =
+    private val selectedShapeManager: SelectedShapeManager =
         SelectedShapeManager(shapeManager, canvasManager, ::requestRedraw)
+
+    // TODO: Move this to the caller of MainStateManager
+    private val actionManager: ActionManager = ActionManager(lifecycleOwner, keyCommandLiveData)
 
     private var windowBoardBound: Rect = Rect.ZERO
 
@@ -78,6 +82,13 @@ class MainStateManager(
 
         redrawRequestMutableLiveData.observe(lifecycleOwner, 1) { redraw() }
 
+        actionManager.retainableActionLiveData.observe(lifecycleOwner) {
+            currentRetainableActionType = it
+        }
+        actionManager.oneTimeActionLiveData.observe(lifecycleOwner) {
+            TODO("Trigger equivalent action")
+        }
+
         addDemoShape()
     }
 
@@ -102,7 +113,11 @@ class MainStateManager(
     private fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.Down) {
             currentMouseCommand =
-                MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
+                MouseCommandFactory.getCommand(
+                    environment,
+                    mousePointer,
+                    currentRetainableActionType
+                )
         }
 
         val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
@@ -120,7 +135,8 @@ class MainStateManager(
                 } else {
                     selectedShapeManager.setSelectedShapes()
                 }
-            KeyCommand.ADD_RECTANGLE -> currentRetainableActionType = RetainableActionType.ADD_RECTANGLE
+            KeyCommand.ADD_RECTANGLE -> currentRetainableActionType =
+                RetainableActionType.ADD_RECTANGLE
             KeyCommand.ADD_TEXT -> currentRetainableActionType = RetainableActionType.ADD_TEXT
             KeyCommand.ADD_LINE -> currentRetainableActionType = RetainableActionType.ADD_LINE
 
