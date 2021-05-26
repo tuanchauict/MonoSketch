@@ -9,6 +9,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
+import mono.html.toolbar.RetainableActionType
 import mono.keycommand.KeyCommand
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -23,7 +24,6 @@ import mono.shape.shape.Text
 import mono.shapebound.InteractionPoint
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
-import mono.state.command.CommandType
 import mono.state.command.mouse.MouseCommand
 import mono.state.command.MouseCommandFactory
 
@@ -50,7 +50,7 @@ class MainStateManager(
 
     private val environment: CommandEnvironment = CommandEnvironmentImpl(this)
     private var currentMouseCommand: MouseCommand? = null
-    private var currentCommandType: CommandType = CommandType.IDLE
+    private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
     private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
 
@@ -102,7 +102,7 @@ class MainStateManager(
     private fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.Down) {
             currentMouseCommand =
-                MouseCommandFactory.getCommand(environment, mousePointer, currentCommandType)
+                MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
         }
 
         val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
@@ -116,13 +116,13 @@ class MainStateManager(
         when (keyCommand) {
             KeyCommand.ESC ->
                 if (selectedShapeManager.selectedShapes.isEmpty()) {
-                    currentCommandType = CommandType.IDLE
+                    currentRetainableActionType = RetainableActionType.IDLE
                 } else {
                     selectedShapeManager.setSelectedShapes()
                 }
-            KeyCommand.ADD_RECTANGLE -> currentCommandType = CommandType.ADD_RECTANGLE
-            KeyCommand.ADD_TEXT -> currentCommandType = CommandType.ADD_TEXT
-            KeyCommand.ADD_LINE -> currentCommandType = CommandType.ADD_LINE
+            KeyCommand.ADD_RECTANGLE -> currentRetainableActionType = RetainableActionType.ADD_RECTANGLE
+            KeyCommand.ADD_TEXT -> currentRetainableActionType = RetainableActionType.ADD_TEXT
+            KeyCommand.ADD_LINE -> currentRetainableActionType = RetainableActionType.ADD_LINE
 
             KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
             KeyCommand.ENTER_EDIT_MODE -> selectedShapeManager.editSelectedShapes()

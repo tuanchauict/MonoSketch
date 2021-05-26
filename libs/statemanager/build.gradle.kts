@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":monoboard"))
     implementation(project(":shape-interaction-bound"))
     implementation(project(":htmlcanvas"))
+    implementation(project(":htmltoolbar"))
     implementation(project(":monobitmap"))
     implementation(project(":htmlmodal"))
     implementation(project(":keycommand"))
