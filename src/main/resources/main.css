@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -6,11 +7,50 @@ html, body {
 #root {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
+
+#header-layout {
+    width: 100%;
+    height: 64px;
+    border-bottom: 1px solid #E0E0E0;
+    display: flex;
+    flex-direction: row;
+}
+
+#header-layout > .nav-brand {
+    height: 100%;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    margin-left: 32px;
+    padding-top: 10px;
+}
+
+#header-layout h2 {
+    font-size: 20px;
+    letter-spacing: 0.2px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+}
+
+#toolbar {
+    margin: 0px 20px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
 #monoboard-canvas-container {
     width: 100%;
     height: 100%;
+    position: relative;
 }
+
 #monoboard-canvas-container > canvas {
     position: absolute;
     top: 0;
@@ -18,7 +58,7 @@ html, body {
 }
 .modal-textarea-container {
     background: #fff;
-    box-shadow: 0 0px 16px 0 rgba(0,0,0,0.5);
+    box-shadow: 0 0px 16px 0 rgba(0, 0, 0, 0.5);
     overflow: scroll;
     padding: 8px 10px;
 }
@@ -27,4 +67,9 @@ html, body {
 }
 .monomodal-mono-edit-text {
     font-family: monospace;
+}
+
+.btn-group.btn-group-sm>.btn, .btn-sm {
+    padding: 0.05rem 0.5rem;
+    width: 56px;
 }
