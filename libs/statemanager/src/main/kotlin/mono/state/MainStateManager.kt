@@ -27,8 +27,8 @@ import mono.shape.shape.Text
 import mono.shapebound.InteractionPoint
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
-import mono.state.command.mouse.MouseCommand
 import mono.state.command.MouseCommandFactory
+import mono.state.command.mouse.MouseCommand
 
 /**
  * A class which is connect components in the app.
@@ -67,7 +67,7 @@ class MainStateManager(
     init {
         // TODO: This should be call in application class
         ToolbarViewController(lifecycleOwner, actionManager)
-        
+
         mousePointerLiveData
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::onMouseEvent)

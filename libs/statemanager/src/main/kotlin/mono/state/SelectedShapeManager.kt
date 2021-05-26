@@ -86,6 +86,6 @@ class SelectedShapeManager(
     }
 
     fun isInSelectionBounds(point: Point): Boolean = selectedShapes.any { it.contains(point) }
-    
+
     fun hasSelectedShapes(): Boolean = selectedShapes.isNotEmpty()
 }

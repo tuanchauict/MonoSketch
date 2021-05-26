@@ -29,7 +29,6 @@ internal class MouseEventObserver(
     private var drawingInfo: DrawingInfoController.DrawingInfo =
         drawingInfoLiveData.value
 
-
     init {
         containerPosition = container.getPosition()
 
