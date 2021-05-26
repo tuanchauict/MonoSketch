@@ -10,6 +10,7 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
 import mono.html.toolbar.ActionManager
+import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.RetainableActionType
 import mono.keycommand.KeyCommand
 import mono.lifecycle.LifecycleOwner
@@ -66,7 +67,6 @@ class MainStateManager(
         mousePointerLiveData
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::onMouseEvent)
-        keyCommandLiveData.observe(lifecycleOwner, listener = ::onKeyEvent)
 
         canvasManager.windowBoardBoundLiveData
             .observe(lifecycleOwner, throttleDurationMillis = 10) {
@@ -90,7 +90,23 @@ class MainStateManager(
             currentRetainableActionType = it
         }
         actionManager.oneTimeActionLiveData.observe(lifecycleOwner) {
-            TODO("Trigger equivalent action")
+            when (it) {
+                OneTimeActionType.IDLE -> Unit
+                OneTimeActionType.DESELECT_SHAPES ->
+                    selectedShapeManager.setSelectedShapes()
+                OneTimeActionType.DELETE_SELECTED_SHAPES ->
+                    selectedShapeManager.deleteSelectedShapes()
+                OneTimeActionType.EDIT_SELECTED_SHAPES ->
+                    selectedShapeManager.editSelectedShapes()
+                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN ->
+                    selectedShapeManager.moveSelectedShape(1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_UP ->
+                    selectedShapeManager.moveSelectedShape(-1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT ->
+                    selectedShapeManager.moveSelectedShape(0, -1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT ->
+                    selectedShapeManager.moveSelectedShape(0, 1)
+            }
         }
 
         addDemoShape()
@@ -128,30 +144,6 @@ class MainStateManager(
         if (isFinished) {
             currentMouseCommand = null
             requestRedraw()
-        }
-    }
-
-    private fun onKeyEvent(keyCommand: KeyCommand) {
-        when (keyCommand) {
-            KeyCommand.ESC ->
-                if (selectedShapeManager.selectedShapes.isEmpty()) {
-                    currentRetainableActionType = RetainableActionType.IDLE
-                } else {
-                    selectedShapeManager.setSelectedShapes()
-                }
-            KeyCommand.ADD_RECTANGLE -> currentRetainableActionType =
-                RetainableActionType.ADD_RECTANGLE
-            KeyCommand.ADD_TEXT -> currentRetainableActionType = RetainableActionType.ADD_TEXT
-            KeyCommand.ADD_LINE -> currentRetainableActionType = RetainableActionType.ADD_LINE
-
-            KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
-            KeyCommand.ENTER_EDIT_MODE -> selectedShapeManager.editSelectedShapes()
-
-            KeyCommand.MOVE_DOWN -> selectedShapeManager.moveSelectedShape(1, 0)
-            KeyCommand.MOVE_UP -> selectedShapeManager.moveSelectedShape(-1, 0)
-            KeyCommand.MOVE_LEFT -> selectedShapeManager.moveSelectedShape(0, -1)
-            KeyCommand.MOVE_RIGHT -> selectedShapeManager.moveSelectedShape(0, 1)
-            KeyCommand.IDLE -> Unit
         }
     }
 
