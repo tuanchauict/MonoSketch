@@ -12,6 +12,7 @@ import mono.html.canvas.CanvasViewController
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.RetainableActionType
+import mono.html.toolbar.ToolbarViewController
 import mono.keycommand.KeyCommand
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -64,6 +65,9 @@ class MainStateManager(
     private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
 
     init {
+        // TODO: This should be call in application class
+        ToolbarViewController(lifecycleOwner, actionManager)
+        
         mousePointerLiveData
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::onMouseEvent)

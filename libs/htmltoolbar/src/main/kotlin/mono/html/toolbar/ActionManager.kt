@@ -56,7 +56,7 @@ class ActionManager(
         }
     }
 
-    private fun setRetainableAction(actionType: RetainableActionType) {
+    fun setRetainableAction(actionType: RetainableActionType) {
         retainableActionMutableLiveData.value = actionType
     }
 
