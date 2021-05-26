@@ -14,5 +14,12 @@ enum class RetainableActionType {
  * An enum class which defines all action types which are only have affect once.
  */
 enum class OneTimeActionType {
-    IDLE
+    IDLE,
+    DESELECT_SHAPES,
+    DELETE_SELECTED_SHAPES,
+    EDIT_SELECTED_SHAPES,
+    MOVE_SELECTED_SHAPES_DOWN,
+    MOVE_SELECTED_SHAPES_UP,
+    MOVE_SELECTED_SHAPES_LEFT,
+    MOVE_SELECTED_SHAPES_RIGHT
 }

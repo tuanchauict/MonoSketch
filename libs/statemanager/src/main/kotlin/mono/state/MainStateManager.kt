@@ -48,7 +48,11 @@ class MainStateManager(
         SelectedShapeManager(shapeManager, canvasManager, ::requestRedraw)
 
     // TODO: Move this to the caller of MainStateManager
-    private val actionManager: ActionManager = ActionManager(lifecycleOwner, keyCommandLiveData)
+    private val actionManager: ActionManager = ActionManager(
+        lifecycleOwner,
+        keyCommandLiveData,
+        selectedShapeManager::hasSelectedShapes
+    )
 
     private var windowBoardBound: Rect = Rect.ZERO
 
