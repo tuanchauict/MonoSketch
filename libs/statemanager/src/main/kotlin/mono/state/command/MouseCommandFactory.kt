@@ -1,6 +1,7 @@
 package mono.state.command
 
 import mono.graphics.geo.MousePointer
+import mono.html.toolbar.RetainableActionType
 import mono.shape.shape.Line
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionPoint
@@ -22,7 +23,7 @@ internal object MouseCommandFactory {
     fun getCommand(
         commandEnvironment: CommandEnvironment,
         mousePointer: MousePointer.Down,
-        commandType: CommandType
+        commandType: RetainableActionType
     ): MouseCommand {
         val interactionCommand = detectInteractionCommand(commandEnvironment, mousePointer)
         if (interactionCommand != null) {
@@ -30,10 +31,11 @@ internal object MouseCommandFactory {
         }
 
         return when (commandType) {
-            CommandType.ADD_RECTANGLE -> AddShapeMouseCommand(ShapeFactory.RectangleFactory)
-            CommandType.ADD_TEXT -> AddTextMouseCommand()
-            CommandType.ADD_LINE -> AddLineMouseCommand()
-            CommandType.IDLE -> SelectShapeMouseCommand()
+            RetainableActionType.ADD_RECTANGLE ->
+                AddShapeMouseCommand(ShapeFactory.RectangleFactory)
+            RetainableActionType.ADD_TEXT -> AddTextMouseCommand()
+            RetainableActionType.ADD_LINE -> AddLineMouseCommand()
+            RetainableActionType.IDLE -> SelectShapeMouseCommand()
         }
     }
 

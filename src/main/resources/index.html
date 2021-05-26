@@ -1,15 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name='viewport'
-          content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+    <meta charset="UTF-8"/>
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
     <title>Mono Flow</title>
-    <link href="main.css" rel="stylesheet">
+    <link href="main.css" rel="stylesheet"/>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+            crossorigin="anonymous"
+    />
 </head>
 <body>
 <script src="MonoFlow.js"></script>
 <div id="root">
+    <div id="header-layout">
+        <div class="nav-brand">
+            <h2 id="main-title">Monoflow</h2>
+        </div>
+        <div id="toolbar">
+            <div class="btn-group btn-group-sm" role="group"
+                 aria-label="Basic radio toggle button group">
+                <input id="tool_selection" type="radio" class="btn-check" name="btnradio"
+                       autocomplete="off" checked>
+                <label class="btn btn-outline-secondary shadow-none icon-action"
+                       for="tool_selection" title="Select (ESC)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                         fill="currentColor" class="bi bi-cursor-fill" viewBox="0 0 16 16">
+                        <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z"/>
+                    </svg>
+                </label>
+
+                <input id="tool_add_rectangle" type="radio" class="btn-check" name="btnradio"
+                       autocomplete="off">
+                <label class="btn btn-outline-secondary shadow-none icon-action"
+                       for="tool_add_rectangle" title="Rectangle (R)">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                         width="24px" fill="currentColor">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path d="M21 6H3v12h18V6zm-2 10H5V8h14v8z"/>
+                    </svg>
+                </label>
+
+                <input id="tool_add_text" type="radio" class="btn-check" name="btnradio"
+                       autocomplete="off" title="Text (T)">
+                <label class="btn btn-outline-secondary shadow-none icon-action"
+                       for="tool_add_text">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                         fill="currentColor" class="bi bi-type" viewBox="0 0 16 16">
+                        <path d="m2.244 13.081.943-2.803H6.66l.944 2.803H8.86L5.54 3.75H4.322L1 13.081h1.244zm2.7-7.923L6.34 9.314H3.51l1.4-4.156h.034zm9.146 7.027h.035v.896h1.128V8.125c0-1.51-1.114-2.345-2.646-2.345-1.736 0-2.59.916-2.666 2.174h1.108c.068-.718.595-1.19 1.517-1.19.971 0 1.518.52 1.518 1.464v.731H12.19c-1.647.007-2.522.8-2.522 2.058 0 1.319.957 2.18 2.345 2.18 1.06 0 1.716-.43 2.078-1.011zm-1.763.035c-.752 0-1.456-.397-1.456-1.244 0-.65.424-1.115 1.408-1.115h1.805v.834c0 .896-.752 1.525-1.757 1.525z"/>
+                    </svg>
+                </label>
+
+                <input id="tool_add_line" type="radio" class="btn-check" name="btnradio"
+                       autocomplete="off">
+                <label class="btn btn-outline-secondary shadow-none icon-action"
+                       for="tool_add_line" title="Line (L)">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                         width="24px" fill="currentColor">
+                        <path d="M19.5 9.5c-1.03 0-1.9.62-2.29 1.5h-2.92c-.39-.88-1.26-1.5-2.29-1.5s-1.9.62-2.29 1.5H6.79c-.39-.88-1.26-1.5-2.29-1.5C3.12 9.5 2 10.62 2 12s1.12 2.5 2.5 2.5c1.03 0 1.9-.62 2.29-1.5h2.92c.39.88 1.26 1.5 2.29 1.5s1.9-.62 2.29-1.5h2.92c.39.88 1.26 1.5 2.29 1.5 1.38 0 2.5-1.12 2.5-2.5s-1.12-2.5-2.5-2.5z"/>
+                    </svg>
+                </label>
+            </div>
+        </div>
+    </div>
     <div id="monoboard-canvas-container"></div>
 </div>
 </body>

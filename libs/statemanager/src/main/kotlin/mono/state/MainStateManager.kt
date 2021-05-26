@@ -9,6 +9,10 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
+import mono.html.toolbar.ActionManager
+import mono.html.toolbar.OneTimeActionType
+import mono.html.toolbar.RetainableActionType
+import mono.html.toolbar.ToolbarViewController
 import mono.keycommand.KeyCommand
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -23,9 +27,8 @@ import mono.shape.shape.Text
 import mono.shapebound.InteractionPoint
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
-import mono.state.command.CommandType
-import mono.state.command.mouse.MouseCommand
 import mono.state.command.MouseCommandFactory
+import mono.state.command.mouse.MouseCommand
 
 /**
  * A class which is connect components in the app.
@@ -43,22 +46,31 @@ class MainStateManager(
 
     private var workingParentGroup: Group = shapeManager.root
 
-    private var selectedShapeManager: SelectedShapeManager =
+    private val selectedShapeManager: SelectedShapeManager =
         SelectedShapeManager(shapeManager, canvasManager, ::requestRedraw)
+
+    // TODO: Move this to the caller of MainStateManager
+    private val actionManager: ActionManager = ActionManager(
+        lifecycleOwner,
+        keyCommandLiveData,
+        selectedShapeManager::hasSelectedShapes
+    )
 
     private var windowBoardBound: Rect = Rect.ZERO
 
     private val environment: CommandEnvironment = CommandEnvironmentImpl(this)
     private var currentMouseCommand: MouseCommand? = null
-    private var currentCommandType: CommandType = CommandType.IDLE
+    private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
     private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
 
     init {
+        // TODO: This should be call in application class
+        ToolbarViewController(lifecycleOwner, actionManager)
+
         mousePointerLiveData
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::onMouseEvent)
-        keyCommandLiveData.observe(lifecycleOwner, listener = ::onKeyEvent)
 
         canvasManager.windowBoardBoundLiveData
             .observe(lifecycleOwner, throttleDurationMillis = 10) {
@@ -77,6 +89,29 @@ class MainStateManager(
             }
 
         redrawRequestMutableLiveData.observe(lifecycleOwner, 1) { redraw() }
+
+        actionManager.retainableActionLiveData.observe(lifecycleOwner) {
+            currentRetainableActionType = it
+        }
+        actionManager.oneTimeActionLiveData.observe(lifecycleOwner) {
+            when (it) {
+                OneTimeActionType.IDLE -> Unit
+                OneTimeActionType.DESELECT_SHAPES ->
+                    selectedShapeManager.setSelectedShapes()
+                OneTimeActionType.DELETE_SELECTED_SHAPES ->
+                    selectedShapeManager.deleteSelectedShapes()
+                OneTimeActionType.EDIT_SELECTED_SHAPES ->
+                    selectedShapeManager.editSelectedShapes()
+                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN ->
+                    selectedShapeManager.moveSelectedShape(1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_UP ->
+                    selectedShapeManager.moveSelectedShape(-1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT ->
+                    selectedShapeManager.moveSelectedShape(0, -1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT ->
+                    selectedShapeManager.moveSelectedShape(0, 1)
+            }
+        }
 
         addDemoShape()
     }
@@ -102,36 +137,17 @@ class MainStateManager(
     private fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.Down) {
             currentMouseCommand =
-                MouseCommandFactory.getCommand(environment, mousePointer, currentCommandType)
+                MouseCommandFactory.getCommand(
+                    environment,
+                    mousePointer,
+                    currentRetainableActionType
+                )
         }
 
         val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
         if (isFinished) {
             currentMouseCommand = null
             requestRedraw()
-        }
-    }
-
-    private fun onKeyEvent(keyCommand: KeyCommand) {
-        when (keyCommand) {
-            KeyCommand.ESC ->
-                if (selectedShapeManager.selectedShapes.isEmpty()) {
-                    currentCommandType = CommandType.IDLE
-                } else {
-                    selectedShapeManager.setSelectedShapes()
-                }
-            KeyCommand.ADD_RECTANGLE -> currentCommandType = CommandType.ADD_RECTANGLE
-            KeyCommand.ADD_TEXT -> currentCommandType = CommandType.ADD_TEXT
-            KeyCommand.ADD_LINE -> currentCommandType = CommandType.ADD_LINE
-
-            KeyCommand.DELETE -> selectedShapeManager.deleteSelectedShapes()
-            KeyCommand.ENTER_EDIT_MODE -> selectedShapeManager.editSelectedShapes()
-
-            KeyCommand.MOVE_DOWN -> selectedShapeManager.moveSelectedShape(1, 0)
-            KeyCommand.MOVE_UP -> selectedShapeManager.moveSelectedShape(-1, 0)
-            KeyCommand.MOVE_LEFT -> selectedShapeManager.moveSelectedShape(0, -1)
-            KeyCommand.MOVE_RIGHT -> selectedShapeManager.moveSelectedShape(0, 1)
-            KeyCommand.IDLE -> Unit
         }
     }
 

@@ -19,6 +19,8 @@ internal class MouseEventObserver(
     container: HTMLDivElement,
     drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
 ) {
+    private var containerPosition: Point
+
     private val mousePointerMutableLiveData: MutableLiveData<MousePointer> =
         MutableLiveData(MousePointer.Idle)
     val mousePointerLiveData: LiveData<MousePointer> =
@@ -28,12 +30,15 @@ internal class MouseEventObserver(
         drawingInfoLiveData.value
 
     init {
+        containerPosition = container.getPosition()
+
         container.onmousedown = ::setMouseDownPointer
         container.onmouseup = ::setMouseUpPointer
         container.onmousemove = ::setMouseMovePointer
 
         drawingInfoLiveData.observe(lifecycleOwner) {
             drawingInfo = it
+            containerPosition = container.getPosition()
         }
     }
 
@@ -78,8 +83,19 @@ internal class MouseEventObserver(
     }
 
     private fun MouseEvent.toPoint(): Point =
-        Point(drawingInfo.toBoardColumn(clientX), drawingInfo.toBoardRow(clientY))
+        Point(
+            drawingInfo.toBoardColumn(clientX - containerPosition.left),
+            drawingInfo.toBoardRow(clientY - containerPosition.top)
+        )
 
     private fun MouseEvent.toPointPx(): Point =
-        Point(clientX - drawingInfo.offsetPx.left, clientY - drawingInfo.offsetPx.top)
+        Point(
+            clientX - drawingInfo.offsetPx.left - containerPosition.left,
+            clientY - drawingInfo.offsetPx.top - containerPosition.top
+        )
+
+    private fun HTMLDivElement.getPosition(): Point {
+        val containerBounding = getBoundingClientRect()
+        return Point(containerBounding.left.toInt(), containerBounding.top.toInt())
+    }
 }
