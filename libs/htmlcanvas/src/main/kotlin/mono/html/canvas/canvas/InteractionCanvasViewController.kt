@@ -12,6 +12,7 @@ import mono.shapebound.LineInteractionBound
 import mono.shapebound.ScalableInteractionBound
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
+import kotlin.math.PI
 import kotlin.math.abs
 
 /**
@@ -58,22 +59,41 @@ internal class InteractionCanvasViewController(
             lineTo(drawingInfo.toXPx(bound.left), drawingInfo.toYPx(bound.bottom))
             closePath()
         }
+        context.strokeStyle = "#64b5f6"
+        context.lineWidth = 1.0
         context.stroke(path)
 
+        val dotPath = Path2D()
+        context.beginPath()
         for (point in bound.interactionPoints) {
-            drawDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
+            dotPath.addDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
         }
+        context.strokeStyle = "#64b5f6"
+        context.lineWidth = 2.0
+        context.fillStyle = "#FFFFFF"
+        context.stroke(dotPath)
+        context.fill(dotPath)
     }
 
     private fun drawLineInteractionBound(bound: LineInteractionBound) {
+        context.strokeStyle = "#6b6b6b"
+        context.lineWidth = 2.5
+
+        val dotPath = Path2D()
+        context.beginPath()
         for (point in bound.interactionPoints) {
-            drawDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
+            dotPath.addDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
         }
+        context.strokeStyle = "#64b5f6"
+        context.lineWidth = 2.0
+        context.fillStyle = "#FFFFFF"
+        context.stroke(dotPath)
+        context.fill(dotPath)
     }
 
-    private fun drawDot(xPx: Double, yPx: Double) {
-        val dotSizePx = 6.0
-        context.fillRect(xPx - dotSizePx / 2, yPx - dotSizePx / 2, dotSizePx, dotSizePx)
+    private fun Path2D.addDot(xPx: Double, yPx: Double) {
+        moveTo(xPx, yPx)
+        arc(xPx, yPx, DOT_RADIUS, 0.0, FULL_CIRCLE_ARG)
     }
 
     fun getInteractionPoint(pointPx: Point): InteractionPoint? {
@@ -91,5 +111,10 @@ internal class InteractionCanvasViewController(
         val leftPx = drawingInfo.toXPx(left)
         val topPx = drawingInfo.toYPx(top)
         return abs(leftPx - pointPx.left) < 6 && abs(topPx - pointPx.top) < 6
+    }
+
+    companion object {
+        private const val DOT_RADIUS = 3.2
+        private const val FULL_CIRCLE_ARG = 2 * PI
     }
 }
