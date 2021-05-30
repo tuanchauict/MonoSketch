@@ -28,7 +28,7 @@ internal class BoardCanvasViewController(
     private fun drawPixel(pixel: Pixel, row: Int, column: Int) {
         if (!pixel.isTransparent) {
             context.fillStyle = pixel.highlight.paintColor
-            context.font = if (pixel.char == '|') drawingInfo.boldFont else drawingInfo.font
+            context.font = drawingInfo.font
             drawText(pixel.char.toString(), row, column)
         }
     }

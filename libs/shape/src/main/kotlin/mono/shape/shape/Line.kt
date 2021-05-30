@@ -94,10 +94,11 @@ class Line(
 
     override val bound: Rect
         get() {
-            val left = jointPoints.minOf { it.left }
-            val right = jointPoints.maxOf { it.left }
-            val top = jointPoints.minOf { it.top }
-            val bottom = jointPoints.maxOf { it.top }
+            val points = reducedJoinPoints
+            val left = points.minOf { it.left }
+            val right = points.maxOf { it.left }
+            val top = points.minOf { it.top }
+            val bottom = points.maxOf { it.top }
             return Rect.byLTRB(left, top, right, bottom)
         }
 

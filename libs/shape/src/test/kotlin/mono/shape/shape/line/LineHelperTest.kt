@@ -205,16 +205,6 @@ class LineHelperTest {
         listOf(Point(0, 0), Point(10, 0), Point(10, 10)).let {
             assertEquals(it, LineHelper.reduce(it))
         }
-
-        // Same line but not monotonic: horizontal
-        listOf(Point(0, 0), Point(10, 0), Point(5, 0)).let {
-            assertEquals(it, LineHelper.reduce(it))
-        }
-
-        // Same line but not monotonic: vertical
-        listOf(Point(0, 0), Point(0, 10), Point(0, 5)).let {
-            assertEquals(it, LineHelper.reduce(it))
-        }
     }
 
     @Test
@@ -296,6 +286,20 @@ class LineHelperTest {
                 )
             )
         )
+
+        // Non monotonic
+        assertEquals(
+            listOf(Point(0, 0), Point(10, 0)),
+            LineHelper.reduce(
+                listOf(
+                    Point(0, 0),
+                    Point(0, 5),
+                    Point(0, 5),
+                    Point(0, 0),
+                    Point(10, 0),
+                )
+            )
+        )
     }
 
     @Test
@@ -304,28 +308,32 @@ class LineHelperTest {
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(2, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
         assertFalse(
             LineHelper.isOnStraightLine(
                 Point(2, 0),
                 Point(0, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
         assertFalse(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 2),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
         assertFalse(
             LineHelper.isOnStraightLine(
                 Point(0, 2),
                 Point(0, 0),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
 
@@ -334,42 +342,48 @@ class LineHelperTest {
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(1, 0),
-                Point(2, 0)
+                Point(2, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(2, 0),
                 Point(1, 0),
-                Point(0, 0)
+                Point(0, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(1, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(1, 0),
                 Point(1, 0),
-                Point(0, 0)
+                Point(0, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(1, 0),
                 Point(1, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
 
@@ -378,42 +392,48 @@ class LineHelperTest {
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 1),
-                Point(0, 2)
+                Point(0, 2),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 2),
                 Point(0, 1),
-                Point(0, 0)
+                Point(0, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 0),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 1),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 1),
                 Point(0, 1),
-                Point(0, 0)
+                Point(0, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 1),
                 Point(0, 1),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
     }

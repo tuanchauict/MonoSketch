@@ -26,7 +26,7 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         this.drawingInfo = drawingInfo
         val canvasSizePx = drawingInfo.canvasSizePx
 
-        val dpr = max(window.devicePixelRatio, 1.0)
+        val dpr = max(window.devicePixelRatio, 2.0)
 
         canvas.width = (canvasSizePx.width * dpr).toInt()
         canvas.height = (canvasSizePx.height * dpr).toInt()
