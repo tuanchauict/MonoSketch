@@ -304,28 +304,32 @@ class LineHelperTest {
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(2, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
         assertFalse(
             LineHelper.isOnStraightLine(
                 Point(2, 0),
                 Point(0, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
         assertFalse(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 2),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
         assertFalse(
             LineHelper.isOnStraightLine(
                 Point(0, 2),
                 Point(0, 0),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
 
@@ -334,42 +338,48 @@ class LineHelperTest {
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(1, 0),
-                Point(2, 0)
+                Point(2, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(2, 0),
                 Point(1, 0),
-                Point(0, 0)
+                Point(0, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(1, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(1, 0),
                 Point(1, 0),
-                Point(0, 0)
+                Point(0, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(1, 0),
                 Point(1, 0),
-                Point(1, 0)
+                Point(1, 0),
+                isInOrderedRequired = true
             )
         )
 
@@ -378,42 +388,48 @@ class LineHelperTest {
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 1),
-                Point(0, 2)
+                Point(0, 2),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 2),
                 Point(0, 1),
-                Point(0, 0)
+                Point(0, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 0),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 0),
                 Point(0, 1),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 1),
                 Point(0, 1),
-                Point(0, 0)
+                Point(0, 0),
+                isInOrderedRequired = true
             )
         )
         assertTrue(
             LineHelper.isOnStraightLine(
                 Point(0, 1),
                 Point(0, 1),
-                Point(0, 1)
+                Point(0, 1),
+                isInOrderedRequired = true
             )
         )
     }

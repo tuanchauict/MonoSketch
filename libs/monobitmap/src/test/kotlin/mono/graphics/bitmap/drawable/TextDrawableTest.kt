@@ -21,9 +21,9 @@ class TextDrawableTest {
         assertEquals(
             """
                 |┌─────┐
-                ||01234|
-                ||5678 |
-                ||abc  |
+                |│01234│
+                |│5678 │
+                |│abc  │
                 |└─────┘
             """.trimMargin(),
             bitmap.toString()

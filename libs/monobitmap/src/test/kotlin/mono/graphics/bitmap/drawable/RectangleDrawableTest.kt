@@ -18,9 +18,9 @@ class RectangleDrawableTest {
         assertEquals(
             """
             ┌───┐
-            |   |
-            |   |
-            |   |
+            │   │
+            │   │
+            │   │
             └───┘
             """.trimIndent(),
             bitmap.toString()
