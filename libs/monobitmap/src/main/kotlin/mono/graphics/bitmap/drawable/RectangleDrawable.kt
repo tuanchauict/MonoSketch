@@ -9,7 +9,7 @@ object RectangleDrawable {
     private val REPEATABLE_RANGE = NinePatchDrawable.RepeatableRange.Repeat(1, 1)
     private val PATTERN_TEXT_0 = """
         ┌─┐
-        | |
+        │ │
         └─┘
     """.trimIndent()
 
@@ -34,7 +34,7 @@ object RectangleDrawable {
     )
 
     private val NINE_PATCH_VERTICAL_LINE = NinePatchDrawable(
-        NinePatchDrawable.Pattern.fromText("|"),
+        NinePatchDrawable.Pattern.fromText("│"),
         verticalRepeatableRange = NinePatchDrawable.RepeatableRange.Repeat(0, 0)
     )
 
