@@ -205,16 +205,6 @@ class LineHelperTest {
         listOf(Point(0, 0), Point(10, 0), Point(10, 10)).let {
             assertEquals(it, LineHelper.reduce(it))
         }
-
-        // Same line but not monotonic: horizontal
-        listOf(Point(0, 0), Point(10, 0), Point(5, 0)).let {
-            assertEquals(it, LineHelper.reduce(it))
-        }
-
-        // Same line but not monotonic: vertical
-        listOf(Point(0, 0), Point(0, 10), Point(0, 5)).let {
-            assertEquals(it, LineHelper.reduce(it))
-        }
     }
 
     @Test
@@ -293,6 +283,20 @@ class LineHelperTest {
                     Point(6, 0),
                     Point(8, 0),
                     Point(10, 0)
+                )
+            )
+        )
+        
+        // Non monotonic
+        assertEquals(
+            listOf(Point(0, 0), Point(10, 0)),
+            LineHelper.reduce(
+                listOf(
+                    Point(0, 0),
+                    Point(0, 5),
+                    Point(0, 5),
+                    Point(0, 0),
+                    Point(10, 0),
                 )
             )
         )
