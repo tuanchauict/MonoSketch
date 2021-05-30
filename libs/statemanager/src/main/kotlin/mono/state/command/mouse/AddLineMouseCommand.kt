@@ -5,6 +5,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.add
 import mono.shape.command.MoveLineAnchor
+import mono.shape.remove
 import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
 
@@ -31,12 +32,23 @@ internal class AddLineMouseCommand : MouseCommand {
             }
             is MousePointer.Up -> {
                 environment.changeEndAnchor(mousePointer.point, true)
-                environment.selectedShapeManager.setSelectedShapes(workingShape)
+
+                if (isValidLine()) {
+                    environment.selectedShapeManager.setSelectedShapes(workingShape)
+                } else {
+                    environment.shapeManager.remove(workingShape)
+                    environment.selectedShapeManager.setSelectedShapes()
+                }
                 true
             }
             is MousePointer.Click,
             MousePointer.Idle -> true
         }
+    }
+
+    private fun isValidLine(): Boolean {
+        val line = workingShape ?: return false
+        return line.bound.width * line.bound.height > 1
     }
 
     private fun CommandEnvironment.changeEndAnchor(point: Point, isReducedRequired: Boolean) {
