@@ -72,7 +72,7 @@ internal object LineHelper {
             val p1 = list.getOrNull(list.size - 2)
             val p2 = list.getOrNull(list.size - 1)
             val p3 = points[i]
-            if (p1 == null || p2 == null || !isOnStraightLine(p1, p2, p3)) {
+            if (p1 == null || p2 == null || !isOnStraightLine(p1, p2, p3, false)) {
                 list.add(p3)
             } else {
                 list[list.size - 1] = p3
@@ -82,7 +82,7 @@ internal object LineHelper {
         val p1 = points.first()
         val p2 = list.getOrNull(0)
         val p3 = list.getOrNull(1)
-        if (p2 == null || p3 == null || !isOnStraightLine(p1, p2, p3)) {
+        if (p2 == null || p3 == null || !isOnStraightLine(p1, p2, p3, false)) {
             list.add(0, p1)
         } else {
             list[0] = p1
@@ -94,7 +94,7 @@ internal object LineHelper {
         p1: Point,
         p2: Point,
         p3: Point,
-        isInOrderedRequired: Boolean = true
+        isInOrderedRequired: Boolean
     ): Boolean =
         if (isInOrderedRequired) {
             isEquals(p1.left, p2.left, p3.left) && isMonotonic(p1.top, p2.top, p3.top) ||
