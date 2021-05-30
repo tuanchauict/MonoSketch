@@ -286,7 +286,7 @@ class LineHelperTest {
                 )
             )
         )
-        
+
         // Non monotonic
         assertEquals(
             listOf(Point(0, 0), Point(10, 0)),
