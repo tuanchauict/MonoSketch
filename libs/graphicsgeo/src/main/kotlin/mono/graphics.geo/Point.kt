@@ -40,7 +40,12 @@ data class DirectedPoint(
     operator fun plus(base: Point): DirectedPoint =
         copy(left = left + base.left, top = top + base.top)
 
+    @Serializable
     enum class Direction {
-        HORIZONTAL, VERTICAL
+        @SerialName("H")
+        HORIZONTAL,
+
+        @SerialName("V")
+        VERTICAL
     }
 }

@@ -1,5 +1,6 @@
 package mono.shape.shape
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
@@ -372,7 +373,16 @@ class Line(
     }
 
     @Serializable
-    data class AnchorChar(val left: Char, val right: Char, val top: Char, val bottom: Char) {
+    data class AnchorChar(
+        @SerialName("l")
+        val left: Char,
+        @SerialName("r")
+        val right: Char,
+        @SerialName("t")
+        val top: Char,
+        @SerialName("b")
+        val bottom: Char
+    ) {
         constructor(all: Char) : this(all, all, all, all)
     }
 
