@@ -5,6 +5,7 @@ import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.serialization.SerializableLine
 import mono.shape.shape.line.LineHelper
 
 /**
@@ -104,9 +105,8 @@ class Line(
             return Rect.byLTRB(left, top, right, bottom)
         }
 
-    override fun toSerializableShape(): AbstractSerializableShape {
-        TODO("Not yet implemented")
-    }
+    override fun toSerializableShape(): AbstractSerializableShape =
+        SerializableLine(startPoint, endPoint, jointPoints, anchorCharStart, anchorCharEnd)
 
     override fun setBound(newBound: Rect) {
         val left = jointPoints.minOf { it.left }
