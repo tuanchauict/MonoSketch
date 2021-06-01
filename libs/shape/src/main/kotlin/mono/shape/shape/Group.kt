@@ -5,6 +5,7 @@ import mono.shape.list.QuickList
 import mono.shape.list.QuickList.AddPosition
 import mono.shape.list.QuickList.MoveActionType
 import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.serialization.SerializableGroup
 
 /**
  * A special shape which manages a collection of shapes.
@@ -27,9 +28,8 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
             return Rect.byLTRB(left, top, right, bottom)
         }
 
-    override fun toSerializableShape(): AbstractSerializableShape {
-        TODO("Not yet implemented")
-    }
+    override fun toSerializableShape(): AbstractSerializableShape =
+        SerializableGroup(items.map { it.toSerializableShape() })
 
     internal fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) = update {
         if (shape.parentId != null && shape.parentId != id) {
