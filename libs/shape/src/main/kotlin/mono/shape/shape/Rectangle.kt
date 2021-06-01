@@ -34,6 +34,16 @@ class Rectangle(
         parentId
     )
 
+    internal constructor(
+        serializableRectangle: SerializableRectangle,
+        parentId: Int? = null
+    ) : this(
+        serializableRectangle.bound,
+        parentId
+    ) {
+        extra = serializableRectangle.extra
+    }
+
     override fun toSerializableShape(): AbstractSerializableShape =
         SerializableRectangle(bound, extra)
 
