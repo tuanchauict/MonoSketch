@@ -4,6 +4,7 @@ import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 import mono.shape.list.QuickList.AddPosition
 import mono.shape.list.QuickList.MoveActionType
+import mono.shape.serialization.AbstractSerializableShape
 
 /**
  * A special shape which manages a collection of shapes.
@@ -25,6 +26,10 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
             val bottom = quickList.maxOf { it.bound.bottom }
             return Rect.byLTRB(left, top, right, bottom)
         }
+
+    override fun toSerializableShape(): AbstractSerializableShape {
+        TODO("Not yet implemented")
+    }
 
     internal fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) = update {
         if (shape.parentId != null && shape.parentId != id) {

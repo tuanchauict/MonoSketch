@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.shape.line.LineHelper
 
 /**
@@ -102,6 +103,10 @@ class Line(
             val bottom = points.maxOf { it.top }
             return Rect.byLTRB(left, top, right, bottom)
         }
+
+    override fun toSerializableShape(): AbstractSerializableShape {
+        TODO("Not yet implemented")
+    }
 
     override fun setBound(newBound: Rect) {
         val left = jointPoints.minOf { it.left }

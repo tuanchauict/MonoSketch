@@ -3,6 +3,7 @@ package mono.shape.shape
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
+import mono.shape.serialization.AbstractSerializableShape
 
 /**
  * An abstract class which is used for defining all kinds of shape which are supported by the app.
@@ -25,6 +26,8 @@ sealed class AbstractShape(
      * Extra information which is specific to each shape.
      */
     open val extra: Any = Unit
+
+    internal abstract fun toSerializableShape(): AbstractSerializableShape
 
     open fun setBound(newBound: Rect) = Unit
 

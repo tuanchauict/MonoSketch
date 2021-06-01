@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.serialization.AbstractSerializableShape
 
 /**
  * A rectangle shape.
@@ -31,6 +32,10 @@ class Rectangle(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
         parentId
     )
+
+    override fun toSerializableShape(): AbstractSerializableShape {
+        TODO("Not yet implemented")
+    }
 
     override fun setBound(newBound: Rect) {
         bound = newBound

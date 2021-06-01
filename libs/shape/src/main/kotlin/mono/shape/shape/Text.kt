@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
+import mono.shape.serialization.AbstractSerializableShape
 import kotlin.math.max
 
 /**
@@ -38,6 +39,10 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     init {
         userSettingSize = rect.size
         updateRenderableText()
+    }
+
+    override fun toSerializableShape(): AbstractSerializableShape {
+        TODO("Not yet implemented")
     }
 
     override fun setBound(newBound: Rect) = update {
