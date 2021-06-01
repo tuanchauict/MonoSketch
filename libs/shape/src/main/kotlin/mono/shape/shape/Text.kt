@@ -32,10 +32,18 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     var renderableText: RenderableText = RenderableText.EMPTY
         private set
 
-    constructor(startPoint: Point, endPoint: Point, parentId: Int?) : this(
+    constructor(startPoint: Point, endPoint: Point, parentId: Int? = null) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
         parentId
     )
+
+    internal constructor(serializableText: SerializableText, parentId: Int?) : this(
+        serializableText.bound,
+        parentId
+    ) {
+        extra = serializableText.extra
+        setText(serializableText.text)
+    }
 
     init {
         userSettingSize = rect.size
