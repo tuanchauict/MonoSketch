@@ -4,14 +4,13 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://dl.bintray.com/kotlin/kotlinx") }
 }
 
 dependencies {
     implementation(project(":commons"))
     implementation(project(":graphicsgeo"))
-    implementation(project(":shape"))
     implementation(project(":monobitmap"))
+    implementation(project(":shape"))
 
     testImplementation(kotlin("test-js"))
 }

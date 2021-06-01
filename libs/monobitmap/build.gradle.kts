@@ -5,13 +5,13 @@ plugins {
 repositories {
     jcenter()
     mavenCentral()
-    maven { url = uri("https://dl.bintray.com/kotlin/kotlinx") }
 }
 
 dependencies {
     implementation(project(":commons"))
     implementation(project(":graphicsgeo"))
     implementation(project(":shape"))
+
     implementation(kotlin("stdlib-js"))
 
     testImplementation(kotlin("test-js"))
