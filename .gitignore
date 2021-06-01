@@ -245,3 +245,5 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 
+.idea/saveactions_settings.xml
+.idea/libraries-with-intellij-classes.xml
