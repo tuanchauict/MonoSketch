@@ -1,6 +1,15 @@
 package mono.graphics.geo
 
-data class Point(val left: Int, val top: Int) {
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Point(
+    @SerialName("l")
+    val left: Int,
+    @SerialName("t")
+    val top: Int
+) {
     val row: Int get() = top
     val column: Int get() = left
 
@@ -14,8 +23,15 @@ data class Point(val left: Int, val top: Int) {
     }
 }
 
-data class DirectedPoint(val direction: Direction, val left: Int, val top: Int) {
-
+@Serializable
+data class DirectedPoint(
+    @SerialName("d")
+    val direction: Direction,
+    @SerialName("l")
+    val left: Int,
+    @SerialName("t")
+    val top: Int
+) {
     val point: Point
         get() = Point(left, top)
 
