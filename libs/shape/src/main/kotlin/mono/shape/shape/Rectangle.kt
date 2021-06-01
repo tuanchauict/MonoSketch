@@ -1,5 +1,7 @@
 package mono.shape.shape
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 
@@ -39,7 +41,11 @@ class Rectangle(
     /**
      * A data class which contains extra information of a rectangle.
      */
-    data class Extra(val fillStyle: FillStyle) {
+    @Serializable
+    data class Extra(
+        @SerialName("sf")
+        val fillStyle: FillStyle
+    ) {
 
         data class Updater(val fillStyle: FillStyle? = null) : ExtraUpdater {
             fun combine(extra: Extra?): Extra =
@@ -53,8 +59,12 @@ class Rectangle(
         }
     }
 
+    @Serializable
     enum class FillStyle {
+        @SerialName("s0f")
         STYLE_0_FILL,
+
+        @SerialName("s0b")
         STYLE_0_BORDER
     }
 }

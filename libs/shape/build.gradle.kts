@@ -1,5 +1,6 @@
 plugins {
     kotlin("js")
+    kotlin("plugin.serialization")
 }
 
 repositories {
@@ -9,6 +10,8 @@ repositories {
 dependencies {
     implementation(project(":graphicsgeo"))
     implementation(project(":livedata"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 
     testImplementation(kotlin("test-js"))
 }

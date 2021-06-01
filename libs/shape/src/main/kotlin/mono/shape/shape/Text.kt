@@ -1,5 +1,7 @@
 package mono.shape.shape
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -87,7 +89,9 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         return textBoundWidth >= 1 && textBoundHeight >= 1
     }
 
+    @Serializable
     data class Extra(
+        @SerialName("be")
         val boundExtra: Rectangle.Extra?
     ) {
         /**
