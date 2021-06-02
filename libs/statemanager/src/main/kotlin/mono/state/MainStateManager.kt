@@ -19,11 +19,8 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
-import mono.shape.add
-import mono.shape.command.ChangeText
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
-import mono.shape.shape.Text
 import mono.shapebound.InteractionPoint
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
@@ -112,26 +109,6 @@ class MainStateManager(
                     selectedShapeManager.moveSelectedShape(0, 1)
             }
         }
-
-        addDemoShape()
-    }
-
-    private fun addDemoShape() {
-        // TODO: This is for testing
-        val commandText =
-            """
-                Keyboard Command   | Function
-                -------------------|----------------------------
-                R                  | Draw rectangle
-                T                  | Draw text
-                L                  | Draw line
-                DELETE             | Remove selected shape(s)
-                ESC                | Deselect, enter select mode
-                UP/DOWN/LEFT/RIGHT | Move selected shape(s)
-            """.trimIndent()
-        val textShape = Text(Rect.byLTWH(1, 1, 51, 10))
-        shapeManager.add(textShape)
-        shapeManager.execute(ChangeText(textShape, commandText))
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
