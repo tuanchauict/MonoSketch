@@ -27,7 +27,7 @@ sealed class AbstractShape(
      */
     open val extra: Any = Unit
 
-    internal abstract fun toSerializableShape(): AbstractSerializableShape
+    abstract fun toSerializableShape(): AbstractSerializableShape
 
     open fun setBound(newBound: Rect) = Unit
 

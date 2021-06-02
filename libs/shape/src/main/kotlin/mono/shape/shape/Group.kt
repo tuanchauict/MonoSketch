@@ -31,7 +31,7 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
             return Rect.byLTRB(left, top, right, bottom)
         }
 
-    internal constructor(serializableGroup: SerializableGroup, parentId: Int?) : this(parentId) {
+    constructor(serializableGroup: SerializableGroup, parentId: Int?) : this(parentId) {
         for (serializableShape in serializableGroup.shapes) {
             val shape = when (serializableShape) {
                 is SerializableRectangle -> Rectangle(serializableShape, id)
