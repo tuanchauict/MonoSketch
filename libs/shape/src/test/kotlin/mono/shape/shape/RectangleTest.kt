@@ -41,7 +41,6 @@ internal class RectangleTest {
         assertEquals(PARENT_ID, rectangle2.parentId)
     }
 
-
     companion object {
         private const val PARENT_ID = 1
     }
