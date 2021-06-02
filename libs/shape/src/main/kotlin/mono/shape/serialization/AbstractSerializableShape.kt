@@ -10,11 +10,11 @@ import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 
 @Serializable
-internal sealed class AbstractSerializableShape
+sealed class AbstractSerializableShape
 
 @Serializable
 @SerialName("R")
-internal data class SerializableRectangle(
+data class SerializableRectangle(
     @SerialName("b")
     val bound: Rect,
     @SerialName("e")
@@ -23,7 +23,7 @@ internal data class SerializableRectangle(
 
 @Serializable
 @SerialName("T")
-internal data class SerializableText(
+data class SerializableText(
     @SerialName("b")
     val bound: Rect,
     @SerialName("t")
@@ -34,22 +34,24 @@ internal data class SerializableText(
 
 @Serializable
 @SerialName("L")
-internal data class SerializableLine(
-    @SerialName("sp")
-    val startPoint: DirectedPoint,
-    @SerialName("ep")
-    val endPoint: DirectedPoint,
+data class SerializableLine(
     @SerialName("ps")
+    val startPoint: DirectedPoint,
+    @SerialName("pe")
+    val endPoint: DirectedPoint,
+    @SerialName("jps")
     val jointPoints: List<Point>,
-    @SerialName("sc")
+    @SerialName("cs")
     val anchorCharStart: Line.AnchorChar,
-    @SerialName("ec")
-    val anchorCharEnd: Line.AnchorChar
+    @SerialName("ce")
+    val anchorCharEnd: Line.AnchorChar,
+    @SerialName("em")
+    val wasMovingEdge: Boolean
 ) : AbstractSerializableShape()
 
 @Serializable
 @SerialName("G")
-internal data class SerializableGroup(
+data class SerializableGroup(
     @SerialName("ss")
     val shapes: List<AbstractSerializableShape>
 ) : AbstractSerializableShape()
