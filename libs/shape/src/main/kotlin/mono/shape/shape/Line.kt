@@ -106,8 +106,30 @@ class Line(
             return Rect.byLTRB(left, top, right, bottom)
         }
 
+    internal constructor(serializableLine: SerializableLine, parentId: Int) : this(
+        serializableLine.startPoint,
+        serializableLine.endPoint,
+        parentId
+    ) {
+        jointPoints = serializableLine.jointPoints
+        if (serializableLine.wasMovingEdge) {
+            confirmedJointPoints = jointPoints
+        }
+        edges = LineHelper.createEdges(jointPoints)
+
+        anchorCharStart = serializableLine.anchorCharStart
+        anchorCharEnd = serializableLine.anchorCharEnd
+    }
+
     override fun toSerializableShape(): AbstractSerializableShape =
-        SerializableLine(startPoint, endPoint, jointPoints, anchorCharStart, anchorCharEnd)
+        SerializableLine(
+            startPoint,
+            endPoint,
+            jointPoints,
+            anchorCharStart,
+            anchorCharEnd,
+            wasMovingEdge()
+        )
 
     override fun setBound(newBound: Rect) {
         val left = jointPoints.minOf { it.left }
@@ -331,6 +353,8 @@ class Line(
         Anchor.START -> startPoint.direction
         Anchor.END -> endPoint.direction
     }
+
+    fun wasMovingEdge(): Boolean = confirmedJointPoints.isNotEmpty()
 
     override fun contains(point: Point): Boolean = edges.any { it.contains(point) }
 
