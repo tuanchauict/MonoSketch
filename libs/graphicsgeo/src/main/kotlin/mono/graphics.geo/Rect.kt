@@ -1,18 +1,41 @@
 package mono.graphics.geo
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-data class Rect(val position: Point, val size: Size) {
+@Serializable
+data class Rect(
+    @SerialName("p")
+    val position: Point,
+    @SerialName("s")
+    val size: Size
+) {
+    @Transient
     val width: Int = size.width
+
+    @Transient
     val height: Int = size.height
+
+    @Transient
     val left: Int = position.left
+
+    @Transient
     val right: Int = position.left + width - 1
+
+    @Transient
     val top: Int = position.top
+
+    @Transient
     val bottom: Int = position.top + height - 1
 
+    @Transient
     private val validHorizontalRange = left..right
+
+    @Transient
     private val validVerticalRange = top..bottom
 
     operator fun contains(point: Point): Boolean =

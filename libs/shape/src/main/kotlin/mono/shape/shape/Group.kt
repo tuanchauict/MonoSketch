@@ -4,6 +4,11 @@ import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 import mono.shape.list.QuickList.AddPosition
 import mono.shape.list.QuickList.MoveActionType
+import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.serialization.SerializableGroup
+import mono.shape.serialization.SerializableLine
+import mono.shape.serialization.SerializableRectangle
+import mono.shape.serialization.SerializableText
 
 /**
  * A special shape which manages a collection of shapes.
@@ -25,6 +30,21 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
             val bottom = quickList.maxOf { it.bound.bottom }
             return Rect.byLTRB(left, top, right, bottom)
         }
+
+    constructor(serializableGroup: SerializableGroup, parentId: Int?) : this(parentId) {
+        for (serializableShape in serializableGroup.shapes) {
+            val shape = when (serializableShape) {
+                is SerializableRectangle -> Rectangle(serializableShape, id)
+                is SerializableText -> Text(serializableShape, id)
+                is SerializableLine -> Line(serializableShape, id)
+                is SerializableGroup -> Group(serializableShape, id)
+            }
+            add(shape)
+        }
+    }
+
+    override fun toSerializableShape(): AbstractSerializableShape =
+        SerializableGroup(items.map { it.toSerializableShape() })
 
     internal fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) = update {
         if (shape.parentId != null && shape.parentId != id) {

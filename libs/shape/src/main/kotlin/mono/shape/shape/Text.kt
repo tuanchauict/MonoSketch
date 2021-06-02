@@ -1,8 +1,12 @@
 package mono.shape.shape
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
+import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.serialization.SerializableText
 import kotlin.math.max
 
 /**
@@ -28,15 +32,26 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     var renderableText: RenderableText = RenderableText.EMPTY
         private set
 
-    constructor(startPoint: Point, endPoint: Point, parentId: Int?) : this(
+    constructor(startPoint: Point, endPoint: Point, parentId: Int? = null) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
         parentId
     )
+
+    internal constructor(serializableText: SerializableText, parentId: Int?) : this(
+        serializableText.bound,
+        parentId
+    ) {
+        extra = serializableText.extra
+        setText(serializableText.text)
+    }
 
     init {
         userSettingSize = rect.size
         updateRenderableText()
     }
+
+    override fun toSerializableShape(): AbstractSerializableShape =
+        SerializableText(bound, text, extra)
 
     override fun setBound(newBound: Rect) = update {
         val isUpdated = bound != newBound
@@ -87,7 +102,9 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
         return textBoundWidth >= 1 && textBoundHeight >= 1
     }
 
+    @Serializable
     data class Extra(
+        @SerialName("be")
         val boundExtra: Rectangle.Extra?
     ) {
         /**

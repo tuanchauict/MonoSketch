@@ -14,8 +14,9 @@ import mono.shape.shape.Group
  * A model class which contains all shapes of the app and also defines all shape handling logics.
  */
 class ShapeManager {
-    val root: Group = Group(null)
-    private val allShapeMap: MutableMap<Int, AbstractShape> = mutableMapOf(root.id to root)
+    var root: Group = Group(null)
+        private set
+    private var allShapeMap: MutableMap<Int, AbstractShape> = mutableMapOf(root.id to root)
 
     /**
      * Reflect the version of the root through live data. The other components are able to observe
@@ -23,6 +24,40 @@ class ShapeManager {
      */
     private val versionMutableLiveData: MutableLiveData<Int> = MutableLiveData(root.version)
     val versionLiveData: LiveData<Int> = versionMutableLiveData
+
+    init {
+        replaceRoot(root)
+    }
+
+    /**
+     * Replace [root] with [newRoot].
+     * This also wipe current stored shapes with shapes in new root.
+     */
+    fun replaceRoot(newRoot: Group) {
+        val currentVersion = root.version
+        root = newRoot
+
+        allShapeMap = createAllShapeMap(newRoot)
+
+        versionMutableLiveData.value =
+            if (currentVersion == newRoot.version) currentVersion - 1 else newRoot.version
+    }
+
+    private fun createAllShapeMap(group: Group): MutableMap<Int, AbstractShape> {
+        val map: MutableMap<Int, AbstractShape> = mutableMapOf()
+        map[group.id] = group
+        createAllShapeMapRecursive(group, map)
+        return map
+    }
+
+    private fun createAllShapeMapRecursive(group: Group, map: MutableMap<Int, AbstractShape>) {
+        for (shape in group.items) {
+            map[shape.id] = shape
+            if (shape is Group) {
+                createAllShapeMapRecursive(group, map)
+            }
+        }
+    }
 
     fun execute(command: Command) {
         val affectedParent = command.getDirectAffectedParent(this) ?: return

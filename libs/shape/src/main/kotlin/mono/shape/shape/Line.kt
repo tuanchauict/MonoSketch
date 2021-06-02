@@ -1,8 +1,12 @@
 package mono.shape.shape
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.serialization.SerializableLine
 import mono.shape.shape.line.LineHelper
 
 /**
@@ -101,6 +105,31 @@ class Line(
             val bottom = points.maxOf { it.top }
             return Rect.byLTRB(left, top, right, bottom)
         }
+
+    internal constructor(serializableLine: SerializableLine, parentId: Int) : this(
+        serializableLine.startPoint,
+        serializableLine.endPoint,
+        parentId
+    ) {
+        jointPoints = serializableLine.jointPoints
+        if (serializableLine.wasMovingEdge) {
+            confirmedJointPoints = jointPoints
+        }
+        edges = LineHelper.createEdges(jointPoints)
+
+        anchorCharStart = serializableLine.anchorCharStart
+        anchorCharEnd = serializableLine.anchorCharEnd
+    }
+
+    override fun toSerializableShape(): AbstractSerializableShape =
+        SerializableLine(
+            startPoint,
+            endPoint,
+            jointPoints,
+            anchorCharStart,
+            anchorCharEnd,
+            wasMovingEdge()
+        )
 
     override fun setBound(newBound: Rect) {
         val left = jointPoints.minOf { it.left }
@@ -325,6 +354,8 @@ class Line(
         Anchor.END -> endPoint.direction
     }
 
+    fun wasMovingEdge(): Boolean = confirmedJointPoints.isNotEmpty()
+
     override fun contains(point: Point): Boolean = edges.any { it.contains(point) }
 
     data class Edge internal constructor(
@@ -365,7 +396,17 @@ class Line(
         START, END
     }
 
-    data class AnchorChar(val left: Char, val right: Char, val top: Char, val bottom: Char) {
+    @Serializable
+    data class AnchorChar(
+        @SerialName("l")
+        val left: Char,
+        @SerialName("r")
+        val right: Char,
+        @SerialName("t")
+        val top: Char,
+        @SerialName("b")
+        val bottom: Char
+    ) {
         constructor(all: Char) : this(all, all, all, all)
     }
 

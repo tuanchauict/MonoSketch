@@ -8,6 +8,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":commons"))
     implementation(project(":htmlcanvas"))
     implementation(project(":keycommand"))
     implementation(project(":lifecycle"))
@@ -17,6 +18,8 @@ dependencies {
     implementation(project(":graphicsgeo"))
     implementation(project(":livedata"))
     implementation(project(":statemanager"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 
     testImplementation(kotlin("test-js"))
 }
