@@ -35,14 +35,21 @@ body {
     font-weight: 600;
 }
 
-#toolbar {
-    margin: 0px 20px;
+.toolbar {
     height: 100%;
-    width: 100%;
     display: flex;
     -webkit-box-align: center;
     align-items: center;
     justify-content: center;
+}
+
+#middle-toolbar {
+    margin: 0px 20px;
+    width: 100%;
+}
+
+.toolbar.right {
+    margin: 0px 20px;
 }
 
 #monoboard-canvas-container {
@@ -69,7 +76,16 @@ body {
     font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
 }
 
-.btn-group.btn-group-sm>.btn, .btn-sm {
-    padding: 0.05rem 0.5rem;
-    width: 56px;
+.btn-group.btn-group-sm>.btn.toolbar-btn, .btn.toolbar-btn {
+    padding: 0.15rem 0.5rem;
+    height: 31px;
+}
+
+.btn.toolbar-btn.btn-outline-primary:active {
+    border-color: #003c8f;
+    background-color: #003c8f;
+}
+
+ul.dropdown-menu a.dropdown-item {
+    cursor: pointer;
 }

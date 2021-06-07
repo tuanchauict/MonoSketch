@@ -1,5 +1,6 @@
 package mono.state
 
+import kotlinx.browser.document
 import kotlinx.html.currentTimeMillis
 import mono.common.nullToFalse
 import mono.graphics.bitmap.MonoBitmapManager
@@ -26,6 +27,7 @@ import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
+import org.w3c.dom.HTMLDivElement
 
 /**
  * A class which is connect components in the app.
@@ -63,7 +65,11 @@ class MainStateManager(
 
     init {
         // TODO: This should be call in application class
-        ToolbarViewController(lifecycleOwner, actionManager)
+        ToolbarViewController(
+            lifecycleOwner,
+            document.getElementById("header-layout") as HTMLDivElement,
+            actionManager
+        )
 
         mousePointerLiveData
             .distinctUntilChange()

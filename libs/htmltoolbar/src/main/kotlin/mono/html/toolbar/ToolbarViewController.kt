@@ -1,7 +1,9 @@
 package mono.html.toolbar
 
 import kotlinx.browser.document
+import kotlinx.html.dom.append
 import mono.lifecycle.LifecycleOwner
+import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLInputElement
 
 /**
@@ -9,6 +11,7 @@ import org.w3c.dom.HTMLInputElement
  */
 class ToolbarViewController(
     lifecycleOwner: LifecycleOwner,
+    toolbarContainer: HTMLDivElement,
     private val actionManager: ActionManager
 ) {
     init {
@@ -21,6 +24,10 @@ class ToolbarViewController(
 
         actionManager.retainableActionLiveData.observe(lifecycleOwner) {
             actionToInputMap[it]?.checked = true
+        }
+
+        toolbarContainer.append {
+            RightToolbar { TODO("Export selected shapes") }
         }
     }
 

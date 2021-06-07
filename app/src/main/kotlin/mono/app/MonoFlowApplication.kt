@@ -10,6 +10,7 @@ import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
+import mono.html.ui.toolbar.RightToolbarView
 import mono.keycommand.KeyCommandController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.distinctUntilChange
@@ -46,6 +47,7 @@ class MonoFlowApplication : LifecycleOwner() {
      */
     override fun onStartInternal() {
         val body = document.body ?: return
+
         val boardCanvasContainer =
             document.getElementById(CONTAINER_ID) as? HTMLDivElement ?: return
 
@@ -66,7 +68,7 @@ class MonoFlowApplication : LifecycleOwner() {
             keyCommandController.keyCommandLiveData,
             canvasViewController.mousePointerLiveData
         )
-
+        
         onResize()
     }
 
