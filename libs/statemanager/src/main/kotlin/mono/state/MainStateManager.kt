@@ -67,7 +67,7 @@ class MainStateManager(
         // TODO: This should be call in application class
         ToolbarViewController(
             lifecycleOwner,
-            document.getElementById("header-layout") as HTMLDivElement,
+            document.getElementById("header-toolbar") as HTMLDivElement,
             actionManager
         )
 
