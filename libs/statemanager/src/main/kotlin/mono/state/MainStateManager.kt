@@ -2,6 +2,7 @@ package mono.state
 
 import kotlinx.browser.document
 import kotlinx.html.currentTimeMillis
+import mono.common.exhaustive
 import mono.common.nullToFalse
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
@@ -99,12 +100,16 @@ class MainStateManager(
         actionManager.oneTimeActionLiveData.observe(lifecycleOwner) {
             when (it) {
                 OneTimeActionType.IDLE -> Unit
+
+                OneTimeActionType.EXPORT_SELECTED_SHAPES -> TODO("Show dialog with extracted text")
+
                 OneTimeActionType.DESELECT_SHAPES ->
                     selectedShapeManager.setSelectedShapes()
                 OneTimeActionType.DELETE_SELECTED_SHAPES ->
                     selectedShapeManager.deleteSelectedShapes()
                 OneTimeActionType.EDIT_SELECTED_SHAPES ->
                     selectedShapeManager.editSelectedShapes()
+
                 OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN ->
                     selectedShapeManager.moveSelectedShape(1, 0)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_UP ->
@@ -113,7 +118,7 @@ class MainStateManager(
                     selectedShapeManager.moveSelectedShape(0, -1)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT ->
                     selectedShapeManager.moveSelectedShape(0, 1)
-            }
+            }.exhaustive
         }
     }
 

@@ -60,7 +60,7 @@ class ActionManager(
         retainableActionMutableLiveData.value = actionType
     }
 
-    private fun setOneTimeAction(actionType: OneTimeActionType) {
+    fun setOneTimeAction(actionType: OneTimeActionType) {
         oneTimeActionMutableLiveData.value = actionType
         oneTimeActionMutableLiveData.value = OneTimeActionType.IDLE
     }

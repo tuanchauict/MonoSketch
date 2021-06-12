@@ -19,7 +19,9 @@ class ToolbarViewController(
                 actionManager.retainableActionLiveData,
                 actionManager::setRetainableAction
             )
-            RightToolbar { TODO("Export selected shapes") }
+            RightToolbar {
+                actionManager.setOneTimeAction(OneTimeActionType.EXPORT_SELECTED_SHAPES)
+            }
         }
     }
 }
