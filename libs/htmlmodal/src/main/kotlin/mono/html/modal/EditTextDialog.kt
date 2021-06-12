@@ -2,16 +2,14 @@ package mono.html.modal
 
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.html.TagConsumer
 import kotlinx.html.contentEditable
 import kotlinx.html.div
-import kotlinx.html.dom.append
 import kotlinx.html.style
 import mono.common.Key
-import mono.common.getOnlyElementByClassName
 import mono.common.isCommandKeySupported
 import mono.common.onKeyDown
 import mono.common.setTimeout
-import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.KeyboardEvent
 
@@ -26,17 +24,18 @@ class EditTextDialog(
     override val contentPosition: ModalPosition =
         ModalPosition(ModalPosition.Horizontal.MIDDLE, ModalPosition.Vertical.TOP)
 
-    override fun initContent(parent: HTMLElement) {
-        parent.append {
-            div(TEXT_AREA_CONTAINER_CSS_CLASS) {
-                div("$TEXT_AREA_CSS_CLASS $classes") {
-                    contentEditable = true
-                    style = "width: 500px; min-height: 60px; max-height: 100px"
-                }
-            }
+    override fun TagConsumer<HTMLElement>.initContent() {
+        div(TEXT_AREA_CONTAINER_CSS_CLASS) {
+            initTextArea()
         }
-        val textArea =
-            parent.getOnlyElementByClassName<HTMLDivElement>(TEXT_AREA_CSS_CLASS) ?: return
+    }
+    
+    private fun TagConsumer<HTMLElement>.initTextArea() {
+        val textArea = div("$TEXT_AREA_CSS_CLASS $classes") {
+            contentEditable = true
+            style = "width: 500px; min-height: 60px; max-height: 160px;"
+        }
+
         textArea.oninput = {
             onTextChange(textArea.innerText)
         }

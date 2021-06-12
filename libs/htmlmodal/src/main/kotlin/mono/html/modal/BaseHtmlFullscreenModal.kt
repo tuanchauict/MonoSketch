@@ -1,12 +1,11 @@
 package mono.html.modal
 
 import kotlinx.browser.document
+import kotlinx.html.TagConsumer
 import kotlinx.html.dom.append
-import kotlinx.html.id
 import kotlinx.html.js.div
+import kotlinx.html.js.onClickFunction
 import kotlinx.html.style
-import mono.common.getOnlyElementByClassName
-import mono.common.onClick
 import mono.lifecycle.LifecycleOwner
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -31,34 +30,33 @@ abstract class BaseHtmlFullscreenModal(
 
     fun show() {
         val body = modalContainer ?: document.body ?: return
-        val rootId = generateUniqueModalId()
         body.append {
-            div {
-                id = rootId
+            root = div {
                 style = "background-color: $backgroundRGBAColor; $STYLE_POSITION"
 
-                div(MAIN_CONTAINER_CSS_CLASS) {
+                div {
                     style = "${contentPosition.toStyle()};"
-                    div(PARENT_CONTAINER_CSS_CLASS) {}
+                    div {
+                        initContent()
+                    }
+
+                    onClickFunction = {
+                        it.stopPropagation()
+                    }
+                }
+
+                onClickFunction = {
+                    if (isCancelable) {
+                        dismiss()
+                    }
                 }
             }
         }
-        val rootDiv = document.getElementById(rootId) as? HTMLDivElement ?: return
-        root = rootDiv
 
-        rootDiv.getOnlyElementByClassName<HTMLDivElement>(PARENT_CONTAINER_CSS_CLASS)
-            ?.let(::initContent)
-
-        rootDiv.getOnlyElementByClassName<HTMLDivElement>(MAIN_CONTAINER_CSS_CLASS)?.onClick { }
-        rootDiv.onClick {
-            if (isCancelable) {
-                dismiss()
-            }
-        }
         onStart()
     }
 
-    protected abstract fun initContent(parent: HTMLElement)
+    protected abstract fun TagConsumer<HTMLElement>.initContent()
 
     fun dismiss() {
         onStop()
@@ -103,14 +101,5 @@ abstract class BaseHtmlFullscreenModal(
     companion object {
         private const val STYLE_POSITION =
             "position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 1000"
-        private const val MAIN_CONTAINER_CSS_CLASS = "modal-main-container"
-        private const val PARENT_CONTAINER_CSS_CLASS = "modal-parent-container"
-
-        private var NEXT_MODAL_ID = 0
-        private fun generateUniqueModalId(): String {
-            val id = NEXT_MODAL_ID
-            NEXT_MODAL_ID += 1
-            return "html-modal-id-$id"
-        }
     }
 }
