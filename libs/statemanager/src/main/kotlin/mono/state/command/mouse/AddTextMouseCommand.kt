@@ -42,6 +42,8 @@ internal class AddTextMouseCommand : MouseCommand {
                 onMouseUp(environment, mousePointer)
                 true
             }
+
+            is MousePointer.Move,
             is MousePointer.Click,
             MousePointer.Idle -> true
         }

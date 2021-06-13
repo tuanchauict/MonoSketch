@@ -58,6 +58,8 @@ internal class MouseEventObserver(
                 MousePointer.Up(currentValue.point, clickPoint, event.shiftKey)
             is MousePointer.Drag ->
                 MousePointer.Up(currentValue.mouseDownPoint, clickPoint, event.shiftKey)
+
+            is MousePointer.Move,
             is MousePointer.Up,
             is MousePointer.Click,
             MousePointer.Idle -> MousePointer.Idle
@@ -73,11 +75,14 @@ internal class MouseEventObserver(
             is MousePointer.Down ->
                 MousePointer.Drag(mousePointer.point, event.toPoint(), event.shiftKey)
                     .takeIf { it.point != mousePointer.point }
+
             is MousePointer.Drag ->
                 MousePointer.Drag(mousePointer.mouseDownPoint, event.toPoint(), event.shiftKey)
+
+            is MousePointer.Move,
             is MousePointer.Up,
             is MousePointer.Click,
-            MousePointer.Idle -> MousePointer.Idle
+            MousePointer.Idle -> MousePointer.Move(event.toPoint(), event.toPointPx())
         } ?: return
         mousePointerMutableLiveData.value = newPointer
     }

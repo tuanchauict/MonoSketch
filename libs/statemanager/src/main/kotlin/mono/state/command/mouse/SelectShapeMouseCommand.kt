@@ -7,7 +7,7 @@ import mono.state.command.CommandEnvironment
 /**
  * A [MouseCommand] to select shapes.
  */
-internal class SelectShapeMouseCommand : MouseCommand {
+internal object SelectShapeMouseCommand : MouseCommand {
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
         when (mousePointer) {
             is MousePointer.Down -> false
@@ -57,6 +57,7 @@ internal class SelectShapeMouseCommand : MouseCommand {
                 }
                 true
             }
+            is MousePointer.Move,
             MousePointer.Idle -> true
         }
 }

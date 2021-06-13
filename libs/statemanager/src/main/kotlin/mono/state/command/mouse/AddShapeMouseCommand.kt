@@ -41,6 +41,8 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
                 workingShape = null
                 true
             }
+            
+            is MousePointer.Move,
             is MousePointer.Click,
             MousePointer.Idle -> true
         }

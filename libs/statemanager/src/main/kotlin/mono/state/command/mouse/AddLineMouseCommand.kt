@@ -12,8 +12,8 @@ import mono.state.command.CommandEnvironment
 internal class AddLineMouseCommand : MouseCommand {
     private var workingShape: Line? = null
 
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
-        return when (mousePointer) {
+    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
+        when (mousePointer) {
             is MousePointer.Down -> {
                 // TODO: Detect direction based on the environment
                 val shape = Line(
@@ -41,10 +41,11 @@ internal class AddLineMouseCommand : MouseCommand {
                 }
                 true
             }
+
+            is MousePointer.Move,
             is MousePointer.Click,
             MousePointer.Idle -> true
         }
-    }
 
     private fun isValidLine(): Boolean {
         val line = workingShape ?: return false

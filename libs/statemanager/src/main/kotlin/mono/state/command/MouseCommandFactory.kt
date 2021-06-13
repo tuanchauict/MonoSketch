@@ -35,7 +35,7 @@ internal object MouseCommandFactory {
                 AddShapeMouseCommand(ShapeFactory.RectangleFactory)
             RetainableActionType.ADD_TEXT -> AddTextMouseCommand()
             RetainableActionType.ADD_LINE -> AddLineMouseCommand()
-            RetainableActionType.IDLE -> SelectShapeMouseCommand()
+            RetainableActionType.IDLE -> SelectShapeMouseCommand
         }
     }
 

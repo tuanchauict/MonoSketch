@@ -10,7 +10,7 @@ import mono.state.command.CommandEnvironment
  * A [MouseCommand] for moving selected shapes.
  */
 internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : MouseCommand {
-    private val initialPositions = shapes.map { it.id to it.bound.position }.toMap()
+    private val initialPositions = shapes.associate { it.id to it.bound.position }
 
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
         val offset = when (mousePointer) {
@@ -18,6 +18,7 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
             is MousePointer.Up -> mousePointer.point - mousePointer.mouseDownPoint
             is MousePointer.Down,
             is MousePointer.Click,
+            is MousePointer.Move,
             MousePointer.Idle -> Point.ZERO
         }
 
