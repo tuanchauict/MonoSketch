@@ -12,7 +12,7 @@ sealed class MousePointer {
         val isWithShiftKey: Boolean
     ) : MousePointer()
 
-    data class Move(
+    data class Drag(
         val mouseDownPoint: Point,
         val point: Point,
         val isWithShiftKey: Boolean

@@ -26,7 +26,7 @@ internal class AddLineMouseCommand : MouseCommand {
                 environment.selectedShapeManager.setSelectedShapes()
                 false
             }
-            is MousePointer.Move -> {
+            is MousePointer.Drag -> {
                 environment.changeEndAnchor(mousePointer.point, false)
                 false
             }

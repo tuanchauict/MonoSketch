@@ -11,7 +11,7 @@ internal class SelectShapeMouseCommand : MouseCommand {
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
         when (mousePointer) {
             is MousePointer.Down -> false
-            is MousePointer.Move -> {
+            is MousePointer.Drag -> {
                 environment.selectedShapeManager.setSelectionBound(
                     Rect.byLTRB(
                         mousePointer.mouseDownPoint.left,

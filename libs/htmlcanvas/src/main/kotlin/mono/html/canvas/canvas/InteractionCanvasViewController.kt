@@ -31,7 +31,7 @@ internal class InteractionCanvasViewController(
 
     init {
         drawingInfoLiveData.observe(lifecycleOwner, listener = ::setDrawingInfo)
-        mousePointerLiveData.map { it is MousePointer.Move }.observe(lifecycleOwner) {
+        mousePointerLiveData.map { it is MousePointer.Drag }.observe(lifecycleOwner) {
             isMouseMoving = it
         }
     }

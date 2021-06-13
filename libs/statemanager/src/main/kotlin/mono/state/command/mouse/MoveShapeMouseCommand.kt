@@ -14,7 +14,7 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
 
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
         val offset = when (mousePointer) {
-            is MousePointer.Move -> mousePointer.point - mousePointer.mouseDownPoint
+            is MousePointer.Drag -> mousePointer.point - mousePointer.mouseDownPoint
             is MousePointer.Up -> mousePointer.point - mousePointer.mouseDownPoint
             is MousePointer.Down,
             is MousePointer.Click,

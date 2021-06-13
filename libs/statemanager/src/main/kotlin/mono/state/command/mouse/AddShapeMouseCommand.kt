@@ -27,7 +27,7 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
                 environment.selectedShapeManager.setSelectedShapes()
                 false
             }
-            is MousePointer.Move -> {
+            is MousePointer.Drag -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
                 false
             }

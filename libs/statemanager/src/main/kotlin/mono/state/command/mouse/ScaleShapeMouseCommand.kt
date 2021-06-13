@@ -17,7 +17,7 @@ internal class ScaleShapeMouseCommand(
     private val initialBound = shape.bound
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
         when (mousePointer) {
-            is MousePointer.Move -> scale(environment, mousePointer.point)
+            is MousePointer.Drag -> scale(environment, mousePointer.point)
             is MousePointer.Up -> scale(environment, mousePointer.point)
             is MousePointer.Down,
             is MousePointer.Click,

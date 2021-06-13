@@ -56,7 +56,7 @@ internal class MouseEventObserver(
         mousePointerMutableLiveData.value = when (currentValue) {
             is MousePointer.Down ->
                 MousePointer.Up(currentValue.point, clickPoint, event.shiftKey)
-            is MousePointer.Move ->
+            is MousePointer.Drag ->
                 MousePointer.Up(currentValue.mouseDownPoint, clickPoint, event.shiftKey)
             is MousePointer.Up,
             is MousePointer.Click,
@@ -71,10 +71,10 @@ internal class MouseEventObserver(
     private fun setMouseMovePointer(event: MouseEvent) {
         val newPointer = when (val mousePointer = mousePointerLiveData.value) {
             is MousePointer.Down ->
-                MousePointer.Move(mousePointer.point, event.toPoint(), event.shiftKey)
+                MousePointer.Drag(mousePointer.point, event.toPoint(), event.shiftKey)
                     .takeIf { it.point != mousePointer.point }
-            is MousePointer.Move ->
-                MousePointer.Move(mousePointer.mouseDownPoint, event.toPoint(), event.shiftKey)
+            is MousePointer.Drag ->
+                MousePointer.Drag(mousePointer.mouseDownPoint, event.toPoint(), event.shiftKey)
             is MousePointer.Up,
             is MousePointer.Click,
             MousePointer.Idle -> MousePointer.Idle

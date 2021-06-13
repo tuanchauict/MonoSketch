@@ -18,7 +18,7 @@ internal class LineInteractionMouseCommand(
 ) : MouseCommand {
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
         when (mousePointer) {
-            is MousePointer.Move -> move(environment, mousePointer.point, false)
+            is MousePointer.Drag -> move(environment, mousePointer.point, false)
             is MousePointer.Up -> move(environment, mousePointer.point, true)
             is MousePointer.Down,
             is MousePointer.Click,
