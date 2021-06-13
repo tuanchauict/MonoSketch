@@ -29,7 +29,7 @@ class EditTextDialog(
             initTextArea()
         }
     }
-    
+
     private fun TagConsumer<HTMLElement>.initTextArea() {
         val textArea = div("$TEXT_AREA_CSS_CLASS $classes") {
             contentEditable = true

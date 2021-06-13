@@ -15,13 +15,13 @@ enum class RetainableActionType {
  */
 enum class OneTimeActionType {
     IDLE,
-    
+
     EXPORT_SELECTED_SHAPES,
-    
+
     DESELECT_SHAPES,
     DELETE_SELECTED_SHAPES,
     EDIT_SELECTED_SHAPES,
-    
+
     MOVE_SELECTED_SHAPES_DOWN,
     MOVE_SELECTED_SHAPES_UP,
     MOVE_SELECTED_SHAPES_LEFT,

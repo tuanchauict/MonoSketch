@@ -16,7 +16,7 @@ dependencies {
     implementation(project(":shape"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.2")
-    
+
     implementation(kotlin("stdlib-js"))
     testImplementation(kotlin("test-js"))
 }

@@ -79,9 +79,12 @@ class ExportShapesModal(
                     }
                 }
             }
-            rootView.addEventListener("hidden.bs.modal", {
-                rootView.remove()
-            })
+            rootView.addEventListener(
+                "hidden.bs.modal",
+                {
+                    rootView.remove()
+                }
+            )
         }
         js(
             """
