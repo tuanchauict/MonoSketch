@@ -4,6 +4,7 @@ import kotlinx.browser.document
 import kotlinx.html.currentTimeMillis
 import mono.common.exhaustive
 import mono.common.nullToFalse
+import mono.export.ExportShapesModal
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
@@ -101,7 +102,8 @@ class MainStateManager(
             when (it) {
                 OneTimeActionType.IDLE -> Unit
 
-                OneTimeActionType.EXPORT_SELECTED_SHAPES -> TODO("Show dialog with extracted text")
+                OneTimeActionType.EXPORT_SELECTED_SHAPES ->
+                    exportSelectedShape()
 
                 OneTimeActionType.DESELECT_SHAPES ->
                     selectedShapeManager.setSelectedShapes()
@@ -145,30 +147,30 @@ class MainStateManager(
 
     private fun redraw() {
         auditPerformance("Redraw") {
-            mainBoard.redraw()
+            redrawMainBoard()
         }
         auditPerformance("Draw canvas") {
             canvasManager.drawBoard()
         }
     }
 
-    private fun MonoBoard.redraw() {
+    private fun redrawMainBoard() {
         shapeSearcher.clear(windowBoardBound)
-        clearAndSetWindow(windowBoardBound)
-        drawShape(shapeManager.root)
+        mainBoard.clearAndSetWindow(windowBoardBound)
+        drawShapeToMainBoard(shapeManager.root)
     }
 
-    private fun MonoBoard.drawShape(shape: AbstractShape) {
+    private fun drawShapeToMainBoard(shape: AbstractShape) {
         if (shape is Group) {
             for (child in shape.items) {
-                drawShape(child)
+                drawShapeToMainBoard(child)
             }
             return
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
         val highlight =
             if (shape in selectedShapeManager.selectedShapes) Highlight.SELECTED else Highlight.NO
-        fill(shape.bound.position, bitmap, highlight)
+        mainBoard.fill(shape.bound.position, bitmap, highlight)
         shapeSearcher.register(shape)
     }
 
@@ -184,6 +186,16 @@ class MainStateManager(
         val t0 = currentTimeMillis()
         action()
         println("$objective runtime: ${currentTimeMillis() - t0}")
+    }
+
+    private fun exportSelectedShape() {
+        val selectedShapes =
+            if (selectedShapeManager.selectedShapes.isNotEmpty()) {
+                workingParentGroup.items.filter { it in selectedShapeManager.selectedShapes }
+            } else {
+                listOf(workingParentGroup)
+            }
+        ExportShapesModal(selectedShapes, bitmapManager).show()
     }
 
     private class CommandEnvironmentImpl(
