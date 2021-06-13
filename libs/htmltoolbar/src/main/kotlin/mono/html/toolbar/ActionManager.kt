@@ -1,5 +1,6 @@
 package mono.html.toolbar
 
+import mono.common.exhaustive
 import mono.keycommand.KeyCommand
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -11,8 +12,7 @@ import mono.livedata.distinctUntilChange
  */
 class ActionManager(
     lifecycleOwner: LifecycleOwner,
-    keyCommandLiveData: LiveData<KeyCommand>,
-    private val hasAnySelectedShapes: () -> Boolean
+    keyCommandLiveData: LiveData<KeyCommand>
 ) {
     private val retainableActionMutableLiveData: MutableLiveData<RetainableActionType> =
         MutableLiveData(RetainableActionType.IDLE)
@@ -29,14 +29,12 @@ class ActionManager(
     private fun onKeyEvent(keyCommand: KeyCommand) {
         when (keyCommand) {
             KeyCommand.IDLE -> Unit
-            KeyCommand.ESC ->
-                if (hasAnySelectedShapes()) {
-                    setOneTimeAction(OneTimeActionType.DESELECT_SHAPES)
-                } else {
-                    setRetainableAction(RetainableActionType.IDLE)
-                }
+            KeyCommand.DESELECTION ->
+                setOneTimeAction(OneTimeActionType.DESELECT_SHAPES)
+
             KeyCommand.DELETE ->
                 setOneTimeAction(OneTimeActionType.DELETE_SELECTED_SHAPES)
+
             KeyCommand.MOVE_LEFT ->
                 setOneTimeAction(OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT)
             KeyCommand.MOVE_UP ->
@@ -45,15 +43,19 @@ class ActionManager(
                 setOneTimeAction(OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT)
             KeyCommand.MOVE_DOWN ->
                 setOneTimeAction(OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN)
+
             KeyCommand.ADD_RECTANGLE ->
                 setRetainableAction(RetainableActionType.ADD_RECTANGLE)
             KeyCommand.ADD_TEXT ->
                 setRetainableAction(RetainableActionType.ADD_TEXT)
             KeyCommand.ADD_LINE ->
                 setRetainableAction(RetainableActionType.ADD_LINE)
+
+            KeyCommand.SELECTION_MODE ->
+                setRetainableAction(RetainableActionType.IDLE)
             KeyCommand.ENTER_EDIT_MODE ->
                 setOneTimeAction(OneTimeActionType.EDIT_SELECTED_SHAPES)
-        }
+        }.exhaustive
     }
 
     fun setRetainableAction(actionType: RetainableActionType) {

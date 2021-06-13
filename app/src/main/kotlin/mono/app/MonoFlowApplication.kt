@@ -10,6 +10,8 @@ import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
+import mono.html.toolbar.ActionManager
+import mono.html.toolbar.ToolbarViewController
 import mono.keycommand.KeyCommandController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.distinctUntilChange
@@ -58,16 +60,23 @@ class MonoFlowApplication : LifecycleOwner() {
         )
         val keyCommandController = KeyCommandController(body)
 
+        val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
+
         mainStateManager = MainStateManager(
             this,
             mainBoard,
             shapeManager,
             bitmapManager,
             canvasViewController,
-            keyCommandController.keyCommandLiveData,
-            canvasViewController.mousePointerLiveData
+            canvasViewController.mousePointerLiveData,
+            actionManager
         )
 
+        ToolbarViewController(
+            this,
+            document.getElementById("header-toolbar") as HTMLDivElement,
+            actionManager
+        )
         onResize()
     }
 

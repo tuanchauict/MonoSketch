@@ -7,8 +7,10 @@ import mono.common.Key
  */
 enum class KeyCommand(vararg val keyCodes: Int) {
     IDLE,
-    ESC(Key.KEY_ESC),
+
+    DESELECTION(Key.KEY_ESC),
     DELETE(Key.KEY_BACKSPACE, Key.KEY_DELETE),
+
     MOVE_LEFT(Key.KEY_ARROW_LEFT),
     MOVE_UP(Key.KEY_ARROW_UP),
     MOVE_RIGHT(Key.KEY_ARROW_RIGHT),
@@ -18,7 +20,8 @@ enum class KeyCommand(vararg val keyCodes: Int) {
     ADD_TEXT(Key.KEY_T),
     ADD_LINE(Key.KEY_L),
 
-    ENTER_EDIT_MODE(Key.KEY_ENTER);
+    ENTER_EDIT_MODE(Key.KEY_ENTER),
+    SELECTION_MODE(Key.KEY_V), ;
 
     companion object {
         private val KEYCODE_TO_COMMAND_MAP: Map<Int, KeyCommand> =
