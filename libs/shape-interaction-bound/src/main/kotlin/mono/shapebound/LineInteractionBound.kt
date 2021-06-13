@@ -30,7 +30,8 @@ class LineInteractionBound(
                     targetedShapeId,
                     it.id,
                     left = it.middleLeft + 0.5,
-                    top = it.middleTop + 0.5
+                    top = it.middleTop + 0.5,
+                    it.isHorizontal
                 )
             }
 
