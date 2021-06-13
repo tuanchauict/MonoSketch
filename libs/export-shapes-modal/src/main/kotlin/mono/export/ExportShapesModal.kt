@@ -22,6 +22,10 @@ import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import org.w3c.dom.HTMLElement
 
+/**
+ * A modal which is for showing the board rendering selected shapes and allowing users to copy as
+ * text.
+ */
 class ExportShapesModal(
     private val selectedShapes: List<AbstractShape>,
     private val bitmapManager: MonoBitmapManager
