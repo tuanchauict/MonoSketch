@@ -1,6 +1,5 @@
 package mono.state
 
-import kotlinx.browser.document
 import kotlinx.html.currentTimeMillis
 import mono.common.exhaustive
 import mono.common.nullToFalse
@@ -15,8 +14,6 @@ import mono.html.canvas.CanvasViewController
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.RetainableActionType
-import mono.html.toolbar.ToolbarViewController
-import mono.keycommand.KeyCommand
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
@@ -29,7 +26,6 @@ import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
-import org.w3c.dom.HTMLDivElement
 
 /**
  * A class which is connect components in the app.
@@ -40,8 +36,8 @@ class MainStateManager(
     private val shapeManager: ShapeManager,
     private val bitmapManager: MonoBitmapManager,
     private val canvasManager: CanvasViewController,
-    keyCommandLiveData: LiveData<KeyCommand>,
-    mousePointerLiveData: LiveData<MousePointer>
+    mousePointerLiveData: LiveData<MousePointer>,
+    actionManager: ActionManager
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager)
 
@@ -49,12 +45,6 @@ class MainStateManager(
 
     private val selectedShapeManager: SelectedShapeManager =
         SelectedShapeManager(shapeManager, canvasManager, ::requestRedraw)
-
-    // TODO: Move this to the caller of MainStateManager
-    private val actionManager: ActionManager = ActionManager(
-        lifecycleOwner,
-        keyCommandLiveData,
-    )
 
     private var windowBoardBound: Rect = Rect.ZERO
 
@@ -65,13 +55,6 @@ class MainStateManager(
     private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
 
     init {
-        // TODO: This should be call in application class
-        ToolbarViewController(
-            lifecycleOwner,
-            document.getElementById("header-toolbar") as HTMLDivElement,
-            actionManager
-        )
-
         mousePointerLiveData
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::onMouseEvent)

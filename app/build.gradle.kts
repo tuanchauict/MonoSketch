@@ -10,6 +10,7 @@ repositories {
 dependencies {
     implementation(project(":commons"))
     implementation(project(":htmlcanvas"))
+    implementation(project(":htmltoolbar"))
     implementation(project(":keycommand"))
     implementation(project(":lifecycle"))
     implementation(project(":shape"))
