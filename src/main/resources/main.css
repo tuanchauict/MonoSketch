@@ -35,14 +35,31 @@ body {
     font-weight: 600;
 }
 
-#toolbar {
-    margin: 0px 20px;
-    height: 100%;
+#header-toolbar {
     width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.toolbar {
+    height: 100%;
     display: flex;
     -webkit-box-align: center;
     align-items: center;
     justify-content: center;
+}
+
+.toolbar.middle {
+    margin: 0px 20px;
+    width: 100%;
+}
+
+.toolbar.middle .retainable-action-group .btn{
+    width: 65px;
+}
+
+.toolbar.right {
+    margin: 0px 20px;
 }
 
 #monoboard-canvas-container {
@@ -69,7 +86,16 @@ body {
     font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
 }
 
-.btn-group.btn-group-sm>.btn, .btn-sm {
-    padding: 0.05rem 0.5rem;
-    width: 56px;
+.btn-group.btn-group-sm>.btn.toolbar-btn, .btn.toolbar-btn {
+    padding: 0.15rem 0.5rem;
+    height: 31px;
+}
+
+.btn.toolbar-btn.btn-outline-primary:active {
+    border-color: #003c8f;
+    background-color: #003c8f;
+}
+
+ul.dropdown-menu a.dropdown-item {
+    cursor: pointer;
 }

@@ -126,9 +126,13 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         )
         val painterBoard = PainterBoard(rect)
 
-        painterBoards.values.forEach {
-            painterBoard.fill(it)
-        }
+        painterBoards.values.forEach(painterBoard::fill)
+        return painterBoard.toString()
+    }
+
+    fun toStringInBound(bound: Rect): String {
+        val painterBoard = PainterBoard(bound)
+        painterBoards.values.forEach(painterBoard::fill)
         return painterBoard.toString()
     }
 

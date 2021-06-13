@@ -46,6 +46,7 @@ class MonoFlowApplication : LifecycleOwner() {
      */
     override fun onStartInternal() {
         val body = document.body ?: return
+
         val boardCanvasContainer =
             document.getElementById(CONTAINER_ID) as? HTMLDivElement ?: return
 

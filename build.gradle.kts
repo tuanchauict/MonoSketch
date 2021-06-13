@@ -8,7 +8,7 @@ plugins {
 group = "com.monoflow"
 version = "0.0.1"
 
-allprojects { 
+allprojects {
     ext {
         set("compilerType", KotlinJsCompilerType.LEGACY)
     }
