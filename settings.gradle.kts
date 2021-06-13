@@ -3,6 +3,7 @@ rootProject.name = "MonoFlow"
 val moduleMap = mapOf(
     "app" to "app",
     "commons" to "libs/commons",
+    "export-shapes-modal" to "libs/export-shapes-modal",
     "graphicsgeo" to "libs/graphicsgeo",
     "html-ui-toolbar" to "libs/html-ui-toolbar",
     "htmlcanvas" to "libs/htmlcanvas",
