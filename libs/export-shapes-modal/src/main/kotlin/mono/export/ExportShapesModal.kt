@@ -109,6 +109,7 @@ class ExportShapesModal(
     private fun TagConsumer<HTMLElement>.Body(content: String) {
         div("modal-body") {
             pre {
+                style = "line-height: 15px; font-size: 12px;height: 100%"
                 +content
             }
         }
