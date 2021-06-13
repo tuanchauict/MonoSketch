@@ -16,5 +16,5 @@ internal interface CommandEnvironment {
     val workingParentGroup: Group
     val selectedShapeManager: SelectedShapeManager
 
-    fun getInteractionPoint(point: Point): InteractionPoint?
+    fun getInteractionPoint(pointPx: Point): InteractionPoint?
 }

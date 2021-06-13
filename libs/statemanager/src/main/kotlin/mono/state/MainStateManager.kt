@@ -59,6 +59,10 @@ class MainStateManager(
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::onMouseEvent)
 
+        mousePointerLiveData
+            .distinctUntilChange()
+            .observe(lifecycleOwner, listener = ::updateMouseCursor)
+
         canvasManager.windowBoardBoundLiveData
             .observe(lifecycleOwner, throttleDurationMillis = 10) {
                 windowBoardBound = it
@@ -180,6 +184,27 @@ class MainStateManager(
         ExportShapesModal(selectedShapes, bitmapManager).show()
     }
 
+    private fun updateMouseCursor(mousePointer: MousePointer) {
+        val mouseCursor = when (mousePointer) {
+            is MousePointer.Move -> {
+                val interactionPoint = canvasManager.getInteractionPoint(mousePointer.pointPx)
+                interactionPoint?.mouseCursor ?: "default"
+            }
+            is MousePointer.Drag -> {
+                val mouseCommand = currentMouseCommand
+                if (mouseCommand != null) mouseCommand.mouseCursor else "default"
+            }
+            is MousePointer.Up -> "default"
+
+            MousePointer.Idle,
+            is MousePointer.Down,
+            is MousePointer.Click -> null
+        }
+        if (mouseCursor != null) {
+            canvasManager.setMouseCursor(mouseCursor)
+        }
+    }
+
     private class CommandEnvironmentImpl(
         private val stateManager: MainStateManager
     ) : CommandEnvironment {
@@ -195,8 +220,8 @@ class MainStateManager(
         override val selectedShapeManager: SelectedShapeManager
             get() = stateManager.selectedShapeManager
 
-        override fun getInteractionPoint(point: Point): InteractionPoint? =
-            stateManager.canvasManager.getInteractionPoint(point)
+        override fun getInteractionPoint(pointPx: Point): InteractionPoint? =
+            stateManager.canvasManager.getInteractionPoint(pointPx)
     }
 
     companion object {

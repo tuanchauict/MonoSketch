@@ -113,8 +113,8 @@ class CanvasViewController(
         selectionCanvasViewController.draw()
     }
 
-    fun getInteractionPoint(point: Point): InteractionPoint? =
-        interactionCanvasViewController.getInteractionPoint(point)
+    fun getInteractionPoint(pointPx: Point): InteractionPoint? =
+        interactionCanvasViewController.getInteractionPoint(pointPx)
 
     fun setFont(fontSize: Int) {
         drawingInfoController.setFont(fontSize)
@@ -126,6 +126,10 @@ class CanvasViewController(
         val heightPx = container.clientHeight
         drawingInfoController.setSize(widthPx, heightPx)
         windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
+    }
+
+    fun setMouseCursor(mouseCursor: String) {
+        container.style.cursor = mouseCursor
     }
 
     companion object {
