@@ -43,7 +43,9 @@ internal class MouseEventObserver(
     }
 
     private fun setMouseDownPointer(event: MouseEvent) {
-        if (mousePointerLiveData.value == MousePointer.Idle) {
+        if (mousePointerLiveData.value == MousePointer.Idle ||
+            mousePointerLiveData.value is MousePointer.Move
+        ) {
             mousePointerMutableLiveData.value =
                 MousePointer.Down(event.toPoint(), event.toPointPx(), event.shiftKey)
         }
