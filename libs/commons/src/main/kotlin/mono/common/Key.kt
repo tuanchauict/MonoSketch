@@ -12,7 +12,8 @@ object Key {
     const val KEY_ARROW_UP = 38
     const val KEY_ARROW_RIGHT = 39
     const val KEY_ARROW_DOWN = 40
+    const val KEY_L = 76
     const val KEY_R = 82
     const val KEY_T = 84
-    const val KEY_L = 76
+    const val KEY_V = 86
 }

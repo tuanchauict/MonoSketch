@@ -54,7 +54,6 @@ class MainStateManager(
     private val actionManager: ActionManager = ActionManager(
         lifecycleOwner,
         keyCommandLiveData,
-        selectedShapeManager::hasSelectedShapes
     )
 
     private var windowBoardBound: Rect = Rect.ZERO

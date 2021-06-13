@@ -83,7 +83,7 @@ private enum class MouseActionType(
 ) {
     SELECTION(
         RetainableActionType.IDLE,
-        "Select (ESC)",
+        "Select (V)",
         isChecked = true,
         {
             SvgIcon(16, 16) {
