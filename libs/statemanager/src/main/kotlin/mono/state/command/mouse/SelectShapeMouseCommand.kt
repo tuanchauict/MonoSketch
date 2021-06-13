@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.exhaustive
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Rect
 import mono.state.command.CommandEnvironment
@@ -8,6 +9,8 @@ import mono.state.command.CommandEnvironment
  * A [MouseCommand] to select shapes.
  */
 internal object SelectShapeMouseCommand : MouseCommand {
+    override val mouseCursor: String = "default"
+
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
         when (mousePointer) {
             is MousePointer.Down -> false
@@ -59,5 +62,5 @@ internal object SelectShapeMouseCommand : MouseCommand {
             }
             is MousePointer.Move,
             MousePointer.Idle -> true
-        }
+        }.exhaustive
 }

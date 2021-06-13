@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.exhaustive
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
@@ -16,14 +17,17 @@ internal class LineInteractionMouseCommand(
     private val lineShape: Line,
     private val interactionPoint: LineInteractionPoint
 ) : MouseCommand {
+    override val mouseCursor: String? = null
+
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
         when (mousePointer) {
             is MousePointer.Drag -> move(environment, mousePointer.point, false)
             is MousePointer.Up -> move(environment, mousePointer.point, true)
             is MousePointer.Down,
             is MousePointer.Click,
+            is MousePointer.Move,
             MousePointer.Idle -> Unit
-        }
+        }.exhaustive
 
         return mousePointer == MousePointer.Idle
     }

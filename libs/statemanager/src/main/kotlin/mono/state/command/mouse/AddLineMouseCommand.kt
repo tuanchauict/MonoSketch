@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.exhaustive
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
@@ -10,6 +11,8 @@ import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
 
 internal class AddLineMouseCommand : MouseCommand {
+    override val mouseCursor: String = "crosshair"
+
     private var workingShape: Line? = null
 
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
@@ -45,7 +48,7 @@ internal class AddLineMouseCommand : MouseCommand {
             is MousePointer.Move,
             is MousePointer.Click,
             MousePointer.Idle -> true
-        }
+        }.exhaustive
 
     private fun isValidLine(): Boolean {
         val line = workingShape ?: return false

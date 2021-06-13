@@ -9,6 +9,11 @@ import mono.state.command.CommandEnvironment
  */
 internal sealed interface MouseCommand {
     /**
+     * CSS mouse cursor value to show during command execution.
+     */
+    val mouseCursor: String?
+
+    /**
      * Handles mouse events.
      * Returns true when the action finishes.
      */

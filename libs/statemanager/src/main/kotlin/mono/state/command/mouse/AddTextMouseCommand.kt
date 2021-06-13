@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.exhaustive
 import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
@@ -20,6 +21,8 @@ import mono.state.command.text.EditTextShapeHelper
  * TODO: Implement step 2
  */
 internal class AddTextMouseCommand : MouseCommand {
+    override val mouseCursor: String = "crosshair"
+
     private var workingShape: Text? = null
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
         when (mousePointer) {
@@ -46,7 +49,7 @@ internal class AddTextMouseCommand : MouseCommand {
             is MousePointer.Move,
             is MousePointer.Click,
             MousePointer.Idle -> true
-        }
+        }.exhaustive
 
     private fun onMouseUp(environment: CommandEnvironment, mousePointer: MousePointer.Up) {
         environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)

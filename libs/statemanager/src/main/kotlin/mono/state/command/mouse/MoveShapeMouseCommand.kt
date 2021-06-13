@@ -10,6 +10,8 @@ import mono.state.command.CommandEnvironment
  * A [MouseCommand] for moving selected shapes.
  */
 internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : MouseCommand {
+    override val mouseCursor: String = "move"
+
     private val initialPositions = shapes.associate { it.id to it.bound.position }
 
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
