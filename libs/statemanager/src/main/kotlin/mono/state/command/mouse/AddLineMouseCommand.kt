@@ -26,7 +26,7 @@ internal class AddLineMouseCommand : MouseCommand {
                 )
                 workingShape = shape
                 environment.shapeManager.add(shape)
-                environment.selectedShapeManager.clearSelectedShapes()
+                environment.clearSelectedShapes()
                 false
             }
             is MousePointer.Drag -> {
@@ -37,10 +37,10 @@ internal class AddLineMouseCommand : MouseCommand {
                 environment.changeEndAnchor(mousePointer.point, true)
 
                 if (isValidLine()) {
-                    environment.selectedShapeManager.addSelectedShape(workingShape)
+                    environment.addSelectedShape(workingShape)
                 } else {
                     environment.shapeManager.remove(workingShape)
-                    environment.selectedShapeManager.clearSelectedShapes()
+                    environment.clearSelectedShapes()
                 }
                 true
             }

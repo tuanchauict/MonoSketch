@@ -104,7 +104,7 @@ class MainStateManager(
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
-                OneTimeActionType.DESELECT_SHAPES -> selectedShapeManager.clearSelectedShapes()
+                OneTimeActionType.DESELECT_SHAPES -> environment.clearSelectedShapes()
                 OneTimeActionType.DELETE_SELECTED_SHAPES -> deleteSelectedShapes()
                 OneTimeActionType.EDIT_SELECTED_SHAPES -> editSelectedShapes()
 
@@ -120,17 +120,18 @@ class MainStateManager(
         for (shape in selectedShapeManager.selectedShapes) {
             shapeManager.remove(shape)
         }
-        selectedShapeManager.clearSelectedShapes()
+        environment.clearSelectedShapes()
     }
     
     private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
-        for (shape in selectedShapeManager.selectedShapes) {
+        val selectedShapes = selectedShapeManager.selectedShapes
+        for (shape in selectedShapes) {
             val bound = shape.bound
             val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
             val newBound = shape.bound.copy(position = newPosition)
             shapeManager.execute(ChangeBound(shape, newBound))
         }
-        updateInteractionBounds(selectedShapeManager.selectedShapes)
+        updateInteractionBounds(selectedShapes)
     }
 
     private fun editSelectedShapes() {
@@ -209,13 +210,14 @@ class MainStateManager(
     }
 
     private fun exportSelectedShape() {
-        val selectedShapes =
-            if (selectedShapeManager.selectedShapes.isNotEmpty()) {
-                workingParentGroup.items.filter { it in selectedShapeManager.selectedShapes }
+        val selectedShapes = selectedShapeManager.selectedShapes
+        val extractableShapes =
+            if (selectedShapes.isNotEmpty()) {
+                workingParentGroup.items.filter { it in selectedShapes }
             } else {
                 listOf(workingParentGroup)
             }
-        ExportShapesModal(selectedShapes, bitmapManager).show()
+        ExportShapesModal(extractableShapes, bitmapManager).show()
     }
 
     private fun updateMouseCursor(mousePointer: MousePointer) {
@@ -272,12 +274,23 @@ class MainStateManager(
             stateManager.canvasManager.getInteractionPoint(pointPx)
 
         override fun updateInteractionBounds() {
-            stateManager.updateInteractionBounds(stateManager.selectedShapeManager.selectedShapes)
+            stateManager.updateInteractionBounds(selectedShapeManager.selectedShapes)
         }
 
         override fun setSelectionBound(bound: Rect?) {
             stateManager.canvasManager.drawSelectionBound(bound)
         }
+
+        override fun addSelectedShape(shape: AbstractShape?) {
+            if (shape != null) {
+                selectedShapeManager.addSelectedShape(shape)
+            }
+        }
+
+        override fun toggleShapeSelection(shape: AbstractShape) =
+            selectedShapeManager.toggleSelection(shape)
+
+        override fun clearSelectedShapes() = selectedShapeManager.clearSelectedShapes()
     }
 
     companion object {

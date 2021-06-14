@@ -42,10 +42,10 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 }
 
                 if (!mousePointer.isWithShiftKey) {
-                    environment.selectedShapeManager.clearSelectedShapes()
+                    environment.clearSelectedShapes()
                 }
                 for (shape in shapes) {
-                    environment.selectedShapeManager.addSelectedShape(shape)
+                    environment.addSelectedShape(shape)
                 }
                 false
             }
@@ -54,10 +54,10 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 if (shapes.isNotEmpty()) {
                     val shape = shapes.last()
                     if (mousePointer.isWithShiftKey) {
-                        environment.selectedShapeManager.toggleSelection(shape)
+                        environment.toggleShapeSelection(shape)
                     } else {
-                        environment.selectedShapeManager.clearSelectedShapes()
-                        environment.selectedShapeManager.addSelectedShape(shape)
+                        environment.clearSelectedShapes()
+                        environment.addSelectedShape(shape)
                     }
                 }
                 true

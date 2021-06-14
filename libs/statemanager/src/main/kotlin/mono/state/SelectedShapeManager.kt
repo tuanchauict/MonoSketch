@@ -16,10 +16,8 @@ class SelectedShapeManager {
     val selectedShapes: Set<AbstractShape>
         get() = selectedShapesLiveData.value
 
-    fun addSelectedShape(shape: AbstractShape?) {
-        if (shape != null) {
-            selectedShapesMutableLiveData.value += shape
-        }
+    fun addSelectedShape(shape: AbstractShape) {
+        selectedShapesMutableLiveData.value += shape
     }
 
     fun toggleSelection(shape: AbstractShape) {
@@ -30,7 +28,7 @@ class SelectedShapeManager {
         }
         selectedShapesMutableLiveData.value = selectedShapes
     }
-    
+
     fun clearSelectedShapes() {
         selectedShapesMutableLiveData.value = emptySet()
     }
