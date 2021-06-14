@@ -17,4 +17,6 @@ internal interface CommandEnvironment {
     val selectedShapeManager: SelectedShapeManager
 
     fun getInteractionPoint(pointPx: Point): InteractionPoint?
+    
+    fun updateInteractionBounds()
 }

@@ -35,6 +35,6 @@ internal class ScaleShapeMouseCommand(
         val newBound = interactionPoint.createNewShapeBound(initialBound, point)
         environment.shapeManager.execute(ChangeBound(shape, newBound))
 
-        environment.selectedShapeManager.updateInteractionBound()
+        environment.updateInteractionBounds()
     }
 }

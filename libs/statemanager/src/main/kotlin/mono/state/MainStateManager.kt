@@ -222,6 +222,10 @@ class MainStateManager(
 
         override fun getInteractionPoint(pointPx: Point): InteractionPoint? =
             stateManager.canvasManager.getInteractionPoint(pointPx)
+
+        override fun updateInteractionBounds() {
+            stateManager.selectedShapeManager.updateInteractionBound()
+        }
     }
 
     companion object {

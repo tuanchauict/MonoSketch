@@ -60,7 +60,7 @@ internal class LineInteractionMouseCommand(
                 isReducedRequired
             )
         )
-        environment.selectedShapeManager.updateInteractionBound()
+        environment.updateInteractionBounds()
     }
 
     private fun moveEdge(
@@ -77,6 +77,6 @@ internal class LineInteractionMouseCommand(
                 isReducedRequired
             )
         )
-        environment.selectedShapeManager.updateInteractionBound()
+        environment.updateInteractionBounds()
     }
 }
