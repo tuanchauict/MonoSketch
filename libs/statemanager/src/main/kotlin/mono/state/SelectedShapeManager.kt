@@ -4,6 +4,8 @@ import mono.common.exhaustive
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
+import mono.livedata.LiveData
+import mono.livedata.MutableLiveData
 import mono.shape.ShapeManager
 import mono.shape.command.ChangeBound
 import mono.shape.remove
@@ -28,8 +30,13 @@ class SelectedShapeManager(
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
 
+    private val selectedShapesMutableLiveData: MutableLiveData<Set<AbstractShape>> =
+        MutableLiveData(emptySet())
+    val selectedShapesLiveData: LiveData<Set<AbstractShape>> = selectedShapesMutableLiveData
+
     fun setSelectedShapes(vararg shapes: AbstractShape?) {
         selectedShapes = shapes.filterNotNull().toSet()
+        selectedShapesMutableLiveData.value = selectedShapes
         updateInteractionBound()
     }
 
@@ -39,6 +46,7 @@ class SelectedShapeManager(
         } else {
             selectedShapes + shape
         }
+        selectedShapesMutableLiveData.value = selectedShapes
         updateInteractionBound()
     }
 
@@ -47,6 +55,7 @@ class SelectedShapeManager(
             shapeManager.remove(shape)
         }
         selectedShapes = emptySet()
+        selectedShapesMutableLiveData.value = selectedShapes
         updateInteractionBound()
     }
 
@@ -57,7 +66,7 @@ class SelectedShapeManager(
             val newBound = shape.bound.copy(position = newPosition)
             shapeManager.execute(ChangeBound(shape, newBound))
         }
-
+        selectedShapesMutableLiveData.value = selectedShapes
         updateInteractionBound()
     }
 
