@@ -52,11 +52,9 @@ class MainStateManager(
 
     private var workingParentGroup: Group = shapeManager.root
 
-    private val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
-
     private var windowBoardBound: Rect = Rect.ZERO
 
-    private val environment: CommandEnvironment = CommandEnvironmentImpl(this)
+    private val environment: CommandEnvironmentImpl = CommandEnvironmentImpl(this)
     private var currentMouseCommand: MouseCommand? = null
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
@@ -87,7 +85,7 @@ class MainStateManager(
                 requestRedraw()
             }
 
-        selectedShapeManager.selectedShapesLiveData.observe(
+        environment.selectedShapeManager.selectedShapesLiveData.observe(
             lifecycleOwner,
             listener = ::updateInteractionBounds
         )
@@ -117,14 +115,14 @@ class MainStateManager(
     }
 
     private fun deleteSelectedShapes() {
-        for (shape in selectedShapeManager.selectedShapes) {
+        for (shape in environment.getSelectedShapes()) {
             shapeManager.remove(shape)
         }
         environment.clearSelectedShapes()
     }
 
     private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
-        val selectedShapes = selectedShapeManager.selectedShapes
+        val selectedShapes = environment.getSelectedShapes()
         for (shape in selectedShapes) {
             val bound = shape.bound
             val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
@@ -135,7 +133,7 @@ class MainStateManager(
     }
 
     private fun editSelectedShapes() {
-        val singleShape = selectedShapeManager.selectedShapes.singleOrNull() ?: return
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
         when (singleShape) {
             is Text -> EditTextShapeHelper.showEditTextDialog(shapeManager, singleShape)
             is Line,
@@ -190,7 +188,7 @@ class MainStateManager(
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
         val highlight =
-            if (shape in selectedShapeManager.selectedShapes) Highlight.SELECTED else Highlight.NO
+            if (shape in environment.getSelectedShapes()) Highlight.SELECTED else Highlight.NO
         mainBoard.fill(shape.bound.position, bitmap, highlight)
         shapeSearcher.register(shape)
     }
@@ -210,7 +208,7 @@ class MainStateManager(
     }
 
     private fun exportSelectedShape() {
-        val selectedShapes = selectedShapeManager.selectedShapes
+        val selectedShapes = environment.getSelectedShapes()
         val extractableShapes =
             if (selectedShapes.isNotEmpty()) {
                 workingParentGroup.items.filter { it in selectedShapes }
@@ -267,8 +265,7 @@ class MainStateManager(
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 
-        private val selectedShapeManager: SelectedShapeManager
-            get() = stateManager.selectedShapeManager
+        val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
 
         override fun getInteractionPoint(pointPx: Point): InteractionPoint? =
             stateManager.canvasManager.getInteractionPoint(pointPx)
