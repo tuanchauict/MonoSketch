@@ -21,7 +21,13 @@ import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
+import mono.shape.shape.Line
+import mono.shape.shape.MockShape
+import mono.shape.shape.Rectangle
+import mono.shape.shape.Text
 import mono.shapebound.InteractionPoint
+import mono.shapebound.LineInteractionBound
+import mono.shapebound.ScalableInteractionBound
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.MouseCommandFactory
@@ -44,7 +50,7 @@ class MainStateManager(
     private var workingParentGroup: Group = shapeManager.root
 
     private val selectedShapeManager: SelectedShapeManager =
-        SelectedShapeManager(shapeManager, canvasManager, ::requestRedraw)
+        SelectedShapeManager(shapeManager, canvasManager)
 
     private var windowBoardBound: Rect = Rect.ZERO
 
@@ -78,6 +84,11 @@ class MainStateManager(
             .observe(lifecycleOwner, throttleDurationMillis = 0) {
                 requestRedraw()
             }
+
+        selectedShapeManager.selectedShapesLiveData.observe(
+            lifecycleOwner,
+            listener = ::updateInteractionBounds
+        )
 
         redrawRequestMutableLiveData.observe(lifecycleOwner, 1) { redraw() }
 
@@ -205,6 +216,20 @@ class MainStateManager(
         }
     }
 
+    private fun updateInteractionBounds(selectedShapes: Collection<AbstractShape>) {
+        val bounds = selectedShapes.mapNotNull {
+            when (it) {
+                is Rectangle,
+                is Text -> ScalableInteractionBound(it.id, it.bound)
+                is Line -> LineInteractionBound(it.id, it.edges)
+                is Group -> null // TODO: Add new Interaction bound type for Group
+                is MockShape -> null
+            }
+        }
+        canvasManager.drawInteractionBounds(bounds)
+        requestRedraw()
+    }
+
     private class CommandEnvironmentImpl(
         private val stateManager: MainStateManager
     ) : CommandEnvironment {
@@ -224,7 +249,7 @@ class MainStateManager(
             stateManager.canvasManager.getInteractionPoint(pointPx)
 
         override fun updateInteractionBounds() {
-            stateManager.selectedShapeManager.updateInteractionBound()
+            stateManager.updateInteractionBounds(stateManager.selectedShapeManager.selectedShapes)
         }
     }
 

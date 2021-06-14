@@ -15,8 +15,6 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shapebound.LineInteractionBound
-import mono.shapebound.ScalableInteractionBound
 import mono.state.command.text.EditTextShapeHelper
 
 /**
@@ -24,8 +22,7 @@ import mono.state.command.text.EditTextShapeHelper
  */
 class SelectedShapeManager(
     private val shapeManager: ShapeManager,
-    private val canvasManager: CanvasViewController,
-    private val requestRedraw: () -> Unit
+    private val canvasManager: CanvasViewController
 ) {
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
@@ -37,7 +34,6 @@ class SelectedShapeManager(
     fun setSelectedShapes(vararg shapes: AbstractShape?) {
         selectedShapes = shapes.filterNotNull().toSet()
         selectedShapesMutableLiveData.value = selectedShapes
-        updateInteractionBound()
     }
 
     fun toggleSelection(shape: AbstractShape) {
@@ -47,7 +43,6 @@ class SelectedShapeManager(
             selectedShapes + shape
         }
         selectedShapesMutableLiveData.value = selectedShapes
-        updateInteractionBound()
     }
 
     fun deleteSelectedShapes() {
@@ -56,7 +51,6 @@ class SelectedShapeManager(
         }
         selectedShapes = emptySet()
         selectedShapesMutableLiveData.value = selectedShapes
-        updateInteractionBound()
     }
 
     fun moveSelectedShape(offsetRow: Int, offsetCol: Int) {
@@ -67,7 +61,6 @@ class SelectedShapeManager(
             shapeManager.execute(ChangeBound(shape, newBound))
         }
         selectedShapesMutableLiveData.value = selectedShapes
-        updateInteractionBound()
     }
 
     fun editSelectedShapes() {
@@ -79,20 +72,6 @@ class SelectedShapeManager(
             is MockShape,
             is Group -> Unit
         }.exhaustive
-    }
-
-    fun updateInteractionBound() {
-        val bounds = selectedShapes.mapNotNull {
-            when (it) {
-                is Rectangle,
-                is Text -> ScalableInteractionBound(it.id, it.bound)
-                is Line -> LineInteractionBound(it.id, it.edges)
-                is Group -> null // TODO: Add new Interaction bound type for Group
-                is MockShape -> null
-            }
-        }
-        canvasManager.drawInteractionBounds(bounds)
-        requestRedraw()
     }
 
     fun setSelectionBound(bound: Rect?) {
