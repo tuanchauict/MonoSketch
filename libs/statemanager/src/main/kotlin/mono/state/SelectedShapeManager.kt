@@ -1,5 +1,6 @@
 package mono.state
 
+import mono.common.exhaustive
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
@@ -9,6 +10,7 @@ import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
+import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import mono.shapebound.LineInteractionBound
@@ -61,10 +63,13 @@ class SelectedShapeManager(
 
     fun editSelectedShapes() {
         val singleShape = selectedShapes.singleOrNull() ?: return
-        // TODO: handle action with singleShape
         when (singleShape) {
             is Text -> EditTextShapeHelper.showEditTextDialog(shapeManager, singleShape)
-        }
+            is Line,
+            is Rectangle,
+            is MockShape,
+            is Group -> Unit
+        }.exhaustive
     }
 
     fun updateInteractionBound() {
@@ -72,9 +77,9 @@ class SelectedShapeManager(
             when (it) {
                 is Rectangle,
                 is Text -> ScalableInteractionBound(it.id, it.bound)
-                is Group -> null // TODO: Add new Interaction bound type for Group
                 is Line -> LineInteractionBound(it.id, it.edges)
-                else -> null
+                is Group -> null // TODO: Add new Interaction bound type for Group
+                is MockShape -> null
             }
         }
         canvasManager.drawInteractionBounds(bounds)
@@ -86,6 +91,4 @@ class SelectedShapeManager(
     }
 
     fun isInSelectionBounds(point: Point): Boolean = selectedShapes.any { it.contains(point) }
-
-    fun hasSelectedShapes(): Boolean = selectedShapes.isNotEmpty()
 }
