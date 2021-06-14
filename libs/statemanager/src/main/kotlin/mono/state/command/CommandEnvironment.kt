@@ -17,18 +17,18 @@ internal interface CommandEnvironment {
     val workingParentGroup: Group
 
     fun getInteractionPoint(pointPx: Point): InteractionPoint?
-    
+
     fun updateInteractionBounds()
 
     fun isPointInInteractionBounds(point: Point): Boolean
-    
+
     fun setSelectionBound(bound: Rect?)
-    
+
     fun getSelectedShapes(): Set<AbstractShape>
-    
+
     fun addSelectedShape(shape: AbstractShape?)
-    
+
     fun toggleShapeSelection(shape: AbstractShape)
-    
+
     fun clearSelectedShapes()
 }
