@@ -19,20 +19,21 @@ import mono.state.command.text.EditTextShapeHelper
  * A model class to manage selected shapes and render the selection bound.
  */
 class SelectedShapeManager(private val shapeManager: ShapeManager) {
-    var selectedShapes: Set<AbstractShape> = emptySet()
-        private set
 
     private val selectedShapesMutableLiveData: MutableLiveData<Set<AbstractShape>> =
         MutableLiveData(emptySet())
     val selectedShapesLiveData: LiveData<Set<AbstractShape>> = selectedShapesMutableLiveData
 
+    val selectedShapes: Set<AbstractShape>
+        get() = selectedShapesLiveData.value
+
     fun setSelectedShapes(vararg shapes: AbstractShape?) {
-        selectedShapes = shapes.filterNotNull().toSet()
+        val selectedShapes = shapes.filterNotNull().toSet()
         selectedShapesMutableLiveData.value = selectedShapes
     }
 
     fun toggleSelection(shape: AbstractShape) {
-        selectedShapes = if (shape in selectedShapes) {
+        val selectedShapes = if (shape in selectedShapes) {
             selectedShapes - shape
         } else {
             selectedShapes + shape
@@ -44,8 +45,7 @@ class SelectedShapeManager(private val shapeManager: ShapeManager) {
         for (shape in selectedShapes) {
             shapeManager.remove(shape)
         }
-        selectedShapes = emptySet()
-        selectedShapesMutableLiveData.value = selectedShapes
+        selectedShapesMutableLiveData.value = emptySet()
     }
 
     fun moveSelectedShape(offsetRow: Int, offsetCol: Int) {
