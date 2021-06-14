@@ -34,7 +34,7 @@ internal class AddTextMouseCommand : MouseCommand {
                 )
                 workingShape = shape
                 environment.shapeManager.add(shape)
-                environment.selectedShapeManager.setSelectedShapes()
+                environment.selectedShapeManager.clearSelectedShapes()
                 false
             }
             is MousePointer.Drag -> {
@@ -58,11 +58,11 @@ internal class AddTextMouseCommand : MouseCommand {
             workingShape = null
             return
         }
-        environment.selectedShapeManager.setSelectedShapes(workingShape)
+        environment.selectedShapeManager.addSelectedShape(workingShape)
         EditTextShapeHelper.showEditTextDialog(environment.shapeManager, workingShape) {
             if (!workingShape?.isValid().nullToFalse()) {
                 environment.shapeManager.remove(workingShape)
-                environment.selectedShapeManager.setSelectedShapes()
+                environment.selectedShapeManager.clearSelectedShapes()
             }
             workingShape = null
         }

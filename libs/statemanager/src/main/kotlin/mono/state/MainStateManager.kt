@@ -104,7 +104,7 @@ class MainStateManager(
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
-                OneTimeActionType.DESELECT_SHAPES -> selectedShapeManager.setSelectedShapes()
+                OneTimeActionType.DESELECT_SHAPES -> selectedShapeManager.clearSelectedShapes()
                 OneTimeActionType.DELETE_SELECTED_SHAPES -> deleteSelectedShapes()
                 OneTimeActionType.EDIT_SELECTED_SHAPES -> editSelectedShapes()
 
@@ -120,7 +120,7 @@ class MainStateManager(
         for (shape in selectedShapeManager.selectedShapes) {
             shapeManager.remove(shape)
         }
-        selectedShapeManager.setSelectedShapes(emptySet())
+        selectedShapeManager.clearSelectedShapes()
     }
     
     private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
