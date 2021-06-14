@@ -68,6 +68,4 @@ class SelectedShapeManager(private val shapeManager: ShapeManager) {
             is Group -> Unit
         }.exhaustive
     }
-
-    fun isInSelectionBounds(point: Point): Boolean = selectedShapes.any { it.contains(point) }
 }
