@@ -19,6 +19,7 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
+import mono.shape.command.ChangeBound
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
@@ -109,15 +110,25 @@ class MainStateManager(
                     selectedShapeManager.editSelectedShapes()
 
                 OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN ->
-                    selectedShapeManager.moveSelectedShape(1, 0)
+                    moveSelectedShapes(1, 0)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_UP ->
-                    selectedShapeManager.moveSelectedShape(-1, 0)
+                    moveSelectedShapes(-1, 0)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT ->
-                    selectedShapeManager.moveSelectedShape(0, -1)
+                    moveSelectedShapes(0, -1)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT ->
-                    selectedShapeManager.moveSelectedShape(0, 1)
+                    moveSelectedShapes(0, 1)
             }.exhaustive
         }
+    }
+
+    private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
+        for (shape in selectedShapeManager.selectedShapes) {
+            val bound = shape.bound
+            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
+            val newBound = shape.bound.copy(position = newPosition)
+            shapeManager.execute(ChangeBound(shape, newBound))
+        }
+        updateInteractionBounds(selectedShapeManager.selectedShapes)
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {

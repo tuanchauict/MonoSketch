@@ -1,11 +1,9 @@
 package mono.state
 
 import mono.common.exhaustive
-import mono.graphics.geo.Point
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.ShapeManager
-import mono.shape.command.ChangeBound
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -46,16 +44,6 @@ class SelectedShapeManager(private val shapeManager: ShapeManager) {
             shapeManager.remove(shape)
         }
         selectedShapesMutableLiveData.value = emptySet()
-    }
-
-    fun moveSelectedShape(offsetRow: Int, offsetCol: Int) {
-        for (shape in selectedShapes) {
-            val bound = shape.bound
-            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
-            val newBound = shape.bound.copy(position = newPosition)
-            shapeManager.execute(ChangeBound(shape, newBound))
-        }
-        selectedShapesMutableLiveData.value = selectedShapes
     }
 
     fun editSelectedShapes() {
