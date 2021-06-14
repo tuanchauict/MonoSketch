@@ -33,6 +33,7 @@ import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
+import mono.state.command.text.EditTextShapeHelper
 
 /**
  * A class which is connect components in the app.
@@ -102,21 +103,14 @@ class MainStateManager(
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
-                OneTimeActionType.DESELECT_SHAPES ->
-                    selectedShapeManager.setSelectedShapes()
-                OneTimeActionType.DELETE_SELECTED_SHAPES ->
-                    selectedShapeManager.deleteSelectedShapes()
-                OneTimeActionType.EDIT_SELECTED_SHAPES ->
-                    selectedShapeManager.editSelectedShapes()
+                OneTimeActionType.DESELECT_SHAPES -> selectedShapeManager.setSelectedShapes()
+                OneTimeActionType.DELETE_SELECTED_SHAPES -> selectedShapeManager.deleteSelectedShapes()
+                OneTimeActionType.EDIT_SELECTED_SHAPES -> editSelectedShapes()
 
-                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN ->
-                    moveSelectedShapes(1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_UP ->
-                    moveSelectedShapes(-1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT ->
-                    moveSelectedShapes(0, -1)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT ->
-                    moveSelectedShapes(0, 1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN -> moveSelectedShapes(1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_UP -> moveSelectedShapes(-1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT -> moveSelectedShapes(0, -1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT -> moveSelectedShapes(0, 1)
             }.exhaustive
         }
     }
@@ -129,6 +123,17 @@ class MainStateManager(
             shapeManager.execute(ChangeBound(shape, newBound))
         }
         updateInteractionBounds(selectedShapeManager.selectedShapes)
+    }
+
+    private fun editSelectedShapes() {
+        val singleShape = selectedShapeManager.selectedShapes.singleOrNull() ?: return
+        when (singleShape) {
+            is Text -> EditTextShapeHelper.showEditTextDialog(shapeManager, singleShape)
+            is Line,
+            is Rectangle,
+            is MockShape,
+            is Group -> Unit
+        }.exhaustive
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
