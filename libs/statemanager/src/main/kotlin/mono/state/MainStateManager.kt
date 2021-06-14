@@ -49,8 +49,7 @@ class MainStateManager(
 
     private var workingParentGroup: Group = shapeManager.root
 
-    private val selectedShapeManager: SelectedShapeManager =
-        SelectedShapeManager(shapeManager, canvasManager)
+    private val selectedShapeManager: SelectedShapeManager = SelectedShapeManager(shapeManager)
 
     private var windowBoardBound: Rect = Rect.ZERO
 
@@ -250,6 +249,10 @@ class MainStateManager(
 
         override fun updateInteractionBounds() {
             stateManager.updateInteractionBounds(stateManager.selectedShapeManager.selectedShapes)
+        }
+
+        override fun setSelectionBound(bound: Rect?) {
+            stateManager.canvasManager.drawSelectionBound(bound)
         }
     }
 

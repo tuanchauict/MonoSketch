@@ -15,7 +15,7 @@ internal object SelectShapeMouseCommand : MouseCommand {
         when (mousePointer) {
             is MousePointer.Down -> false
             is MousePointer.Drag -> {
-                environment.selectedShapeManager.setSelectionBound(
+                environment.setSelectionBound(
                     Rect.byLTRB(
                         mousePointer.mouseDownPoint.left,
                         mousePointer.mouseDownPoint.top,
@@ -26,7 +26,7 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 false
             }
             is MousePointer.Up -> {
-                environment.selectedShapeManager.setSelectionBound(null)
+                environment.setSelectionBound(null)
 
                 val area = Rect.byLTRB(
                     mousePointer.mouseDownPoint.left,

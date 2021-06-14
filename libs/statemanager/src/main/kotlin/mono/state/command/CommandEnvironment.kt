@@ -1,6 +1,7 @@
 package mono.state.command
 
 import mono.graphics.geo.Point
+import mono.graphics.geo.Rect
 import mono.shape.ShapeManager
 import mono.shape.shape.Group
 import mono.shapebound.InteractionPoint
@@ -19,4 +20,6 @@ internal interface CommandEnvironment {
     fun getInteractionPoint(pointPx: Point): InteractionPoint?
     
     fun updateInteractionBounds()
+    
+    fun setSelectionBound(bound: Rect?)
 }

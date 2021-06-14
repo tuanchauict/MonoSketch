@@ -2,8 +2,6 @@ package mono.state
 
 import mono.common.exhaustive
 import mono.graphics.geo.Point
-import mono.graphics.geo.Rect
-import mono.html.canvas.CanvasViewController
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.ShapeManager
@@ -20,10 +18,7 @@ import mono.state.command.text.EditTextShapeHelper
 /**
  * A model class to manage selected shapes and render the selection bound.
  */
-class SelectedShapeManager(
-    private val shapeManager: ShapeManager,
-    private val canvasManager: CanvasViewController
-) {
+class SelectedShapeManager(private val shapeManager: ShapeManager) {
     var selectedShapes: Set<AbstractShape> = emptySet()
         private set
 
@@ -72,10 +67,6 @@ class SelectedShapeManager(
             is MockShape,
             is Group -> Unit
         }.exhaustive
-    }
-
-    fun setSelectionBound(bound: Rect?) {
-        canvasManager.drawSelectionBound(bound)
     }
 
     fun isInSelectionBounds(point: Point): Boolean = selectedShapes.any { it.contains(point) }
