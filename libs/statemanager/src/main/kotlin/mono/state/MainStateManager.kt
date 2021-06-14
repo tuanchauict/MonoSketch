@@ -19,13 +19,22 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
+import mono.shape.command.ChangeBound
+import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
+import mono.shape.shape.Line
+import mono.shape.shape.MockShape
+import mono.shape.shape.Rectangle
+import mono.shape.shape.Text
 import mono.shapebound.InteractionPoint
+import mono.shapebound.LineInteractionBound
+import mono.shapebound.ScalableInteractionBound
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
+import mono.state.command.text.EditTextShapeHelper
 
 /**
  * A class which is connect components in the app.
@@ -43,12 +52,9 @@ class MainStateManager(
 
     private var workingParentGroup: Group = shapeManager.root
 
-    private val selectedShapeManager: SelectedShapeManager =
-        SelectedShapeManager(shapeManager, canvasManager, ::requestRedraw)
-
     private var windowBoardBound: Rect = Rect.ZERO
 
-    private val environment: CommandEnvironment = CommandEnvironmentImpl(this)
+    private val environment: CommandEnvironmentImpl = CommandEnvironmentImpl(this)
     private var currentMouseCommand: MouseCommand? = null
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
@@ -79,6 +85,11 @@ class MainStateManager(
                 requestRedraw()
             }
 
+        environment.selectedShapeManager.selectedShapesLiveData.observe(
+            lifecycleOwner,
+            listener = ::updateInteractionBounds
+        )
+
         redrawRequestMutableLiveData.observe(lifecycleOwner, 1) { redraw() }
 
         actionManager.retainableActionLiveData.observe(lifecycleOwner) {
@@ -91,23 +102,45 @@ class MainStateManager(
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
-                OneTimeActionType.DESELECT_SHAPES ->
-                    selectedShapeManager.setSelectedShapes()
-                OneTimeActionType.DELETE_SELECTED_SHAPES ->
-                    selectedShapeManager.deleteSelectedShapes()
-                OneTimeActionType.EDIT_SELECTED_SHAPES ->
-                    selectedShapeManager.editSelectedShapes()
+                OneTimeActionType.DESELECT_SHAPES -> environment.clearSelectedShapes()
+                OneTimeActionType.DELETE_SELECTED_SHAPES -> deleteSelectedShapes()
+                OneTimeActionType.EDIT_SELECTED_SHAPES -> editSelectedShapes()
 
-                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN ->
-                    selectedShapeManager.moveSelectedShape(1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_UP ->
-                    selectedShapeManager.moveSelectedShape(-1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT ->
-                    selectedShapeManager.moveSelectedShape(0, -1)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT ->
-                    selectedShapeManager.moveSelectedShape(0, 1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN -> moveSelectedShapes(1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_UP -> moveSelectedShapes(-1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT -> moveSelectedShapes(0, -1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT -> moveSelectedShapes(0, 1)
             }.exhaustive
         }
+    }
+
+    private fun deleteSelectedShapes() {
+        for (shape in environment.getSelectedShapes()) {
+            shapeManager.remove(shape)
+        }
+        environment.clearSelectedShapes()
+    }
+
+    private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
+        val selectedShapes = environment.getSelectedShapes()
+        for (shape in selectedShapes) {
+            val bound = shape.bound
+            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
+            val newBound = shape.bound.copy(position = newPosition)
+            shapeManager.execute(ChangeBound(shape, newBound))
+        }
+        updateInteractionBounds(selectedShapes)
+    }
+
+    private fun editSelectedShapes() {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        when (singleShape) {
+            is Text -> EditTextShapeHelper.showEditTextDialog(shapeManager, singleShape)
+            is Line,
+            is Rectangle,
+            is MockShape,
+            is Group -> Unit
+        }.exhaustive
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
@@ -155,7 +188,7 @@ class MainStateManager(
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
         val highlight =
-            if (shape in selectedShapeManager.selectedShapes) Highlight.SELECTED else Highlight.NO
+            if (shape in environment.getSelectedShapes()) Highlight.SELECTED else Highlight.NO
         mainBoard.fill(shape.bound.position, bitmap, highlight)
         shapeSearcher.register(shape)
     }
@@ -175,13 +208,14 @@ class MainStateManager(
     }
 
     private fun exportSelectedShape() {
-        val selectedShapes =
-            if (selectedShapeManager.selectedShapes.isNotEmpty()) {
-                workingParentGroup.items.filter { it in selectedShapeManager.selectedShapes }
+        val selectedShapes = environment.getSelectedShapes()
+        val extractableShapes =
+            if (selectedShapes.isNotEmpty()) {
+                workingParentGroup.items.filter { it in selectedShapes }
             } else {
                 listOf(workingParentGroup)
             }
-        ExportShapesModal(selectedShapes, bitmapManager).show()
+        ExportShapesModal(extractableShapes, bitmapManager).show()
     }
 
     private fun updateMouseCursor(mousePointer: MousePointer) {
@@ -205,6 +239,20 @@ class MainStateManager(
         }
     }
 
+    private fun updateInteractionBounds(selectedShapes: Collection<AbstractShape>) {
+        val bounds = selectedShapes.mapNotNull {
+            when (it) {
+                is Rectangle,
+                is Text -> ScalableInteractionBound(it.id, it.bound)
+                is Line -> LineInteractionBound(it.id, it.edges)
+                is Group -> null // TODO: Add new Interaction bound type for Group
+                is MockShape -> null
+            }
+        }
+        canvasManager.drawInteractionBounds(bounds)
+        requestRedraw()
+    }
+
     private class CommandEnvironmentImpl(
         private val stateManager: MainStateManager
     ) : CommandEnvironment {
@@ -217,11 +265,32 @@ class MainStateManager(
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 
-        override val selectedShapeManager: SelectedShapeManager
-            get() = stateManager.selectedShapeManager
+        val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
 
         override fun getInteractionPoint(pointPx: Point): InteractionPoint? =
             stateManager.canvasManager.getInteractionPoint(pointPx)
+
+        override fun updateInteractionBounds() =
+            stateManager.updateInteractionBounds(selectedShapeManager.selectedShapes)
+
+        override fun isPointInInteractionBounds(point: Point): Boolean =
+            selectedShapeManager.selectedShapes.any { it.contains(point) }
+
+        override fun setSelectionBound(bound: Rect?) =
+            stateManager.canvasManager.drawSelectionBound(bound)
+
+        override fun getSelectedShapes(): Set<AbstractShape> = selectedShapeManager.selectedShapes
+
+        override fun addSelectedShape(shape: AbstractShape?) {
+            if (shape != null) {
+                selectedShapeManager.addSelectedShape(shape)
+            }
+        }
+
+        override fun toggleShapeSelection(shape: AbstractShape) =
+            selectedShapeManager.toggleSelection(shape)
+
+        override fun clearSelectedShapes() = selectedShapeManager.clearSelectedShapes()
     }
 
     companion object {

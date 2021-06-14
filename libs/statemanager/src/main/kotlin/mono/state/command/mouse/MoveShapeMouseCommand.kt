@@ -31,7 +31,7 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
             environment.shapeManager.execute(ChangeBound(shape, newBound))
         }
 
-        environment.selectedShapeManager.updateInteractionBound()
+        environment.updateInteractionBounds()
 
         return mousePointer is MousePointer.Up || mousePointer == MousePointer.Idle
     }

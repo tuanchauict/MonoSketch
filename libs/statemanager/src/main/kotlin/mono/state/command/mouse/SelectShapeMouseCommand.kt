@@ -15,7 +15,7 @@ internal object SelectShapeMouseCommand : MouseCommand {
         when (mousePointer) {
             is MousePointer.Down -> false
             is MousePointer.Drag -> {
-                environment.selectedShapeManager.setSelectionBound(
+                environment.setSelectionBound(
                     Rect.byLTRB(
                         mousePointer.mouseDownPoint.left,
                         mousePointer.mouseDownPoint.top,
@@ -26,7 +26,7 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 false
             }
             is MousePointer.Up -> {
-                environment.selectedShapeManager.setSelectionBound(null)
+                environment.setSelectionBound(null)
 
                 val area = Rect.byLTRB(
                     mousePointer.mouseDownPoint.left,
@@ -40,12 +40,13 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 } else {
                     emptyList()
                 }
-                val selectedShapes = if (mousePointer.isWithShiftKey) {
-                    environment.selectedShapeManager.selectedShapes + shapes
-                } else {
-                    shapes
+
+                if (!mousePointer.isWithShiftKey) {
+                    environment.clearSelectedShapes()
                 }
-                environment.selectedShapeManager.setSelectedShapes(*selectedShapes.toTypedArray())
+                for (shape in shapes) {
+                    environment.addSelectedShape(shape)
+                }
                 false
             }
             is MousePointer.Click -> {
@@ -53,9 +54,10 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 if (shapes.isNotEmpty()) {
                     val shape = shapes.last()
                     if (mousePointer.isWithShiftKey) {
-                        environment.selectedShapeManager.toggleSelection(shape)
+                        environment.toggleShapeSelection(shape)
                     } else {
-                        environment.selectedShapeManager.setSelectedShapes(shape)
+                        environment.clearSelectedShapes()
+                        environment.addSelectedShape(shape)
                     }
                 }
                 true
