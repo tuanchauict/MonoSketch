@@ -43,7 +43,7 @@ internal object MouseCommandFactory {
         commandEnvironment: CommandEnvironment,
         mousePointer: MousePointer.Down
     ): MouseCommand? {
-        val selectedShapes = commandEnvironment.selectedShapeManager.selectedShapes
+        val selectedShapes = commandEnvironment.getSelectedShapes()
         if (selectedShapes.isEmpty()) {
             return null
         }
@@ -57,7 +57,7 @@ internal object MouseCommandFactory {
         }
 
         if (!mousePointer.isWithShiftKey &&
-            selectedShapes.any { it.contains(mousePointer.point) }
+            commandEnvironment.isPointInInteractionBounds(mousePointer.point)
         ) {
             return MoveShapeMouseCommand(selectedShapes)
         }

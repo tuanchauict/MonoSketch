@@ -122,7 +122,7 @@ class MainStateManager(
         }
         environment.clearSelectedShapes()
     }
-    
+
     private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
         val selectedShapes = selectedShapeManager.selectedShapes
         for (shape in selectedShapes) {
@@ -267,19 +267,22 @@ class MainStateManager(
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 
-        override val selectedShapeManager: SelectedShapeManager
+        private val selectedShapeManager: SelectedShapeManager
             get() = stateManager.selectedShapeManager
 
         override fun getInteractionPoint(pointPx: Point): InteractionPoint? =
             stateManager.canvasManager.getInteractionPoint(pointPx)
 
-        override fun updateInteractionBounds() {
+        override fun updateInteractionBounds() =
             stateManager.updateInteractionBounds(selectedShapeManager.selectedShapes)
-        }
 
-        override fun setSelectionBound(bound: Rect?) {
+        override fun isPointInInteractionBounds(point: Point): Boolean =
+            selectedShapeManager.selectedShapes.any { it.contains(point) }
+
+        override fun setSelectionBound(bound: Rect?) =
             stateManager.canvasManager.drawSelectionBound(bound)
-        }
+
+        override fun getSelectedShapes(): Set<AbstractShape> = selectedShapeManager.selectedShapes
 
         override fun addSelectedShape(shape: AbstractShape?) {
             if (shape != null) {

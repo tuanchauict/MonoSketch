@@ -7,7 +7,6 @@ import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shapebound.InteractionPoint
 import mono.shapesearcher.ShapeSearcher
-import mono.state.SelectedShapeManager
 
 /**
  * An interface defines apis for command to interact with the environment.
@@ -16,13 +15,16 @@ internal interface CommandEnvironment {
     val shapeManager: ShapeManager
     val shapeSearcher: ShapeSearcher
     val workingParentGroup: Group
-    val selectedShapeManager: SelectedShapeManager
 
     fun getInteractionPoint(pointPx: Point): InteractionPoint?
     
     fun updateInteractionBounds()
+
+    fun isPointInInteractionBounds(point: Point): Boolean
     
     fun setSelectionBound(bound: Rect?)
+    
+    fun getSelectedShapes(): Set<AbstractShape>
     
     fun addSelectedShape(shape: AbstractShape?)
     
