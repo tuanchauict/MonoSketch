@@ -1,5 +1,6 @@
 package mono.state.command
 
+import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.ShapeManager
@@ -31,4 +32,6 @@ internal interface CommandEnvironment {
     fun toggleShapeSelection(shape: AbstractShape)
 
     fun clearSelectedShapes()
+
+    fun getEdgeDirection(point: Point): DirectedPoint.Direction?
 }
