@@ -18,9 +18,11 @@ internal class AddLineMouseCommand : MouseCommand {
     override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
         when (mousePointer) {
             is MousePointer.Down -> {
-                // TODO: Detect direction based on the environment
+                val edgeDirection = environment.getEdgeDirection(mousePointer.point)
+                val direction =
+                    edgeDirection?.normalizedDirection ?: DirectedPoint.Direction.HORIZONTAL
                 val shape = Line(
-                    DirectedPoint(DirectedPoint.Direction.HORIZONTAL, mousePointer.point),
+                    DirectedPoint(direction, mousePointer.point),
                     DirectedPoint(DirectedPoint.Direction.VERTICAL, mousePointer.point),
                     environment.workingParentGroup.id
                 )
@@ -30,11 +32,11 @@ internal class AddLineMouseCommand : MouseCommand {
                 false
             }
             is MousePointer.Drag -> {
-                environment.changeEndAnchor(mousePointer.point, false)
+                environment.changeEndAnchor(environment, mousePointer.point, false)
                 false
             }
             is MousePointer.Up -> {
-                environment.changeEndAnchor(mousePointer.point, true)
+                environment.changeEndAnchor(environment, mousePointer.point, true)
 
                 if (isValidLine()) {
                     environment.addSelectedShape(workingShape)
@@ -55,13 +57,18 @@ internal class AddLineMouseCommand : MouseCommand {
         return line.bound.width * line.bound.height > 1
     }
 
-    private fun CommandEnvironment.changeEndAnchor(point: Point, isReducedRequired: Boolean) {
-        val currentShape = workingShape ?: return
-        // TODO: Detect direction based on the environment.
+    private fun CommandEnvironment.changeEndAnchor(
+        environment: CommandEnvironment,
+        point: Point,
+        isReducedRequired: Boolean
+    ) {
+        val line = workingShape ?: return
+        val edgeDirection = environment.getEdgeDirection(point)
+        val direction = edgeDirection?.normalizedDirection ?: line.getDirection(Line.Anchor.END)
         val anchorPointUpdate = Line.AnchorPointUpdate(
             Line.Anchor.END,
-            DirectedPoint(DirectedPoint.Direction.VERTICAL, point)
+            DirectedPoint(direction, point)
         )
-        shapeManager.execute(MoveLineAnchor(currentShape, anchorPointUpdate, isReducedRequired))
+        shapeManager.execute(MoveLineAnchor(line, anchorPointUpdate, isReducedRequired))
     }
 }

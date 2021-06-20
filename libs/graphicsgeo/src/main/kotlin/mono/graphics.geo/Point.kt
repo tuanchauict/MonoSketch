@@ -46,6 +46,12 @@ data class DirectedPoint(
         HORIZONTAL,
 
         @SerialName("V")
-        VERTICAL
+        VERTICAL;
+
+        val normalizedDirection: Direction
+            get() = when (this) {
+                VERTICAL -> HORIZONTAL
+                HORIZONTAL -> VERTICAL
+            }
     }
 }
