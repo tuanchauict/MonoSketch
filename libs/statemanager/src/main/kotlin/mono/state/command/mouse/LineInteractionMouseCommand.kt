@@ -47,8 +47,9 @@ internal class LineInteractionMouseCommand(
         point: Point,
         isReducedRequired: Boolean
     ) {
-        // TODO: Detect direction based on the environment.
-        val direction = lineShape.getDirection(interactionPoint.anchor)
+        val edgeDirection = environment.getEdgeDirection(point)
+        val direction =
+            edgeDirection?.normalizedDirection ?: lineShape.getDirection(interactionPoint.anchor)
         val anchorPointUpdate = Line.AnchorPointUpdate(
             interactionPoint.anchor,
             DirectedPoint(direction, point)
