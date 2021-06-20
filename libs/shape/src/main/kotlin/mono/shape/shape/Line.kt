@@ -203,6 +203,9 @@ class Line(
         }
         val isUpdated = newJointPoints != jointPoints
         jointPoints = if (isReduceRequired) LineHelper.reduce(newJointPoints) else newJointPoints
+        if (isReduceRequired && isEdgeUpdated) {
+            confirmedJointPoints = jointPoints
+        }
         edges = LineHelper.createEdges(jointPoints)
 
         isUpdated
