@@ -7,6 +7,7 @@ import mono.export.ExportShapesModal
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
+import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -291,6 +292,9 @@ class MainStateManager(
             selectedShapeManager.toggleSelection(shape)
 
         override fun clearSelectedShapes() = selectedShapeManager.clearSelectedShapes()
+
+        override fun getEdgeDirection(point: Point): DirectedPoint.Direction? =
+            shapeSearcher.getEdgeDirection(point)
     }
 
     companion object {
