@@ -2,10 +2,13 @@ package mono.shapesearcher
 
 import mono.common.Characters.isTransparent
 import mono.graphics.bitmap.MonoBitmapManager
+import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.ShapeManager
 import mono.shape.shape.AbstractShape
+import mono.shape.shape.Rectangle
+import mono.shape.shape.Text
 
 /**
  * A model class which optimises shapes retrieval from a point.
@@ -51,4 +54,30 @@ class ShapeSearcher(
             .mapNotNull { shapeManager.getShape(it) }
             .filter { it.bound.isOverlapped(bound) }
             .toList()
+
+    /**
+     * Gets the edge direction of a shape having bound's edges at [point].
+     * The considerable shape types are shapes having static bound such as [Text], [Rectangle].
+     * If there are many shapes satisfying the conditions, the first one will be used.
+     */
+    fun getEdgeDirection(point: Point): DirectedPoint.Direction? {
+        val shape = zoneOwnersManager.getPotentialOwners(point)
+            .asSequence()
+            .mapNotNull { shapeManager.getShape(it) }
+            .filter { it is Text || it is Rectangle }
+            .filter { it.contains(point) }
+            .filter {
+                it.bound.left == point.left ||
+                    it.bound.right == point.left ||
+                    it.bound.top == point.top ||
+                    it.bound.bottom == point.top
+            }
+            .firstOrNull()
+        return when {
+            shape == null -> null
+            shape.bound.left == point.left ||
+                shape.bound.right == point.left -> DirectedPoint.Direction.VERTICAL
+            else -> DirectedPoint.Direction.HORIZONTAL
+        }
+    }
 }
