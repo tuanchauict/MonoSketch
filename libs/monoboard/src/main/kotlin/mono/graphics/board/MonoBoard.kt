@@ -158,6 +158,29 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
                 .getOrPut(boardColIndex) { BoardAddress(boardRowIndex, boardColIndex) }
     }
 
+    /**
+     * A data class that stores information of a cross point when drawing a bitmap with
+     * [PainterBoard].
+     * CrossPoint will then be drawn to the board after non-crossing pixels are drawn.
+     *
+     * @param [boardRow] and [boardColumn] are the location of point on the board.
+     * @param [char] is the character at the crossing point
+     * @param [leftChar], [rightChar], [topChar], and [bottomChar] are 4 characters around the
+     * crossing point
+     */
+    internal data class CrossPoint(
+        val boardRow: Int,
+        val boardColumn: Int,
+        val char: Char,
+        val leftChar: Char,
+        val rightChar: Char,
+        val topChar: Char,
+        val bottomChar: Char,
+    ) {
+        val left: Int = boardColumn
+        val top: Int = boardRow
+    }
+
     companion object {
         val STANDARD_UNIT_SIZE = Size(16, 16)
     }
