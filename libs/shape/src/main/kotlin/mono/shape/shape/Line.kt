@@ -86,9 +86,9 @@ class Line(
     var edges: List<Edge> = LineHelper.createEdges(jointPoints)
         private set
 
-    var anchorCharStart: AnchorChar = AnchorChar('─', '─', '|', '|')
+    var anchorCharStart: AnchorChar = AnchorChar('─', '─', '│', '│')
         private set
-    var anchorCharEnd: AnchorChar = AnchorChar('─', '─', '|', '|')
+    var anchorCharEnd: AnchorChar = AnchorChar('─', '─', '│', '│')
         private set
 
     /**
