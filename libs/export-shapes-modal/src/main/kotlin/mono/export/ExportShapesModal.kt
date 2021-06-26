@@ -113,8 +113,8 @@ class ExportShapesModal(
         div("modal-body") {
             pre {
                 attributes["contenteditable"] = "true"
-                style =
-                    "line-height: 15px; font-size: 12px; height: 100%; outline: none; min-height: 160px"
+                style = "line-height: 15px; font-size: 12px; height: 100%; outline: none; " +
+                    "min-height: 160px"
                 +content
             }
         }
