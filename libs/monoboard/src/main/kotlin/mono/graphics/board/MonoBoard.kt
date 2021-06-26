@@ -1,6 +1,12 @@
 package mono.graphics.board
 
 import mono.graphics.bitmap.MonoBitmap
+import mono.graphics.board.CrossingResources.BOTTOM_IN_CHARS
+import mono.graphics.board.CrossingResources.CONNECTOR_CHAR_MAP
+import mono.graphics.board.CrossingResources.LEFT_IN_CHARS
+import mono.graphics.board.CrossingResources.RIGHT_IN_CHARS
+import mono.graphics.board.CrossingResources.TOP_IN_CHARS
+import mono.graphics.board.CrossingResources.inDirectionMark
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -30,8 +36,36 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         val rect = Rect(position, bitmap.size)
         val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = true)
 
+        val crossingPoints = mutableListOf<CrossPoint>()
         for (board in affectedBoards) {
-            board.fill(position, bitmap, highlight)
+            crossingPoints += board.fill(position, bitmap, highlight)
+        }
+
+        drawCrossingPoints(crossingPoints, highlight)
+    }
+
+    private fun drawCrossingPoints(crossingPoints: List<CrossPoint>, highlight: Highlight) {
+        for (charPoint in crossingPoints) {
+            val currentPixel = get(charPoint.left, charPoint.top)
+            val directionMap =
+                CONNECTOR_CHAR_MAP["${currentPixel.char}${charPoint.char}"]
+                    ?: CONNECTOR_CHAR_MAP["${charPoint.char}${currentPixel.char}"]
+            if (directionMap == null) {
+                currentPixel.set(charPoint.char, highlight)
+                continue
+            }
+            val directionMark =
+                inDirectionMark(
+                    hasLeft = charPoint.leftChar in LEFT_IN_CHARS ||
+                        get(charPoint.left - 1, charPoint.top).char in LEFT_IN_CHARS,
+                    hasRight = charPoint.rightChar in RIGHT_IN_CHARS ||
+                        get(charPoint.left + 1, charPoint.top).char in RIGHT_IN_CHARS,
+                    hasTop = charPoint.topChar in TOP_IN_CHARS ||
+                        get(charPoint.left, charPoint.top - 1).char in TOP_IN_CHARS,
+                    hasBottom = charPoint.bottomChar in BOTTOM_IN_CHARS ||
+                        get(charPoint.left, charPoint.top + 1).char in BOTTOM_IN_CHARS,
+                )
+            currentPixel.set(directionMap[directionMark] ?: charPoint.char, highlight)
         }
     }
 
