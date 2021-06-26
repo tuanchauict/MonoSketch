@@ -31,12 +31,12 @@ internal object CrossingResources {
         ),
 
         "─┐" to mapOf(
-            inDirectionMark(hasRight = true, hasBottom = true) to '┐',
+            inDirectionMark(hasLeft = true, hasBottom = true) to '┐',
             inDirectionMark(hasHorizontal = true, hasBottom = true) to '┬'
         ),
 
         "─┘" to mapOf(
-            inDirectionMark(hasRight = true, hasTop = true) to '┘',
+            inDirectionMark(hasLeft = true, hasTop = true) to '┘',
             inDirectionMark(hasHorizontal = true, hasTop = true) to '┴'
         ),
 
