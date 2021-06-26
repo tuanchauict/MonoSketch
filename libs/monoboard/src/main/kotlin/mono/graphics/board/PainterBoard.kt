@@ -27,21 +27,6 @@ internal class PainterBoard(internal val bound: Rect) {
     }
 
     /**
-     * Force values overlap with [rect] to be [char] regardless they are [TRANSPARENT_CHAR]
-     */
-    fun fill(rect: Rect, char: Char, highlight: Highlight) {
-        val overlap = bound.getOverlappedRect(rect) ?: return
-        val (startCol, startRow) = overlap.position - bound.position
-
-        for (r in 0 until overlap.height) {
-            val row = matrix[r + startRow]
-            for (c in 0 until overlap.width) {
-                row[c + startCol].set(char, highlight)
-            }
-        }
-    }
-
-    /**
      * Fills with another [PainterBoard].
      * If a pixel in input [PainterBoard] is transparent, the value in the current board at that
      * position won't be overwritten.
@@ -99,11 +84,31 @@ internal class PainterBoard(internal val bound: Rect) {
     }
 
     /**
-     * Force value at [position] to be [char] with [highlight]
+     * Force values overlap with [rect] to be [char] regardless they are [TRANSPARENT_CHAR].
+     *
+     * Note: This method is for testing only
+     */
+    fun fill(rect: Rect, char: Char, highlight: Highlight) {
+        val overlap = bound.getOverlappedRect(rect) ?: return
+        val (startCol, startRow) = overlap.position - bound.position
+
+        for (r in 0 until overlap.height) {
+            val row = matrix[r + startRow]
+            for (c in 0 until overlap.width) {
+                row[c + startCol].set(char, highlight)
+            }
+        }
+    }
+
+    /**
+     * Force value at [position] to be [char] with [highlight].
+     *
+     * Note: This method is for testing only
      */
     fun set(position: Point, char: Char, highlight: Highlight) =
         set(position.left, position.top, char, highlight)
 
+    // This method is for testing only
     fun set(left: Int, top: Int, char: Char, highlight: Highlight) {
         val columnIndex = left - bound.left
         val rowIndex = top - bound.top

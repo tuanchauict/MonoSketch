@@ -26,13 +26,6 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         }
     }
 
-    fun fill(rect: Rect, char: Char, highlight: Highlight) {
-        val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = true)
-        for (board in affectedBoards) {
-            board.fill(rect, char, highlight)
-        }
-    }
-
     fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
         val rect = Rect(position, bitmap.size)
         val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = true)
@@ -42,10 +35,20 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         }
     }
 
-    fun set(position: Point, char: Char, highlight: Highlight) {
+    // This method is for testing only
+    internal fun fill(rect: Rect, char: Char, highlight: Highlight) {
+        val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = true)
+        for (board in affectedBoards) {
+            board.fill(rect, char, highlight)
+        }
+    }
+
+    // This method is for testing only
+    internal fun set(position: Point, char: Char, highlight: Highlight) {
         set(position.left, position.top, char, highlight)
     }
 
+    // This method is for testing only
     fun set(left: Int, top: Int, char: Char, highlight: Highlight) {
         getOrCreateBoard(left, top, isCreateRequired = true)
             ?.set(left, top, char, highlight)
