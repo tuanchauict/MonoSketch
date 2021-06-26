@@ -1,6 +1,12 @@
 package mono.graphics.board
 
 import mono.graphics.bitmap.MonoBitmap
+import mono.graphics.board.CrossingResources.BOTTOM_IN_CHARS
+import mono.graphics.board.CrossingResources.CONNECTOR_CHAR_MAP
+import mono.graphics.board.CrossingResources.LEFT_IN_CHARS
+import mono.graphics.board.CrossingResources.RIGHT_IN_CHARS
+import mono.graphics.board.CrossingResources.TOP_IN_CHARS
+import mono.graphics.board.CrossingResources.inDirectionMark
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -26,26 +32,57 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         }
     }
 
-    fun fill(rect: Rect, char: Char, highlight: Highlight) {
+    fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
+        val rect = Rect(position, bitmap.size)
+        val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = true)
+
+        val crossingPoints = mutableListOf<CrossPoint>()
+        for (board in affectedBoards) {
+            crossingPoints += board.fill(position, bitmap, highlight)
+        }
+
+        drawCrossingPoints(crossingPoints, highlight)
+    }
+
+    private fun drawCrossingPoints(crossingPoints: List<CrossPoint>, highlight: Highlight) {
+        for (charPoint in crossingPoints) {
+            val currentPixel = get(charPoint.left, charPoint.top)
+            val directionMap =
+                CONNECTOR_CHAR_MAP["${currentPixel.char}${charPoint.char}"]
+                    ?: CONNECTOR_CHAR_MAP["${charPoint.char}${currentPixel.char}"]
+            if (directionMap == null) {
+                currentPixel.set(charPoint.char, highlight)
+                continue
+            }
+            val directionMark =
+                inDirectionMark(
+                    hasLeft = charPoint.leftChar in LEFT_IN_CHARS ||
+                        get(charPoint.left - 1, charPoint.top).char in LEFT_IN_CHARS,
+                    hasRight = charPoint.rightChar in RIGHT_IN_CHARS ||
+                        get(charPoint.left + 1, charPoint.top).char in RIGHT_IN_CHARS,
+                    hasTop = charPoint.topChar in TOP_IN_CHARS ||
+                        get(charPoint.left, charPoint.top - 1).char in TOP_IN_CHARS,
+                    hasBottom = charPoint.bottomChar in BOTTOM_IN_CHARS ||
+                        get(charPoint.left, charPoint.top + 1).char in BOTTOM_IN_CHARS,
+                )
+            currentPixel.set(directionMap[directionMark] ?: charPoint.char, highlight)
+        }
+    }
+
+    // This method is for testing only
+    internal fun fill(rect: Rect, char: Char, highlight: Highlight) {
         val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = true)
         for (board in affectedBoards) {
             board.fill(rect, char, highlight)
         }
     }
 
-    fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
-        val rect = Rect(position, bitmap.size)
-        val affectedBoards = getOrCreateOverlappedBoards(rect, isCreateRequired = true)
-
-        for (board in affectedBoards) {
-            board.fill(position, bitmap, highlight)
-        }
-    }
-
-    fun set(position: Point, char: Char, highlight: Highlight) {
+    // This method is for testing only
+    internal fun set(position: Point, char: Char, highlight: Highlight) {
         set(position.left, position.top, char, highlight)
     }
 
+    // This method is for testing only
     fun set(left: Int, top: Int, char: Char, highlight: Highlight) {
         getOrCreateBoard(left, top, isCreateRequired = true)
             ?.set(left, top, char, highlight)
@@ -153,6 +190,29 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         fun get(boardRowIndex: Int, boardColIndex: Int): BoardAddress =
             addressMap.getOrPut(boardRowIndex) { mutableMapOf() }
                 .getOrPut(boardColIndex) { BoardAddress(boardRowIndex, boardColIndex) }
+    }
+
+    /**
+     * A data class that stores information of a cross point when drawing a bitmap with
+     * [PainterBoard].
+     * CrossPoint will then be drawn to the board after non-crossing pixels are drawn.
+     *
+     * @param [boardRow] and [boardColumn] are the location of point on the board.
+     * @param [char] is the character at the crossing point
+     * @param [leftChar], [rightChar], [topChar], and [bottomChar] are 4 characters around the
+     * crossing point
+     */
+    internal data class CrossPoint(
+        val boardRow: Int,
+        val boardColumn: Int,
+        val char: Char,
+        val leftChar: Char,
+        val rightChar: Char,
+        val topChar: Char,
+        val bottomChar: Char,
+    ) {
+        val left: Int = boardColumn
+        val top: Int = boardRow
     }
 
     companion object {
