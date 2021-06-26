@@ -2,6 +2,7 @@ package mono.graphics.board
 
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.MonoBitmap
+import mono.graphics.board.MonoBoard.CrossPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -57,30 +58,66 @@ internal class PainterBoard(internal val bound: Rect) {
     }
 
     /**
-     * Fills with a bitmap and the highlight state of that bitmap from [position].
+     * Fills with a bitmap and the highlight state of that bitmap from [position] excepts crossing
+     * points. Connection point are the point whose the char is one of connection characters defined
+     * in [CrossingResources.CONNECTABLE_CHARS] and there is a character drawn at the position.
+     * A list of [CrossPoint] will be returned to let [MonoBoard] able to adjust and draw the
+     * adjusted character of the connection points.
+     *
+     * The main reason why it is required to let [MonoBoard] draws the connection points is the
+     * painter board cannot see the pixel outside its bound which is required to identify the final
+     * connection character.
+     *
      * If a pixel in input [bitmap] is transparent, the value in the current board at that
      * position won't be overwritten.
      */
-    fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight) {
+    fun fill(position: Point, bitmap: MonoBitmap, highlight: Highlight): List<CrossPoint> {
         if (bitmap.isEmpty()) {
-            return
+            return emptyList()
         }
         val inMatrix = bitmap.matrix
 
         val inMatrixBound = Rect(position, bitmap.size)
 
-        val overlap = bound.getOverlappedRect(inMatrixBound) ?: return
+        val overlap = bound.getOverlappedRect(inMatrixBound) ?: return emptyList()
         val (startCol, startRow) = overlap.position - bound.position
         val (inStartCol, inStartRow) = overlap.position - position
 
+        val crossingPoints = mutableListOf<CrossPoint>()
+
         for (r in 0 until overlap.height) {
-            val src = inMatrix[inStartRow + r]
-            val dest = matrix[startRow + r]
+            val bitmapRow = inStartRow + r
+            val painterRow = startRow + r
+            val src = inMatrix[bitmapRow]
+            val dest = matrix[painterRow]
 
             src.forEachIndex(inStartCol, inStartCol + overlap.width) { index, char ->
-                dest[startCol + index].set(char, highlight)
+                val bitmapColumn = inStartCol + index
+                val painterColumn = startCol + index
+                val pixel = dest[painterColumn]
+
+                if (pixel.isTransparent ||
+                    pixel.char == char ||
+                    char !in CrossingResources.CONNECTABLE_CHARS
+                ) {
+                    pixel.set(char, highlight)
+                } else {
+                    crossingPoints.add(
+                        CrossPoint(
+                            boardRow = painterRow + bound.position.row,
+                            boardColumn = painterColumn + bound.position.column,
+                            char,
+                            leftChar = bitmap.get(bitmapRow, bitmapColumn - 1),
+                            rightChar = bitmap.get(bitmapRow, bitmapColumn + 1),
+                            topChar = bitmap.get(bitmapRow - 1, bitmapColumn),
+                            bottomChar = bitmap.get(bitmapRow + 1, bitmapColumn),
+                        )
+                    )
+                }
             }
         }
+
+        return crossingPoints
     }
 
     /**
