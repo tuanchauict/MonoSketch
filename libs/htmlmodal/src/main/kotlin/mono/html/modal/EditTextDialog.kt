@@ -1,13 +1,12 @@
 package mono.html.modal
 
 import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.html.TagConsumer
 import kotlinx.html.contentEditable
 import kotlinx.html.div
 import kotlinx.html.style
 import mono.common.Key
-import mono.common.isCommandKeySupported
+import mono.common.commandKey
 import mono.common.onKeyDown
 import mono.common.setTimeout
 import org.w3c.dom.HTMLElement
@@ -41,6 +40,7 @@ class EditTextDialog(
         }
         textArea.onpaste = {
             it.preventDefault()
+            it.stopPropagation()
             val text = it.clipboardData?.getData("text/plain").orEmpty()
             insertText(text)
         }
@@ -58,8 +58,7 @@ class EditTextDialog(
     }
 
     private fun checkKeyCommand(event: KeyboardEvent) {
-        val isWithCommand = if (window.isCommandKeySupported()) event.metaKey else event.ctrlKey
-        if (event.keyCode == Key.KEY_ENTER && isWithCommand || event.keyCode == Key.KEY_ESC) {
+        if (event.keyCode == Key.KEY_ENTER && event.commandKey || event.keyCode == Key.KEY_ESC) {
             dismiss()
         }
     }

@@ -3,6 +3,7 @@ package mono.state.command
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.livedata.LiveData
 import mono.shape.ShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -17,6 +18,8 @@ internal interface CommandEnvironment {
     val shapeSearcher: ShapeSearcher
     val workingParentGroup: Group
 
+    fun getWindowBound(): Rect
+
     fun getInteractionPoint(pointPx: Point): InteractionPoint?
 
     fun updateInteractionBounds()
@@ -24,6 +27,8 @@ internal interface CommandEnvironment {
     fun isPointInInteractionBounds(point: Point): Boolean
 
     fun setSelectionBound(bound: Rect?)
+
+    val selectedShapesLiveData: LiveData<Set<AbstractShape>>
 
     fun getSelectedShapes(): Set<AbstractShape>
 

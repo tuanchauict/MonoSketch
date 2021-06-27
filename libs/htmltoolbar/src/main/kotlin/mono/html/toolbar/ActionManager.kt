@@ -55,6 +55,10 @@ class ActionManager(
                 setRetainableAction(RetainableActionType.IDLE)
             KeyCommand.ENTER_EDIT_MODE ->
                 setOneTimeAction(OneTimeActionType.EDIT_SELECTED_SHAPES)
+
+            KeyCommand.COPY -> setOneTimeAction(OneTimeActionType.COPY)
+            KeyCommand.CUT -> setOneTimeAction(OneTimeActionType.CUT)
+            KeyCommand.DUPLICATE -> setOneTimeAction(OneTimeActionType.DUPLICATE)
         }.exhaustive
     }
 

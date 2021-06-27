@@ -9,15 +9,16 @@ repositories {
 
 dependencies {
     implementation(project(":commons"))
+    implementation(project(":graphicsgeo"))
     implementation(project(":htmlcanvas"))
     implementation(project(":htmltoolbar"))
     implementation(project(":keycommand"))
     implementation(project(":lifecycle"))
-    implementation(project(":shape"))
+    implementation(project(":livedata"))
     implementation(project(":monoboard"))
     implementation(project(":monobitmap"))
-    implementation(project(":graphicsgeo"))
-    implementation(project(":livedata"))
+    implementation(project(":shape"))
+    implementation(project(":shape-clipboard"))
     implementation(project(":statemanager"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")

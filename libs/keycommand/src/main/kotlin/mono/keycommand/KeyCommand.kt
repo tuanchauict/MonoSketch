@@ -5,7 +5,11 @@ import mono.common.Key
 /**
  * An enum class to contains all shortcut key command.
  */
-enum class KeyCommand(vararg val keyCodes: Int) {
+enum class KeyCommand(
+    vararg val keyCodes: Int,
+    private val commandKeyState: MetaKeyState = MetaKeyState.ANY,
+    val isKeyEventPropagationAllowed: Boolean = true
+) {
     IDLE,
 
     DESELECTION(Key.KEY_ESC),
@@ -21,18 +25,35 @@ enum class KeyCommand(vararg val keyCodes: Int) {
     ADD_LINE(Key.KEY_L),
 
     ENTER_EDIT_MODE(Key.KEY_ENTER),
-    SELECTION_MODE(Key.KEY_V), ;
+    SELECTION_MODE(Key.KEY_V, commandKeyState = MetaKeyState.OFF),
+
+    COPY(Key.KEY_C, commandKeyState = MetaKeyState.ON),
+    CUT(Key.KEY_X, commandKeyState = MetaKeyState.ON),
+    DUPLICATE(Key.KEY_D, commandKeyState = MetaKeyState.ON, isKeyEventPropagationAllowed = false),
+    ;
+
+    private enum class MetaKeyState {
+        ON, OFF, ANY
+    }
 
     companion object {
-        private val KEYCODE_TO_COMMAND_MAP: Map<Int, KeyCommand> =
-            values().fold(mutableMapOf()) { map, type ->
+        private val KEYCODE_TO_COMMAND_MAP: Map<Int, List<KeyCommand>> =
+            values().fold(mutableMapOf<Int, MutableList<KeyCommand>>()) { map, type ->
                 for (keyCode in type.keyCodes) {
-                    map[keyCode] = type
+                    map.getOrPut(keyCode) { mutableListOf() }.add(type)
                 }
                 map
             }
 
-        fun getCommandByKey(keyCode: Int): KeyCommand =
-            KEYCODE_TO_COMMAND_MAP[keyCode] ?: IDLE
+        internal fun getCommandByKey(keyCode: Int, hasCommandKey: Boolean): KeyCommand =
+            KEYCODE_TO_COMMAND_MAP[keyCode]
+                ?.firstOrNull {
+                    when (it.commandKeyState) {
+                        MetaKeyState.ANY -> true
+                        MetaKeyState.ON -> hasCommandKey
+                        MetaKeyState.OFF -> !hasCommandKey
+                    }
+                }
+                ?: IDLE
     }
 }

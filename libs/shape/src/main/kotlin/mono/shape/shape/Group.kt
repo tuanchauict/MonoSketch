@@ -33,13 +33,7 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
 
     constructor(serializableGroup: SerializableGroup, parentId: Int?) : this(parentId) {
         for (serializableShape in serializableGroup.shapes) {
-            val shape = when (serializableShape) {
-                is SerializableRectangle -> Rectangle(serializableShape, id)
-                is SerializableText -> Text(serializableShape, id)
-                is SerializableLine -> Line(serializableShape, id)
-                is SerializableGroup -> Group(serializableShape, id)
-            }
-            add(shape)
+            add(toShape(id, serializableShape))
         }
     }
 
@@ -65,5 +59,15 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
 
     override fun toString(): String {
         return "Group($id)"
+    }
+
+    companion object {
+        fun toShape(parentId: Int, serializableShape: AbstractSerializableShape): AbstractShape =
+            when (serializableShape) {
+                is SerializableRectangle -> Rectangle(serializableShape, parentId)
+                is SerializableText -> Text(serializableShape, parentId)
+                is SerializableLine -> Line(serializableShape, parentId)
+                is SerializableGroup -> Group(serializableShape, parentId)
+            }
     }
 }

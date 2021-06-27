@@ -1,5 +1,6 @@
 package mono.keycommand
 
+import mono.common.commandKey
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import org.w3c.dom.HTMLElement
@@ -18,12 +19,18 @@ class KeyCommandController(private val body: HTMLElement) {
     }
 
     private fun updateCommand(event: KeyboardEvent) {
-        keyCommandMutableLiveData.value = if (event.target == body) {
-            KeyCommand.getCommandByKey(event.keyCode)
+        val keyCommand = if (event.target == body) {
+            KeyCommand.getCommandByKey(event.keyCode, event.commandKey)
         } else {
             KeyCommand.IDLE
         }
-        console.log("Key press ${event.code} : ${event.keyCode}")
+
+        if (!keyCommand.isKeyEventPropagationAllowed) {
+            event.stopPropagation()
+            event.preventDefault()
+        }
+        keyCommandMutableLiveData.value = keyCommand
+        console.log("Key press ${event.code} : ${event.keyCode} cmd ${event.commandKey}")
         keyCommandMutableLiveData.value = KeyCommand.IDLE
     }
 }

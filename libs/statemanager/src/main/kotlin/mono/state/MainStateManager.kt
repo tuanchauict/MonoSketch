@@ -20,6 +20,7 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
+import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
@@ -46,6 +47,7 @@ class MainStateManager(
     private val shapeManager: ShapeManager,
     private val bitmapManager: MonoBitmapManager,
     private val canvasManager: CanvasViewController,
+    shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
     actionManager: ActionManager
 ) {
@@ -56,6 +58,10 @@ class MainStateManager(
     private var windowBoardBound: Rect = Rect.ZERO
 
     private val environment: CommandEnvironmentImpl = CommandEnvironmentImpl(this)
+
+    private val clipboardManager: ClipboardManager =
+        ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
+
     private var currentMouseCommand: MouseCommand? = null
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
@@ -86,7 +92,7 @@ class MainStateManager(
                 requestRedraw()
             }
 
-        environment.selectedShapeManager.selectedShapesLiveData.observe(
+        environment.selectedShapesLiveData.observe(
             lifecycleOwner,
             listener = ::updateInteractionBounds
         )
@@ -111,6 +117,10 @@ class MainStateManager(
                 OneTimeActionType.MOVE_SELECTED_SHAPES_UP -> moveSelectedShapes(-1, 0)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT -> moveSelectedShapes(0, -1)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT -> moveSelectedShapes(0, 1)
+
+                OneTimeActionType.COPY -> clipboardManager.copySelectedShapes()
+                OneTimeActionType.CUT -> clipboardManager.cutSelectedShapes()
+                OneTimeActionType.DUPLICATE -> clipboardManager.duplicateSelectedShapes()
             }.exhaustive
         }
     }
@@ -266,7 +276,9 @@ class MainStateManager(
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 
-        val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
+        override fun getWindowBound(): Rect = stateManager.windowBoardBound
+
+        private val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
 
         override fun getInteractionPoint(pointPx: Point): InteractionPoint? =
             stateManager.canvasManager.getInteractionPoint(pointPx)
@@ -279,6 +291,9 @@ class MainStateManager(
 
         override fun setSelectionBound(bound: Rect?) =
             stateManager.canvasManager.drawSelectionBound(bound)
+
+        override val selectedShapesLiveData: LiveData<Set<AbstractShape>> =
+            selectedShapeManager.selectedShapesLiveData
 
         override fun getSelectedShapes(): Set<AbstractShape> = selectedShapeManager.selectedShapes
 
