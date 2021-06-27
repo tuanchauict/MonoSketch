@@ -16,6 +16,7 @@ import mono.keycommand.KeyCommandController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
+import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableGroup
 import mono.shape.shape.Group
@@ -68,6 +69,7 @@ class MonoFlowApplication : LifecycleOwner() {
             shapeManager,
             bitmapManager,
             canvasViewController,
+            ShapeClipboardManager(body),
             canvasViewController.mousePointerLiveData,
             actionManager
         )
