@@ -7,7 +7,7 @@ internal object CrossingResources {
     val CONNECTABLE_CHARS = "-─|│┌└┐┘┬┴├┤┼".toSet()
 
     val LEFT_IN_CHARS = "-─┌└┬┴├┼".toSet()
-    val RIGHT_IN_CHARS = "-─┐┘┴┤┼".toSet()
+    val RIGHT_IN_CHARS = "-─┐┘┬┴┤┼".toSet()
     val TOP_IN_CHARS = "|│┌┐┬├┤┼".toSet()
     val BOTTOM_IN_CHARS = "|│└┘┴├┤┼".toSet()
 
