@@ -1,7 +1,9 @@
 package mono.state
 
 import mono.lifecycle.LifecycleOwner
+import mono.shape.add
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.state.command.CommandEnvironment
 
@@ -10,8 +12,8 @@ import mono.state.command.CommandEnvironment
  */
 internal class ClipboardManager(
     lifecycleOwner: LifecycleOwner,
-    commandEnvironment: CommandEnvironment,
-    shapeClipboardManager: ShapeClipboardManager
+    private val commandEnvironment: CommandEnvironment,
+    private val shapeClipboardManager: ShapeClipboardManager
 ) {
     private var selectedShapes: Collection<AbstractShape> = emptyList()
 
@@ -25,11 +27,16 @@ internal class ClipboardManager(
     }
 
     fun copySelectedShapes() {
-        TODO("Implement this method")
+        val serializableShapes = selectedShapes.map { it.toSerializableShape() }
+        shapeClipboardManager.setClipboard(serializableShapes)
     }
 
     fun cutSelectedShapes() {
-        TODO("Implement this method")
+        copySelectedShapes()
+        for (shape in selectedShapes) {
+            commandEnvironment.shapeManager.remove(shape)
+        }
+        commandEnvironment.clearSelectedShapes()
     }
 
     fun duplicateSelectedShapes() {
