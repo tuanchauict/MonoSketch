@@ -8,25 +8,13 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-js"))
-    implementation(project(":commons"))
-    implementation(project(":export-shapes-modal"))
-    implementation(project(":graphicsgeo"))
-    implementation(project(":htmlcanvas"))
-    implementation(project(":htmlmodal"))
-    implementation(project(":htmltoolbar"))
-    implementation(project(":keycommand"))
-    implementation(project(":lifecycle"))
     implementation(project(":livedata"))
-    implementation(project(":monobitmap"))
-    implementation(project(":monoboard"))
     implementation(project(":shape"))
-    implementation(project(":shape-clipboard"))
-    implementation(project(":shape-interaction-bound"))
-    implementation(project(":shapesearcher"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 
+    implementation(kotlin("stdlib-js"))
     testImplementation(kotlin("test-js"))
 }
 
