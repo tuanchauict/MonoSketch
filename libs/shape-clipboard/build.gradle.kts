@@ -8,6 +8,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":graphicsgeo"))
     implementation(project(":livedata"))
     implementation(project(":shape"))
 
