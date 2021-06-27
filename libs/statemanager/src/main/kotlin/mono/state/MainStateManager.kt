@@ -111,6 +111,10 @@ class MainStateManager(
                 OneTimeActionType.MOVE_SELECTED_SHAPES_UP -> moveSelectedShapes(-1, 0)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT -> moveSelectedShapes(0, -1)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT -> moveSelectedShapes(0, 1)
+
+                OneTimeActionType.COPY -> TODO()
+                OneTimeActionType.CUT -> TODO()
+                OneTimeActionType.DUPLICATE -> TODO()
             }.exhaustive
         }
     }
