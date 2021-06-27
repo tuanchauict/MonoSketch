@@ -24,9 +24,10 @@ internal class ClipboardManager(
         commandEnvironment.selectedShapesLiveData.observe(lifecycleOwner) {
             selectedShapes = it
         }
-        shapeClipboardManager.clipboardShapeLiveData.observe(lifecycleOwner) {
-            TODO("Create shapes with abstract shapes")
-        }
+        shapeClipboardManager.clipboardShapeLiveData.observe(
+            lifecycleOwner,
+            listener = ::pasteShapes
+        )
     }
 
     fun copySelectedShapes() {
@@ -40,6 +41,17 @@ internal class ClipboardManager(
             commandEnvironment.shapeManager.remove(shape)
         }
         commandEnvironment.clearSelectedShapes()
+    }
+
+    private fun pasteShapes(serializableShapes: List<AbstractSerializableShape>) {
+        if (serializableShapes.isEmpty()) {
+            return
+        }
+        commandEnvironment.clearSelectedShapes()
+        val bound = commandEnvironment.getWindowBound()
+        val left = bound.left + bound.width / 5
+        val top = bound.top + bound.height / 5
+        insertShapes(left, top, serializableShapes)
     }
 
     fun duplicateSelectedShapes() {

@@ -18,6 +18,8 @@ internal interface CommandEnvironment {
     val shapeSearcher: ShapeSearcher
     val workingParentGroup: Group
 
+    fun getWindowBound(): Rect
+
     fun getInteractionPoint(pointPx: Point): InteractionPoint?
 
     fun updateInteractionBounds()

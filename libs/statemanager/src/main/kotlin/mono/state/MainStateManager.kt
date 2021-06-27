@@ -276,6 +276,8 @@ class MainStateManager(
         override val workingParentGroup: Group
             get() = stateManager.workingParentGroup
 
+        override fun getWindowBound(): Rect = stateManager.windowBoardBound
+
         private val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
 
         override fun getInteractionPoint(pointPx: Point): InteractionPoint? =
