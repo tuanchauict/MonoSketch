@@ -25,6 +25,10 @@ enum class KeyCommand(
 
     ENTER_EDIT_MODE(Key.KEY_ENTER),
     SELECTION_MODE(Key.KEY_V, commandKeyState = MetaKeyState.OFF),
+
+    COPY(Key.KEY_C, commandKeyState = MetaKeyState.ON),
+    CUT(Key.KEY_X, commandKeyState = MetaKeyState.ON),
+    DUPLICATE(Key.KEY_D, commandKeyState = MetaKeyState.ON),
     ;
 
     private enum class MetaKeyState {
