@@ -7,7 +7,8 @@ import mono.common.Key
  */
 enum class KeyCommand(
     vararg val keyCodes: Int,
-    private val commandKeyState: MetaKeyState = MetaKeyState.ANY
+    private val commandKeyState: MetaKeyState = MetaKeyState.ANY,
+    val isKeyEventPropagationAllowed: Boolean = true
 ) {
     IDLE,
 
@@ -28,7 +29,7 @@ enum class KeyCommand(
 
     COPY(Key.KEY_C, commandKeyState = MetaKeyState.ON),
     CUT(Key.KEY_X, commandKeyState = MetaKeyState.ON),
-    DUPLICATE(Key.KEY_D, commandKeyState = MetaKeyState.ON),
+    DUPLICATE(Key.KEY_D, commandKeyState = MetaKeyState.ON, isKeyEventPropagationAllowed = false),
     ;
 
     private enum class MetaKeyState {
