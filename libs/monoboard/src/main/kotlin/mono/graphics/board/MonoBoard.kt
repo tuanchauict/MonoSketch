@@ -65,6 +65,26 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
                     hasBottom = charPoint.bottomChar in BOTTOM_IN_CHARS ||
                         get(charPoint.left, charPoint.top + 1).char in BOTTOM_IN_CHARS,
                 )
+
+            if (DEBUG) {
+                val bitmapSurroundingChars = listOf(
+                    charPoint.leftChar,
+                    charPoint.rightChar,
+                    charPoint.topChar,
+                    charPoint.bottomChar
+                ).joinToString("•")
+                val boardSurroundingChars = listOf(
+                    get(charPoint.left - 1, charPoint.top).char,
+                    get(charPoint.left + 1, charPoint.top).char,
+                    get(charPoint.left, charPoint.top - 1).char,
+                    get(charPoint.left, charPoint.top + 1).char,
+                ).joinToString("•")
+                println(
+                    "${charPoint.char}${currentPixel.char} " +
+                        "($bitmapSurroundingChars) - ($boardSurroundingChars) -> " +
+                        "${directionMap[directionMark]}"
+                )
+            }
             currentPixel.set(directionMap[directionMark] ?: charPoint.char, highlight)
         }
     }
@@ -217,5 +237,8 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
 
     companion object {
         val STANDARD_UNIT_SIZE = Size(16, 16)
+
+        // DO NOT change this value to true when commit
+        private const val DEBUG = false
     }
 }
