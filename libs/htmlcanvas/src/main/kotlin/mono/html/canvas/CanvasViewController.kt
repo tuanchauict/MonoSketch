@@ -59,6 +59,7 @@ class CanvasViewController(
         mousePointerLiveData = mouseEventController.mousePointerLiveData
         mouseEventController.drawingOffsetPointPxLiveData.observe(
             lifecycleOwner,
+            throttleDurationMillis = 5, // Reduce number of redraw request due to drawingInfo update
             listener = drawingInfoController::setOffset
         )
 
