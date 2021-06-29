@@ -9,6 +9,7 @@ import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.MouseEvent
+import org.w3c.dom.events.WheelEvent
 
 /**
  * A class to attach and observe mouse events happening on the canvas.
@@ -29,12 +30,19 @@ internal class MouseEventObserver(
     private var drawingInfo: DrawingInfoController.DrawingInfo =
         drawingInfoLiveData.value
 
+    private var mouseWheelDeltaX: Float = 0F
+    private var mouseWheelDeltaY: Float = 0F
+    private val drawingOffsetPointPxMutableLiveData: MutableLiveData<Point> =
+        MutableLiveData(Point.ZERO)
+    val drawingOffsetPointPxLiveData: LiveData<Point> = drawingOffsetPointPxMutableLiveData
+
     init {
         containerPosition = container.getPosition()
 
         container.onmousedown = ::setMouseDownPointer
         container.onmouseup = ::setMouseUpPointer
         container.onmousemove = ::setMouseMovePointer
+        container.onwheel = ::setMouseWheel
 
         drawingInfoLiveData.observe(lifecycleOwner) {
             drawingInfo = it
@@ -89,6 +97,31 @@ internal class MouseEventObserver(
         mousePointerMutableLiveData.value = newPointer
     }
 
+    private fun setMouseWheel(event: WheelEvent) {
+        event.preventDefault()
+        event.stopPropagation()
+
+        val cellWidthPx = drawingInfo.cellSizePx.width.toFloat()
+        val cellHeightPx = drawingInfo.cellSizePx.height.toFloat()
+
+        val wheelDeltaLeft = event.deltaX.toFloat() / cellWidthPx * SCROLL_SPEED_RATIO
+        val wheelDeltaTop = event.deltaY.toFloat() / cellHeightPx * SCROLL_SPEED_RATIO
+        val accumulateWheelDeltaLeft = mouseWheelDeltaX + wheelDeltaLeft
+        val accumulateWheelDeltaTop = mouseWheelDeltaY + wheelDeltaTop
+
+        val usableDeltaLeft = accumulateWheelDeltaLeft.toInt()
+        val usableDeltaTop = accumulateWheelDeltaTop.toInt()
+
+        if (usableDeltaLeft != 0 || usableDeltaTop != 0) {
+            val offsetLeft = drawingInfo.offsetPx.left - usableDeltaLeft * cellWidthPx.toInt()
+            val offsetTop = drawingInfo.offsetPx.top - usableDeltaTop * cellHeightPx.toInt()
+            drawingOffsetPointPxMutableLiveData.value = Point(offsetLeft, offsetTop)
+        }
+
+        mouseWheelDeltaX = accumulateWheelDeltaLeft - usableDeltaLeft
+        mouseWheelDeltaY = accumulateWheelDeltaTop - usableDeltaTop
+    }
+
     private fun MouseEvent.toPoint(): Point =
         Point(
             drawingInfo.toBoardColumn(clientX - containerPosition.left),
@@ -97,12 +130,16 @@ internal class MouseEventObserver(
 
     private fun MouseEvent.toPointPx(): Point =
         Point(
-            clientX - drawingInfo.offsetPx.left - containerPosition.left,
-            clientY - drawingInfo.offsetPx.top - containerPosition.top
+            clientX - containerPosition.left,
+            clientY - containerPosition.top
         )
 
     private fun HTMLDivElement.getPosition(): Point {
         val containerBounding = getBoundingClientRect()
         return Point(containerBounding.left.toInt(), containerBounding.top.toInt())
+    }
+
+    companion object {
+        private const val SCROLL_SPEED_RATIO = 1 / 1.5F
     }
 }
