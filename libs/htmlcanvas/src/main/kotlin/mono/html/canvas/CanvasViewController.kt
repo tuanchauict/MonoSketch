@@ -16,7 +16,7 @@ import mono.html.canvas.canvas.SelectionCanvasViewController
 import mono.html.canvas.mouse.MouseEventObserver
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
-import mono.livedata.MutableLiveData
+import mono.livedata.MediatorLiveData
 import mono.livedata.distinctUntilChange
 import mono.shapebound.InteractionBound
 import mono.shapebound.InteractionPoint
@@ -44,9 +44,9 @@ class CanvasViewController(
     val windowBoundPx: Rect
         get() = gridCanvasViewController.drawingInfo.boundPx
 
-    private val windowBoardBoundMutableLiveData: MutableLiveData<Rect> =
-        MutableLiveData(Rect.ZERO)
-    val windowBoardBoundLiveData: LiveData<Rect> = windowBoardBoundMutableLiveData
+    private val windowBoardBoundMediatorLiveData: MediatorLiveData<Rect> =
+        MediatorLiveData(Rect.ZERO)
+    val windowBoardBoundLiveData: LiveData<Rect> = windowBoardBoundMediatorLiveData
 
     init {
         val drawingInfoLiveData = drawingInfoController.drawingInfoLiveData
@@ -91,6 +91,7 @@ class CanvasViewController(
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
             updateCanvasSize()
         }
+        windowBoardBoundMediatorLiveData.add(drawingInfoLiveData) { value = it.boardBound }
     }
 
     private fun getCanvas(className: String): HTMLCanvasElement {
@@ -118,14 +119,12 @@ class CanvasViewController(
 
     fun setFont(fontSize: Int) {
         drawingInfoController.setFont(fontSize)
-        windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
     }
 
     private fun updateCanvasSize() {
         val widthPx = container.clientWidth
         val heightPx = container.clientHeight
         drawingInfoController.setSize(widthPx, heightPx)
-        windowBoardBoundMutableLiveData.value = gridCanvasViewController.drawingInfo.boardBound
     }
 
     fun setMouseCursor(mouseCursor: String) {
