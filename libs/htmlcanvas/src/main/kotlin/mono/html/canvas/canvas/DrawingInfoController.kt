@@ -18,6 +18,7 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.LEFT
 import org.w3c.dom.MIDDLE
 import kotlin.math.ceil
+import kotlin.math.floor
 
 /**
  * A controller class to manage drawing info for the other canvas.
@@ -86,8 +87,8 @@ internal class DrawingInfoController(container: HTMLDivElement) {
 
         fun toXPx(column: Double): Double = offsetPx.left + cellSizePx.width * column
         fun toYPx(row: Double): Double = offsetPx.top + cellSizePx.height * row
-        fun toBoardRow(yPx: Int): Int = ((yPx - offsetPx.top) / cellSizePx.height).toInt()
-        fun toBoardColumn(xPx: Int): Int = ((xPx - offsetPx.left) / cellSizePx.width).toInt()
+        fun toBoardRow(yPx: Int): Int = floor((yPx - offsetPx.top) / cellSizePx.height).toInt()
+        fun toBoardColumn(xPx: Int): Int = floor((xPx - offsetPx.left) / cellSizePx.width).toInt()
     }
 
     companion object {
