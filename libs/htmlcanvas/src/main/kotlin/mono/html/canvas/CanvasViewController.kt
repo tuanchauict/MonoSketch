@@ -57,6 +57,10 @@ class CanvasViewController(
             drawingInfoLiveData
         )
         mousePointerLiveData = mouseEventController.mousePointerLiveData
+        mouseEventController.drawingOffsetPointPxLiveData.observe(
+            lifecycleOwner,
+            listener = drawingInfoController::setOffset
+        )
 
         container.append {
             canvas(CLASS_NAME_GRID) {}

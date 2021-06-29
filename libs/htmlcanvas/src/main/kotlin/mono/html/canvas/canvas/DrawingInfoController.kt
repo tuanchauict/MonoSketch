@@ -56,6 +56,10 @@ internal class DrawingInfoController(container: HTMLDivElement) {
             drawingInfoMutableLiveData.value.copy(canvasSizePx = Size(widthPx, heightPx))
     }
 
+    fun setOffset(offset: Point) {
+        drawingInfoMutableLiveData.value = drawingInfoMutableLiveData.value.copy(offsetPx = offset)
+    }
+
     private fun CanvasRenderingContext2D.getCellSizePx(fontSize: Int): SizeF {
         context.font = font
         context.textAlign = CanvasTextAlign.LEFT
