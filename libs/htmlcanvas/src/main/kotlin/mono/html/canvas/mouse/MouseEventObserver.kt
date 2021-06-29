@@ -101,11 +101,12 @@ internal class MouseEventObserver(
         event.preventDefault()
         event.stopPropagation()
 
-        val cellWidthPx = drawingInfo.cellSizePx.width.toFloat()
-        val cellHeightPx = drawingInfo.cellSizePx.height.toFloat()
+        val scrollHorizontalThresholdPx = SCROLL_THRESHOLD_PIXEL
+        val scrollVerticalThresholdPx = SCROLL_THRESHOLD_PIXEL
 
-        val wheelDeltaLeft = event.deltaX.toFloat() / cellWidthPx * SCROLL_SPEED_RATIO
-        val wheelDeltaTop = event.deltaY.toFloat() / cellHeightPx * SCROLL_SPEED_RATIO
+        val wheelDeltaLeft =
+            event.deltaX.toFloat() * SCROLL_SPEED_RATIO / scrollHorizontalThresholdPx
+        val wheelDeltaTop = event.deltaY.toFloat() * SCROLL_SPEED_RATIO / scrollVerticalThresholdPx
         val accumulateWheelDeltaLeft = mouseWheelDeltaX + wheelDeltaLeft
         val accumulateWheelDeltaTop = mouseWheelDeltaY + wheelDeltaTop
 
@@ -113,8 +114,10 @@ internal class MouseEventObserver(
         val usableDeltaTop = accumulateWheelDeltaTop.toInt()
 
         if (usableDeltaLeft != 0 || usableDeltaTop != 0) {
-            val offsetLeft = drawingInfo.offsetPx.left - usableDeltaLeft * cellWidthPx.toInt()
-            val offsetTop = drawingInfo.offsetPx.top - usableDeltaTop * cellHeightPx.toInt()
+            val offsetLeft =
+                drawingInfo.offsetPx.left - usableDeltaLeft * scrollHorizontalThresholdPx.toInt()
+            val offsetTop =
+                drawingInfo.offsetPx.top - usableDeltaTop * scrollVerticalThresholdPx.toInt()
             drawingOffsetPointPxMutableLiveData.value = Point(offsetLeft, offsetTop)
         }
 
@@ -141,5 +144,6 @@ internal class MouseEventObserver(
 
     companion object {
         private const val SCROLL_SPEED_RATIO = 1 / 1.5F
+        private const val SCROLL_THRESHOLD_PIXEL = 1F
     }
 }
