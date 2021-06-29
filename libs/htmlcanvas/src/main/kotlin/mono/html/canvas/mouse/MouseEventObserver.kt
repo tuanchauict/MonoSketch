@@ -97,8 +97,8 @@ internal class MouseEventObserver(
 
     private fun MouseEvent.toPointPx(): Point =
         Point(
-            clientX - drawingInfo.offsetPx.left - containerPosition.left,
-            clientY - drawingInfo.offsetPx.top - containerPosition.top
+            clientX - containerPosition.left,
+            clientY - containerPosition.top
         )
 
     private fun HTMLDivElement.getPosition(): Point {
