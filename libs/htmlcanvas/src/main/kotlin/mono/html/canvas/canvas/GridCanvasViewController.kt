@@ -5,6 +5,8 @@ import mono.livedata.LiveData
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
 import kotlin.math.abs
+import kotlin.math.absoluteValue
+import kotlin.math.floor
 
 internal class GridCanvasViewController(
     lifecycleOwner: LifecycleOwner,
@@ -62,13 +64,12 @@ internal class GridCanvasViewController(
     }
 
     private fun getAxisFillStyle(index: Int): String {
-        val styleIndex = (index / 10) % AXIS_STYLES.size
-        return AXIS_STYLES[styleIndex]
+        val styleIndex = floor(index / 10F) % AXIS_STYLES.size
+        return AXIS_STYLES[styleIndex.toInt().absoluteValue]
     }
 
     companion object {
-        private val AXIS_STYLES =
-            listOf("#86b3fc", "#ff878d")
+        private val AXIS_STYLES = listOf("#86b3fc", "#ff878d")
         private const val DEBUG = true
     }
 }
