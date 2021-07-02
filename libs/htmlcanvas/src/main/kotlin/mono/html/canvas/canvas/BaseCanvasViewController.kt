@@ -11,10 +11,7 @@ import org.w3c.dom.TOP
 import kotlin.math.max
 
 // TODO: Pass drawing info livedata into this class and let it observes the change.
-internal abstract class BaseCanvasViewController(
-    private val canvas: HTMLCanvasElement,
-    private val redrawWhenDrawingInfoUpdated: Boolean = false
-) {
+internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasElement) {
     protected val context: CanvasRenderingContext2D =
         canvas.getContext("2d") as CanvasRenderingContext2D
 
@@ -41,7 +38,7 @@ internal abstract class BaseCanvasViewController(
 
         this.drawingInfo = drawingInfo
 
-        if (isSizeChange || redrawWhenDrawingInfoUpdated) {
+        if (isSizeChange) {
             draw()
         }
     }
