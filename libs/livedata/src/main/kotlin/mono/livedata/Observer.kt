@@ -1,6 +1,6 @@
 package mono.livedata
 
-import mono.common.Timeout
+import mono.common.Cancelable
 import mono.common.setTimeout
 
 /**
@@ -32,7 +32,7 @@ internal class ThrottledObserver<T>(
     private val durationMillis: Int,
     private val observer: Observer<T>
 ) : Observer<T> {
-    private var currentTimeout: Timeout? = null
+    private var currentTimeout: Cancelable? = null
     private var currentValue: T? = null
 
     override fun onChanged(newValue: T) {

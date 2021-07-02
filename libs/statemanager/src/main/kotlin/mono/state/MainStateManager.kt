@@ -77,7 +77,7 @@ class MainStateManager(
             .observe(lifecycleOwner, listener = ::updateMouseCursor)
 
         canvasManager.windowBoardBoundLiveData
-            .observe(lifecycleOwner, throttleDurationMillis = 10) {
+            .observe(lifecycleOwner, throttleDurationMillis = 0) {
                 windowBoardBound = it
                 console.warn(
                     "Drawing info: window board size $windowBoardBound • " +
@@ -97,7 +97,10 @@ class MainStateManager(
             listener = ::updateInteractionBounds
         )
 
-        redrawRequestMutableLiveData.observe(lifecycleOwner, 1) { redraw() }
+        redrawRequestMutableLiveData.observe(
+            lifecycleOwner,
+            throttleDurationMillis = 0
+        ) { redraw() }
 
         actionManager.retainableActionLiveData.observe(lifecycleOwner) {
             currentRetainableActionType = it
