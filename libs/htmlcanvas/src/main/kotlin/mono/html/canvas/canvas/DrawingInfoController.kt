@@ -89,8 +89,8 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         internal val boardColumnRange: IntRange =
             boardOffsetColumn..(boardOffsetColumn + columnCount)
 
-        fun toXPx(column: Double): Double = offsetPx.left + cellSizePx.width * column
-        fun toYPx(row: Double): Double = offsetPx.top + cellSizePx.height * row
+        fun toXPx(column: Double): Double = floor(offsetPx.left + cellSizePx.width * column)
+        fun toYPx(row: Double): Double = floor(offsetPx.top + cellSizePx.height * row)
         fun toBoardRow(yPx: Int): Int = floor((yPx - offsetPx.top) / cellSizePx.height).toInt()
         fun toBoardColumn(xPx: Int): Int = floor((xPx - offsetPx.left) / cellSizePx.width).toInt()
     }
