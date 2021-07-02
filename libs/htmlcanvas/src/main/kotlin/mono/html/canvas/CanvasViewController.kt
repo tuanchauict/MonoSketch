@@ -129,6 +129,11 @@ class CanvasViewController(
     private fun updateCanvasSize() {
         val widthPx = container.clientWidth
         val heightPx = container.clientHeight
+
+        // Avoid layout mistake on Safari when height is set to 0 after being correct.
+        if (widthPx == 0 || heightPx == 0) {
+            return
+        }
         drawingInfoController.setSize(widthPx, heightPx)
     }
 
