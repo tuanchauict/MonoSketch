@@ -17,6 +17,12 @@ abstract class LiveData<T>(initValue: T) {
     /**
      * Observes changes from live data within lifecycle with [lifecycleOwner].
      * Note that if [lifecycleOwner] is stopped, life data won't accept observer.
+     *
+     * @param throttleDurationMillis: Throttling configuration. By default, the throttle duration is
+     * set to -1 which means the observer will be executed immediately as the value is updated.
+     * With the throttle duration is 0, the execution will be run in the next frame. With throttle
+     * duration > 0, it will execute by timeout of the duration with the latest value bound to the
+     * live data.
      */
     fun observe(
         lifecycleOwner: LifecycleOwner,
