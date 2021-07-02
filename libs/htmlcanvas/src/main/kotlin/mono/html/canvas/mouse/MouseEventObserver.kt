@@ -143,7 +143,7 @@ internal class MouseEventObserver(
     }
 
     companion object {
-        private const val SCROLL_SPEED_RATIO = 1 / 1.5F
+        private const val SCROLL_SPEED_RATIO = 1 / 1.3F
         private const val SCROLL_THRESHOLD_PIXEL = 1F
     }
 }
