@@ -76,19 +76,18 @@ class MainStateManager(
             .distinctUntilChange()
             .observe(lifecycleOwner, listener = ::updateMouseCursor)
 
-        canvasManager.windowBoardBoundLiveData
-            .observe(lifecycleOwner, throttleDurationMillis = 0) {
-                windowBoardBound = it
-                console.warn(
-                    "Drawing info: window board size $windowBoardBound • " +
-                        "pixel size ${canvasManager.windowBoundPx}"
-                )
-                requestRedraw()
-            }
+        canvasManager.windowBoardBoundLiveData.observe(lifecycleOwner) {
+            windowBoardBound = it
+            println(
+                "¶ Drawing info: window board size $windowBoardBound • " +
+                    "pixel size ${canvasManager.windowBoundPx}"
+            )
+            requestRedraw()
+        }
 
         shapeManager.versionLiveData
             .distinctUntilChange()
-            .observe(lifecycleOwner, throttleDurationMillis = 0) {
+            .observe(lifecycleOwner) {
                 requestRedraw()
             }
 
@@ -316,6 +315,6 @@ class MainStateManager(
     }
 
     companion object {
-        private const val DEBUG_PERFORMANCE_AUDIT_ENABLED = false
+        private const val DEBUG_PERFORMANCE_AUDIT_ENABLED = true
     }
 }

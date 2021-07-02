@@ -12,10 +12,11 @@ internal class GridCanvasViewController(
     lifecycleOwner: LifecycleOwner,
     canvas: HTMLCanvasElement,
     drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
-) : BaseCanvasViewController(canvas, redrawWhenDrawingInfoUpdated = true) {
+) : BaseCanvasViewController(canvas) {
 
     init {
         drawingInfoLiveData.observe(lifecycleOwner, listener = ::setDrawingInfo)
+        drawingInfoLiveData.observe(lifecycleOwner, 0) { draw() }
     }
 
     override fun drawInternal() {
