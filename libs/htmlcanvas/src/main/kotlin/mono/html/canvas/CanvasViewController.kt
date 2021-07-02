@@ -8,6 +8,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
+import mono.html.canvas.canvas.AxisCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.DrawingInfoController
 import mono.html.canvas.canvas.GridCanvasViewController
@@ -68,6 +69,7 @@ class CanvasViewController(
             canvas(CLASS_NAME_BOARD) {}
             canvas(CLASS_NAME_INTERACTION) {}
             canvas(CLASS_NAME_SELECTION) {}
+            canvas(CLASS_NAME_AXIS) {}
         }
 
         gridCanvasViewController = GridCanvasViewController(
@@ -75,6 +77,8 @@ class CanvasViewController(
             getCanvas(CLASS_NAME_GRID),
             drawingInfoLiveData
         )
+        AxisCanvasViewController(lifecycleOwner, getCanvas(CLASS_NAME_AXIS), drawingInfoLiveData)
+
         boardCanvasViewController = BoardCanvasViewController(
             lifecycleOwner,
             getCanvas(CLASS_NAME_BOARD),
@@ -146,5 +150,6 @@ class CanvasViewController(
         private const val CLASS_NAME_BOARD = "board-canvas"
         private const val CLASS_NAME_INTERACTION = "interaction-canvas"
         private const val CLASS_NAME_SELECTION = "selection-canvas"
+        private const val CLASS_NAME_AXIS = "axis-canvas"
     }
 }
