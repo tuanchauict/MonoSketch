@@ -70,7 +70,6 @@ class CanvasViewController(
             canvas(CLASS_NAME_INTERACTION) {}
             canvas(CLASS_NAME_SELECTION) {}
             canvas(CLASS_NAME_AXIS) {}
-
         }
 
         gridCanvasViewController = GridCanvasViewController(
