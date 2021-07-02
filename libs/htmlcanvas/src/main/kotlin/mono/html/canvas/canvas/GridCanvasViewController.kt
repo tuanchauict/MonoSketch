@@ -4,9 +4,6 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
-import kotlin.math.abs
-import kotlin.math.absoluteValue
-import kotlin.math.floor
 
 internal class GridCanvasViewController(
     lifecycleOwner: LifecycleOwner,
@@ -24,53 +21,37 @@ internal class GridCanvasViewController(
         context.lineWidth = 0.25
         context.stroke(createGridPath())
 
-        if (DEBUG) {
-            drawAxis()
+        context.strokeStyle = "#AAAAAA"
+        context.lineWidth = 1.0
+        val zeroLines = Path2D().apply {
+            addHLine(
+                0.0,
+                drawingInfo.toYPx(AxisCanvasViewController.AXIS_X_HEIGHT),
+                drawingInfo.canvasSizePx.width.toDouble()
+            )
+            addVLine(
+                drawingInfo.toXPx(AxisCanvasViewController.AXIS_Y_WIDTH),
+                0.0,
+                drawingInfo.canvasSizePx.height.toDouble()
+            )
         }
+        context.stroke(zeroLines)
     }
 
     private fun createGridPath(): Path2D = Path2D().apply {
-        val zeroX = drawingInfo.toXPx(drawingInfo.boardColumnRange.first.toDouble())
-        val maxX = drawingInfo.toXPx(drawingInfo.boardColumnRange.last.toDouble())
-        val zeroY = drawingInfo.toYPx(drawingInfo.boardRowRange.first.toDouble())
-        val maxY = drawingInfo.toYPx(drawingInfo.boardRowRange.last.toDouble())
+        val zeroX = drawingInfo.toXPx(drawingInfo.boardColumnRange.first.toDouble() - 1.0)
+        val maxX = drawingInfo.toXPx(drawingInfo.boardColumnRange.last.toDouble() + 1.0)
+        val zeroY = drawingInfo.toYPx(drawingInfo.boardRowRange.first.toDouble() - 1.0)
+        val maxY = drawingInfo.toYPx(drawingInfo.boardRowRange.last.toDouble() + 1.0)
 
         for (row in drawingInfo.boardRowRange) {
             val y = drawingInfo.toYPx(row.toDouble())
-            moveTo(zeroX, y)
-            lineTo(maxX, y)
+            addHLine(zeroX, y, maxX - zeroX)
         }
 
         for (col in drawingInfo.boardColumnRange) {
             val x = drawingInfo.toXPx(col.toDouble())
-            moveTo(x, zeroY)
-            lineTo(x, maxY)
+            addVLine(x, zeroY, maxY - zeroY)
         }
-    }
-
-    private fun drawAxis() {
-        for (row in drawingInfo.boardRowRange) {
-            context.fillStyle = getAxisFillStyle(row)
-            drawText("${abs(row % 10)}", row, drawingInfo.boardBound.position.column)
-        }
-        for (col in drawingInfo.boardColumnRange) {
-            context.fillStyle = getAxisFillStyle(col)
-            drawText("${abs(col % 10)}", drawingInfo.boardBound.position.row, col)
-        }
-
-        context.fillStyle = "#ff0000"
-        drawText("█", 0, 0)
-        context.fillStyle = "#ffffff"
-        drawText("+", 0, 0)
-    }
-
-    private fun getAxisFillStyle(index: Int): String {
-        val styleIndex = floor(index / 10F) % AXIS_STYLES.size
-        return AXIS_STYLES[styleIndex.toInt().absoluteValue]
-    }
-
-    companion object {
-        private val AXIS_STYLES = listOf("#86b3fc", "#ff878d")
-        private const val DEBUG = true
     }
 }
