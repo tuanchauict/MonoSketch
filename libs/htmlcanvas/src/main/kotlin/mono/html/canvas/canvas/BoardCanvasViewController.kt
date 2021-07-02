@@ -18,6 +18,7 @@ internal class BoardCanvasViewController(
     }
 
     override fun drawInternal() {
+        context.font = drawingInfo.font
         for (row in drawingInfo.boardRowRange) {
             for (col in drawingInfo.boardColumnRange) {
                 drawPixel(board.get(col, row), row, col)
@@ -28,7 +29,6 @@ internal class BoardCanvasViewController(
     private fun drawPixel(pixel: Pixel, row: Int, column: Int) {
         if (!pixel.isTransparent) {
             context.fillStyle = pixel.highlight.paintColor
-            context.font = drawingInfo.font
             drawText(pixel.char.toString(), row, column)
         }
     }
