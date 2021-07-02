@@ -7,6 +7,7 @@ import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.CanvasTextBaseline
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.LEFT
+import org.w3c.dom.Path2D
 import org.w3c.dom.TOP
 import kotlin.math.max
 
@@ -64,5 +65,15 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
         val rowYPx = drawingInfo.toYPx(row.toDouble())
         val xPx = drawingInfo.toXPx(column + 0.05)
         context.fillText(text, xPx, rowYPx)
+    }
+
+    protected fun Path2D.addHLine(xPx: Double, yPx: Double, widthPx: Double) {
+        moveTo(xPx, yPx)
+        lineTo(xPx + widthPx, yPx)
+    }
+
+    protected fun Path2D.addVLine(xPx: Double, yPx: Double, heightPx: Double) {
+        moveTo(xPx, yPx)
+        lineTo(xPx, yPx + heightPx)
     }
 }
