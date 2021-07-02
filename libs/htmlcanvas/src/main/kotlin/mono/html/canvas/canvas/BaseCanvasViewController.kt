@@ -11,7 +11,10 @@ import org.w3c.dom.TOP
 import kotlin.math.max
 
 // TODO: Pass drawing info livedata into this class and let it observes the change.
-internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasElement) {
+internal abstract class BaseCanvasViewController(
+    private val canvas: HTMLCanvasElement,
+    private val redrawWhenDrawingInfoUpdated: Boolean = false
+) {
     protected val context: CanvasRenderingContext2D =
         canvas.getContext("2d") as CanvasRenderingContext2D
 
@@ -23,18 +26,24 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
     }
 
     protected fun setDrawingInfo(drawingInfo: DrawingInfoController.DrawingInfo) {
-        this.drawingInfo = drawingInfo
         val canvasSizePx = drawingInfo.canvasSizePx
 
-        val dpr = max(window.devicePixelRatio, 2.0)
+        // Update canvas information causes canvas clearRect() which requires redraw
+        val isSizeChange = this.drawingInfo.canvasSizePx != canvasSizePx
+        if (isSizeChange) {
+            val dpr = max(window.devicePixelRatio, 2.0)
+            canvas.width = (canvasSizePx.width * dpr).toInt()
+            canvas.height = (canvasSizePx.height * dpr).toInt()
+            canvas.style.width = "${canvasSizePx.width}px"
+            canvas.style.height = "${canvasSizePx.height}px"
+            context.scale(dpr, dpr)
+        }
 
-        canvas.width = (canvasSizePx.width * dpr).toInt()
-        canvas.height = (canvasSizePx.height * dpr).toInt()
-        canvas.style.width = "${canvasSizePx.width}px"
-        canvas.style.height = "${canvasSizePx.height}px"
-        context.scale(dpr, dpr)
+        this.drawingInfo = drawingInfo
 
-        draw()
+        if (isSizeChange || redrawWhenDrawingInfoUpdated) {
+            draw()
+        }
     }
 
     internal fun draw() {
