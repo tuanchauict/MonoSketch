@@ -17,6 +17,7 @@ import kotlinx.html.js.label
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.li
+import kotlinx.html.style
 import kotlinx.html.svg
 import kotlinx.html.ul
 import kotlinx.html.visit
@@ -37,14 +38,19 @@ internal fun TagConsumer<HTMLElement>.RightToolbar(onActionSelected: (RightActio
     val dropdownMenuId = "right-toolbar-dropdown-menu"
     div("toolbar right") {
         div("dropdown") {
-            button(classes = "btn btn-outline-primary btn-sm toolbar-btn shadow-none") {
+            button(classes = "btn btn-outline-secondary btn-sm toolbar-btn shadow-none") {
                 id = dropdownMenuId
                 attributes["data-bs-toggle"] = "dropdown"
                 attributes["aria-expanded"] = "false"
                 // Avoid input being focused which voids key event commands.
                 attributes["onfocus"] = "this.blur()"
 
-                +"•••"
+                style = "padding: 0 3px;"
+
+                SvgIcon(16, 16) {
+                    style = "margin-bottom: 3px;"
+                    SvgPath("M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z")
+                }
             }
             ul("dropdown-menu dropdown-menu-light") {
                 attributes["aria-labelledby"] = dropdownMenuId
