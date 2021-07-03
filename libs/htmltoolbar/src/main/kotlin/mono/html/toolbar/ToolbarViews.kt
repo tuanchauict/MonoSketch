@@ -195,7 +195,12 @@ private fun TagConsumer<HTMLElement>.MouseActionGroupItem(
         autoComplete = false
         name = "mouse-action-group"
 
-        onChangeFunction = { onChangeAction(mouseActionType.retainableActionType) }
+        onChangeFunction = {
+            onChangeAction(mouseActionType.retainableActionType)
+
+            // Avoid input being focused which voids key event commands.
+            (it.target as? HTMLElement)?.blur()
+        }
     }
     label("btn btn-outline-secondary shadow-none icon-action toolbar-btn") {
         attributes["for"] = actionId
