@@ -51,7 +51,7 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     }
 
     override fun toSerializableShape(): AbstractSerializableShape =
-        SerializableText(bound, text, extra)
+        SerializableText(id, bound, text, extra)
 
     override fun setBound(newBound: Rect) = update {
         val isUpdated = bound != newBound

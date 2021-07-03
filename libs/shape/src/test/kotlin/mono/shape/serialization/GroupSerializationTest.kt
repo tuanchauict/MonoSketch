@@ -10,8 +10,13 @@ import kotlin.test.Test
 class GroupSerializationTest {
     @Test
     fun test() {
-        val rectangle = SerializableRectangle(Rect.byLTRB(0, 0, 1, 1), Rectangle.Extra.DEFAULT)
+        val rectangle = SerializableRectangle(
+            null,
+            Rect.byLTRB(0, 0, 1, 1),
+            Rectangle.Extra.DEFAULT
+        )
         val group = SerializableGroup(
+            null,
             listOf(rectangle)
         )
         val string = Json.encodeToString(group)

@@ -57,6 +57,7 @@ class ShapeClipboardManager(private val body: HTMLElement) {
             }
 
         return SerializableText(
+            null,
             Rect.Companion.byLTWH(0, 0, width, height),
             text,
             Text.Extra(null)

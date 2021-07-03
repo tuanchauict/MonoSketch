@@ -123,6 +123,7 @@ class Line(
 
     override fun toSerializableShape(): AbstractSerializableShape =
         SerializableLine(
+            id,
             startPoint,
             endPoint,
             jointPoints,
