@@ -49,7 +49,9 @@ internal fun TagConsumer<HTMLElement>.RightToolbar(onActionSelected: (RightActio
 
                 SvgIcon(16, 16) {
                     style = "margin-bottom: 3px;"
+                    /* ktlint-disable max-line-length */
                     SvgPath("M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z")
+                    /* ktlint-enable max-line-length */
                 }
             }
             ul("dropdown-menu dropdown-menu-light") {
