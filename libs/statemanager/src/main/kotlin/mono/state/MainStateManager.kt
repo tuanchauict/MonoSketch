@@ -317,6 +317,6 @@ class MainStateManager(
     }
 
     companion object {
-        private const val DEBUG_PERFORMANCE_AUDIT_ENABLED = true
+        private const val DEBUG_PERFORMANCE_AUDIT_ENABLED = false
     }
 }
