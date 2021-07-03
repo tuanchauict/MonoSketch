@@ -111,6 +111,7 @@ class MainStateManager(
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
+                OneTimeActionType.SELECT_ALL_SHAPES -> environment.selectAllShapes()
                 OneTimeActionType.DESELECT_SHAPES -> environment.clearSelectedShapes()
                 OneTimeActionType.DELETE_SELECTED_SHAPES -> deleteSelectedShapes()
                 OneTimeActionType.EDIT_SELECTED_SHAPES -> editSelectedShapes()
@@ -307,6 +308,12 @@ class MainStateManager(
 
         override fun toggleShapeSelection(shape: AbstractShape) =
             selectedShapeManager.toggleSelection(shape)
+
+        override fun selectAllShapes() {
+            for (shape in stateManager.workingParentGroup.items) {
+                addSelectedShape(shape)
+            }
+        }
 
         override fun clearSelectedShapes() = selectedShapeManager.clearSelectedShapes()
 
