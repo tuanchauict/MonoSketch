@@ -19,7 +19,7 @@ sealed class AbstractSerializableShape {
 @SerialName("R")
 data class SerializableRectangle(
     @SerialName("i")
-    override val id: Int?,
+    override val id: Int? = null,
     @SerialName("b")
     val bound: Rect,
     @SerialName("e")
@@ -30,7 +30,7 @@ data class SerializableRectangle(
 @SerialName("T")
 data class SerializableText(
     @SerialName("i")
-    override val id: Int?,
+    override val id: Int? = null,
     @SerialName("b")
     val bound: Rect,
     @SerialName("t")
@@ -43,7 +43,7 @@ data class SerializableText(
 @SerialName("L")
 data class SerializableLine(
     @SerialName("i")
-    override val id: Int?,
+    override val id: Int? = null,
     @SerialName("ps")
     val startPoint: DirectedPoint,
     @SerialName("pe")
@@ -62,7 +62,7 @@ data class SerializableLine(
 @SerialName("G")
 data class SerializableGroup(
     @SerialName("i")
-    override val id: Int?,
+    override val id: Int? = null,
     @SerialName("ss")
     val shapes: List<AbstractSerializableShape>
 ) : AbstractSerializableShape()
