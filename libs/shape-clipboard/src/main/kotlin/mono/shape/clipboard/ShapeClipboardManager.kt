@@ -82,6 +82,6 @@ class ShapeClipboardManager(private val body: HTMLElement) {
     }
 
     companion object {
-        private const val DEFAULT_TEXT_BOUND_WIDTH = 16
+        private const val DEFAULT_TEXT_BOUND_WIDTH = 60
     }
 }
