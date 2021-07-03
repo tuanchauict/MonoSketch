@@ -108,6 +108,10 @@ class MainStateManager(
             when (it) {
                 OneTimeActionType.IDLE -> Unit
 
+                OneTimeActionType.SAVE_SHAPES_AS ->
+                    TODO("Save shapes model")
+                OneTimeActionType.OPEN_SHAPES ->
+                    TODO("Open shapes model")
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
@@ -160,7 +164,7 @@ class MainStateManager(
     private fun onMouseEvent(mousePointer: MousePointer) {
         currentMouseCommand =
             MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
-            ?: currentMouseCommand
+                ?: currentMouseCommand
 
         val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
         if (isFinished) {

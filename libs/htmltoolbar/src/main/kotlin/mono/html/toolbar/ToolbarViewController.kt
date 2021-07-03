@@ -26,6 +26,8 @@ class ToolbarViewController(
     }
 
     enum class RightAction(val title: String, val actionType: OneTimeActionType) {
+        SAVE_AS("Save As...", OneTimeActionType.SAVE_SHAPES_AS),
+        OPEN_FILE("Open File...", OneTimeActionType.OPEN_SHAPES),
         EXPORT("Export", OneTimeActionType.EXPORT_SELECTED_SHAPES)
     }
 }
