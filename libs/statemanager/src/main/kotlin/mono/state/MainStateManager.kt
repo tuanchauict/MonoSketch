@@ -23,12 +23,14 @@ import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
 import mono.shape.remove
+import mono.shape.replaceWithJson
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
+import mono.shape.toJson
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
 import mono.shapebound.ScalableInteractionBound
@@ -61,6 +63,7 @@ class MainStateManager(
 
     private val clipboardManager: ClipboardManager =
         ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
+    private val fileMediator: FileMediator = FileMediator()
 
     private var currentMouseCommand: MouseCommand? = null
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
@@ -108,6 +111,10 @@ class MainStateManager(
             when (it) {
                 OneTimeActionType.IDLE -> Unit
 
+                OneTimeActionType.SAVE_SHAPES_AS ->
+                    fileMediator.saveFile(shapeManager.toJson())
+                OneTimeActionType.OPEN_SHAPES ->
+                    openSavedFile()
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
@@ -214,6 +221,13 @@ class MainStateManager(
         val t0 = currentTimeMillis()
         action()
         println("$objective runtime: ${currentTimeMillis() - t0}")
+    }
+
+    private fun openSavedFile() {
+        fileMediator.openFile { jsonString ->
+            shapeManager.replaceWithJson(jsonString)
+            workingParentGroup = shapeManager.root
+        }
     }
 
     private fun exportSelectedShape() {

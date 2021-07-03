@@ -16,6 +16,8 @@ enum class RetainableActionType {
 enum class OneTimeActionType {
     IDLE,
 
+    SAVE_SHAPES_AS,
+    OPEN_SHAPES,
     EXPORT_SELECTED_SHAPES,
 
     SELECT_ALL_SHAPES,

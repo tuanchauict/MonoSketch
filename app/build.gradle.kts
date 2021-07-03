@@ -21,8 +21,6 @@ dependencies {
     implementation(project(":shape-clipboard"))
     implementation(project(":statemanager"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
-
     testImplementation(kotlin("test-js"))
 }
 val compilerType: org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType by ext

@@ -2,9 +2,6 @@ package mono.app
 
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import mono.common.setTimeout
 import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.MonoBoard
@@ -17,9 +14,8 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.serialization.AbstractSerializableShape
-import mono.shape.serialization.SerializableGroup
-import mono.shape.shape.Group
+import mono.shape.replaceWithJson
+import mono.shape.toJson
 import mono.state.MainStateManager
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.get
@@ -98,22 +94,13 @@ class MonoFlowApplication : LifecycleOwner() {
     }
 
     private fun backupShapes() {
-        val json = Json.encodeToString(shapeManager.root.toSerializableShape())
-        localStorage[BACKUP_SHAPES_KEY] = json
+        localStorage[BACKUP_SHAPES_KEY] = shapeManager.toJson()
     }
 
     private fun restoreShapes() {
         val backedUpJson = localStorage[BACKUP_SHAPES_KEY] ?: return
-
-        try {
-            val serializableGroup =
-                Json.decodeFromString<AbstractSerializableShape>(backedUpJson) as SerializableGroup
-            val root = Group(serializableGroup, 0)
-            shapeManager.replaceRoot(root)
-        } catch (e: Exception) {
-            console.error("Error while restoring shapes")
-            console.error(e)
-
+        val isRestoreSuccessful = shapeManager.replaceWithJson(backedUpJson)
+        if (!isRestoreSuccessful) {
             // Wipe local data with current shapes.
             backupShapes()
         }
