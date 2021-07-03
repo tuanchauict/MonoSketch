@@ -20,8 +20,12 @@ class ToolbarViewController(
                 actionManager::setRetainableAction
             )
             RightToolbar {
-                actionManager.setOneTimeAction(OneTimeActionType.EXPORT_SELECTED_SHAPES)
+                actionManager.setOneTimeAction(it.actionType)
             }
         }
+    }
+
+    enum class RightAction(val title: String, val actionType: OneTimeActionType) {
+        EXPORT("Export", OneTimeActionType.EXPORT_SELECTED_SHAPES)
     }
 }
