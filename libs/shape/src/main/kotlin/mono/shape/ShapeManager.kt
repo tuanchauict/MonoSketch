@@ -19,7 +19,7 @@ import mono.shape.shape.Group
  * A model class which contains all shapes of the app and also defines all shape handling logics.
  */
 class ShapeManager {
-    var root: Group = Group(null)
+    var root: Group = Group(parentId = null)
         private set
     private var allShapeMap: MutableMap<Int, AbstractShape> = mutableMapOf(root.id to root)
 
@@ -122,7 +122,7 @@ fun ShapeManager.toJson(): String = Json.encodeToString(root.toSerializableShape
 fun ShapeManager.replaceWithJson(jsonString: String): Boolean = try {
     val serializableGroup =
         Json.decodeFromString<AbstractSerializableShape>(jsonString) as SerializableGroup
-    val root = Group(serializableGroup, 0)
+    val root = Group(serializableGroup, parentId = 0)
     replaceRoot(root)
     true
 } catch (e: Exception) {

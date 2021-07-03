@@ -24,7 +24,7 @@ class ShapeManagerTest {
         target.execute(AddShape(shape1))
         assertEquals(listOf(shape1), target.root.items.toList())
 
-        val group1 = Group(null)
+        val group1 = Group(parentId = null)
         target.execute(AddShape(group1))
         assertEquals(listOf(shape1, group1), target.root.items.toList())
 
@@ -41,7 +41,7 @@ class ShapeManagerTest {
 
     @Test
     fun testExecute_Remove_singleGroupItem_removeGroup() {
-        val group = Group(null)
+        val group = Group(parentId = null)
         val shape = Rectangle(Rect.ZERO, parentId = group.id)
 
         target.add(group)
@@ -52,7 +52,7 @@ class ShapeManagerTest {
 
     @Test
     fun testExecute_Remove_removeGroupItem_ungroup() {
-        val group = Group(null)
+        val group = Group(parentId = null)
         val shape1 = Rectangle(Rect.ZERO)
         val shape2 = Rectangle(Rect.ZERO, parentId = group.id)
         val shape3 = Rectangle(Rect.ZERO, parentId = group.id)
@@ -69,7 +69,7 @@ class ShapeManagerTest {
 
     @Test
     fun testExecute_Remove_removeGroupItem_unchangeRoot() {
-        val group = Group(null)
+        val group = Group(parentId = null)
         val shape1 = Rectangle(Rect.ZERO)
         val shape2 = Rectangle(Rect.ZERO, parentId = group.id)
         val shape3 = Rectangle(Rect.ZERO, parentId = group.id)
@@ -88,7 +88,7 @@ class ShapeManagerTest {
 
     @Test
     fun testExecute_Group_invalid() {
-        val group = Group(null)
+        val group = Group(parentId = null)
         val shape1 = Rectangle(Rect.ZERO)
         val shape2 = Rectangle(Rect.ZERO, parentId = group.id)
 
@@ -130,7 +130,7 @@ class ShapeManagerTest {
 
     @Test
     fun testExecute_Ungroup() {
-        val group = Group(null)
+        val group = Group(parentId = null)
         val shape0 = Rectangle(Rect.ZERO)
         val shape1 = Rectangle(Rect.ZERO, parentId = group.id)
         val shape2 = Rectangle(Rect.ZERO, parentId = group.id)
@@ -150,16 +150,16 @@ class ShapeManagerTest {
 
     @Test
     fun testRecursiveVersionUpdate() {
-        val group0 = Group(null)
+        val group0 = Group(parentId = null)
         target.add(group0)
-        val group1 = Group(group0.id)
+        val group1 = Group(parentId = group0.id)
         target.add(group1)
 
         val rootOldVersion = target.root.version
         val group0OldVersion = group0.version
         val group1OldVersion = group1.version
 
-        val group2 = Group(group1.id)
+        val group2 = Group(parentId = group1.id)
         target.add(group2)
 
         assertTrue(target.root.version != rootOldVersion)

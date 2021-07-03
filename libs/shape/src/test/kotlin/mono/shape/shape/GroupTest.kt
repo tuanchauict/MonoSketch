@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
  * A test for [Group].
  */
 class GroupTest {
-    private val target: Group = Group(100)
+    private val target: Group = Group(parentId = 100)
 
     @Test
     fun testAdd() {

@@ -13,7 +13,7 @@ import mono.shape.serialization.SerializableText
 /**
  * A special shape which manages a collection of shapes.
  */
-class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
+class Group(id: Int = generateId(), parentId: Int?) : AbstractShape(id = id, parentId = parentId) {
     private val quickList: QuickList<AbstractShape> = QuickList()
     val items: Collection<AbstractShape> = quickList
     val itemCount: Int get() = items.size
@@ -31,7 +31,10 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
             return Rect.byLTRB(left, top, right, bottom)
         }
 
-    constructor(serializableGroup: SerializableGroup, parentId: Int?) : this(parentId) {
+    constructor(
+        serializableGroup: SerializableGroup,
+        parentId: Int?
+    ) : this(id = serializableGroup.id ?: generateId(), parentId = parentId) {
         for (serializableShape in serializableGroup.shapes) {
             add(toShape(id, serializableShape))
         }
