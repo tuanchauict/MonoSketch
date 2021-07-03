@@ -17,7 +17,7 @@ class LineTest {
     fun testSerialization_init() {
         val startPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 1, 2)
         val endPoint = DirectedPoint(DirectedPoint.Direction.HORIZONTAL, 3, 4)
-        val line = Line(startPoint, endPoint, PARENT_ID)
+        val line = Line(startPoint, endPoint, parentId = PARENT_ID)
 
         val serializableLine = line.toSerializableShape() as SerializableLine
         assertEquals(startPoint, serializableLine.startPoint)
@@ -32,7 +32,7 @@ class LineTest {
     fun testSerialization_moveAnchorPoints() {
         val startPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 1, 2)
         val endPoint = DirectedPoint(DirectedPoint.Direction.HORIZONTAL, 3, 4)
-        val line = Line(startPoint, endPoint, PARENT_ID)
+        val line = Line(startPoint, endPoint, parentId = PARENT_ID)
 
         val newStartPoint = DirectedPoint(DirectedPoint.Direction.HORIZONTAL, 4, 5)
         val newEndPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 7, 8)
@@ -58,7 +58,7 @@ class LineTest {
     fun testSerialization_moveEdge() {
         val startPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 1, 2)
         val endPoint = DirectedPoint(DirectedPoint.Direction.HORIZONTAL, 3, 4)
-        val line = Line(startPoint, endPoint, PARENT_ID)
+        val line = Line(startPoint, endPoint, parentId = PARENT_ID)
         line.moveEdge(line.edges.first().id, Point(10, 10), isReduceRequired = true)
 
         val serializableLine = line.toSerializableShape() as SerializableLine
@@ -74,10 +74,10 @@ class LineTest {
     fun testSerialization_restoreInit() {
         val startPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 1, 2)
         val endPoint = DirectedPoint(DirectedPoint.Direction.HORIZONTAL, 3, 4)
-        val line = Line(startPoint, endPoint, PARENT_ID)
+        val line = Line(startPoint, endPoint, parentId = PARENT_ID)
 
         val serializableLine = line.toSerializableShape() as SerializableLine
-        val line2 = Line(serializableLine, PARENT_ID)
+        val line2 = Line(serializableLine, parentId = PARENT_ID)
         assertEquals(line.getDirection(Line.Anchor.START), line2.getDirection(Line.Anchor.START))
         assertEquals(line.getDirection(Line.Anchor.END), line2.getDirection(Line.Anchor.END))
         assertEquals(line.reducedJoinPoints, line2.reducedJoinPoints)
@@ -90,7 +90,7 @@ class LineTest {
     fun testSerialization_restoreAfterMovingAnchorPoints() {
         val startPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 1, 2)
         val endPoint = DirectedPoint(DirectedPoint.Direction.HORIZONTAL, 3, 4)
-        val line = Line(startPoint, endPoint, PARENT_ID)
+        val line = Line(startPoint, endPoint, parentId = PARENT_ID)
 
         val newStartPoint = DirectedPoint(DirectedPoint.Direction.HORIZONTAL, 4, 5)
         val newEndPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 7, 8)
@@ -104,7 +104,7 @@ class LineTest {
         )
 
         val serializableLine = line.toSerializableShape() as SerializableLine
-        val line2 = Line(serializableLine, PARENT_ID)
+        val line2 = Line(serializableLine, parentId = PARENT_ID)
         assertEquals(line.getDirection(Line.Anchor.START), line2.getDirection(Line.Anchor.START))
         assertEquals(line.getDirection(Line.Anchor.END), line2.getDirection(Line.Anchor.END))
         assertEquals(line.reducedJoinPoints, line2.reducedJoinPoints)
@@ -117,7 +117,7 @@ class LineTest {
     fun testSerialization_restoreAfterMovingEdge() {
         val startPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 1, 2)
         val endPoint = DirectedPoint(DirectedPoint.Direction.HORIZONTAL, 3, 4)
-        val line = Line(startPoint, endPoint, PARENT_ID)
+        val line = Line(startPoint, endPoint, parentId = PARENT_ID)
         line.moveEdge(line.edges.first().id, Point(10, 10), isReduceRequired = true)
 
         val serializableLine = line.toSerializableShape() as SerializableLine
