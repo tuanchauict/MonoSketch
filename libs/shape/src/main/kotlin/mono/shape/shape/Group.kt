@@ -64,10 +64,10 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
     companion object {
         fun toShape(parentId: Int, serializableShape: AbstractSerializableShape): AbstractShape =
             when (serializableShape) {
-                is SerializableRectangle -> Rectangle(serializableShape, parentId)
-                is SerializableText -> Text(serializableShape, parentId)
-                is SerializableLine -> Line(serializableShape, parentId)
-                is SerializableGroup -> Group(serializableShape, parentId)
+                is SerializableRectangle -> Rectangle(serializableShape, parentId = parentId)
+                is SerializableText -> Text(serializableShape, parentId = parentId)
+                is SerializableLine -> Line(serializableShape, parentId = parentId)
+                is SerializableGroup -> Group(serializableShape, parentId = parentId)
             }
     }
 }

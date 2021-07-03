@@ -42,7 +42,7 @@ class ShapeManagerTest {
     @Test
     fun testExecute_Remove_singleGroupItem_removeGroup() {
         val group = Group(null)
-        val shape = Rectangle(Rect.ZERO, group.id)
+        val shape = Rectangle(Rect.ZERO, parentId = group.id)
 
         target.add(group)
         target.add(shape)
@@ -54,8 +54,8 @@ class ShapeManagerTest {
     fun testExecute_Remove_removeGroupItem_ungroup() {
         val group = Group(null)
         val shape1 = Rectangle(Rect.ZERO)
-        val shape2 = Rectangle(Rect.ZERO, group.id)
-        val shape3 = Rectangle(Rect.ZERO, group.id)
+        val shape2 = Rectangle(Rect.ZERO, parentId = group.id)
+        val shape3 = Rectangle(Rect.ZERO, parentId = group.id)
 
         target.add(group)
         target.add(shape1)
@@ -71,9 +71,9 @@ class ShapeManagerTest {
     fun testExecute_Remove_removeGroupItem_unchangeRoot() {
         val group = Group(null)
         val shape1 = Rectangle(Rect.ZERO)
-        val shape2 = Rectangle(Rect.ZERO, group.id)
-        val shape3 = Rectangle(Rect.ZERO, group.id)
-        val shape4 = Rectangle(Rect.ZERO, group.id)
+        val shape2 = Rectangle(Rect.ZERO, parentId = group.id)
+        val shape3 = Rectangle(Rect.ZERO, parentId = group.id)
+        val shape4 = Rectangle(Rect.ZERO, parentId = group.id)
 
         target.add(group)
         target.add(shape1)
@@ -90,7 +90,7 @@ class ShapeManagerTest {
     fun testExecute_Group_invalid() {
         val group = Group(null)
         val shape1 = Rectangle(Rect.ZERO)
-        val shape2 = Rectangle(Rect.ZERO, group.id)
+        val shape2 = Rectangle(Rect.ZERO, parentId = group.id)
 
         target.add(group)
         target.add(shape1)
@@ -132,8 +132,8 @@ class ShapeManagerTest {
     fun testExecute_Ungroup() {
         val group = Group(null)
         val shape0 = Rectangle(Rect.ZERO)
-        val shape1 = Rectangle(Rect.ZERO, group.id)
-        val shape2 = Rectangle(Rect.ZERO, group.id)
+        val shape1 = Rectangle(Rect.ZERO, parentId = group.id)
+        val shape2 = Rectangle(Rect.ZERO, parentId = group.id)
         val shape3 = Rectangle(Rect.ZERO)
 
         target.add(shape0)

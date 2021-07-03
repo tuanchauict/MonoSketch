@@ -68,6 +68,6 @@ internal sealed class ShapeFactory {
 
     object RectangleFactory : ShapeFactory() {
         override fun createShape(position: Point, parentId: Int): AbstractShape =
-            Rectangle(position, position, parentId)
+            Rectangle(position, position, parentId = parentId)
     }
 }
