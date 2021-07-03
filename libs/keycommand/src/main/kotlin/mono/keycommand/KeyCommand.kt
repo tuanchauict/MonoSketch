@@ -12,6 +12,7 @@ enum class KeyCommand(
 ) {
     IDLE,
 
+    SELECT_ALL(Key.KEY_A, commandKeyState = MetaKeyState.ON, isKeyEventPropagationAllowed = false),
     DESELECTION(Key.KEY_ESC),
     DELETE(Key.KEY_BACKSPACE, Key.KEY_DELETE),
 

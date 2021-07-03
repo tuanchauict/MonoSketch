@@ -29,6 +29,7 @@ class ActionManager(
     private fun onKeyEvent(keyCommand: KeyCommand) {
         when (keyCommand) {
             KeyCommand.IDLE -> Unit
+            KeyCommand.SELECT_ALL -> TODO("Handle select all")
             KeyCommand.DESELECTION ->
                 setOneTimeAction(OneTimeActionType.DESELECT_SHAPES)
 
