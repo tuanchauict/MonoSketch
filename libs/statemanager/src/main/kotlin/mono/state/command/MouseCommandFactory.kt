@@ -22,6 +22,24 @@ import mono.state.command.mouse.ShapeFactory
 internal object MouseCommandFactory {
     fun getCommand(
         commandEnvironment: CommandEnvironment,
+        mousePointer: MousePointer,
+        commandType: RetainableActionType
+    ): MouseCommand? = when (mousePointer) {
+        is MousePointer.Down -> detectMouseCommandWithMouseDown(
+            commandEnvironment,
+            mousePointer,
+            commandType
+        )
+        is MousePointer.Click ->
+            if (commandType == RetainableActionType.IDLE) SelectShapeMouseCommand else null
+        is MousePointer.Move,
+        is MousePointer.Drag,
+        is MousePointer.Up,
+        MousePointer.Idle -> null
+    }
+
+    private fun detectMouseCommandWithMouseDown(
+        commandEnvironment: CommandEnvironment,
         mousePointer: MousePointer.Down,
         commandType: RetainableActionType
     ): MouseCommand {

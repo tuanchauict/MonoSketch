@@ -158,14 +158,9 @@ class MainStateManager(
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
-        if (mousePointer is MousePointer.Down) {
-            currentMouseCommand =
-                MouseCommandFactory.getCommand(
-                    environment,
-                    mousePointer,
-                    currentRetainableActionType
-                )
-        }
+        currentMouseCommand =
+            MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
+                ?: currentMouseCommand
 
         val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
         if (isFinished) {
