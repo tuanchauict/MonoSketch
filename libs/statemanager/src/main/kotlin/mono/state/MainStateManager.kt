@@ -111,6 +111,7 @@ class MainStateManager(
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
+                OneTimeActionType.SELECT_ALL_SHAPES -> environment.selectAllShapes()
                 OneTimeActionType.DESELECT_SHAPES -> environment.clearSelectedShapes()
                 OneTimeActionType.DELETE_SELECTED_SHAPES -> deleteSelectedShapes()
                 OneTimeActionType.EDIT_SELECTED_SHAPES -> editSelectedShapes()
@@ -157,14 +158,9 @@ class MainStateManager(
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
-        if (mousePointer is MousePointer.Down) {
-            currentMouseCommand =
-                MouseCommandFactory.getCommand(
-                    environment,
-                    mousePointer,
-                    currentRetainableActionType
-                )
-        }
+        currentMouseCommand =
+            MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
+            ?: currentMouseCommand
 
         val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
         if (isFinished) {
@@ -308,6 +304,12 @@ class MainStateManager(
         override fun toggleShapeSelection(shape: AbstractShape) =
             selectedShapeManager.toggleSelection(shape)
 
+        override fun selectAllShapes() {
+            for (shape in stateManager.workingParentGroup.items) {
+                addSelectedShape(shape)
+            }
+        }
+
         override fun clearSelectedShapes() = selectedShapeManager.clearSelectedShapes()
 
         override fun getEdgeDirection(point: Point): DirectedPoint.Direction? =
@@ -315,6 +317,6 @@ class MainStateManager(
     }
 
     companion object {
-        private const val DEBUG_PERFORMANCE_AUDIT_ENABLED = true
+        private const val DEBUG_PERFORMANCE_AUDIT_ENABLED = false
     }
 }

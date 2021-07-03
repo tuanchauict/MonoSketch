@@ -36,6 +36,8 @@ internal interface CommandEnvironment {
 
     fun toggleShapeSelection(shape: AbstractShape)
 
+    fun selectAllShapes()
+
     fun clearSelectedShapes()
 
     fun getEdgeDirection(point: Point): DirectedPoint.Direction?
