@@ -24,7 +24,7 @@ internal class AddLineMouseCommand : MouseCommand {
                 val shape = Line(
                     DirectedPoint(direction, mousePointer.point),
                     DirectedPoint(DirectedPoint.Direction.VERTICAL, mousePointer.point),
-                    environment.workingParentGroup.id
+                    parentId = environment.workingParentGroup.id
                 )
                 workingShape = shape
                 environment.shapeManager.add(shape)

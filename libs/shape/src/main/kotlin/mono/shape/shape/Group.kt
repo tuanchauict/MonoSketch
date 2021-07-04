@@ -13,7 +13,7 @@ import mono.shape.serialization.SerializableText
 /**
  * A special shape which manages a collection of shapes.
  */
-class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
+class Group(id: Int = generateId(), parentId: Int?) : AbstractShape(id = id, parentId = parentId) {
     private val quickList: QuickList<AbstractShape> = QuickList()
     val items: Collection<AbstractShape> = quickList
     val itemCount: Int get() = items.size
@@ -31,14 +31,17 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
             return Rect.byLTRB(left, top, right, bottom)
         }
 
-    constructor(serializableGroup: SerializableGroup, parentId: Int?) : this(parentId) {
+    constructor(
+        serializableGroup: SerializableGroup,
+        parentId: Int?
+    ) : this(id = serializableGroup.id ?: generateId(), parentId = parentId) {
         for (serializableShape in serializableGroup.shapes) {
             add(toShape(id, serializableShape))
         }
     }
 
     override fun toSerializableShape(): AbstractSerializableShape =
-        SerializableGroup(items.map { it.toSerializableShape() })
+        SerializableGroup(id, items.map { it.toSerializableShape() })
 
     internal fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) = update {
         if (shape.parentId != null && shape.parentId != id) {
@@ -64,10 +67,10 @@ class Group(parentId: Int?) : AbstractShape(parentId = parentId) {
     companion object {
         fun toShape(parentId: Int, serializableShape: AbstractSerializableShape): AbstractShape =
             when (serializableShape) {
-                is SerializableRectangle -> Rectangle(serializableShape, parentId)
-                is SerializableText -> Text(serializableShape, parentId)
-                is SerializableLine -> Line(serializableShape, parentId)
-                is SerializableGroup -> Group(serializableShape, parentId)
+                is SerializableRectangle -> Rectangle(serializableShape, parentId = parentId)
+                is SerializableText -> Text(serializableShape, parentId = parentId)
+                is SerializableLine -> Line(serializableShape, parentId = parentId)
+                is SerializableGroup -> Group(serializableShape, parentId = parentId)
             }
     }
 }

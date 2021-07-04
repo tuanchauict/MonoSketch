@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class TextTest {
     @Test
     fun testSerialization_init() {
-        val text = Text(Rect.byLTWH(1, 2, 3, 4), PARENT_ID)
+        val text = Text(Rect.byLTWH(1, 2, 3, 4), parentId = PARENT_ID)
 
         val serializableText = text.toSerializableShape() as SerializableText
         assertEquals(text.text, serializableText.text)
@@ -21,7 +21,7 @@ class TextTest {
 
     @Test
     fun testSerialization_updateBound() {
-        val text = Text(Rect.byLTWH(1, 2, 3, 4), PARENT_ID)
+        val text = Text(Rect.byLTWH(1, 2, 3, 4), parentId = PARENT_ID)
         text.setBound(Rect.byLTWH(5, 6, 7, 8))
 
         val serializableText = text.toSerializableShape() as SerializableText
@@ -32,7 +32,7 @@ class TextTest {
 
     @Test
     fun testSerialization_updateText() {
-        val text = Text(Rect.byLTWH(1, 2, 3, 4), PARENT_ID)
+        val text = Text(Rect.byLTWH(1, 2, 3, 4), parentId = PARENT_ID)
         text.setText("Hello Hello!")
 
         val serializableText = text.toSerializableShape() as SerializableText
@@ -43,12 +43,12 @@ class TextTest {
 
     @Test
     fun testSerialization_restore() {
-        val text = Text(Rect.byLTWH(1, 2, 3, 4), PARENT_ID)
+        val text = Text(Rect.byLTWH(1, 2, 3, 4), parentId = PARENT_ID)
         text.setText("Hello Hello!")
         text.setBound(Rect.byLTWH(5, 5, 2, 2))
 
         val serializableText = text.toSerializableShape() as SerializableText
-        val text2 = Text(serializableText, PARENT_ID)
+        val text2 = Text(serializableText, parentId = PARENT_ID)
         assertEquals(PARENT_ID, text2.parentId)
         assertEquals(text.text, text2.text)
         assertEquals(text.bound, text2.bound)

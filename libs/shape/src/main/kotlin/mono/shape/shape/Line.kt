@@ -74,8 +74,9 @@ import mono.shape.shape.line.LineHelper
 class Line(
     private var startPoint: DirectedPoint,
     private var endPoint: DirectedPoint,
-    parentId: Int?
-) : AbstractShape(parentId = parentId) {
+    id: Int = generateId(),
+    parentId: Int? = null
+) : AbstractShape(id = id, parentId = parentId) {
 
     private var jointPoints: List<Point> =
         LineHelper.createJointPoints(listOf(startPoint, endPoint))
@@ -109,7 +110,8 @@ class Line(
     internal constructor(serializableLine: SerializableLine, parentId: Int) : this(
         serializableLine.startPoint,
         serializableLine.endPoint,
-        parentId
+        id = serializableLine.id ?: generateId(),
+        parentId = parentId
     ) {
         jointPoints = serializableLine.jointPoints
         if (serializableLine.wasMovingEdge) {
@@ -123,6 +125,7 @@ class Line(
 
     override fun toSerializableShape(): AbstractSerializableShape =
         SerializableLine(
+            id,
             startPoint,
             endPoint,
             jointPoints,

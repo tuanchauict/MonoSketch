@@ -57,6 +57,7 @@ class ShapeClipboardManager(private val body: HTMLElement) {
             }
 
         return SerializableText(
+            null,
             Rect.Companion.byLTWH(0, 0, width, height),
             text,
             Text.Extra(null)
@@ -81,6 +82,6 @@ class ShapeClipboardManager(private val body: HTMLElement) {
     }
 
     companion object {
-        private const val DEFAULT_TEXT_BOUND_WIDTH = 16
+        private const val DEFAULT_TEXT_BOUND_WIDTH = 60
     }
 }

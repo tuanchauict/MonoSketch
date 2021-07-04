@@ -14,7 +14,11 @@ import kotlin.math.max
  *
  * TODO: Resize bound by text
  */
-class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentId) {
+class Text(
+    rect: Rect,
+    id: Int = generateId(),
+    parentId: Int? = null
+) : AbstractShape(id = id, parentId = parentId) {
     private var userSettingSize: Size = Size.ZERO
         set(value) {
             field = value.takeIf { it.width >= 3 && it.height >= 3 } ?: Size.ZERO
@@ -32,14 +36,21 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     var renderableText: RenderableText = RenderableText.EMPTY
         private set
 
-    constructor(startPoint: Point, endPoint: Point, parentId: Int? = null) : this(
+    constructor(
+        startPoint: Point,
+        endPoint: Point,
+        id: Int = generateId(),
+        parentId: Int? = null
+    ) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
-        parentId
+        id = id,
+        parentId = parentId
     )
 
     internal constructor(serializableText: SerializableText, parentId: Int?) : this(
         serializableText.bound,
-        parentId
+        id = serializableText.id ?: generateId(),
+        parentId = parentId
     ) {
         extra = serializableText.extra
         setText(serializableText.text)
@@ -51,7 +62,7 @@ class Text(rect: Rect, parentId: Int? = null) : AbstractShape(parentId = parentI
     }
 
     override fun toSerializableShape(): AbstractSerializableShape =
-        SerializableText(bound, text, extra)
+        SerializableText(id, bound, text, extra)
 
     override fun setBound(newBound: Rect) = update {
         val isUpdated = bound != newBound

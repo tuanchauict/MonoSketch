@@ -62,7 +62,7 @@ class GroupShapes(private val sameParentShapes: List<AbstractShape>) : Command()
     }
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
-        val group = Group(parent.id)
+        val group = Group(parentId = parent.id)
         parent.add(group, QuickList.AddPosition.After(sameParentShapes.last()))
         shapeManager.register(group)
 

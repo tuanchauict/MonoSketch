@@ -20,7 +20,7 @@ internal class RectangleTest {
 
     @Test
     fun testSerialization_changeBound() {
-        val rectangle = Rectangle(Rect.byLTWH(1, 2, 3, 4), PARENT_ID)
+        val rectangle = Rectangle(Rect.byLTWH(1, 2, 3, 4), parentId = PARENT_ID)
         rectangle.bound = Rect.byLTWH(5, 6, 7, 8)
 
         val serializableRectangle = rectangle.toSerializableShape() as SerializableRectangle
@@ -30,12 +30,12 @@ internal class RectangleTest {
 
     @Test
     fun testSerialization_Restore() {
-        val rectangle = Rectangle(Rect.byLTWH(1, 2, 3, 4), PARENT_ID)
+        val rectangle = Rectangle(Rect.byLTWH(1, 2, 3, 4), parentId = PARENT_ID)
         rectangle.bound = Rect.byLTWH(5, 6, 7, 8)
 
         val serializableRectangle = rectangle.toSerializableShape() as SerializableRectangle
 
-        val rectangle2 = Rectangle(serializableRectangle, PARENT_ID)
+        val rectangle2 = Rectangle(serializableRectangle, parentId = PARENT_ID)
         assertEquals(rectangle.bound, rectangle2.bound)
         assertEquals(rectangle.extra, rectangle2.extra)
         assertEquals(PARENT_ID, rectangle2.parentId)
