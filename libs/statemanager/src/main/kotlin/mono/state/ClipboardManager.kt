@@ -31,7 +31,7 @@ internal class ClipboardManager(
     }
 
     fun copySelectedShapes() {
-        val serializableShapes = selectedShapes.map { it.toSerializableShape() }
+        val serializableShapes = selectedShapes.map { it.toSerializableShape(false) }
         shapeClipboardManager.setClipboard(serializableShapes)
     }
 
@@ -59,7 +59,7 @@ internal class ClipboardManager(
             return
         }
         val currentSelectedShapes = selectedShapes
-        val serializableShapes = currentSelectedShapes.map { it.toSerializableShape() }
+        val serializableShapes = currentSelectedShapes.map { it.toSerializableShape(false) }
         val minLeft = currentSelectedShapes.minOf { it.bound.left }
         val minTop = currentSelectedShapes.minOf { it.bound.top }
 

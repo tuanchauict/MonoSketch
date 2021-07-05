@@ -61,8 +61,8 @@ class Text(
         updateRenderableText()
     }
 
-    override fun toSerializableShape(): AbstractSerializableShape =
-        SerializableText(id, bound, text, extra)
+    override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
+        SerializableText(id.takeIf { isIdIncluded }, bound, text, extra)
 
     override fun setBound(newBound: Rect) = update {
         val isUpdated = bound != newBound

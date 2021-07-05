@@ -117,7 +117,8 @@ fun ShapeManager.group(sameParentShapes: List<AbstractShape>) =
 
 fun ShapeManager.ungroup(group: Group) = execute(Ungroup(group))
 
-fun ShapeManager.toJson(): String = Json.encodeToString(root.toSerializableShape())
+fun ShapeManager.toJson(isIdIncluded: Boolean): String =
+    Json.encodeToString(root.toSerializableShape(isIdIncluded))
 
 fun ShapeManager.replaceWithJson(jsonString: String): Boolean = try {
     val serializableGroup =

@@ -43,8 +43,11 @@ class Group(
         }
     }
 
-    override fun toSerializableShape(): AbstractSerializableShape =
-        SerializableGroup(id, items.map { it.toSerializableShape() })
+    override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
+        SerializableGroup(
+            id.takeIf { isIdIncluded },
+            items.map { it.toSerializableShape(isIdIncluded) }
+        )
 
     internal fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) = update {
         if (shape.parentId != null && shape.parentId != id) {

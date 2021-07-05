@@ -52,8 +52,8 @@ class Rectangle(
         extra = serializableRectangle.extra
     }
 
-    override fun toSerializableShape(): AbstractSerializableShape =
-        SerializableRectangle(id, bound, extra)
+    override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
+        SerializableRectangle(id.takeIf { isIdIncluded }, bound, extra)
 
     override fun setBound(newBound: Rect) {
         bound = newBound

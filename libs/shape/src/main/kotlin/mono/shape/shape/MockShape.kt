@@ -11,7 +11,7 @@ class MockShape(
     parentId: String? = null
 ) : AbstractShape(id = null, parentId = parentId) {
 
-    override fun toSerializableShape(): AbstractSerializableShape {
+    override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape {
         TODO("Not yet implemented")
     }
 

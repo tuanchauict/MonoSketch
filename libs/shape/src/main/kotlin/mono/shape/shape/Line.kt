@@ -123,9 +123,9 @@ class Line(
         anchorCharEnd = serializableLine.anchorCharEnd
     }
 
-    override fun toSerializableShape(): AbstractSerializableShape =
+    override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
         SerializableLine(
-            id,
+            id.takeIf { isIdIncluded },
             startPoint,
             endPoint,
             jointPoints,
