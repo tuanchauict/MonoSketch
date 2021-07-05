@@ -2,10 +2,10 @@ package mono.graphics.bitmap.drawable
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Size
-import mono.shape.shape.Text
+import mono.shape.shape.extra.TextExtra
 
 object TextDrawable {
-    fun toBitmap(boundSize: Size, renderableText: List<String>, extra: Text.Extra): MonoBitmap {
+    fun toBitmap(boundSize: Size, renderableText: List<String>, extra: TextExtra): MonoBitmap {
         val boundExtra = extra.boundExtra
         val bgBitmap = if (boundExtra != null) {
             RectangleDrawable.toBitmap(boundSize, boundExtra)

@@ -1,12 +1,12 @@
 package mono.shape.shape
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableText
+import mono.shape.shape.extra.ShapeExtra
+import mono.shape.shape.extra.TextExtra
 import kotlin.math.max
 
 /**
@@ -30,7 +30,7 @@ class Text(
     var text: String = ""
         private set
 
-    override var extra: Extra = Extra(Rectangle.Extra.DEFAULT)
+    override var extra: TextExtra = TextExtra.DEFAULT
         private set
 
     var renderableText: RenderableText = RenderableText.EMPTY
@@ -81,19 +81,16 @@ class Text(
         isTextChanged
     }
 
-    override fun setExtra(extraUpdater: ExtraUpdater) = update {
-        val newExtra = when (extraUpdater) {
-            is Rectangle.Extra.Updater -> Extra.Updater.Bound(extraUpdater).combine(extra)
-            is Extra.Updater -> extraUpdater.combine(extra)
-            else -> null
+    override fun setExtra(newExtra: ShapeExtra) {
+        if (newExtra !is TextExtra || newExtra == extra) {
+            return
         }
-        val isUpdated = newExtra != null && newExtra != extra
-        if (newExtra != null) {
+        update {
             extra = newExtra
             updateRenderableText()
-        }
 
-        isUpdated
+            true
+        }
     }
 
     private fun updateRenderableText() {
@@ -111,28 +108,6 @@ class Text(
         val textBoundWidth = if (extra.boundExtra != null) bound.width - 2 else bound.width
         val textBoundHeight = if (extra.boundExtra != null) bound.height - 2 else bound.height
         return textBoundWidth >= 1 && textBoundHeight >= 1
-    }
-
-    @Serializable
-    data class Extra(
-        @SerialName("be")
-        val boundExtra: Rectangle.Extra?
-    ) {
-        /**
-         * A sealed class for updating [Extra].
-         */
-        sealed class Updater : ExtraUpdater {
-            abstract fun combine(extra: Extra): Extra
-
-            /**
-             * A text updater for updating bound.
-             * If [boundExtraUpdater], [Extra.boundExtra] will be null.
-             */
-            data class Bound(val boundExtraUpdater: Rectangle.Extra.Updater?) : Updater() {
-                override fun combine(extra: Extra): Extra =
-                    extra.copy(boundExtra = boundExtraUpdater?.combine(extra.boundExtra))
-            }
-        }
     }
 
     /**

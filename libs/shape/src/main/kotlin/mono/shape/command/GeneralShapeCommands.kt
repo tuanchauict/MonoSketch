@@ -4,6 +4,7 @@ import mono.graphics.geo.Rect
 import mono.shape.ShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
+import mono.shape.shape.extra.ShapeExtra
 
 class ChangeBound(private val target: AbstractShape, private val newBound: Rect) : Command() {
     override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
@@ -20,14 +21,14 @@ class ChangeBound(private val target: AbstractShape, private val newBound: Rect)
 
 class ChangeExtra(
     private val target: AbstractShape,
-    private val extraUpdater: AbstractShape.ExtraUpdater
+    private val newExtra: ShapeExtra
 ) : Command() {
     override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
         shapeManager.getGroup(target.parentId)
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
         val currentVersion = target.version
-        target.setExtra(extraUpdater)
+        target.setExtra(newExtra)
         if (currentVersion != target.version) {
             parent.update { true }
         }

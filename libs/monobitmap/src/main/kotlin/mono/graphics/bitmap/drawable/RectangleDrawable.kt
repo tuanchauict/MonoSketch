@@ -3,7 +3,7 @@ package mono.graphics.bitmap.drawable
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Size
-import mono.shape.shape.Rectangle
+import mono.shape.shape.extra.RectangleExtra
 
 object RectangleDrawable {
     private val REPEATABLE_RANGE = NinePatchDrawable.RepeatableRange.Repeat(1, 1)
@@ -38,7 +38,7 @@ object RectangleDrawable {
         verticalRepeatableRange = NinePatchDrawable.RepeatableRange.Repeat(0, 0)
     )
 
-    fun toBitmap(size: Size, extra: Rectangle.Extra): MonoBitmap {
+    fun toBitmap(size: Size, extra: RectangleExtra): MonoBitmap {
         val ninepatch = when {
             size.width == 1 && size.height == 1 -> NINE_PATCH_DOT
             size.width == 1 -> NINE_PATCH_VERTICAL_LINE
@@ -48,8 +48,8 @@ object RectangleDrawable {
         return ninepatch.toBitmap(size.width, size.height)
     }
 
-    private fun Rectangle.FillStyle.toNinePatch(): NinePatchDrawable = when (this) {
-        Rectangle.FillStyle.STYLE_0_BORDER -> NINE_PATCH_0_BLANK
-        Rectangle.FillStyle.STYLE_0_FILL -> NINE_PATCH_0_FILL
+    private fun RectangleExtra.FillStyle.toNinePatch(): NinePatchDrawable = when (this) {
+        RectangleExtra.FillStyle.STYLE_0_BORDER -> NINE_PATCH_0_BLANK
+        RectangleExtra.FillStyle.STYLE_0_FILL -> NINE_PATCH_0_FILL
     }
 }

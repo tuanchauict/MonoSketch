@@ -8,7 +8,6 @@ import kotlin.math.min
 /**
  * A simple 9-patch image which scales image based on repeating points in
  * [horizontalRepeatableRange] and [horizontalRepeatableRange].
- *
  */
 class NinePatchDrawable internal constructor(
     private val pattern: Pattern,
