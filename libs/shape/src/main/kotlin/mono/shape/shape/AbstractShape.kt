@@ -14,11 +14,15 @@ import mono.uuid.UUID
  *
  * Each shape's attributes might be changed and [version] reflects the update. To ensure the
  * [version]'s value is accurate, all properties modifying must be wrapped inside [update].
+ *
+ * @param id with null means the id will be automatically generated.
  */
 sealed class AbstractShape(
-    override val id: String = generateId(),
+    id: String?,
     internal var parentId: String? = null
 ) : QuickList.Identifier {
+    override val id: String = id ?: UUID.generate()
+
     var version: Int = 0
         private set
     abstract val bound: Rect
@@ -53,8 +57,4 @@ sealed class AbstractShape(
      * An interface which is used for updating extra value.
      */
     interface ExtraUpdater
-
-    companion object {
-        fun generateId(): String = UUID.generate()
-    }
 }

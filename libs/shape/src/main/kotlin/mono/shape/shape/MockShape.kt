@@ -9,7 +9,7 @@ import mono.shape.serialization.AbstractSerializableShape
 class MockShape(
     rect: Rect,
     parentId: String? = null
-) : AbstractShape(parentId = parentId) {
+) : AbstractShape(id = null, parentId = parentId) {
 
     override fun toSerializableShape(): AbstractSerializableShape {
         TODO("Not yet implemented")

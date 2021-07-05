@@ -16,7 +16,7 @@ import kotlin.math.max
  */
 class Text(
     rect: Rect,
-    id: String = generateId(),
+    id: String? = null,
     parentId: String? = null
 ) : AbstractShape(id = id, parentId = parentId) {
     private var userSettingSize: Size = Size.ZERO
@@ -39,7 +39,7 @@ class Text(
     constructor(
         startPoint: Point,
         endPoint: Point,
-        id: String = generateId(),
+        id: String? = null,
         parentId: String? = null
     ) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
@@ -49,7 +49,7 @@ class Text(
 
     internal constructor(serializableText: SerializableText, parentId: String?) : this(
         serializableText.bound,
-        id = serializableText.id ?: generateId(),
+        id = serializableText.id,
         parentId = parentId
     ) {
         extra = serializableText.extra

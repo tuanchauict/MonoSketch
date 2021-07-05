@@ -74,7 +74,7 @@ import mono.shape.shape.line.LineHelper
 class Line(
     private var startPoint: DirectedPoint,
     private var endPoint: DirectedPoint,
-    id: String = generateId(),
+    id: String? = null,
     parentId: String? = null
 ) : AbstractShape(id = id, parentId = parentId) {
 
@@ -110,7 +110,7 @@ class Line(
     internal constructor(serializableLine: SerializableLine, parentId: String) : this(
         serializableLine.startPoint,
         serializableLine.endPoint,
-        id = serializableLine.id ?: generateId(),
+        id = serializableLine.id,
         parentId = parentId
     ) {
         jointPoints = serializableLine.jointPoints

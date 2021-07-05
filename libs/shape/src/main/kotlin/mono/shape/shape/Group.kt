@@ -14,7 +14,7 @@ import mono.shape.serialization.SerializableText
  * A special shape which manages a collection of shapes.
  */
 class Group(
-    id: String = generateId(),
+    id: String? = null,
     parentId: String?
 ) : AbstractShape(id = id, parentId = parentId) {
     private val quickList: QuickList<AbstractShape> = QuickList()
@@ -37,7 +37,7 @@ class Group(
     constructor(
         serializableGroup: SerializableGroup,
         parentId: String?
-    ) : this(id = serializableGroup.id ?: generateId(), parentId = parentId) {
+    ) : this(id = serializableGroup.id, parentId = parentId) {
         for (serializableShape in serializableGroup.shapes) {
             add(toShape(id, serializableShape))
         }
