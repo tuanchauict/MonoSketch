@@ -131,6 +131,6 @@ class LineTest {
     }
 
     companion object {
-        private const val PARENT_ID = 1
+        private const val PARENT_ID = "1"
     }
 }

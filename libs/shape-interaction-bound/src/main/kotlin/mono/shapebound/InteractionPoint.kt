@@ -10,7 +10,7 @@ import mono.shape.shape.Line
  * [left] and [top] are the center position of the interaction point, with board-related unit.
  */
 sealed class InteractionPoint(
-    val shapeId: Int,
+    val shapeId: String,
     val left: Double,
     val top: Double,
     val mouseCursor: String
@@ -20,7 +20,7 @@ sealed class InteractionPoint(
  * A sealed class for defining all possible scale interaction point types for a shape.
  */
 sealed class ScaleInteractionPoint(
-    shapeId: Int,
+    shapeId: String,
     left: Double,
     top: Double,
     mouseCursor: String
@@ -28,7 +28,7 @@ sealed class ScaleInteractionPoint(
     abstract fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect
 
     class TopLeft(
-        shapeId: Int,
+        shapeId: String,
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, "nwse-resize") {
@@ -37,7 +37,7 @@ sealed class ScaleInteractionPoint(
     }
 
     class TopMiddle(
-        shapeId: Int,
+        shapeId: String,
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, "ns-resize") {
@@ -46,7 +46,7 @@ sealed class ScaleInteractionPoint(
     }
 
     class TopRight(
-        shapeId: Int,
+        shapeId: String,
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, "nesw-resize") {
@@ -55,7 +55,7 @@ sealed class ScaleInteractionPoint(
     }
 
     class MiddleLeft(
-        shapeId: Int,
+        shapeId: String,
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, "ew-resize") {
@@ -64,7 +64,7 @@ sealed class ScaleInteractionPoint(
     }
 
     class MiddleRight(
-        shapeId: Int,
+        shapeId: String,
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, "ew-resize") {
@@ -73,7 +73,7 @@ sealed class ScaleInteractionPoint(
     }
 
     class BottomLeft(
-        shapeId: Int,
+        shapeId: String,
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, "nesw-resize") {
@@ -82,7 +82,7 @@ sealed class ScaleInteractionPoint(
     }
 
     class BottomMiddle(
-        shapeId: Int,
+        shapeId: String,
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, "ns-resize") {
@@ -91,7 +91,7 @@ sealed class ScaleInteractionPoint(
     }
 
     class BottomRight(
-        shapeId: Int,
+        shapeId: String,
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, "nwse-resize") {
@@ -104,21 +104,21 @@ sealed class ScaleInteractionPoint(
  * A sealed class to define all possible interaction points on Line shapes.
  */
 sealed class LineInteractionPoint(
-    shapeId: Int,
+    shapeId: String,
     left: Double,
     top: Double,
     mouseCursor: String
 ) : InteractionPoint(shapeId, left, top, mouseCursor) {
 
     class Anchor(
-        shapeId: Int,
+        shapeId: String,
         val anchor: Line.Anchor,
         left: Double,
         top: Double
     ) : LineInteractionPoint(shapeId, left, top, "move")
 
     class Edge(
-        shapeId: Int,
+        shapeId: String,
         val edgeId: Int,
         left: Double,
         top: Double,

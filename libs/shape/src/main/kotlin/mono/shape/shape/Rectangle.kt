@@ -12,8 +12,8 @@ import mono.shape.serialization.SerializableRectangle
  */
 class Rectangle(
     rect: Rect,
-    id: Int = generateId(),
-    parentId: Int? = null
+    id: String = generateId(),
+    parentId: String? = null
 ) : AbstractShape(id, parentId = parentId) {
 
     override var bound: Rect = rect
@@ -33,8 +33,8 @@ class Rectangle(
     constructor(
         startPoint: Point,
         endPoint: Point,
-        id: Int = generateId(),
-        parentId: Int? = null
+        id: String = generateId(),
+        parentId: String? = null
     ) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
         id = id,
@@ -43,7 +43,7 @@ class Rectangle(
 
     internal constructor(
         serializableRectangle: SerializableRectangle,
-        parentId: Int? = null
+        parentId: String? = null
     ) : this(
         serializableRectangle.bound,
         id = serializableRectangle.id ?: generateId(),

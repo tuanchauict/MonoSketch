@@ -12,14 +12,14 @@ import mono.shape.shape.Text
 @Serializable
 sealed class AbstractSerializableShape {
     // null for not having id.
-    abstract val id: Int?
+    abstract val id: String?
 }
 
 @Serializable
 @SerialName("R")
 data class SerializableRectangle(
     @SerialName("i")
-    override val id: Int? = null,
+    override val id: String? = null,
     @SerialName("b")
     val bound: Rect,
     @SerialName("e")
@@ -30,7 +30,7 @@ data class SerializableRectangle(
 @SerialName("T")
 data class SerializableText(
     @SerialName("i")
-    override val id: Int? = null,
+    override val id: String? = null,
     @SerialName("b")
     val bound: Rect,
     @SerialName("t")
@@ -43,7 +43,7 @@ data class SerializableText(
 @SerialName("L")
 data class SerializableLine(
     @SerialName("i")
-    override val id: Int? = null,
+    override val id: String? = null,
     @SerialName("ps")
     val startPoint: DirectedPoint,
     @SerialName("pe")
@@ -62,7 +62,7 @@ data class SerializableLine(
 @SerialName("G")
 data class SerializableGroup(
     @SerialName("i")
-    override val id: Int? = null,
+    override val id: String? = null,
     @SerialName("ss")
     val shapes: List<AbstractSerializableShape>
 ) : AbstractSerializableShape()

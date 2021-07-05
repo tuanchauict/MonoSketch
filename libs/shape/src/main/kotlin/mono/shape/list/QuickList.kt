@@ -8,7 +8,7 @@ package mono.shape.list
  */
 internal class QuickList<T : QuickList.Identifier> : Collection<T> {
     private val linkedList: DoubleLinkedList<T> = DoubleLinkedList()
-    private val map: MutableMap<Int, Node<T>> = mutableMapOf()
+    private val map: MutableMap<String, Node<T>> = mutableMapOf()
 
     override val size: Int
         get() = map.size
@@ -63,7 +63,7 @@ internal class QuickList<T : QuickList.Identifier> : Collection<T> {
         return result
     }
 
-    operator fun get(id: Int): T? = map[id]?.value
+    operator fun get(id: String): T? = map[id]?.value
 
     fun move(identifier: Identifier, moveActionType: MoveActionType): Boolean {
         if (size < 2) {
@@ -75,7 +75,7 @@ internal class QuickList<T : QuickList.Identifier> : Collection<T> {
     }
 
     interface Identifier {
-        val id: Int
+        val id: String
     }
 
     sealed class AddPosition {

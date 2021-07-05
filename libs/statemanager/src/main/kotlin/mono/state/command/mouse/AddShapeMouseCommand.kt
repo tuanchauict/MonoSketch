@@ -64,10 +64,10 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
 }
 
 internal sealed class ShapeFactory {
-    abstract fun createShape(position: Point, parentId: Int): AbstractShape
+    abstract fun createShape(position: Point, parentId: String): AbstractShape
 
     object RectangleFactory : ShapeFactory() {
-        override fun createShape(position: Point, parentId: Int): AbstractShape =
+        override fun createShape(position: Point, parentId: String): AbstractShape =
             Rectangle(position, position, parentId = parentId)
     }
 }

@@ -9,7 +9,7 @@ import mono.graphics.geo.Rect
  * Owners of a zone will be stored in the same order as owners are added if overlapped.
  */
 internal class ZoneOwnersManager {
-    private val zoneToOwnersMap: MutableMap<ZoneAddress, MutableList<Int>> = mutableMapOf()
+    private val zoneToOwnersMap: MutableMap<ZoneAddress, MutableList<String>> = mutableMapOf()
 
     fun clear(clearBound: Rect) {
         val leftIndex = ZoneAddressFactory.toAddressIndex(clearBound.left)
@@ -25,21 +25,21 @@ internal class ZoneOwnersManager {
         }
     }
 
-    fun registerOwnerAddresses(ownerId: Int, addresses: Set<ZoneAddress>) {
+    fun registerOwnerAddresses(ownerId: String, addresses: Set<ZoneAddress>) {
         for (address in addresses) {
             zoneToOwnersMap.getOrPut(address) { mutableListOf() }.add(ownerId)
         }
     }
 
-    fun getPotentialOwners(point: Point): List<Int> {
+    fun getPotentialOwners(point: Point): List<String> {
         val address = ZoneAddressFactory.toAddress(point.row, point.column)
         return zoneToOwnersMap[address].orEmpty()
     }
 
-    fun getAllPotentialOwnersInZone(zone: Rect): Set<Int> {
+    fun getAllPotentialOwnersInZone(zone: Rect): Set<String> {
         val address1 = ZoneAddressFactory.toAddress(zone.top, zone.left)
         val address2 = ZoneAddressFactory.toAddress(zone.bottom, zone.right)
-        val owners = mutableSetOf<Int>()
+        val owners = mutableSetOf<String>()
         for (addressRow in address1.row..address2.row) {
             for (addressCol in address1.column..address2.column) {
                 val address = ZoneAddressFactory.get(addressRow, addressCol)

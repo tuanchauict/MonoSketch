@@ -10,6 +10,7 @@ repositories {
 dependencies {
     implementation(project(":graphicsgeo"))
     implementation(project(":livedata"))
+    implementation(project(":uuid"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 

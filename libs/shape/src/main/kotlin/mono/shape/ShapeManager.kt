@@ -21,7 +21,7 @@ import mono.shape.shape.Group
 class ShapeManager {
     var root: Group = Group(parentId = null)
         private set
-    private var allShapeMap: MutableMap<Int, AbstractShape> = mutableMapOf(root.id to root)
+    private var allShapeMap: MutableMap<String, AbstractShape> = mutableMapOf(root.id to root)
 
     /**
      * Reflect the version of the root through live data. The other components are able to observe
@@ -48,14 +48,14 @@ class ShapeManager {
             if (currentVersion == newRoot.version) currentVersion - 1 else newRoot.version
     }
 
-    private fun createAllShapeMap(group: Group): MutableMap<Int, AbstractShape> {
-        val map: MutableMap<Int, AbstractShape> = mutableMapOf()
+    private fun createAllShapeMap(group: Group): MutableMap<String, AbstractShape> {
+        val map: MutableMap<String, AbstractShape> = mutableMapOf()
         map[group.id] = group
         createAllShapeMapRecursive(group, map)
         return map
     }
 
-    private fun createAllShapeMapRecursive(group: Group, map: MutableMap<Int, AbstractShape>) {
+    private fun createAllShapeMapRecursive(group: Group, map: MutableMap<String, AbstractShape>) {
         for (shape in group.items) {
             map[shape.id] = shape
             if (shape is Group) {
@@ -80,10 +80,10 @@ class ShapeManager {
         versionMutableLiveData.value = root.version
     }
 
-    internal fun getGroup(shapeId: Int?): Group? =
+    internal fun getGroup(shapeId: String?): Group? =
         if (shapeId == null) root else allShapeMap[shapeId] as? Group
 
-    fun getShape(shapeId: Int): AbstractShape? = allShapeMap[shapeId]
+    fun getShape(shapeId: String): AbstractShape? = allShapeMap[shapeId]
 
     internal fun register(shape: AbstractShape) {
         allShapeMap[shape.id] = shape
@@ -122,7 +122,7 @@ fun ShapeManager.toJson(): String = Json.encodeToString(root.toSerializableShape
 fun ShapeManager.replaceWithJson(jsonString: String): Boolean = try {
     val serializableGroup =
         Json.decodeFromString<AbstractSerializableShape>(jsonString) as SerializableGroup
-    val root = Group(serializableGroup, parentId = 0)
+    val root = Group(serializableGroup, parentId = null)
     replaceRoot(root)
     true
 } catch (e: Exception) {
