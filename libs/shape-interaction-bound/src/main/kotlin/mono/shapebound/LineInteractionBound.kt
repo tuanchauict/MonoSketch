@@ -6,7 +6,7 @@ import mono.shape.shape.Line
  * A class which defines interaction bound for Line shapes.
  */
 class LineInteractionBound(
-    private val targetedShapeId: Int,
+    private val targetedShapeId: String,
     edges: List<Line.Edge>
 ) : InteractionBound() {
     private val reducedEdges: List<Line.Edge>

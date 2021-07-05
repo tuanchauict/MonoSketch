@@ -17,7 +17,7 @@ import mono.shape.shape.Text
  * Call [invalidate] to clean up cache of a shape.
  */
 class MonoBitmapManager {
-    private val idToBitmapMap: MutableMap<Int, VersionizedBitmap> = mutableMapOf()
+    private val idToBitmapMap: MutableMap<String, VersionizedBitmap> = mutableMapOf()
 
     fun getBitmap(shape: AbstractShape): MonoBitmap? {
         val cachedBitmap = getCacheBitmap(shape)

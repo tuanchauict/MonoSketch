@@ -10,12 +10,12 @@ import kotlin.test.assertTrue
  * A test for [Group].
  */
 class GroupTest {
-    private val target: Group = Group(parentId = 100)
+    private val target: Group = Group(parentId = "100")
 
     @Test
     fun testAdd() {
         assertEquals(0, target.itemCount)
-        val invalidShape = Rectangle(Rect.ZERO, parentId = 10000)
+        val invalidShape = Rectangle(Rect.ZERO, parentId = "10000")
         val validShape1 = Rectangle(Rect.ZERO, parentId = null)
         val validShape2 = Rectangle(Rect.ZERO, parentId = target.id)
         val validShape3 = Rectangle(Rect.ZERO, parentId = null)

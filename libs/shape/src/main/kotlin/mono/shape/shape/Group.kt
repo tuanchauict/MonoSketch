@@ -13,7 +13,10 @@ import mono.shape.serialization.SerializableText
 /**
  * A special shape which manages a collection of shapes.
  */
-class Group(id: Int = generateId(), parentId: Int?) : AbstractShape(id = id, parentId = parentId) {
+class Group(
+    id: String? = null,
+    parentId: String?
+) : AbstractShape(id = id, parentId = parentId) {
     private val quickList: QuickList<AbstractShape> = QuickList()
     val items: Collection<AbstractShape> = quickList
     val itemCount: Int get() = items.size
@@ -33,15 +36,18 @@ class Group(id: Int = generateId(), parentId: Int?) : AbstractShape(id = id, par
 
     constructor(
         serializableGroup: SerializableGroup,
-        parentId: Int?
-    ) : this(id = serializableGroup.id ?: generateId(), parentId = parentId) {
+        parentId: String?
+    ) : this(id = serializableGroup.id, parentId = parentId) {
         for (serializableShape in serializableGroup.shapes) {
             add(toShape(id, serializableShape))
         }
     }
 
-    override fun toSerializableShape(): AbstractSerializableShape =
-        SerializableGroup(id, items.map { it.toSerializableShape() })
+    override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
+        SerializableGroup(
+            id.takeIf { isIdIncluded },
+            items.map { it.toSerializableShape(isIdIncluded) }
+        )
 
     internal fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) = update {
         if (shape.parentId != null && shape.parentId != id) {
@@ -65,7 +71,7 @@ class Group(id: Int = generateId(), parentId: Int?) : AbstractShape(id = id, par
     }
 
     companion object {
-        fun toShape(parentId: Int, serializableShape: AbstractSerializableShape): AbstractShape =
+        fun toShape(parentId: String, serializableShape: AbstractSerializableShape): AbstractShape =
             when (serializableShape) {
                 is SerializableRectangle -> Rectangle(serializableShape, parentId = parentId)
                 is SerializableText -> Text(serializableShape, parentId = parentId)

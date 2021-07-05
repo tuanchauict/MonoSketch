@@ -33,7 +33,7 @@ class ShapeManagerTest {
         assertEquals(listOf(shape1, group1), target.root.items.toList())
         assertEquals(listOf(shape2), group1.items.toList())
 
-        val shape3 = MockShape(Rect.ZERO, parentId = 1000)
+        val shape3 = MockShape(Rect.ZERO, parentId = "1000")
         target.execute(AddShape(shape3))
         assertEquals(listOf(shape1, group1), target.root.items.toList())
         assertEquals(listOf(shape2), group1.items.toList())

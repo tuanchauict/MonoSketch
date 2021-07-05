@@ -4,7 +4,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://dl.bintray.com/kotlin/kotlinx") }
 }
 
 dependencies {
@@ -15,7 +14,7 @@ dependencies {
     implementation(project(":monoboard"))
     implementation(project(":shape-interaction-bound"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.3")
 
     testImplementation(kotlin("test-js"))
 }

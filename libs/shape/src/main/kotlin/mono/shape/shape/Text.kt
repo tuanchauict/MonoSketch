@@ -16,8 +16,8 @@ import kotlin.math.max
  */
 class Text(
     rect: Rect,
-    id: Int = generateId(),
-    parentId: Int? = null
+    id: String? = null,
+    parentId: String? = null
 ) : AbstractShape(id = id, parentId = parentId) {
     private var userSettingSize: Size = Size.ZERO
         set(value) {
@@ -39,17 +39,17 @@ class Text(
     constructor(
         startPoint: Point,
         endPoint: Point,
-        id: Int = generateId(),
-        parentId: Int? = null
+        id: String? = null,
+        parentId: String? = null
     ) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
         id = id,
         parentId = parentId
     )
 
-    internal constructor(serializableText: SerializableText, parentId: Int?) : this(
+    internal constructor(serializableText: SerializableText, parentId: String?) : this(
         serializableText.bound,
-        id = serializableText.id ?: generateId(),
+        id = serializableText.id,
         parentId = parentId
     ) {
         extra = serializableText.extra
@@ -61,8 +61,8 @@ class Text(
         updateRenderableText()
     }
 
-    override fun toSerializableShape(): AbstractSerializableShape =
-        SerializableText(id, bound, text, extra)
+    override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
+        SerializableText(id.takeIf { isIdIncluded }, bound, text, extra)
 
     override fun setBound(newBound: Rect) = update {
         val isUpdated = bound != newBound

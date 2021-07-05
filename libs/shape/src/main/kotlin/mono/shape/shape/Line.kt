@@ -74,8 +74,8 @@ import mono.shape.shape.line.LineHelper
 class Line(
     private var startPoint: DirectedPoint,
     private var endPoint: DirectedPoint,
-    id: Int = generateId(),
-    parentId: Int? = null
+    id: String? = null,
+    parentId: String? = null
 ) : AbstractShape(id = id, parentId = parentId) {
 
     private var jointPoints: List<Point> =
@@ -107,10 +107,10 @@ class Line(
             return Rect.byLTRB(left, top, right, bottom)
         }
 
-    internal constructor(serializableLine: SerializableLine, parentId: Int) : this(
+    internal constructor(serializableLine: SerializableLine, parentId: String) : this(
         serializableLine.startPoint,
         serializableLine.endPoint,
-        id = serializableLine.id ?: generateId(),
+        id = serializableLine.id,
         parentId = parentId
     ) {
         jointPoints = serializableLine.jointPoints
@@ -123,9 +123,9 @@ class Line(
         anchorCharEnd = serializableLine.anchorCharEnd
     }
 
-    override fun toSerializableShape(): AbstractSerializableShape =
+    override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
         SerializableLine(
-            id,
+            id.takeIf { isIdIncluded },
             startPoint,
             endPoint,
             jointPoints,

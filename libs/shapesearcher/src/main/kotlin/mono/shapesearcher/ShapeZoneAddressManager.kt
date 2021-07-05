@@ -8,7 +8,7 @@ import mono.shape.shape.AbstractShape
  * This class also cache the addresses belong to the shape along with its version.
  */
 internal class ShapeZoneAddressManager(private val bitmapManager: MonoBitmapManager) {
-    private val idToZoneAddressMap: MutableMap<Int, VersionizedZoneAddresses> = mutableMapOf()
+    private val idToZoneAddressMap: MutableMap<String, VersionizedZoneAddresses> = mutableMapOf()
 
     fun getZoneAddresses(shape: AbstractShape): Set<ZoneAddress> {
         val cachedAddresses = getCachedAddresses(shape)

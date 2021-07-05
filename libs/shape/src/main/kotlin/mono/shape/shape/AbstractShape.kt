@@ -4,6 +4,7 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 import mono.shape.serialization.AbstractSerializableShape
+import mono.uuid.UUID
 
 /**
  * An abstract class which is used for defining all kinds of shape which are supported by the app.
@@ -13,11 +14,15 @@ import mono.shape.serialization.AbstractSerializableShape
  *
  * Each shape's attributes might be changed and [version] reflects the update. To ensure the
  * [version]'s value is accurate, all properties modifying must be wrapped inside [update].
+ *
+ * @param id with null means the id will be automatically generated.
  */
 sealed class AbstractShape(
-    override val id: Int = generateId(),
-    internal var parentId: Int? = null
+    id: String?,
+    internal var parentId: String? = null
 ) : QuickList.Identifier {
+    override val id: String = id ?: UUID.generate()
+
     var version: Int = 0
         private set
     abstract val bound: Rect
@@ -27,7 +32,7 @@ sealed class AbstractShape(
      */
     open val extra: Any = Unit
 
-    abstract fun toSerializableShape(): AbstractSerializableShape
+    abstract fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape
 
     open fun setBound(newBound: Rect) = Unit
 
@@ -52,14 +57,4 @@ sealed class AbstractShape(
      * An interface which is used for updating extra value.
      */
     interface ExtraUpdater
-
-    companion object {
-        private var NEXT_ID: Int = 1
-
-        fun generateId(): Int {
-            val id = NEXT_ID
-            NEXT_ID += 1
-            return id
-        }
-    }
 }

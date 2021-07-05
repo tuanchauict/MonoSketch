@@ -94,7 +94,7 @@ class MonoFlowApplication : LifecycleOwner() {
     }
 
     private fun backupShapes() {
-        localStorage[BACKUP_SHAPES_KEY] = shapeManager.toJson()
+        localStorage[BACKUP_SHAPES_KEY] = shapeManager.toJson(true)
     }
 
     private fun restoreShapes() {

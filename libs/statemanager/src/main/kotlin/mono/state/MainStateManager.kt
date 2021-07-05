@@ -112,7 +112,7 @@ class MainStateManager(
                 OneTimeActionType.IDLE -> Unit
 
                 OneTimeActionType.SAVE_SHAPES_AS ->
-                    fileMediator.saveFile(shapeManager.toJson())
+                    fileMediator.saveFile(shapeManager.toJson(true))
                 OneTimeActionType.OPEN_SHAPES ->
                     openSavedFile()
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->

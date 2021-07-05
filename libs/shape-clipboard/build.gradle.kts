@@ -4,7 +4,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://dl.bintray.com/kotlin/kotlinx") }
 }
 
 dependencies {
@@ -12,7 +11,7 @@ dependencies {
     implementation(project(":livedata"))
     implementation(project(":shape"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 
     implementation(kotlin("stdlib-js"))

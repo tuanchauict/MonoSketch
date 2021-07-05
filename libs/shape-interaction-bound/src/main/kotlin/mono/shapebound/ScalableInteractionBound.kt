@@ -6,7 +6,7 @@ import mono.graphics.geo.Rect
  * A class which defines interaction bound for scalable shapes.
  */
 class ScalableInteractionBound(
-    targetedShapeId: Int,
+    targetedShapeId: String,
     shapeBound: Rect
 ) : InteractionBound() {
     val left: Double = shapeBound.left.toDouble()
