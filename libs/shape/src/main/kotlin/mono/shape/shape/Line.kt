@@ -1,12 +1,11 @@
 package mono.shape.shape
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableLine
+import mono.shape.shape.extra.LineExtra
 import mono.shape.shape.line.LineHelper
 
 /**
@@ -87,9 +86,7 @@ class Line(
     var edges: List<Edge> = LineHelper.createEdges(jointPoints)
         private set
 
-    var anchorCharStart: AnchorChar = AnchorChar('─', '─', '│', '│')
-        private set
-    var anchorCharEnd: AnchorChar = AnchorChar('─', '─', '│', '│')
+    override var extra: LineExtra = LineExtra.DEFAULT
         private set
 
     /**
@@ -119,8 +116,7 @@ class Line(
         }
         edges = LineHelper.createEdges(jointPoints)
 
-        anchorCharStart = serializableLine.anchorCharStart
-        anchorCharEnd = serializableLine.anchorCharEnd
+        extra = serializableLine.extra
     }
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
@@ -129,8 +125,7 @@ class Line(
             startPoint,
             endPoint,
             jointPoints,
-            anchorCharStart,
-            anchorCharEnd,
+            extra,
             wasMovingEdge()
         )
 
@@ -402,19 +397,6 @@ class Line(
         START, END
     }
 
-    @Serializable
-    data class AnchorChar(
-        @SerialName("l")
-        val left: Char,
-        @SerialName("r")
-        val right: Char,
-        @SerialName("t")
-        val top: Char,
-        @SerialName("b")
-        val bottom: Char
-    ) {
-        constructor(all: Char) : this(all, all, all, all)
-    }
 
     companion object {
         private fun isHorizontal(p1: Point, p2: Point): Boolean = p1.top == p2.top

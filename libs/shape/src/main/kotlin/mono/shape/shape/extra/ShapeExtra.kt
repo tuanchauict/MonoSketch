@@ -47,3 +47,34 @@ data class TextExtra(
         val DEFAULT = TextExtra(boundExtra = RectangleExtra.DEFAULT)
     }
 }
+
+/**
+ * A [ShapeExtra] for [mono.shape.shape.Line].
+ */
+@Serializable
+data class LineExtra(
+    val startAnchorChar: AnchorChar,
+    val endAnchorChar: AnchorChar
+) : ShapeExtra() {
+
+    @Serializable
+    data class AnchorChar(
+        @SerialName("l")
+        val left: Char,
+        @SerialName("r")
+        val right: Char,
+        @SerialName("t")
+        val top: Char,
+        @SerialName("b")
+        val bottom: Char
+    ) {
+        constructor(all: Char) : this(all, all, all, all)
+    }
+
+    companion object {
+        val DEFAULT = LineExtra(
+            startAnchorChar = AnchorChar(left = '─', right = '─', top = '│', bottom = '│'),
+            endAnchorChar = AnchorChar(left = '─', right = '─', top = '│', bottom = '│')
+        )
+    }
+}

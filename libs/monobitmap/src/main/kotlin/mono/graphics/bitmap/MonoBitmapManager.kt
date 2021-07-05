@@ -34,8 +34,7 @@ class MonoBitmapManager {
             )
             is Line -> LineDrawable.toBitmap(
                 shape.reducedJoinPoints,
-                shape.anchorCharStart,
-                shape.anchorCharEnd
+                shape.extra,
             )
 
             is Group -> null // No draw group since it change very frequently.

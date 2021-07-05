@@ -23,8 +23,7 @@ class LineTest {
         assertEquals(startPoint, serializableLine.startPoint)
         assertEquals(endPoint, serializableLine.endPoint)
         assertEquals(line.reducedJoinPoints, LineHelper.reduce(serializableLine.jointPoints))
-        assertEquals(line.anchorCharStart, serializableLine.anchorCharStart)
-        assertEquals(line.anchorCharEnd, serializableLine.anchorCharEnd)
+        assertEquals(line.extra, serializableLine.extra)
         assertFalse(serializableLine.wasMovingEdge)
     }
 
@@ -49,8 +48,7 @@ class LineTest {
         assertEquals(newStartPoint, serializableLine.startPoint)
         assertEquals(newEndPoint, serializableLine.endPoint)
         assertEquals(line.reducedJoinPoints, LineHelper.reduce(serializableLine.jointPoints))
-        assertEquals(line.anchorCharStart, serializableLine.anchorCharStart)
-        assertEquals(line.anchorCharEnd, serializableLine.anchorCharEnd)
+        assertEquals(line.extra, serializableLine.extra)
         assertFalse(serializableLine.wasMovingEdge)
     }
 
@@ -65,8 +63,7 @@ class LineTest {
         assertEquals(startPoint, serializableLine.startPoint)
         assertEquals(endPoint, serializableLine.endPoint)
         assertEquals(line.reducedJoinPoints, LineHelper.reduce(serializableLine.jointPoints))
-        assertEquals(line.anchorCharStart, serializableLine.anchorCharStart)
-        assertEquals(line.anchorCharEnd, serializableLine.anchorCharEnd)
+        assertEquals(line.extra, serializableLine.extra)
         assertTrue(serializableLine.wasMovingEdge)
     }
 
@@ -81,8 +78,7 @@ class LineTest {
         assertEquals(line.getDirection(Line.Anchor.START), line2.getDirection(Line.Anchor.START))
         assertEquals(line.getDirection(Line.Anchor.END), line2.getDirection(Line.Anchor.END))
         assertEquals(line.reducedJoinPoints, line2.reducedJoinPoints)
-        assertEquals(line.anchorCharStart, line2.anchorCharStart)
-        assertEquals(line.anchorCharEnd, line2.anchorCharEnd)
+        assertEquals(line.extra, line2.extra)
         assertEquals(line.wasMovingEdge(), line2.wasMovingEdge())
     }
 
@@ -108,8 +104,7 @@ class LineTest {
         assertEquals(line.getDirection(Line.Anchor.START), line2.getDirection(Line.Anchor.START))
         assertEquals(line.getDirection(Line.Anchor.END), line2.getDirection(Line.Anchor.END))
         assertEquals(line.reducedJoinPoints, line2.reducedJoinPoints)
-        assertEquals(line.anchorCharStart, line2.anchorCharStart)
-        assertEquals(line.anchorCharEnd, line2.anchorCharEnd)
+        assertEquals(line.extra, line2.extra)
         assertEquals(line.wasMovingEdge(), line2.wasMovingEdge())
     }
 
@@ -125,8 +120,7 @@ class LineTest {
         assertEquals(line.getDirection(Line.Anchor.START), line2.getDirection(Line.Anchor.START))
         assertEquals(line.getDirection(Line.Anchor.END), line2.getDirection(Line.Anchor.END))
         assertEquals(line.reducedJoinPoints, line2.reducedJoinPoints)
-        assertEquals(line.anchorCharStart, line2.anchorCharStart)
-        assertEquals(line.anchorCharEnd, line2.anchorCharEnd)
+        assertEquals(line.extra, line2.extra)
         assertEquals(line.wasMovingEdge(), line2.wasMovingEdge())
     }
 

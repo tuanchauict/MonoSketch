@@ -2,7 +2,7 @@ package mono.graphics.bitmap.drawable
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
-import mono.shape.shape.Line
+import mono.shape.shape.extra.LineExtra
 import kotlin.math.max
 import kotlin.math.min
 
@@ -12,8 +12,7 @@ import kotlin.math.min
 object LineDrawable {
     fun toBitmap(
         jointPoints: List<Point>,
-        anchorCharStart: Line.AnchorChar,
-        anchorCharEnd: Line.AnchorChar
+        lineExtra: LineExtra,
     ): MonoBitmap {
         val bitmapBuilder = BitmapBuilderDecoration.getInstance(jointPoints)
         if (jointPoints.size < 2) {
@@ -40,12 +39,12 @@ object LineDrawable {
         bitmapBuilder.putAnchorPoint(
             jointPoints[0],
             jointPoints[1],
-            anchorCharStart
+            lineExtra.startAnchorChar
         )
         bitmapBuilder.putAnchorPoint(
             jointPoints[jointPoints.lastIndex],
             jointPoints[jointPoints.lastIndex - 1],
-            anchorCharEnd
+            lineExtra.endAnchorChar
         )
 
         return bitmapBuilder.toBitmap()
@@ -70,7 +69,7 @@ object LineDrawable {
     private fun BitmapBuilderDecoration.putAnchorPoint(
         anchor: Point,
         previousPoint: Point,
-        anchorChar: Line.AnchorChar
+        anchorChar: LineExtra.AnchorChar
     ) {
         val char = if (isHorizontal(anchor, previousPoint)) {
             if (anchor.left < previousPoint.left) anchorChar.left else anchorChar.right
