@@ -17,7 +17,8 @@ val moduleMap = mapOf(
     "shape-clipboard" to "libs/shape-clipboard",
     "shape-interaction-bound" to "libs/shape-interaction-bound",
     "shapesearcher" to "libs/shapesearcher",
-    "statemanager" to "libs/statemanager"
+    "statemanager" to "libs/statemanager",
+    "uuid" to "libs/uuid"
 )
 
 moduleMap.entries.forEach { (name, path) ->
