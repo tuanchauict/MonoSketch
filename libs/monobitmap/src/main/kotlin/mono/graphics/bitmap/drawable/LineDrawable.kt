@@ -39,12 +39,12 @@ object LineDrawable {
         bitmapBuilder.putAnchorPoint(
             jointPoints[0],
             jointPoints[1],
-            lineExtra.startAnchorChar
+            lineExtra.startAnchor
         )
         bitmapBuilder.putAnchorPoint(
             jointPoints[jointPoints.lastIndex],
             jointPoints[jointPoints.lastIndex - 1],
-            lineExtra.endAnchorChar
+            lineExtra.endAnchor
         )
 
         return bitmapBuilder.toBitmap()
