@@ -13,7 +13,7 @@ internal class RectangleTest {
     fun testSerialization_init() {
         val rectangle = Rectangle(Rect.byLTWH(1, 2, 3, 4), PARENT_ID)
 
-        val serializableRectangle = rectangle.toSerializableShape() as SerializableRectangle
+        val serializableRectangle = rectangle.toSerializableShape(true) as SerializableRectangle
         assertEquals(rectangle.bound, serializableRectangle.bound)
         assertEquals(rectangle.extra, serializableRectangle.extra)
     }
@@ -23,7 +23,7 @@ internal class RectangleTest {
         val rectangle = Rectangle(Rect.byLTWH(1, 2, 3, 4), parentId = PARENT_ID)
         rectangle.bound = Rect.byLTWH(5, 6, 7, 8)
 
-        val serializableRectangle = rectangle.toSerializableShape() as SerializableRectangle
+        val serializableRectangle = rectangle.toSerializableShape(true) as SerializableRectangle
         assertEquals(rectangle.bound, serializableRectangle.bound)
         assertEquals(rectangle.extra, serializableRectangle.extra)
     }
@@ -33,7 +33,7 @@ internal class RectangleTest {
         val rectangle = Rectangle(Rect.byLTWH(1, 2, 3, 4), parentId = PARENT_ID)
         rectangle.bound = Rect.byLTWH(5, 6, 7, 8)
 
-        val serializableRectangle = rectangle.toSerializableShape() as SerializableRectangle
+        val serializableRectangle = rectangle.toSerializableShape(true) as SerializableRectangle
 
         val rectangle2 = Rectangle(serializableRectangle, parentId = PARENT_ID)
         assertEquals(rectangle.bound, rectangle2.bound)
