@@ -14,7 +14,7 @@ dependencies {
     implementation(project(":monoboard"))
     implementation(project(":shape"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.3")
+    implementation(libs.kotlinx.html)
 
     implementation(kotlin("stdlib-js"))
     testImplementation(kotlin("test-js"))

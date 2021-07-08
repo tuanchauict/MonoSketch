@@ -12,7 +12,7 @@ dependencies {
     implementation(project(":lifecycle"))
     implementation(project(":livedata"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.3")
+    implementation(libs.kotlinx.html)
 
     testImplementation(kotlin("test-js"))
 }

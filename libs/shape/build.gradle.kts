@@ -12,7 +12,7 @@ dependencies {
     implementation(project(":livedata"))
     implementation(project(":uuid"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(kotlin("test-js"))
 }
