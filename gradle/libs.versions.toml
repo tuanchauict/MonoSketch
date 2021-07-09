@@ -1,0 +1,6 @@
+[versions]
+kotlinxSerialization = "1.2.1"
+
+[libraries]
+kotlinx-html = "org.jetbrains.kotlinx:kotlinx-html:0.7.3"
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }

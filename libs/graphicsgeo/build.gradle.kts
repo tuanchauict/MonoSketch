@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+    implementation(libs.kotlinx.serialization.json)
     implementation(kotlin("stdlib-js"))
     testImplementation(kotlin("test-js"))
 }

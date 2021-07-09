@@ -11,8 +11,8 @@ dependencies {
     implementation(project(":livedata"))
     implementation(project(":shape"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+    implementation(libs.kotlinx.html)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(kotlin("stdlib-js"))
     testImplementation(kotlin("test-js"))
