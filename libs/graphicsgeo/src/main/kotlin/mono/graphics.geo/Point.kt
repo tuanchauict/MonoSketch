@@ -1,15 +1,15 @@
 package mono.graphics.geo
 
-import kotlinx.serialization.SerialName
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
-@Serializable
-data class Point(
-    @SerialName("l")
-    val left: Int,
-    @SerialName("t")
-    val top: Int
-) {
+@Serializable(with = Point.PointSerializer::class)
+data class Point(val left: Int, val top: Int) {
     val row: Int get() = top
     val column: Int get() = left
 
@@ -17,21 +17,28 @@ data class Point(
 
     operator fun plus(base: Point): Point = Point(left + base.left, top + base.top)
 
+    internal object PointSerializer : KSerializer<Point> {
+        override val descriptor: SerialDescriptor =
+            PrimitiveSerialDescriptor("Point", PrimitiveKind.STRING)
+
+        override fun serialize(encoder: Encoder, value: Point) {
+            encoder.encodeString("${value.left}|${value.top}")
+        }
+
+        override fun deserialize(decoder: Decoder): Point {
+            val marshaledValue = decoder.decodeString()
+            val (left, top) = marshaledValue.split("|")
+            return Point(left = left.toInt(), top = top.toInt())
+        }
+    }
+
     companion object {
-        val INVALID = Point(Int.MIN_VALUE, Int.MIN_VALUE)
         val ZERO = Point(0, 0)
     }
 }
 
-@Serializable
-data class DirectedPoint(
-    @SerialName("d")
-    val direction: Direction,
-    @SerialName("l")
-    val left: Int,
-    @SerialName("t")
-    val top: Int
-) {
+@Serializable(with = DirectedPoint.DirectedPointSerializer::class)
+data class DirectedPoint(val direction: Direction, val left: Int, val top: Int) {
     val point: Point
         get() = Point(left, top)
 
@@ -40,12 +47,8 @@ data class DirectedPoint(
     operator fun plus(base: Point): DirectedPoint =
         copy(left = left + base.left, top = top + base.top)
 
-    @Serializable
     enum class Direction {
-        @SerialName("H")
         HORIZONTAL,
-
-        @SerialName("V")
         VERTICAL;
 
         val normalizedDirection: Direction
@@ -53,5 +56,37 @@ data class DirectedPoint(
                 VERTICAL -> HORIZONTAL
                 HORIZONTAL -> VERTICAL
             }
+    }
+
+    internal object DirectedPointSerializer : KSerializer<DirectedPoint> {
+        private const val MARSHAL_HORIZONTAL = "H"
+        private const val MARSHAL_VERTICAL = "V"
+
+        override val descriptor: SerialDescriptor =
+            PrimitiveSerialDescriptor("DirectedPoint", PrimitiveKind.STRING)
+
+        override fun serialize(encoder: Encoder, value: DirectedPoint) {
+            val direction = when (value.direction) {
+                Direction.HORIZONTAL -> MARSHAL_HORIZONTAL
+                Direction.VERTICAL -> MARSHAL_VERTICAL
+            }
+            encoder.encodeString("$direction|${value.left}|${value.top}")
+        }
+
+        override fun deserialize(decoder: Decoder): DirectedPoint {
+            val marshaledValue = decoder.decodeString()
+            val (marshaledDirection, left, top) = marshaledValue.split("|")
+            val direction =
+                if (marshaledDirection == MARSHAL_HORIZONTAL) {
+                    Direction.HORIZONTAL
+                } else {
+                    Direction.VERTICAL
+                }
+            return DirectedPoint(
+                direction,
+                left = left.toInt(),
+                top = top.toInt()
+            )
+        }
     }
 }
