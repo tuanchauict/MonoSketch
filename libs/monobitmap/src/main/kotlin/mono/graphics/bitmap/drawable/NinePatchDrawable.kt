@@ -9,14 +9,14 @@ import kotlin.math.min
  * A simple 9-patch image which scales image based on repeating points in
  * [horizontalRepeatableRange] and [horizontalRepeatableRange].
  */
-class NinePatchDrawable constructor(
+class NinePatchDrawable(
     private val pattern: Pattern,
     private val horizontalRepeatableRange: RepeatableRange =
         RepeatableRange.Scale(0, pattern.width - 1),
     private val verticalRepeatableRange: RepeatableRange =
         RepeatableRange.Scale(0, pattern.height - 1)
-) {
-    fun toBitmap(width: Int, height: Int): MonoBitmap {
+) : Drawable {
+    override fun toBitmap(width: Int, height: Int): MonoBitmap {
         val builder = MonoBitmap.Builder(width, height)
         val rowIndexes = verticalRepeatableRange.toIndexes(height, pattern.height)
         val colIndexes = horizontalRepeatableRange.toIndexes(width, pattern.width)
