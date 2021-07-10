@@ -53,7 +53,7 @@ class MainStateManager(
     mousePointerLiveData: LiveData<MousePointer>,
     actionManager: ActionManager
 ) {
-    private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager)
+    private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
     private var workingParentGroup: Group = shapeManager.root
 
