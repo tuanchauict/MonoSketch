@@ -2,7 +2,6 @@ package mono.shape.shape.extra
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import mono.shape.shape.Rectangle
 
 /**
@@ -48,4 +47,3 @@ data class TextExtra(
         val DEFAULT = TextExtra(boundExtra = RectangleExtra.DEFAULT)
     }
 }
-

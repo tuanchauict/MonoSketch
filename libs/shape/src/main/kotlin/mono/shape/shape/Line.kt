@@ -397,7 +397,6 @@ class Line(
         START, END
     }
 
-
     companion object {
         private fun isHorizontal(p1: Point, p2: Point): Boolean = p1.top == p2.top
     }
