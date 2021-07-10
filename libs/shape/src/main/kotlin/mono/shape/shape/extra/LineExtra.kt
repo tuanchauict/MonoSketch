@@ -39,6 +39,15 @@ data class LineExtra(
         val bottom: Char
     ) {
 
+        constructor(
+            left: Char,
+            right: Char,
+            top: Char,
+            bottom: Char
+        ) : this(NO_ID, "", left, right, top, bottom)
+
+        constructor(all: Char) : this(all, all, all, all)
+
         private constructor(id: String, displayName: String, all: Char) :
             this(id, displayName, all, all, all, all)
 
