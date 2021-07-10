@@ -3,14 +3,12 @@ plugins {
 }
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
 dependencies {
     implementation(project(":commons"))
     implementation(project(":graphicsgeo"))
-    implementation(project(":shape"))
 
     implementation(kotlin("stdlib-js"))
 
