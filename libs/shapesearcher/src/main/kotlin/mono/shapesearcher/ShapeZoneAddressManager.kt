@@ -1,13 +1,13 @@
 package mono.shapesearcher
 
-import mono.graphics.bitmap.MonoBitmapManager
+import mono.graphics.bitmap.MonoBitmap
 import mono.shape.shape.AbstractShape
 
 /**
  * A model class to convert a shape to addresses which the shape have pixels on.
  * This class also cache the addresses belong to the shape along with its version.
  */
-internal class ShapeZoneAddressManager(private val bitmapManager: MonoBitmapManager) {
+internal class ShapeZoneAddressManager(private val getBitmap: (AbstractShape) -> MonoBitmap?) {
     private val idToZoneAddressMap: MutableMap<String, VersionizedZoneAddresses> = mutableMapOf()
 
     fun getZoneAddresses(shape: AbstractShape): Set<ZoneAddress> {
@@ -16,7 +16,7 @@ internal class ShapeZoneAddressManager(private val bitmapManager: MonoBitmapMana
             return cachedAddresses
         }
 
-        val bitmap = bitmapManager.getBitmap(shape)
+        val bitmap = getBitmap(shape)
         if (bitmap == null) {
             idToZoneAddressMap.remove(shape.id)
             return emptySet()

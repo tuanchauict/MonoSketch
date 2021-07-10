@@ -1,14 +1,14 @@
-package mono.graphics.bitmap.drawable
+package mono.bitmap.manager.factory
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Size
 import mono.shape.shape.extra.TextExtra
 
-object TextDrawable {
+object TextBitmapFactory {
     fun toBitmap(boundSize: Size, renderableText: List<String>, extra: TextExtra): MonoBitmap {
         val boundExtra = extra.boundExtra
         val bgBitmap = if (boundExtra != null) {
-            RectangleDrawable.toBitmap(boundSize, boundExtra)
+            RectangleBitmapFactory.toBitmap(boundSize, boundExtra)
         } else {
             null
         }

@@ -12,6 +12,7 @@ val moduleMap = mapOf(
     "lifecycle" to "libs/lifecycle",
     "livedata" to "libs/livedata",
     "monobitmap" to "libs/monobitmap",
+    "monobitmap-manager" to "libs/monobitmap-manager",
     "monoboard" to "libs/monoboard",
     "shape" to "libs/shape",
     "shape-clipboard" to "libs/shape-clipboard",

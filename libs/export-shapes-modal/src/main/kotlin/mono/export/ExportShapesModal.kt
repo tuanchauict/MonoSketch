@@ -14,7 +14,7 @@ import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.textArea
 import kotlinx.html.pre
 import kotlinx.html.style
-import mono.graphics.bitmap.MonoBitmapManager
+import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Rect
@@ -28,7 +28,7 @@ import org.w3c.dom.HTMLElement
  */
 class ExportShapesModal(
     private val selectedShapes: List<AbstractShape>,
-    private val bitmapManager: MonoBitmapManager
+    private val getBitmap: (AbstractShape) -> MonoBitmap?
 ) {
     fun show() {
         val left = selectedShapes.minOf { it.bound.left }
@@ -48,7 +48,7 @@ class ExportShapesModal(
                 drawShapesOntoExportingBoard(board, shape.items)
                 continue
             }
-            val bitmap = bitmapManager.getBitmap(shape) ?: continue
+            val bitmap = getBitmap(shape) ?: continue
             board.fill(shape.bound.position, bitmap, Highlight.NO)
         }
     }

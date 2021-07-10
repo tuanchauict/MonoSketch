@@ -1,10 +1,10 @@
 package mono.state
 
 import kotlinx.html.currentTimeMillis
+import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
 import mono.common.nullToFalse
 import mono.export.ExportShapesModal
-import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.DirectedPoint
@@ -53,7 +53,7 @@ class MainStateManager(
     mousePointerLiveData: LiveData<MousePointer>,
     actionManager: ActionManager
 ) {
-    private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager)
+    private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
     private var workingParentGroup: Group = shapeManager.root
 
@@ -241,7 +241,7 @@ class MainStateManager(
             } else {
                 listOf(workingParentGroup)
             }
-        ExportShapesModal(extractableShapes, bitmapManager).show()
+        ExportShapesModal(extractableShapes, bitmapManager::getBitmap).show()
     }
 
     private fun updateMouseCursor(mousePointer: MousePointer) {

@@ -1,11 +1,12 @@
-package mono.graphics.bitmap.drawable
+package mono.bitmap.manager.factory
 
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.MonoBitmap
+import mono.graphics.bitmap.drawable.NinePatchDrawable
 import mono.graphics.geo.Size
 import mono.shape.shape.extra.RectangleExtra
 
-object RectangleDrawable {
+object RectangleBitmapFactory {
     private val REPEATABLE_RANGE = NinePatchDrawable.RepeatableRange.Repeat(1, 1)
     private val PATTERN_TEXT_0 = """
         ┌─┐

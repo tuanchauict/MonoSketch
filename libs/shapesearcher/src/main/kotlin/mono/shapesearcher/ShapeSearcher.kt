@@ -1,7 +1,7 @@
 package mono.shapesearcher
 
 import mono.common.Characters.isTransparent
-import mono.graphics.bitmap.MonoBitmapManager
+import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -16,10 +16,10 @@ import mono.shape.shape.Text
  */
 class ShapeSearcher(
     private val shapeManager: ShapeManager,
-    private val bitmapManager: MonoBitmapManager
+    private val getBitmap: (AbstractShape) -> MonoBitmap?
 ) {
     private val shapeZoneAddressManager: ShapeZoneAddressManager =
-        ShapeZoneAddressManager(bitmapManager)
+        ShapeZoneAddressManager(getBitmap)
     private val zoneOwnersManager: ZoneOwnersManager = ZoneOwnersManager()
 
     fun register(shape: AbstractShape) {
@@ -41,7 +41,7 @@ class ShapeSearcher(
         .mapNotNull { shapeManager.getShape(it) }
         .filter {
             val position = it.bound.position
-            val bitmap = bitmapManager.getBitmap(it) ?: return@filter false
+            val bitmap = getBitmap(it) ?: return@filter false
             val bitmapRow = point.row - position.row
             val bitmapCol = point.column - position.column
             !bitmap.get(bitmapRow, bitmapCol).isTransparent
