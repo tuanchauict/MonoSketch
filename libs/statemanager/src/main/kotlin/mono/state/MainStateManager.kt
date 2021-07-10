@@ -241,7 +241,7 @@ class MainStateManager(
             } else {
                 listOf(workingParentGroup)
             }
-        ExportShapesModal(extractableShapes, bitmapManager).show()
+        ExportShapesModal(extractableShapes, bitmapManager::getBitmap).show()
     }
 
     private fun updateMouseCursor(mousePointer: MousePointer) {
