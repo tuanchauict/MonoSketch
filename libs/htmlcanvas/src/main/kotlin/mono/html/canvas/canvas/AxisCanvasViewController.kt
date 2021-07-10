@@ -23,7 +23,7 @@ internal class AxisCanvasViewController(
     }
 
     private fun drawAxis() {
-        context.font = "normal normal normal ${11}px 'JetBrains Mono'"
+        context.font = "normal normal normal 10.5px 'Menlo'"
         val cellSizePx = drawingInfo.cellSizePx
         val canvasSizePx = drawingInfo.canvasSizePx
 
@@ -44,15 +44,11 @@ internal class AxisCanvasViewController(
 
         path.addHLine(0.0, xAxisHeight, canvasSizePx.width.toDouble())
 
-        for (row in drawingInfo.boardRowRange.filter { it % 10 == 0 }) {
+        for (row in drawingInfo.boardRowRange) {
             val text = row.toString()
             val yPx = xAxisHeight + drawingInfo.toYPx(row.toDouble())
             val xPx = yAxisWidth - 0.5 * cellSizePx.width
-            context.fillText(text, xPx, yPx + 5)
-
-            if (yPx > xAxisHeight) {
-                path.addHLine(yAxisWidth - AXIS_RULER_SIZE, yPx, AXIS_RULER_SIZE)
-            }
+            context.fillText(text, xPx, yPx + 3)
         }
 
         context.fillStyle = AXIS_BG_COLOR
@@ -67,9 +63,9 @@ internal class AxisCanvasViewController(
 
         path.addVLine(yAxisWidth, xAxisHeight, canvasSizePx.height.toDouble())
 
-        for (col in drawingInfo.boardColumnRange.filter { it % 15 == 0 }) {
+        for (col in drawingInfo.boardColumnRange.filter { it % 20 == 0 }) {
             val xPx = drawingInfo.toXPx(col.toDouble() + AXIS_Y_WIDTH)
-            context.fillText(col.toString(), xPx + 3, 1 * cellSizePx.height)
+            context.fillText(col.toString(), xPx + 2, 2.0)
 
             path.addVLine(xPx, xAxisHeight - AXIS_RULER_SIZE, AXIS_RULER_SIZE)
         }
@@ -80,11 +76,11 @@ internal class AxisCanvasViewController(
 
     companion object {
         private const val AXIS_BG_COLOR = "#EEEEEE"
-        private const val AXIS_TEXT_COLOR = "#000000"
+        private const val AXIS_TEXT_COLOR = "#666666"
         private const val AXIS_RULER_COLOR = "#444444"
         private const val AXIS_RULER_SIZE = 15.0
 
         const val AXIS_Y_WIDTH = 4.0
-        const val AXIS_X_HEIGHT = 2.0
+        const val AXIS_X_HEIGHT = 1.0
     }
 }
