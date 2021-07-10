@@ -65,7 +65,7 @@ class TextTest {
         val target = Text(Rect.byLTWH(0, 0, 5, 5))
 
         target.setText("0 1234 12345\n1   2 3 4 5678901 23")
-        target.setExtra(TextExtra(null))
+        target.setExtra(TextExtra.NO_BOUND)
         assertEquals(
             listOf("0", "1234", "12345", "1   2", "3 4", "56789", "01 23"),
             target.renderableText.getRenderableText()

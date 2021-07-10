@@ -1,29 +1,11 @@
 package mono.bitmap.manager.factory
 
-import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.bitmap.drawable.NinePatchDrawable
 import mono.graphics.geo.Size
 import mono.shape.shape.extra.RectangleExtra
 
 object RectangleBitmapFactory {
-    private val REPEATABLE_RANGE = NinePatchDrawable.RepeatableRange.Repeat(1, 1)
-    private val PATTERN_TEXT_0 = """
-        ┌─┐
-        │ │
-        └─┘
-    """.trimIndent()
-
-    private val NINE_PATCH_0_BLANK = NinePatchDrawable(
-        NinePatchDrawable.Pattern.fromText(PATTERN_TEXT_0),
-        REPEATABLE_RANGE,
-        REPEATABLE_RANGE
-    )
-    private val NINE_PATCH_0_FILL = NinePatchDrawable(
-        NinePatchDrawable.Pattern.fromText(PATTERN_TEXT_0, transparentChar = TRANSPARENT_CHAR),
-        REPEATABLE_RANGE,
-        REPEATABLE_RANGE
-    )
 
     private val NINE_PATCH_DOT = NinePatchDrawable(
         NinePatchDrawable.Pattern.fromText("•")
@@ -40,17 +22,25 @@ object RectangleBitmapFactory {
     )
 
     fun toBitmap(size: Size, extra: RectangleExtra): MonoBitmap {
-        val ninepatch = when {
+        val fillDrawable = when {
+            size.width == 1 && size.height == 1 -> null
+            size.width == 1 -> null
+            size.height == 1 -> null
+            else -> extra.fillStyle.drawable
+        }
+        val borderDrawable = when {
             size.width == 1 && size.height == 1 -> NINE_PATCH_DOT
             size.width == 1 -> NINE_PATCH_VERTICAL_LINE
             size.height == 1 -> NINE_PATCH_HORIZONTAL_LINE
-            else -> extra.fillStyle.toNinePatch()
+            else -> extra.borderStyle.drawable
         }
-        return ninepatch.toBitmap(size.width, size.height)
-    }
 
-    private fun RectangleExtra.FillStyle.toNinePatch(): NinePatchDrawable = when (this) {
-        RectangleExtra.FillStyle.STYLE_0_BORDER -> NINE_PATCH_0_BLANK
-        RectangleExtra.FillStyle.STYLE_0_FILL -> NINE_PATCH_0_FILL
+        val bitmapBuilder = MonoBitmap.Builder(size.width, size.height)
+        if (fillDrawable != null) {
+            bitmapBuilder.fill(0, 0, fillDrawable.toBitmap(size.width, size.height))
+        }
+        bitmapBuilder.fill(0, 0, borderDrawable.toBitmap(size.width, size.height))
+
+        return bitmapBuilder.toBitmap()
     }
 }

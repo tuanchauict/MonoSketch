@@ -25,7 +25,10 @@ class MonoBitmapManager {
         }
 
         val bitmap = when (shape) {
-            is Rectangle -> RectangleBitmapFactory.toBitmap(shape.bound.size, shape.extra)
+            is Rectangle -> RectangleBitmapFactory.toBitmap(
+                shape.bound.size,
+                shape.extra
+            )
             is Text -> TextBitmapFactory.toBitmap(
                 shape.bound.size,
                 shape.renderableText.getRenderableText(),

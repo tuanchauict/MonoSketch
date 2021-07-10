@@ -21,10 +21,10 @@ data class LineExtra(
 ) : ShapeExtra() {
 
     /**
-     * A data class for defining a anchor end char.
+     * A class for defining an anchor end-char.
      *
      * @param id is the key for retrieving predefined [AnchorChar] when serialization. If id is not
-     * defined (empty), serializer will use the other information for marshal and unmarshal. [id]
+     * defined ([NO_ID]), serializer will use the other information for marshal and unmarshal. [id]
      * cannot be set from outside.
      *
      * @param displayName is the text visible on the UI tool for selection.
