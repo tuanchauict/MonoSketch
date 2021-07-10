@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.shape.shape.Line
-import mono.shape.shape.Rectangle
-import mono.shape.shape.Text
+import mono.shape.shape.extra.LineExtra
+import mono.shape.shape.extra.RectangleExtra
+import mono.shape.shape.extra.TextExtra
 
 @Serializable
 sealed class AbstractSerializableShape {
@@ -23,7 +23,7 @@ data class SerializableRectangle(
     @SerialName("b")
     val bound: Rect,
     @SerialName("e")
-    val extra: Rectangle.Extra
+    val extra: RectangleExtra
 ) : AbstractSerializableShape()
 
 @Serializable
@@ -36,7 +36,7 @@ data class SerializableText(
     @SerialName("t")
     val text: String,
     @SerialName("e")
-    val extra: Text.Extra
+    val extra: TextExtra
 ) : AbstractSerializableShape()
 
 @Serializable
@@ -50,10 +50,8 @@ data class SerializableLine(
     val endPoint: DirectedPoint,
     @SerialName("jps")
     val jointPoints: List<Point>,
-    @SerialName("cs")
-    val anchorCharStart: Line.AnchorChar,
-    @SerialName("ce")
-    val anchorCharEnd: Line.AnchorChar,
+    @SerialName("e")
+    val extra: LineExtra,
     @SerialName("em")
     val wasMovingEdge: Boolean
 ) : AbstractSerializableShape()

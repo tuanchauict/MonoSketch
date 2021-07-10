@@ -1,41 +1,30 @@
 package mono.graphics.geo
 
-import kotlinx.serialization.SerialName
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-@Serializable
+@Serializable(with = Rect.RectSerializer::class)
 data class Rect(
-    @SerialName("p")
     val position: Point,
-    @SerialName("s")
     val size: Size
 ) {
-    @Transient
     val width: Int = size.width
-
-    @Transient
     val height: Int = size.height
 
-    @Transient
     val left: Int = position.left
-
-    @Transient
     val right: Int = position.left + width - 1
-
-    @Transient
     val top: Int = position.top
-
-    @Transient
     val bottom: Int = position.top + height - 1
 
-    @Transient
     private val validHorizontalRange = left..right
-
-    @Transient
     private val validVerticalRange = top..bottom
 
     operator fun contains(point: Point): Boolean =
@@ -65,6 +54,21 @@ data class Rect(
     }
 
     override fun toString(): String = "[$left, $top] - [$width x $height]"
+
+    internal object RectSerializer : KSerializer<Rect> {
+        override val descriptor: SerialDescriptor =
+            PrimitiveSerialDescriptor("Rect", PrimitiveKind.STRING)
+
+        override fun serialize(encoder: Encoder, value: Rect) {
+            encoder.encodeString("${value.left}|${value.top}|${value.width}|${value.height}")
+        }
+
+        override fun deserialize(decoder: Decoder): Rect {
+            val marshaledValue = decoder.decodeString()
+            val (left, top, width, height) = marshaledValue.split("|")
+            return byLTWH(left.toInt(), top.toInt(), width.toInt(), height.toInt())
+        }
+    }
 
     companion object {
         val ZERO = byLTWH(0, 0, 0, 0)

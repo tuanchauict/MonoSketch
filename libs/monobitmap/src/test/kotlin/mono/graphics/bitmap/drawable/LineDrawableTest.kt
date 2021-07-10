@@ -1,7 +1,7 @@
 package mono.graphics.bitmap.drawable
 
 import mono.graphics.geo.Point
-import mono.shape.shape.Line
+import mono.shape.shape.extra.LineExtra
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -15,7 +15,7 @@ class LineDrawableTest {
             Point(2, 0),
             Point(6, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals("0───1", bitmap.toString())
     }
 
@@ -25,7 +25,7 @@ class LineDrawableTest {
             Point(6, 0),
             Point(2, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals("1───0", bitmap.toString())
     }
 
@@ -36,7 +36,7 @@ class LineDrawableTest {
             Point(2, 0),
             Point(4, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals("0───1", bitmap.toString())
     }
 
@@ -47,7 +47,7 @@ class LineDrawableTest {
             Point(2, 0),
             Point(0, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals("1───0", bitmap.toString())
     }
 
@@ -58,7 +58,7 @@ class LineDrawableTest {
             Point(4, 0),
             Point(2, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals("0─1──", bitmap.toString())
     }
 
@@ -69,7 +69,7 @@ class LineDrawableTest {
             Point(0, 0),
             Point(2, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals("──1─0", bitmap.toString())
     }
 
@@ -79,7 +79,7 @@ class LineDrawableTest {
             Point(0, 2),
             Point(0, 6)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             0
@@ -98,7 +98,7 @@ class LineDrawableTest {
             Point(0, 6),
             Point(0, 2)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             1
@@ -118,7 +118,7 @@ class LineDrawableTest {
             Point(0, 2),
             Point(0, 4)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             0
@@ -138,7 +138,7 @@ class LineDrawableTest {
             Point(0, 2),
             Point(0, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             1
@@ -158,7 +158,7 @@ class LineDrawableTest {
             Point(0, 4),
             Point(0, 2)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             0
@@ -178,7 +178,7 @@ class LineDrawableTest {
             Point(0, 0),
             Point(0, 2)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             │
@@ -198,7 +198,7 @@ class LineDrawableTest {
             Point(4, 4),
             Point(4, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             |    1
@@ -218,7 +218,7 @@ class LineDrawableTest {
             Point(4, 4),
             Point(0, 4)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             |    0
@@ -238,7 +238,7 @@ class LineDrawableTest {
             Point(4, 0),
             Point(4, 4)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             |0───┐
@@ -258,7 +258,7 @@ class LineDrawableTest {
             Point(4, 0),
             Point(0, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             |1───┐
@@ -278,7 +278,7 @@ class LineDrawableTest {
             Point(0, 4),
             Point(0, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             |1    
@@ -298,7 +298,7 @@ class LineDrawableTest {
             Point(0, 4),
             Point(4, 4)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             |0    
@@ -318,7 +318,7 @@ class LineDrawableTest {
             Point(0, 0),
             Point(0, 4)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             |┌───0
@@ -338,7 +338,7 @@ class LineDrawableTest {
             Point(0, 0),
             Point(4, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, ANCHOR_CHAR_START, ANCHOR_CHAR_END)
+        val bitmap = LineDrawable.toBitmap(points, LINE_EXTRA)
         assertEquals(
             """
             |┌───1
@@ -353,13 +353,14 @@ class LineDrawableTest {
 
     @Test
     fun testToBitmap_anchorChar_leftToRight() {
-        val anchorCharStart = Line.AnchorChar('L', 'R', 'T', 'B')
-        val anchorCharEnd = Line.AnchorChar('l', 'r', 't', 'b')
+        val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
+        val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
+        val lineExtra = LineExtra(anchorCharStart, anchorCharEnd)
         val points = listOf(
             Point(0, 0),
             Point(4, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, anchorCharStart, anchorCharEnd)
+        val bitmap = LineDrawable.toBitmap(points, lineExtra)
         assertEquals(
             "L───r",
             bitmap.toString()
@@ -368,13 +369,14 @@ class LineDrawableTest {
 
     @Test
     fun testToBitmap_anchorChar_rightToLeft() {
-        val anchorCharStart = Line.AnchorChar('L', 'R', 'T', 'B')
-        val anchorCharEnd = Line.AnchorChar('l', 'r', 't', 'b')
+        val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
+        val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
+        val lineExtra = LineExtra(anchorCharStart, anchorCharEnd)
         val points = listOf(
             Point(4, 0),
             Point(0, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, anchorCharStart, anchorCharEnd)
+        val bitmap = LineDrawable.toBitmap(points, lineExtra)
         assertEquals(
             "l───R",
             bitmap.toString()
@@ -383,13 +385,14 @@ class LineDrawableTest {
 
     @Test
     fun testToBitmap_anchorChar_topToBottom() {
-        val anchorCharStart = Line.AnchorChar('L', 'R', 'T', 'B')
-        val anchorCharEnd = Line.AnchorChar('l', 'r', 't', 'b')
+        val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
+        val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
+        val lineExtra = LineExtra(anchorCharStart, anchorCharEnd)
         val points = listOf(
             Point(0, 0),
             Point(0, 4)
         )
-        val bitmap = LineDrawable.toBitmap(points, anchorCharStart, anchorCharEnd)
+        val bitmap = LineDrawable.toBitmap(points, lineExtra)
         assertEquals(
             """
             T
@@ -404,13 +407,14 @@ class LineDrawableTest {
 
     @Test
     fun testToBitmap_anchorChar_bottomToTop() {
-        val anchorCharStart = Line.AnchorChar('L', 'R', 'T', 'B')
-        val anchorCharEnd = Line.AnchorChar('l', 'r', 't', 'b')
+        val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
+        val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
+        val lineExtra = LineExtra(anchorCharStart, anchorCharEnd)
         val points = listOf(
             Point(0, 4),
             Point(0, 0)
         )
-        val bitmap = LineDrawable.toBitmap(points, anchorCharStart, anchorCharEnd)
+        val bitmap = LineDrawable.toBitmap(points, lineExtra)
         assertEquals(
             """
             t
@@ -424,7 +428,6 @@ class LineDrawableTest {
     }
 
     companion object {
-        private val ANCHOR_CHAR_START = Line.AnchorChar('0')
-        private val ANCHOR_CHAR_END = Line.AnchorChar('1')
+        private val LINE_EXTRA = LineExtra(LineExtra.AnchorChar('0'), LineExtra.AnchorChar('1'))
     }
 }

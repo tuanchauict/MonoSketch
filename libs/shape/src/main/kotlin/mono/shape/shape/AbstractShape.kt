@@ -4,6 +4,8 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.shape.extra.NoExtra
+import mono.shape.shape.extra.ShapeExtra
 import mono.uuid.UUID
 
 /**
@@ -30,13 +32,13 @@ sealed class AbstractShape(
     /**
      * Extra information which is specific to each shape.
      */
-    open val extra: Any = Unit
+    open val extra: ShapeExtra = NoExtra
 
     abstract fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape
 
     open fun setBound(newBound: Rect) = Unit
 
-    open fun setExtra(extraUpdater: ExtraUpdater) = Unit
+    open fun setExtra(newExtra: ShapeExtra) = Unit
 
     open fun isValid(): Boolean = true
 
@@ -52,9 +54,4 @@ sealed class AbstractShape(
     }
 
     open fun contains(point: Point): Boolean = bound.contains(point)
-
-    /**
-     * An interface which is used for updating extra value.
-     */
-    interface ExtraUpdater
 }

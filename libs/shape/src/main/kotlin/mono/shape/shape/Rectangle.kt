@@ -1,11 +1,10 @@
 package mono.shape.shape
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableRectangle
+import mono.shape.shape.extra.RectangleExtra
 
 /**
  * A rectangle shape.
@@ -23,7 +22,7 @@ class Rectangle(
             isUpdated
         }
 
-    override var extra: Extra = Extra(FillStyle.STYLE_0_BORDER)
+    override var extra: RectangleExtra = RectangleExtra.DEFAULT
         private set
 
     /**
@@ -60,34 +59,4 @@ class Rectangle(
     }
 
     override fun isValid(): Boolean = bound.width > 1 && bound.height > 1
-
-    /**
-     * A data class which contains extra information of a rectangle.
-     */
-    @Serializable
-    data class Extra(
-        @SerialName("sf")
-        val fillStyle: FillStyle
-    ) {
-
-        data class Updater(val fillStyle: FillStyle? = null) : ExtraUpdater {
-            fun combine(extra: Extra?): Extra =
-                extra?.copy(
-                    fillStyle = fillStyle ?: extra.fillStyle
-                ) ?: Extra(fillStyle ?: FillStyle.STYLE_0_BORDER)
-        }
-
-        companion object {
-            val DEFAULT = Extra(FillStyle.STYLE_0_BORDER)
-        }
-    }
-
-    @Serializable
-    enum class FillStyle {
-        @SerialName("s0f")
-        STYLE_0_FILL,
-
-        @SerialName("s0b")
-        STYLE_0_BORDER
-    }
 }

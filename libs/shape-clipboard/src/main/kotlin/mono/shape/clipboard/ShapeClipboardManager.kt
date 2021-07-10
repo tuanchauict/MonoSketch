@@ -12,7 +12,7 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableText
-import mono.shape.shape.Text
+import mono.shape.shape.extra.TextExtra
 import org.w3c.dom.HTMLElement
 
 /**
@@ -60,7 +60,7 @@ class ShapeClipboardManager(private val body: HTMLElement) {
             null,
             Rect.Companion.byLTWH(0, 0, width, height),
             text,
-            Text.Extra(null)
+            TextExtra(null)
         )
     }
 
