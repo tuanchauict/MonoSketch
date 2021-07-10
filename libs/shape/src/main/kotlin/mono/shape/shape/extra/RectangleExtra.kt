@@ -124,9 +124,16 @@ data class RectangleExtra(
             """.trimIndent()
             private val REPEATABLE_RANGE_0 = NinePatchDrawable.RepeatableRange.Repeat(1, 1)
 
+            val NO_BORDER = BorderStyle(
+                id = "B0",
+                displayName = "No border",
+                NinePatchDrawable(Pattern.fromText(" "))
+            )
+
             val PREDEFINED_FILL_STYLE = listOf(
+                NO_BORDER,
                 BorderStyle(
-                    id = "B0",
+                    id = "B1",
                     displayName = "─",
                     NinePatchDrawable(
                         Pattern.fromText(PATTERN_TEXT_0),
@@ -135,13 +142,15 @@ data class RectangleExtra(
                     )
                 )
             )
+
+            fun BorderStyle.hasBorder(): Boolean = this != NO_BORDER
         }
     }
 
     companion object {
         val DEFAULT = RectangleExtra(
             FillStyle.PREDEFINED_FILL_STYLE[0],
-            BorderStyle.PREDEFINED_FILL_STYLE[0]
+            BorderStyle.PREDEFINED_FILL_STYLE[1]
         )
     }
 }

@@ -6,18 +6,14 @@ import mono.shape.shape.extra.TextExtra
 
 object TextBitmapFactory {
     fun toBitmap(boundSize: Size, renderableText: List<String>, extra: TextExtra): MonoBitmap {
-        val boundExtra = extra.boundExtra
-        val bgBitmap = if (boundExtra != null) {
-            RectangleBitmapFactory.toBitmap(boundSize, boundExtra)
-        } else {
-            null
-        }
+        val bgBitmap =
+            RectangleBitmapFactory.toBitmap(boundSize, extra.boundExtra)
         val bitmapBuilder = MonoBitmap.Builder(boundSize.width, boundSize.height)
-        if (bgBitmap != null) {
-            bitmapBuilder.fill(0, 0, bgBitmap)
-        }
-        val rowOffset = if (extra.boundExtra != null) 1 else 0
-        val colOffset = if (extra.boundExtra != null) 1 else 0
+        bitmapBuilder.fill(0, 0, bgBitmap)
+
+        val hasBorder = extra.hasBorder()
+        val rowOffset = if (hasBorder) 1 else 0
+        val colOffset = if (hasBorder) 1 else 0
         for (rowIndex in renderableText.indices) {
             val row = renderableText[rowIndex]
             for (colIndex in row.indices) {

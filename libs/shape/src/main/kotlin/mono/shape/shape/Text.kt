@@ -94,7 +94,8 @@ class Text(
     }
 
     private fun updateRenderableText() {
-        val maxRowCharCount = if (extra.boundExtra != null) bound.width - 2 else bound.width
+        val maxRowCharCount =
+            if (extra.hasBorder()) bound.width - 2 else bound.width
         if (text != renderableText.text ||
             maxRowCharCount != renderableText.maxRowCharCount
         ) {
@@ -105,8 +106,9 @@ class Text(
     override fun isValid(): Boolean = text.isNotEmpty()
 
     fun isBoundValid(): Boolean {
-        val textBoundWidth = if (extra.boundExtra != null) bound.width - 2 else bound.width
-        val textBoundHeight = if (extra.boundExtra != null) bound.height - 2 else bound.height
+        val hasBound = extra.hasBorder()
+        val textBoundWidth = if (hasBound) bound.width - 2 else bound.width
+        val textBoundHeight = if (hasBound) bound.height - 2 else bound.height
         return textBoundWidth >= 1 && textBoundHeight >= 1
     }
 

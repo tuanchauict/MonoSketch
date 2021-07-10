@@ -28,7 +28,7 @@ object RectangleBitmapFactory {
             size.height == 1 -> null
             else -> extra.fillStyle.drawable
         }
-        val borderStyle = when {
+        val borderDrawable = when {
             size.width == 1 && size.height == 1 -> NINE_PATCH_DOT
             size.width == 1 -> NINE_PATCH_VERTICAL_LINE
             size.height == 1 -> NINE_PATCH_HORIZONTAL_LINE
@@ -39,7 +39,7 @@ object RectangleBitmapFactory {
         if (fillDrawable != null) {
             bitmapBuilder.fill(0, 0, fillDrawable.toBitmap(size.width, size.height))
         }
-        bitmapBuilder.fill(0, 0, borderStyle.toBitmap(size.width, size.height))
+        bitmapBuilder.fill(0, 0, borderDrawable.toBitmap(size.width, size.height))
 
         return bitmapBuilder.toBitmap()
     }

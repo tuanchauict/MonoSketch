@@ -27,7 +27,7 @@ class ShapeClipboardManager(private val body: HTMLElement) {
         clipboardShapeMutableLiveData
 
     init {
-        body.onpaste = {
+        document.onpaste = {
             it.preventDefault()
             it.stopPropagation()
             onPasteText(it.clipboardData?.getData("text/plain").orEmpty())
@@ -60,7 +60,7 @@ class ShapeClipboardManager(private val body: HTMLElement) {
             null,
             Rect.Companion.byLTWH(0, 0, width, height),
             text,
-            TextExtra(null)
+            TextExtra.NO_BOUND
         )
     }
 
