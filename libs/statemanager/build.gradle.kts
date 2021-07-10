@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":lifecycle"))
     implementation(project(":livedata"))
     implementation(project(":monobitmap"))
+    implementation(project(":monobitmap-manager"))
     implementation(project(":monoboard"))
     implementation(project(":shape"))
     implementation(project(":shape-clipboard"))

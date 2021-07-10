@@ -1,4 +1,4 @@
-package mono.graphics.bitmap.drawable
+package mono.bitmap.manager.factory
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
@@ -9,7 +9,7 @@ import kotlin.math.min
 /**
  * A drawable to draw Line shape to bitmap.
  */
-object LineDrawable {
+object LineBitmapFactory {
     fun toBitmap(
         jointPoints: List<Point>,
         lineExtra: LineExtra,

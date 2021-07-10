@@ -2,8 +2,8 @@ package mono.app
 
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
+import mono.bitmap.manager.MonoBitmapManager
 import mono.common.setTimeout
-import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController

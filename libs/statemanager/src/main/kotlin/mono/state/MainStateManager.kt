@@ -1,10 +1,10 @@
 package mono.state
 
 import kotlinx.html.currentTimeMillis
+import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
 import mono.common.nullToFalse
 import mono.export.ExportShapesModal
-import mono.graphics.bitmap.MonoBitmapManager
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.DirectedPoint
