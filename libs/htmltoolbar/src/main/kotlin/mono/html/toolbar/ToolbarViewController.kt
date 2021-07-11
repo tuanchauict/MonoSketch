@@ -1,6 +1,8 @@
 package mono.html.toolbar
 
 import kotlinx.html.dom.append
+import mono.html.toolbar.view.MiddleToolbar
+import mono.html.toolbar.view.RightToolbar
 import mono.lifecycle.LifecycleOwner
 import org.w3c.dom.HTMLDivElement
 
@@ -23,11 +25,5 @@ class ToolbarViewController(
                 actionManager.setOneTimeAction(it.actionType)
             }
         }
-    }
-
-    enum class RightAction(val title: String, val actionType: OneTimeActionType) {
-        SAVE_AS("Save As...", OneTimeActionType.SAVE_SHAPES_AS),
-        OPEN_FILE("Open File...", OneTimeActionType.OPEN_SHAPES),
-        EXPORT("Export", OneTimeActionType.EXPORT_SELECTED_SHAPES)
     }
 }
