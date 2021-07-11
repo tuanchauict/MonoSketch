@@ -14,7 +14,7 @@ body {
 #header-layout {
     width: 100%;
     height: 64px;
-    border-bottom: 5px solid #EEEEEE;
+    border-bottom: 1px solid #EEEEEE;
     display: flex;
     flex-direction: row;
 }
@@ -62,10 +62,20 @@ body {
     margin: 0px 20px;
 }
 
+#workspace {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
 #monoboard-canvas-container {
     width: 100%;
     height: 100%;
     position: relative;
+}
+
+.top-divider {
+    border-top: 5px solid #EEEEEE;
 }
 
 #monoboard-canvas-container > canvas {
@@ -83,7 +93,7 @@ body {
     outline: none;
 }
 .monomodal-mono-edit-text {
-    font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+    font-family: 'Menlo', 'Courier New', Courier, monospace;
 }
 
 .btn-group.btn-group-sm>.btn.toolbar-btn, .btn.toolbar-btn {
@@ -98,4 +108,11 @@ body {
 
 ul.dropdown-menu a.dropdown-item {
     cursor: pointer;
+}
+
+#workspace-right-toolbar {
+    width: 270px;
+    height: 100%;
+    border-left: 1.5px solid #BBB;
+    background: #F8F8F8;
 }
