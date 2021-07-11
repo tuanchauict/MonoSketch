@@ -54,4 +54,6 @@ sealed class AbstractShape(
     }
 
     open fun contains(point: Point): Boolean = bound.contains(point)
+
+    open fun isOverlapped(rect: Rect): Boolean = bound.isOverlapped(rect)
 }

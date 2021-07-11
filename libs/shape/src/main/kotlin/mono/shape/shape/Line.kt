@@ -359,6 +359,17 @@ class Line(
 
     override fun contains(point: Point): Boolean = edges.any { it.contains(point) }
 
+    override fun isOverlapped(rect: Rect): Boolean =
+        edges.any {
+            val edgeBound = Rect.byLTRB(
+                it.startPoint.left,
+                it.startPoint.top,
+                it.endPoint.left,
+                it.endPoint.top
+            )
+            edgeBound.isOverlapped(rect)
+        }
+
     data class Edge internal constructor(
         val id: Int = getId(),
         val startPoint: Point,

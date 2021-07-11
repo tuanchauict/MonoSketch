@@ -52,7 +52,7 @@ class ShapeSearcher(
         zoneOwnersManager.getAllPotentialOwnersInZone(bound)
             .asSequence()
             .mapNotNull { shapeManager.getShape(it) }
-            .filter { it.bound.isOverlapped(bound) }
+            .filter { it.isOverlapped(bound) }
             .toList()
 
     /**
