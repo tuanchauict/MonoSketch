@@ -4,6 +4,7 @@ import kotlinx.html.dom.append
 import mono.html.toolbar.ActionManager
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.livedata.MediatorLiveData
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
@@ -14,6 +15,7 @@ class ShapeToolViewController(
     controller: HTMLElement,
     actionManager: ActionManager,
     selectedShapesLiveData: LiveData<Set<AbstractShape>>,
+    shapeManagerVersionLiveData: LiveData<Int>
 ) {
     init {
         controller.append {
@@ -23,16 +25,22 @@ class ShapeToolViewController(
             AppearanceSection()
             TextSection()
 
-            selectedShapesLiveData.observe(lifecycleOwner) {
-                val singleShape = it.singleOrNull()
-                val isSingle = singleShape != null
-                val isSizeChangeable = singleShape is Rectangle || singleShape is Text
+            val singleShapeLiveData = MediatorLiveData<AbstractShape?>(null).apply {
+                add(selectedShapesLiveData) {
+                    value = it.singleOrNull()
+                }
+                add(shapeManagerVersionLiveData) {
+                    value = value
+                }
+            }
 
-                moveTool.setEnabled(isSingle)
+            singleShapeLiveData.observe(lifecycleOwner) {
+                moveTool.setEnabled(it != null)
 
-                transformTool.setEnabled(isSingle, isSizeChangeable)
-                if (singleShape != null) {
-                    transformTool.setValue(singleShape.bound)
+                val isSizeChangeable = it is Rectangle || it is Text
+                transformTool.setEnabled(it != null, isSizeChangeable)
+                if (it != null) {
+                    transformTool.setValue(it.bound)
                 }
             }
         }
