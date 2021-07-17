@@ -14,9 +14,9 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 /**
- * View controller for shape tool' move section.
+ * View controller for shape tool' reorder section.
  */
-private class MoveSectionViewController(
+private class ReorderSectionViewController(
     rootDiv: HTMLDivElement,
     private val icons: List<HTMLDivElement>
 ) : ToolViewController(rootDiv) {
@@ -27,7 +27,7 @@ private class MoveSectionViewController(
     }
 }
 
-internal fun Tag.MoveSection(
+internal fun Tag.ReorderSection(
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): ToolViewController {
     val icons = mutableListOf<HTMLDivElement>()
@@ -41,7 +41,7 @@ internal fun Tag.MoveSection(
         }
     }
 
-    return MoveSectionViewController(div, icons)
+    return ReorderSectionViewController(div, icons)
 }
 
 private fun Tag.Icon(iconType: IconType, onClick: (IconType) -> Unit): HTMLDivElement =
