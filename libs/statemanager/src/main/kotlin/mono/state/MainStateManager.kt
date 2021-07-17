@@ -113,47 +113,35 @@ class MainStateManager(
         }
         actionManager.oneTimeActionLiveData.observe(lifecycleOwner) {
             when (it) {
-                OneTimeActionType.IDLE -> Unit
+                OneTimeActionType.Idle -> Unit
 
-                OneTimeActionType.SAVE_SHAPES_AS ->
+                OneTimeActionType.SaveShapesAs ->
                     fileMediator.saveFile(shapeManager.toJson(true))
-                OneTimeActionType.OPEN_SHAPES ->
+                OneTimeActionType.OpenShapes ->
                     openSavedFile()
-                OneTimeActionType.EXPORT_SELECTED_SHAPES ->
+                OneTimeActionType.ExportSelectedShapes ->
                     exportSelectedShape()
 
-                OneTimeActionType.SELECT_ALL_SHAPES ->
+                OneTimeActionType.SelectAllShapes ->
                     environment.selectAllShapes()
-                OneTimeActionType.DESELECT_SHAPES ->
+                OneTimeActionType.DeselectShapes ->
                     environment.clearSelectedShapes()
-                OneTimeActionType.DELETE_SELECTED_SHAPES ->
+                OneTimeActionType.DeleteSelectedShapes ->
                     deleteSelectedShapes()
-                OneTimeActionType.EDIT_SELECTED_SHAPES ->
+                OneTimeActionType.EditSelectedShapes ->
                     editSelectedShapes()
 
-                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN ->
-                    moveSelectedShapes(1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_UP ->
-                    moveSelectedShapes(-1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT ->
-                    moveSelectedShapes(0, -1)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT ->
-                    moveSelectedShapes(0, 1)
+                is OneTimeActionType.MoveShapes ->
+                    moveSelectedShapes(it.offsetRow, it.offsetCol)
+                is OneTimeActionType.ChangeShapeBound ->
+                    setSelectedShapeBound(it.newLeft, it.newTop, it.newWidth, it.newHeight)
 
-                OneTimeActionType.REORDER_SELECTED_SHAPE_FRONT ->
-                    changeShapeOrder(ChangeOrderType.FRONT)
-                OneTimeActionType.REORDER_SELECTED_SHAPE_FORWARD ->
-                    changeShapeOrder(ChangeOrderType.FORWARD)
-                OneTimeActionType.REORDER_SELECTED_SHAPE_BACKWARD ->
-                    changeShapeOrder(ChangeOrderType.BACKWARD)
-                OneTimeActionType.REORDER_SELECTED_SHAPE_BACK ->
-                    changeShapeOrder(ChangeOrderType.BACK)
+                is OneTimeActionType.ReorderShape ->
+                    changeShapeOrder(it.orderType)
 
-                OneTimeActionType.COPY ->
-                    clipboardManager.copySelectedShapes()
-                OneTimeActionType.CUT ->
-                    clipboardManager.cutSelectedShapes()
-                OneTimeActionType.DUPLICATE ->
+                is OneTimeActionType.Copy ->
+                    clipboardManager.copySelectedShapes(it.isRemoveRequired)
+                OneTimeActionType.Duplicate ->
                     clipboardManager.duplicateSelectedShapes()
             }.exhaustive
         }
@@ -174,10 +162,23 @@ class MainStateManager(
             val newBound = shape.bound.copy(position = newPosition)
             shapeManager.execute(ChangeBound(shape, newBound))
         }
-        updateInteractionBounds(selectedShapes)
+        environment.updateInteractionBounds()
     }
 
-    private fun changeShapeOrder(orderType: ChangeOrder.ChangeOrderType) {
+    private fun setSelectedShapeBound(left: Int?, top: Int?, width: Int?, height: Int?) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        val currentBound = singleShape.bound
+        val newLeft = left ?: currentBound.left
+        val newTop = top ?: currentBound.top
+        val newWidth = width ?: currentBound.width
+        val newHeight = height ?: currentBound.height
+        shapeManager.execute(
+            ChangeBound(singleShape, Rect.byLTWH(newLeft, newTop, newWidth, newHeight))
+        )
+        environment.updateInteractionBounds()
+    }
+
+    private fun changeShapeOrder(orderType: ChangeOrderType) {
         val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
         shapeManager.execute(ChangeOrder(singleShape, orderType))
     }
