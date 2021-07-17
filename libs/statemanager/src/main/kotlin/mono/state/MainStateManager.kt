@@ -22,8 +22,11 @@ import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
+import mono.shape.command.ChangeOrder
+import mono.shape.command.ChangeOrder.ChangeOrderType
 import mono.shape.remove
 import mono.shape.replaceWithJson
+import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
@@ -47,6 +50,7 @@ class MainStateManager(
     lifecycleOwner: LifecycleOwner,
     private val mainBoard: MonoBoard,
     private val shapeManager: ShapeManager,
+    private val selectedShapeManager: SelectedShapeManager,
     private val bitmapManager: MonoBitmapManager,
     private val canvasManager: CanvasViewController,
     shapeClipboardManager: ShapeClipboardManager,
@@ -118,19 +122,39 @@ class MainStateManager(
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
-                OneTimeActionType.SELECT_ALL_SHAPES -> environment.selectAllShapes()
-                OneTimeActionType.DESELECT_SHAPES -> environment.clearSelectedShapes()
-                OneTimeActionType.DELETE_SELECTED_SHAPES -> deleteSelectedShapes()
-                OneTimeActionType.EDIT_SELECTED_SHAPES -> editSelectedShapes()
+                OneTimeActionType.SELECT_ALL_SHAPES ->
+                    environment.selectAllShapes()
+                OneTimeActionType.DESELECT_SHAPES ->
+                    environment.clearSelectedShapes()
+                OneTimeActionType.DELETE_SELECTED_SHAPES ->
+                    deleteSelectedShapes()
+                OneTimeActionType.EDIT_SELECTED_SHAPES ->
+                    editSelectedShapes()
 
-                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN -> moveSelectedShapes(1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_UP -> moveSelectedShapes(-1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT -> moveSelectedShapes(0, -1)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT -> moveSelectedShapes(0, 1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN ->
+                    moveSelectedShapes(1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_UP ->
+                    moveSelectedShapes(-1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT ->
+                    moveSelectedShapes(0, -1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT ->
+                    moveSelectedShapes(0, 1)
 
-                OneTimeActionType.COPY -> clipboardManager.copySelectedShapes()
-                OneTimeActionType.CUT -> clipboardManager.cutSelectedShapes()
-                OneTimeActionType.DUPLICATE -> clipboardManager.duplicateSelectedShapes()
+                OneTimeActionType.REORDER_SELECTED_SHAPE_FRONT ->
+                    changeShapeOrder(ChangeOrderType.FRONT)
+                OneTimeActionType.REORDER_SELECTED_SHAPE_FORWARD ->
+                    changeShapeOrder(ChangeOrderType.FORWARD)
+                OneTimeActionType.REORDER_SELECTED_SHAPE_BACKWARD ->
+                    changeShapeOrder(ChangeOrderType.BACKWARD)
+                OneTimeActionType.REORDER_SELECTED_SHAPE_BACK ->
+                    changeShapeOrder(ChangeOrderType.BACK)
+
+                OneTimeActionType.COPY ->
+                    clipboardManager.copySelectedShapes()
+                OneTimeActionType.CUT ->
+                    clipboardManager.cutSelectedShapes()
+                OneTimeActionType.DUPLICATE ->
+                    clipboardManager.duplicateSelectedShapes()
             }.exhaustive
         }
     }
@@ -151,6 +175,11 @@ class MainStateManager(
             shapeManager.execute(ChangeBound(shape, newBound))
         }
         updateInteractionBounds(selectedShapes)
+    }
+
+    private fun changeShapeOrder(orderType: ChangeOrder.ChangeOrderType) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        shapeManager.execute(ChangeOrder(singleShape, orderType))
     }
 
     private fun editSelectedShapes() {
@@ -293,33 +322,32 @@ class MainStateManager(
 
         override fun getWindowBound(): Rect = stateManager.windowBoardBound
 
-        private val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
-
         override fun getInteractionPoint(pointPx: Point): InteractionPoint? =
             stateManager.canvasManager.getInteractionPoint(pointPx)
 
         override fun updateInteractionBounds() =
-            stateManager.updateInteractionBounds(selectedShapeManager.selectedShapes)
+            stateManager.updateInteractionBounds(stateManager.selectedShapeManager.selectedShapes)
 
         override fun isPointInInteractionBounds(point: Point): Boolean =
-            selectedShapeManager.selectedShapes.any { it.contains(point) }
+            stateManager.selectedShapeManager.selectedShapes.any { it.contains(point) }
 
         override fun setSelectionBound(bound: Rect?) =
             stateManager.canvasManager.drawSelectionBound(bound)
 
         override val selectedShapesLiveData: LiveData<Set<AbstractShape>> =
-            selectedShapeManager.selectedShapesLiveData
+            stateManager.selectedShapeManager.selectedShapesLiveData
 
-        override fun getSelectedShapes(): Set<AbstractShape> = selectedShapeManager.selectedShapes
+        override fun getSelectedShapes(): Set<AbstractShape> =
+            stateManager.selectedShapeManager.selectedShapes
 
         override fun addSelectedShape(shape: AbstractShape?) {
             if (shape != null) {
-                selectedShapeManager.addSelectedShape(shape)
+                stateManager.selectedShapeManager.addSelectedShape(shape)
             }
         }
 
         override fun toggleShapeSelection(shape: AbstractShape) =
-            selectedShapeManager.toggleSelection(shape)
+            stateManager.selectedShapeManager.toggleSelection(shape)
 
         override fun selectAllShapes() {
             for (shape in stateManager.workingParentGroup.items) {
@@ -327,7 +355,7 @@ class MainStateManager(
             }
         }
 
-        override fun clearSelectedShapes() = selectedShapeManager.clearSelectedShapes()
+        override fun clearSelectedShapes() = stateManager.selectedShapeManager.clearSelectedShapes()
 
         override fun getEdgeDirection(point: Point): DirectedPoint.Direction? =
             shapeSearcher.getEdgeDirection(point)

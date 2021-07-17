@@ -90,3 +90,21 @@ class Ungroup(private val group: Group) : Command() {
         shapeManager.remove(group)
     }
 }
+
+class ChangeOrder(
+    private val shape: AbstractShape,
+    private val changeOrderType: ChangeOrderType
+) : Command() {
+    override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
+        shapeManager.getGroup(shape.parentId)
+
+    override fun execute(shapeManager: ShapeManager, parent: Group) =
+        parent.changeOrder(shape, changeOrderType.orderType)
+
+    enum class ChangeOrderType(internal val orderType: QuickList.MoveActionType) {
+        FORWARD(QuickList.MoveActionType.UP),
+        BACKWARD(QuickList.MoveActionType.DOWN),
+        FRONT(QuickList.MoveActionType.TOP),
+        BACK(QuickList.MoveActionType.BOTTOM)
+    }
+}

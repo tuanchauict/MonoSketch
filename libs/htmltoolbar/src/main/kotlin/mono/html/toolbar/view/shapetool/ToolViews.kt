@@ -5,6 +5,8 @@ package mono.html.toolbar.view.shapetool
 import kotlinx.html.div
 import kotlinx.html.js.div
 import mono.html.toolbar.view.Tag
+import mono.html.toolbar.view.isEnabled
+import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.ADD_BOTTOM_SPACE
 import mono.html.toolbar.view.shapetool.Class.CENTER_EVEN_SPACE
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
@@ -17,6 +19,16 @@ import mono.html.toolbar.view.shapetool.Class.SECTION_TITLE
 import mono.html.toolbar.view.shapetool.Class.SMALL_SPACE
 import mono.html.toolbar.view.shapetool.Class.TOOL
 import org.w3c.dom.HTMLDivElement
+
+internal open class ToolViewController(private val rootView: HTMLDivElement) {
+    fun setVisible(isVisible: Boolean) {
+        rootView.isVisible = isVisible
+    }
+
+    open fun setEnabled(isEnabled: Boolean) {
+        rootView.isEnabled = isEnabled
+    }
+}
 
 internal fun Tag.Section(
     title: String,

@@ -1,4 +1,4 @@
-package mono.state
+package mono.shape.selection
 
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData

@@ -17,6 +17,7 @@ val moduleMap = mapOf(
     "shape" to "libs/shape",
     "shape-clipboard" to "libs/shape-clipboard",
     "shape-interaction-bound" to "libs/shape-interaction-bound",
+    "shape-selection" to "libs/shape-selection",
     "shapesearcher" to "libs/shapesearcher",
     "statemanager" to "libs/statemanager",
     "uuid" to "libs/uuid"
