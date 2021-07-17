@@ -13,6 +13,7 @@ enum class Class(val value: String) {
     DIVIDER("divider"),
     GRID("grid"),
     HALF("half"),
+    HIDE("hide"),
     ICON_BUTTON("icon-button"),
     INLINE_TITLE("inline-title"),
     INPUT_CHECK_BOX("tool-input-checkbox"),
