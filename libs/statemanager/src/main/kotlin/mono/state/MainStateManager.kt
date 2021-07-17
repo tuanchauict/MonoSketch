@@ -22,6 +22,7 @@ import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
+import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.ChangeOrder.ChangeOrderType
 import mono.shape.remove
@@ -33,6 +34,7 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
+import mono.shape.shape.extra.TextExtra
 import mono.shape.toJson
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
@@ -130,6 +132,8 @@ class MainStateManager(
                     deleteSelectedShapes()
                 OneTimeActionType.EditSelectedShapes ->
                     editSelectedShapes()
+                is OneTimeActionType.TextAlignment ->
+                    setTextAlignment(it.newHorizontalAlign, it.newVerticalAlign)
 
                 is OneTimeActionType.MoveShapes ->
                     moveSelectedShapes(it.offsetRow, it.offsetCol)
@@ -192,6 +196,19 @@ class MainStateManager(
             is MockShape,
             is Group -> Unit
         }.exhaustive
+    }
+
+    private fun setTextAlignment(
+        horizontalAlign: TextExtra.HorizontalAlign?,
+        verticalAlign: TextExtra.VerticalAlign?
+    ) {
+        val textShape = environment.getSelectedShapes().singleOrNull() as? Text ?: return
+        val newTextAlign = textShape.extra.textAlign.copy(
+            horizontalAlign ?: textShape.extra.textAlign.horizontalAlign,
+            verticalAlign ?: textShape.extra.textAlign.verticalAlign
+        )
+        val newExtra = textShape.extra.copy(textAlign = newTextAlign)
+        shapeManager.execute(ChangeExtra(textShape, newExtra))
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
