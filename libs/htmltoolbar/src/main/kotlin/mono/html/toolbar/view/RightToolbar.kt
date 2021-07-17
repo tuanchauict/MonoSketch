@@ -2,7 +2,6 @@
 
 package mono.html.toolbar.view
 
-import kotlinx.html.TagConsumer
 import kotlinx.html.a
 import kotlinx.html.button
 import kotlinx.html.div
@@ -12,7 +11,6 @@ import kotlinx.html.li
 import kotlinx.html.style
 import kotlinx.html.ul
 import mono.html.toolbar.OneTimeActionType
-import org.w3c.dom.HTMLElement
 
 /**
  * An enum for right actions on drop down menu
@@ -26,7 +24,7 @@ enum class RightAction(val title: String, val actionType: OneTimeActionType) {
 /**
  * A function to create right toolbar UI.
  */
-internal fun TagConsumer<HTMLElement>.RightToolbar(
+internal fun Tag.RightToolbar(
     onActionSelected: (RightAction) -> Unit
 ) {
     val dropdownMenuId = "right-toolbar-dropdown-menu"
@@ -61,7 +59,7 @@ internal fun TagConsumer<HTMLElement>.RightToolbar(
     }
 }
 
-private fun TagConsumer<HTMLElement>.RightToolbarMenuItem(
+private fun Tag.RightToolbarMenuItem(
     title: String,
     onClickAction: () -> Unit
 ) {

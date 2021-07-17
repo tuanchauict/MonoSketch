@@ -9,9 +9,8 @@ import kotlinx.html.TagConsumer
 import kotlinx.html.attributesMapOf
 import kotlinx.html.svg
 import kotlinx.html.visit
-import org.w3c.dom.HTMLElement
 
-internal fun TagConsumer<HTMLElement>.SvgIcon(width: Int, height: Int, pathBlock: SVG.() -> Unit) {
+internal fun Tag.SvgIcon(width: Int, height: Int, pathBlock: SVG.() -> Unit) {
     svg("bi bi-cursor-fill") {
         attributes["width"] = "$width"
         attributes["height"] = "$height"
@@ -22,7 +21,24 @@ internal fun TagConsumer<HTMLElement>.SvgIcon(width: Int, height: Int, pathBlock
     }
 }
 
-internal inline fun TagConsumer<HTMLElement>.SvgPath(
+internal fun Tag.SvgIcon(
+    width: Int,
+    height: Int,
+    viewPortWidth: Int,
+    viewPortHeight: Int,
+    pathBlock: SVG.() -> Unit
+) {
+    svg("bi bi-cursor-fill") {
+        attributes["width"] = "$width"
+        attributes["height"] = "$height"
+        attributes["fill"] = "currentColor"
+        attributes["viewBox"] = "0 0 $viewPortWidth $viewPortHeight"
+
+        pathBlock()
+    }
+}
+
+internal inline fun Tag.SvgPath(
     path: String,
     crossinline block: SVG_PATH.() -> Unit = {}
 ) = SVG_PATH(attributesMapOf("d", path), this).visit(block)

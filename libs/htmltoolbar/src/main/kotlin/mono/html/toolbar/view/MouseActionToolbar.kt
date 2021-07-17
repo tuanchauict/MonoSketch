@@ -3,7 +3,6 @@
 package mono.html.toolbar.view
 
 import kotlinx.html.InputType
-import kotlinx.html.TagConsumer
 import kotlinx.html.div
 import kotlinx.html.id
 import kotlinx.html.js.input
@@ -12,7 +11,6 @@ import kotlinx.html.js.onChangeFunction
 import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import kotlin.random.Random
 import kotlin.random.nextULong
@@ -22,7 +20,7 @@ private val random = Random(100)
 /**
  * A function to create mouse action toolbar UI.
  */
-internal fun TagConsumer<HTMLElement>.MouseActionGroup(
+internal fun Tag.MouseActionGroup(
     lifecycleOwner: LifecycleOwner,
     retainableActionLiveData: LiveData<RetainableActionType>,
     setRetainableAction: (RetainableActionType) -> Unit
@@ -66,7 +64,7 @@ private enum class MouseActionType(
     val retainableActionType: RetainableActionType,
     val title: String,
     val isChecked: Boolean,
-    private val icon: TagConsumer<HTMLElement>.() -> Unit
+    private val icon: Tag.() -> Unit
 ) {
     SELECTION(
         RetainableActionType.IDLE,
@@ -124,14 +122,14 @@ private enum class MouseActionType(
         }
     );
 
-    fun bindIcon(tagConsumer: TagConsumer<HTMLElement>) {
+    fun bindIcon(tagConsumer: Tag) {
         with(tagConsumer) {
             icon()
         }
     }
 }
 
-private fun TagConsumer<HTMLElement>.MouseActionGroupItem(
+private fun Tag.MouseActionGroupItem(
     mouseActionType: MouseActionType,
     onChangeAction: (RetainableActionType) -> Unit
 ): Pair<RetainableActionType, HTMLInputElement> {
