@@ -16,9 +16,9 @@ import mono.html.toolbar.OneTimeActionType
  * An enum for right actions on drop down menu
  */
 enum class RightAction(val title: String, val actionType: OneTimeActionType) {
-    SAVE_AS("Save As...", OneTimeActionType.SAVE_SHAPES_AS),
-    OPEN_FILE("Open File...", OneTimeActionType.OPEN_SHAPES),
-    EXPORT("Export Text", OneTimeActionType.EXPORT_SELECTED_SHAPES)
+    SAVE_AS("Save As...", OneTimeActionType.SaveShapesAs),
+    OPEN_FILE("Open File...", OneTimeActionType.OpenShapes),
+    EXPORT("Export Text", OneTimeActionType.ExportSelectedShapes)
 }
 
 /**

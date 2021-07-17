@@ -19,7 +19,7 @@ class ActionManager(
     val retainableActionLiveData: LiveData<RetainableActionType> = retainableActionMutableLiveData
 
     private val oneTimeActionMutableLiveData: MutableLiveData<OneTimeActionType> =
-        MutableLiveData(OneTimeActionType.IDLE)
+        MutableLiveData(OneTimeActionType.Idle)
     val oneTimeActionLiveData: LiveData<OneTimeActionType> = oneTimeActionMutableLiveData
 
     init {
@@ -30,21 +30,21 @@ class ActionManager(
         when (keyCommand) {
             KeyCommand.IDLE -> Unit
             KeyCommand.SELECT_ALL ->
-                setOneTimeAction(OneTimeActionType.SELECT_ALL_SHAPES)
+                setOneTimeAction(OneTimeActionType.SelectAllShapes)
             KeyCommand.DESELECTION ->
-                setOneTimeAction(OneTimeActionType.DESELECT_SHAPES)
+                setOneTimeAction(OneTimeActionType.DeselectShapes)
 
             KeyCommand.DELETE ->
-                setOneTimeAction(OneTimeActionType.DELETE_SELECTED_SHAPES)
+                setOneTimeAction(OneTimeActionType.DeleteSelectedShapes)
 
             KeyCommand.MOVE_LEFT ->
-                setOneTimeAction(OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT)
+                setOneTimeAction(OneTimeActionType.MoveShapes(0, -1))
             KeyCommand.MOVE_UP ->
-                setOneTimeAction(OneTimeActionType.MOVE_SELECTED_SHAPES_UP)
+                setOneTimeAction(OneTimeActionType.MoveShapes(-1, 0))
             KeyCommand.MOVE_RIGHT ->
-                setOneTimeAction(OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT)
+                setOneTimeAction(OneTimeActionType.MoveShapes(0, 1))
             KeyCommand.MOVE_DOWN ->
-                setOneTimeAction(OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN)
+                setOneTimeAction(OneTimeActionType.MoveShapes(1, 0))
 
             KeyCommand.ADD_RECTANGLE ->
                 setRetainableAction(RetainableActionType.ADD_RECTANGLE)
@@ -56,11 +56,11 @@ class ActionManager(
             KeyCommand.SELECTION_MODE ->
                 setRetainableAction(RetainableActionType.IDLE)
             KeyCommand.ENTER_EDIT_MODE ->
-                setOneTimeAction(OneTimeActionType.EDIT_SELECTED_SHAPES)
+                setOneTimeAction(OneTimeActionType.EditSelectedShapes)
 
-            KeyCommand.COPY -> setOneTimeAction(OneTimeActionType.COPY)
-            KeyCommand.CUT -> setOneTimeAction(OneTimeActionType.CUT)
-            KeyCommand.DUPLICATE -> setOneTimeAction(OneTimeActionType.DUPLICATE)
+            KeyCommand.COPY -> setOneTimeAction(OneTimeActionType.Copy(false))
+            KeyCommand.CUT -> setOneTimeAction(OneTimeActionType.Copy(true))
+            KeyCommand.DUPLICATE -> setOneTimeAction(OneTimeActionType.Duplicate)
         }.exhaustive
     }
 
@@ -70,6 +70,6 @@ class ActionManager(
 
     fun setOneTimeAction(actionType: OneTimeActionType) {
         oneTimeActionMutableLiveData.value = actionType
-        oneTimeActionMutableLiveData.value = OneTimeActionType.IDLE
+        oneTimeActionMutableLiveData.value = OneTimeActionType.Idle
     }
 }

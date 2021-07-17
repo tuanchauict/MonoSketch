@@ -5,11 +5,13 @@ package mono.html.toolbar.view.shapetool
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import mono.html.toolbar.OneTimeActionType
+import mono.html.toolbar.OneTimeActionType.ReorderShape
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.SvgPath
 import mono.html.toolbar.view.Tag
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
+import mono.shape.command.ChangeOrder
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -35,7 +37,7 @@ internal fun Tag.ReorderSection(
         Tool {
             Row(isCenterEvenSpace = true) {
                 for (type in IconType.values()) {
-                    icons += Icon(type) { setOneTimeAction(it.actionType) }
+                    icons += Icon(type) { setOneTimeAction(ReorderShape(it.changeOrderType)) }
                 }
             }
         }
@@ -61,28 +63,31 @@ private fun Tag.Icon(iconType: IconType, onClick: (IconType) -> Unit): HTMLDivEl
     }
 
 /* ktlint-disable max-line-length */
-private enum class IconType(val actionType: OneTimeActionType, val iconPaths: List<String>) {
+private enum class IconType(
+    val changeOrderType: ChangeOrder.ChangeOrderType,
+    val iconPaths: List<String>
+) {
     FRONT(
-        OneTimeActionType.REORDER_SELECTED_SHAPE_FRONT,
+        ChangeOrder.ChangeOrderType.FRONT,
         listOf(
             "M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z",
             "M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
         )
     ),
     UPWARD(
-        OneTimeActionType.REORDER_SELECTED_SHAPE_FORWARD,
+        ChangeOrder.ChangeOrderType.FORWARD,
         listOf(
             "M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
         )
     ),
     BACKWARD(
-        OneTimeActionType.REORDER_SELECTED_SHAPE_BACKWARD,
+        ChangeOrder.ChangeOrderType.BACKWARD,
         listOf(
             "M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
         )
     ),
     BACK(
-        OneTimeActionType.REORDER_SELECTED_SHAPE_BACK,
+        ChangeOrder.ChangeOrderType.BACK,
         listOf(
             "M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z",
             "M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"

@@ -1,5 +1,7 @@
 package mono.html.toolbar
 
+import mono.shape.command.ChangeOrder
+
 /**
  * An enum class which defines all action types which repeatedly have effects after triggered.
  */
@@ -13,29 +15,22 @@ enum class RetainableActionType {
 /**
  * An enum class which defines all action types which are only have affect once.
  */
-enum class OneTimeActionType {
-    IDLE,
+sealed interface OneTimeActionType {
+    object Idle : OneTimeActionType
 
-    SAVE_SHAPES_AS,
-    OPEN_SHAPES,
-    EXPORT_SELECTED_SHAPES,
+    object SaveShapesAs : OneTimeActionType
+    object OpenShapes : OneTimeActionType
+    object ExportSelectedShapes : OneTimeActionType
 
-    SELECT_ALL_SHAPES,
-    DESELECT_SHAPES,
-    DELETE_SELECTED_SHAPES,
-    EDIT_SELECTED_SHAPES,
+    object SelectAllShapes : OneTimeActionType
+    object DeselectShapes : OneTimeActionType
+    object DeleteSelectedShapes : OneTimeActionType
+    object EditSelectedShapes : OneTimeActionType
 
-    MOVE_SELECTED_SHAPES_DOWN,
-    MOVE_SELECTED_SHAPES_UP,
-    MOVE_SELECTED_SHAPES_LEFT,
-    MOVE_SELECTED_SHAPES_RIGHT,
+    data class MoveShapes(val offsetRow: Int, val offsetCol: Int) : OneTimeActionType
 
-    REORDER_SELECTED_SHAPE_FRONT,
-    REORDER_SELECTED_SHAPE_FORWARD,
-    REORDER_SELECTED_SHAPE_BACKWARD,
-    REORDER_SELECTED_SHAPE_BACK,
+    data class ReorderShape(val orderType: ChangeOrder.ChangeOrderType) : OneTimeActionType
 
-    COPY,
-    CUT,
-    DUPLICATE
+    data class Copy(val isRemoveRequired: Boolean) : OneTimeActionType
+    object Duplicate : OneTimeActionType
 }

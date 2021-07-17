@@ -30,17 +30,15 @@ internal class ClipboardManager(
         )
     }
 
-    fun copySelectedShapes() {
+    fun copySelectedShapes(isRemoveRequired: Boolean) {
         val serializableShapes = selectedShapes.map { it.toSerializableShape(false) }
         shapeClipboardManager.setClipboard(serializableShapes)
-    }
-
-    fun cutSelectedShapes() {
-        copySelectedShapes()
-        for (shape in selectedShapes) {
-            commandEnvironment.shapeManager.remove(shape)
+        if (isRemoveRequired) {
+            for (shape in selectedShapes) {
+                commandEnvironment.shapeManager.remove(shape)
+            }
+            commandEnvironment.clearSelectedShapes()
         }
-        commandEnvironment.clearSelectedShapes()
     }
 
     private fun pasteShapes(serializableShapes: List<AbstractSerializableShape>) {
