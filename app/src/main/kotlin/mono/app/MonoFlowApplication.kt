@@ -81,7 +81,8 @@ class MonoFlowApplication : LifecycleOwner() {
             actionManager
         )
         ShapeToolViewController(
-            document.getElementById("shape-tools") as HTMLElement
+            document.getElementById("shape-tools") as HTMLElement,
+            actionManager
         )
         onResize()
     }
