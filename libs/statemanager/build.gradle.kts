@@ -23,6 +23,7 @@ dependencies {
     implementation(project(":shape"))
     implementation(project(":shape-clipboard"))
     implementation(project(":shape-interaction-bound"))
+    implementation(project(":shape-selection"))
     implementation(project(":shapesearcher"))
 
     implementation(libs.kotlinx.html)

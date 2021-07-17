@@ -16,6 +16,7 @@ import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.replaceWithJson
+import mono.shape.selection.SelectedShapeManager
 import mono.shape.toJson
 import mono.state.MainStateManager
 import org.w3c.dom.HTMLDivElement
@@ -31,6 +32,7 @@ class MonoFlowApplication : LifecycleOwner() {
 
     private val mainBoard: MonoBoard = MonoBoard()
     private val shapeManager = ShapeManager()
+    private val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
     private val bitmapManager = MonoBitmapManager()
     private var mainStateManager: MainStateManager? = null
 
@@ -65,6 +67,7 @@ class MonoFlowApplication : LifecycleOwner() {
             this,
             mainBoard,
             shapeManager,
+            selectedShapeManager,
             bitmapManager,
             canvasViewController,
             ShapeClipboardManager(body),

@@ -1,5 +1,6 @@
 plugins {
     kotlin("js")
+    kotlin("plugin.serialization")
 }
 
 repositories {
@@ -7,23 +8,13 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":commons"))
-    implementation(project(":graphicsgeo"))
-    implementation(project(":htmlcanvas"))
-    implementation(project(":htmltoolbar"))
-    implementation(project(":keycommand"))
-    implementation(project(":lifecycle"))
     implementation(project(":livedata"))
-    implementation(project(":monoboard"))
-    implementation(project(":monobitmap"))
-    implementation(project(":monobitmap-manager"))
     implementation(project(":shape"))
-    implementation(project(":shape-clipboard"))
-    implementation(project(":shape-selection"))
-    implementation(project(":statemanager"))
 
+    implementation(kotlin("stdlib-js"))
     testImplementation(kotlin("test-js"))
 }
+
 val compilerType: org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType by ext
 kotlin {
     js(compilerType) {

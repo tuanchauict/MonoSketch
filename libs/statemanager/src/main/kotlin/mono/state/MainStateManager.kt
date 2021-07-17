@@ -24,6 +24,7 @@ import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
 import mono.shape.remove
 import mono.shape.replaceWithJson
+import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
@@ -47,6 +48,7 @@ class MainStateManager(
     lifecycleOwner: LifecycleOwner,
     private val mainBoard: MonoBoard,
     private val shapeManager: ShapeManager,
+    private val selectedShapeManager: SelectedShapeManager,
     private val bitmapManager: MonoBitmapManager,
     private val canvasManager: CanvasViewController,
     shapeClipboardManager: ShapeClipboardManager,
@@ -298,33 +300,32 @@ class MainStateManager(
 
         override fun getWindowBound(): Rect = stateManager.windowBoardBound
 
-        private val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
-
         override fun getInteractionPoint(pointPx: Point): InteractionPoint? =
             stateManager.canvasManager.getInteractionPoint(pointPx)
 
         override fun updateInteractionBounds() =
-            stateManager.updateInteractionBounds(selectedShapeManager.selectedShapes)
+            stateManager.updateInteractionBounds(stateManager.selectedShapeManager.selectedShapes)
 
         override fun isPointInInteractionBounds(point: Point): Boolean =
-            selectedShapeManager.selectedShapes.any { it.contains(point) }
+            stateManager.selectedShapeManager.selectedShapes.any { it.contains(point) }
 
         override fun setSelectionBound(bound: Rect?) =
             stateManager.canvasManager.drawSelectionBound(bound)
 
         override val selectedShapesLiveData: LiveData<Set<AbstractShape>> =
-            selectedShapeManager.selectedShapesLiveData
+            stateManager.selectedShapeManager.selectedShapesLiveData
 
-        override fun getSelectedShapes(): Set<AbstractShape> = selectedShapeManager.selectedShapes
+        override fun getSelectedShapes(): Set<AbstractShape> =
+            stateManager.selectedShapeManager.selectedShapes
 
         override fun addSelectedShape(shape: AbstractShape?) {
             if (shape != null) {
-                selectedShapeManager.addSelectedShape(shape)
+                stateManager.selectedShapeManager.addSelectedShape(shape)
             }
         }
 
         override fun toggleShapeSelection(shape: AbstractShape) =
-            selectedShapeManager.toggleSelection(shape)
+            stateManager.selectedShapeManager.toggleSelection(shape)
 
         override fun selectAllShapes() {
             for (shape in stateManager.workingParentGroup.items) {
@@ -332,7 +333,7 @@ class MainStateManager(
             }
         }
 
-        override fun clearSelectedShapes() = selectedShapeManager.clearSelectedShapes()
+        override fun clearSelectedShapes() = stateManager.selectedShapeManager.clearSelectedShapes()
 
         override fun getEdgeDirection(point: Point): DirectedPoint.Direction? =
             shapeSearcher.getEdgeDirection(point)
