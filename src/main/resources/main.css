@@ -360,7 +360,7 @@ html, body {
   height: 24px;
   margin-left: 4px;
   border: none;
-  border-bottom: 1px solid #BBB;
+  border-bottom: 1px solid #AAA;
   background: #0000;
   font-size: 12px;
 }
@@ -376,6 +376,11 @@ html, body {
 
 .tool-input-text.medium {
   width: 60px;
+}
+
+.tool-input-text:disabled {
+  color: #999;
+  border-color: #DDD;
 }
 
 .tool-input-checkbox {

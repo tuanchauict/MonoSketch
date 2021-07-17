@@ -16,13 +16,20 @@ class ShapeToolViewController(
     init {
         controller.append {
             val moveTool = ReorderSection(actionManager::setOneTimeAction)
+            val transformTool = TransformSection(0, 0, 10, 10)
 
-            TransformSection(0, 0, 10, 10)
             AppearanceSection()
             TextSection()
 
             selectedShapesLiveData.observe(lifecycleOwner) {
-                moveTool.setEnabled(it.size == 1)
+                val singleShape = it.singleOrNull()
+                val isSingle = singleShape != null
+
+                moveTool.setEnabled(isSingle)
+                transformTool.setEnabled(isSingle)
+                if (singleShape != null) {
+                    transformTool.setValue(singleShape.bound)
+                }
             }
         }
     }
