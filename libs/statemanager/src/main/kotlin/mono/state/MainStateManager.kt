@@ -23,7 +23,7 @@ import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
 import mono.shape.command.ChangeOrder
-import mono.shape.command.ChangeOrder.ChangeOrderType.*
+import mono.shape.command.ChangeOrder.ChangeOrderType
 import mono.shape.remove
 import mono.shape.replaceWithJson
 import mono.shape.selection.SelectedShapeManager
@@ -122,24 +122,39 @@ class MainStateManager(
                 OneTimeActionType.EXPORT_SELECTED_SHAPES ->
                     exportSelectedShape()
 
-                OneTimeActionType.SELECT_ALL_SHAPES -> environment.selectAllShapes()
-                OneTimeActionType.DESELECT_SHAPES -> environment.clearSelectedShapes()
-                OneTimeActionType.DELETE_SELECTED_SHAPES -> deleteSelectedShapes()
-                OneTimeActionType.EDIT_SELECTED_SHAPES -> editSelectedShapes()
+                OneTimeActionType.SELECT_ALL_SHAPES ->
+                    environment.selectAllShapes()
+                OneTimeActionType.DESELECT_SHAPES ->
+                    environment.clearSelectedShapes()
+                OneTimeActionType.DELETE_SELECTED_SHAPES ->
+                    deleteSelectedShapes()
+                OneTimeActionType.EDIT_SELECTED_SHAPES ->
+                    editSelectedShapes()
 
-                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN -> moveSelectedShapes(1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_UP -> moveSelectedShapes(-1, 0)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT -> moveSelectedShapes(0, -1)
-                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT -> moveSelectedShapes(0, 1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_DOWN ->
+                    moveSelectedShapes(1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_UP ->
+                    moveSelectedShapes(-1, 0)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT ->
+                    moveSelectedShapes(0, -1)
+                OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT ->
+                    moveSelectedShapes(0, 1)
 
-                OneTimeActionType.MOVE_SELECTED_SHAPE_FRONT -> changeShapeOrder(FRONT)
-                OneTimeActionType.MOVE_SELECTED_SHAPE_FORWARD -> changeShapeOrder(FORWARD)
-                OneTimeActionType.MOVE_SELECTED_SHAPE_BACKWARD -> changeShapeOrder(BACKWARD)
-                OneTimeActionType.MOVE_SELECTED_SHAPE_BACK -> changeShapeOrder(BACK)
+                OneTimeActionType.REORDER_SELECTED_SHAPE_FRONT ->
+                    changeShapeOrder(ChangeOrderType.FRONT)
+                OneTimeActionType.REORDER_SELECTED_SHAPE_FORWARD ->
+                    changeShapeOrder(ChangeOrderType.FORWARD)
+                OneTimeActionType.REORDER_SELECTED_SHAPE_BACKWARD ->
+                    changeShapeOrder(ChangeOrderType.BACKWARD)
+                OneTimeActionType.REORDER_SELECTED_SHAPE_BACK ->
+                    changeShapeOrder(ChangeOrderType.BACK)
 
-                OneTimeActionType.COPY -> clipboardManager.copySelectedShapes()
-                OneTimeActionType.CUT -> clipboardManager.cutSelectedShapes()
-                OneTimeActionType.DUPLICATE -> clipboardManager.duplicateSelectedShapes()
+                OneTimeActionType.COPY ->
+                    clipboardManager.copySelectedShapes()
+                OneTimeActionType.CUT ->
+                    clipboardManager.cutSelectedShapes()
+                OneTimeActionType.DUPLICATE ->
+                    clipboardManager.duplicateSelectedShapes()
             }.exhaustive
         }
     }
