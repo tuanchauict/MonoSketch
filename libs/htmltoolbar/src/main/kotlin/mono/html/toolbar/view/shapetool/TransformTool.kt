@@ -5,8 +5,10 @@ package mono.html.toolbar.view.shapetool
 import kotlinx.html.InputType
 import kotlinx.html.js.div
 import kotlinx.html.js.input
+import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.span
 import mono.graphics.geo.Rect
+import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.Tag
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
 import mono.html.toolbar.view.shapetool.Class.COLUMN
@@ -23,6 +25,8 @@ internal abstract class TransformToolViewController(
     rootView: HTMLDivElement
 ) : ToolViewController(rootView) {
     abstract fun setValue(bound: Rect)
+
+    abstract fun setEnabled(isPositionEnabled: Boolean, isSizeEnabled: Boolean)
 }
 
 private class TransformToolViewControllerImpl(
@@ -39,19 +43,16 @@ private class TransformToolViewControllerImpl(
         hInput.value = bound.height.toString()
     }
 
-    override fun setEnabled(isEnabled: Boolean) {
-        xInput.disabled = !isEnabled
-        yInput.disabled = !isEnabled
-        wInput.disabled = !isEnabled
-        hInput.disabled = !isEnabled
+    override fun setEnabled(isPositionEnabled: Boolean, isSizeEnabled: Boolean) {
+        xInput.disabled = !isPositionEnabled
+        yInput.disabled = !isPositionEnabled
+        wInput.disabled = !isSizeEnabled
+        hInput.disabled = !isSizeEnabled
     }
 }
 
 internal fun Tag.TransformSection(
-    left: Int,
-    top: Int,
-    width: Int,
-    height: Int
+    setOneTimeAction: (OneTimeActionType) -> Unit
 ): TransformToolViewController {
     var xInput: HTMLInputElement? = null
     var yInput: HTMLInputElement? = null
@@ -60,19 +61,32 @@ internal fun Tag.TransformSection(
     val rootView = Section("TRANSFORM") {
         Tool(hasMoreBottomSpace = true) {
             Row(true) {
-                xInput = NumberCell("X", left)
-                wInput = NumberCell("W", width, 1)
+                xInput = NumberCell("X", 0) {
+                    setOneTimeAction(OneTimeActionType.ChangeShapeBound(newLeft = it))
+                }
+                wInput = NumberCell("W", 10, 1) {
+                    setOneTimeAction(OneTimeActionType.ChangeShapeBound(newWidth = it))
+                }
             }
             Row {
-                yInput = NumberCell("Y", top)
-                hInput = NumberCell("H", height, 1)
+                yInput = NumberCell("Y", 0) {
+                    setOneTimeAction(OneTimeActionType.ChangeShapeBound(newTop = it))
+                }
+                hInput = NumberCell("H", 10, 1) {
+                    setOneTimeAction(OneTimeActionType.ChangeShapeBound(newHeight = it))
+                }
             }
         }
     }
     return TransformToolViewControllerImpl(rootView, xInput!!, yInput!!, wInput!!, hInput!!)
 }
 
-private fun Tag.NumberCell(title: String, value: Int, minValue: Int? = null): HTMLInputElement {
+private fun Tag.NumberCell(
+    title: String,
+    value: Int,
+    minValue: Int? = null,
+    onValueChange: (Int) -> Unit
+): HTMLInputElement {
     var result: HTMLInputElement? = null
     div(classes(COLUMN, HALF)) {
         div(classes(ROW, CENTER_VERTICAL)) {
@@ -82,6 +96,11 @@ private fun Tag.NumberCell(title: String, value: Int, minValue: Int? = null): HT
                     attributes["min"] = minValue.toString()
                 }
                 this.value = value.toString()
+
+                onChangeFunction = {
+                    val target = it.currentTarget as HTMLInputElement
+                    onValueChange(target.value.toInt())
+                }
             }
         }
     }
