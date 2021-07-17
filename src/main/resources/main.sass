@@ -111,10 +111,11 @@ $shape-tool-box-border-selected-color: #039be5
     font-size: 12px
     overflow-y: scroll
 
-    & > .tsection
+    & > .tsection.visible
+        display: flex
         border-bottom: 0.75px solid $shape-tool-divider-color
 
-    & > .tsection:last-child
+    & > .visible:last-of-type
         border-bottom: none
 
 .tsection
@@ -122,6 +123,7 @@ $shape-tool-box-border-selected-color: #039be5
     width: 100%
     flex-direction: column
     padding: 10px 10px
+    display: none
 
     &.small-space
         padding-top: 4px
@@ -259,3 +261,6 @@ $shape-tool-box-border-selected-color: #039be5
 
 .tool-input-checkbox
     margin-top: 2px
+
+.hide
+    display: none

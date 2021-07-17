@@ -23,7 +23,7 @@ class ShapeToolViewController(
             val transformTool = TransformSection(actionManager::setOneTimeAction)
 
             AppearanceSection()
-            TextSection()
+            val textAlignmentTool = TextSection(actionManager::setOneTimeAction)
 
             val singleShapeLiveData = MediatorLiveData<AbstractShape?>(null).apply {
                 add(selectedShapesLiveData) {
@@ -42,6 +42,9 @@ class ShapeToolViewController(
                 if (it != null) {
                     transformTool.setValue(it.bound)
                 }
+
+                val textAlign = (it as? Text)?.extra?.textAlign
+                textAlignmentTool.setCurrentTextAlign(textAlign)
             }
         }
     }
