@@ -11,6 +11,7 @@ import mono.html.toolbar.view.Tag
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
 
 /**
  * View controller for shape tool' move section.
@@ -46,8 +47,10 @@ internal fun Tag.MoveSection(
 private fun Tag.Icon(iconType: IconType, onClick: (IconType) -> Unit): HTMLDivElement =
     div(classes(ICON_BUTTON)) {
         onClickFunction = {
-            console.log(it)
-            onClick(iconType)
+            val target = it.currentTarget as HTMLElement
+            if (target.isEnabled) {
+                onClick(iconType)
+            }
         }
 
         SvgIcon(16, 16) {

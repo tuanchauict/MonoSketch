@@ -81,8 +81,10 @@ class MonoFlowApplication : LifecycleOwner() {
             actionManager
         )
         ShapeToolViewController(
+            this,
             document.getElementById("shape-tools") as HTMLElement,
-            actionManager
+            actionManager,
+            selectedShapeManager.selectedShapesLiveData
         )
         onResize()
     }

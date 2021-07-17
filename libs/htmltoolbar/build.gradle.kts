@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":keycommand"))
     implementation(project(":lifecycle"))
     implementation(project(":livedata"))
+    implementation(project(":shape"))
 
     implementation(libs.kotlinx.html)
 
