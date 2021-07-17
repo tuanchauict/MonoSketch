@@ -1,3 +1,5 @@
+// ktlint-disable filename
+
 package mono.html.toolbar.view
 
 import kotlinx.html.TagConsumer
