@@ -1,5 +1,6 @@
 package mono.html.canvas
 
+import kotlinx.dom.addClass
 import kotlinx.html.dom.append
 import kotlinx.html.js.canvas
 import mono.common.firstOrNull
@@ -63,6 +64,8 @@ class CanvasViewController(
             throttleDurationMillis = 0,
             listener = drawingInfoController::setOffset
         )
+
+        container.addClass("top-divider")
 
         container.append {
             canvas(CLASS_NAME_GRID) {}

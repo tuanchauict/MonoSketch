@@ -9,6 +9,7 @@ import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.ToolbarViewController
+import mono.html.toolbar.view.shapetool.ShapeToolViewController
 import mono.keycommand.KeyCommandController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.distinctUntilChange
@@ -18,6 +19,7 @@ import mono.shape.replaceWithJson
 import mono.shape.toJson
 import mono.state.MainStateManager
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.get
 import org.w3c.dom.set
 
@@ -74,6 +76,9 @@ class MonoFlowApplication : LifecycleOwner() {
             this,
             document.getElementById("header-toolbar") as HTMLDivElement,
             actionManager
+        )
+        ShapeToolViewController(
+            document.getElementById("shape-tools") as HTMLElement
         )
         onResize()
     }
