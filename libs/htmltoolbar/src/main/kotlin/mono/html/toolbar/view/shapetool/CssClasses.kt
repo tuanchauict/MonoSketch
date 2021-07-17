@@ -10,7 +10,6 @@ enum class Class(val value: String) {
     CENTER_VERTICAL("center-vertical"),
     COLUMN("tcolumn"),
     DISABLED("disabled"),
-    DIVIDER("divider"),
     GRID("grid"),
     HALF("half"),
     HIDE("hide"),

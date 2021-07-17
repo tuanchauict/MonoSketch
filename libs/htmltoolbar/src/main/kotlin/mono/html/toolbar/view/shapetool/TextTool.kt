@@ -15,7 +15,7 @@ import mono.html.toolbar.view.shapetool.Class.QUARTER
 import mono.html.toolbar.view.shapetool.Class.SELECTED
 
 internal fun Tag.TextSection() {
-    Section("TEXT", hasDivider = false) {
+    Section("TEXT") {
         Tool(true) {
             TextTool("Alignment") {
                 /* ktlint-disable max-line-length */

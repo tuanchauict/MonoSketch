@@ -33,7 +33,7 @@ internal fun Tag.ReorderSection(
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): ToolViewController {
     val icons = mutableListOf<HTMLDivElement>()
-    val div = Section("", hasDivider = true, isSmallSpace = true) {
+    val div = Section("", isSmallSpace = true) {
         Tool {
             Row(isCenterEvenSpace = true) {
                 for (type in IconType.values()) {

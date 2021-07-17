@@ -10,7 +10,6 @@ import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.ADD_BOTTOM_SPACE
 import mono.html.toolbar.view.shapetool.Class.CENTER_EVEN_SPACE
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
-import mono.html.toolbar.view.shapetool.Class.DIVIDER
 import mono.html.toolbar.view.shapetool.Class.GRID
 import mono.html.toolbar.view.shapetool.Class.MONOFONT
 import mono.html.toolbar.view.shapetool.Class.ROW
@@ -32,13 +31,11 @@ internal open class ToolViewController(private val rootView: HTMLDivElement) {
 
 internal fun Tag.Section(
     title: String,
-    hasDivider: Boolean = true,
     isSmallSpace: Boolean = false,
     block: Tag.() -> Unit
 ): HTMLDivElement {
     val sectionClasses = classes(
         SECTION,
-        DIVIDER x hasDivider,
         SMALL_SPACE x isSmallSpace
     )
 
