@@ -13,21 +13,21 @@ class ShapeToolViewController(
     actionManager: ActionManager,
     selectedShapesLiveData: LiveData<Set<AbstractShape>>
 ) {
-    private val moveSection: SectionViewController
+    private val moveTool: ToolViewController
 
     init {
-        var moveSection: SectionViewController? = null
+        var moveTool: ToolViewController? = null
         controller.append {
-            moveSection = MoveSection(actionManager::setOneTimeAction)
+            moveTool = MoveSection(actionManager::setOneTimeAction)
 
             TransformSection(0, 0, 10, 10)
             AppearanceSection()
             TextSection()
         }
-        this.moveSection = moveSection!!
+        this.moveTool = moveTool!!
 
         selectedShapesLiveData.observe(lifecycleOwner) {
-            this.moveSection.setEnabled(it.isNotEmpty())
+            this.moveTool.setEnabled(it.isNotEmpty())
         }
     }
 }

@@ -20,7 +20,7 @@ import mono.html.toolbar.view.shapetool.Class.SMALL_SPACE
 import mono.html.toolbar.view.shapetool.Class.TOOL
 import org.w3c.dom.HTMLDivElement
 
-internal open class SectionViewController(private val rootView: HTMLDivElement) {
+internal open class ToolViewController(private val rootView: HTMLDivElement) {
     fun setVisible(isVisible: Boolean) {
         rootView.isVisible = isVisible
     }

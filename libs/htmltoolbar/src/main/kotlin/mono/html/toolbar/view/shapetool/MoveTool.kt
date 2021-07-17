@@ -19,7 +19,7 @@ import org.w3c.dom.HTMLElement
 private class MoveSectionViewController(
     rootDiv: HTMLDivElement,
     private val icons: List<HTMLDivElement>
-) : SectionViewController(rootDiv) {
+) : ToolViewController(rootDiv) {
     override fun setEnabled(isEnabled: Boolean) {
         for (icon in icons) {
             icon.isEnabled = isEnabled
@@ -29,7 +29,7 @@ private class MoveSectionViewController(
 
 internal fun Tag.MoveSection(
     setOneTimeAction: (OneTimeActionType) -> Unit
-): SectionViewController {
+): ToolViewController {
     val icons = mutableListOf<HTMLDivElement>()
     val div = Section("", hasDivider = true, isSmallSpace = true) {
         Tool {
