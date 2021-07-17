@@ -128,6 +128,11 @@ class MainStateManager(
                 OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT -> moveSelectedShapes(0, -1)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT -> moveSelectedShapes(0, 1)
 
+                OneTimeActionType.MOVE_SELECTED_SHAPE_FRONT -> TODO()
+                OneTimeActionType.MOVE_SELECTED_SHAPE_FORWARD -> TODO()
+                OneTimeActionType.MOVE_SELECTED_SHAPE_BACKWARD -> TODO()
+                OneTimeActionType.MOVE_SELECTED_SHAPE_BACK -> TODO()
+
                 OneTimeActionType.COPY -> clipboardManager.copySelectedShapes()
                 OneTimeActionType.CUT -> clipboardManager.cutSelectedShapes()
                 OneTimeActionType.DUPLICATE -> clipboardManager.duplicateSelectedShapes()
