@@ -73,7 +73,7 @@ class GroupTest {
         target.add(shape2)
         target.add(shape3)
 
-        target.move(shape1, QuickList.MoveActionType.UP)
+        target.changeOrder(shape1, QuickList.MoveActionType.UP)
         assertEquals(listOf(shape2, shape1, shape3), target.items.toList())
     }
 
@@ -87,7 +87,7 @@ class GroupTest {
         target.add(shape2)
         target.add(shape3)
 
-        target.move(shape3, QuickList.MoveActionType.DOWN)
+        target.changeOrder(shape3, QuickList.MoveActionType.DOWN)
         assertEquals(listOf(shape1, shape3, shape2), target.items.toList())
     }
 
@@ -101,7 +101,7 @@ class GroupTest {
         target.add(shape2)
         target.add(shape3)
 
-        target.move(shape1, QuickList.MoveActionType.TOP)
+        target.changeOrder(shape1, QuickList.MoveActionType.TOP)
         assertEquals(listOf(shape2, shape3, shape1), target.items.toList())
     }
 
@@ -115,7 +115,7 @@ class GroupTest {
         target.add(shape2)
         target.add(shape3)
 
-        target.move(shape3, QuickList.MoveActionType.BOTTOM)
+        target.changeOrder(shape3, QuickList.MoveActionType.BOTTOM)
         assertEquals(listOf(shape3, shape1, shape2), target.items.toList())
     }
 }

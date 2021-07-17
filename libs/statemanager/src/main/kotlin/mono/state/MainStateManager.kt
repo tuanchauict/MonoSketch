@@ -22,6 +22,8 @@ import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
+import mono.shape.command.ChangeOrder
+import mono.shape.command.ChangeOrder.ChangeOrderType.*
 import mono.shape.remove
 import mono.shape.replaceWithJson
 import mono.shape.selection.SelectedShapeManager
@@ -130,10 +132,10 @@ class MainStateManager(
                 OneTimeActionType.MOVE_SELECTED_SHAPES_LEFT -> moveSelectedShapes(0, -1)
                 OneTimeActionType.MOVE_SELECTED_SHAPES_RIGHT -> moveSelectedShapes(0, 1)
 
-                OneTimeActionType.MOVE_SELECTED_SHAPE_FRONT -> TODO()
-                OneTimeActionType.MOVE_SELECTED_SHAPE_FORWARD -> TODO()
-                OneTimeActionType.MOVE_SELECTED_SHAPE_BACKWARD -> TODO()
-                OneTimeActionType.MOVE_SELECTED_SHAPE_BACK -> TODO()
+                OneTimeActionType.MOVE_SELECTED_SHAPE_FRONT -> changeShapeOrder(FRONT)
+                OneTimeActionType.MOVE_SELECTED_SHAPE_FORWARD -> changeShapeOrder(FORWARD)
+                OneTimeActionType.MOVE_SELECTED_SHAPE_BACKWARD -> changeShapeOrder(BACKWARD)
+                OneTimeActionType.MOVE_SELECTED_SHAPE_BACK -> changeShapeOrder(BACK)
 
                 OneTimeActionType.COPY -> clipboardManager.copySelectedShapes()
                 OneTimeActionType.CUT -> clipboardManager.cutSelectedShapes()
@@ -158,6 +160,11 @@ class MainStateManager(
             shapeManager.execute(ChangeBound(shape, newBound))
         }
         updateInteractionBounds(selectedShapes)
+    }
+
+    private fun changeShapeOrder(orderType: ChangeOrder.ChangeOrderType) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        shapeManager.execute(ChangeOrder(singleShape, orderType))
     }
 
     private fun editSelectedShapes() {

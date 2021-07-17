@@ -62,7 +62,7 @@ class Group(
         quickList.remove(shape) != null
     }
 
-    internal fun move(shape: AbstractShape, moveActionType: MoveActionType) = update {
+    internal fun changeOrder(shape: AbstractShape, moveActionType: MoveActionType) = update {
         quickList.move(shape, moveActionType)
     }
 
