@@ -133,6 +133,8 @@ class MainStateManager(
 
                 is OneTimeActionType.MoveShapes ->
                     moveSelectedShapes(it.offsetRow, it.offsetCol)
+                is OneTimeActionType.ChangeShapeBound ->
+                    setSelectedShapeBound(it.newBound)
 
                 is OneTimeActionType.ReorderShape ->
                     changeShapeOrder(it.orderType)
@@ -161,6 +163,11 @@ class MainStateManager(
             shapeManager.execute(ChangeBound(shape, newBound))
         }
         updateInteractionBounds(selectedShapes)
+    }
+
+    private fun setSelectedShapeBound(newBound: Rect) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        shapeManager.execute(ChangeBound(singleShape, newBound))
     }
 
     private fun changeShapeOrder(orderType: ChangeOrderType) {

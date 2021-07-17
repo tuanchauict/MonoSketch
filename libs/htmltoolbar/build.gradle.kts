@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
     implementation(project(":commons"))
+    implementation(project(":graphicsgeo"))
     implementation(project(":keycommand"))
     implementation(project(":lifecycle"))
     implementation(project(":livedata"))

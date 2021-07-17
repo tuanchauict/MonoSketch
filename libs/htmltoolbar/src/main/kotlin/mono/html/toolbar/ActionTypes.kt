@@ -1,5 +1,6 @@
 package mono.html.toolbar
 
+import mono.graphics.geo.Rect
 import mono.shape.command.ChangeOrder
 
 /**
@@ -28,6 +29,7 @@ sealed interface OneTimeActionType {
     object EditSelectedShapes : OneTimeActionType
 
     data class MoveShapes(val offsetRow: Int, val offsetCol: Int) : OneTimeActionType
+    data class ChangeShapeBound(val newBound: Rect) : OneTimeActionType
 
     data class ReorderShape(val orderType: ChangeOrder.ChangeOrderType) : OneTimeActionType
 
