@@ -8,6 +8,8 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import mono.common.Characters.TRANSPARENT_CHAR
+import mono.graphics.bitmap.drawable.CharDrawable
 import mono.graphics.bitmap.drawable.Drawable
 import mono.graphics.bitmap.drawable.NinePatchDrawable
 import mono.graphics.bitmap.drawable.NinePatchDrawable.Pattern
@@ -17,11 +19,20 @@ import mono.graphics.bitmap.drawable.NinePatchDrawable.Pattern
  */
 @Serializable
 data class RectangleExtra(
-    @SerialName("f")
-    val fillStyle: FillStyle,
-    @SerialName("b")
-    val borderStyle: BorderStyle
+    @SerialName("fe")
+    val isFillEnabled: Boolean = false,
+    @SerialName("fu")
+    val userSelectedFillStyle: FillStyle,
+    @SerialName("be")
+    val isBorderEnabled: Boolean,
+    @SerialName("bu")
+    val userSelectedBorderStyle: BorderStyle
 ) : ShapeExtra() {
+    val fillStyle: FillStyle
+        get() = if (isFillEnabled) userSelectedFillStyle else FillStyle.NOFILLED_STYLE
+
+    val borderStyle: BorderStyle
+        get() = if (isBorderEnabled) userSelectedBorderStyle else BorderStyle.NO_BORDER
 
     /**
      * A class for defining a fill style for rectangle.
@@ -63,16 +74,37 @@ data class RectangleExtra(
         companion object {
             private const val NO_ID = ""
 
+            internal val NOFILLED_STYLE = FillStyle(
+                id = "F0",
+                displayName = "No Fill",
+                CharDrawable(TRANSPARENT_CHAR)
+            )
+
             val PREDEFINED_FILL_STYLE = listOf(
                 FillStyle(
-                    id = "F0",
-                    displayName = "No Fill",
-                    NinePatchDrawable(Pattern.fromText(" "))
+                    id = "F1",
+                    displayName = " ",
+                    CharDrawable(' ')
                 ),
                 FillStyle(
-                    id = "F1",
-                    displayName = "Fill",
-                    NinePatchDrawable(Pattern.fromText(" ", transparentChar = '-'))
+                    id = "F2",
+                    displayName = "█",
+                    CharDrawable('█')
+                ),
+                FillStyle(
+                    id = "F3",
+                    displayName = "▒",
+                    CharDrawable('▒')
+                ),
+                FillStyle(
+                    id = "F4",
+                    displayName = "░",
+                    CharDrawable('░')
+                ),
+                FillStyle(
+                    id = "F5",
+                    displayName = "▚",
+                    CharDrawable('▚')
                 )
             )
         }
@@ -124,14 +156,13 @@ data class RectangleExtra(
             """.trimIndent()
             private val REPEATABLE_RANGE_0 = NinePatchDrawable.RepeatableRange.Repeat(1, 1)
 
-            val NO_BORDER = BorderStyle(
+            internal val NO_BORDER = BorderStyle(
                 id = "B0",
                 displayName = "No border",
                 NinePatchDrawable(Pattern.fromText(" "))
             )
 
             val PREDEFINED_FILL_STYLE = listOf(
-                NO_BORDER,
                 BorderStyle(
                     id = "B1",
                     displayName = "─",
@@ -142,15 +173,15 @@ data class RectangleExtra(
                     )
                 )
             )
-
-            fun BorderStyle.hasBorder(): Boolean = this != NO_BORDER
         }
     }
 
     companion object {
         val DEFAULT = RectangleExtra(
+            isFillEnabled = false,
             FillStyle.PREDEFINED_FILL_STYLE[0],
-            BorderStyle.PREDEFINED_FILL_STYLE[1]
+            isBorderEnabled = true,
+            BorderStyle.PREDEFINED_FILL_STYLE[0]
         )
     }
 }
