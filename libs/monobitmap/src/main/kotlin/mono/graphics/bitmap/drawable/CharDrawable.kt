@@ -11,4 +11,4 @@ class CharDrawable(private val char: Char) : Drawable {
         builder.fill(char)
         return builder.toBitmap()
     }
-} 
+}
