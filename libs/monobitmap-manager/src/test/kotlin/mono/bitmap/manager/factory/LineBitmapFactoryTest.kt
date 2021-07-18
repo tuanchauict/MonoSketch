@@ -355,7 +355,12 @@ class LineBitmapFactoryTest {
     fun testToBitmap_anchorChar_leftToRight() {
         val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
         val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
-        val lineExtra = LineExtra(anchorCharStart, anchorCharEnd)
+        val lineExtra = LineExtra(
+            isStartAnchorEnabled = true,
+            anchorCharStart,
+            isEndAnchorEnabled = true,
+            anchorCharEnd
+        )
         val points = listOf(
             Point(0, 0),
             Point(4, 0)
@@ -371,7 +376,12 @@ class LineBitmapFactoryTest {
     fun testToBitmap_anchorChar_rightToLeft() {
         val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
         val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
-        val lineExtra = LineExtra(anchorCharStart, anchorCharEnd)
+        val lineExtra = LineExtra(
+            isStartAnchorEnabled = true,
+            anchorCharStart,
+            isEndAnchorEnabled = true,
+            anchorCharEnd
+        )
         val points = listOf(
             Point(4, 0),
             Point(0, 0)
@@ -387,7 +397,12 @@ class LineBitmapFactoryTest {
     fun testToBitmap_anchorChar_topToBottom() {
         val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
         val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
-        val lineExtra = LineExtra(anchorCharStart, anchorCharEnd)
+        val lineExtra = LineExtra(
+            isStartAnchorEnabled = true,
+            anchorCharStart,
+            isEndAnchorEnabled = true,
+            anchorCharEnd
+        )
         val points = listOf(
             Point(0, 0),
             Point(0, 4)
@@ -409,7 +424,12 @@ class LineBitmapFactoryTest {
     fun testToBitmap_anchorChar_bottomToTop() {
         val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
         val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
-        val lineExtra = LineExtra(anchorCharStart, anchorCharEnd)
+        val lineExtra = LineExtra(
+            isStartAnchorEnabled = true,
+            anchorCharStart,
+            isEndAnchorEnabled = true,
+            anchorCharEnd
+        )
         val points = listOf(
             Point(0, 4),
             Point(0, 0)
@@ -428,6 +448,11 @@ class LineBitmapFactoryTest {
     }
 
     companion object {
-        private val LINE_EXTRA = LineExtra(LineExtra.AnchorChar('0'), LineExtra.AnchorChar('1'))
+        private val LINE_EXTRA = LineExtra(
+            isStartAnchorEnabled = true,
+            LineExtra.AnchorChar('0'),
+            isEndAnchorEnabled = true,
+            LineExtra.AnchorChar('1')
+        )
     }
 }
