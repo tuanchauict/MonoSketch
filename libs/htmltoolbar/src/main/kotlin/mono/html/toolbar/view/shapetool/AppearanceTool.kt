@@ -32,14 +32,12 @@ internal abstract class AppearanceSectionViewController(
 
     enum class ToolType(val title: String) {
         FILL("Fill") {
-            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
-                return OneTimeActionType.ChangeShapeFillExtra(isChecked, selectedId)
-            }
+            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType =
+                OneTimeActionType.ChangeShapeFillExtra(isChecked, selectedId)
         },
         BORDER("Border") {
-            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
-                TODO("Not yet implemented")
-            }
+            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType =
+                OneTimeActionType.ChangeShapeBorderExtra(isChecked, selectedId)
         },
         STROKE("Stroke") {
             override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
