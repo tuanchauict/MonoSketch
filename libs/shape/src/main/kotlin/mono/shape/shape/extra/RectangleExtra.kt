@@ -154,6 +154,17 @@ data class RectangleExtra(
                 │ │
                 └─┘
             """.trimIndent()
+            private val PATTERN_TEXT_1 = """
+                ┏━┓
+                ┃ ┃
+                ┗━┛
+            """.trimIndent()
+            private val PATTERN_TEXT_2 = """
+                ╔═╗
+                ║ ║
+                ╚═╝
+            """.trimIndent()
+
             private val REPEATABLE_RANGE_0 = NinePatchDrawable.RepeatableRange.Repeat(1, 1)
 
             internal val NO_BORDER = BorderStyle(
@@ -168,6 +179,24 @@ data class RectangleExtra(
                     displayName = "─",
                     NinePatchDrawable(
                         Pattern.fromText(PATTERN_TEXT_0),
+                        REPEATABLE_RANGE_0,
+                        REPEATABLE_RANGE_0
+                    )
+                ),
+                BorderStyle(
+                    id = "B2",
+                    displayName = "━",
+                    NinePatchDrawable(
+                        Pattern.fromText(PATTERN_TEXT_1),
+                        REPEATABLE_RANGE_0,
+                        REPEATABLE_RANGE_0
+                    )
+                ),
+                BorderStyle(
+                    id = "B3",
+                    displayName = "═",
+                    NinePatchDrawable(
+                        Pattern.fromText(PATTERN_TEXT_2),
                         REPEATABLE_RANGE_0,
                         REPEATABLE_RANGE_0
                     )

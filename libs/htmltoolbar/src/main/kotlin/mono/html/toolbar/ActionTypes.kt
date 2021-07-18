@@ -46,6 +46,11 @@ sealed interface OneTimeActionType {
         val newFillStyleId: String? = null
     ) : OneTimeActionType
 
+    data class ChangeShapeBorderExtra(
+        val isEnabled: Boolean? = null,
+        val newBorderStyleId: String? = null
+    ) : OneTimeActionType
+
     data class ReorderShape(val orderType: ChangeOrder.ChangeOrderType) : OneTimeActionType
 
     data class Copy(val isRemoveRequired: Boolean) : OneTimeActionType
