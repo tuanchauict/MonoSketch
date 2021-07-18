@@ -34,6 +34,14 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
             }
         }
 
+        fun fill(char: Char) {
+            for (row in 0 until height) {
+                for (col in 0 until width) {
+                    matrix[row][col] = char
+                }
+            }
+        }
+
         fun fill(row: Int, column: Int, bitmap: MonoBitmap) {
             if (bitmap.isEmpty()) {
                 return
