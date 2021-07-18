@@ -17,10 +17,9 @@ import mono.html.toolbar.view.shapetool.Class.SECTION
 import mono.html.toolbar.view.shapetool.Class.SECTION_TITLE
 import mono.html.toolbar.view.shapetool.Class.SMALL_SPACE
 import mono.html.toolbar.view.shapetool.Class.TOOL
-import mono.html.toolbar.view.shapetool.Class.VISIBLE
 import org.w3c.dom.HTMLDivElement
 
-internal open class ToolViewController(protected val rootView: HTMLDivElement) {
+internal open class ToolViewController(private val rootView: HTMLDivElement) {
     open fun setVisible(isVisible: Boolean) {
         rootView.isVisible = isVisible
     }
@@ -35,11 +34,7 @@ internal fun Tag.Section(
     isSmallSpace: Boolean = false,
     block: Tag.() -> Unit
 ): HTMLDivElement {
-    val sectionClasses = classes(
-        SECTION,
-        VISIBLE,
-        SMALL_SPACE x isSmallSpace
-    )
+    val sectionClasses = classes(SECTION, SMALL_SPACE x isSmallSpace)
 
     return div(sectionClasses) {
         if (title.isNotEmpty()) {
