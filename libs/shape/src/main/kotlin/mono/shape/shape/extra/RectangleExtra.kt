@@ -52,7 +52,7 @@ data class RectangleExtra(
 
         internal object FillStyleSerializer : KSerializer<FillStyle> {
             private val predefinedMap: Map<String, FillStyle> =
-                PREDEFINED_FILL_STYLE.associateBy { it.id }
+                PREDEFINED_STYLES.associateBy { it.id }
 
             override val descriptor: SerialDescriptor =
                 PrimitiveSerialDescriptor("FillStyle", PrimitiveKind.STRING)
@@ -80,7 +80,7 @@ data class RectangleExtra(
                 CharDrawable(TRANSPARENT_CHAR)
             )
 
-            val PREDEFINED_FILL_STYLE = listOf(
+            val PREDEFINED_STYLES = listOf(
                 FillStyle(
                     id = "F1",
                     displayName = " ",
@@ -127,7 +127,7 @@ data class RectangleExtra(
     ) {
         internal object BorderStyleSerializer : KSerializer<BorderStyle> {
             private val predefinedMap: Map<String, BorderStyle> =
-                PREDEFINED_FILL_STYLE.associateBy { it.id }
+                PREDEFINED_STYLES.associateBy { it.id }
 
             override val descriptor: SerialDescriptor =
                 PrimitiveSerialDescriptor("BorderStyle", PrimitiveKind.STRING)
@@ -162,7 +162,7 @@ data class RectangleExtra(
                 NinePatchDrawable(Pattern.fromText(" "))
             )
 
-            val PREDEFINED_FILL_STYLE = listOf(
+            val PREDEFINED_STYLES = listOf(
                 BorderStyle(
                     id = "B1",
                     displayName = "─",
@@ -179,9 +179,9 @@ data class RectangleExtra(
     companion object {
         val DEFAULT = RectangleExtra(
             isFillEnabled = false,
-            FillStyle.PREDEFINED_FILL_STYLE[0],
+            FillStyle.PREDEFINED_STYLES[0],
             isBorderEnabled = true,
-            BorderStyle.PREDEFINED_FILL_STYLE[0]
+            BorderStyle.PREDEFINED_STYLES[0]
         )
     }
 }

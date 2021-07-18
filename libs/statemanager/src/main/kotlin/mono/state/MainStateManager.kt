@@ -34,6 +34,7 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
+import mono.shape.shape.extra.RectangleExtra
 import mono.shape.shape.extra.TextExtra
 import mono.shape.toJson
 import mono.shapebound.InteractionPoint
@@ -140,6 +141,9 @@ class MainStateManager(
                 is OneTimeActionType.ChangeShapeBound ->
                     setSelectedShapeBound(it.newLeft, it.newTop, it.newWidth, it.newHeight)
 
+                is OneTimeActionType.ChangeShapeFillExtra ->
+                    setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
+
                 is OneTimeActionType.ReorderShape ->
                     changeShapeOrder(it.orderType)
 
@@ -180,6 +184,38 @@ class MainStateManager(
             ChangeBound(singleShape, Rect.byLTWH(newLeft, newTop, newWidth, newHeight))
         )
         environment.updateInteractionBounds()
+    }
+
+    private fun setSelectedShapeFillExtra(isEnabled: Boolean?, newFillStyleId: String?) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+
+        val currentRectangleExtra = when (singleShape) {
+            is Rectangle -> singleShape.extra
+            is Text -> singleShape.extra.boundExtra
+            is Line,
+            is MockShape,
+            is Group -> null
+        } ?: return
+        val newIsFillEnabled = isEnabled ?: currentRectangleExtra.isFillEnabled
+        // TODO: Move this into a fill style manager class. This won't work well when user's style
+        //  is supported.
+        val newFillStyle =
+            RectangleExtra.FillStyle.PREDEFINED_STYLES.firstOrNull { it.id == newFillStyleId }
+                ?: currentRectangleExtra.userSelectedFillStyle
+        val rectangleExtra = currentRectangleExtra.copy(
+            isFillEnabled = newIsFillEnabled,
+            userSelectedFillStyle = newFillStyle
+        )
+        val newExtra = when (singleShape) {
+            is Rectangle -> rectangleExtra
+            is Text -> singleShape.extra.copy(boundExtra = rectangleExtra)
+            is Line,
+            is MockShape,
+            is Group -> null
+        } ?: return
+        shapeManager.execute(
+            ChangeExtra(singleShape, newExtra)
+        )
     }
 
     private fun changeShapeOrder(orderType: ChangeOrderType) {
