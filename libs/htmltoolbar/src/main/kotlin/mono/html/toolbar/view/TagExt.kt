@@ -15,7 +15,7 @@ internal typealias Tag = TagConsumer<HTMLElement>
 internal var HTMLElement.isVisible: Boolean
     get() = hasClass(HIDE)
     set(value) {
-        addOrRemove(HIDE, value)
+        addOrRemove(HIDE, !value)
     }
 
 internal var HTMLElement.isSelected: Boolean
@@ -32,9 +32,10 @@ internal var HTMLElement.isEnabled: Boolean
 
 private fun HTMLElement.hasClass(cls: Class) = hasClass(cls.value)
 
-private fun HTMLElement.addOrRemove(cls: Class, isAdded: Boolean) =
-    if (isAdded) {
+fun HTMLElement.addOrRemove(cls: Class, willAdd: Boolean) {
+    if (willAdd) {
         addClass(cls.value)
     } else {
         removeClass(cls.value)
     }
+}

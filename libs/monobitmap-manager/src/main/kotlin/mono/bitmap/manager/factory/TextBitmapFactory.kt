@@ -14,12 +14,38 @@ object TextBitmapFactory {
         val hasBorder = extra.hasBorder()
         val rowOffset = if (hasBorder) 1 else 0
         val colOffset = if (hasBorder) 1 else 0
+
+        val maxTextWidth = boundSize.width - colOffset * 2
+        val maxTextHeight = boundSize.height - rowOffset * 2
+
+        val row0 = when (extra.textAlign.verticalAlign) {
+            TextExtra.VerticalAlign.TOP -> rowOffset
+            TextExtra.VerticalAlign.MIDDLE ->
+                if (maxTextHeight < renderableText.size) {
+                    rowOffset
+                } else {
+                    (maxTextHeight - renderableText.size) / 2 + rowOffset
+                }
+            TextExtra.VerticalAlign.BOTTOM ->
+                if (maxTextHeight < renderableText.size) {
+                    rowOffset
+                } else {
+                    maxTextHeight - renderableText.size + rowOffset
+                }
+        }
+
+        val horizontalAlign = extra.textAlign.horizontalAlign
         for (rowIndex in renderableText.indices) {
             val row = renderableText[rowIndex]
+            val col0 = when (horizontalAlign) {
+                TextExtra.HorizontalAlign.LEFT -> colOffset
+                TextExtra.HorizontalAlign.MIDDLE -> (maxTextWidth - row.length) / 2 + colOffset
+                TextExtra.HorizontalAlign.RIGHT -> maxTextWidth - row.length + colOffset
+            }
             for (colIndex in row.indices) {
                 val char = row[colIndex]
                 if (char != ' ') {
-                    bitmapBuilder.put(rowOffset + rowIndex, colOffset + colIndex, char)
+                    bitmapBuilder.put(row0 + rowIndex, col0 + colIndex, char)
                 }
             }
         }

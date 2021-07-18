@@ -33,10 +33,10 @@ internal fun Tag.ReorderSection(
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): ToolViewController {
     val icons = mutableListOf<HTMLDivElement>()
-    val div = Section("", hasDivider = true, isSmallSpace = true) {
+    val div = Section("", isSmallSpace = true) {
         Tool {
             Row(isCenterEvenSpace = true) {
-                for (type in IconType.values()) {
+                for (type in ReorderIconType.values()) {
                     icons += Icon(type) { setOneTimeAction(ReorderShape(it.changeOrderType)) }
                 }
             }
@@ -46,7 +46,10 @@ internal fun Tag.ReorderSection(
     return ReorderSectionViewController(div, icons)
 }
 
-private fun Tag.Icon(iconType: IconType, onClick: (IconType) -> Unit): HTMLDivElement =
+private fun Tag.Icon(
+    iconType: ReorderIconType,
+    onClick: (ReorderIconType) -> Unit
+): HTMLDivElement =
     div(classes(ICON_BUTTON)) {
         onClickFunction = {
             val target = it.currentTarget as HTMLElement
@@ -63,7 +66,7 @@ private fun Tag.Icon(iconType: IconType, onClick: (IconType) -> Unit): HTMLDivEl
     }
 
 /* ktlint-disable max-line-length */
-private enum class IconType(
+private enum class ReorderIconType(
     val changeOrderType: ChangeOrder.ChangeOrderType,
     val iconPaths: List<String>
 ) {

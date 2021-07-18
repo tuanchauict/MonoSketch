@@ -111,6 +111,31 @@ $shape-tool-box-border-selected-color: #039be5
     font-size: 12px
     overflow-y: scroll
 
+    & > .tsection.visible
+        display: flex
+        border-bottom: 0.75px solid $shape-tool-divider-color
+
+    & > .visible:last-of-type
+        border-bottom: none
+
+.tsection
+    display: flex
+    width: 100%
+    flex-direction: column
+    padding: 10px 10px
+    display: none
+
+    &.small-space
+        padding-top: 4px
+        padding-bottom: 4px
+
+.tsection-title
+    font-weight: 300
+    font-size: 11px
+    color: #616161
+    margin-bottom: 10px
+    user-select: none
+
 .tool
     display: flex
     flex-direction: column
@@ -123,26 +148,6 @@ $shape-tool-box-border-selected-color: #039be5
 
 .tool-title
     font-size: 12px
-    user-select: none
-
-.tsection
-    display: flex
-    width: 100%
-    flex-direction: column
-    padding: 10px 10px
-
-    &.small-space
-        padding-top: 4px
-        padding-bottom: 4px
-
-    &.divider
-        border-bottom: 0.75px solid $shape-tool-divider-color
-
-.tsection-title
-    font-weight: 300
-    font-size: 11px
-    color: #616161
-    margin-bottom: 10px
     user-select: none
 
 .trow
@@ -256,3 +261,6 @@ $shape-tool-box-border-selected-color: #039be5
 
 .tool-input-checkbox
     margin-top: 2px
+
+.hide
+    display: none
