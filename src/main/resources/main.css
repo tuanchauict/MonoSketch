@@ -323,6 +323,10 @@ html, body {
   border-color: #0279b3;
 }
 
+.icon-button.small.selected.disabled, .icon-button.small.selected:disabled {
+  border-color: #c4c4c4;
+}
+
 .icon-button.small:hover {
   border-color: #c4c4c4;
 }
@@ -336,7 +340,7 @@ html, body {
 }
 
 .icon-button.selected {
-  background: #E8E8E8;
+  background: #FFFFFF;
 }
 
 .tcolumn.half {

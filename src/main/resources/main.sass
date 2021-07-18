@@ -209,6 +209,8 @@ $shape-tool-box-border-selected-color: #039be5
             border-color: $shape-tool-box-border-selected-color
             &:hover
                 border-color: darken($shape-tool-box-border-selected-color, 10%)
+            &.disabled, &:disabled
+                border-color: darken($shape-tool-box-border-color, 10%)
 
         &:hover
             border-color: darken($shape-tool-box-border-color, 10%)
@@ -219,7 +221,7 @@ $shape-tool-box-border-selected-color: #039be5
         padding: 6px
 
     &.selected
-        background: #E8E8E8
+        background: #FFFFFF
 
 .tcolumn
 
