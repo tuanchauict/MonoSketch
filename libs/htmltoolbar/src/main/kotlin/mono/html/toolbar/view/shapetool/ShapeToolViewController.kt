@@ -76,10 +76,7 @@ class ShapeToolViewController(
         // TODO: Move this into a fill style manager class. This won't work well when user's style
         //  is supported.
         return RectangleExtra.FillStyle.PREDEFINED_STYLES.map {
-            OptionItem(
-                it.id,
-                it.displayName
-            )
+            OptionItem(it.id, it.displayName)
         }
     }
 
@@ -87,10 +84,7 @@ class ShapeToolViewController(
         // TODO: Move this into a border style manager class. This won't work well when user's style
         //  is supported.
         return RectangleExtra.BorderStyle.PREDEFINED_STYLES.map {
-            OptionItem(
-                it.id,
-                it.displayName
-            )
+            OptionItem(it.id, it.displayName)
         }
     }
 
@@ -113,7 +107,7 @@ class ShapeToolViewController(
 
     // TODO: Correct state values
     private fun Line.toAppearanceVisibilityState(): Map<ToolType, ToolState> = mapOf(
-        ToolType.STROKE to ToolState(false, 0),
+//        ToolType.STROKE to ToolState(false, 0),
         ToolType.START_HEAD to ToolState(false, 0),
         ToolType.END_HEAD to ToolState(false, 0)
     )

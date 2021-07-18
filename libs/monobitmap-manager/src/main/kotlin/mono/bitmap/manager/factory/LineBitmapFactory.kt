@@ -36,16 +36,22 @@ object LineBitmapFactory {
             bitmapBuilder.put(point1.row, point1.column, rightAngle.char)
         }
 
-        bitmapBuilder.putAnchorPoint(
-            jointPoints[0],
-            jointPoints[1],
-            lineExtra.startAnchor
-        )
-        bitmapBuilder.putAnchorPoint(
-            jointPoints[jointPoints.lastIndex],
-            jointPoints[jointPoints.lastIndex - 1],
-            lineExtra.endAnchor
-        )
+        val startAnchor = lineExtra.startAnchor
+        if (startAnchor != null) {
+            bitmapBuilder.putAnchorPoint(
+                jointPoints[0],
+                jointPoints[1],
+                startAnchor
+            )
+        }
+        val endAnchor = lineExtra.endAnchor
+        if (endAnchor != null) {
+            bitmapBuilder.putAnchorPoint(
+                jointPoints[jointPoints.lastIndex],
+                jointPoints[jointPoints.lastIndex - 1],
+                endAnchor
+            )
+        }
 
         return bitmapBuilder.toBitmap()
     }
