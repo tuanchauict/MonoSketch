@@ -5,7 +5,11 @@ package mono.html.toolbar.view.shapetool
 import kotlinx.html.InputType
 import kotlinx.html.js.div
 import kotlinx.html.js.input
+import kotlinx.html.js.onChangeFunction
+import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.span
+import mono.common.nullToFalse
+import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.Tag
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.isSelected
@@ -27,11 +31,36 @@ internal abstract class AppearanceSectionViewController(
     abstract fun setVisibility(toolStates: Map<ToolType, ToolState>)
 
     enum class ToolType(val title: String) {
-        FILL("Fill"),
-        BORDER("Border"),
-        STROKE("Stroke"),
-        START_HEAD("Start head"),
-        END_HEAD("End head")
+        FILL("Fill") {
+            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
+                return OneTimeActionType.ChangeShapeFillExtra(isChecked, selectedId)
+            }
+        },
+        BORDER("Border") {
+            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
+                TODO("Not yet implemented")
+            }
+        },
+        STROKE("Stroke") {
+            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
+                TODO("Not yet implemented")
+            }
+        },
+        START_HEAD("Start head") {
+            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
+                TODO("Not yet implemented")
+            }
+        },
+        END_HEAD("End head") {
+            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
+                TODO("Not yet implemented")
+            }
+        };
+
+        abstract fun toActionType(
+            isChecked: Boolean? = null,
+            selectedId: String? = null
+        ): OneTimeActionType
     }
 
     data class ToolState(val isChecked: Boolean, val selectedPosition: Int)
@@ -76,40 +105,50 @@ internal data class OptionItem(val id: String, val name: String)
 internal fun Tag.AppearanceSection(
     fillOptions: List<OptionItem>,
     borderOptions: List<OptionItem>,
-    headOptions: List<OptionItem>
+    headOptions: List<OptionItem>,
+    setOneTimeAction: (OneTimeActionType) -> Unit
 ): AppearanceSectionViewController {
     val tools = mutableListOf<AppearanceToolViewController>()
 
     val rootView = Section("APPEARANCE") {
-        tools += GridTextIconOptions(ToolType.FILL, fillOptions)
-        tools += GridTextIconOptions(ToolType.BORDER, borderOptions)
-        tools += GridTextIconOptions(ToolType.STROKE, borderOptions)
-        tools += GridTextIconOptions(ToolType.START_HEAD, headOptions)
-        tools += GridTextIconOptions(ToolType.END_HEAD, headOptions)
+        tools += GridTextIconOptions(ToolType.FILL, fillOptions, setOneTimeAction)
+        tools += GridTextIconOptions(ToolType.BORDER, borderOptions, setOneTimeAction)
+        tools += GridTextIconOptions(ToolType.STROKE, borderOptions, setOneTimeAction)
+        tools += GridTextIconOptions(ToolType.START_HEAD, headOptions, setOneTimeAction)
+        tools += GridTextIconOptions(ToolType.END_HEAD, headOptions, setOneTimeAction)
     }
     return AppearanceSectionViewControllerImpl(rootView, tools.associateBy { it.toolType })
 }
 
 private fun Tag.GridTextIconOptions(
     type: ToolType,
-    options: List<OptionItem>
+    options: List<OptionItem>,
+    setOneTimeAction: (OneTimeActionType) -> Unit
 ): AppearanceToolViewController {
     var checkBox: HTMLInputElement? = null
     var optionElements: List<HTMLElement>? = null
     val rootView = Tool(hasMoreBottomSpace = true) {
         Row {
-            checkBox = CheckColumn()
-            optionElements = OptionsColumn(type.title, options)
+            checkBox = CheckColumn {
+                setOneTimeAction(type.toActionType(it))
+            }
+            optionElements = OptionsColumn(type.title, options) {
+                setOneTimeAction(type.toActionType(selectedId = it.id))
+            }
         }
     }
     return AppearanceToolViewController(type, rootView, checkBox!!, optionElements!!)
 }
 
-private fun Tag.CheckColumn(): HTMLInputElement {
+private fun Tag.CheckColumn(onCheckChange: (Boolean) -> Unit): HTMLInputElement {
     var checkBox: HTMLInputElement? = null
     Column(hasMoreRightSpace = true) {
         Row {
-            checkBox = input(InputType.checkBox, classes = classes(INPUT_CHECK_BOX))
+            checkBox = input(InputType.checkBox, classes = classes(INPUT_CHECK_BOX)) {
+                onChangeFunction = {
+                    onCheckChange(checkBox?.checked.nullToFalse())
+                }
+            }
         }
     }
     return checkBox!!
@@ -117,7 +156,8 @@ private fun Tag.CheckColumn(): HTMLInputElement {
 
 private fun Tag.OptionsColumn(
     title: String,
-    options: List<OptionItem>
+    options: List<OptionItem>,
+    onOptionSelected: (OptionItem) -> Unit
 ): List<HTMLElement> {
     val optionElements = mutableListOf<HTMLElement>()
     Column {
@@ -126,7 +166,13 @@ private fun Tag.OptionsColumn(
         }
         Row(isMonoFont = true, isGrid = true) {
             for (option in options) {
-                optionElements += span(classes(ICON_BUTTON, SMALL)) { +option.name }
+                optionElements += span(classes(ICON_BUTTON, SMALL)) {
+                    +option.name
+
+                    onClickFunction = {
+                        onOptionSelected(option)
+                    }
+                }
             }
         }
     }

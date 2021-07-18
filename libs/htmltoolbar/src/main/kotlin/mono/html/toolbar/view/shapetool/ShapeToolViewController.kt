@@ -31,7 +31,8 @@ class ShapeToolViewController(
             val appearanceTool = AppearanceSection(
                 fillOptions = getFillOptions(),
                 borderOptions = getBorderOptions(),
-                headOptions = getHeadOptions()
+                headOptions = getHeadOptions(),
+                actionManager::setOneTimeAction
             )
 
             val textAlignmentTool = TextSection(actionManager::setOneTimeAction)
