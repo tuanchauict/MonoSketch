@@ -6,6 +6,7 @@ import mono.graphics.geo.Rect
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableLine
 import mono.shape.shape.extra.LineExtra
+import mono.shape.shape.extra.ShapeExtra
 import mono.shape.shape.line.LineHelper
 
 /**
@@ -142,6 +143,16 @@ class Line(
             jointPoints = jointPoints.map { it + offsetPoint }
             confirmedJointPoints = confirmedJointPoints.map { it + offsetPoint }
             edges = LineHelper.createEdges(jointPoints)
+            true
+        }
+    }
+
+    override fun setExtra(newExtra: ShapeExtra) {
+        if (newExtra !is LineExtra || newExtra == extra) {
+            return
+        }
+        update {
+            extra = newExtra
             true
         }
     }
