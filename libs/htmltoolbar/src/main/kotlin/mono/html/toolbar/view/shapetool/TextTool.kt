@@ -113,11 +113,10 @@ private fun Tag.Icon(
 ): HTMLElement = span(classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE)) {
     SvgIcon(16, 16, iconType.viewPortSize, iconType.viewPortSize) {
         SvgPath(iconType.iconPath)
+    }
 
-        onClickFunction = {
-            println(iconType.toTextAlignment())
-            setOneTimeAction(iconType.toTextAlignment())
-        }
+    onClickFunction = {
+        setOneTimeAction(iconType.toTextAlignment())
     }
 }
 
