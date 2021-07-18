@@ -8,8 +8,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import mono.shape.shape.extra.RectangleExtra.BorderStyle.Companion.NO_BORDER
-import mono.shape.shape.extra.RectangleExtra.BorderStyle.Companion.hasBorder
 
 /**
  * A [ShapeExtra] for [mono.shape.shape.Text].
@@ -22,7 +20,7 @@ data class TextExtra(
     val textAlign: TextAlign
 ) : ShapeExtra() {
 
-    fun hasBorder(): Boolean = boundExtra.borderStyle.hasBorder()
+    fun hasBorder(): Boolean = boundExtra.isBorderEnabled
 
     @Serializable(with = TextAlign.TextAlignSerializer::class)
     data class TextAlign(val horizontalAlign: HorizontalAlign, val verticalAlign: VerticalAlign) {
@@ -70,7 +68,7 @@ data class TextExtra(
         )
 
         val NO_BOUND = TextExtra(
-            boundExtra = RectangleExtra.DEFAULT.copy(borderStyle = NO_BORDER),
+            boundExtra = RectangleExtra.DEFAULT.copy(isBorderEnabled = false),
             textAlign = TextAlign(HorizontalAlign.LEFT, VerticalAlign.TOP)
         )
     }
