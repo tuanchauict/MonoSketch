@@ -9,14 +9,12 @@ import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.SvgPath
 import mono.html.toolbar.view.Tag
-import mono.html.toolbar.view.addOrRemove
 import mono.html.toolbar.view.isSelected
 import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
 import mono.html.toolbar.view.shapetool.Class.COLUMN
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.html.toolbar.view.shapetool.Class.MEDIUM
 import mono.html.toolbar.view.shapetool.Class.QUARTER
-import mono.html.toolbar.view.shapetool.Class.VISIBLE
 import mono.shape.shape.extra.TextExtra
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -33,10 +31,6 @@ private class TextSectionViewControllerImpl(
     private val horizontalIcons: List<HTMLElement>,
     private val verticalIcons: List<HTMLElement>
 ) : TextSectionViewController(rootView) {
-    override fun setVisible(isVisible: Boolean) {
-        rootView.addOrRemove(VISIBLE, isVisible)
-    }
-
     override fun setCurrentTextAlign(textAlign: TextExtra.TextAlign?) {
         setVisible(textAlign != null)
         if (textAlign == null) {

@@ -152,15 +152,12 @@ html, body {
   overflow-y: scroll;
 }
 
-.shape-tools > .tsection.visible {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  border-bottom: 0.75px solid #BBB;
+.shape-tools > .tsection {
+  border-top: 0.75px solid #BBB;
 }
 
-.shape-tools > .visible:last-of-type {
-  border-bottom: none;
+.shape-tools > .tsection:first-child {
+  border-top: none;
 }
 
 .tsection {
@@ -173,7 +170,6 @@ html, body {
       -ms-flex-direction: column;
           flex-direction: column;
   padding: 10px 10px;
-  display: none;
 }
 
 .tsection.small-space {
