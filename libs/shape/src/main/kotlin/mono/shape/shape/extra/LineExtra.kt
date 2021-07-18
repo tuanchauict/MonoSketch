@@ -15,18 +15,18 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable
 data class LineExtra(
     @SerialName("ase")
-    val isStartHeadEnabled: Boolean = false,
+    val isStartAnchorEnabled: Boolean = false,
     @SerialName("asu")
     val userSelectedStartAnchor: AnchorChar,
-    val isEndHeadEnabled: Boolean = false,
+    val isEndAnchorEnabled: Boolean = false,
     @SerialName("aeu")
     val userSelectedEndAnchor: AnchorChar
 ) : ShapeExtra() {
 
     val startAnchor: AnchorChar?
-        get() = userSelectedStartAnchor.takeIf { isStartHeadEnabled }
+        get() = userSelectedStartAnchor.takeIf { isStartAnchorEnabled }
     val endAnchor: AnchorChar?
-        get() = userSelectedEndAnchor.takeIf { isEndHeadEnabled }
+        get() = userSelectedEndAnchor.takeIf { isEndAnchorEnabled }
 
     /**
      * A class for defining an anchor end-char.
@@ -111,9 +111,9 @@ data class LineExtra(
 
     companion object {
         val DEFAULT = LineExtra(
-            isStartHeadEnabled = false,
+            isStartAnchorEnabled = false,
             userSelectedStartAnchor = AnchorChar.PREDEFINED_ANCHOR_CHARS[0],
-            isEndHeadEnabled = false,
+            isEndAnchorEnabled = false,
             userSelectedEndAnchor = AnchorChar.PREDEFINED_ANCHOR_CHARS[1]
         )
     }

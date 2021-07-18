@@ -45,14 +45,12 @@ internal abstract class AppearanceSectionViewController(
             }
         },
         START_HEAD("Start head") {
-            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
-                TODO("Not yet implemented")
-            }
+            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType =
+                OneTimeActionType.ChangeLineStartAnchorExtra(isChecked, selectedId)
         },
         END_HEAD("End head") {
-            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
-                TODO("Not yet implemented")
-            }
+            override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType =
+                OneTimeActionType.ChangeLineEndAnchorExtra(isChecked, selectedId)
         };
 
         abstract fun toActionType(

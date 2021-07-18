@@ -115,8 +115,8 @@ class ShapeToolViewController(
             LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.indexOf(extra.userSelectedEndAnchor)
         return mapOf(
             //        ToolType.STROKE to ToolState(false, 0),
-            ToolType.START_HEAD to ToolState(extra.isStartHeadEnabled, selectedStartHeadPosition),
-            ToolType.END_HEAD to ToolState(extra.isEndHeadEnabled, selectedEndHeadPosition)
+            ToolType.START_HEAD to ToolState(extra.isStartAnchorEnabled, selectedStartHeadPosition),
+            ToolType.END_HEAD to ToolState(extra.isEndAnchorEnabled, selectedEndHeadPosition)
         )
     }
 }

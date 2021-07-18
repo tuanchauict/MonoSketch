@@ -34,6 +34,7 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
+import mono.shape.shape.extra.LineExtra
 import mono.shape.shape.extra.RectangleExtra
 import mono.shape.shape.extra.TextExtra
 import mono.shape.toJson
@@ -145,6 +146,10 @@ class MainStateManager(
                     setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
                 is OneTimeActionType.ChangeShapeBorderExtra ->
                     setSelectedShapeBorderExtra(it.isEnabled, it.newBorderStyleId)
+                is OneTimeActionType.ChangeLineStartAnchorExtra ->
+                    setSelectedShapeStartAnchorExtra(it.isEnabled, it.newHeadId)
+                is OneTimeActionType.ChangeLineEndAnchorExtra ->
+                    setSelectedShapeEndAnchorExtra(it.isEnabled, it.newHeadId)
 
                 is OneTimeActionType.ReorderShape ->
                     changeShapeOrder(it.orderType)
@@ -215,9 +220,7 @@ class MainStateManager(
             is MockShape,
             is Group -> null
         } ?: return
-        shapeManager.execute(
-            ChangeExtra(singleShape, newExtra)
-        )
+        shapeManager.execute(ChangeExtra(singleShape, newExtra))
     }
 
     private fun setSelectedShapeBorderExtra(isEnabled: Boolean?, newBorderStyleId: String?) {
@@ -247,9 +250,35 @@ class MainStateManager(
             is MockShape,
             is Group -> null
         } ?: return
-        shapeManager.execute(
-            ChangeExtra(singleShape, newExtra)
+        shapeManager.execute(ChangeExtra(singleShape, newExtra))
+    }
+
+    private fun setSelectedShapeStartAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
+        val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
+        val currentExtra = line.extra
+        val newIsEnabled = isEnabled ?: currentExtra.isStartAnchorEnabled
+        val newAnchor =
+            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.firstOrNull { it.id == newAnchorId }
+                ?: currentExtra.userSelectedStartAnchor
+        val newExtra = currentExtra.copy(
+            isStartAnchorEnabled = newIsEnabled,
+            userSelectedStartAnchor = newAnchor
         )
+        shapeManager.execute(ChangeExtra(line, newExtra))
+    }
+
+    private fun setSelectedShapeEndAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
+        val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
+        val currentExtra = line.extra
+        val newIsEnabled = isEnabled ?: currentExtra.isEndAnchorEnabled
+        val newAnchor =
+            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.firstOrNull { it.id == newAnchorId }
+                ?: currentExtra.userSelectedEndAnchor
+        val newExtra = currentExtra.copy(
+            isEndAnchorEnabled = newIsEnabled,
+            userSelectedEndAnchor = newAnchor
+        )
+        shapeManager.execute(ChangeExtra(line, newExtra))
     }
 
     private fun changeShapeOrder(orderType: ChangeOrderType) {
