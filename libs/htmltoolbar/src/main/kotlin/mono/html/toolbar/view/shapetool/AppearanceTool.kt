@@ -72,8 +72,8 @@ private class AppearanceToolViewController(
 }
 
 internal fun Tag.AppearanceSection(
-    fillOptions: List<String> = listOf(" ", "█", "▒", "░", "▚"),
-    borderOptions: List<String> = listOf("─", "━", "═"),
+    fillOptions: List<String>,
+    borderOptions: List<String>,
     headOptions: List<String> = listOf("▶", "■", "○", "◎", "●")
 ): AppearanceSectionViewController {
     val tools = mutableListOf<AppearanceToolViewController>()

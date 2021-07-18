@@ -4,7 +4,6 @@ import kotlinx.html.dom.append
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolState
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
-import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType.*
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
@@ -29,7 +28,11 @@ class ShapeToolViewController(
             val moveTool = ReorderSection(actionManager::setOneTimeAction)
             val transformTool = TransformSection(actionManager::setOneTimeAction)
 
-            val appearanceTool = AppearanceSection()
+            val appearanceTool = AppearanceSection(
+                fillOptions = getFillOptions(),
+                borderOptions = getBorderOptions()
+            )
+
             val textAlignmentTool = TextSection(actionManager::setOneTimeAction)
 
             val singleShapeLiveData = MediatorLiveData<AbstractShape?>(null).apply {
@@ -67,15 +70,27 @@ class ShapeToolViewController(
         }
     }
 
-    private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, ToolState> = mapOf(
-        FILL to ToolState(isFillEnabled, 0),
-        BORDER to ToolState(isBorderEnabled, 0)
-    )
+    private fun getFillOptions(): List<String> =
+        RectangleExtra.FillStyle.PREDEFINED_FILL_STYLE.map { it.displayName }
+
+    private fun getBorderOptions(): List<String> =
+        RectangleExtra.BorderStyle.PREDEFINED_FILL_STYLE.map { it.displayName }
+
+    private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
+        val selectedFillPosition =
+            RectangleExtra.FillStyle.PREDEFINED_FILL_STYLE.indexOf(userSelectedFillStyle)
+        val selectedBorderPosition =
+            RectangleExtra.BorderStyle.PREDEFINED_FILL_STYLE.indexOf(userSelectedBorderStyle)
+        return mapOf(
+            ToolType.FILL to ToolState(isFillEnabled, selectedFillPosition),
+            ToolType.BORDER to ToolState(isBorderEnabled, selectedBorderPosition)
+        )
+    }
 
     // TODO: Correct state values
     private fun Line.toAppearanceVisibilityState(): Map<ToolType, ToolState> = mapOf(
-        STROKE to ToolState(false, 0),
-        START_HEAD to ToolState(false, 0),
-        END_HEAD to ToolState(false, 0)
+        ToolType.STROKE to ToolState(false, 0),
+        ToolType.START_HEAD to ToolState(false, 0),
+        ToolType.END_HEAD to ToolState(false, 0)
     )
 }
