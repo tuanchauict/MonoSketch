@@ -143,6 +143,8 @@ class MainStateManager(
 
                 is OneTimeActionType.ChangeShapeFillExtra ->
                     setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
+                is OneTimeActionType.ChangeShapeBorderExtra ->
+                    setSelectedShapeBorderExtra(it.isEnabled, it.newBorderStyleId)
 
                 is OneTimeActionType.ReorderShape ->
                     changeShapeOrder(it.orderType)
@@ -205,6 +207,38 @@ class MainStateManager(
         val rectangleExtra = currentRectangleExtra.copy(
             isFillEnabled = newIsFillEnabled,
             userSelectedFillStyle = newFillStyle
+        )
+        val newExtra = when (singleShape) {
+            is Rectangle -> rectangleExtra
+            is Text -> singleShape.extra.copy(boundExtra = rectangleExtra)
+            is Line,
+            is MockShape,
+            is Group -> null
+        } ?: return
+        shapeManager.execute(
+            ChangeExtra(singleShape, newExtra)
+        )
+    }
+
+    private fun setSelectedShapeBorderExtra(isEnabled: Boolean?, newBorderStyleId: String?) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+
+        val currentRectangleExtra = when (singleShape) {
+            is Rectangle -> singleShape.extra
+            is Text -> singleShape.extra.boundExtra
+            is Line,
+            is MockShape,
+            is Group -> null
+        } ?: return
+        val newIsBorderEnabled = isEnabled ?: currentRectangleExtra.isBorderEnabled
+        // TODO: Move this into a border style manager class. This won't work well when user's style
+        //  is supported.
+        val newBorderStyle =
+            RectangleExtra.BorderStyle.PREDEFINED_STYLES.firstOrNull { it.id == newBorderStyleId }
+                ?: currentRectangleExtra.userSelectedBorderStyle
+        val rectangleExtra = currentRectangleExtra.copy(
+            isBorderEnabled = newIsBorderEnabled,
+            userSelectedBorderStyle = newBorderStyle
         )
         val newExtra = when (singleShape) {
             is Rectangle -> rectangleExtra
