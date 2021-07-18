@@ -39,7 +39,7 @@ data class LineExtra(
      */
     @Serializable(with = AnchorChar.AnchorCharSerializer::class)
     class AnchorChar private constructor(
-        private val id: String,
+        val id: String,
         val displayName: String,
         val left: Char,
         val right: Char,
