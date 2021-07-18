@@ -14,11 +14,19 @@ import kotlinx.serialization.encoding.Encoder
  */
 @Serializable
 data class LineExtra(
-    @SerialName("as")
-    val startAnchor: AnchorChar,
-    @SerialName("ae")
-    val endAnchor: AnchorChar
+    @SerialName("ase")
+    val isStartAnchorEnabled: Boolean = false,
+    @SerialName("asu")
+    val userSelectedStartAnchor: AnchorChar,
+    val isEndAnchorEnabled: Boolean = false,
+    @SerialName("aeu")
+    val userSelectedEndAnchor: AnchorChar
 ) : ShapeExtra() {
+
+    val startAnchor: AnchorChar?
+        get() = userSelectedStartAnchor.takeIf { isStartAnchorEnabled }
+    val endAnchor: AnchorChar?
+        get() = userSelectedEndAnchor.takeIf { isEndAnchorEnabled }
 
     /**
      * A class for defining an anchor end-char.
@@ -31,7 +39,7 @@ data class LineExtra(
      */
     @Serializable(with = AnchorChar.AnchorCharSerializer::class)
     class AnchorChar private constructor(
-        private val id: String,
+        val id: String,
         val displayName: String,
         val left: Char,
         val right: Char,
@@ -92,17 +100,21 @@ data class LineExtra(
             private const val NO_ID = ""
 
             val PREDEFINED_ANCHOR_CHARS = listOf(
-                AnchorChar(id = "A0", displayName = "─", '─', '│'),
                 AnchorChar(id = "A1", displayName = "▶", '◀', '▶', '▲', '▼'),
-                AnchorChar(id = "A2", displayName = "■", '■')
+                AnchorChar(id = "A2", displayName = "■", '■'),
+                AnchorChar(id = "A3", displayName = "○", '○'),
+                AnchorChar(id = "A4", displayName = "◎", '◎'),
+                AnchorChar(id = "A5", displayName = "●", '●'),
             )
         }
     }
 
     companion object {
         val DEFAULT = LineExtra(
-            startAnchor = AnchorChar.PREDEFINED_ANCHOR_CHARS[0],
-            endAnchor = AnchorChar.PREDEFINED_ANCHOR_CHARS[1]
+            isStartAnchorEnabled = false,
+            userSelectedStartAnchor = AnchorChar.PREDEFINED_ANCHOR_CHARS[0],
+            isEndAnchorEnabled = false,
+            userSelectedEndAnchor = AnchorChar.PREDEFINED_ANCHOR_CHARS[1]
         )
     }
 }

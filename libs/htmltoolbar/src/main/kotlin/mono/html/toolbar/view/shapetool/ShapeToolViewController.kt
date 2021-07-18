@@ -13,6 +13,7 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
+import mono.shape.shape.extra.LineExtra
 import mono.shape.shape.extra.RectangleExtra
 import org.w3c.dom.HTMLElement
 
@@ -76,10 +77,7 @@ class ShapeToolViewController(
         // TODO: Move this into a fill style manager class. This won't work well when user's style
         //  is supported.
         return RectangleExtra.FillStyle.PREDEFINED_STYLES.map {
-            OptionItem(
-                it.id,
-                it.displayName
-            )
+            OptionItem(it.id, it.displayName)
         }
     }
 
@@ -87,18 +85,17 @@ class ShapeToolViewController(
         // TODO: Move this into a border style manager class. This won't work well when user's style
         //  is supported.
         return RectangleExtra.BorderStyle.PREDEFINED_STYLES.map {
-            OptionItem(
-                it.id,
-                it.displayName
-            )
+            OptionItem(it.id, it.displayName)
         }
     }
 
-    private fun getHeadOptions(): List<OptionItem> =
-        // TODO: Correct this value
-        listOf("▶", "■", "○", "◎", "●").mapIndexed { index, name ->
-            OptionItem(index.toString(), name)
+    private fun getHeadOptions(): List<OptionItem> {
+        // TODO: Move this into a line head style manager class. This won't work well when user's 
+        //  style is supported.
+        return LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.map {
+            OptionItem(it.id, it.displayName)
         }
+    }
 
     private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
         val selectedFillPosition =
@@ -111,10 +108,15 @@ class ShapeToolViewController(
         )
     }
 
-    // TODO: Correct state values
-    private fun Line.toAppearanceVisibilityState(): Map<ToolType, ToolState> = mapOf(
-        ToolType.STROKE to ToolState(false, 0),
-        ToolType.START_HEAD to ToolState(false, 0),
-        ToolType.END_HEAD to ToolState(false, 0)
-    )
+    private fun Line.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
+        val selectedStartHeadPosition =
+            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.indexOf(extra.userSelectedStartAnchor)
+        val selectedEndHeadPosition =
+            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.indexOf(extra.userSelectedEndAnchor)
+        return mapOf(
+            //        ToolType.STROKE to ToolState(false, 0),
+            ToolType.START_HEAD to ToolState(extra.isStartAnchorEnabled, selectedStartHeadPosition),
+            ToolType.END_HEAD to ToolState(extra.isEndAnchorEnabled, selectedEndHeadPosition)
+        )
+    }
 }
