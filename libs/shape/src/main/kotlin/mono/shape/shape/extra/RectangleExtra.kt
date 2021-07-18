@@ -45,7 +45,7 @@ data class RectangleExtra(
      */
     @Serializable(with = FillStyle.FillStyleSerializer::class)
     class FillStyle private constructor(
-        private val id: String,
+        val id: String,
         val displayName: String,
         val drawable: Drawable
     ) {
@@ -121,7 +121,7 @@ data class RectangleExtra(
      */
     @Serializable(with = BorderStyle.BorderStyleSerializer::class)
     class BorderStyle private constructor(
-        private val id: String,
+        val id: String,
         val displayName: String,
         val drawable: Drawable
     ) {

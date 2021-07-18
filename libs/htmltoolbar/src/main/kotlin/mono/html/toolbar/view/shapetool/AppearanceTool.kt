@@ -71,10 +71,12 @@ private class AppearanceToolViewController(
     }
 }
 
+internal data class OptionItem(val id: String, val name: String)
+
 internal fun Tag.AppearanceSection(
-    fillOptions: List<String>,
-    borderOptions: List<String>,
-    headOptions: List<String> = listOf("▶", "■", "○", "◎", "●")
+    fillOptions: List<OptionItem>,
+    borderOptions: List<OptionItem>,
+    headOptions: List<OptionItem>
 ): AppearanceSectionViewController {
     val tools = mutableListOf<AppearanceToolViewController>()
 
@@ -90,7 +92,7 @@ internal fun Tag.AppearanceSection(
 
 private fun Tag.GridTextIconOptions(
     type: ToolType,
-    options: List<String>
+    options: List<OptionItem>
 ): AppearanceToolViewController {
     var checkBox: HTMLInputElement? = null
     var optionElements: List<HTMLElement>? = null
@@ -115,7 +117,7 @@ private fun Tag.CheckColumn(): HTMLInputElement {
 
 private fun Tag.OptionsColumn(
     title: String,
-    options: List<String>
+    options: List<OptionItem>
 ): List<HTMLElement> {
     val optionElements = mutableListOf<HTMLElement>()
     Column {
@@ -124,7 +126,7 @@ private fun Tag.OptionsColumn(
         }
         Row(isMonoFont = true, isGrid = true) {
             for (option in options) {
-                optionElements += span(classes(ICON_BUTTON, SMALL)) { +option }
+                optionElements += span(classes(ICON_BUTTON, SMALL)) { +option.name }
             }
         }
     }

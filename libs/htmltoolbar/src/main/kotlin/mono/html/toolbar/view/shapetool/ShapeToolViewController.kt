@@ -30,7 +30,8 @@ class ShapeToolViewController(
 
             val appearanceTool = AppearanceSection(
                 fillOptions = getFillOptions(),
-                borderOptions = getBorderOptions()
+                borderOptions = getBorderOptions(),
+                headOptions = getHeadOptions()
             )
 
             val textAlignmentTool = TextSection(actionManager::setOneTimeAction)
@@ -70,11 +71,17 @@ class ShapeToolViewController(
         }
     }
 
-    private fun getFillOptions(): List<String> =
-        RectangleExtra.FillStyle.PREDEFINED_FILL_STYLE.map { it.displayName }
+    private fun getFillOptions(): List<OptionItem> =
+        RectangleExtra.FillStyle.PREDEFINED_FILL_STYLE.map { OptionItem(it.id, it.displayName) }
 
-    private fun getBorderOptions(): List<String> =
-        RectangleExtra.BorderStyle.PREDEFINED_FILL_STYLE.map { it.displayName }
+    private fun getBorderOptions(): List<OptionItem> =
+        RectangleExtra.BorderStyle.PREDEFINED_FILL_STYLE.map { OptionItem(it.id, it.displayName) }
+
+    private fun getHeadOptions(): List<OptionItem> =
+        // TODO: Correct this value
+        listOf("▶", "■", "○", "◎", "●").mapIndexed { index, name ->
+            OptionItem(index.toString(), name)
+        }
 
     private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
         val selectedFillPosition =
