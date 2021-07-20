@@ -68,18 +68,29 @@ html, body
     height: 100%
     display: flex
 
-#monoboard-canvas-container
+.canvas-layout
     width: 100%
     height: 100%
     position: relative
 
+#monoboard-canvas-container
+    left: 33px
+    top: 18px
+    right: 0
+    bottom: 0
+    position: absolute
+
     &.top-divider
-        border-top: 5px solid $main-border-color
+        // border-top: 5px solid $main-border-color
 
     &> canvas
         position: absolute
         top: 0
         left: 0
+
+#monoboard-axis-container
+    width: 100%
+    height: 100%
 
 .modal-textarea-container
     background: #fff

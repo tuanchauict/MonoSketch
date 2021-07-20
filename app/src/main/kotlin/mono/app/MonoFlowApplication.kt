@@ -52,10 +52,13 @@ class MonoFlowApplication : LifecycleOwner() {
 
         val boardCanvasContainer =
             document.getElementById(CONTAINER_ID) as? HTMLDivElement ?: return
+        val axisCanvasContainer =
+            document.getElementById(AXIS_CONTAINER_ID) as? HTMLDivElement ?: return
 
         val canvasViewController = CanvasViewController(
             this,
             boardCanvasContainer,
+            axisCanvasContainer,
             mainBoard,
             model.windowSizeLiveData
         )
@@ -120,6 +123,7 @@ class MonoFlowApplication : LifecycleOwner() {
 
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
+        private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
         private const val BACKUP_SHAPES_KEY = "backup-shapes"
     }
 }
