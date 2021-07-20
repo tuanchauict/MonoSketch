@@ -1,5 +1,7 @@
 package mono.html.canvas.canvas
 
+import kotlinx.browser.window
+import mono.graphics.geo.Size
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import org.w3c.dom.CanvasTextAlign
@@ -7,18 +9,44 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.LEFT
 import org.w3c.dom.Path2D
 import org.w3c.dom.RIGHT
+import kotlin.math.max
 
 internal class AxisCanvasViewController(
     lifecycleOwner: LifecycleOwner,
-    canvas: HTMLCanvasElement,
+    private val canvas: HTMLCanvasElement,
     drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
 ) : BaseCanvasViewController(canvas) {
     init {
-        drawingInfoLiveData.observe(lifecycleOwner, listener = ::setDrawingInfo)
+        drawingInfoLiveData.observe(lifecycleOwner, listener = ::updateCanvasSize)
         drawingInfoLiveData.observe(lifecycleOwner, 0) { draw() }
     }
 
+    private fun updateCanvasSize(drawingInfo: DrawingInfoController.DrawingInfo) {
+        val canvasSizePx = Size(
+            drawingInfo.canvasSizePx.width + AXIS_Y_WIDTH.toInt(),
+            drawingInfo.canvasSizePx.height + AXIS_X_HEIGHT.toInt()
+        )
+
+        // Update canvas information causes canvas clearRect() which requires redraw
+        val isSizeChange = this.drawingInfo.canvasSizePx != canvasSizePx
+        if (isSizeChange) {
+            val dpr = max(window.devicePixelRatio, 2.0)
+            canvas.width = (canvasSizePx.width * dpr).toInt()
+            canvas.height = ((canvasSizePx.height) * dpr).toInt()
+            canvas.style.width = "${canvasSizePx.width}px"
+            canvas.style.height = "${canvasSizePx.height}px"
+            context.scale(dpr, dpr)
+        }
+
+        this.drawingInfo = drawingInfo.copy(canvasSizePx = canvasSizePx)
+
+        if (isSizeChange) {
+            draw()
+        }
+    }
+
     override fun drawInternal() {
+        println(drawingInfo)
         drawAxis()
     }
 
@@ -27,8 +55,8 @@ internal class AxisCanvasViewController(
         val cellSizePx = drawingInfo.cellSizePx
         val canvasSizePx = drawingInfo.canvasSizePx
 
-        val xAxisHeight = cellSizePx.height * AXIS_X_HEIGHT
-        val yAxisWidth = cellSizePx.width * AXIS_Y_WIDTH
+        val xAxisHeight = AXIS_X_HEIGHT
+        val yAxisWidth = AXIS_Y_WIDTH
 
         val path = Path2D()
 
@@ -64,8 +92,8 @@ internal class AxisCanvasViewController(
         path.addVLine(yAxisWidth, xAxisHeight, canvasSizePx.height.toDouble())
 
         for (col in drawingInfo.boardColumnRange.filter { it % 20 == 0 }) {
-            val xPx = drawingInfo.toXPx(col.toDouble() + AXIS_Y_WIDTH)
-            context.fillText(col.toString(), xPx + 2, 2.0)
+            val xPx = drawingInfo.toXPx(col.toDouble()) + AXIS_Y_WIDTH
+            context.fillText(col.toString(), xPx + 2, 7.0)
 
             path.addVLine(xPx, xAxisHeight - AXIS_RULER_SIZE, AXIS_RULER_SIZE)
         }
@@ -78,9 +106,9 @@ internal class AxisCanvasViewController(
         private const val AXIS_BG_COLOR = "#EEEEEE"
         private const val AXIS_TEXT_COLOR = "#666666"
         private const val AXIS_RULER_COLOR = "#444444"
-        private const val AXIS_RULER_SIZE = 15.0
+        private const val AXIS_RULER_SIZE = 12.0
 
-        const val AXIS_Y_WIDTH = 4.0
-        const val AXIS_X_HEIGHT = 1.0
+        private const val AXIS_Y_WIDTH = 33.0
+        private const val AXIS_X_HEIGHT = 18.0
     }
 }
