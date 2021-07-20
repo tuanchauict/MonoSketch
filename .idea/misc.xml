@@ -9,6 +9,7 @@
       <set>
         <option value="MonoFlow.htmlcanvas" />
         <option value="MonoFlow.monobitmap" />
+        <option value="MonoFlow.monobitmap-manager" />
         <option value="MonoFlow.monoboard" />
         <option value="MonoFlow.shape" />
       </set>
