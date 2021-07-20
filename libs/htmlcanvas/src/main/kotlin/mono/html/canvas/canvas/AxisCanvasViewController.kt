@@ -45,10 +45,7 @@ internal class AxisCanvasViewController(
         }
     }
 
-    override fun drawInternal() {
-        println(drawingInfo)
-        drawAxis()
-    }
+    override fun drawInternal() = drawAxis()
 
     private fun drawAxis() {
         context.font = "normal normal normal 10.5px 'Menlo'"
