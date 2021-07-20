@@ -31,6 +31,7 @@ import org.w3c.dom.HTMLDivElement
 class CanvasViewController(
     lifecycleOwner: LifecycleOwner,
     private val container: HTMLDivElement,
+    axisContainer: HTMLDivElement,
     board: MonoBoard,
     windowSizeLiveData: LiveData<Size>
 ) {
@@ -72,7 +73,10 @@ class CanvasViewController(
             canvas(CLASS_NAME_BOARD) {}
             canvas(CLASS_NAME_INTERACTION) {}
             canvas(CLASS_NAME_SELECTION) {}
-            canvas(CLASS_NAME_AXIS) {}
+        }
+        axisContainer.append {
+            val axisCanvas = canvas(CLASS_NAME_AXIS) {}
+            AxisCanvasViewController(lifecycleOwner, axisCanvas, drawingInfoLiveData)
         }
 
         gridCanvasViewController = GridCanvasViewController(
@@ -80,7 +84,6 @@ class CanvasViewController(
             getCanvas(CLASS_NAME_GRID),
             drawingInfoLiveData
         )
-        AxisCanvasViewController(lifecycleOwner, getCanvas(CLASS_NAME_AXIS), drawingInfoLiveData)
 
         boardCanvasViewController = BoardCanvasViewController(
             lifecycleOwner,

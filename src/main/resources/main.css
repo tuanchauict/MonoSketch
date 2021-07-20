@@ -99,20 +99,29 @@ html, body {
   display: flex;
 }
 
-#monoboard-canvas-container {
+.canvas-layout {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
-#monoboard-canvas-container.top-divider {
-  border-top: 5px solid #EEEEEE;
+#monoboard-canvas-container {
+  left: 33px;
+  top: 18px;
+  right: 0;
+  bottom: 0;
+  position: absolute;
 }
 
 #monoboard-canvas-container > canvas {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+#monoboard-axis-container {
+  width: 100%;
+  height: 100%;
 }
 
 .modal-textarea-container {

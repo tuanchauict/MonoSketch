@@ -2,35 +2,42 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <title>Mono Flow</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+          rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
-        crossorigin="anonymous"></script>
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+            crossorigin="anonymous"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous" />
-    <link href="main.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+          crossorigin="anonymous"/>
+    <link href="main.css" rel="stylesheet"/>
 </head>
 
 <body>
-    <script src="MonoFlow.js"></script>
-    <div id="root">
-        <div id="header-layout">
-            <div class="nav-brand">
-                <h2 id="main-title">Monoflow</h2>
-            </div>
-            <div id="header-toolbar"></div>
+<script src="MonoFlow.js"></script>
+<div id="root">
+    <div id="header-layout">
+        <div class="nav-brand">
+            <h2 id="main-title">Monoflow</h2>
         </div>
-        <div id="workspace">
-            <div id="monoboard-canvas-container"></div>
-            <div id="shape-tools" class="shape-tools"></div>
-        </div>
+        <div id="header-toolbar"></div>
     </div>
+    <div id="workspace">
+        <div class="canvas-layout">
+            <div id="monoboard-canvas-container"></div>
+            <div id="monoboard-axis-container"></div>
+        </div>
+        <div id="shape-tools" class="shape-tools"></div>
+    </div>
+</div>
 </body>
 
 </html>

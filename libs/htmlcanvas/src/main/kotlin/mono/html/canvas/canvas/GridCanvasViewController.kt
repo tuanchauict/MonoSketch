@@ -21,16 +21,16 @@ internal class GridCanvasViewController(
         context.lineWidth = 0.25
         context.stroke(createGridPath())
 
-        context.strokeStyle = "#AAAAAA"
+        context.strokeStyle = "#BBBBBB"
         context.lineWidth = 1.0
         val zeroLines = Path2D().apply {
             addHLine(
                 0.0,
-                drawingInfo.toYPx(AxisCanvasViewController.AXIS_X_HEIGHT),
+                drawingInfo.toYPx(0.0),
                 drawingInfo.canvasSizePx.width.toDouble()
             )
             addVLine(
-                drawingInfo.toXPx(AxisCanvasViewController.AXIS_Y_WIDTH),
+                drawingInfo.toXPx(0.0),
                 0.0,
                 drawingInfo.canvasSizePx.height.toDouble()
             )
