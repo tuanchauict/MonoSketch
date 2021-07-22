@@ -1,6 +1,7 @@
 package mono.graphics.board
 
 import mono.common.Characters.TRANSPARENT_CHAR
+import mono.common.Characters.isHalfTransparent
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.board.MonoBoard.CrossPoint
 import mono.graphics.geo.Point
@@ -100,7 +101,11 @@ internal class PainterBoard(internal val bound: Rect) {
                     pixel.char == char ||
                     char !in CrossingResources.CONNECTABLE_CHARS
                 ) {
-                    pixel.set(char, highlight)
+                    // Not drawing half transparent character 
+                    // (full transparent character is removed by bitmap)
+                    if (!char.isHalfTransparent) {
+                        pixel.set(char, highlight)
+                    }
                 } else {
                     crossingPoints.add(
                         CrossPoint(

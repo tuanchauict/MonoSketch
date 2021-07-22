@@ -1,6 +1,8 @@
 package mono.graphics.board
 
 import mono.common.Characters.TRANSPARENT_CHAR
+import mono.common.Characters.isHalfTransparent
+import mono.common.Characters.isTransparent
 
 /**
  * A class represents each item on the board matrix.
@@ -15,7 +17,7 @@ class Pixel(
         private set
 
     val isTransparent: Boolean
-        get() = char == TRANSPARENT_CHAR
+        get() = char.isTransparent || char.isHalfTransparent
 
     fun set(char: Char, highlight: Highlight) {
         this.char = char

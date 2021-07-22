@@ -1,7 +1,11 @@
 package mono.common
 
 object Characters {
+    // Transparent in both rendering and selection
     const val TRANSPARENT_CHAR: Char = 0.toChar()
+
+    // Transparent in rendering but visible for selection
+    const val HALF_TRANSPARENT_CHAR: Char = 1.toChar()
 
     /**
      * Copies [length] characters from [src] from [srcOffset] into [dest] from [destOffset].
@@ -23,4 +27,7 @@ object Characters {
 
     val Char.isTransparent: Boolean
         get() = this == TRANSPARENT_CHAR
+
+    val Char.isHalfTransparent: Boolean
+        get() = this == HALF_TRANSPARENT_CHAR
 }
