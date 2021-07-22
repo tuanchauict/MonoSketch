@@ -5,7 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "1.5.0"
 }
 
-group = "com.monoflow"
+group = "com.monosketch"
 version = "0.0.1"
 
 allprojects {
