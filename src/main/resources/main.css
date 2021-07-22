@@ -44,7 +44,7 @@ html, body {
 #header-layout h2 {
   font-size: 20px;
   letter-spacing: 0.2px;
-  font-family: Menlo, "Courier New", Courier, monospace;
+  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
   font-weight: 500;
 }
 
@@ -137,11 +137,11 @@ html, body {
 }
 
 .modal-textarea-container > .modal-textarea.monomodal-mono-edit-text {
-  font-family: Menlo, "Courier New", Courier, monospace;
+  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
 }
 
 .monofont {
-  font-family: Menlo, "Courier New", Courier, monospace;
+  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
 }
 
 .shape-tools {
@@ -322,6 +322,10 @@ html, body {
       -ms-flex-pack: center;
           justify-content: center;
   padding-top: 5px;
+}
+
+.icon-button.small.disabled, .icon-button.small:disabled {
+  border-color: #eaeaea;
 }
 
 .icon-button.small.selected {

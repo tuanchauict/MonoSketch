@@ -20,8 +20,6 @@ internal class MouseEventObserver(
     container: HTMLDivElement,
     drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
 ) {
-    private var containerPosition: Point
-
     private val mousePointerMutableLiveData: MutableLiveData<MousePointer> =
         MutableLiveData(MousePointer.Idle)
     val mousePointerLiveData: LiveData<MousePointer> =
@@ -37,8 +35,6 @@ internal class MouseEventObserver(
     val drawingOffsetPointPxLiveData: LiveData<Point> = drawingOffsetPointPxMutableLiveData
 
     init {
-        containerPosition = container.getPosition()
-
         container.onmousedown = ::setMouseDownPointer
         container.onmouseup = ::setMouseUpPointer
         container.onmousemove = ::setMouseMovePointer
@@ -46,7 +42,6 @@ internal class MouseEventObserver(
 
         drawingInfoLiveData.observe(lifecycleOwner) {
             drawingInfo = it
-            containerPosition = container.getPosition()
         }
     }
 
@@ -127,20 +122,11 @@ internal class MouseEventObserver(
 
     private fun MouseEvent.toPoint(): Point =
         Point(
-            drawingInfo.toBoardColumn(clientX - containerPosition.left),
-            drawingInfo.toBoardRow(clientY - containerPosition.top)
+            drawingInfo.toBoardColumn(offsetX.toInt()),
+            drawingInfo.toBoardRow(offsetY.toInt())
         )
 
-    private fun MouseEvent.toPointPx(): Point =
-        Point(
-            clientX - containerPosition.left,
-            clientY - containerPosition.top
-        )
-
-    private fun HTMLDivElement.getPosition(): Point {
-        val containerBounding = getBoundingClientRect()
-        return Point(containerBounding.left.toInt(), containerBounding.top.toInt())
-    }
+    private fun MouseEvent.toPointPx(): Point = Point(offsetX.toInt(), offsetY.toInt())
 
     companion object {
         private const val SCROLL_SPEED_RATIO = 1 / 1.3F

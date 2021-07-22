@@ -46,7 +46,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         drawingInfoMutableLiveData.value =
             drawingInfoMutableLiveData.value.copy(
                 cellSizePx = context.getCellSizePx(fontSize),
-                font = "normal normal normal ${fontSize}px 'JetBrains Mono'",
+                font = "normal normal normal ${fontSize}px 'Fira Code'",
                 fontSize = fontSize
             )
     }
@@ -64,7 +64,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         context.font = font
         context.textAlign = CanvasTextAlign.LEFT
         context.textBaseline = CanvasTextBaseline.MIDDLE
-        val cWidth = fontSize.toDouble() / 1.6
+        val cWidth = floor(fontSize.toDouble() / 1.6)
         val cHeight = fontSize.toDouble()
         return SizeF(cWidth, cHeight)
     }

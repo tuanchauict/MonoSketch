@@ -114,7 +114,7 @@ data class LineExtra(
             isStartAnchorEnabled = false,
             userSelectedStartAnchor = AnchorChar.PREDEFINED_ANCHOR_CHARS[0],
             isEndAnchorEnabled = false,
-            userSelectedEndAnchor = AnchorChar.PREDEFINED_ANCHOR_CHARS[1]
+            userSelectedEndAnchor = AnchorChar.PREDEFINED_ANCHOR_CHARS[0]
         )
     }
 }
