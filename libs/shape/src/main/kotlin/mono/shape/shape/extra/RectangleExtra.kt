@@ -8,6 +8,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import mono.common.Characters.HALF_TRANSPARENT_CHAR
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.drawable.CharDrawable
 import mono.graphics.bitmap.drawable.Drawable
@@ -149,6 +150,13 @@ data class RectangleExtra(
         companion object {
             private const val NO_ID = ""
 
+            private val PATTERN_TEXT_NO_BORDER = """
+                +++
+                + +
+                +++
+            """.trimIndent()
+                .replace('+', HALF_TRANSPARENT_CHAR)
+
             private val PATTERN_TEXT_0 = """
                 ┌─┐
                 │ │
@@ -170,7 +178,11 @@ data class RectangleExtra(
             internal val NO_BORDER = BorderStyle(
                 id = "B0",
                 displayName = "No border",
-                NinePatchDrawable(Pattern.fromText(" "))
+                NinePatchDrawable(
+                    Pattern.fromText(PATTERN_TEXT_NO_BORDER),
+                    REPEATABLE_RANGE_0,
+                    REPEATABLE_RANGE_0
+                )
             )
 
             val PREDEFINED_STYLES = listOf(
