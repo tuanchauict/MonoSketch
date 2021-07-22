@@ -128,11 +128,12 @@ internal class QuickList<T : QuickList.Identifier> : Collection<T> {
 
         fun move(node: Node<T>, moveActionType: MoveActionType): Boolean {
             val newPreviousNode = when (moveActionType) {
-                MoveActionType.UP -> node.next
-                MoveActionType.DOWN -> node.pre?.pre
-                MoveActionType.TOP -> tail.pre
-                MoveActionType.BOTTOM -> head
+                MoveActionType.UP -> if (node != tail.pre) node.next else null
+                MoveActionType.TOP -> if (node != tail.pre) tail.pre else null
+                MoveActionType.DOWN -> if (node != head.next) node.pre?.pre else null
+                MoveActionType.BOTTOM -> if (node != head.next) head else null
             } ?: return false
+
             remove(node)
 
             val newNextNode = newPreviousNode.next
