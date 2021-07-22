@@ -62,9 +62,9 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
     protected abstract fun drawInternal()
 
     protected fun drawText(text: String, row: Int, column: Int) {
-        val rowYPx = drawingInfo.toYPx(row.toDouble())
-        val xPx = drawingInfo.toXPx(column + 0.05)
-        context.fillText(text, xPx, rowYPx)
+        val yPx = drawingInfo.toYPx(row.toDouble())
+        val xPx = drawingInfo.toXPx(column.toDouble())
+        context.fillText(text, xPx, yPx)
     }
 
     protected fun Path2D.addHLine(xPx: Double, yPx: Double, widthPx: Double) {

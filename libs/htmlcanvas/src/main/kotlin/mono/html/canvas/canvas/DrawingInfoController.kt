@@ -46,7 +46,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         drawingInfoMutableLiveData.value =
             drawingInfoMutableLiveData.value.copy(
                 cellSizePx = context.getCellSizePx(fontSize),
-                font = "normal normal normal ${fontSize}px 'JetBrains Mono'",
+                font = "normal normal normal ${fontSize}px 'Menlo'",
                 fontSize = fontSize
             )
     }
