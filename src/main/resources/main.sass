@@ -216,6 +216,9 @@ $shape-tool-box-border-selected-color: #039be5
         justify-content: center
         padding-top: 5px
 
+        &.disabled, &:disabled
+            border-color: lighten($shape-tool-box-border-color, 5%)
+
         &.selected
             border-color: $shape-tool-box-border-selected-color
             &:hover

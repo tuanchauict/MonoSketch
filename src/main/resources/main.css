@@ -324,6 +324,10 @@ html, body {
   padding-top: 5px;
 }
 
+.icon-button.small.disabled, .icon-button.small:disabled {
+  border-color: #eaeaea;
+}
+
 .icon-button.small.selected {
   border-color: #039be5;
 }
