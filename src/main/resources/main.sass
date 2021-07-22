@@ -1,11 +1,13 @@
 $monospaceFont: 'Fira Code', Menlo, 'Courier New', Courier, monospace
 $uiTextFont: 'Roboto', Arial, serif
 $main-border-color: #EEEEEE
+$headerHeight: 64px
 
 html, body
     width: 100%
     height: 100%
     margin: 0
+    overflow-y: hidden
 
 #root
     width: 100%
@@ -15,7 +17,7 @@ html, body
 
 #header-layout
     width: 100%
-    height: 64px
+    height: $headerHeight
     border-bottom: 1px solid $main-border-color
     display: flex
     flex-direction: row
@@ -63,15 +65,27 @@ html, body
         padding: 0.15rem 0.5rem
         height: 31px
 
+$shape-tool: 270px
 #workspace
     width: 100%
-    height: 100%
-    display: flex
+    left: 0
+    right: 0
+    top: $headerHeight
+    bottom: 0
+    position: absolute
+
+    & > #shape-tools
+        top: 0
+        bottom: 0
+        right: 0
+        position: absolute
 
 .canvas-layout
-    width: 100%
-    height: 100%
-    position: relative
+    left: 0
+    top: 0
+    bottom: 0
+    right: $shape-tool
+    position: absolute
 
 #monoboard-canvas-container
     left: 33px
