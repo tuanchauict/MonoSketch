@@ -2,6 +2,7 @@ html, body {
   width: 100%;
   height: 100%;
   margin: 0;
+  overflow-y: hidden;
 }
 
 #root {
@@ -93,16 +94,26 @@ html, body {
 
 #workspace {
   width: 100%;
-  height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  left: 0;
+  right: 0;
+  top: 64px;
+  bottom: 0;
+  position: absolute;
+}
+
+#workspace > #shape-tools {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
 }
 
 .canvas-layout {
-  width: 100%;
-  height: 100%;
-  position: relative;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 270px;
+  position: absolute;
 }
 
 #monoboard-canvas-container {
