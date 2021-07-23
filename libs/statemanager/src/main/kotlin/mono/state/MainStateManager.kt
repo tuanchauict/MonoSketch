@@ -203,8 +203,10 @@ class MainStateManager(
             is Group -> null
         } ?: return
         val newIsFillEnabled = isEnabled ?: currentRectangleExtra.isFillEnabled
-        val newFillStyle = ShapeExtraManager.getRectangleFillStyle(newFillStyleId)
-            ?: currentRectangleExtra.userSelectedFillStyle
+        val newFillStyle = ShapeExtraManager.getRectangleFillStyle(
+            newFillStyleId,
+            currentRectangleExtra.userSelectedFillStyle
+        )
         val rectangleExtra = currentRectangleExtra.copy(
             isFillEnabled = newIsFillEnabled,
             userSelectedFillStyle = newFillStyle
@@ -230,8 +232,10 @@ class MainStateManager(
             is Group -> null
         } ?: return
         val newIsBorderEnabled = isEnabled ?: currentRectangleExtra.isBorderEnabled
-        val newBorderStyle = ShapeExtraManager.getRectangleBorderStyle(newBorderStyleId)
-            ?: currentRectangleExtra.userSelectedBorderStyle
+        val newBorderStyle = ShapeExtraManager.getRectangleBorderStyle(
+            newBorderStyleId,
+            currentRectangleExtra.userSelectedBorderStyle
+        )
         val rectangleExtra = currentRectangleExtra.copy(
             isBorderEnabled = newIsBorderEnabled,
             userSelectedBorderStyle = newBorderStyle
@@ -250,8 +254,8 @@ class MainStateManager(
         val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isStartAnchorEnabled
-        val newAnchor = ShapeExtraManager.getAnchorChar(newAnchorId)
-            ?: currentExtra.userSelectedStartAnchor
+        val newAnchor =
+            ShapeExtraManager.getAnchorChar(newAnchorId, currentExtra.userSelectedStartAnchor)
         val newExtra = currentExtra.copy(
             isStartAnchorEnabled = newIsEnabled,
             userSelectedStartAnchor = newAnchor
@@ -263,8 +267,8 @@ class MainStateManager(
         val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isEndAnchorEnabled
-        val newAnchor = ShapeExtraManager.getAnchorChar(newAnchorId)
-            ?: currentExtra.userSelectedEndAnchor
+        val newAnchor =
+            ShapeExtraManager.getAnchorChar(newAnchorId, currentExtra.userSelectedEndAnchor)
         val newExtra = currentExtra.copy(
             isEndAnchorEnabled = newIsEnabled,
             userSelectedEndAnchor = newAnchor

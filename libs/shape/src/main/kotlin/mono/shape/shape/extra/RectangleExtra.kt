@@ -32,11 +32,9 @@ data class RectangleExtra(
 
     constructor(serializableExtra: SerializableRectangle.SerializableExtra) : this(
         serializableExtra.isFillEnabled,
-        ShapeExtraManager.getRectangleFillStyle(serializableExtra.userSelectedFillStyleId)
-            ?: ShapeExtraManager.DEFAULT_RECTANGLE_FILL_STYLE,
+        ShapeExtraManager.getRectangleFillStyle(serializableExtra.userSelectedFillStyleId),
         serializableExtra.isBorderEnabled,
         ShapeExtraManager.getRectangleBorderStyle(serializableExtra.userSelectedBorderStyleId)
-            ?: ShapeExtraManager.DEFAULT_RECTANGLE_BORDER_STYLE
     )
 
     fun toSerializableExtra(): SerializableRectangle.SerializableExtra =
@@ -50,9 +48,9 @@ data class RectangleExtra(
     companion object {
         val DEFAULT = RectangleExtra(
             isFillEnabled = false,
-            ShapeExtraManager.DEFAULT_RECTANGLE_FILL_STYLE,
+            ShapeExtraManager.getRectangleFillStyle(null),
             isBorderEnabled = true,
-            ShapeExtraManager.DEFAULT_RECTANGLE_BORDER_STYLE
+            ShapeExtraManager.getRectangleBorderStyle(null)
         )
     }
 }
