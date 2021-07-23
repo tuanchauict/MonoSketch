@@ -2,6 +2,7 @@ package mono.bitmap.manager.factory
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Size
+import mono.shape.extra.manager.model.TextAlign
 import mono.shape.shape.extra.TextExtra
 
 object TextBitmapFactory {
@@ -19,14 +20,14 @@ object TextBitmapFactory {
         val maxTextHeight = boundSize.height - rowOffset * 2
 
         val row0 = when (extra.textAlign.verticalAlign) {
-            TextExtra.VerticalAlign.TOP -> rowOffset
-            TextExtra.VerticalAlign.MIDDLE ->
+            TextAlign.VerticalAlign.TOP -> rowOffset
+            TextAlign.VerticalAlign.MIDDLE ->
                 if (maxTextHeight < renderableText.size) {
                     rowOffset
                 } else {
                     (maxTextHeight - renderableText.size) / 2 + rowOffset
                 }
-            TextExtra.VerticalAlign.BOTTOM ->
+            TextAlign.VerticalAlign.BOTTOM ->
                 if (maxTextHeight < renderableText.size) {
                     rowOffset
                 } else {
@@ -38,9 +39,9 @@ object TextBitmapFactory {
         for (rowIndex in renderableText.indices) {
             val row = renderableText[rowIndex]
             val col0 = when (horizontalAlign) {
-                TextExtra.HorizontalAlign.LEFT -> colOffset
-                TextExtra.HorizontalAlign.MIDDLE -> (maxTextWidth - row.length) / 2 + colOffset
-                TextExtra.HorizontalAlign.RIGHT -> maxTextWidth - row.length + colOffset
+                TextAlign.HorizontalAlign.LEFT -> colOffset
+                TextAlign.HorizontalAlign.MIDDLE -> (maxTextWidth - row.length) / 2 + colOffset
+                TextAlign.HorizontalAlign.RIGHT -> maxTextWidth - row.length + colOffset
             }
             for (colIndex in row.indices) {
                 val char = row[colIndex]

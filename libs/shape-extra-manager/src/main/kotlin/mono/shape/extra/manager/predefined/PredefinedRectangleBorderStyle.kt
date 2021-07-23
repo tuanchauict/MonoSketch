@@ -12,24 +12,24 @@ internal object PredefinedRectangleBorderStyle {
                 +++
                 + +
                 +++
-            """.trimIndent()
+    """.trimIndent()
         .replace('+', Characters.HALF_TRANSPARENT_CHAR)
 
     private val PATTERN_TEXT_0 = """
                 ┌─┐
                 │ │
                 └─┘
-            """.trimIndent()
+    """.trimIndent()
     private val PATTERN_TEXT_1 = """
                 ┏━┓
                 ┃ ┃
                 ┗━┛
-            """.trimIndent()
+    """.trimIndent()
     private val PATTERN_TEXT_2 = """
                 ╔═╗
                 ║ ║
                 ╚═╝
-            """.trimIndent()
+    """.trimIndent()
 
     private val REPEATABLE_RANGE_0 = NinePatchDrawable.RepeatableRange.Repeat(1, 1)
 

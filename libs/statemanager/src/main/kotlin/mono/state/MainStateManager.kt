@@ -26,6 +26,7 @@ import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.ChangeOrder.ChangeOrderType
 import mono.shape.extra.manager.ShapeExtraManager
+import mono.shape.extra.manager.model.TextAlign
 import mono.shape.remove
 import mono.shape.replaceWithJson
 import mono.shape.selection.SelectedShapeManager
@@ -36,7 +37,6 @@ import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import mono.shape.shape.extra.LineExtra
-import mono.shape.shape.extra.TextExtra
 import mono.shape.toJson
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
@@ -292,8 +292,8 @@ class MainStateManager(
     }
 
     private fun setTextAlignment(
-        horizontalAlign: TextExtra.HorizontalAlign?,
-        verticalAlign: TextExtra.VerticalAlign?
+        horizontalAlign: TextAlign.HorizontalAlign?,
+        verticalAlign: TextAlign.VerticalAlign?
     ) {
         val textShape = environment.getSelectedShapes().singleOrNull() as? Text ?: return
         val newTextAlign = textShape.extra.textAlign.copy(
