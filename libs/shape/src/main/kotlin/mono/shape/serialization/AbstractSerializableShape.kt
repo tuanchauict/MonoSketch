@@ -23,8 +23,21 @@ data class SerializableRectangle(
     @SerialName("b")
     val bound: Rect,
     @SerialName("e")
-    val extra: RectangleExtra
-) : AbstractSerializableShape()
+    val extra: SerializableExtra
+) : AbstractSerializableShape() {
+
+    @Serializable
+    data class SerializableExtra(
+        @SerialName("fe")
+        val isFillEnabled: Boolean = false,
+        @SerialName("fu")
+        val userSelectedFillStyleId: String,
+        @SerialName("be")
+        val isBorderEnabled: Boolean,
+        @SerialName("bu")
+        val userSelectedBorderStyleId: String
+    )
+}
 
 @Serializable
 @SerialName("T")

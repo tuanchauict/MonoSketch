@@ -14,6 +14,7 @@ import mono.graphics.bitmap.drawable.CharDrawable
 import mono.graphics.bitmap.drawable.Drawable
 import mono.graphics.bitmap.drawable.NinePatchDrawable
 import mono.graphics.bitmap.drawable.NinePatchDrawable.Pattern
+import mono.shape.serialization.SerializableRectangle
 
 /**
  * A [ShapeExtra] for [mono.shape.shape.Rectangle]
@@ -34,6 +35,21 @@ data class RectangleExtra(
 
     val borderStyle: BorderStyle
         get() = if (isBorderEnabled) userSelectedBorderStyle else BorderStyle.NO_BORDER
+
+    constructor(serializableExtra: SerializableRectangle.SerializableExtra) : this(
+        serializableExtra.isFillEnabled,
+        FillStyle.PREDEFINED_STYLES.first { it.id == serializableExtra.userSelectedFillStyleId },
+        serializableExtra.isBorderEnabled,
+        BorderStyle.PREDEFINED_STYLES.first { it.id == serializableExtra.userSelectedBorderStyleId }
+    )
+
+    fun toSerializableExtra(): SerializableRectangle.SerializableExtra =
+        SerializableRectangle.SerializableExtra(
+            isFillEnabled = isFillEnabled,
+            userSelectedFillStyleId = userSelectedFillStyle.id,
+            isBorderEnabled = isBorderEnabled,
+            userSelectedBorderStyleId = userSelectedBorderStyle.id
+        )
 
     /**
      * A class for defining a fill style for rectangle.
