@@ -60,7 +60,7 @@ class ShapeClipboardManager(private val body: HTMLElement) {
             null,
             Rect.Companion.byLTWH(0, 0, width, height),
             text,
-            TextExtra.NO_BOUND
+            TextExtra.NO_BOUND.toSerializableExtra()
         )
     }
 

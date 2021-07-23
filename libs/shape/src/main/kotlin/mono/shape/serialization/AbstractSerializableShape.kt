@@ -6,8 +6,6 @@ import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.shape.extra.LineExtra
-import mono.shape.shape.extra.RectangleExtra
-import mono.shape.shape.extra.TextExtra
 
 @Serializable
 sealed class AbstractSerializableShape {
@@ -49,8 +47,19 @@ data class SerializableText(
     @SerialName("t")
     val text: String,
     @SerialName("e")
-    val extra: TextExtra
-) : AbstractSerializableShape()
+    val extra: SerializableExtra
+) : AbstractSerializableShape() {
+
+    @Serializable
+    data class SerializableExtra(
+        @SerialName("be")
+        val boundExtra: SerializableRectangle.SerializableExtra,
+        @SerialName("tha")
+        val textHorizontalAlign: Int,
+        @SerialName("tva")
+        val textVerticalAlign: Int
+    )
+}
 
 @Serializable
 @SerialName("L")

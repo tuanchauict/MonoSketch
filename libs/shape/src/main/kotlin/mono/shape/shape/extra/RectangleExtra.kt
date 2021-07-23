@@ -1,13 +1,5 @@
 package mono.shape.shape.extra
 
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 import mono.common.Characters.HALF_TRANSPARENT_CHAR
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.drawable.CharDrawable
@@ -15,19 +7,16 @@ import mono.graphics.bitmap.drawable.Drawable
 import mono.graphics.bitmap.drawable.NinePatchDrawable
 import mono.graphics.bitmap.drawable.NinePatchDrawable.Pattern
 import mono.shape.serialization.SerializableRectangle
+import mono.shape.shape.extra.RectangleExtra.BorderStyle.Companion.NO_ID
+import mono.shape.shape.extra.RectangleExtra.FillStyle.Companion.NO_ID
 
 /**
  * A [ShapeExtra] for [mono.shape.shape.Rectangle]
  */
-@Serializable
 data class RectangleExtra(
-    @SerialName("fe")
     val isFillEnabled: Boolean = false,
-    @SerialName("fu")
     val userSelectedFillStyle: FillStyle,
-    @SerialName("be")
     val isBorderEnabled: Boolean,
-    @SerialName("bu")
     val userSelectedBorderStyle: BorderStyle
 ) : ShapeExtra() {
     val fillStyle: FillStyle
@@ -60,33 +49,11 @@ data class RectangleExtra(
      *
      * @param displayName is the text visible on the UI tool for selection.
      */
-    @Serializable(with = FillStyle.FillStyleSerializer::class)
     class FillStyle private constructor(
         val id: String,
         val displayName: String,
         val drawable: Drawable
     ) {
-
-        internal object FillStyleSerializer : KSerializer<FillStyle> {
-            private val predefinedMap: Map<String, FillStyle> =
-                PREDEFINED_STYLES.associateBy { it.id }
-
-            override val descriptor: SerialDescriptor =
-                PrimitiveSerialDescriptor("FillStyle", PrimitiveKind.STRING)
-
-            override fun serialize(encoder: Encoder, value: FillStyle) {
-                val marshaledValue = value.id.ifEmpty {
-                    TODO("Implement marshal-algorithm for general fill style")
-                }
-                encoder.encodeString(marshaledValue)
-            }
-
-            override fun deserialize(decoder: Decoder): FillStyle {
-                val marshaledValue = decoder.decodeString()
-                return predefinedMap[marshaledValue]
-                    ?: TODO("Implement unmarshal-algorithm for general fill style")
-            }
-        }
 
         companion object {
             private const val NO_ID = ""
@@ -136,33 +103,11 @@ data class RectangleExtra(
      *
      * @param displayName is the text visible on the UI tool for selection.
      */
-    @Serializable(with = BorderStyle.BorderStyleSerializer::class)
     class BorderStyle private constructor(
         val id: String,
         val displayName: String,
         val drawable: Drawable
     ) {
-        internal object BorderStyleSerializer : KSerializer<BorderStyle> {
-            private val predefinedMap: Map<String, BorderStyle> =
-                PREDEFINED_STYLES.associateBy { it.id }
-
-            override val descriptor: SerialDescriptor =
-                PrimitiveSerialDescriptor("BorderStyle", PrimitiveKind.STRING)
-
-            override fun serialize(encoder: Encoder, value: BorderStyle) {
-                val marshaledValue = value.id.ifEmpty {
-                    TODO("Implement marshal-algorithm for general border style")
-                }
-                encoder.encodeString(marshaledValue)
-            }
-
-            override fun deserialize(decoder: Decoder): BorderStyle {
-                val marshaledValue = decoder.decodeString()
-                return predefinedMap[marshaledValue]
-                    ?: TODO("Implement unmarshal-algorithm for general border style")
-            }
-        }
-
         companion object {
             private const val NO_ID = ""
 
