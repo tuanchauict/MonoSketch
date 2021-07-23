@@ -14,7 +14,6 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.shape.extra.LineExtra
 import mono.shape.shape.extra.RectangleExtra
 import org.w3c.dom.HTMLElement
 
@@ -82,13 +81,9 @@ class ShapeToolViewController(
         ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
             .map { OptionItem(it.id, it.displayName) }
 
-    private fun getHeadOptions(): List<OptionItem> {
-        // TODO: Move this into a line head style manager class. This won't work well when user's 
-        //  style is supported.
-        return LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.map {
-            OptionItem(it.id, it.displayName)
-        }
-    }
+    private fun getHeadOptions(): List<OptionItem> =
+        ShapeExtraManager.getAllPredefinedAnchorChars()
+            .map { OptionItem(it.id, it.displayName) }
 
     private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
         val selectedFillPosition =
@@ -105,9 +100,9 @@ class ShapeToolViewController(
 
     private fun Line.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
         val selectedStartHeadPosition =
-            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.indexOf(extra.userSelectedStartAnchor)
+            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedStartAnchor)
         val selectedEndHeadPosition =
-            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.indexOf(extra.userSelectedEndAnchor)
+            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
         return mapOf(
             //        ToolType.STROKE to ToolState(false, 0),
             ToolType.START_HEAD to ToolState(extra.isStartAnchorEnabled, selectedStartHeadPosition),

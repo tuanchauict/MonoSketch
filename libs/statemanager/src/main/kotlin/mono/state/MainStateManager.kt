@@ -36,7 +36,6 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.shape.extra.LineExtra
 import mono.shape.toJson
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
@@ -251,9 +250,8 @@ class MainStateManager(
         val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isStartAnchorEnabled
-        val newAnchor =
-            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.firstOrNull { it.id == newAnchorId }
-                ?: currentExtra.userSelectedStartAnchor
+        val newAnchor = ShapeExtraManager.getAnchorChar(newAnchorId)
+            ?: currentExtra.userSelectedStartAnchor
         val newExtra = currentExtra.copy(
             isStartAnchorEnabled = newIsEnabled,
             userSelectedStartAnchor = newAnchor
@@ -265,9 +263,8 @@ class MainStateManager(
         val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isEndAnchorEnabled
-        val newAnchor =
-            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.firstOrNull { it.id == newAnchorId }
-                ?: currentExtra.userSelectedEndAnchor
+        val newAnchor = ShapeExtraManager.getAnchorChar(newAnchorId)
+            ?: currentExtra.userSelectedEndAnchor
         val newExtra = currentExtra.copy(
             isEndAnchorEnabled = newIsEnabled,
             userSelectedEndAnchor = newAnchor
