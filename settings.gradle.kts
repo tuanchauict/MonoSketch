@@ -1,4 +1,4 @@
-rootProject.name = "MonoFlow"
+rootProject.name = "MonoSketch"
 
 val moduleMap = mapOf(
     "app" to "app",

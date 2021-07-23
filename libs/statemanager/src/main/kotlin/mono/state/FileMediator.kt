@@ -21,7 +21,7 @@ internal class FileMediator {
             val fileBlob = Blob(arrayOf(jsonString))
             val node = a {
                 href = URL.Companion.createObjectURL(fileBlob)
-                attributes["download"] = "monoflow.$EXTENSION"
+                attributes["download"] = "$DEFAULT_FILENAME.$EXTENSION"
 
                 style = "position: absolute; left = -1000px;"
             }
@@ -55,6 +55,7 @@ internal class FileMediator {
     }
 
     companion object {
+        private const val DEFAULT_FILENAME = "monosketch"
         private const val EXTENSION = "mono"
     }
 }

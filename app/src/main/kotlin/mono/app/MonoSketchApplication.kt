@@ -27,12 +27,12 @@ import org.w3c.dom.set
 /**
  * Main class of the app to handle all kinds of events, UI, actions, etc.
  */
-class MonoFlowApplication : LifecycleOwner() {
-    private val model: MonoFlowAppModel = MonoFlowAppModel()
+class MonoSketchApplication : LifecycleOwner() {
+    private val model = MonoSketchAppModel()
 
-    private val mainBoard: MonoBoard = MonoBoard()
+    private val mainBoard = MonoBoard()
     private val shapeManager = ShapeManager()
-    private val selectedShapeManager: SelectedShapeManager = SelectedShapeManager()
+    private val selectedShapeManager = SelectedShapeManager()
     private val bitmapManager = MonoBitmapManager()
     private var mainStateManager: MainStateManager? = null
 
