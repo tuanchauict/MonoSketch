@@ -7,7 +7,7 @@ package mono.shape.extra.manager.model
  *
  * @param displayName is the text visible on the UI tool for selection.
  */
-class AnchorChar internal constructor(
+class AnchorChar(
     val id: String,
     val displayName: String,
     val left: Char,
@@ -16,9 +16,9 @@ class AnchorChar internal constructor(
     val bottom: Char
 ) {
 
-    internal constructor(id: String, displayName: String, all: Char) :
+    constructor(id: String, displayName: String, all: Char) :
         this(id, displayName, all, all, all, all)
 
-    internal constructor(id: String, displayName: String, horizontal: Char, vertical: Char) :
+    constructor(id: String, displayName: String, horizontal: Char, vertical: Char) :
         this(id, displayName, horizontal, horizontal, vertical, vertical)
 }

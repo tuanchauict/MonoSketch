@@ -1,6 +1,7 @@
 package mono.bitmap.manager.factory
 
 import mono.graphics.geo.Point
+import mono.shape.extra.manager.model.AnchorChar
 import mono.shape.shape.extra.LineExtra
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -353,8 +354,8 @@ class LineBitmapFactoryTest {
 
     @Test
     fun testToBitmap_anchorChar_leftToRight() {
-        val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
-        val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
+        val anchorCharStart = AnchorChar("id", "name", 'L', 'R', 'T', 'B')
+        val anchorCharEnd = AnchorChar("id", "name", 'l', 'r', 't', 'b')
         val lineExtra = LineExtra(
             isStartAnchorEnabled = true,
             anchorCharStart,
@@ -374,8 +375,8 @@ class LineBitmapFactoryTest {
 
     @Test
     fun testToBitmap_anchorChar_rightToLeft() {
-        val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
-        val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
+        val anchorCharStart = AnchorChar("id", "name", 'L', 'R', 'T', 'B')
+        val anchorCharEnd = AnchorChar("id", "name", 'l', 'r', 't', 'b')
         val lineExtra = LineExtra(
             isStartAnchorEnabled = true,
             anchorCharStart,
@@ -395,8 +396,8 @@ class LineBitmapFactoryTest {
 
     @Test
     fun testToBitmap_anchorChar_topToBottom() {
-        val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
-        val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
+        val anchorCharStart = AnchorChar("id", "name", 'L', 'R', 'T', 'B')
+        val anchorCharEnd = AnchorChar("id", "name", 'l', 'r', 't', 'b')
         val lineExtra = LineExtra(
             isStartAnchorEnabled = true,
             anchorCharStart,
@@ -422,8 +423,8 @@ class LineBitmapFactoryTest {
 
     @Test
     fun testToBitmap_anchorChar_bottomToTop() {
-        val anchorCharStart = LineExtra.AnchorChar('L', 'R', 'T', 'B')
-        val anchorCharEnd = LineExtra.AnchorChar('l', 'r', 't', 'b')
+        val anchorCharStart = AnchorChar("id", "name", 'L', 'R', 'T', 'B')
+        val anchorCharEnd = AnchorChar("id", "name", 'l', 'r', 't', 'b')
         val lineExtra = LineExtra(
             isStartAnchorEnabled = true,
             anchorCharStart,
@@ -450,9 +451,9 @@ class LineBitmapFactoryTest {
     companion object {
         private val LINE_EXTRA = LineExtra(
             isStartAnchorEnabled = true,
-            LineExtra.AnchorChar('0'),
+            AnchorChar("id", "name", '0'),
             isEndAnchorEnabled = true,
-            LineExtra.AnchorChar('1')
+            AnchorChar("id", "name", '1')
         )
     }
 }
