@@ -15,7 +15,7 @@ internal class RectangleTest {
 
         val serializableRectangle = rectangle.toSerializableShape(true) as SerializableRectangle
         assertEquals(rectangle.bound, serializableRectangle.bound)
-        assertEquals(rectangle.extra, serializableRectangle.extra)
+        assertEquals(rectangle.extra.toSerializableExtra(), serializableRectangle.extra)
     }
 
     @Test
@@ -25,7 +25,7 @@ internal class RectangleTest {
 
         val serializableRectangle = rectangle.toSerializableShape(true) as SerializableRectangle
         assertEquals(rectangle.bound, serializableRectangle.bound)
-        assertEquals(rectangle.extra, serializableRectangle.extra)
+        assertEquals(rectangle.extra.toSerializableExtra(), serializableRectangle.extra)
     }
 
     @Test

@@ -23,7 +23,7 @@ class LineTest {
         assertEquals(startPoint, serializableLine.startPoint)
         assertEquals(endPoint, serializableLine.endPoint)
         assertEquals(line.reducedJoinPoints, LineHelper.reduce(serializableLine.jointPoints))
-        assertEquals(line.extra, serializableLine.extra)
+        assertEquals(line.extra.toSerializableExtra(), serializableLine.extra)
         assertFalse(serializableLine.wasMovingEdge)
     }
 
@@ -48,7 +48,7 @@ class LineTest {
         assertEquals(newStartPoint, serializableLine.startPoint)
         assertEquals(newEndPoint, serializableLine.endPoint)
         assertEquals(line.reducedJoinPoints, LineHelper.reduce(serializableLine.jointPoints))
-        assertEquals(line.extra, serializableLine.extra)
+        assertEquals(line.extra.toSerializableExtra(), serializableLine.extra)
         assertFalse(serializableLine.wasMovingEdge)
     }
 
@@ -63,7 +63,7 @@ class LineTest {
         assertEquals(startPoint, serializableLine.startPoint)
         assertEquals(endPoint, serializableLine.endPoint)
         assertEquals(line.reducedJoinPoints, LineHelper.reduce(serializableLine.jointPoints))
-        assertEquals(line.extra, serializableLine.extra)
+        assertEquals(line.extra.toSerializableExtra(), serializableLine.extra)
         assertTrue(serializableLine.wasMovingEdge)
     }
 

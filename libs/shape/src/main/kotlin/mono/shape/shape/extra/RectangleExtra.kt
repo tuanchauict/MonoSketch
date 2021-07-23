@@ -1,228 +1,56 @@
 package mono.shape.shape.extra
 
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import mono.common.Characters.HALF_TRANSPARENT_CHAR
-import mono.common.Characters.TRANSPARENT_CHAR
-import mono.graphics.bitmap.drawable.CharDrawable
-import mono.graphics.bitmap.drawable.Drawable
-import mono.graphics.bitmap.drawable.NinePatchDrawable
-import mono.graphics.bitmap.drawable.NinePatchDrawable.Pattern
+import mono.shape.extra.manager.ShapeExtraManager
+import mono.shape.extra.manager.model.RectangleBorderStyle
+import mono.shape.extra.manager.model.RectangleFillStyle
+import mono.shape.serialization.SerializableRectangle
 
 /**
  * A [ShapeExtra] for [mono.shape.shape.Rectangle]
  */
-@Serializable
 data class RectangleExtra(
-    @SerialName("fe")
     val isFillEnabled: Boolean = false,
-    @SerialName("fu")
-    val userSelectedFillStyle: FillStyle,
-    @SerialName("be")
+    val userSelectedFillStyle: RectangleFillStyle,
     val isBorderEnabled: Boolean,
-    @SerialName("bu")
-    val userSelectedBorderStyle: BorderStyle
+    val userSelectedBorderStyle: RectangleBorderStyle
 ) : ShapeExtra() {
-    val fillStyle: FillStyle
-        get() = if (isFillEnabled) userSelectedFillStyle else FillStyle.NOFILLED_STYLE
-
-    val borderStyle: BorderStyle
-        get() = if (isBorderEnabled) userSelectedBorderStyle else BorderStyle.NO_BORDER
-
-    /**
-     * A class for defining a fill style for rectangle.
-     *
-     * @param id is the key for retrieving predefined [FillStyle] when serialization. If id is not
-     * defined ([NO_ID]), serializer will use the other information for marshal and unmarshal. [id]
-     * cannot be set from outside.
-     *
-     * @param displayName is the text visible on the UI tool for selection.
-     */
-    @Serializable(with = FillStyle.FillStyleSerializer::class)
-    class FillStyle private constructor(
-        val id: String,
-        val displayName: String,
-        val drawable: Drawable
-    ) {
-
-        internal object FillStyleSerializer : KSerializer<FillStyle> {
-            private val predefinedMap: Map<String, FillStyle> =
-                PREDEFINED_STYLES.associateBy { it.id }
-
-            override val descriptor: SerialDescriptor =
-                PrimitiveSerialDescriptor("FillStyle", PrimitiveKind.STRING)
-
-            override fun serialize(encoder: Encoder, value: FillStyle) {
-                val marshaledValue = value.id.ifEmpty {
-                    TODO("Implement marshal-algorithm for general fill style")
-                }
-                encoder.encodeString(marshaledValue)
+    val fillStyle: RectangleFillStyle
+        get() =
+            if (isFillEnabled) {
+                userSelectedFillStyle
+            } else {
+                ShapeExtraManager.RECTANGLE_STYLE_NO_FILLED
             }
 
-            override fun deserialize(decoder: Decoder): FillStyle {
-                val marshaledValue = decoder.decodeString()
-                return predefinedMap[marshaledValue]
-                    ?: TODO("Implement unmarshal-algorithm for general fill style")
-            }
-        }
-
-        companion object {
-            private const val NO_ID = ""
-
-            internal val NOFILLED_STYLE = FillStyle(
-                id = "F0",
-                displayName = "No Fill",
-                CharDrawable(TRANSPARENT_CHAR)
-            )
-
-            val PREDEFINED_STYLES = listOf(
-                FillStyle(
-                    id = "F1",
-                    displayName = " ",
-                    CharDrawable(' ')
-                ),
-                FillStyle(
-                    id = "F2",
-                    displayName = "█",
-                    CharDrawable('█')
-                ),
-                FillStyle(
-                    id = "F3",
-                    displayName = "▒",
-                    CharDrawable('▒')
-                ),
-                FillStyle(
-                    id = "F4",
-                    displayName = "░",
-                    CharDrawable('░')
-                ),
-                FillStyle(
-                    id = "F5",
-                    displayName = "▚",
-                    CharDrawable('▚')
-                )
-            )
-        }
-    }
-
-    /**
-     * A class for defining a fill style for rectangle.
-     *
-     * @param id is the key for retrieving predefined [FillStyle] when serialization. If id is not
-     * defined ([NO_ID]), serializer will use the other information for marshal and unmarshal. [id]
-     * cannot be set from outside.
-     *
-     * @param displayName is the text visible on the UI tool for selection.
-     */
-    @Serializable(with = BorderStyle.BorderStyleSerializer::class)
-    class BorderStyle private constructor(
-        val id: String,
-        val displayName: String,
-        val drawable: Drawable
-    ) {
-        internal object BorderStyleSerializer : KSerializer<BorderStyle> {
-            private val predefinedMap: Map<String, BorderStyle> =
-                PREDEFINED_STYLES.associateBy { it.id }
-
-            override val descriptor: SerialDescriptor =
-                PrimitiveSerialDescriptor("BorderStyle", PrimitiveKind.STRING)
-
-            override fun serialize(encoder: Encoder, value: BorderStyle) {
-                val marshaledValue = value.id.ifEmpty {
-                    TODO("Implement marshal-algorithm for general border style")
-                }
-                encoder.encodeString(marshaledValue)
+    val borderStyle: RectangleBorderStyle
+        get() =
+            if (isBorderEnabled) {
+                userSelectedBorderStyle
+            } else {
+                ShapeExtraManager.RECTANGLE_STYLE_NO_BORDER
             }
 
-            override fun deserialize(decoder: Decoder): BorderStyle {
-                val marshaledValue = decoder.decodeString()
-                return predefinedMap[marshaledValue]
-                    ?: TODO("Implement unmarshal-algorithm for general border style")
-            }
-        }
+    constructor(serializableExtra: SerializableRectangle.SerializableExtra) : this(
+        serializableExtra.isFillEnabled,
+        ShapeExtraManager.getRectangleFillStyle(serializableExtra.userSelectedFillStyleId),
+        serializableExtra.isBorderEnabled,
+        ShapeExtraManager.getRectangleBorderStyle(serializableExtra.userSelectedBorderStyleId)
+    )
 
-        companion object {
-            private const val NO_ID = ""
-
-            private val PATTERN_TEXT_NO_BORDER = """
-                +++
-                + +
-                +++
-            """.trimIndent()
-                .replace('+', HALF_TRANSPARENT_CHAR)
-
-            private val PATTERN_TEXT_0 = """
-                ┌─┐
-                │ │
-                └─┘
-            """.trimIndent()
-            private val PATTERN_TEXT_1 = """
-                ┏━┓
-                ┃ ┃
-                ┗━┛
-            """.trimIndent()
-            private val PATTERN_TEXT_2 = """
-                ╔═╗
-                ║ ║
-                ╚═╝
-            """.trimIndent()
-
-            private val REPEATABLE_RANGE_0 = NinePatchDrawable.RepeatableRange.Repeat(1, 1)
-
-            internal val NO_BORDER = BorderStyle(
-                id = "B0",
-                displayName = "No border",
-                NinePatchDrawable(
-                    Pattern.fromText(PATTERN_TEXT_NO_BORDER),
-                    REPEATABLE_RANGE_0,
-                    REPEATABLE_RANGE_0
-                )
-            )
-
-            val PREDEFINED_STYLES = listOf(
-                BorderStyle(
-                    id = "B1",
-                    displayName = "─",
-                    NinePatchDrawable(
-                        Pattern.fromText(PATTERN_TEXT_0),
-                        REPEATABLE_RANGE_0,
-                        REPEATABLE_RANGE_0
-                    )
-                ),
-                BorderStyle(
-                    id = "B2",
-                    displayName = "━",
-                    NinePatchDrawable(
-                        Pattern.fromText(PATTERN_TEXT_1),
-                        REPEATABLE_RANGE_0,
-                        REPEATABLE_RANGE_0
-                    )
-                ),
-                BorderStyle(
-                    id = "B3",
-                    displayName = "═",
-                    NinePatchDrawable(
-                        Pattern.fromText(PATTERN_TEXT_2),
-                        REPEATABLE_RANGE_0,
-                        REPEATABLE_RANGE_0
-                    )
-                )
-            )
-        }
-    }
+    fun toSerializableExtra(): SerializableRectangle.SerializableExtra =
+        SerializableRectangle.SerializableExtra(
+            isFillEnabled = isFillEnabled,
+            userSelectedFillStyleId = userSelectedFillStyle.id,
+            isBorderEnabled = isBorderEnabled,
+            userSelectedBorderStyleId = userSelectedBorderStyle.id
+        )
 
     companion object {
         val DEFAULT = RectangleExtra(
             isFillEnabled = false,
-            FillStyle.PREDEFINED_STYLES[0],
+            ShapeExtraManager.getRectangleFillStyle(null),
             isBorderEnabled = true,
-            BorderStyle.PREDEFINED_STYLES[0]
+            ShapeExtraManager.getRectangleBorderStyle(null)
         )
     }
 }

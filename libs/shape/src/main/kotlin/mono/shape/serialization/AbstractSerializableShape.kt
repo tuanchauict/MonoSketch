@@ -5,9 +5,6 @@ import kotlinx.serialization.Serializable
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.shape.shape.extra.LineExtra
-import mono.shape.shape.extra.RectangleExtra
-import mono.shape.shape.extra.TextExtra
 
 @Serializable
 sealed class AbstractSerializableShape {
@@ -23,8 +20,21 @@ data class SerializableRectangle(
     @SerialName("b")
     val bound: Rect,
     @SerialName("e")
-    val extra: RectangleExtra
-) : AbstractSerializableShape()
+    val extra: SerializableExtra
+) : AbstractSerializableShape() {
+
+    @Serializable
+    data class SerializableExtra(
+        @SerialName("fe")
+        val isFillEnabled: Boolean = false,
+        @SerialName("fu")
+        val userSelectedFillStyleId: String,
+        @SerialName("be")
+        val isBorderEnabled: Boolean,
+        @SerialName("bu")
+        val userSelectedBorderStyleId: String
+    )
+}
 
 @Serializable
 @SerialName("T")
@@ -36,8 +46,19 @@ data class SerializableText(
     @SerialName("t")
     val text: String,
     @SerialName("e")
-    val extra: TextExtra
-) : AbstractSerializableShape()
+    val extra: SerializableExtra
+) : AbstractSerializableShape() {
+
+    @Serializable
+    data class SerializableExtra(
+        @SerialName("be")
+        val boundExtra: SerializableRectangle.SerializableExtra,
+        @SerialName("tha")
+        val textHorizontalAlign: Int,
+        @SerialName("tva")
+        val textVerticalAlign: Int
+    )
+}
 
 @Serializable
 @SerialName("L")
@@ -51,10 +72,23 @@ data class SerializableLine(
     @SerialName("jps")
     val jointPoints: List<Point>,
     @SerialName("e")
-    val extra: LineExtra,
+    val extra: SerializableExtra,
     @SerialName("em")
     val wasMovingEdge: Boolean
-) : AbstractSerializableShape()
+) : AbstractSerializableShape() {
+
+    @Serializable
+    data class SerializableExtra(
+        @SerialName("ase")
+        val isStartAnchorEnabled: Boolean = false,
+        @SerialName("asu")
+        val userSelectedStartAnchorId: String,
+        @SerialName("aee")
+        val isEndAnchorEnabled: Boolean = false,
+        @SerialName("aeu")
+        val userSelectedEndAnchorId: String
+    )
+}
 
 @Serializable
 @SerialName("G")

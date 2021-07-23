@@ -52,7 +52,7 @@ class Text(
         id = serializableText.id,
         parentId = parentId
     ) {
-        extra = serializableText.extra
+        extra = TextExtra(serializableText.extra)
         setText(serializableText.text)
     }
 
@@ -62,7 +62,7 @@ class Text(
     }
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
-        SerializableText(id.takeIf { isIdIncluded }, bound, text, extra)
+        SerializableText(id.takeIf { isIdIncluded }, bound, text, extra.toSerializableExtra())
 
     override fun setBound(newBound: Rect) = update {
         val isUpdated = bound != newBound

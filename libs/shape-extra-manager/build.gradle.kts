@@ -9,11 +9,8 @@ repositories {
 dependencies {
     implementation(project(":commons"))
     implementation(project(":graphicsgeo"))
+    implementation(project(":livedata"))
     implementation(project(":monobitmap"))
-    implementation(project(":shape"))
-    implementation(project(":shape-extra-manager"))
-
-    implementation(kotlin("stdlib-js"))
 
     testImplementation(kotlin("test-js"))
 }

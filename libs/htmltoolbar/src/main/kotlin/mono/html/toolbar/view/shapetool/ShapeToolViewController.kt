@@ -7,13 +7,13 @@ import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
+import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.shape.extra.LineExtra
 import mono.shape.shape.extra.RectangleExtra
 import org.w3c.dom.HTMLElement
 
@@ -73,35 +73,25 @@ class ShapeToolViewController(
         }
     }
 
-    private fun getFillOptions(): List<OptionItem> {
-        // TODO: Move this into a fill style manager class. This won't work well when user's style
-        //  is supported.
-        return RectangleExtra.FillStyle.PREDEFINED_STYLES.map {
-            OptionItem(it.id, it.displayName)
-        }
-    }
+    private fun getFillOptions(): List<OptionItem> =
+        ShapeExtraManager.getAllPredefinedRectangleFillStyles()
+            .map { OptionItem(it.id, it.displayName) }
 
-    private fun getBorderOptions(): List<OptionItem> {
-        // TODO: Move this into a border style manager class. This won't work well when user's style
-        //  is supported.
-        return RectangleExtra.BorderStyle.PREDEFINED_STYLES.map {
-            OptionItem(it.id, it.displayName)
-        }
-    }
+    private fun getBorderOptions(): List<OptionItem> =
+        ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
+            .map { OptionItem(it.id, it.displayName) }
 
-    private fun getHeadOptions(): List<OptionItem> {
-        // TODO: Move this into a line head style manager class. This won't work well when user's 
-        //  style is supported.
-        return LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.map {
-            OptionItem(it.id, it.displayName)
-        }
-    }
+    private fun getHeadOptions(): List<OptionItem> =
+        ShapeExtraManager.getAllPredefinedAnchorChars()
+            .map { OptionItem(it.id, it.displayName) }
 
     private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
         val selectedFillPosition =
-            RectangleExtra.FillStyle.PREDEFINED_STYLES.indexOf(userSelectedFillStyle)
+            ShapeExtraManager.getAllPredefinedRectangleFillStyles()
+                .indexOf(userSelectedFillStyle)
         val selectedBorderPosition =
-            RectangleExtra.BorderStyle.PREDEFINED_STYLES.indexOf(userSelectedBorderStyle)
+            ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
+                .indexOf(userSelectedBorderStyle)
         return mapOf(
             ToolType.FILL to ToolState(isFillEnabled, selectedFillPosition),
             ToolType.BORDER to ToolState(isBorderEnabled, selectedBorderPosition)
@@ -110,9 +100,9 @@ class ShapeToolViewController(
 
     private fun Line.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
         val selectedStartHeadPosition =
-            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.indexOf(extra.userSelectedStartAnchor)
+            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedStartAnchor)
         val selectedEndHeadPosition =
-            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.indexOf(extra.userSelectedEndAnchor)
+            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
         return mapOf(
             //        ToolType.STROKE to ToolState(false, 0),
             ToolType.START_HEAD to ToolState(extra.isStartAnchorEnabled, selectedStartHeadPosition),

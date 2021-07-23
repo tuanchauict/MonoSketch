@@ -2,6 +2,7 @@ package mono.bitmap.manager.factory
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
+import mono.shape.extra.manager.model.AnchorChar
 import mono.shape.shape.extra.LineExtra
 import kotlin.math.max
 import kotlin.math.min
@@ -75,7 +76,7 @@ object LineBitmapFactory {
     private fun BitmapBuilderDecoration.putAnchorPoint(
         anchor: Point,
         previousPoint: Point,
-        anchorChar: LineExtra.AnchorChar
+        anchorChar: AnchorChar
     ) {
         val char = if (isHorizontal(anchor, previousPoint)) {
             if (anchor.left < previousPoint.left) anchorChar.left else anchorChar.right

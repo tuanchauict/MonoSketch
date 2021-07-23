@@ -1,7 +1,7 @@
 package mono.html.toolbar
 
 import mono.shape.command.ChangeOrder
-import mono.shape.shape.extra.TextExtra
+import mono.shape.extra.manager.model.TextAlign
 
 /**
  * An enum class which defines all action types which repeatedly have effects after triggered.
@@ -29,8 +29,8 @@ sealed interface OneTimeActionType {
     object EditSelectedShapes : OneTimeActionType
 
     data class TextAlignment(
-        val newHorizontalAlign: TextExtra.HorizontalAlign? = null,
-        val newVerticalAlign: TextExtra.VerticalAlign? = null
+        val newHorizontalAlign: TextAlign.HorizontalAlign? = null,
+        val newVerticalAlign: TextAlign.VerticalAlign? = null
     ) : OneTimeActionType
 
     data class MoveShapes(val offsetRow: Int, val offsetCol: Int) : OneTimeActionType

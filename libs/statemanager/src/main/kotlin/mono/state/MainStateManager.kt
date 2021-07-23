@@ -25,6 +25,8 @@ import mono.shape.command.ChangeBound
 import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.ChangeOrder.ChangeOrderType
+import mono.shape.extra.manager.ShapeExtraManager
+import mono.shape.extra.manager.model.TextAlign
 import mono.shape.remove
 import mono.shape.replaceWithJson
 import mono.shape.selection.SelectedShapeManager
@@ -34,9 +36,6 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.shape.extra.LineExtra
-import mono.shape.shape.extra.RectangleExtra
-import mono.shape.shape.extra.TextExtra
 import mono.shape.toJson
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
@@ -204,11 +203,10 @@ class MainStateManager(
             is Group -> null
         } ?: return
         val newIsFillEnabled = isEnabled ?: currentRectangleExtra.isFillEnabled
-        // TODO: Move this into a fill style manager class. This won't work well when user's style
-        //  is supported.
-        val newFillStyle =
-            RectangleExtra.FillStyle.PREDEFINED_STYLES.firstOrNull { it.id == newFillStyleId }
-                ?: currentRectangleExtra.userSelectedFillStyle
+        val newFillStyle = ShapeExtraManager.getRectangleFillStyle(
+            newFillStyleId,
+            currentRectangleExtra.userSelectedFillStyle
+        )
         val rectangleExtra = currentRectangleExtra.copy(
             isFillEnabled = newIsFillEnabled,
             userSelectedFillStyle = newFillStyle
@@ -234,11 +232,10 @@ class MainStateManager(
             is Group -> null
         } ?: return
         val newIsBorderEnabled = isEnabled ?: currentRectangleExtra.isBorderEnabled
-        // TODO: Move this into a border style manager class. This won't work well when user's style
-        //  is supported.
-        val newBorderStyle =
-            RectangleExtra.BorderStyle.PREDEFINED_STYLES.firstOrNull { it.id == newBorderStyleId }
-                ?: currentRectangleExtra.userSelectedBorderStyle
+        val newBorderStyle = ShapeExtraManager.getRectangleBorderStyle(
+            newBorderStyleId,
+            currentRectangleExtra.userSelectedBorderStyle
+        )
         val rectangleExtra = currentRectangleExtra.copy(
             isBorderEnabled = newIsBorderEnabled,
             userSelectedBorderStyle = newBorderStyle
@@ -258,8 +255,7 @@ class MainStateManager(
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isStartAnchorEnabled
         val newAnchor =
-            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.firstOrNull { it.id == newAnchorId }
-                ?: currentExtra.userSelectedStartAnchor
+            ShapeExtraManager.getAnchorChar(newAnchorId, currentExtra.userSelectedStartAnchor)
         val newExtra = currentExtra.copy(
             isStartAnchorEnabled = newIsEnabled,
             userSelectedStartAnchor = newAnchor
@@ -272,8 +268,7 @@ class MainStateManager(
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isEndAnchorEnabled
         val newAnchor =
-            LineExtra.AnchorChar.PREDEFINED_ANCHOR_CHARS.firstOrNull { it.id == newAnchorId }
-                ?: currentExtra.userSelectedEndAnchor
+            ShapeExtraManager.getAnchorChar(newAnchorId, currentExtra.userSelectedEndAnchor)
         val newExtra = currentExtra.copy(
             isEndAnchorEnabled = newIsEnabled,
             userSelectedEndAnchor = newAnchor
@@ -298,8 +293,8 @@ class MainStateManager(
     }
 
     private fun setTextAlignment(
-        horizontalAlign: TextExtra.HorizontalAlign?,
-        verticalAlign: TextExtra.VerticalAlign?
+        horizontalAlign: TextAlign.HorizontalAlign?,
+        verticalAlign: TextAlign.VerticalAlign?
     ) {
         val textShape = environment.getSelectedShapes().singleOrNull() as? Text ?: return
         val newTextAlign = textShape.extra.textAlign.copy(
