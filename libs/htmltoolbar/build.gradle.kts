@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":lifecycle"))
     implementation(project(":livedata"))
     implementation(project(":shape"))
+    implementation(project(":shape-extra-manager"))
 
     implementation(libs.kotlinx.html)
 

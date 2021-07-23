@@ -3,7 +3,6 @@ plugins {
 }
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
@@ -12,6 +11,7 @@ dependencies {
     implementation(project(":graphicsgeo"))
     implementation(project(":monobitmap"))
     implementation(project(":shape"))
+    implementation(project(":shape-extra-manager"))
 
     implementation(kotlin("stdlib-js"))
 

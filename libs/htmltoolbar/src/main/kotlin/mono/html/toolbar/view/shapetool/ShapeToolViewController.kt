@@ -7,6 +7,7 @@ import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
+import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
@@ -73,21 +74,13 @@ class ShapeToolViewController(
         }
     }
 
-    private fun getFillOptions(): List<OptionItem> {
-        // TODO: Move this into a fill style manager class. This won't work well when user's style
-        //  is supported.
-        return RectangleExtra.FillStyle.PREDEFINED_STYLES.map {
-            OptionItem(it.id, it.displayName)
-        }
-    }
+    private fun getFillOptions(): List<OptionItem> =
+        ShapeExtraManager.getAllPredefinedRectangleFillStyles()
+            .map { OptionItem(it.id, it.displayName) }
 
-    private fun getBorderOptions(): List<OptionItem> {
-        // TODO: Move this into a border style manager class. This won't work well when user's style
-        //  is supported.
-        return RectangleExtra.BorderStyle.PREDEFINED_STYLES.map {
-            OptionItem(it.id, it.displayName)
-        }
-    }
+    private fun getBorderOptions(): List<OptionItem> =
+        ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
+            .map { OptionItem(it.id, it.displayName) }
 
     private fun getHeadOptions(): List<OptionItem> {
         // TODO: Move this into a line head style manager class. This won't work well when user's 
@@ -99,9 +92,11 @@ class ShapeToolViewController(
 
     private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
         val selectedFillPosition =
-            RectangleExtra.FillStyle.PREDEFINED_STYLES.indexOf(userSelectedFillStyle)
+            ShapeExtraManager.getAllPredefinedRectangleFillStyles()
+                .indexOf(userSelectedFillStyle)
         val selectedBorderPosition =
-            RectangleExtra.BorderStyle.PREDEFINED_STYLES.indexOf(userSelectedBorderStyle)
+            ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
+                .indexOf(userSelectedBorderStyle)
         return mapOf(
             ToolType.FILL to ToolState(isFillEnabled, selectedFillPosition),
             ToolType.BORDER to ToolState(isBorderEnabled, selectedBorderPosition)

@@ -8,22 +8,22 @@ import mono.shape.extra.manager.predefined.PredefinedRectangleFillStyle
 /**
  * A manager class for managing shape extras
  */
-class ShapeExtraManager {
-    fun getRectangleFillStyle(id: String = NO_ID): RectangleFillStyle =
+object ShapeExtraManager {
+    val RECTANGLE_STYLE_NO_FILLED = PredefinedRectangleFillStyle.NOFILLED_STYLE
+    val RECTANGLE_STYLE_NO_BORDER = PredefinedRectangleBorderStyle.NO_BORDER
+
+    val DEFAULT_RECTANGLE_FILL_STYLE = PredefinedRectangleFillStyle.PREDEFINED_STYLES[0]
+    val DEFAULT_RECTANGLE_BORDER_STYLE = PredefinedRectangleBorderStyle.PREDEFINED_STYLES[0]
+
+    fun getRectangleFillStyle(id: String?): RectangleFillStyle? =
         PredefinedRectangleFillStyle.PREDEFINED_STYLE_MAP[id]
-            ?: PredefinedRectangleFillStyle.NOFILLED_STYLE
 
     fun getAllPredefinedRectangleFillStyles(): List<RectangleFillStyle> =
         PredefinedRectangleFillStyle.PREDEFINED_STYLES
 
-    fun getRectangleBorderStyle(id: String = NO_ID): RectangleBorderStyle =
+    fun getRectangleBorderStyle(id: String?): RectangleBorderStyle? =
         PredefinedRectangleBorderStyle.PREDEFINED_STYLE_MAP[id]
-            ?: PredefinedRectangleBorderStyle.NO_BORDER
 
     fun getAllPredefinedRectangleBorderStyles(): List<RectangleBorderStyle> =
         PredefinedRectangleBorderStyle.PREDEFINED_STYLES
-
-    companion object {
-        private const val NO_ID = ""
-    }
 }
