@@ -17,7 +17,7 @@ class TextTest {
         val serializableText = text.toSerializableShape(true) as SerializableText
         assertEquals(text.text, serializableText.text)
         assertEquals(text.bound, serializableText.bound)
-        assertEquals(text.extra, serializableText.extra)
+        assertEquals(text.extra.toSerializableExtra(), serializableText.extra)
     }
 
     @Test
@@ -28,7 +28,7 @@ class TextTest {
         val serializableText = text.toSerializableShape(true) as SerializableText
         assertEquals(text.text, serializableText.text)
         assertEquals(text.bound, serializableText.bound)
-        assertEquals(text.extra, serializableText.extra)
+        assertEquals(text.extra.toSerializableExtra(), serializableText.extra)
     }
 
     @Test
@@ -39,7 +39,7 @@ class TextTest {
         val serializableText = text.toSerializableShape(true) as SerializableText
         assertEquals(text.text, serializableText.text)
         assertEquals(text.bound, serializableText.bound)
-        assertEquals(text.extra, serializableText.extra)
+        assertEquals(text.extra.toSerializableExtra(), serializableText.extra)
     }
 
     @Test
