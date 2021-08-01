@@ -35,11 +35,14 @@ data class LineExtra(
         )
 
     companion object {
-        val DEFAULT = LineExtra(
-            isStartAnchorEnabled = false,
-            userSelectedStartAnchor = ShapeExtraManager.getStartHeadAnchorChar(null),
-            isEndAnchorEnabled = false,
-            userSelectedEndAnchor = ShapeExtraManager.getEndHeadAnchorChar(null)
-        )
+        fun createDefault(): LineExtra {
+            val defaultExtraState = ShapeExtraManager.defaultExtraState
+            return LineExtra(
+                defaultExtraState.isStartHeadAnchorCharEnabled,
+                defaultExtraState.startHeadAnchorChar,
+                defaultExtraState.isEndHeadAnchorCharEnabled,
+                defaultExtraState.endHeadAnchorChar
+            )
+        }
     }
 }

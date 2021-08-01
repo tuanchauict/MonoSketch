@@ -87,7 +87,7 @@ class Line(
     var edges: List<Edge> = LineHelper.createEdges(jointPoints)
         private set
 
-    override var extra: LineExtra = LineExtra.DEFAULT
+    override var extra: LineExtra = LineExtra.createDefault()
         private set
 
     /**
