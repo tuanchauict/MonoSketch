@@ -2,11 +2,13 @@ package mono.html.toolbar.view.shapetool
 
 import kotlinx.html.dom.append
 import mono.html.toolbar.ActionManager
+import mono.html.toolbar.RetainableActionType
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.Visibility
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
+import mono.livedata.map
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -70,6 +72,18 @@ class ShapeToolViewController(
                 }
                 appearanceTool.setVisibility(visibleAppearanceTools)
             }
+
+            val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
+                selectedShapesLiveData,
+                actionManager.retainableActionLiveData
+            )
+            MediatorLiveData(emptyMap<ToolType, Visibility>())
+                .apply {
+                    add(fillAppearanceVisibilityLiveData) { value = value + (ToolType.FILL to it) }
+                }
+                .observe(lifecycleOwner) {
+                    appearanceTool.setVisibility(it)
+                }
         }
     }
 
@@ -84,6 +98,64 @@ class ShapeToolViewController(
     private fun getHeadOptions(): List<OptionItem> =
         ShapeExtraManager.getAllPredefinedAnchorChars()
             .map { OptionItem(it.id, it.displayName) }
+
+    private fun createFillAppearanceVisibilityLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
+        retainableActionTypeLiveData: LiveData<RetainableActionType>
+    ): LiveData<Visibility> {
+        val selectedVisibilityLiveData = selectedShapesLiveData.map {
+            when {
+                it.isEmpty() -> null
+                it.size > 1 -> Visibility.Hide
+                else -> {
+                    when (val shape = it.single()) {
+                        is Rectangle -> shape.extra.toFillAppearanceVisibilityState()
+                        is Text -> shape.extra.boundExtra.toFillAppearanceVisibilityState()
+                        is Group,
+                        is Line,
+                        is MockShape -> Visibility.Hide
+                    }
+                }
+            }
+        }
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
+            val defaultFillState = when (it) {
+                RetainableActionType.ADD_RECTANGLE,
+                RetainableActionType.ADD_TEXT -> ShapeExtraManager.getRectangleFillStyle(null)
+                RetainableActionType.ADD_LINE,
+                RetainableActionType.IDLE -> null
+            }
+            if (defaultFillState != null) {
+                val selectedFillPosition =
+                    ShapeExtraManager.getAllPredefinedRectangleFillStyles()
+                        .indexOf(defaultFillState)
+                Visibility.Visible(true, selectedFillPosition)
+            } else {
+                Visibility.Hide
+            }
+        }
+
+        return createAppearanceVisibilityLiveData(
+            selectedVisibilityLiveData,
+            defaultVisibilityLiveData
+        )
+    }
+
+    private fun createAppearanceVisibilityLiveData(
+        selectedShapeVisibilityLiveData: LiveData<Visibility?>,
+        defaultVisibilityLiveData: LiveData<Visibility>
+    ): LiveData<Visibility> {
+        return MediatorLiveData(arrayOfNulls<Visibility>(2))
+            .apply {
+                add(selectedShapeVisibilityLiveData) {
+                    value[0] = it
+                }
+                add(defaultVisibilityLiveData) {
+                    value[1] = it
+                }
+            }
+            .map { it[0] ?: it[1] ?: Visibility.Hide }
+    }
 
     private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, Visibility> = mapOf(
         ToolType.FILL to toFillAppearanceVisibilityState(),
