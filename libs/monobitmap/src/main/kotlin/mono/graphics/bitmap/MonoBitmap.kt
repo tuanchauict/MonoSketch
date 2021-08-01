@@ -1,6 +1,7 @@
 package mono.graphics.bitmap
 
 import mono.common.Characters.TRANSPARENT_CHAR
+import mono.common.Characters.isHalfTransparent
 import mono.common.Characters.isTransparent
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -59,7 +60,14 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
                 val dest = matrix[startRow + r]
 
                 src.forEachIndex(inStartCol, inStartCol + overlap.width) { index, char ->
-                    dest[startCol + index] = char
+                    val destIndex = startCol + index
+                    // char from source is always not transparent (0) due to the optimisation of Row
+                    val isApplicable =
+                        dest[destIndex].isTransparent && char.isHalfTransparent ||
+                            !char.isHalfTransparent
+                    if (isApplicable) {
+                        dest[startCol + index] = char
+                    }
                 }
             }
         }
