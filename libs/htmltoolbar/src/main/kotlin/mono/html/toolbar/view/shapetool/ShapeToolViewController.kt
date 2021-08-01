@@ -129,17 +129,19 @@ class ShapeToolViewController(
             }
         }
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultFillState = when (it) {
+            val defaultState = when (it) {
                 RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> ShapeExtraManager.getRectangleFillStyle(null)
+                RetainableActionType.ADD_TEXT -> ShapeExtraManager.defaultExtraState.fillStyle
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultFillState != null) {
+            if (defaultState != null) {
                 val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedRectangleFillStyles()
-                        .indexOf(defaultFillState)
-                Visibility.Visible(true, selectedFillPosition)
+                    ShapeExtraManager.getAllPredefinedRectangleFillStyles().indexOf(defaultState)
+                Visibility.Visible(
+                    ShapeExtraManager.defaultExtraState.isFillEnabled,
+                    selectedFillPosition
+                )
             } else {
                 Visibility.Hide
             }
@@ -171,17 +173,19 @@ class ShapeToolViewController(
             }
         }
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultFillState = when (it) {
+            val defaultState = when (it) {
                 RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> ShapeExtraManager.getRectangleBorderStyle(null)
+                RetainableActionType.ADD_TEXT -> ShapeExtraManager.defaultExtraState.borderStyle
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultFillState != null) {
+            if (defaultState != null) {
                 val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
-                        .indexOf(defaultFillState)
-                Visibility.Visible(true, selectedFillPosition)
+                    ShapeExtraManager.getAllPredefinedRectangleBorderStyles().indexOf(defaultState)
+                Visibility.Visible(
+                    ShapeExtraManager.defaultExtraState.isBorderEnabled,
+                    selectedFillPosition
+                )
             } else {
                 Visibility.Hide
             }
@@ -213,17 +217,20 @@ class ShapeToolViewController(
             }
         }
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultFillState = when (it) {
-                RetainableActionType.ADD_LINE -> ShapeExtraManager.getStartHeadAnchorChar(null)
+            val defaultState = when (it) {
+                RetainableActionType.ADD_LINE ->
+                    ShapeExtraManager.defaultExtraState.startHeadAnchorChar
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultFillState != null) {
-                val selectedFillPosition =
-                    // TODO: Add method for default start
-                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultFillState)
-                Visibility.Visible(true, selectedFillPosition)
+            if (defaultState != null) {
+                val selectedStartHeaderPosition =
+                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
+                Visibility.Visible(
+                    ShapeExtraManager.defaultExtraState.isStartHeadAnchorCharEnabled,
+                    selectedStartHeaderPosition
+                )
             } else {
                 Visibility.Hide
             }
@@ -255,17 +262,20 @@ class ShapeToolViewController(
             }
         }
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultFillState = when (it) {
-                RetainableActionType.ADD_LINE -> ShapeExtraManager.getEndHeadAnchorChar(null)
+            val defaultState = when (it) {
+                RetainableActionType.ADD_LINE ->
+                    ShapeExtraManager.defaultExtraState.endHeadAnchorChar
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultFillState != null) {
+            if (defaultState != null) {
                 val selectedFillPosition =
-                    // TODO: Add method for default end
-                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultFillState)
-                Visibility.Visible(true, selectedFillPosition)
+                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
+                Visibility.Visible(
+                    ShapeExtraManager.defaultExtraState.isEndHeadAnchorCharEnabled,
+                    selectedFillPosition
+                )
             } else {
                 Visibility.Hide
             }
