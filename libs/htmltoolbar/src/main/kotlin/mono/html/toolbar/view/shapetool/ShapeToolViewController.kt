@@ -85,29 +85,39 @@ class ShapeToolViewController(
         ShapeExtraManager.getAllPredefinedAnchorChars()
             .map { OptionItem(it.id, it.displayName) }
 
-    private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, Visibility> {
+    private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, Visibility> = mapOf(
+        ToolType.FILL to toFillAppearanceVisibilityState(),
+        ToolType.BORDER to toBorderAppearanceVisibilityState()
+    )
+
+    private fun RectangleExtra.toFillAppearanceVisibilityState(): Visibility {
         val selectedFillPosition =
             ShapeExtraManager.getAllPredefinedRectangleFillStyles()
                 .indexOf(userSelectedFillStyle)
+        return Visibility.Visible(isFillEnabled, selectedFillPosition)
+    }
+
+    private fun RectangleExtra.toBorderAppearanceVisibilityState(): Visibility {
         val selectedBorderPosition =
             ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
                 .indexOf(userSelectedBorderStyle)
-        return mapOf(
-            ToolType.FILL to Visibility.Visible(isFillEnabled, selectedFillPosition),
-            ToolType.BORDER to Visibility.Visible(isBorderEnabled, selectedBorderPosition)
-        )
+        return Visibility.Visible(isBorderEnabled, selectedBorderPosition)
     }
 
-    private fun Line.toAppearanceVisibilityState(): Map<ToolType, Visibility> {
+    private fun Line.toAppearanceVisibilityState(): Map<ToolType, Visibility> = mapOf(
+        ToolType.START_HEAD to toStartHeadAppearanceVisibilityState(),
+        ToolType.END_HEAD to toEndHeadAppearanceVisibilityState()
+    )
+
+    private fun Line.toStartHeadAppearanceVisibilityState(): Visibility {
         val selectedStartHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedStartAnchor)
+        return Visibility.Visible(extra.isStartAnchorEnabled, selectedStartHeadPosition)
+    }
+
+    private fun Line.toEndHeadAppearanceVisibilityState(): Visibility {
         val selectedEndHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
-        return mapOf(
-            ToolType.START_HEAD to
-                Visibility.Visible(extra.isStartAnchorEnabled, selectedStartHeadPosition),
-            ToolType.END_HEAD to
-                Visibility.Visible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
-        )
+        return Visibility.Visible(extra.isStartAnchorEnabled, selectedEndHeadPosition)
     }
 }
