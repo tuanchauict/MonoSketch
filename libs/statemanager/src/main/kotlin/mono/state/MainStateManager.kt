@@ -193,7 +193,15 @@ class MainStateManager(
     }
 
     private fun setSelectedShapeFillExtra(isEnabled: Boolean?, newFillStyleId: String?) {
-        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        val singleShape = environment.getSelectedShapes().singleOrNull()
+
+        if (singleShape == null) {
+            ShapeExtraManager.setDefaultValues(
+                isFillEnabled = isEnabled,
+                fillStyleId = newFillStyleId
+            )
+            return
+        }
 
         val currentRectangleExtra = when (singleShape) {
             is Rectangle -> singleShape.extra
@@ -222,7 +230,14 @@ class MainStateManager(
     }
 
     private fun setSelectedShapeBorderExtra(isEnabled: Boolean?, newBorderStyleId: String?) {
-        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        val singleShape = environment.getSelectedShapes().singleOrNull()
+        if (singleShape == null) {
+            ShapeExtraManager.setDefaultValues(
+                isBorderEnabled = isEnabled,
+                borderStyleId = newBorderStyleId
+            )
+            return
+        }
 
         val currentRectangleExtra = when (singleShape) {
             is Rectangle -> singleShape.extra
@@ -251,11 +266,22 @@ class MainStateManager(
     }
 
     private fun setSelectedShapeStartAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
-        val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
+        val line = environment.getSelectedShapes().singleOrNull() as? Line
+        if (line == null) {
+            ShapeExtraManager.setDefaultValues(
+                isStartHeadAnchorCharEnabled = isEnabled,
+                startHeadAnchorCharId = newAnchorId
+            )
+            return
+        }
+
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isStartAnchorEnabled
         val newAnchor =
-            ShapeExtraManager.getAnchorChar(newAnchorId, currentExtra.userSelectedStartAnchor)
+            ShapeExtraManager.getStartHeadAnchorChar(
+                newAnchorId,
+                currentExtra.userSelectedStartAnchor
+            )
         val newExtra = currentExtra.copy(
             isStartAnchorEnabled = newIsEnabled,
             userSelectedStartAnchor = newAnchor
@@ -264,11 +290,21 @@ class MainStateManager(
     }
 
     private fun setSelectedShapeEndAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
-        val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
+        val line = environment.getSelectedShapes().singleOrNull() as? Line
+        if (line == null) {
+            ShapeExtraManager.setDefaultValues(
+                isEndHeadAnchorCharEnabled = isEnabled,
+                endHeadAnchorCharId = newAnchorId
+            )
+            return
+        }
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isEndAnchorEnabled
         val newAnchor =
-            ShapeExtraManager.getAnchorChar(newAnchorId, currentExtra.userSelectedEndAnchor)
+            ShapeExtraManager.getEndHeadAnchorChar(
+                newAnchorId,
+                currentExtra.userSelectedEndAnchor
+            )
         val newExtra = currentExtra.copy(
             isEndAnchorEnabled = newIsEnabled,
             userSelectedEndAnchor = newAnchor

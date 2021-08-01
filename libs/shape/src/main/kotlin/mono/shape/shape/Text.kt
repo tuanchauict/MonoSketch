@@ -30,7 +30,7 @@ class Text(
     var text: String = ""
         private set
 
-    override var extra: TextExtra = TextExtra.DEFAULT
+    override var extra: TextExtra = TextExtra.withDefault()
         private set
 
     var renderableText: RenderableText = RenderableText.EMPTY

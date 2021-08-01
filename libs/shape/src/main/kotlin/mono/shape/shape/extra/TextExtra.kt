@@ -26,13 +26,16 @@ data class TextExtra(
     fun hasBorder(): Boolean = boundExtra.isBorderEnabled
 
     companion object {
-        val DEFAULT = TextExtra(
-            boundExtra = RectangleExtra.DEFAULT,
+        val NO_BOUND = TextExtra(
+            boundExtra = RectangleExtra.withDefault().copy(
+                isFillEnabled = false,
+                isBorderEnabled = false
+            ),
             textAlign = TextAlign(TextAlign.HorizontalAlign.LEFT, TextAlign.VerticalAlign.TOP)
         )
 
-        val NO_BOUND = TextExtra(
-            boundExtra = RectangleExtra.DEFAULT.copy(isBorderEnabled = false),
+        fun withDefault(): TextExtra = TextExtra(
+            boundExtra = RectangleExtra.withDefault(),
             textAlign = TextAlign(TextAlign.HorizontalAlign.LEFT, TextAlign.VerticalAlign.TOP)
         )
     }
