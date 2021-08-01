@@ -46,11 +46,14 @@ data class RectangleExtra(
         )
 
     companion object {
-        val DEFAULT = RectangleExtra(
-            isFillEnabled = false,
-            ShapeExtraManager.getRectangleFillStyle(null),
-            isBorderEnabled = true,
-            ShapeExtraManager.getRectangleBorderStyle(null)
-        )
+        fun withDefault(): RectangleExtra {
+            val defaultExtraState = ShapeExtraManager.defaultExtraState
+            return RectangleExtra(
+                defaultExtraState.isFillEnabled,
+                defaultExtraState.fillStyle,
+                defaultExtraState.isBorderEnabled,
+                defaultExtraState.borderStyle
+            )
+        }
     }
 }

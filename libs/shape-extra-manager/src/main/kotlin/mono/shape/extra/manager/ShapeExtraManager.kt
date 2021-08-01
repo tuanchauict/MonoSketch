@@ -27,6 +27,30 @@ object ShapeExtraManager {
         )
         private set
 
+    fun setDefaultValues(
+        isFillEnabled: Boolean? = null,
+        fillStyleId: String? = null,
+        isBorderEnabled: Boolean? = null,
+        borderStyleId: String? = null,
+        isStartHeadAnchorCharEnabled: Boolean? = null,
+        startHeadAnchorCharId: String? = null,
+        isEndHeadAnchorCharEnabled: Boolean? = null,
+        endHeadAnchorCharId: String? = null
+    ) {
+        defaultExtraState = DefaultExtraState(
+            isFillEnabled = isFillEnabled ?: defaultExtraState.isFillEnabled,
+            fillStyle = getRectangleFillStyle(fillStyleId),
+            isBorderEnabled = isBorderEnabled ?: defaultExtraState.isBorderEnabled,
+            borderStyle = getRectangleBorderStyle(borderStyleId),
+            isStartHeadAnchorCharEnabled = isStartHeadAnchorCharEnabled
+                ?: defaultExtraState.isStartHeadAnchorCharEnabled,
+            startHeadAnchorChar = getStartHeadAnchorChar(startHeadAnchorCharId),
+            isEndHeadAnchorCharEnabled = isEndHeadAnchorCharEnabled
+                ?: defaultExtraState.isEndHeadAnchorCharEnabled,
+            endHeadAnchorChar = getEndHeadAnchorChar(endHeadAnchorCharId)
+        )
+    }
+
     fun getRectangleFillStyle(
         id: String?,
         default: RectangleFillStyle = defaultExtraState.fillStyle

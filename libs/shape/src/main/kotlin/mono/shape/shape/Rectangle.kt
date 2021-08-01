@@ -23,7 +23,7 @@ class Rectangle(
             isUpdated
         }
 
-    override var extra: RectangleExtra = RectangleExtra.DEFAULT
+    override var extra: RectangleExtra = RectangleExtra.withDefault()
         private set
 
     /**

@@ -13,7 +13,7 @@ class GroupSerializationTest {
         val rectangle = SerializableRectangle(
             null,
             Rect.byLTRB(0, 0, 1, 1),
-            RectangleExtra.DEFAULT.toSerializableExtra()
+            RectangleExtra.withDefault().toSerializableExtra()
         )
         val group = SerializableGroup(
             null,
