@@ -77,9 +77,18 @@ class ShapeToolViewController(
                 selectedShapesLiveData,
                 actionManager.retainableActionLiveData
             )
+            val borderAppearanceVisibilityLiveData = createBorderAppearanceVisibilityLiveData(
+                selectedShapesLiveData,
+                actionManager.retainableActionLiveData
+            )
             MediatorLiveData(emptyMap<ToolType, Visibility>())
                 .apply {
-                    add(fillAppearanceVisibilityLiveData) { value = value + (ToolType.FILL to it) }
+                    add(fillAppearanceVisibilityLiveData) {
+                        value = value + (ToolType.FILL to it)
+                    }
+                    add(borderAppearanceVisibilityLiveData) {
+                        value = value + (ToolType.BORDER to it)
+                    }
                 }
                 .observe(lifecycleOwner) {
                     appearanceTool.setVisibility(it)
@@ -128,6 +137,48 @@ class ShapeToolViewController(
             if (defaultFillState != null) {
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedRectangleFillStyles()
+                        .indexOf(defaultFillState)
+                Visibility.Visible(true, selectedFillPosition)
+            } else {
+                Visibility.Hide
+            }
+        }
+
+        return createAppearanceVisibilityLiveData(
+            selectedVisibilityLiveData,
+            defaultVisibilityLiveData
+        )
+    }
+
+    private fun createBorderAppearanceVisibilityLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
+        retainableActionTypeLiveData: LiveData<RetainableActionType>
+    ): LiveData<Visibility> {
+        val selectedVisibilityLiveData = selectedShapesLiveData.map {
+            when {
+                it.isEmpty() -> null
+                it.size > 1 -> Visibility.Hide
+                else -> {
+                    when (val shape = it.single()) {
+                        is Rectangle -> shape.extra.toBorderAppearanceVisibilityState()
+                        is Text -> shape.extra.boundExtra.toBorderAppearanceVisibilityState()
+                        is Group,
+                        is Line,
+                        is MockShape -> Visibility.Hide
+                    }
+                }
+            }
+        }
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
+            val defaultFillState = when (it) {
+                RetainableActionType.ADD_RECTANGLE,
+                RetainableActionType.ADD_TEXT -> ShapeExtraManager.getRectangleBorderStyle(null)
+                RetainableActionType.ADD_LINE,
+                RetainableActionType.IDLE -> null
+            }
+            if (defaultFillState != null) {
+                val selectedFillPosition =
+                    ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
                         .indexOf(defaultFillState)
                 Visibility.Visible(true, selectedFillPosition)
             } else {
