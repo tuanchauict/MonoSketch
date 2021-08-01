@@ -1,5 +1,7 @@
 package mono.shape.extra.manager
 
+import mono.livedata.LiveData
+import mono.livedata.MutableLiveData
 import mono.shape.extra.manager.model.AnchorChar
 import mono.shape.extra.manager.model.RectangleBorderStyle
 import mono.shape.extra.manager.model.RectangleFillStyle
@@ -27,6 +29,9 @@ object ShapeExtraManager {
         )
         private set
 
+    private val defaultExtraStateUpdateMutableLiveData = MutableLiveData(Unit)
+    val defaultExtraStateUpdateLiveData: LiveData<Unit> = defaultExtraStateUpdateMutableLiveData
+
     fun setDefaultValues(
         isFillEnabled: Boolean? = null,
         fillStyleId: String? = null,
@@ -49,6 +54,7 @@ object ShapeExtraManager {
                 ?: defaultExtraState.isEndHeadAnchorCharEnabled,
             endHeadAnchorChar = getEndHeadAnchorChar(endHeadAnchorCharId)
         )
+        defaultExtraStateUpdateMutableLiveData.value = Unit
     }
 
     fun getRectangleFillStyle(

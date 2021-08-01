@@ -70,22 +70,31 @@ class ShapeToolViewController(
                     value = value
                 }
             }
+            val retainableActionLiveData =
+                MediatorLiveData(actionManager.retainableActionLiveData.value).apply {
+                    add(actionManager.retainableActionLiveData) {
+                        value = it
+                    }
+                    add(ShapeExtraManager.defaultExtraStateUpdateLiveData) {
+                        value = value
+                    }
+                }
 
             val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
                 shapesLiveData,
-                actionManager.retainableActionLiveData
+                retainableActionLiveData
             )
             val borderAppearanceVisibilityLiveData = createBorderAppearanceVisibilityLiveData(
                 shapesLiveData,
-                actionManager.retainableActionLiveData
+                retainableActionLiveData
             )
             val startHeadAppearanceVisibilityLiveData = createStartHeadAppearanceVisibilityLiveData(
                 shapesLiveData,
-                actionManager.retainableActionLiveData
+                retainableActionLiveData
             )
             val endHeadAppearanceVisibilityLiveData = createEndHeadAppearanceVisibilityLiveData(
                 shapesLiveData,
-                actionManager.retainableActionLiveData
+                retainableActionLiveData
             )
             MediatorLiveData(emptyMap<ToolType, Visibility>())
                 .apply {
