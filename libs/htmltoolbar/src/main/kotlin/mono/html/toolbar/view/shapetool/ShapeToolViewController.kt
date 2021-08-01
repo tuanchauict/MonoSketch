@@ -62,20 +62,29 @@ class ShapeToolViewController(
                 textAlignmentTool.setCurrentTextAlign(textAlign)
             }
 
+            val shapesLiveData = MediatorLiveData<Set<AbstractShape>>(emptySet()).apply {
+                add(selectedShapesLiveData) {
+                    value = it
+                }
+                add(shapeManagerVersionLiveData) {
+                    value = value
+                }
+            }
+
             val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
-                selectedShapesLiveData,
+                shapesLiveData,
                 actionManager.retainableActionLiveData
             )
             val borderAppearanceVisibilityLiveData = createBorderAppearanceVisibilityLiveData(
-                selectedShapesLiveData,
+                shapesLiveData,
                 actionManager.retainableActionLiveData
             )
             val startHeadAppearanceVisibilityLiveData = createStartHeadAppearanceVisibilityLiveData(
-                selectedShapesLiveData,
+                shapesLiveData,
                 actionManager.retainableActionLiveData
             )
             val endHeadAppearanceVisibilityLiveData = createEndHeadAppearanceVisibilityLiveData(
-                selectedShapesLiveData,
+                shapesLiveData,
                 actionManager.retainableActionLiveData
             )
             MediatorLiveData(emptyMap<ToolType, Visibility>())
