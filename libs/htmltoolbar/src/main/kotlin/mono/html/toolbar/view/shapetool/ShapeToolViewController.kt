@@ -2,8 +2,8 @@ package mono.html.toolbar.view.shapetool
 
 import kotlinx.html.dom.append
 import mono.html.toolbar.ActionManager
-import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolState
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
+import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.Visibility
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
@@ -85,7 +85,7 @@ class ShapeToolViewController(
         ShapeExtraManager.getAllPredefinedAnchorChars()
             .map { OptionItem(it.id, it.displayName) }
 
-    private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
+    private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, Visibility> {
         val selectedFillPosition =
             ShapeExtraManager.getAllPredefinedRectangleFillStyles()
                 .indexOf(userSelectedFillStyle)
@@ -93,20 +93,21 @@ class ShapeToolViewController(
             ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
                 .indexOf(userSelectedBorderStyle)
         return mapOf(
-            ToolType.FILL to ToolState(isFillEnabled, selectedFillPosition),
-            ToolType.BORDER to ToolState(isBorderEnabled, selectedBorderPosition)
+            ToolType.FILL to Visibility.Visible(isFillEnabled, selectedFillPosition),
+            ToolType.BORDER to Visibility.Visible(isBorderEnabled, selectedBorderPosition)
         )
     }
 
-    private fun Line.toAppearanceVisibilityState(): Map<ToolType, ToolState> {
+    private fun Line.toAppearanceVisibilityState(): Map<ToolType, Visibility> {
         val selectedStartHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedStartAnchor)
         val selectedEndHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
         return mapOf(
-            //        ToolType.STROKE to ToolState(false, 0),
-            ToolType.START_HEAD to ToolState(extra.isStartAnchorEnabled, selectedStartHeadPosition),
-            ToolType.END_HEAD to ToolState(extra.isEndAnchorEnabled, selectedEndHeadPosition)
+            ToolType.START_HEAD to
+                Visibility.Visible(extra.isStartAnchorEnabled, selectedStartHeadPosition),
+            ToolType.END_HEAD to
+                Visibility.Visible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
         )
     }
 }

@@ -28,7 +28,7 @@ internal abstract class AppearanceSectionViewController(
     rootView: HTMLDivElement
 ) : ToolViewController(rootView) {
 
-    abstract fun setVisibility(toolStates: Map<ToolType, ToolState>)
+    abstract fun setVisibility(toolStates: Map<ToolType, Visibility>)
 
     enum class ToolType(val title: String) {
         FILL("Fill") {
@@ -59,7 +59,11 @@ internal abstract class AppearanceSectionViewController(
         ): OneTimeActionType
     }
 
-    data class ToolState(val isChecked: Boolean, val selectedPosition: Int)
+    sealed class Visibility {
+        object Hide : Visibility()
+
+        data class Visible(val isChecked: Boolean, val selectedPosition: Int) : Visibility()
+    }
 }
 
 private class AppearanceSectionViewControllerImpl(
@@ -67,13 +71,13 @@ private class AppearanceSectionViewControllerImpl(
     private val toolTypeToViewControllerMap: Map<ToolType, AppearanceToolViewController>
 ) : AppearanceSectionViewController(rootView) {
 
-    override fun setVisibility(toolStates: Map<ToolType, ToolState>) {
+    override fun setVisibility(toolStates: Map<ToolType, Visibility>) {
         setVisible(toolStates.isNotEmpty())
         for ((type, controller) in toolTypeToViewControllerMap.entries) {
             val state = toolStates[type]
             controller.setVisible(state != null)
 
-            if (state != null) {
+            if (state != null && state is Visibility.Visible) {
                 controller.setState(state.isChecked, state.selectedPosition)
             }
         }
