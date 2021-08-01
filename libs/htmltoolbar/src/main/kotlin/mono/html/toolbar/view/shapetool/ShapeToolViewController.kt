@@ -342,6 +342,6 @@ class ShapeToolViewController(
     private fun Line.toEndHeadAppearanceVisibilityState(): Visibility {
         val selectedEndHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
-        return Visibility.Visible(extra.isStartAnchorEnabled, selectedEndHeadPosition)
+        return Visibility.Visible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
     }
 }
