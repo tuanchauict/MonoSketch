@@ -72,7 +72,8 @@ private class AppearanceSectionViewControllerImpl(
 ) : AppearanceSectionViewController(rootView) {
 
     override fun setVisibility(toolStates: Map<ToolType, Visibility>) {
-        setVisible(toolStates.isNotEmpty())
+        val isVisible = toolStates.entries.any { it.value is Visibility.Visible }
+        setVisible(isVisible)
         for ((type, controller) in toolTypeToViewControllerMap.entries) {
             val state = toolStates[type] as? Visibility.Visible
             controller.setVisible(state != null)
