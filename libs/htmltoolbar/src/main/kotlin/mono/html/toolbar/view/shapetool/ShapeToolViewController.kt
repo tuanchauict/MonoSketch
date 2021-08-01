@@ -60,17 +60,6 @@ class ShapeToolViewController(
 
                 val textAlign = (it as? Text)?.extra?.textAlign
                 textAlignmentTool.setCurrentTextAlign(textAlign)
-
-                val visibleAppearanceTools = when (it) {
-                    is Rectangle -> it.extra.toAppearanceVisibilityState()
-                    is Text -> it.extra.boundExtra.toAppearanceVisibilityState()
-                    is Line -> it.toAppearanceVisibilityState()
-
-                    is MockShape,
-                    is Group,
-                    null -> emptyMap()
-                }
-                appearanceTool.setVisibility(visibleAppearanceTools)
             }
 
             val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
@@ -78,6 +67,14 @@ class ShapeToolViewController(
                 actionManager.retainableActionLiveData
             )
             val borderAppearanceVisibilityLiveData = createBorderAppearanceVisibilityLiveData(
+                selectedShapesLiveData,
+                actionManager.retainableActionLiveData
+            )
+            val startHeadAppearanceVisibilityLiveData = createStartHeadAppearanceVisibilityLiveData(
+                selectedShapesLiveData,
+                actionManager.retainableActionLiveData
+            )
+            val endHeadAppearanceVisibilityLiveData = createEndHeadAppearanceVisibilityLiveData(
                 selectedShapesLiveData,
                 actionManager.retainableActionLiveData
             )
@@ -89,10 +86,14 @@ class ShapeToolViewController(
                     add(borderAppearanceVisibilityLiveData) {
                         value = value + (ToolType.BORDER to it)
                     }
+                    add(startHeadAppearanceVisibilityLiveData) {
+                        value = value + (ToolType.START_HEAD to it)
+                    }
+                    add(endHeadAppearanceVisibilityLiveData) {
+                        value = value + (ToolType.END_HEAD to it)
+                    }
                 }
-                .observe(lifecycleOwner) {
-                    appearanceTool.setVisibility(it)
-                }
+                .observe(lifecycleOwner, listener = appearanceTool::setVisibility)
         }
     }
 
@@ -192,26 +193,103 @@ class ShapeToolViewController(
         )
     }
 
+    private fun createStartHeadAppearanceVisibilityLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
+        retainableActionTypeLiveData: LiveData<RetainableActionType>
+    ): LiveData<Visibility> {
+        val selectedVisibilityLiveData = selectedShapesLiveData.map {
+            when {
+                it.isEmpty() -> null
+                it.size > 1 -> Visibility.Hide
+                else -> {
+                    when (val shape = it.single()) {
+                        is Line -> shape.toStartHeadAppearanceVisibilityState()
+                        is Rectangle,
+                        is Text,
+                        is Group,
+                        is MockShape -> Visibility.Hide
+                    }
+                }
+            }
+        }
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
+            val defaultFillState = when (it) {
+                RetainableActionType.ADD_LINE -> ShapeExtraManager.getAnchorChar(null)
+                RetainableActionType.ADD_RECTANGLE,
+                RetainableActionType.ADD_TEXT,
+                RetainableActionType.IDLE -> null
+            }
+            if (defaultFillState != null) {
+                val selectedFillPosition =
+                    // TODO: Add method for default start
+                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultFillState)
+                Visibility.Visible(true, selectedFillPosition)
+            } else {
+                Visibility.Hide
+            }
+        }
+
+        return createAppearanceVisibilityLiveData(
+            selectedVisibilityLiveData,
+            defaultVisibilityLiveData
+        )
+    }
+
+    private fun createEndHeadAppearanceVisibilityLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
+        retainableActionTypeLiveData: LiveData<RetainableActionType>
+    ): LiveData<Visibility> {
+        val selectedVisibilityLiveData = selectedShapesLiveData.map {
+            when {
+                it.isEmpty() -> null
+                it.size > 1 -> Visibility.Hide
+                else -> {
+                    when (val shape = it.single()) {
+                        is Line -> shape.toEndHeadAppearanceVisibilityState()
+                        is Rectangle,
+                        is Text,
+                        is Group,
+                        is MockShape -> Visibility.Hide
+                    }
+                }
+            }
+        }
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
+            val defaultFillState = when (it) {
+                RetainableActionType.ADD_LINE -> ShapeExtraManager.getAnchorChar(null)
+                RetainableActionType.ADD_RECTANGLE,
+                RetainableActionType.ADD_TEXT,
+                RetainableActionType.IDLE -> null
+            }
+            if (defaultFillState != null) {
+                val selectedFillPosition =
+                    // TODO: Add method for default end
+                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultFillState)
+                Visibility.Visible(true, selectedFillPosition)
+            } else {
+                Visibility.Hide
+            }
+        }
+
+        return createAppearanceVisibilityLiveData(
+            selectedVisibilityLiveData,
+            defaultVisibilityLiveData
+        )
+    }
+
     private fun createAppearanceVisibilityLiveData(
         selectedShapeVisibilityLiveData: LiveData<Visibility?>,
         defaultVisibilityLiveData: LiveData<Visibility>
-    ): LiveData<Visibility> {
-        return MediatorLiveData(arrayOfNulls<Visibility>(2))
-            .apply {
-                add(selectedShapeVisibilityLiveData) {
-                    value[0] = it
-                }
-                add(defaultVisibilityLiveData) {
-                    value[1] = it
-                }
+    ): LiveData<Visibility> = MediatorLiveData(Pair<Visibility?, Visibility>(null, Visibility.Hide))
+        .apply {
+            add(selectedShapeVisibilityLiveData) {
+                value = value.copy(first = it)
             }
-            .map { it[0] ?: it[1] ?: Visibility.Hide }
-    }
-
-    private fun RectangleExtra.toAppearanceVisibilityState(): Map<ToolType, Visibility> = mapOf(
-        ToolType.FILL to toFillAppearanceVisibilityState(),
-        ToolType.BORDER to toBorderAppearanceVisibilityState()
-    )
+            add(defaultVisibilityLiveData) {
+                value = value.copy(second = it)
+            }
+        }
+        .map { it.first ?: it.second }
 
     private fun RectangleExtra.toFillAppearanceVisibilityState(): Visibility {
         val selectedFillPosition =
@@ -226,11 +304,6 @@ class ShapeToolViewController(
                 .indexOf(userSelectedBorderStyle)
         return Visibility.Visible(isBorderEnabled, selectedBorderPosition)
     }
-
-    private fun Line.toAppearanceVisibilityState(): Map<ToolType, Visibility> = mapOf(
-        ToolType.START_HEAD to toStartHeadAppearanceVisibilityState(),
-        ToolType.END_HEAD to toEndHeadAppearanceVisibilityState()
-    )
 
     private fun Line.toStartHeadAppearanceVisibilityState(): Visibility {
         val selectedStartHeadPosition =
