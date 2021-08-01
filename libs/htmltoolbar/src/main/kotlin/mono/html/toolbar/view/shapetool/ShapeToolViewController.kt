@@ -214,7 +214,7 @@ class ShapeToolViewController(
         }
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultFillState = when (it) {
-                RetainableActionType.ADD_LINE -> ShapeExtraManager.getAnchorChar(null)
+                RetainableActionType.ADD_LINE -> ShapeExtraManager.getStartHeadAnchorChar(null)
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
@@ -256,7 +256,7 @@ class ShapeToolViewController(
         }
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultFillState = when (it) {
-                RetainableActionType.ADD_LINE -> ShapeExtraManager.getAnchorChar(null)
+                RetainableActionType.ADD_LINE -> ShapeExtraManager.getEndHeadAnchorChar(null)
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null

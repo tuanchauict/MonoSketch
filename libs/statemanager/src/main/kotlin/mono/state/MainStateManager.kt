@@ -255,7 +255,10 @@ class MainStateManager(
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isStartAnchorEnabled
         val newAnchor =
-            ShapeExtraManager.getAnchorChar(newAnchorId, currentExtra.userSelectedStartAnchor)
+            ShapeExtraManager.getStartHeadAnchorChar(
+                newAnchorId,
+                currentExtra.userSelectedStartAnchor
+            )
         val newExtra = currentExtra.copy(
             isStartAnchorEnabled = newIsEnabled,
             userSelectedStartAnchor = newAnchor
@@ -268,7 +271,10 @@ class MainStateManager(
         val currentExtra = line.extra
         val newIsEnabled = isEnabled ?: currentExtra.isEndAnchorEnabled
         val newAnchor =
-            ShapeExtraManager.getAnchorChar(newAnchorId, currentExtra.userSelectedEndAnchor)
+            ShapeExtraManager.getEndHeadAnchorChar(
+                newAnchorId,
+                currentExtra.userSelectedEndAnchor
+            )
         val newExtra = currentExtra.copy(
             isEndAnchorEnabled = newIsEnabled,
             userSelectedEndAnchor = newAnchor

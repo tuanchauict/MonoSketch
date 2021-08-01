@@ -21,9 +21,9 @@ data class LineExtra(
 
     constructor(serializableExtra: SerializableLine.SerializableExtra) : this(
         serializableExtra.isStartAnchorEnabled,
-        ShapeExtraManager.getAnchorChar(serializableExtra.userSelectedStartAnchorId),
+        ShapeExtraManager.getStartHeadAnchorChar(serializableExtra.userSelectedStartAnchorId),
         serializableExtra.isEndAnchorEnabled,
-        ShapeExtraManager.getAnchorChar(serializableExtra.userSelectedEndAnchorId)
+        ShapeExtraManager.getEndHeadAnchorChar(serializableExtra.userSelectedEndAnchorId)
     )
 
     fun toSerializableExtra(): SerializableLine.SerializableExtra =
@@ -37,9 +37,9 @@ data class LineExtra(
     companion object {
         val DEFAULT = LineExtra(
             isStartAnchorEnabled = false,
-            userSelectedStartAnchor = ShapeExtraManager.getAnchorChar(null),
+            userSelectedStartAnchor = ShapeExtraManager.getStartHeadAnchorChar(null),
             isEndAnchorEnabled = false,
-            userSelectedEndAnchor = ShapeExtraManager.getAnchorChar(null)
+            userSelectedEndAnchor = ShapeExtraManager.getEndHeadAnchorChar(null)
         )
     }
 }
