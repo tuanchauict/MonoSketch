@@ -124,7 +124,8 @@ internal class MouseEventObserver(
     }
 
     private fun setMouseDoubleClick(event: MouseEvent) {
-        console.log(event)
+        mousePointerMutableLiveData.value = MousePointer.DoubleClick(event.toPoint())
+        mousePointerMutableLiveData.value = MousePointer.Idle
     }
 
     private fun MouseEvent.toPoint(): Point =
