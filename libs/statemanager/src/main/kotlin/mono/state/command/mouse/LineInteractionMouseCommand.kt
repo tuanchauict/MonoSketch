@@ -25,6 +25,7 @@ internal class LineInteractionMouseCommand(
             is MousePointer.Up -> move(environment, mousePointer.point, true)
             is MousePointer.Down,
             is MousePointer.Click,
+            is MousePointer.DoubleClick,
             is MousePointer.Move,
             MousePointer.Idle -> Unit
         }.exhaustive

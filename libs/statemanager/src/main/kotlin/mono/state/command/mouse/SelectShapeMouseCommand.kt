@@ -62,6 +62,7 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 }
                 true
             }
+            is MousePointer.DoubleClick -> true
             is MousePointer.Move,
             MousePointer.Idle -> true
         }.exhaustive

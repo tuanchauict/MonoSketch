@@ -132,7 +132,7 @@ class MainStateManager(
                 OneTimeActionType.DeleteSelectedShapes ->
                     deleteSelectedShapes()
                 OneTimeActionType.EditSelectedShapes ->
-                    editSelectedShapes()
+                    editSelectedShape(environment.getSelectedShapes().singleOrNull())
                 is OneTimeActionType.TextAlignment ->
                     setTextAlignment(it.newHorizontalAlign, it.newVerticalAlign)
 
@@ -317,14 +317,14 @@ class MainStateManager(
         shapeManager.execute(ChangeOrder(singleShape, orderType))
     }
 
-    private fun editSelectedShapes() {
-        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
-        when (singleShape) {
-            is Text -> EditTextShapeHelper.showEditTextDialog(shapeManager, singleShape)
+    private fun editSelectedShape(shape: AbstractShape?) {
+        when (shape) {
+            is Text -> EditTextShapeHelper.showEditTextDialog(shapeManager, shape)
             is Line,
             is Rectangle,
             is MockShape,
-            is Group -> Unit
+            is Group,
+            null -> Unit
         }.exhaustive
     }
 
@@ -349,6 +349,13 @@ class MainStateManager(
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
+        if (mousePointer is MousePointer.DoubleClick) {
+            val targetedShape =
+                environment.getSelectedShapes().firstOrNull { it.contains(mousePointer.point) }
+            editSelectedShape(targetedShape)
+            return
+        }
+
         currentMouseCommand = MouseCommandFactory.getCommand(
             environment,
             mousePointer,
@@ -442,7 +449,8 @@ class MainStateManager(
 
             MousePointer.Idle,
             is MousePointer.Down,
-            is MousePointer.Click -> null
+            is MousePointer.Click,
+            is MousePointer.DoubleClick -> null
         }
         if (mouseCursor != null) {
             canvasManager.setMouseCursor(mouseCursor)

@@ -49,6 +49,7 @@ internal class AddLineMouseCommand : MouseCommand {
 
             is MousePointer.Move,
             is MousePointer.Click,
+            is MousePointer.DoubleClick,
             MousePointer.Idle -> true
         }.exhaustive
 

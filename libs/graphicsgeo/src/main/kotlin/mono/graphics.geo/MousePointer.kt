@@ -30,4 +30,6 @@ sealed interface MousePointer {
     ) : MousePointer
 
     data class Click(val point: Point, val isWithShiftKey: Boolean) : MousePointer
+
+    data class DoubleClick(val point: Point) : MousePointer
 }

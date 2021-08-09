@@ -39,6 +39,7 @@ internal class MouseEventObserver(
         container.onmouseup = ::setMouseUpPointer
         container.onmousemove = ::setMouseMovePointer
         container.onwheel = ::setMouseWheel
+        container.ondblclick = ::setMouseDoubleClick
 
         drawingInfoLiveData.observe(lifecycleOwner) {
             drawingInfo = it
@@ -67,6 +68,7 @@ internal class MouseEventObserver(
             is MousePointer.Move,
             is MousePointer.Up,
             is MousePointer.Click,
+            is MousePointer.DoubleClick,
             MousePointer.Idle -> MousePointer.Idle
         }
         if (currentValue is MousePointer.Down) {
@@ -87,6 +89,7 @@ internal class MouseEventObserver(
             is MousePointer.Move,
             is MousePointer.Up,
             is MousePointer.Click,
+            is MousePointer.DoubleClick,
             MousePointer.Idle -> MousePointer.Move(event.toPoint(), event.toPointPx())
         } ?: return
         mousePointerMutableLiveData.value = newPointer
@@ -118,6 +121,11 @@ internal class MouseEventObserver(
 
         mouseWheelDeltaX = accumulateWheelDeltaLeft - usableDeltaLeft
         mouseWheelDeltaY = accumulateWheelDeltaTop - usableDeltaTop
+    }
+
+    private fun setMouseDoubleClick(event: MouseEvent) {
+        mousePointerMutableLiveData.value = MousePointer.DoubleClick(event.toPoint())
+        mousePointerMutableLiveData.value = MousePointer.Idle
     }
 
     private fun MouseEvent.toPoint(): Point =
