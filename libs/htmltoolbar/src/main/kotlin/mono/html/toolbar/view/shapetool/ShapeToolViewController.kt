@@ -5,6 +5,7 @@ import mono.html.toolbar.ActionManager
 import mono.html.toolbar.RetainableActionType
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.Visibility
+import mono.html.toolbar.view.shapetool.TextSectionViewController.TextAlignVisibility
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
@@ -57,9 +58,6 @@ class ShapeToolViewController(
                 if (it != null) {
                     transformTool.setValue(it.bound)
                 }
-
-                val textAlign = (it as? Text)?.extra?.textAlign
-                textAlignmentTool.setCurrentTextAlign(textAlign)
             }
 
             val shapesLiveData = MediatorLiveData<Set<AbstractShape>>(emptySet()).apply {
@@ -112,6 +110,9 @@ class ShapeToolViewController(
                     }
                 }
                 .observe(lifecycleOwner, listener = appearanceTool::setVisibility)
+
+            createTextAlignLiveData(shapesLiveData, retainableActionLiveData)
+                .observe(lifecycleOwner, listener = textAlignmentTool::setCurrentTextAlign)
         }
     }
 
@@ -343,5 +344,40 @@ class ShapeToolViewController(
         val selectedEndHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
         return Visibility.Visible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
+    }
+
+    private fun createTextAlignLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
+        retainableActionTypeLiveData: LiveData<RetainableActionType>
+    ): LiveData<TextAlignVisibility> {
+        val selectedTextAlignLiveData = selectedShapesLiveData.map {
+            when {
+                it.isEmpty() -> null
+                it.size > 1 -> TextAlignVisibility.Hide
+                else -> {
+                    val text = it.single() as? Text
+                    text?.extra?.textAlign?.let(TextAlignVisibility::Visible)
+                }
+            }
+        }
+        val defaultTextAlignLiveData = retainableActionTypeLiveData.map {
+            if (it == RetainableActionType.ADD_TEXT) {
+                TextAlignVisibility.Visible(ShapeExtraManager.defaultExtraState.textAlign)
+            } else {
+                TextAlignVisibility.Hide
+            }
+        }
+        return MediatorLiveData<Pair<TextAlignVisibility?, TextAlignVisibility>>(
+            null to TextAlignVisibility.Hide
+        )
+            .apply {
+                add(selectedTextAlignLiveData) {
+                    value = value.copy(first = it)
+                }
+                add(defaultTextAlignLiveData) {
+                    value = value.copy(second = it)
+                }
+            }
+            .map { it.first ?: it.second }
     }
 }

@@ -332,7 +332,14 @@ class MainStateManager(
         horizontalAlign: TextAlign.HorizontalAlign?,
         verticalAlign: TextAlign.VerticalAlign?
     ) {
-        val textShape = environment.getSelectedShapes().singleOrNull() as? Text ?: return
+        val textShape = environment.getSelectedShapes().singleOrNull() as? Text
+        if (textShape == null) {
+            ShapeExtraManager.setDefaultValues(
+                textHorizontalAlign = horizontalAlign,
+                textVerticalAlign = verticalAlign
+            )
+            return
+        }
         val newTextAlign = textShape.extra.textAlign.copy(
             horizontalAlign ?: textShape.extra.textAlign.horizontalAlign,
             verticalAlign ?: textShape.extra.textAlign.verticalAlign
