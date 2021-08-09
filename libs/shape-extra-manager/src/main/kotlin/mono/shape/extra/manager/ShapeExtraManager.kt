@@ -5,6 +5,7 @@ import mono.livedata.MutableLiveData
 import mono.shape.extra.manager.model.AnchorChar
 import mono.shape.extra.manager.model.RectangleBorderStyle
 import mono.shape.extra.manager.model.RectangleFillStyle
+import mono.shape.extra.manager.model.TextAlign
 import mono.shape.extra.manager.predefined.PredefinedAnchorChar
 import mono.shape.extra.manager.predefined.PredefinedRectangleBorderStyle
 import mono.shape.extra.manager.predefined.PredefinedRectangleFillStyle
@@ -25,7 +26,8 @@ object ShapeExtraManager {
             isStartHeadAnchorCharEnabled = false,
             startHeadAnchorChar = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
             isEndHeadAnchorCharEnabled = false,
-            endHeadAnchorChar = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0]
+            endHeadAnchorChar = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
+            textAlign = TextAlign(TextAlign.HorizontalAlign.LEFT, TextAlign.VerticalAlign.TOP)
         )
         private set
 
@@ -40,8 +42,14 @@ object ShapeExtraManager {
         isStartHeadAnchorCharEnabled: Boolean? = null,
         startHeadAnchorCharId: String? = null,
         isEndHeadAnchorCharEnabled: Boolean? = null,
-        endHeadAnchorCharId: String? = null
+        endHeadAnchorCharId: String? = null,
+        textHorizontalAlign: TextAlign.HorizontalAlign? = null,
+        textVerticalAlign: TextAlign.VerticalAlign? = null
     ) {
+        val newTextHorizontalAlign =
+            textHorizontalAlign ?: defaultExtraState.textAlign.horizontalAlign
+        val newTextVerticalAlign =
+            textVerticalAlign ?: defaultExtraState.textAlign.verticalAlign
         defaultExtraState = DefaultExtraState(
             isFillEnabled = isFillEnabled ?: defaultExtraState.isFillEnabled,
             fillStyle = getRectangleFillStyle(fillStyleId),
@@ -52,7 +60,8 @@ object ShapeExtraManager {
             startHeadAnchorChar = getStartHeadAnchorChar(startHeadAnchorCharId),
             isEndHeadAnchorCharEnabled = isEndHeadAnchorCharEnabled
                 ?: defaultExtraState.isEndHeadAnchorCharEnabled,
-            endHeadAnchorChar = getEndHeadAnchorChar(endHeadAnchorCharId)
+            endHeadAnchorChar = getEndHeadAnchorChar(endHeadAnchorCharId),
+            textAlign = TextAlign(newTextHorizontalAlign, newTextVerticalAlign)
         )
         defaultExtraStateUpdateMutableLiveData.value = Unit
     }
@@ -94,6 +103,7 @@ object ShapeExtraManager {
         val isStartHeadAnchorCharEnabled: Boolean,
         val startHeadAnchorChar: AnchorChar,
         val isEndHeadAnchorCharEnabled: Boolean,
-        val endHeadAnchorChar: AnchorChar
+        val endHeadAnchorChar: AnchorChar,
+        val textAlign: TextAlign
     )
 }

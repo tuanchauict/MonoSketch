@@ -23,7 +23,13 @@ internal abstract class TextSectionViewController(
     rootView: HTMLDivElement
 ) : ToolViewController(rootView) {
 
-    abstract fun setCurrentTextAlign(textAlign: TextAlign?)
+    abstract fun setCurrentTextAlign(textAlignVisibility: TextAlignVisibility)
+
+    sealed class TextAlignVisibility {
+        object Hide : TextAlignVisibility()
+
+        data class Visible(val textAlign: TextAlign) : TextAlignVisibility()
+    }
 }
 
 private class TextSectionViewControllerImpl(
@@ -31,7 +37,9 @@ private class TextSectionViewControllerImpl(
     private val horizontalIcons: List<HTMLElement>,
     private val verticalIcons: List<HTMLElement>
 ) : TextSectionViewController(rootView) {
-    override fun setCurrentTextAlign(textAlign: TextAlign?) {
+    override fun setCurrentTextAlign(textAlignVisibility: TextAlignVisibility) {
+        val textAlignVisible = textAlignVisibility as? TextAlignVisibility.Visible
+        val textAlign = textAlignVisible?.textAlign
         setVisible(textAlign != null)
         if (textAlign == null) {
             return

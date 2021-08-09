@@ -1,5 +1,6 @@
 package mono.shape.shape.extra
 
+import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.TextAlign
 import mono.shape.serialization.SerializableText
 
@@ -36,7 +37,7 @@ data class TextExtra(
 
         fun withDefault(): TextExtra = TextExtra(
             boundExtra = RectangleExtra.withDefault(),
-            textAlign = TextAlign(TextAlign.HorizontalAlign.LEFT, TextAlign.VerticalAlign.TOP)
+            textAlign = ShapeExtraManager.defaultExtraState.textAlign
         )
     }
 }
