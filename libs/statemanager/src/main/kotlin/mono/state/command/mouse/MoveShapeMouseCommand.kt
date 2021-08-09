@@ -20,6 +20,7 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
             is MousePointer.Up -> mousePointer.point - mousePointer.mouseDownPoint
             is MousePointer.Down,
             is MousePointer.Click,
+            is MousePointer.DoubleClick,
             is MousePointer.Move,
             MousePointer.Idle -> Point.ZERO
         }

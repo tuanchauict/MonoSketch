@@ -442,7 +442,8 @@ class MainStateManager(
 
             MousePointer.Idle,
             is MousePointer.Down,
-            is MousePointer.Click -> null
+            is MousePointer.Click,
+            is MousePointer.DoubleClick -> null
         }
         if (mouseCursor != null) {
             canvasManager.setMouseCursor(mouseCursor)

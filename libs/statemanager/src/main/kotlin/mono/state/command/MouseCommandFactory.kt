@@ -32,6 +32,7 @@ internal object MouseCommandFactory {
         )
         is MousePointer.Click ->
             if (commandType == RetainableActionType.IDLE) SelectShapeMouseCommand else null
+        is MousePointer.DoubleClick -> null
         is MousePointer.Move,
         is MousePointer.Drag,
         is MousePointer.Up,

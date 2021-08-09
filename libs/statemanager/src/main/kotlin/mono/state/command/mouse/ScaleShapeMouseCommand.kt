@@ -24,6 +24,7 @@ internal class ScaleShapeMouseCommand(
             is MousePointer.Up -> scale(environment, mousePointer.point)
             is MousePointer.Down,
             is MousePointer.Click,
+            is MousePointer.DoubleClick,
             is MousePointer.Move,
             MousePointer.Idle -> Unit
         }.exhaustive
