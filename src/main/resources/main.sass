@@ -35,6 +35,7 @@ html, body
         letter-spacing: 0.2px
         font-family: $monospaceFont
         font-weight: 500
+        line-height: 18px
 
 #header-toolbar
     width: 100%
@@ -56,10 +57,20 @@ html, body
         width: 65px
 
     &.right
-        margin: 0px 20px
+        margin: 0px 8px
 
         & ul.dropdown-menu a.dropdown-item
             cursor: pointer
+
+        & #right-toolbar-dropdown-menu
+            border: none
+            width: 30px
+            height: 30px
+
+            &:hover, &:active
+                background: none
+                color: #252525
+
 
     & .btn.toolbar-btn
         padding: 0.15rem 0.5rem

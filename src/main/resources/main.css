@@ -47,6 +47,7 @@ html, body {
   letter-spacing: 0.2px;
   font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
   font-weight: 500;
+  line-height: 18px;
 }
 
 #header-toolbar {
@@ -80,11 +81,22 @@ html, body {
 }
 
 .toolbar.right {
-  margin: 0px 20px;
+  margin: 0px 8px;
 }
 
 .toolbar.right ul.dropdown-menu a.dropdown-item {
   cursor: pointer;
+}
+
+.toolbar.right #right-toolbar-dropdown-menu {
+  border: none;
+  width: 30px;
+  height: 30px;
+}
+
+.toolbar.right #right-toolbar-dropdown-menu:hover, .toolbar.right #right-toolbar-dropdown-menu:active {
+  background: none;
+  color: #252525;
 }
 
 .toolbar .btn.toolbar-btn {
