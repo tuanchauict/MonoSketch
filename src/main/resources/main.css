@@ -75,6 +75,41 @@ html, body {
   height: 31px;
 }
 
+#workspace {
+  width: 100%;
+  left: 0;
+  right: 0;
+  top: 64px;
+  bottom: 0;
+  position: absolute;
+}
+
+.canvas-layout {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 270px;
+  position: absolute;
+}
+
+#monoboard-canvas-container {
+  left: 33px;
+  top: 18px;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+}
+#monoboard-canvas-container > canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#monoboard-axis-container {
+  width: 100%;
+  height: 100%;
+}
+
 .modal-edit-text {
   position: absolute;
   left: 0;
@@ -111,45 +146,11 @@ html, body {
   outline: none;
 }
 
-#workspace {
-  width: 100%;
-  left: 0;
-  right: 0;
-  top: 64px;
-  bottom: 0;
-  position: absolute;
-}
 #workspace > #shape-tools {
   top: 0;
   bottom: 0;
   right: 0;
   position: absolute;
-}
-
-.canvas-layout {
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 270px;
-  position: absolute;
-}
-
-#monoboard-canvas-container {
-  left: 33px;
-  top: 18px;
-  right: 0;
-  bottom: 0;
-  position: absolute;
-}
-#monoboard-canvas-container > canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-#monoboard-axis-container {
-  width: 100%;
-  height: 100%;
 }
 
 .monofont {
