@@ -27,6 +27,13 @@ class Text(
     // Text can be auto resized by text
     override var bound: Rect = rect
 
+    val contentBound: Rect
+        get() = if (extra.boundExtra.isBorderEnabled) {
+            Rect.byLTWH(bound.left + 1, bound.top + 1, bound.width - 2, bound.height - 2)
+        } else {
+            bound
+        }
+
     var text: String = ""
         private set
 
