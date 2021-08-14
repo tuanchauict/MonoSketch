@@ -58,7 +58,7 @@ internal class AddTextMouseCommand : MouseCommand {
             return
         }
         environment.addSelectedShape(workingShape)
-        EditTextShapeHelper.showEditTextDialog(environment.shapeManager, workingShape) {
+        EditTextShapeHelper.showEditTextDialog(environment, workingShape) {
             if (!workingShape?.isValid().nullToFalse()) {
                 environment.shapeManager.remove(workingShape)
                 environment.clearSelectedShapes()
