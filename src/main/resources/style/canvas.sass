@@ -1,0 +1,41 @@
+@import 'variables.sass'
+
+#workspace
+    width: 100%
+    left: 0
+    right: 0
+    top: $header-height
+    bottom: 0
+    position: absolute
+
+.canvas-layout
+    left: 0
+    top: 0
+    bottom: 0
+    right: $shape-tool
+    position: absolute
+
+#monoboard-canvas-container
+    left: $canvas-left
+    top: $canvas-top
+    right: 0
+    bottom: 0
+    position: absolute
+
+    &.top-divider
+        // border-top: 5px solid $main-border-color
+
+    &> canvas
+        position: absolute
+        top: 0
+        left: 0
+
+#monoboard-axis-container
+    width: 100%
+    height: 100%
+
+#workspace > #shape-tools
+    top: 0
+    bottom: 0
+    right: 0
+    position: absolute

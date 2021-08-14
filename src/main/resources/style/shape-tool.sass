@@ -1,0 +1,176 @@
+@import 'variables.sass'
+
+$shape-tool-divider-color: #BBB
+$shape-tool-box-border-color: #DDDDDD
+$shape-tool-box-border-selected-color: #039be5
+
+.monofont
+    font-family: $monospaceFont
+
+.shape-tools
+    width: 270px
+    height: 100%
+    border-left: 1.5px solid $shape-tool-divider-color
+    background: #FAFAFA
+    display: flex
+    flex-direction: column
+    font-family: $uiTextFont
+    font-size: 12px
+    overflow-y: scroll
+
+    & > .tsection
+        border-top: 0.75px solid $shape-tool-divider-color
+
+    & > .tsection:first-child
+        border-top: none
+
+.tsection
+    display: flex
+    width: 100%
+    flex-direction: column
+    padding: 10px 10px
+
+    &.small-space
+        padding-top: 4px
+        padding-bottom: 4px
+
+.tsection-title
+    font-weight: 300
+    font-size: 11px
+    color: #616161
+    margin-bottom: 10px
+    user-select: none
+
+.tool
+    display: flex
+    flex-direction: column
+
+.add-bottom-space
+    margin-bottom: 12px
+
+.add-right-space
+    margin-right: 8px
+
+.tool-title
+    font-size: 12px
+    user-select: none
+
+.trow
+    display: flex
+    flex-direction: row
+
+    &.center-even-space
+        align-items: center
+        justify-content: space-evenly
+
+    &.center-vertical
+        align-items: center
+
+    &.grid
+        justify-content: flex-start
+        flex-wrap: wrap
+
+        & > *
+            margin-top: 6px
+            margin-right: 6px
+
+.button
+    padding: 4px
+    cursor: pointer
+    border-radius: 3px
+    user-select: none
+    align-items: center
+    justify-content: center
+    display: flex
+    flex-direction: column
+
+    &:hover
+        background: #eeeeee
+    &:active
+        background: #e0e0e0
+
+    &:disabled, &.disabled
+        background: #00000000
+        cursor: default
+
+.icon-button
+    @extend .button
+    color: #000000
+    padding: 8px
+
+    &.disabled, &:disabled
+        color: #aaa
+
+    &.small
+        width: 20px
+        height: 26px
+        border: 1px solid $shape-tool-box-border-color
+        background: #FFF
+        font-size: 15px
+        align-items: center
+        display: flex
+        justify-content: center
+        padding-top: 5px
+
+        &.disabled, &:disabled
+            border-color: lighten($shape-tool-box-border-color, 5%)
+
+        &.selected
+            border-color: $shape-tool-box-border-selected-color
+            &:hover
+                border-color: darken($shape-tool-box-border-selected-color, 10%)
+            &.disabled, &:disabled
+                border-color: darken($shape-tool-box-border-color, 10%)
+
+        &:hover
+            border-color: darken($shape-tool-box-border-color, 10%)
+        &:active
+            background: #fafafa
+
+    &.medium
+        padding: 6px
+
+    &.selected
+        background: #FFFFFF
+
+.tcolumn
+
+    &.half
+        width: 50%
+
+    &.quarter
+        width: 30%
+
+.inline-title
+    display: inline-block
+    font-size: 11px
+    user-select: none
+
+    &.short
+        width: 10px
+
+.tool-input-text
+    height: 24px
+    margin-left: 4px
+    border: none
+    border-bottom: 1px solid #AAA
+    background: #0000
+    font-size: 12px
+
+    &:focus
+        outline: none
+        border-bottom: 1px solid #03a9f4
+
+    &.small
+        width: 30px
+    &.medium
+        width: 60px
+    &:disabled
+        color: #999
+        border-color: #DDD
+
+.tool-input-checkbox
+    margin-top: 2px
+
+.hide
+    display: none
