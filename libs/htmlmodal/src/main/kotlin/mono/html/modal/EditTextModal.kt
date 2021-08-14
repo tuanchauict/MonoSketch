@@ -41,10 +41,10 @@ class EditTextModal(
                 div("modal-edit-text-container") {
                     div("modal-edit-text-area-container") {
                         style = styleOf(
-                            "left" to leftPx.px,
-                            "top" to topPx.px,
-                            "width" to widthPx.px,
-                            "height" to heightPx.px
+                            "left" to (leftPx - 1).px,
+                            "top" to (topPx - 1).px,
+                            "width" to (widthPx + 2).px,
+                            "height" to (heightPx + 2).px
                         )
 
                         initTextArea()
