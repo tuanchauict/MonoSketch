@@ -41,4 +41,9 @@ internal interface CommandEnvironment {
     fun clearSelectedShapes()
 
     fun getEdgeDirection(point: Point): DirectedPoint.Direction?
+
+    fun toXPx(column: Double): Double
+    fun toYPx(row: Double): Double
+    fun toWidthPx(width: Double): Double
+    fun toHeightPx(height: Double): Double
 }

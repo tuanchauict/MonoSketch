@@ -51,6 +51,9 @@ class CanvasViewController(
         MediatorLiveData(Rect.ZERO)
     val windowBoardBoundLiveData: LiveData<Rect> = windowBoardBoundMediatorLiveData
 
+    private val drawingInfo: DrawingInfoController.DrawingInfo
+        get() = drawingInfoController.drawingInfoLiveData.value
+
     init {
         val drawingInfoLiveData = drawingInfoController.drawingInfoLiveData
 
@@ -150,6 +153,14 @@ class CanvasViewController(
     fun setMouseCursor(mouseCursor: String) {
         container.style.cursor = mouseCursor
     }
+
+    fun toXPx(column: Double): Double = drawingInfo.toXPx(column)
+
+    fun toYPx(row: Double): Double = drawingInfo.toYPx(row)
+
+    fun toWidthPx(width: Double) = drawingInfo.toWidthPx(width)
+
+    fun toHeightPx(height: Double) = drawingInfo.toHeightPx(height)
 
     companion object {
         private const val CLASS_NAME_GRID = "grid-canvas"

@@ -93,6 +93,8 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         fun toYPx(row: Double): Double = floor(offsetPx.top + cellSizePx.height * row)
         fun toBoardRow(yPx: Int): Int = floor((yPx - offsetPx.top) / cellSizePx.height).toInt()
         fun toBoardColumn(xPx: Int): Int = floor((xPx - offsetPx.left) / cellSizePx.width).toInt()
+        fun toWidthPx(width: Double) = floor(cellSizePx.width * width)
+        fun toHeightPx(height: Double) = floor(cellSizePx.height * height)
     }
 
     companion object {
