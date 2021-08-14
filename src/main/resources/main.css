@@ -110,6 +110,13 @@ html, body {
   height: 100%;
 }
 
+#workspace > #shape-tools {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+}
+
 .modal-edit-text {
   position: absolute;
   left: 0;
@@ -144,13 +151,6 @@ html, body {
 }
 .modal-edit-text .modal-edit-text-area-container .modal-edit-text-area:focus {
   outline: none;
-}
-
-#workspace > #shape-tools {
-  top: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
 }
 
 .monofont {
