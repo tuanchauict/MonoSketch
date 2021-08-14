@@ -12,42 +12,6 @@ html, body {
   flex-direction: column;
 }
 
-.modal-edit-text {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-  background-color: #00000000;
-}
-.modal-edit-text .modal-edit-text-container {
-  position: absolute;
-  left: 33px;
-  top: 82px;
-  right: 0;
-  bottom: 0;
-}
-.modal-edit-text .modal-edit-text-area-container {
-  position: absolute;
-  background-color: #fff;
-  margin-top: -1px;
-}
-.modal-edit-text .modal-edit-text-area-container .modal-edit-text-area {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
-  font-size: 13px;
-  line-height: 13px;
-  letter-spacing: 0.2px;
-}
-.modal-edit-text .modal-edit-text-area-container .modal-edit-text-area:focus {
-  outline: none;
-}
-
 #header-layout {
   width: 100%;
   height: 64px;
@@ -109,6 +73,42 @@ html, body {
 .toolbar .btn.toolbar-btn {
   padding: 0.15rem 0.5rem;
   height: 31px;
+}
+
+.modal-edit-text {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: #00000000;
+}
+.modal-edit-text .modal-edit-text-container {
+  position: absolute;
+  left: 33px;
+  top: 82px;
+  right: 0;
+  bottom: 0;
+}
+.modal-edit-text .modal-edit-text-area-container {
+  position: absolute;
+  background-color: #fff;
+  margin-top: -1px;
+}
+.modal-edit-text .modal-edit-text-area-container .modal-edit-text-area {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
+  font-size: 13px;
+  line-height: 13px;
+  letter-spacing: 0.2px;
+}
+.modal-edit-text .modal-edit-text-area-container .modal-edit-text-area:focus {
+  outline: none;
 }
 
 #workspace {
