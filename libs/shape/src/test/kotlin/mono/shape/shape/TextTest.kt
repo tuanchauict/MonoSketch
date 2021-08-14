@@ -72,6 +72,29 @@ class TextTest {
         )
     }
 
+    @Test
+    fun testContentBound() {
+        val target = Text(Rect.byLTWH(1, 2, 5, 6))
+
+        val defaultBoundExtra = target.extra.boundExtra
+
+        val extraWithBorder =
+            target.extra.copy(boundExtra = defaultBoundExtra.copy(isBorderEnabled = true))
+        target.setExtra(extraWithBorder)
+        assertEquals(
+            Rect.byLTWH(2, 3, 3, 4),
+            target.contentBound
+        )
+
+        val extraWithoutBorder =
+            target.extra.copy(boundExtra = defaultBoundExtra.copy(isBorderEnabled = false))
+        target.setExtra(extraWithoutBorder)
+        assertEquals(
+            Rect.byLTWH(1, 2, 5, 6),
+            target.contentBound
+        )
+    }
+
     companion object {
         private const val PARENT_ID = "1"
     }

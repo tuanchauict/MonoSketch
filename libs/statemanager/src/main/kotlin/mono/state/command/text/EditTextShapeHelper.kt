@@ -1,26 +1,33 @@
 package mono.state.command.text
 
-import mono.html.modal.EditTextDialog
-import mono.shape.ShapeManager
+import mono.html.modal.EditTextModal
 import mono.shape.command.ChangeText
 import mono.shape.shape.Text
+import mono.state.command.CommandEnvironment
 
 /**
  * A helper class to show edit text dialog for targeted text shape.
  */
 internal object EditTextShapeHelper {
     fun showEditTextDialog(
-        shapeManager: ShapeManager,
+        environment: CommandEnvironment,
         textShape: Text?,
         onFinish: () -> Unit = {}
     ) {
         if (textShape == null) {
             return
         }
-        val dialog = EditTextDialog("monomodal-mono-edit-text", textShape.text) {
-            shapeManager.execute(ChangeText(textShape, it))
+        val contentBound = textShape.contentBound
+
+        val dialog = EditTextModal(textShape.text) {
+            environment.shapeManager.execute(ChangeText(textShape, it))
         }
         dialog.setOnDismiss(onFinish)
-        dialog.show()
+        dialog.show(
+            environment.toXPx(contentBound.left.toDouble()),
+            environment.toYPx(contentBound.top.toDouble()),
+            environment.toWidthPx(contentBound.width.toDouble()),
+            environment.toHeightPx(contentBound.height.toDouble()),
+        )
     }
 }

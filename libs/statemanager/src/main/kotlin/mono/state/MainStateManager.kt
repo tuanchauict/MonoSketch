@@ -319,7 +319,7 @@ class MainStateManager(
 
     private fun editSelectedShape(shape: AbstractShape?) {
         when (shape) {
-            is Text -> EditTextShapeHelper.showEditTextDialog(shapeManager, shape)
+            is Text -> EditTextShapeHelper.showEditTextDialog(environment, shape)
             is Line,
             is Rectangle,
             is MockShape,
@@ -522,6 +522,15 @@ class MainStateManager(
 
         override fun getEdgeDirection(point: Point): DirectedPoint.Direction? =
             shapeSearcher.getEdgeDirection(point)
+
+        override fun toXPx(column: Double): Double = stateManager.canvasManager.toXPx(column)
+
+        override fun toYPx(row: Double): Double = stateManager.canvasManager.toYPx(row)
+
+        override fun toWidthPx(width: Double): Double = stateManager.canvasManager.toWidthPx(width)
+
+        override fun toHeightPx(height: Double): Double =
+            stateManager.canvasManager.toHeightPx(height)
     }
 
     companion object {
