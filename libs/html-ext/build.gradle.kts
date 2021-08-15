@@ -7,13 +7,9 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":commons"))
-    implementation(project(":html-ext"))
-    implementation(project(":lifecycle"))
-    implementation(project(":livedata"))
-
     implementation(libs.kotlinx.html)
 
+    implementation(kotlin("stdlib-js"))
     testImplementation(kotlin("test-js"))
 }
 

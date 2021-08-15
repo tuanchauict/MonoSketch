@@ -5,6 +5,7 @@ val moduleMap = mapOf(
     "commons" to "libs/commons",
     "export-shapes-modal" to "libs/export-shapes-modal",
     "graphicsgeo" to "libs/graphicsgeo",
+    "html-ext" to "libs/html-ext",
     "htmlcanvas" to "libs/htmlcanvas",
     "htmlmodal" to "libs/htmlmodal",
     "htmltoolbar" to "libs/htmltoolbar",
