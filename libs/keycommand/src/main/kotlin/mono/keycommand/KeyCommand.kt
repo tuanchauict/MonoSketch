@@ -34,7 +34,17 @@ enum class KeyCommand(
     ;
 
     private enum class MetaKeyState {
-        ON, OFF, ANY
+        ON {
+            override fun isAccepted(hasKey: Boolean): Boolean = hasKey
+        },
+        OFF {
+            override fun isAccepted(hasKey: Boolean): Boolean = !hasKey
+        },
+        ANY {
+            override fun isAccepted(hasKey: Boolean): Boolean = true
+        };
+
+        abstract fun isAccepted(hasKey: Boolean): Boolean
     }
 
     companion object {
@@ -48,13 +58,7 @@ enum class KeyCommand(
 
         internal fun getCommandByKey(keyCode: Int, hasCommandKey: Boolean): KeyCommand =
             KEYCODE_TO_COMMAND_MAP[keyCode]
-                ?.firstOrNull {
-                    when (it.commandKeyState) {
-                        MetaKeyState.ANY -> true
-                        MetaKeyState.ON -> hasCommandKey
-                        MetaKeyState.OFF -> !hasCommandKey
-                    }
-                }
+                ?.firstOrNull { it.commandKeyState.isAccepted(hasCommandKey) }
                 ?: IDLE
     }
 }
