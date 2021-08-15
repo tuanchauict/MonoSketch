@@ -1,9 +1,12 @@
 package mono.state
 
+import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
+import mono.export.ExportShapesHelper
 import mono.html.toolbar.OneTimeActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.replaceWithJson
 import mono.shape.toJson
 import mono.state.command.CommandEnvironment
@@ -16,9 +19,15 @@ internal class OneTimeActionHandler(
     oneTimeActionLiveData: LiveData<OneTimeActionType>,
     private val environment: CommandEnvironment,
     // TODO: Remove this after moving all required methods into this class
-    mainStateManager: MainStateManager
+    mainStateManager: MainStateManager,
+    bitmapManager: MonoBitmapManager,
+    shapeClipboardManager: ShapeClipboardManager,
 ) {
     private val fileMediator: FileMediator = FileMediator()
+    private val exportShapesHelper = ExportShapesHelper(
+        bitmapManager::getBitmap,
+        shapeClipboardManager::setClipboardText
+    )
 
     init {
         oneTimeActionLiveData.observe(lifecycleOwner) {
@@ -30,7 +39,10 @@ internal class OneTimeActionHandler(
                 OneTimeActionType.OpenShapes ->
                     loadShapesFromFile()
                 OneTimeActionType.ExportSelectedShapes ->
-                    mainStateManager.exportSelectedShape(true)
+                    exportSelectedShapes(true)
+
+                OneTimeActionType.CopyText ->
+                    exportSelectedShapes(false)
 
                 OneTimeActionType.SelectAllShapes ->
                     environment.selectAllShapes()
@@ -71,9 +83,6 @@ internal class OneTimeActionHandler(
                     mainStateManager.clipboardManager.copySelectedShapes(it.isRemoveRequired)
                 OneTimeActionType.Duplicate ->
                     mainStateManager.clipboardManager.duplicateSelectedShapes()
-
-                OneTimeActionType.CopyText ->
-                    mainStateManager.exportSelectedShape(false)
             }.exhaustive
         }
     }
@@ -88,5 +97,19 @@ internal class OneTimeActionHandler(
             environment.workingParentGroup = environment.shapeManager.root
             environment.clearSelectedShapes()
         }
+    }
+
+    private fun exportSelectedShapes(isModalRequired: Boolean) {
+        val selectedShapes = environment.getSelectedShapes()
+        val extractableShapes = when {
+            selectedShapes.isNotEmpty() ->
+                environment.workingParentGroup.items.filter { it in selectedShapes }
+            isModalRequired ->
+                listOf(environment.workingParentGroup)
+            else ->
+                emptyList()
+        }
+
+        exportShapesHelper.exportText(extractableShapes, isModalRequired)
     }
 }
