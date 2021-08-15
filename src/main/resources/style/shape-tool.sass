@@ -2,7 +2,7 @@
 
 $shape-tool-divider-color: #BBB
 $shape-tool-box-border-color: #DDDDDD
-$shape-tool-box-border-selected-color: #039be5
+$shape-tool-box-border-selected-color: #0091ff
 
 .monofont
     font-family: $monospaceFont
@@ -101,16 +101,9 @@ $shape-tool-box-border-selected-color: #039be5
     &.disabled, &:disabled
         color: #aaa
 
-    &.small
-        width: 20px
-        height: 26px
+    &.small, &.medium
         border: 1px solid $shape-tool-box-border-color
         background: #FFF
-        font-size: 15px
-        align-items: center
-        display: flex
-        justify-content: center
-        padding-top: 5px
 
         &.disabled, &:disabled
             border-color: lighten($shape-tool-box-border-color, 5%)
@@ -126,6 +119,15 @@ $shape-tool-box-border-selected-color: #039be5
             border-color: darken($shape-tool-box-border-color, 10%)
         &:active
             background: #fafafa
+
+    &.small
+        width: 20px
+        height: 26px
+        font-size: 15px
+        align-items: center
+        display: flex
+        justify-content: center
+        padding-top: 5px
 
     &.medium
         padding: 6px
