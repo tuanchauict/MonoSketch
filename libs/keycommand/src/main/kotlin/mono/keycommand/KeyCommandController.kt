@@ -21,7 +21,7 @@ class KeyCommandController(private val body: HTMLElement) {
 
     private fun updateCommand(event: KeyboardEvent) {
         val keyCommand = if (event.target == body) {
-            KeyCommand.getCommandByKey(event.keyCode, event.commandKey)
+            KeyCommand.getCommandByKey(event.keyCode, event.commandKey, event.shiftKey)
         } else {
             KeyCommand.IDLE
         }
