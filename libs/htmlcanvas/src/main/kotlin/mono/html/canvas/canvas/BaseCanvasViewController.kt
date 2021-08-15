@@ -2,6 +2,7 @@ package mono.html.canvas.canvas
 
 import kotlinx.browser.window
 import mono.graphics.geo.Size
+import mono.html.ext.px
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.CanvasTextBaseline
@@ -32,8 +33,8 @@ internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasE
             val dpr = max(window.devicePixelRatio, 2.0)
             canvas.width = (canvasSizePx.width * dpr).toInt()
             canvas.height = (canvasSizePx.height * dpr).toInt()
-            canvas.style.width = "${canvasSizePx.width}px"
-            canvas.style.height = "${canvasSizePx.height}px"
+            canvas.style.width = canvasSizePx.width.px
+            canvas.style.height = canvasSizePx.height.px
             context.scale(dpr, dpr)
         }
 

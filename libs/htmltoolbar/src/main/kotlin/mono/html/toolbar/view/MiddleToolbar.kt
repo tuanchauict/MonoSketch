@@ -3,6 +3,7 @@
 package mono.html.toolbar.view
 
 import kotlinx.html.div
+import mono.html.ext.Tag
 import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData

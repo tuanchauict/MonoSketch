@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
     implementation(project(":commons"))
+    implementation(project(":html-ext"))
     implementation(project(":lifecycle"))
     implementation(project(":livedata"))
 

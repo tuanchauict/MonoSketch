@@ -12,6 +12,14 @@ html, body {
   flex-direction: column;
 }
 
+.hidden {
+  position: absolute;
+  left: -1000px;
+  top: -1000px;
+  width: 0;
+  height: 0;
+}
+
 #header-layout {
   width: 100%;
   height: 64px;
@@ -136,11 +144,10 @@ html, body {
 .modal-edit-text .modal-edit-text-area-container {
   position: absolute;
   background-color: #fff;
-  margin-top: -1px;
 }
 .modal-edit-text .modal-edit-text-area-container .modal-edit-text-area {
   position: absolute;
-  left: 0;
+  left: 1px;
   top: 0;
   width: 100%;
   height: 100%;
@@ -260,34 +267,36 @@ html, body {
 .icon-button.disabled, .icon-button:disabled {
   color: #aaa;
 }
+.icon-button.small, .icon-button.medium {
+  border: 1px solid #DDDDDD;
+  background: #FFF;
+}
+.icon-button.small.disabled, .icon-button.small:disabled, .icon-button.medium.disabled, .icon-button.medium:disabled {
+  border-color: #eaeaea;
+}
+.icon-button.small.selected, .icon-button.medium.selected {
+  border-color: #0091ff;
+}
+.icon-button.small.selected:hover, .icon-button.medium.selected:hover {
+  border-color: #0074cc;
+}
+.icon-button.small.selected.disabled, .icon-button.small.selected:disabled, .icon-button.medium.selected.disabled, .icon-button.medium.selected:disabled {
+  border-color: #c4c4c4;
+}
+.icon-button.small:hover, .icon-button.medium:hover {
+  border-color: #c4c4c4;
+}
+.icon-button.small:active, .icon-button.medium:active {
+  background: #fafafa;
+}
 .icon-button.small {
   width: 20px;
   height: 26px;
-  border: 1px solid #DDDDDD;
-  background: #FFF;
   font-size: 15px;
   align-items: center;
   display: flex;
   justify-content: center;
   padding-top: 5px;
-}
-.icon-button.small.disabled, .icon-button.small:disabled {
-  border-color: #eaeaea;
-}
-.icon-button.small.selected {
-  border-color: #039be5;
-}
-.icon-button.small.selected:hover {
-  border-color: #0279b3;
-}
-.icon-button.small.selected.disabled, .icon-button.small.selected:disabled {
-  border-color: #c4c4c4;
-}
-.icon-button.small:hover {
-  border-color: #c4c4c4;
-}
-.icon-button.small:active {
-  background: #fafafa;
 }
 .icon-button.medium {
   padding: 6px;

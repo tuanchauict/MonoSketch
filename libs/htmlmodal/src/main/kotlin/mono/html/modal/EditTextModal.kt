@@ -1,7 +1,6 @@
 package mono.html.modal
 
 import kotlinx.browser.document
-import kotlinx.html.TagConsumer
 import kotlinx.html.contentEditable
 import kotlinx.html.div
 import kotlinx.html.dom.append
@@ -12,11 +11,12 @@ import mono.common.Key
 import mono.common.commandKey
 import mono.common.onKeyDown
 import mono.common.setTimeout
+import mono.html.ext.Tag
+import mono.html.ext.px
+import mono.html.ext.styleOf
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
-
-private typealias Tag = TagConsumer<HTMLElement>
 
 /**
  * A modal for edit text.
@@ -41,10 +41,10 @@ class EditTextModal(
                 div("modal-edit-text-container") {
                     div("modal-edit-text-area-container") {
                         style = styleOf(
-                            "left" to leftPx.px,
-                            "top" to topPx.px,
-                            "width" to widthPx.px,
-                            "height" to heightPx.px
+                            "left" to (leftPx - 1).px,
+                            "top" to (topPx - 1).px,
+                            "width" to (widthPx + 2).px,
+                            "height" to (heightPx + 2).px
                         )
 
                         initTextArea()
@@ -104,13 +104,5 @@ class EditTextModal(
         if (event.keyCode == Key.KEY_ENTER && event.commandKey || event.keyCode == Key.KEY_ESC) {
             dismiss()
         }
-    }
-
-    companion object {
-        private fun styleOf(vararg attributes: Pair<String, String>): String =
-            attributes.asSequence().map { "${it.first}: ${it.second}" }.joinToString(";")
-
-        private val Number.px: String
-            get() = "${this}px"
     }
 }

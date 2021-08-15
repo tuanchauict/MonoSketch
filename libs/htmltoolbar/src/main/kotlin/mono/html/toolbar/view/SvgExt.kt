@@ -9,6 +9,7 @@ import kotlinx.html.TagConsumer
 import kotlinx.html.attributesMapOf
 import kotlinx.html.svg
 import kotlinx.html.visit
+import mono.html.ext.Tag
 
 internal fun Tag.SvgIcon(width: Int, height: Int, pathBlock: SVG.() -> Unit) {
     svg("bi bi-cursor-fill") {
