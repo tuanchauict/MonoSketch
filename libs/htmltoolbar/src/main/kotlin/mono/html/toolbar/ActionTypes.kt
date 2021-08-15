@@ -65,4 +65,6 @@ sealed interface OneTimeActionType {
 
     data class Copy(val isRemoveRequired: Boolean) : OneTimeActionType
     object Duplicate : OneTimeActionType
+
+    object CopyText : OneTimeActionType
 }

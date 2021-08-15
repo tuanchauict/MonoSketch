@@ -62,7 +62,7 @@ class ActionManager(
             KeyCommand.CUT -> setOneTimeAction(OneTimeActionType.Copy(true))
             KeyCommand.DUPLICATE -> setOneTimeAction(OneTimeActionType.Duplicate)
 
-            KeyCommand.COPY_TEXT -> TODO("Set one time action")
+            KeyCommand.COPY_TEXT -> setOneTimeAction(OneTimeActionType.CopyText)
         }.exhaustive
     }
 

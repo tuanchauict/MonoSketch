@@ -126,7 +126,7 @@ class MainStateManager(
                 OneTimeActionType.OpenShapes ->
                     openSavedFile()
                 OneTimeActionType.ExportSelectedShapes ->
-                    exportSelectedShape()
+                    exportSelectedShape(true)
 
                 OneTimeActionType.SelectAllShapes ->
                     environment.selectAllShapes()
@@ -160,6 +160,9 @@ class MainStateManager(
                     clipboardManager.copySelectedShapes(it.isRemoveRequired)
                 OneTimeActionType.Duplicate ->
                     clipboardManager.duplicateSelectedShapes()
+
+                OneTimeActionType.CopyText ->
+                    exportSelectedShape(false)
             }.exhaustive
         }
     }
@@ -427,7 +430,7 @@ class MainStateManager(
         }
     }
 
-    private fun exportSelectedShape() {
+    private fun exportSelectedShape(isModalRequired: Boolean) {
         val selectedShapes = environment.getSelectedShapes()
         val extractableShapes =
             if (selectedShapes.isNotEmpty()) {
@@ -435,7 +438,12 @@ class MainStateManager(
             } else {
                 listOf(workingParentGroup)
             }
-        ExportShapesModal(extractableShapes, bitmapManager::getBitmap).show()
+
+        if (isModalRequired) {
+            ExportShapesModal(extractableShapes, bitmapManager::getBitmap).show()
+        } else {
+            TODO("Set clipboard")
+        }
     }
 
     private fun updateMouseCursor(mousePointer: MousePointer) {
