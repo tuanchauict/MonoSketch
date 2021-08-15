@@ -8,6 +8,8 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-js"))
+
+    implementation(project(":build-environment"))
     implementation(project(":commons"))
     implementation(project(":export-shapes-modal"))
     implementation(project(":graphicsgeo"))

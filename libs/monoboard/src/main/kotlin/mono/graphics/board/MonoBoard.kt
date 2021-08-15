@@ -1,5 +1,6 @@
 package mono.graphics.board
 
+import mono.environment.Build
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.board.CrossingResources.BOTTOM_IN_CHARS
 import mono.graphics.board.CrossingResources.CONNECTOR_CHAR_MAP
@@ -66,7 +67,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
                         get(charPoint.left, charPoint.top + 1).char in BOTTOM_IN_CHARS,
                 )
 
-            if (DEBUG) {
+            if (Build.DEBUG && DEBUG) {
                 val bitmapSurroundingChars = listOf(
                     charPoint.leftChar,
                     charPoint.rightChar,

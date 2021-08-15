@@ -3,18 +3,11 @@ plugins {
 }
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
 dependencies {
-    implementation(project(":build-environment"))
-    implementation(project(":commons"))
-    implementation(project(":graphicsgeo"))
-    implementation(project(":monobitmap"))
-
     implementation(kotlin("stdlib-js"))
-
     testImplementation(kotlin("test-js"))
 }
 

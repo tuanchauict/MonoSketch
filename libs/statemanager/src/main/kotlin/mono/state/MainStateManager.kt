@@ -4,6 +4,7 @@ import kotlinx.html.currentTimeMillis
 import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
 import mono.common.nullToFalse
+import mono.environment.Build
 import mono.export.ExportShapesModal
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
@@ -88,10 +89,12 @@ class MainStateManager(
 
         canvasManager.windowBoardBoundLiveData.observe(lifecycleOwner) {
             windowBoardBound = it
-            println(
-                "¶ Drawing info: window board size $windowBoardBound • " +
-                    "pixel size ${canvasManager.windowBoundPx}"
-            )
+            if (Build.DEBUG) {
+                println(
+                    "¶ Drawing info: window board size $windowBoardBound • " +
+                        "pixel size ${canvasManager.windowBoundPx}"
+                )
+            }
             requestRedraw()
         }
 
@@ -407,7 +410,7 @@ class MainStateManager(
         isEnabled: Boolean = DEBUG_PERFORMANCE_AUDIT_ENABLED,
         action: () -> Unit
     ) {
-        if (!isEnabled) {
+        if (!isEnabled || !Build.DEBUG) {
             action()
             return
         }
