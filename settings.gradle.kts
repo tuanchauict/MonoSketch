@@ -24,6 +24,7 @@ val moduleMap = mapOf(
     "shape-serialization" to "libs/shape-serialization",
     "shapesearcher" to "libs/shapesearcher",
     "statemanager" to "libs/statemanager",
+    "store-manager" to "libs/store-manager",
     "uuid" to "libs/uuid"
 )
 
