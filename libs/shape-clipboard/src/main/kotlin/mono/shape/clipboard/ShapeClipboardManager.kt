@@ -52,10 +52,12 @@ class ShapeClipboardManager(private val body: HTMLElement) {
         val width = lines.maxOf { it.length }
         val height = lines.size
 
+        // Replace space chars with nbsp chars to avoid space chars are being trimmed by the browser
+        val toBeUsedText = text.replace(' ', NON_BREAKING_SPACE_CHAR)
         return SerializableText(
             null,
             Rect.Companion.byLTWH(0, 0, width, height),
-            text,
+            toBeUsedText,
             TextExtra.NO_BOUND.toSerializableExtra()
         )
     }
@@ -76,5 +78,6 @@ class ShapeClipboardManager(private val body: HTMLElement) {
 
     companion object {
         private const val DEFAULT_TEXT_BOUND_WIDTH = 400
+        private const val NON_BREAKING_SPACE_CHAR = '\u00a0'
     }
 }
