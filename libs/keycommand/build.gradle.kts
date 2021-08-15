@@ -7,6 +7,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":build-environment"))
     implementation(project(":commons"))
     implementation(project(":livedata"))
 
