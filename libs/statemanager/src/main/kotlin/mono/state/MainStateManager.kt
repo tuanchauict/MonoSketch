@@ -14,7 +14,6 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
 import mono.html.toolbar.ActionManager
-import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -37,7 +36,6 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.toJson
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
 import mono.shapebound.ScalableInteractionBound
@@ -69,9 +67,9 @@ class MainStateManager(
 
     private val environment: CommandEnvironmentImpl = CommandEnvironmentImpl(this)
 
-    private val clipboardManager: ClipboardManager =
+    internal val clipboardManager: ClipboardManager =
         ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
-    private val fileMediator: FileMediator = FileMediator()
+    internal val fileMediator: FileMediator = FileMediator()
 
     private val exportShapesHelper = ExportShapesHelper(
         bitmapManager::getBitmap,
@@ -122,64 +120,23 @@ class MainStateManager(
         actionManager.retainableActionLiveData.observe(lifecycleOwner) {
             currentRetainableActionType = it
         }
-        actionManager.oneTimeActionLiveData.observe(lifecycleOwner) {
-            when (it) {
-                OneTimeActionType.Idle -> Unit
 
-                OneTimeActionType.SaveShapesAs ->
-                    fileMediator.saveFile(shapeManager.toJson(true))
-                OneTimeActionType.OpenShapes ->
-                    openSavedFile()
-                OneTimeActionType.ExportSelectedShapes ->
-                    exportSelectedShape(true)
-
-                OneTimeActionType.SelectAllShapes ->
-                    environment.selectAllShapes()
-                OneTimeActionType.DeselectShapes ->
-                    environment.clearSelectedShapes()
-                OneTimeActionType.DeleteSelectedShapes ->
-                    deleteSelectedShapes()
-                OneTimeActionType.EditSelectedShapes ->
-                    editSelectedShape(environment.getSelectedShapes().singleOrNull())
-                is OneTimeActionType.TextAlignment ->
-                    setTextAlignment(it.newHorizontalAlign, it.newVerticalAlign)
-
-                is OneTimeActionType.MoveShapes ->
-                    moveSelectedShapes(it.offsetRow, it.offsetCol)
-                is OneTimeActionType.ChangeShapeBound ->
-                    setSelectedShapeBound(it.newLeft, it.newTop, it.newWidth, it.newHeight)
-
-                is OneTimeActionType.ChangeShapeFillExtra ->
-                    setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
-                is OneTimeActionType.ChangeShapeBorderExtra ->
-                    setSelectedShapeBorderExtra(it.isEnabled, it.newBorderStyleId)
-                is OneTimeActionType.ChangeLineStartAnchorExtra ->
-                    setSelectedShapeStartAnchorExtra(it.isEnabled, it.newHeadId)
-                is OneTimeActionType.ChangeLineEndAnchorExtra ->
-                    setSelectedShapeEndAnchorExtra(it.isEnabled, it.newHeadId)
-
-                is OneTimeActionType.ReorderShape ->
-                    changeShapeOrder(it.orderType)
-
-                is OneTimeActionType.Copy ->
-                    clipboardManager.copySelectedShapes(it.isRemoveRequired)
-                OneTimeActionType.Duplicate ->
-                    clipboardManager.duplicateSelectedShapes()
-
-                OneTimeActionType.CopyText ->
-                    exportSelectedShape(false)
-            }.exhaustive
-        }
+        OneTimeActionHandler(
+            lifecycleOwner,
+            actionManager.oneTimeActionLiveData,
+            environment,
+            this
+        )
     }
 
-    private fun deleteSelectedShapes() {
+    fun deleteSelectedShapes() {
         for (shape in environment.getSelectedShapes()) {
             shapeManager.remove(shape)
         }
         environment.clearSelectedShapes()
     }
 
-    private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
+    fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
         val selectedShapes = environment.getSelectedShapes()
         for (shape in selectedShapes) {
             val bound = shape.bound
@@ -190,7 +147,7 @@ class MainStateManager(
         environment.updateInteractionBounds()
     }
 
-    private fun setSelectedShapeBound(left: Int?, top: Int?, width: Int?, height: Int?) {
+    fun setSelectedShapeBound(left: Int?, top: Int?, width: Int?, height: Int?) {
         val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
         val currentBound = singleShape.bound
         val newLeft = left ?: currentBound.left
@@ -203,7 +160,7 @@ class MainStateManager(
         environment.updateInteractionBounds()
     }
 
-    private fun setSelectedShapeFillExtra(isEnabled: Boolean?, newFillStyleId: String?) {
+    fun setSelectedShapeFillExtra(isEnabled: Boolean?, newFillStyleId: String?) {
         val singleShape = environment.getSelectedShapes().singleOrNull()
 
         if (singleShape == null) {
@@ -240,7 +197,7 @@ class MainStateManager(
         shapeManager.execute(ChangeExtra(singleShape, newExtra))
     }
 
-    private fun setSelectedShapeBorderExtra(isEnabled: Boolean?, newBorderStyleId: String?) {
+    fun setSelectedShapeBorderExtra(isEnabled: Boolean?, newBorderStyleId: String?) {
         val singleShape = environment.getSelectedShapes().singleOrNull()
         if (singleShape == null) {
             ShapeExtraManager.setDefaultValues(
@@ -276,7 +233,7 @@ class MainStateManager(
         shapeManager.execute(ChangeExtra(singleShape, newExtra))
     }
 
-    private fun setSelectedShapeStartAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
+    fun setSelectedShapeStartAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
         val line = environment.getSelectedShapes().singleOrNull() as? Line
         if (line == null) {
             ShapeExtraManager.setDefaultValues(
@@ -300,7 +257,7 @@ class MainStateManager(
         shapeManager.execute(ChangeExtra(line, newExtra))
     }
 
-    private fun setSelectedShapeEndAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
+    fun setSelectedShapeEndAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
         val line = environment.getSelectedShapes().singleOrNull() as? Line
         if (line == null) {
             ShapeExtraManager.setDefaultValues(
@@ -323,12 +280,12 @@ class MainStateManager(
         shapeManager.execute(ChangeExtra(line, newExtra))
     }
 
-    private fun changeShapeOrder(orderType: ChangeOrderType) {
+    fun changeShapeOrder(orderType: ChangeOrderType) {
         val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
         shapeManager.execute(ChangeOrder(singleShape, orderType))
     }
 
-    private fun editSelectedShape(shape: AbstractShape?) {
+    fun editSelectedShape(shape: AbstractShape?) {
         when (shape) {
             is Text -> EditTextShapeHelper.showEditTextDialog(environment, shape)
             is Line,
@@ -339,7 +296,7 @@ class MainStateManager(
         }.exhaustive
     }
 
-    private fun setTextAlignment(
+    fun setTextAlignment(
         horizontalAlign: TextAlign.HorizontalAlign?,
         verticalAlign: TextAlign.VerticalAlign?
     ) {
@@ -427,7 +384,7 @@ class MainStateManager(
         println("$objective runtime: ${currentTimeMillis() - t0}")
     }
 
-    private fun openSavedFile() {
+    fun openSavedFile() {
         fileMediator.openFile { jsonString ->
             shapeManager.replaceWithJson(jsonString)
             workingParentGroup = shapeManager.root
@@ -435,7 +392,7 @@ class MainStateManager(
         }
     }
 
-    private fun exportSelectedShape(isModalRequired: Boolean) {
+    fun exportSelectedShape(isModalRequired: Boolean) {
         val selectedShapes = environment.getSelectedShapes()
         val extractableShapes = when {
             selectedShapes.isNotEmpty() ->
