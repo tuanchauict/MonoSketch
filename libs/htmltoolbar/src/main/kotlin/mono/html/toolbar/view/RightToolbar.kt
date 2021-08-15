@@ -11,6 +11,7 @@ import kotlinx.html.li
 import kotlinx.html.style
 import kotlinx.html.ul
 import mono.html.ext.Tag
+import mono.html.ext.px
 import mono.html.ext.styleOf
 import mono.html.toolbar.OneTimeActionType
 
@@ -42,7 +43,7 @@ internal fun Tag.RightToolbar(
                 style = styleOf("padding" to "0 3px")
 
                 SvgIcon(16, 16) {
-                    style = "margin-bottom: 3px;"
+                    style = styleOf("margin-bottom" to 3.px)
                     /* ktlint-disable max-line-length */
                     SvgPath("M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z")
                     /* ktlint-enable max-line-length */

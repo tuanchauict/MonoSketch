@@ -3,7 +3,6 @@ package mono.shape.clipboard
 import kotlinx.browser.document
 import kotlinx.html.dom.append
 import kotlinx.html.js.textArea
-import kotlinx.html.style
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -71,10 +70,7 @@ class ShapeClipboardManager(private val body: HTMLElement) {
 
     private fun setClipboard(text: String) {
         body.append {
-            val textBox = textArea {
-                style = "position: absolute; left: -1000px; width: 0px; height: 0px;"
-                +text
-            }
+            val textBox = textArea(classes = "hidden", content = text)
             textBox.select()
             document.execCommand("copy")
             textBox.remove()

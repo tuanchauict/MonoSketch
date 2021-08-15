@@ -18,6 +18,8 @@ import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Rect
+import mono.html.ext.px
+import mono.html.ext.styleOf
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import org.w3c.dom.HTMLElement
@@ -113,8 +115,13 @@ class ExportShapesModal(
         div("modal-body") {
             pre {
                 attributes["contenteditable"] = "true"
-                style = "line-height: 15px; font-size: 12px; height: 100%; outline: none; " +
-                    "min-height: 160px"
+                style = styleOf(
+                    "height" to "100%",
+                    "min-height" to 160.px,
+                    "line-height" to 15.px,
+                    "font-size" to 12.px,
+                    "outline" to "none"
+                )
                 +content
             }
         }
@@ -122,10 +129,7 @@ class ExportShapesModal(
 
     private fun TagConsumer<HTMLElement>.Footer(content: String) {
         div("modal-footer") {
-            val textBox = textArea {
-                style = "position: absolute; left: -1000px; width: 0px; height: 0px;"
-                +content
-            }
+            val textBox = textArea(classes = "hidden", content = content)
             button(classes = "btn btn-outline-primary btn-sm") {
                 +"Copy"
 

@@ -5,7 +5,6 @@ import kotlinx.html.InputType
 import kotlinx.html.a
 import kotlinx.html.dom.append
 import kotlinx.html.js.input
-import kotlinx.html.style
 import org.w3c.dom.url.URL
 import org.w3c.files.Blob
 import org.w3c.files.FileList
@@ -19,11 +18,9 @@ internal class FileMediator {
     fun saveFile(jsonString: String) {
         document.body?.append {
             val fileBlob = Blob(arrayOf(jsonString))
-            val node = a {
+            val node = a(classes = "hidden") {
                 href = URL.Companion.createObjectURL(fileBlob)
                 attributes["download"] = "$DEFAULT_FILENAME.$EXTENSION"
-
-                style = "position: absolute; left = -1000px;"
             }
             node.click()
             node.remove()
@@ -32,9 +29,8 @@ internal class FileMediator {
 
     fun openFile(onFileLoadedAction: (String) -> Unit) {
         document.body?.append {
-            val fileInput = input(type = InputType.file) {
+            val fileInput = input(type = InputType.file, classes = "hidden") {
                 attributes["accept"] = ".$EXTENSION"
-                style = "position: absolute; left: -1000px;"
             }
             fileInput.onchange = {
                 readFile(fileInput.files, onFileLoadedAction)
