@@ -9,6 +9,7 @@ repositories {
 dependencies {
     implementation(project(":commons"))
     implementation(project(":graphicsgeo"))
+    implementation(project(":html-ext"))
     implementation(project(":lifecycle"))
     implementation(project(":livedata"))
     implementation(project(":monoboard"))

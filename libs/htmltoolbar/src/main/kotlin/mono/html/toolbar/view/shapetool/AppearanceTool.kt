@@ -9,8 +9,8 @@ import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.span
 import mono.common.nullToFalse
+import mono.html.ext.Tag
 import mono.html.toolbar.OneTimeActionType
-import mono.html.toolbar.view.Tag
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.isSelected
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType

@@ -5,10 +5,10 @@ package mono.html.toolbar.view.shapetool
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.span
+import mono.html.ext.Tag
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.SvgPath
-import mono.html.toolbar.view.Tag
 import mono.html.toolbar.view.isSelected
 import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
 import mono.html.toolbar.view.shapetool.Class.COLUMN

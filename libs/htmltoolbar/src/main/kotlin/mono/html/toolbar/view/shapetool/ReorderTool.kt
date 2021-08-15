@@ -4,11 +4,11 @@ package mono.html.toolbar.view.shapetool
 
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
+import mono.html.ext.Tag
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.OneTimeActionType.ReorderShape
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.SvgPath
-import mono.html.toolbar.view.Tag
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.shape.command.ChangeOrder

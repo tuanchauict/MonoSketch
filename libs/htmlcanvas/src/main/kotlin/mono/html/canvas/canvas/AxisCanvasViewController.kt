@@ -2,6 +2,7 @@ package mono.html.canvas.canvas
 
 import kotlinx.browser.window
 import mono.graphics.geo.Size
+import mono.html.ext.px
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import org.w3c.dom.CanvasTextAlign
@@ -33,8 +34,8 @@ internal class AxisCanvasViewController(
             val dpr = max(window.devicePixelRatio, 2.0)
             canvas.width = (canvasSizePx.width * dpr).toInt()
             canvas.height = ((canvasSizePx.height) * dpr).toInt()
-            canvas.style.width = "${canvasSizePx.width}px"
-            canvas.style.height = "${canvasSizePx.height}px"
+            canvas.style.width = canvasSizePx.width.px
+            canvas.style.height = canvasSizePx.height.px
             context.scale(dpr, dpr)
         }
 

@@ -4,7 +4,7 @@ package mono.html.toolbar.view.shapetool
 
 import kotlinx.html.div
 import kotlinx.html.js.div
-import mono.html.toolbar.view.Tag
+import mono.html.ext.Tag
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.ADD_BOTTOM_SPACE

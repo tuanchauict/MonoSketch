@@ -7,6 +7,7 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.graphics.geo.SizeF
+import mono.html.ext.px
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
@@ -46,7 +47,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         drawingInfoMutableLiveData.value =
             drawingInfoMutableLiveData.value.copy(
                 cellSizePx = context.getCellSizePx(fontSize),
-                font = "normal normal normal ${fontSize}px 'Fira Code'",
+                font = "normal normal normal ${fontSize.px} 'Fira Code'",
                 fontSize = fontSize
             )
     }

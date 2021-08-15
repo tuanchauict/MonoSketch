@@ -8,8 +8,8 @@ import kotlinx.html.js.input
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.span
 import mono.graphics.geo.Rect
+import mono.html.ext.Tag
 import mono.html.toolbar.OneTimeActionType
-import mono.html.toolbar.view.Tag
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
 import mono.html.toolbar.view.shapetool.Class.COLUMN
 import mono.html.toolbar.view.shapetool.Class.HALF
