@@ -4,6 +4,7 @@ import mono.common.exhaustive
 import mono.html.toolbar.OneTimeActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.shape.replaceWithJson
 import mono.shape.toJson
 import mono.state.command.CommandEnvironment
 
@@ -17,6 +18,7 @@ internal class OneTimeActionHandler(
     // TODO: Remove this after moving all required methods into this class
     mainStateManager: MainStateManager
 ) {
+    private val fileMediator: FileMediator = FileMediator()
 
     init {
         oneTimeActionLiveData.observe(lifecycleOwner) {
@@ -24,9 +26,9 @@ internal class OneTimeActionHandler(
                 OneTimeActionType.Idle -> Unit
 
                 OneTimeActionType.SaveShapesAs ->
-                    mainStateManager.fileMediator.saveFile(environment.shapeManager.toJson(true))
+                    saveCurrentShapesToFile()
                 OneTimeActionType.OpenShapes ->
-                    mainStateManager.openSavedFile()
+                    loadShapesFromFile()
                 OneTimeActionType.ExportSelectedShapes ->
                     mainStateManager.exportSelectedShape(true)
 
@@ -73,6 +75,18 @@ internal class OneTimeActionHandler(
                 OneTimeActionType.CopyText ->
                     mainStateManager.exportSelectedShape(false)
             }.exhaustive
+        }
+    }
+
+    private fun saveCurrentShapesToFile() {
+        fileMediator.saveFile(environment.shapeManager.toJson(true))
+    }
+
+    private fun loadShapesFromFile() {
+        fileMediator.openFile { jsonString ->
+            environment.shapeManager.replaceWithJson(jsonString)
+            environment.workingParentGroup = environment.shapeManager.root
+            environment.clearSelectedShapes()
         }
     }
 }

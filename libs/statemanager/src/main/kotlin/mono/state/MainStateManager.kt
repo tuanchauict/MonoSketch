@@ -28,7 +28,6 @@ import mono.shape.command.ChangeOrder.ChangeOrderType
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.TextAlign
 import mono.shape.remove
-import mono.shape.replaceWithJson
 import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -69,7 +68,6 @@ class MainStateManager(
 
     internal val clipboardManager: ClipboardManager =
         ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
-    internal val fileMediator: FileMediator = FileMediator()
 
     private val exportShapesHelper = ExportShapesHelper(
         bitmapManager::getBitmap,
@@ -384,14 +382,6 @@ class MainStateManager(
         println("$objective runtime: ${currentTimeMillis() - t0}")
     }
 
-    fun openSavedFile() {
-        fileMediator.openFile { jsonString ->
-            shapeManager.replaceWithJson(jsonString)
-            workingParentGroup = shapeManager.root
-            environment.clearSelectedShapes()
-        }
-    }
-
     fun exportSelectedShape(isModalRequired: Boolean) {
         val selectedShapes = environment.getSelectedShapes()
         val extractableShapes = when {
@@ -451,8 +441,11 @@ class MainStateManager(
         override val shapeSearcher: ShapeSearcher
             get() = stateManager.shapeSearcher
 
-        override val workingParentGroup: Group
+        override var workingParentGroup: Group
             get() = stateManager.workingParentGroup
+            set(value) {
+                stateManager.workingParentGroup = value
+            }
 
         override fun getWindowBound(): Rect = stateManager.windowBoardBound
 

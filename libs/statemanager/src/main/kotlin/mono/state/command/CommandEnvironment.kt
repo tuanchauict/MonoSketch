@@ -16,7 +16,8 @@ import mono.shapesearcher.ShapeSearcher
 internal interface CommandEnvironment {
     val shapeManager: ShapeManager
     val shapeSearcher: ShapeSearcher
-    val workingParentGroup: Group
+
+    var workingParentGroup: Group
 
     fun getWindowBound(): Rect
 
