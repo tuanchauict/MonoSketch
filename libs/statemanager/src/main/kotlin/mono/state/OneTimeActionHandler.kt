@@ -7,6 +7,7 @@ import mono.html.toolbar.OneTimeActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.remove
 import mono.shape.replaceWithJson
 import mono.shape.toJson
 import mono.state.command.CommandEnvironment
@@ -49,7 +50,7 @@ internal class OneTimeActionHandler(
                 OneTimeActionType.DeselectShapes ->
                     environment.clearSelectedShapes()
                 OneTimeActionType.DeleteSelectedShapes ->
-                    mainStateManager.deleteSelectedShapes()
+                    deleteSelectedShapes()
                 OneTimeActionType.EditSelectedShapes ->
                     mainStateManager.editSelectedShape(
                         environment.getSelectedShapes().singleOrNull()
@@ -111,5 +112,12 @@ internal class OneTimeActionHandler(
         }
 
         exportShapesHelper.exportText(extractableShapes, isModalRequired)
+    }
+
+    private fun deleteSelectedShapes() {
+        for (shape in environment.getSelectedShapes()) {
+            environment.shapeManager.remove(shape)
+        }
+        environment.clearSelectedShapes()
     }
 }

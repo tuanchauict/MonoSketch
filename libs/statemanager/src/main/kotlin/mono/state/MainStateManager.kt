@@ -26,7 +26,6 @@ import mono.shape.command.ChangeOrder
 import mono.shape.command.ChangeOrder.ChangeOrderType
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.TextAlign
-import mono.shape.remove
 import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -122,13 +121,6 @@ class MainStateManager(
             bitmapManager,
             shapeClipboardManager
         )
-    }
-
-    fun deleteSelectedShapes() {
-        for (shape in environment.getSelectedShapes()) {
-            shapeManager.remove(shape)
-        }
-        environment.clearSelectedShapes()
     }
 
     fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
