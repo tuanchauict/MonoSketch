@@ -14,46 +14,16 @@ import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.textArea
 import kotlinx.html.pre
 import kotlinx.html.style
-import mono.graphics.bitmap.MonoBitmap
-import mono.graphics.board.Highlight
-import mono.graphics.board.MonoBoard
-import mono.graphics.geo.Rect
 import mono.html.ext.px
 import mono.html.ext.styleOf
-import mono.shape.shape.AbstractShape
-import mono.shape.shape.Group
 import org.w3c.dom.HTMLElement
 
 /**
  * A modal which is for showing the board rendering selected shapes and allowing users to copy as
  * text.
  */
-class ExportShapesModal(
-    private val selectedShapes: List<AbstractShape>,
-    private val getBitmap: (AbstractShape) -> MonoBitmap?
-) {
-    fun show() {
-        val left = selectedShapes.minOf { it.bound.left }
-        val right = selectedShapes.maxOf { it.bound.right }
-        val top = selectedShapes.minOf { it.bound.top }
-        val bottom = selectedShapes.maxOf { it.bound.bottom }
-        val window = Rect.byLTRB(left, top, right, bottom)
-        val exportingBoard = MonoBoard().apply { clearAndSetWindow(window) }
-        drawShapesOntoExportingBoard(exportingBoard, selectedShapes)
-
-        createModalContent(exportingBoard.toStringInBound(window))
-    }
-
-    private fun drawShapesOntoExportingBoard(board: MonoBoard, shapes: Collection<AbstractShape>) {
-        for (shape in shapes) {
-            if (shape is Group) {
-                drawShapesOntoExportingBoard(board, shape.items)
-                continue
-            }
-            val bitmap = getBitmap(shape) ?: continue
-            board.fill(shape.bound.position, bitmap, Highlight.NO)
-        }
-    }
+internal class ExportShapesModal {
+    fun show(content: String) = createModalContent(content)
 
     private fun createModalContent(content: String) {
         val body = document.body ?: return

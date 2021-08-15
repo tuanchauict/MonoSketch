@@ -8,6 +8,7 @@ import mono.common.Key
 enum class KeyCommand(
     vararg val keyCodes: Int,
     private val commandKeyState: MetaKeyState = MetaKeyState.ANY,
+    private val shiftKeyState: MetaKeyState = MetaKeyState.ANY,
     val isKeyEventPropagationAllowed: Boolean = true
 ) {
     IDLE,
@@ -28,13 +29,30 @@ enum class KeyCommand(
     ENTER_EDIT_MODE(Key.KEY_ENTER),
     SELECTION_MODE(Key.KEY_V, commandKeyState = MetaKeyState.OFF),
 
-    COPY(Key.KEY_C, commandKeyState = MetaKeyState.ON),
+    COPY(Key.KEY_C, commandKeyState = MetaKeyState.ON, shiftKeyState = MetaKeyState.OFF),
     CUT(Key.KEY_X, commandKeyState = MetaKeyState.ON),
     DUPLICATE(Key.KEY_D, commandKeyState = MetaKeyState.ON, isKeyEventPropagationAllowed = false),
+
+    COPY_TEXT(
+        Key.KEY_C,
+        commandKeyState = MetaKeyState.ON,
+        shiftKeyState = MetaKeyState.ON,
+        isKeyEventPropagationAllowed = false
+    ),
     ;
 
     private enum class MetaKeyState {
-        ON, OFF, ANY
+        ON {
+            override fun isAccepted(hasKey: Boolean): Boolean = hasKey
+        },
+        OFF {
+            override fun isAccepted(hasKey: Boolean): Boolean = !hasKey
+        },
+        ANY {
+            override fun isAccepted(hasKey: Boolean): Boolean = true
+        };
+
+        abstract fun isAccepted(hasKey: Boolean): Boolean
     }
 
     companion object {
@@ -46,14 +64,15 @@ enum class KeyCommand(
                 map
             }
 
-        internal fun getCommandByKey(keyCode: Int, hasCommandKey: Boolean): KeyCommand =
+        internal fun getCommandByKey(
+            keyCode: Int,
+            hasCommandKey: Boolean,
+            hasShiftKey: Boolean
+        ): KeyCommand =
             KEYCODE_TO_COMMAND_MAP[keyCode]
                 ?.firstOrNull {
-                    when (it.commandKeyState) {
-                        MetaKeyState.ANY -> true
-                        MetaKeyState.ON -> hasCommandKey
-                        MetaKeyState.OFF -> !hasCommandKey
-                    }
+                    it.commandKeyState.isAccepted(hasCommandKey) &&
+                        it.shiftKeyState.isAccepted(hasShiftKey)
                 }
                 ?: IDLE
     }

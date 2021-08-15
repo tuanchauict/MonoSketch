@@ -5,7 +5,7 @@ import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
 import mono.common.nullToFalse
 import mono.environment.Build
-import mono.export.ExportShapesModal
+import mono.export.ExportShapesHelper
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.DirectedPoint
@@ -73,6 +73,11 @@ class MainStateManager(
         ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
     private val fileMediator: FileMediator = FileMediator()
 
+    private val exportShapesHelper = ExportShapesHelper(
+        bitmapManager::getBitmap,
+        shapeClipboardManager::setClipboardText
+    )
+
     private var currentMouseCommand: MouseCommand? = null
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
@@ -126,7 +131,7 @@ class MainStateManager(
                 OneTimeActionType.OpenShapes ->
                     openSavedFile()
                 OneTimeActionType.ExportSelectedShapes ->
-                    exportSelectedShape()
+                    exportSelectedShape(true)
 
                 OneTimeActionType.SelectAllShapes ->
                     environment.selectAllShapes()
@@ -160,6 +165,9 @@ class MainStateManager(
                     clipboardManager.copySelectedShapes(it.isRemoveRequired)
                 OneTimeActionType.Duplicate ->
                     clipboardManager.duplicateSelectedShapes()
+
+                OneTimeActionType.CopyText ->
+                    exportSelectedShape(false)
             }.exhaustive
         }
     }
@@ -427,15 +435,18 @@ class MainStateManager(
         }
     }
 
-    private fun exportSelectedShape() {
+    private fun exportSelectedShape(isModalRequired: Boolean) {
         val selectedShapes = environment.getSelectedShapes()
-        val extractableShapes =
-            if (selectedShapes.isNotEmpty()) {
+        val extractableShapes = when {
+            selectedShapes.isNotEmpty() ->
                 workingParentGroup.items.filter { it in selectedShapes }
-            } else {
+            isModalRequired ->
                 listOf(workingParentGroup)
-            }
-        ExportShapesModal(extractableShapes, bitmapManager::getBitmap).show()
+            else ->
+                emptyList()
+        }
+
+        exportShapesHelper.exportText(extractableShapes, isModalRequired)
     }
 
     private fun updateMouseCursor(mousePointer: MousePointer) {
