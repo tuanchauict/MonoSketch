@@ -46,14 +46,11 @@ class ShapeClipboardManager(private val body: HTMLElement) {
     }
 
     private fun createTextShapeFromText(text: String): SerializableText {
-        val width = text.length.coerceAtMost(DEFAULT_TEXT_BOUND_WIDTH)
-        val height =
-            if (width < text.length) {
-                val chunks = text.chunked(DEFAULT_TEXT_BOUND_WIDTH)
-                chunks.size
-            } else {
-                1
-            }
+        val lines = text
+            .split('\n')
+            .flatMap { it.chunked(DEFAULT_TEXT_BOUND_WIDTH) }
+        val width = lines.maxOf { it.length }
+        val height = lines.size
 
         return SerializableText(
             null,
@@ -78,6 +75,6 @@ class ShapeClipboardManager(private val body: HTMLElement) {
     }
 
     companion object {
-        private const val DEFAULT_TEXT_BOUND_WIDTH = 60
+        private const val DEFAULT_TEXT_BOUND_WIDTH = 400
     }
 }
