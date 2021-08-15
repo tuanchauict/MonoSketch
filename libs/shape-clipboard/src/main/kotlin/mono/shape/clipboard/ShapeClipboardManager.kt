@@ -65,10 +65,10 @@ class ShapeClipboardManager(private val body: HTMLElement) {
 
     fun setClipboard(shapes: List<AbstractSerializableShape>) {
         val json = Json.encodeToString(shapes)
-        setClipboard(json)
+        setClipboardText(json)
     }
 
-    private fun setClipboard(text: String) {
+    fun setClipboardText(text: String) {
         body.append {
             val textBox = textArea(classes = "hidden", content = text)
             textBox.select()

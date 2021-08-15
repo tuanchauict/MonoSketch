@@ -5,7 +5,7 @@ import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
 import mono.common.nullToFalse
 import mono.environment.Build
-import mono.export.ExportShapesModal
+import mono.export.ExportShapesHelper
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.DirectedPoint
@@ -72,6 +72,11 @@ class MainStateManager(
     private val clipboardManager: ClipboardManager =
         ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
     private val fileMediator: FileMediator = FileMediator()
+
+    private val exportShapesHelper = ExportShapesHelper(
+        bitmapManager::getBitmap,
+        shapeClipboardManager::setClipboardText
+    )
 
     private var currentMouseCommand: MouseCommand? = null
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
@@ -432,18 +437,16 @@ class MainStateManager(
 
     private fun exportSelectedShape(isModalRequired: Boolean) {
         val selectedShapes = environment.getSelectedShapes()
-        val extractableShapes =
-            if (selectedShapes.isNotEmpty()) {
+        val extractableShapes = when {
+            selectedShapes.isNotEmpty() ->
                 workingParentGroup.items.filter { it in selectedShapes }
-            } else {
+            isModalRequired ->
                 listOf(workingParentGroup)
-            }
-
-        if (isModalRequired) {
-            ExportShapesModal(extractableShapes, bitmapManager::getBitmap).show()
-        } else {
-            TODO("Set clipboard")
+            else ->
+                emptyList()
         }
+
+        exportShapesHelper.exportText(extractableShapes, isModalRequired)
     }
 
     private fun updateMouseCursor(mousePointer: MousePointer) {
