@@ -25,7 +25,6 @@ import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.ChangeOrder.ChangeOrderType
 import mono.shape.extra.manager.ShapeExtraManager
-import mono.shape.extra.manager.model.TextAlign
 import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -269,26 +268,6 @@ class MainStateManager(
     fun changeShapeOrder(orderType: ChangeOrderType) {
         val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
         shapeManager.execute(ChangeOrder(singleShape, orderType))
-    }
-
-    fun setTextAlignment(
-        horizontalAlign: TextAlign.HorizontalAlign?,
-        verticalAlign: TextAlign.VerticalAlign?
-    ) {
-        val textShape = environment.getSelectedShapes().singleOrNull() as? Text
-        if (textShape == null) {
-            ShapeExtraManager.setDefaultValues(
-                textHorizontalAlign = horizontalAlign,
-                textVerticalAlign = verticalAlign
-            )
-            return
-        }
-        val newTextAlign = textShape.extra.textAlign.copy(
-            horizontalAlign ?: textShape.extra.textAlign.horizontalAlign,
-            verticalAlign ?: textShape.extra.textAlign.verticalAlign
-        )
-        val newExtra = textShape.extra.copy(textAlign = newTextAlign)
-        shapeManager.execute(ChangeExtra(textShape, newExtra))
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {

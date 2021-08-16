@@ -7,6 +7,9 @@ import mono.html.toolbar.OneTimeActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.command.ChangeExtra
+import mono.shape.extra.manager.ShapeExtraManager
+import mono.shape.extra.manager.model.TextAlign
 import mono.shape.remove
 import mono.shape.replaceWithJson
 import mono.shape.shape.AbstractShape
@@ -63,7 +66,7 @@ internal class OneTimeActionHandler(
                 is OneTimeActionType.EditSelectedShape ->
                     editSelectedShape(it.shape)
                 is OneTimeActionType.TextAlignment ->
-                    mainStateManager.setTextAlignment(it.newHorizontalAlign, it.newVerticalAlign)
+                    setTextAlignment(it.newHorizontalAlign, it.newVerticalAlign)
 
                 is OneTimeActionType.MoveShapes ->
                     mainStateManager.moveSelectedShapes(it.offsetRow, it.offsetCol)
@@ -137,5 +140,25 @@ internal class OneTimeActionHandler(
             is Group,
             null -> Unit
         }.exhaustive
+    }
+
+    private fun setTextAlignment(
+        horizontalAlign: TextAlign.HorizontalAlign?,
+        verticalAlign: TextAlign.VerticalAlign?
+    ) {
+        val textShape = environment.getSelectedShapes().singleOrNull() as? Text
+        if (textShape == null) {
+            ShapeExtraManager.setDefaultValues(
+                textHorizontalAlign = horizontalAlign,
+                textVerticalAlign = verticalAlign
+            )
+            return
+        }
+        val newTextAlign = textShape.extra.textAlign.copy(
+            horizontalAlign ?: textShape.extra.textAlign.horizontalAlign,
+            verticalAlign ?: textShape.extra.textAlign.verticalAlign
+        )
+        val newExtra = textShape.extra.copy(textAlign = newTextAlign)
+        environment.shapeManager.execute(ChangeExtra(textShape, newExtra))
     }
 }
