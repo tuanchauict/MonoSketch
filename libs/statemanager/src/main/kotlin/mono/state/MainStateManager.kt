@@ -179,7 +179,6 @@ class MainStateManager(
         println("$objective runtime: ${currentTimeMillis() - t0}")
     }
 
-
     private fun updateMouseCursor(mousePointer: MousePointer) {
         val mouseCursor = when (mousePointer) {
             is MousePointer.Move -> {
