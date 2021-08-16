@@ -9,8 +9,15 @@ import mono.livedata.LiveData
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.remove
 import mono.shape.replaceWithJson
+import mono.shape.shape.AbstractShape
+import mono.shape.shape.Group
+import mono.shape.shape.Line
+import mono.shape.shape.MockShape
+import mono.shape.shape.Rectangle
+import mono.shape.shape.Text
 import mono.shape.toJson
 import mono.state.command.CommandEnvironment
+import mono.state.command.text.EditTextShapeHelper
 
 /**
  * A class to handle one time actions.
@@ -52,9 +59,9 @@ internal class OneTimeActionHandler(
                 OneTimeActionType.DeleteSelectedShapes ->
                     deleteSelectedShapes()
                 OneTimeActionType.EditSelectedShapes ->
-                    mainStateManager.editSelectedShape(
-                        environment.getSelectedShapes().singleOrNull()
-                    )
+                    editSelectedShape(environment.getSelectedShapes().singleOrNull())
+                is OneTimeActionType.EditSelectedShape ->
+                    editSelectedShape(it.shape)
                 is OneTimeActionType.TextAlignment ->
                     mainStateManager.setTextAlignment(it.newHorizontalAlign, it.newVerticalAlign)
 
@@ -119,5 +126,16 @@ internal class OneTimeActionHandler(
             environment.shapeManager.remove(shape)
         }
         environment.clearSelectedShapes()
+    }
+
+    private fun editSelectedShape(shape: AbstractShape?) {
+        when (shape) {
+            is Text -> EditTextShapeHelper.showEditTextDialog(environment, shape)
+            is Line,
+            is Rectangle,
+            is MockShape,
+            is Group,
+            null -> Unit
+        }.exhaustive
     }
 }

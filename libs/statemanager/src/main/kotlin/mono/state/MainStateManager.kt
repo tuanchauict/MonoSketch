@@ -2,7 +2,6 @@ package mono.state
 
 import kotlinx.html.currentTimeMillis
 import mono.bitmap.manager.MonoBitmapManager
-import mono.common.exhaustive
 import mono.common.nullToFalse
 import mono.environment.Build
 import mono.graphics.board.Highlight
@@ -13,6 +12,7 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
 import mono.html.toolbar.ActionManager
+import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -40,7 +40,6 @@ import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
-import mono.state.command.text.EditTextShapeHelper
 
 /**
  * A class which is connect components in the app.
@@ -54,7 +53,7 @@ class MainStateManager(
     private val canvasManager: CanvasViewController,
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
-    actionManager: ActionManager
+    private val actionManager: ActionManager
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
@@ -272,17 +271,6 @@ class MainStateManager(
         shapeManager.execute(ChangeOrder(singleShape, orderType))
     }
 
-    fun editSelectedShape(shape: AbstractShape?) {
-        when (shape) {
-            is Text -> EditTextShapeHelper.showEditTextDialog(environment, shape)
-            is Line,
-            is Rectangle,
-            is MockShape,
-            is Group,
-            null -> Unit
-        }.exhaustive
-    }
-
     fun setTextAlignment(
         horizontalAlign: TextAlign.HorizontalAlign?,
         verticalAlign: TextAlign.VerticalAlign?
@@ -307,7 +295,7 @@ class MainStateManager(
         if (mousePointer is MousePointer.DoubleClick) {
             val targetedShape =
                 environment.getSelectedShapes().firstOrNull { it.contains(mousePointer.point) }
-            editSelectedShape(targetedShape)
+            actionManager.setOneTimeAction(OneTimeActionType.EditSelectedShape(targetedShape))
             return
         }
 
