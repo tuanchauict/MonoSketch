@@ -2,10 +2,8 @@ package mono.state
 
 import kotlinx.html.currentTimeMillis
 import mono.bitmap.manager.MonoBitmapManager
-import mono.common.exhaustive
 import mono.common.nullToFalse
 import mono.environment.Build
-import mono.export.ExportShapesHelper
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.DirectedPoint
@@ -22,14 +20,6 @@ import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.command.ChangeBound
-import mono.shape.command.ChangeExtra
-import mono.shape.command.ChangeOrder
-import mono.shape.command.ChangeOrder.ChangeOrderType
-import mono.shape.extra.manager.ShapeExtraManager
-import mono.shape.extra.manager.model.TextAlign
-import mono.shape.remove
-import mono.shape.replaceWithJson
 import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -37,7 +27,6 @@ import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.toJson
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
 import mono.shapebound.ScalableInteractionBound
@@ -45,7 +34,6 @@ import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
-import mono.state.command.text.EditTextShapeHelper
 
 /**
  * A class which is connect components in the app.
@@ -59,7 +47,7 @@ class MainStateManager(
     private val canvasManager: CanvasViewController,
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
-    actionManager: ActionManager
+    private val actionManager: ActionManager
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
@@ -68,15 +56,6 @@ class MainStateManager(
     private var windowBoardBound: Rect = Rect.ZERO
 
     private val environment: CommandEnvironmentImpl = CommandEnvironmentImpl(this)
-
-    private val clipboardManager: ClipboardManager =
-        ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
-    private val fileMediator: FileMediator = FileMediator()
-
-    private val exportShapesHelper = ExportShapesHelper(
-        bitmapManager::getBitmap,
-        shapeClipboardManager::setClipboardText
-    )
 
     private var currentMouseCommand: MouseCommand? = null
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
@@ -122,248 +101,21 @@ class MainStateManager(
         actionManager.retainableActionLiveData.observe(lifecycleOwner) {
             currentRetainableActionType = it
         }
-        actionManager.oneTimeActionLiveData.observe(lifecycleOwner) {
-            when (it) {
-                OneTimeActionType.Idle -> Unit
 
-                OneTimeActionType.SaveShapesAs ->
-                    fileMediator.saveFile(shapeManager.toJson(true))
-                OneTimeActionType.OpenShapes ->
-                    openSavedFile()
-                OneTimeActionType.ExportSelectedShapes ->
-                    exportSelectedShape(true)
-
-                OneTimeActionType.SelectAllShapes ->
-                    environment.selectAllShapes()
-                OneTimeActionType.DeselectShapes ->
-                    environment.clearSelectedShapes()
-                OneTimeActionType.DeleteSelectedShapes ->
-                    deleteSelectedShapes()
-                OneTimeActionType.EditSelectedShapes ->
-                    editSelectedShape(environment.getSelectedShapes().singleOrNull())
-                is OneTimeActionType.TextAlignment ->
-                    setTextAlignment(it.newHorizontalAlign, it.newVerticalAlign)
-
-                is OneTimeActionType.MoveShapes ->
-                    moveSelectedShapes(it.offsetRow, it.offsetCol)
-                is OneTimeActionType.ChangeShapeBound ->
-                    setSelectedShapeBound(it.newLeft, it.newTop, it.newWidth, it.newHeight)
-
-                is OneTimeActionType.ChangeShapeFillExtra ->
-                    setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
-                is OneTimeActionType.ChangeShapeBorderExtra ->
-                    setSelectedShapeBorderExtra(it.isEnabled, it.newBorderStyleId)
-                is OneTimeActionType.ChangeLineStartAnchorExtra ->
-                    setSelectedShapeStartAnchorExtra(it.isEnabled, it.newHeadId)
-                is OneTimeActionType.ChangeLineEndAnchorExtra ->
-                    setSelectedShapeEndAnchorExtra(it.isEnabled, it.newHeadId)
-
-                is OneTimeActionType.ReorderShape ->
-                    changeShapeOrder(it.orderType)
-
-                is OneTimeActionType.Copy ->
-                    clipboardManager.copySelectedShapes(it.isRemoveRequired)
-                OneTimeActionType.Duplicate ->
-                    clipboardManager.duplicateSelectedShapes()
-
-                OneTimeActionType.CopyText ->
-                    exportSelectedShape(false)
-            }.exhaustive
-        }
-    }
-
-    private fun deleteSelectedShapes() {
-        for (shape in environment.getSelectedShapes()) {
-            shapeManager.remove(shape)
-        }
-        environment.clearSelectedShapes()
-    }
-
-    private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
-        val selectedShapes = environment.getSelectedShapes()
-        for (shape in selectedShapes) {
-            val bound = shape.bound
-            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
-            val newBound = shape.bound.copy(position = newPosition)
-            shapeManager.execute(ChangeBound(shape, newBound))
-        }
-        environment.updateInteractionBounds()
-    }
-
-    private fun setSelectedShapeBound(left: Int?, top: Int?, width: Int?, height: Int?) {
-        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
-        val currentBound = singleShape.bound
-        val newLeft = left ?: currentBound.left
-        val newTop = top ?: currentBound.top
-        val newWidth = width ?: currentBound.width
-        val newHeight = height ?: currentBound.height
-        shapeManager.execute(
-            ChangeBound(singleShape, Rect.byLTWH(newLeft, newTop, newWidth, newHeight))
+        OneTimeActionHandler(
+            lifecycleOwner,
+            actionManager.oneTimeActionLiveData,
+            environment,
+            bitmapManager,
+            shapeClipboardManager
         )
-        environment.updateInteractionBounds()
-    }
-
-    private fun setSelectedShapeFillExtra(isEnabled: Boolean?, newFillStyleId: String?) {
-        val singleShape = environment.getSelectedShapes().singleOrNull()
-
-        if (singleShape == null) {
-            ShapeExtraManager.setDefaultValues(
-                isFillEnabled = isEnabled,
-                fillStyleId = newFillStyleId
-            )
-            return
-        }
-
-        val currentRectangleExtra = when (singleShape) {
-            is Rectangle -> singleShape.extra
-            is Text -> singleShape.extra.boundExtra
-            is Line,
-            is MockShape,
-            is Group -> null
-        } ?: return
-        val newIsFillEnabled = isEnabled ?: currentRectangleExtra.isFillEnabled
-        val newFillStyle = ShapeExtraManager.getRectangleFillStyle(
-            newFillStyleId,
-            currentRectangleExtra.userSelectedFillStyle
-        )
-        val rectangleExtra = currentRectangleExtra.copy(
-            isFillEnabled = newIsFillEnabled,
-            userSelectedFillStyle = newFillStyle
-        )
-        val newExtra = when (singleShape) {
-            is Rectangle -> rectangleExtra
-            is Text -> singleShape.extra.copy(boundExtra = rectangleExtra)
-            is Line,
-            is MockShape,
-            is Group -> null
-        } ?: return
-        shapeManager.execute(ChangeExtra(singleShape, newExtra))
-    }
-
-    private fun setSelectedShapeBorderExtra(isEnabled: Boolean?, newBorderStyleId: String?) {
-        val singleShape = environment.getSelectedShapes().singleOrNull()
-        if (singleShape == null) {
-            ShapeExtraManager.setDefaultValues(
-                isBorderEnabled = isEnabled,
-                borderStyleId = newBorderStyleId
-            )
-            return
-        }
-
-        val currentRectangleExtra = when (singleShape) {
-            is Rectangle -> singleShape.extra
-            is Text -> singleShape.extra.boundExtra
-            is Line,
-            is MockShape,
-            is Group -> null
-        } ?: return
-        val newIsBorderEnabled = isEnabled ?: currentRectangleExtra.isBorderEnabled
-        val newBorderStyle = ShapeExtraManager.getRectangleBorderStyle(
-            newBorderStyleId,
-            currentRectangleExtra.userSelectedBorderStyle
-        )
-        val rectangleExtra = currentRectangleExtra.copy(
-            isBorderEnabled = newIsBorderEnabled,
-            userSelectedBorderStyle = newBorderStyle
-        )
-        val newExtra = when (singleShape) {
-            is Rectangle -> rectangleExtra
-            is Text -> singleShape.extra.copy(boundExtra = rectangleExtra)
-            is Line,
-            is MockShape,
-            is Group -> null
-        } ?: return
-        shapeManager.execute(ChangeExtra(singleShape, newExtra))
-    }
-
-    private fun setSelectedShapeStartAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
-        val line = environment.getSelectedShapes().singleOrNull() as? Line
-        if (line == null) {
-            ShapeExtraManager.setDefaultValues(
-                isStartHeadAnchorCharEnabled = isEnabled,
-                startHeadAnchorCharId = newAnchorId
-            )
-            return
-        }
-
-        val currentExtra = line.extra
-        val newIsEnabled = isEnabled ?: currentExtra.isStartAnchorEnabled
-        val newAnchor =
-            ShapeExtraManager.getStartHeadAnchorChar(
-                newAnchorId,
-                currentExtra.userSelectedStartAnchor
-            )
-        val newExtra = currentExtra.copy(
-            isStartAnchorEnabled = newIsEnabled,
-            userSelectedStartAnchor = newAnchor
-        )
-        shapeManager.execute(ChangeExtra(line, newExtra))
-    }
-
-    private fun setSelectedShapeEndAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
-        val line = environment.getSelectedShapes().singleOrNull() as? Line
-        if (line == null) {
-            ShapeExtraManager.setDefaultValues(
-                isEndHeadAnchorCharEnabled = isEnabled,
-                endHeadAnchorCharId = newAnchorId
-            )
-            return
-        }
-        val currentExtra = line.extra
-        val newIsEnabled = isEnabled ?: currentExtra.isEndAnchorEnabled
-        val newAnchor =
-            ShapeExtraManager.getEndHeadAnchorChar(
-                newAnchorId,
-                currentExtra.userSelectedEndAnchor
-            )
-        val newExtra = currentExtra.copy(
-            isEndAnchorEnabled = newIsEnabled,
-            userSelectedEndAnchor = newAnchor
-        )
-        shapeManager.execute(ChangeExtra(line, newExtra))
-    }
-
-    private fun changeShapeOrder(orderType: ChangeOrderType) {
-        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
-        shapeManager.execute(ChangeOrder(singleShape, orderType))
-    }
-
-    private fun editSelectedShape(shape: AbstractShape?) {
-        when (shape) {
-            is Text -> EditTextShapeHelper.showEditTextDialog(environment, shape)
-            is Line,
-            is Rectangle,
-            is MockShape,
-            is Group,
-            null -> Unit
-        }.exhaustive
-    }
-
-    private fun setTextAlignment(
-        horizontalAlign: TextAlign.HorizontalAlign?,
-        verticalAlign: TextAlign.VerticalAlign?
-    ) {
-        val textShape = environment.getSelectedShapes().singleOrNull() as? Text
-        if (textShape == null) {
-            ShapeExtraManager.setDefaultValues(
-                textHorizontalAlign = horizontalAlign,
-                textVerticalAlign = verticalAlign
-            )
-            return
-        }
-        val newTextAlign = textShape.extra.textAlign.copy(
-            horizontalAlign ?: textShape.extra.textAlign.horizontalAlign,
-            verticalAlign ?: textShape.extra.textAlign.verticalAlign
-        )
-        val newExtra = textShape.extra.copy(textAlign = newTextAlign)
-        shapeManager.execute(ChangeExtra(textShape, newExtra))
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.DoubleClick) {
             val targetedShape =
                 environment.getSelectedShapes().firstOrNull { it.contains(mousePointer.point) }
-            editSelectedShape(targetedShape)
+            actionManager.setOneTimeAction(OneTimeActionType.EditSelectedShape(targetedShape))
             return
         }
 
@@ -427,28 +179,6 @@ class MainStateManager(
         println("$objective runtime: ${currentTimeMillis() - t0}")
     }
 
-    private fun openSavedFile() {
-        fileMediator.openFile { jsonString ->
-            shapeManager.replaceWithJson(jsonString)
-            workingParentGroup = shapeManager.root
-            environment.clearSelectedShapes()
-        }
-    }
-
-    private fun exportSelectedShape(isModalRequired: Boolean) {
-        val selectedShapes = environment.getSelectedShapes()
-        val extractableShapes = when {
-            selectedShapes.isNotEmpty() ->
-                workingParentGroup.items.filter { it in selectedShapes }
-            isModalRequired ->
-                listOf(workingParentGroup)
-            else ->
-                emptyList()
-        }
-
-        exportShapesHelper.exportText(extractableShapes, isModalRequired)
-    }
-
     private fun updateMouseCursor(mousePointer: MousePointer) {
         val mouseCursor = when (mousePointer) {
             is MousePointer.Move -> {
@@ -494,8 +224,11 @@ class MainStateManager(
         override val shapeSearcher: ShapeSearcher
             get() = stateManager.shapeSearcher
 
-        override val workingParentGroup: Group
+        override var workingParentGroup: Group
             get() = stateManager.workingParentGroup
+            set(value) {
+                stateManager.workingParentGroup = value
+            }
 
         override fun getWindowBound(): Rect = stateManager.windowBoardBound
 
