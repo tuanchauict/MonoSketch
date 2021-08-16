@@ -11,6 +11,7 @@ import mono.livedata.LiveData
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
 import mono.shape.command.ChangeExtra
+import mono.shape.command.ChangeOrder
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.TextAlign
 import mono.shape.remove
@@ -86,7 +87,7 @@ internal class OneTimeActionHandler(
                     setSelectedShapeEndAnchorExtra(it.isEnabled, it.newHeadId)
 
                 is OneTimeActionType.ReorderShape ->
-                    mainStateManager.changeShapeOrder(it.orderType)
+                    changeShapeOrder(it.orderType)
 
                 is OneTimeActionType.Copy ->
                     mainStateManager.clipboardManager.copySelectedShapes(it.isRemoveRequired)
@@ -302,5 +303,10 @@ internal class OneTimeActionHandler(
             userSelectedEndAnchor = newAnchor
         )
         environment.shapeManager.execute(ChangeExtra(line, newExtra))
+    }
+
+    private fun changeShapeOrder(orderType: ChangeOrder.ChangeOrderType) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        environment.shapeManager.execute(ChangeOrder(singleShape, orderType))
     }
 }

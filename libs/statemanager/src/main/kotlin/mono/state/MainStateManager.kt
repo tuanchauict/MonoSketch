@@ -20,8 +20,6 @@ import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.command.ChangeOrder
-import mono.shape.command.ChangeOrder.ChangeOrderType
 import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -116,12 +114,6 @@ class MainStateManager(
             bitmapManager,
             shapeClipboardManager
         )
-    }
-
-
-    fun changeShapeOrder(orderType: ChangeOrderType) {
-        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
-        shapeManager.execute(ChangeOrder(singleShape, orderType))
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
