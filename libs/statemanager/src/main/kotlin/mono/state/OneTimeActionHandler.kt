@@ -3,10 +3,13 @@ package mono.state
 import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
 import mono.export.ExportShapesHelper
+import mono.graphics.geo.Point
+import mono.graphics.geo.Rect
 import mono.html.toolbar.OneTimeActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.command.ChangeBound
 import mono.shape.command.ChangeExtra
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.TextAlign
@@ -69,14 +72,9 @@ internal class OneTimeActionHandler(
                     setTextAlignment(it.newHorizontalAlign, it.newVerticalAlign)
 
                 is OneTimeActionType.MoveShapes ->
-                    mainStateManager.moveSelectedShapes(it.offsetRow, it.offsetCol)
+                    moveSelectedShapes(it.offsetRow, it.offsetCol)
                 is OneTimeActionType.ChangeShapeBound ->
-                    mainStateManager.setSelectedShapeBound(
-                        it.newLeft,
-                        it.newTop,
-                        it.newWidth,
-                        it.newHeight
-                    )
+                    setSelectedShapeBound(it.newLeft, it.newTop, it.newWidth, it.newHeight)
 
                 is OneTimeActionType.ChangeShapeFillExtra ->
                     mainStateManager.setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
@@ -160,5 +158,29 @@ internal class OneTimeActionHandler(
         )
         val newExtra = textShape.extra.copy(textAlign = newTextAlign)
         environment.shapeManager.execute(ChangeExtra(textShape, newExtra))
+    }
+
+    private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
+        val selectedShapes = environment.getSelectedShapes()
+        for (shape in selectedShapes) {
+            val bound = shape.bound
+            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
+            val newBound = shape.bound.copy(position = newPosition)
+            environment.shapeManager.execute(ChangeBound(shape, newBound))
+        }
+        environment.updateInteractionBounds()
+    }
+
+    private fun setSelectedShapeBound(left: Int?, top: Int?, width: Int?, height: Int?) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        val currentBound = singleShape.bound
+        val newLeft = left ?: currentBound.left
+        val newTop = top ?: currentBound.top
+        val newWidth = width ?: currentBound.width
+        val newHeight = height ?: currentBound.height
+        environment.shapeManager.execute(
+            ChangeBound(singleShape, Rect.byLTWH(newLeft, newTop, newWidth, newHeight))
+        )
+        environment.updateInteractionBounds()
     }
 }

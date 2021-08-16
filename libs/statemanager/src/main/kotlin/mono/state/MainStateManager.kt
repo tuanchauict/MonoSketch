@@ -20,7 +20,6 @@ import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.command.ChangeBound
 import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.ChangeOrder.ChangeOrderType
@@ -119,30 +118,6 @@ class MainStateManager(
             bitmapManager,
             shapeClipboardManager
         )
-    }
-
-    fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
-        val selectedShapes = environment.getSelectedShapes()
-        for (shape in selectedShapes) {
-            val bound = shape.bound
-            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
-            val newBound = shape.bound.copy(position = newPosition)
-            shapeManager.execute(ChangeBound(shape, newBound))
-        }
-        environment.updateInteractionBounds()
-    }
-
-    fun setSelectedShapeBound(left: Int?, top: Int?, width: Int?, height: Int?) {
-        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
-        val currentBound = singleShape.bound
-        val newLeft = left ?: currentBound.left
-        val newTop = top ?: currentBound.top
-        val newWidth = width ?: currentBound.width
-        val newHeight = height ?: currentBound.height
-        shapeManager.execute(
-            ChangeBound(singleShape, Rect.byLTWH(newLeft, newTop, newWidth, newHeight))
-        )
-        environment.updateInteractionBounds()
     }
 
     fun setSelectedShapeFillExtra(isEnabled: Boolean?, newFillStyleId: String?) {
