@@ -57,10 +57,6 @@ class MainStateManager(
 
     private val environment: CommandEnvironmentImpl = CommandEnvironmentImpl(this)
 
-    internal val clipboardManager: ClipboardManager =
-        ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
-
-
     private var currentMouseCommand: MouseCommand? = null
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
@@ -110,7 +106,6 @@ class MainStateManager(
             lifecycleOwner,
             actionManager.oneTimeActionLiveData,
             environment,
-            this,
             bitmapManager,
             shapeClipboardManager
         )

@@ -33,8 +33,6 @@ internal class OneTimeActionHandler(
     lifecycleOwner: LifecycleOwner,
     oneTimeActionLiveData: LiveData<OneTimeActionType>,
     private val environment: CommandEnvironment,
-    // TODO: Remove this after moving all required methods into this class
-    mainStateManager: MainStateManager,
     bitmapManager: MonoBitmapManager,
     shapeClipboardManager: ShapeClipboardManager,
 ) {
@@ -43,6 +41,9 @@ internal class OneTimeActionHandler(
         bitmapManager::getBitmap,
         shapeClipboardManager::setClipboardText
     )
+
+    private val clipboardManager: ClipboardManager =
+        ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
 
     init {
         oneTimeActionLiveData.observe(lifecycleOwner) {
@@ -90,9 +91,9 @@ internal class OneTimeActionHandler(
                     changeShapeOrder(it.orderType)
 
                 is OneTimeActionType.Copy ->
-                    mainStateManager.clipboardManager.copySelectedShapes(it.isRemoveRequired)
+                    clipboardManager.copySelectedShapes(it.isRemoveRequired)
                 OneTimeActionType.Duplicate ->
-                    mainStateManager.clipboardManager.duplicateSelectedShapes()
+                    clipboardManager.duplicateSelectedShapes()
             }.exhaustive
         }
     }
