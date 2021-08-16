@@ -77,13 +77,13 @@ internal class OneTimeActionHandler(
                     setSelectedShapeBound(it.newLeft, it.newTop, it.newWidth, it.newHeight)
 
                 is OneTimeActionType.ChangeShapeFillExtra ->
-                    mainStateManager.setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
+                    setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
                 is OneTimeActionType.ChangeShapeBorderExtra ->
-                    mainStateManager.setSelectedShapeBorderExtra(it.isEnabled, it.newBorderStyleId)
+                    setSelectedShapeBorderExtra(it.isEnabled, it.newBorderStyleId)
                 is OneTimeActionType.ChangeLineStartAnchorExtra ->
-                    mainStateManager.setSelectedShapeStartAnchorExtra(it.isEnabled, it.newHeadId)
+                    setSelectedShapeStartAnchorExtra(it.isEnabled, it.newHeadId)
                 is OneTimeActionType.ChangeLineEndAnchorExtra ->
-                    mainStateManager.setSelectedShapeEndAnchorExtra(it.isEnabled, it.newHeadId)
+                    setSelectedShapeEndAnchorExtra(it.isEnabled, it.newHeadId)
 
                 is OneTimeActionType.ReorderShape ->
                     mainStateManager.changeShapeOrder(it.orderType)
@@ -182,5 +182,125 @@ internal class OneTimeActionHandler(
             ChangeBound(singleShape, Rect.byLTWH(newLeft, newTop, newWidth, newHeight))
         )
         environment.updateInteractionBounds()
+    }
+
+    private fun setSelectedShapeFillExtra(isEnabled: Boolean?, newFillStyleId: String?) {
+        val singleShape = environment.getSelectedShapes().singleOrNull()
+
+        if (singleShape == null) {
+            ShapeExtraManager.setDefaultValues(
+                isFillEnabled = isEnabled,
+                fillStyleId = newFillStyleId
+            )
+            return
+        }
+
+        val currentRectangleExtra = when (singleShape) {
+            is Rectangle -> singleShape.extra
+            is Text -> singleShape.extra.boundExtra
+            is Line,
+            is MockShape,
+            is Group -> null
+        } ?: return
+        val newIsFillEnabled = isEnabled ?: currentRectangleExtra.isFillEnabled
+        val newFillStyle = ShapeExtraManager.getRectangleFillStyle(
+            newFillStyleId,
+            currentRectangleExtra.userSelectedFillStyle
+        )
+        val rectangleExtra = currentRectangleExtra.copy(
+            isFillEnabled = newIsFillEnabled,
+            userSelectedFillStyle = newFillStyle
+        )
+        val newExtra = when (singleShape) {
+            is Rectangle -> rectangleExtra
+            is Text -> singleShape.extra.copy(boundExtra = rectangleExtra)
+            is Line,
+            is MockShape,
+            is Group -> null
+        } ?: return
+        environment.shapeManager.execute(ChangeExtra(singleShape, newExtra))
+    }
+
+    private fun setSelectedShapeBorderExtra(isEnabled: Boolean?, newBorderStyleId: String?) {
+        val singleShape = environment.getSelectedShapes().singleOrNull()
+        if (singleShape == null) {
+            ShapeExtraManager.setDefaultValues(
+                isBorderEnabled = isEnabled,
+                borderStyleId = newBorderStyleId
+            )
+            return
+        }
+
+        val currentRectangleExtra = when (singleShape) {
+            is Rectangle -> singleShape.extra
+            is Text -> singleShape.extra.boundExtra
+            is Line,
+            is MockShape,
+            is Group -> null
+        } ?: return
+        val newIsBorderEnabled = isEnabled ?: currentRectangleExtra.isBorderEnabled
+        val newBorderStyle = ShapeExtraManager.getRectangleBorderStyle(
+            newBorderStyleId,
+            currentRectangleExtra.userSelectedBorderStyle
+        )
+        val rectangleExtra = currentRectangleExtra.copy(
+            isBorderEnabled = newIsBorderEnabled,
+            userSelectedBorderStyle = newBorderStyle
+        )
+        val newExtra = when (singleShape) {
+            is Rectangle -> rectangleExtra
+            is Text -> singleShape.extra.copy(boundExtra = rectangleExtra)
+            is Line,
+            is MockShape,
+            is Group -> null
+        } ?: return
+        environment.shapeManager.execute(ChangeExtra(singleShape, newExtra))
+    }
+
+    private fun setSelectedShapeStartAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
+        val line = environment.getSelectedShapes().singleOrNull() as? Line
+        if (line == null) {
+            ShapeExtraManager.setDefaultValues(
+                isStartHeadAnchorCharEnabled = isEnabled,
+                startHeadAnchorCharId = newAnchorId
+            )
+            return
+        }
+
+        val currentExtra = line.extra
+        val newIsEnabled = isEnabled ?: currentExtra.isStartAnchorEnabled
+        val newAnchor =
+            ShapeExtraManager.getStartHeadAnchorChar(
+                newAnchorId,
+                currentExtra.userSelectedStartAnchor
+            )
+        val newExtra = currentExtra.copy(
+            isStartAnchorEnabled = newIsEnabled,
+            userSelectedStartAnchor = newAnchor
+        )
+        environment.shapeManager.execute(ChangeExtra(line, newExtra))
+    }
+
+    private fun setSelectedShapeEndAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
+        val line = environment.getSelectedShapes().singleOrNull() as? Line
+        if (line == null) {
+            ShapeExtraManager.setDefaultValues(
+                isEndHeadAnchorCharEnabled = isEnabled,
+                endHeadAnchorCharId = newAnchorId
+            )
+            return
+        }
+        val currentExtra = line.extra
+        val newIsEnabled = isEnabled ?: currentExtra.isEndAnchorEnabled
+        val newAnchor =
+            ShapeExtraManager.getEndHeadAnchorChar(
+                newAnchorId,
+                currentExtra.userSelectedEndAnchor
+            )
+        val newExtra = currentExtra.copy(
+            isEndAnchorEnabled = newIsEnabled,
+            userSelectedEndAnchor = newAnchor
+        )
+        environment.shapeManager.execute(ChangeExtra(line, newExtra))
     }
 }

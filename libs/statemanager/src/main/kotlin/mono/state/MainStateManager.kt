@@ -20,10 +20,8 @@ import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.ChangeOrder.ChangeOrderType
-import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -120,125 +118,6 @@ class MainStateManager(
         )
     }
 
-    fun setSelectedShapeFillExtra(isEnabled: Boolean?, newFillStyleId: String?) {
-        val singleShape = environment.getSelectedShapes().singleOrNull()
-
-        if (singleShape == null) {
-            ShapeExtraManager.setDefaultValues(
-                isFillEnabled = isEnabled,
-                fillStyleId = newFillStyleId
-            )
-            return
-        }
-
-        val currentRectangleExtra = when (singleShape) {
-            is Rectangle -> singleShape.extra
-            is Text -> singleShape.extra.boundExtra
-            is Line,
-            is MockShape,
-            is Group -> null
-        } ?: return
-        val newIsFillEnabled = isEnabled ?: currentRectangleExtra.isFillEnabled
-        val newFillStyle = ShapeExtraManager.getRectangleFillStyle(
-            newFillStyleId,
-            currentRectangleExtra.userSelectedFillStyle
-        )
-        val rectangleExtra = currentRectangleExtra.copy(
-            isFillEnabled = newIsFillEnabled,
-            userSelectedFillStyle = newFillStyle
-        )
-        val newExtra = when (singleShape) {
-            is Rectangle -> rectangleExtra
-            is Text -> singleShape.extra.copy(boundExtra = rectangleExtra)
-            is Line,
-            is MockShape,
-            is Group -> null
-        } ?: return
-        shapeManager.execute(ChangeExtra(singleShape, newExtra))
-    }
-
-    fun setSelectedShapeBorderExtra(isEnabled: Boolean?, newBorderStyleId: String?) {
-        val singleShape = environment.getSelectedShapes().singleOrNull()
-        if (singleShape == null) {
-            ShapeExtraManager.setDefaultValues(
-                isBorderEnabled = isEnabled,
-                borderStyleId = newBorderStyleId
-            )
-            return
-        }
-
-        val currentRectangleExtra = when (singleShape) {
-            is Rectangle -> singleShape.extra
-            is Text -> singleShape.extra.boundExtra
-            is Line,
-            is MockShape,
-            is Group -> null
-        } ?: return
-        val newIsBorderEnabled = isEnabled ?: currentRectangleExtra.isBorderEnabled
-        val newBorderStyle = ShapeExtraManager.getRectangleBorderStyle(
-            newBorderStyleId,
-            currentRectangleExtra.userSelectedBorderStyle
-        )
-        val rectangleExtra = currentRectangleExtra.copy(
-            isBorderEnabled = newIsBorderEnabled,
-            userSelectedBorderStyle = newBorderStyle
-        )
-        val newExtra = when (singleShape) {
-            is Rectangle -> rectangleExtra
-            is Text -> singleShape.extra.copy(boundExtra = rectangleExtra)
-            is Line,
-            is MockShape,
-            is Group -> null
-        } ?: return
-        shapeManager.execute(ChangeExtra(singleShape, newExtra))
-    }
-
-    fun setSelectedShapeStartAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
-        val line = environment.getSelectedShapes().singleOrNull() as? Line
-        if (line == null) {
-            ShapeExtraManager.setDefaultValues(
-                isStartHeadAnchorCharEnabled = isEnabled,
-                startHeadAnchorCharId = newAnchorId
-            )
-            return
-        }
-
-        val currentExtra = line.extra
-        val newIsEnabled = isEnabled ?: currentExtra.isStartAnchorEnabled
-        val newAnchor =
-            ShapeExtraManager.getStartHeadAnchorChar(
-                newAnchorId,
-                currentExtra.userSelectedStartAnchor
-            )
-        val newExtra = currentExtra.copy(
-            isStartAnchorEnabled = newIsEnabled,
-            userSelectedStartAnchor = newAnchor
-        )
-        shapeManager.execute(ChangeExtra(line, newExtra))
-    }
-
-    fun setSelectedShapeEndAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {
-        val line = environment.getSelectedShapes().singleOrNull() as? Line
-        if (line == null) {
-            ShapeExtraManager.setDefaultValues(
-                isEndHeadAnchorCharEnabled = isEnabled,
-                endHeadAnchorCharId = newAnchorId
-            )
-            return
-        }
-        val currentExtra = line.extra
-        val newIsEnabled = isEnabled ?: currentExtra.isEndAnchorEnabled
-        val newAnchor =
-            ShapeExtraManager.getEndHeadAnchorChar(
-                newAnchorId,
-                currentExtra.userSelectedEndAnchor
-            )
-        val newExtra = currentExtra.copy(
-            isEndAnchorEnabled = newIsEnabled,
-            userSelectedEndAnchor = newAnchor
-        )
-        shapeManager.execute(ChangeExtra(line, newExtra))
-    }
 
     fun changeShapeOrder(orderType: ChangeOrderType) {
         val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
