@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":shape-selection"))
     implementation(project(":shape-serialization"))
     implementation(project(":shapesearcher"))
+    implementation(project(":store-manager"))
 
     implementation(libs.kotlinx.html)
 
