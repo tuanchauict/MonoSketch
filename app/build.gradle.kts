@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":shape"))
     implementation(project(":shape-clipboard"))
     implementation(project(":shape-selection"))
+    implementation(project(":shape-serialization"))
     implementation(project(":statemanager"))
 
     testImplementation(kotlin("test-js"))

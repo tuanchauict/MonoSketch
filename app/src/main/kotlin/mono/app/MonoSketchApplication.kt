@@ -15,9 +15,10 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.replaceWithJson
 import mono.shape.selection.SelectedShapeManager
-import mono.shape.toJson
+import mono.shape.serialization.SerializableGroup
+import mono.shape.serialization.ShapeSerializationUtil
+import mono.shape.shape.Group
 import mono.state.MainStateManager
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -109,16 +110,20 @@ class MonoSketchApplication : LifecycleOwner() {
     }
 
     private fun backupShapes() {
-        localStorage[BACKUP_SHAPES_KEY] = shapeManager.toJson(true)
+        val serializableRoot = shapeManager.root.toSerializableShape(true)
+        localStorage[BACKUP_SHAPES_KEY] = ShapeSerializationUtil.toJson(serializableRoot)
     }
 
     private fun restoreShapes() {
         val backedUpJson = localStorage[BACKUP_SHAPES_KEY] ?: return
-        val isRestoreSuccessful = shapeManager.replaceWithJson(backedUpJson)
-        if (!isRestoreSuccessful) {
+        val serializableRoot = ShapeSerializationUtil.fromJson(backedUpJson) as? SerializableGroup
+        if (serializableRoot == null) {
             // Wipe local data with current shapes.
             backupShapes()
+            return
         }
+        val root = Group(serializableRoot, parentId = null)
+        shapeManager.replaceRoot(root)
     }
 
     companion object {
