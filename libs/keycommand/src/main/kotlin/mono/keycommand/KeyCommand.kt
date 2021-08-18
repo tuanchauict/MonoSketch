@@ -39,6 +39,9 @@ enum class KeyCommand(
         shiftKeyState = MetaKeyState.ON,
         isKeyEventPropagationAllowed = false
     ),
+
+    UNDO(Key.KEY_Z, commandKeyState = MetaKeyState.ON, shiftKeyState = MetaKeyState.OFF),
+    REDO(Key.KEY_Z, commandKeyState = MetaKeyState.ON, shiftKeyState = MetaKeyState.ON),
     ;
 
     private enum class MetaKeyState {
