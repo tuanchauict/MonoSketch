@@ -113,6 +113,7 @@ internal class OneTimeActionHandler(
         fileMediator.openFile { jsonString ->
             val serializableRoot = ShapeSerializationUtil.fromJson(jsonString) as? SerializableGroup
             if (serializableRoot != null) {
+                stateHistoryManager.clear()
                 environment.replaceRoot(Group(serializableRoot, parentId = null))
             }
         }

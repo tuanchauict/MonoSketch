@@ -23,10 +23,12 @@ internal class StateHistoryManager(
 
         environment.shapeManager.versionLiveData.observe(
             lifecycleOwner,
-            500,
+            200,
             ::registerBackupShapes
         )
     }
+
+    fun clear() = historyStack.clear()
 
     fun undo() {
         val history = historyStack.undo() ?: return
@@ -43,7 +45,7 @@ internal class StateHistoryManager(
     }
 
     private fun registerBackupShapes(version: Int) {
-        setTimeout(500) {
+        setTimeout(300) {
             // Only backup if the shape manager is idle.
             if (environment.shapeManager.versionLiveData.value == version) {
                 backupShapes()
@@ -80,6 +82,11 @@ internal class StateHistoryManager(
                 return
             }
             undoStack.add(History(version, state))
+            redoStack.clear()
+        }
+
+        fun clear() {
+            undoStack.clear()
             redoStack.clear()
         }
 
