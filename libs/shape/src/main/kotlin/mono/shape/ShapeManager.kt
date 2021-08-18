@@ -1,8 +1,5 @@
 package mono.shape
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.command.AddShape
@@ -10,8 +7,6 @@ import mono.shape.command.Command
 import mono.shape.command.GroupShapes
 import mono.shape.command.RemoveShape
 import mono.shape.command.Ungroup
-import mono.shape.serialization.AbstractSerializableShape
-import mono.shape.serialization.SerializableGroup
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 
@@ -116,19 +111,3 @@ fun ShapeManager.group(sameParentShapes: List<AbstractShape>) =
     execute(GroupShapes(sameParentShapes))
 
 fun ShapeManager.ungroup(group: Group) = execute(Ungroup(group))
-
-fun ShapeManager.toJson(isIdIncluded: Boolean): String =
-    Json.encodeToString(root.toSerializableShape(isIdIncluded))
-
-fun ShapeManager.replaceWithJson(jsonString: String): Boolean = try {
-    val serializableGroup =
-        Json.decodeFromString<AbstractSerializableShape>(jsonString) as SerializableGroup
-    val root = Group(serializableGroup, parentId = null)
-    replaceRoot(root)
-    true
-} catch (e: Exception) {
-    console.error("Error while restoring shapes")
-    console.error(e)
-
-    false
-}

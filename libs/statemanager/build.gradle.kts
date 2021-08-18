@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":shape-extra-manager"))
     implementation(project(":shape-interaction-bound"))
     implementation(project(":shape-selection"))
+    implementation(project(":shape-serialization"))
     implementation(project(":shapesearcher"))
 
     implementation(libs.kotlinx.html)

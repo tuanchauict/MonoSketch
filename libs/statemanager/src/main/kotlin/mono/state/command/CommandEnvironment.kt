@@ -17,7 +17,9 @@ internal interface CommandEnvironment {
     val shapeManager: ShapeManager
     val shapeSearcher: ShapeSearcher
 
-    var workingParentGroup: Group
+    val workingParentGroup: Group
+
+    fun replaceRoot(newRoot: Group)
 
     fun getWindowBound(): Rect
 

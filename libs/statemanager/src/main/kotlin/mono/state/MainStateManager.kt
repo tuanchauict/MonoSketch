@@ -226,9 +226,15 @@ class MainStateManager(
 
         override var workingParentGroup: Group
             get() = stateManager.workingParentGroup
-            set(value) {
+            private set(value) {
                 stateManager.workingParentGroup = value
             }
+
+        override fun replaceRoot(newRoot: Group) {
+            shapeManager.replaceRoot(newRoot)
+            workingParentGroup = shapeManager.root
+            clearSelectedShapes()
+        }
 
         override fun getWindowBound(): Rect = stateManager.windowBoardBound
 
