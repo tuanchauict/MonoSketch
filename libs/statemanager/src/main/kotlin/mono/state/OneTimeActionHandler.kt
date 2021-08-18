@@ -15,14 +15,14 @@ import mono.shape.command.ChangeOrder
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.TextAlign
 import mono.shape.remove
-import mono.shape.replaceWithJson
+import mono.shape.serialization.SerializableGroup
+import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.toJson
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
 
@@ -99,14 +99,16 @@ internal class OneTimeActionHandler(
     }
 
     private fun saveCurrentShapesToFile() {
-        fileMediator.saveFile(environment.shapeManager.toJson(true))
+        val serializableRoot = environment.shapeManager.root.toSerializableShape(true)
+        fileMediator.saveFile(ShapeSerializationUtil.toJson(serializableRoot))
     }
 
     private fun loadShapesFromFile() {
         fileMediator.openFile { jsonString ->
-            environment.shapeManager.replaceWithJson(jsonString)
-            environment.workingParentGroup = environment.shapeManager.root
-            environment.clearSelectedShapes()
+            val serializableRoot = ShapeSerializationUtil.fromJson(jsonString) as? SerializableGroup
+            if (serializableRoot != null) {
+                environment.replaceRoot(Group(serializableRoot, parentId = null))
+            }
         }
     }
 
