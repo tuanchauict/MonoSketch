@@ -16,6 +16,8 @@ internal class StateHistoryManager(
     private val environment: CommandEnvironment,
     private val storeManager: StoreManager
 ) {
+    private val historyStack = HistoryStack()
+
     init {
         restoreShapes()
 
@@ -36,7 +38,9 @@ internal class StateHistoryManager(
     }
 
     private fun backupShapes() {
-        val serializableGroup = environment.shapeManager.root.toSerializableShape(true)
+        val root = environment.shapeManager.root
+        val serializableGroup = root.toSerializableShape(true) as SerializableGroup
+        historyStack.pushState(root.version, serializableGroup)
         val jsonRoot = ShapeSerializationUtil.toJson(serializableGroup)
         storeManager.set(BACKUP_SHAPES_KEY, jsonRoot)
     }
@@ -52,6 +56,40 @@ internal class StateHistoryManager(
             backupShapes()
         }
     }
+
+    private class HistoryStack {
+        private val undoStack = mutableListOf<History>()
+        private val redoStack = mutableListOf<History>()
+
+        fun pushState(version: Int, state: SerializableGroup) {
+            if (version == undoStack.lastOrNull()?.version) {
+                return
+            }
+            undoStack.add(History(version, state))
+            redoStack.clear()
+        }
+
+        fun undo(): History? {
+            if (undoStack.size <= 1) {
+                return null
+            }
+            val currentState = undoStack.removeLastOrNull()
+            if (currentState != null) {
+                redoStack.add(currentState)
+            }
+            return undoStack.lastOrNull()
+        }
+
+        fun redo(): History? {
+            val currentState = redoStack.removeLastOrNull()
+            if (currentState != null) {
+                undoStack.add(currentState)
+            }
+            return currentState
+        }
+    }
+
+    private class History(val version: Int, val serializableGroup: SerializableGroup)
 
     companion object {
         private const val BACKUP_SHAPES_KEY = "backup-shapes"
