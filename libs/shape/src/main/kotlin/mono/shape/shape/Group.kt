@@ -36,10 +36,14 @@ class Group(
 
     constructor(
         serializableGroup: SerializableGroup,
-        parentId: String?
+        parentId: String?,
+        initialVersion: Int? = null
     ) : this(id = serializableGroup.id, parentId = parentId) {
         for (serializableShape in serializableGroup.shapes) {
             add(toShape(id, serializableShape))
+        }
+        if (initialVersion != null) {
+            version = initialVersion
         }
     }
 
