@@ -26,7 +26,7 @@ sealed class AbstractShape(
     override val id: String = id ?: UUID.generate()
 
     var version: Int = 0
-        private set
+        protected set
     abstract val bound: Rect
 
     /**

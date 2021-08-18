@@ -20,4 +20,5 @@ object Key {
     const val KEY_T = 84
     const val KEY_V = 86
     const val KEY_X = 88
+    const val KEY_Z = 90
 }

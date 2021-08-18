@@ -34,6 +34,7 @@ import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
+import mono.store.manager.StoreManager
 
 /**
  * A class which is connect components in the app.
@@ -47,7 +48,8 @@ class MainStateManager(
     private val canvasManager: CanvasViewController,
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
-    private val actionManager: ActionManager
+    private val actionManager: ActionManager,
+    storeManager: StoreManager
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
@@ -102,12 +104,15 @@ class MainStateManager(
             currentRetainableActionType = it
         }
 
+        val stateHistoryManager = StateHistoryManager(lifecycleOwner, environment, storeManager)
+
         OneTimeActionHandler(
             lifecycleOwner,
             actionManager.oneTimeActionLiveData,
             environment,
             bitmapManager,
-            shapeClipboardManager
+            shapeClipboardManager,
+            stateHistoryManager
         )
     }
 

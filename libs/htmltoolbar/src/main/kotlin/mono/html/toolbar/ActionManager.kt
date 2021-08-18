@@ -63,6 +63,9 @@ class ActionManager(
             KeyCommand.DUPLICATE -> setOneTimeAction(OneTimeActionType.Duplicate)
 
             KeyCommand.COPY_TEXT -> setOneTimeAction(OneTimeActionType.CopyText)
+
+            KeyCommand.UNDO -> setOneTimeAction(OneTimeActionType.Undo)
+            KeyCommand.REDO -> setOneTimeAction(OneTimeActionType.Redo)
         }.exhaustive
     }
 

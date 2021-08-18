@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":shape-selection"))
     implementation(project(":shape-serialization"))
     implementation(project(":statemanager"))
+    implementation(project(":store-manager"))
 
     testImplementation(kotlin("test-js"))
 }

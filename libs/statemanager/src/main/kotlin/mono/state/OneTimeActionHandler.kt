@@ -35,6 +35,7 @@ internal class OneTimeActionHandler(
     private val environment: CommandEnvironment,
     bitmapManager: MonoBitmapManager,
     shapeClipboardManager: ShapeClipboardManager,
+    private val stateHistoryManager: StateHistoryManager
 ) {
     private val fileMediator: FileMediator = FileMediator()
     private val exportShapesHelper = ExportShapesHelper(
@@ -94,6 +95,11 @@ internal class OneTimeActionHandler(
                     clipboardManager.copySelectedShapes(it.isRemoveRequired)
                 OneTimeActionType.Duplicate ->
                     clipboardManager.duplicateSelectedShapes()
+
+                OneTimeActionType.Undo ->
+                    stateHistoryManager.undo()
+                OneTimeActionType.Redo ->
+                    stateHistoryManager.redo()
             }.exhaustive
         }
     }
@@ -107,6 +113,7 @@ internal class OneTimeActionHandler(
         fileMediator.openFile { jsonString ->
             val serializableRoot = ShapeSerializationUtil.fromJson(jsonString) as? SerializableGroup
             if (serializableRoot != null) {
+                stateHistoryManager.clear()
                 environment.replaceRoot(Group(serializableRoot, parentId = null))
             }
         }

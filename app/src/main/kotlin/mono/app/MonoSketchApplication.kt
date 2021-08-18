@@ -1,9 +1,7 @@
 package mono.app
 
 import kotlinx.browser.document
-import kotlinx.browser.localStorage
 import mono.bitmap.manager.MonoBitmapManager
-import mono.common.setTimeout
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
@@ -12,18 +10,13 @@ import mono.html.toolbar.ToolbarViewController
 import mono.html.toolbar.view.shapetool.ShapeToolViewController
 import mono.keycommand.KeyCommandController
 import mono.lifecycle.LifecycleOwner
-import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.selection.SelectedShapeManager
-import mono.shape.serialization.SerializableGroup
-import mono.shape.serialization.ShapeSerializationUtil
-import mono.shape.shape.Group
 import mono.state.MainStateManager
+import mono.store.manager.StoreManager
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.get
-import org.w3c.dom.set
 
 /**
  * Main class of the app to handle all kinds of events, UI, actions, etc.
@@ -36,14 +29,6 @@ class MonoSketchApplication : LifecycleOwner() {
     private val selectedShapeManager = SelectedShapeManager()
     private val bitmapManager = MonoBitmapManager()
     private var mainStateManager: MainStateManager? = null
-
-    init {
-        restoreShapes()
-
-        shapeManager.versionLiveData.distinctUntilChange().observe(this, 500) {
-            registerBackupShapes(it)
-        }
-    }
 
     /**
      * The entry point for all actions. This is called after window is loaded (`window.onload`)
@@ -76,7 +61,8 @@ class MonoSketchApplication : LifecycleOwner() {
             canvasViewController,
             ShapeClipboardManager(body),
             canvasViewController.mousePointerLiveData,
-            actionManager
+            actionManager,
+            StoreManager()
         )
 
         ToolbarViewController(
@@ -100,35 +86,8 @@ class MonoSketchApplication : LifecycleOwner() {
         model.setWindowSize(newSize)
     }
 
-    private fun registerBackupShapes(version: Int) {
-        setTimeout(500) {
-            // Only backup if the shape manager is idle.
-            if (shapeManager.versionLiveData.value == version) {
-                backupShapes()
-            }
-        }
-    }
-
-    private fun backupShapes() {
-        val serializableRoot = shapeManager.root.toSerializableShape(true)
-        localStorage[BACKUP_SHAPES_KEY] = ShapeSerializationUtil.toJson(serializableRoot)
-    }
-
-    private fun restoreShapes() {
-        val backedUpJson = localStorage[BACKUP_SHAPES_KEY] ?: return
-        val serializableRoot = ShapeSerializationUtil.fromJson(backedUpJson) as? SerializableGroup
-        if (serializableRoot == null) {
-            // Wipe local data with current shapes.
-            backupShapes()
-            return
-        }
-        val root = Group(serializableRoot, parentId = null)
-        shapeManager.replaceRoot(root)
-    }
-
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
         private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
-        private const val BACKUP_SHAPES_KEY = "backup-shapes"
     }
 }
