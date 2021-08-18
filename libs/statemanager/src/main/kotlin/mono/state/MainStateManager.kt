@@ -111,7 +111,8 @@ class MainStateManager(
             actionManager.oneTimeActionLiveData,
             environment,
             bitmapManager,
-            shapeClipboardManager
+            shapeClipboardManager,
+            stateHistoryManager
         )
     }
 

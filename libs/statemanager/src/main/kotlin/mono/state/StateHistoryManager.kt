@@ -28,6 +28,20 @@ internal class StateHistoryManager(
         )
     }
 
+    fun undo() {
+        val history = historyStack.undo() ?: return
+        val root =
+            Group(history.serializableGroup, parentId = null, initialVersion = history.version)
+        environment.replaceRoot(root)
+    }
+
+    fun redo() {
+        val history = historyStack.redo() ?: return
+        val root =
+            Group(history.serializableGroup, parentId = null, initialVersion = history.version)
+        environment.replaceRoot(root)
+    }
+
     private fun registerBackupShapes(version: Int) {
         setTimeout(500) {
             // Only backup if the shape manager is idle.

@@ -35,6 +35,7 @@ internal class OneTimeActionHandler(
     private val environment: CommandEnvironment,
     bitmapManager: MonoBitmapManager,
     shapeClipboardManager: ShapeClipboardManager,
+    private val stateHistoryManager: StateHistoryManager
 ) {
     private val fileMediator: FileMediator = FileMediator()
     private val exportShapesHelper = ExportShapesHelper(
@@ -96,9 +97,9 @@ internal class OneTimeActionHandler(
                     clipboardManager.duplicateSelectedShapes()
 
                 OneTimeActionType.Undo ->
-                    TODO()
+                    stateHistoryManager.undo()
                 OneTimeActionType.Redo ->
-                    TODO()
+                    stateHistoryManager.redo()
             }.exhaustive
         }
     }
