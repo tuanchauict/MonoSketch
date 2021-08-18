@@ -69,4 +69,7 @@ sealed interface OneTimeActionType {
     object Duplicate : OneTimeActionType
 
     object CopyText : OneTimeActionType
+
+    object Undo : OneTimeActionType
+    object Redo : OneTimeActionType
 }

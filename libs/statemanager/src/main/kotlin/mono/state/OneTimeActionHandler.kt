@@ -94,6 +94,11 @@ internal class OneTimeActionHandler(
                     clipboardManager.copySelectedShapes(it.isRemoveRequired)
                 OneTimeActionType.Duplicate ->
                     clipboardManager.duplicateSelectedShapes()
+
+                OneTimeActionType.Undo ->
+                    TODO()
+                OneTimeActionType.Redo ->
+                    TODO()
             }.exhaustive
         }
     }

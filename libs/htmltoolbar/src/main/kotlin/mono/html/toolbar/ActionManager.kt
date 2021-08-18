@@ -64,8 +64,8 @@ class ActionManager(
 
             KeyCommand.COPY_TEXT -> setOneTimeAction(OneTimeActionType.CopyText)
 
-            KeyCommand.UNDO -> TODO()
-            KeyCommand.REDO -> TODO()
+            KeyCommand.UNDO -> setOneTimeAction(OneTimeActionType.Undo)
+            KeyCommand.REDO -> setOneTimeAction(OneTimeActionType.Redo)
         }.exhaustive
     }
 
