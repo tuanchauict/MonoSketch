@@ -36,15 +36,12 @@ class Group(
 
     constructor(
         serializableGroup: SerializableGroup,
-        parentId: String?,
-        initialVersion: Int? = null
+        parentId: String?
     ) : this(id = serializableGroup.id, parentId = parentId) {
         for (serializableShape in serializableGroup.shapes) {
             add(toShape(id, serializableShape))
         }
-        if (initialVersion != null) {
-            versionCode = initialVersion
-        }
+        versionCode = serializableGroup.versionCode
     }
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =

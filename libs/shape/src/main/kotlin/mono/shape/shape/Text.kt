@@ -61,6 +61,7 @@ class Text(
     ) {
         extra = TextExtra(serializableText.extra)
         setText(serializableText.text)
+        versionCode = serializableText.versionCode
     }
 
     init {

@@ -116,8 +116,8 @@ class Line(
             confirmedJointPoints = jointPoints
         }
         edges = LineHelper.createEdges(jointPoints)
-
         extra = LineExtra(serializableLine.extra)
+        versionCode = serializableLine.versionCode
     }
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =

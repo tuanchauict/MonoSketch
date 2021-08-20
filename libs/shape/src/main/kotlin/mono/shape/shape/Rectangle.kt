@@ -50,6 +50,7 @@ class Rectangle(
         parentId = parentId
     ) {
         extra = RectangleExtra(serializableRectangle.extra)
+        versionCode = serializableRectangle.versionCode
     }
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
