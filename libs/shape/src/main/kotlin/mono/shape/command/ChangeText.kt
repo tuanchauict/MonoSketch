@@ -15,8 +15,8 @@ class ChangeText(
         shapeManager.getGroup(target.parentId)
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
-        val currentVersion = target.version
+        val currentVersion = target.versionCode
         target.setText(newText)
-        parent.update { currentVersion != target.version }
+        parent.update { currentVersion != target.versionCode }
     }
 }

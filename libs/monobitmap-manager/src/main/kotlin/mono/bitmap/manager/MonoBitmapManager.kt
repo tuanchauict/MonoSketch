@@ -42,12 +42,12 @@ class MonoBitmapManager {
             is Group -> null // No draw group since it change very frequently.
             is MockShape -> null // Only for testing.
         } ?: return null
-        idToBitmapMap[shape.id] = VersionizedBitmap(shape.version, bitmap)
+        idToBitmapMap[shape.id] = VersionizedBitmap(shape.versionCode, bitmap)
         return bitmap
     }
 
     private fun getCacheBitmap(shape: AbstractShape): MonoBitmap? =
-        idToBitmapMap[shape.id]?.takeIf { it.version == shape.version }?.bitmap
+        idToBitmapMap[shape.id]?.takeIf { it.versionCode == shape.versionCode }?.bitmap
 
-    private class VersionizedBitmap(val version: Int, val bitmap: MonoBitmap)
+    private class VersionizedBitmap(val versionCode: Int, val bitmap: MonoBitmap)
 }

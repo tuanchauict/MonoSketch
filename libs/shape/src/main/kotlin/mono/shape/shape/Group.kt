@@ -43,7 +43,7 @@ class Group(
             add(toShape(id, serializableShape))
         }
         if (initialVersion != null) {
-            version = initialVersion
+            versionCode = initialVersion
         }
     }
 

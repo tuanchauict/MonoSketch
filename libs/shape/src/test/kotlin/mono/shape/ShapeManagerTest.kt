@@ -155,15 +155,15 @@ class ShapeManagerTest {
         val group1 = Group(parentId = group0.id)
         target.add(group1)
 
-        val rootOldVersion = target.root.version
-        val group0OldVersion = group0.version
-        val group1OldVersion = group1.version
+        val rootOldVersion = target.root.versionCode
+        val group0OldVersion = group0.versionCode
+        val group1OldVersion = group1.versionCode
 
         val group2 = Group(parentId = group1.id)
         target.add(group2)
 
-        assertTrue(target.root.version != rootOldVersion)
-        assertTrue(group0.version != group0OldVersion)
-        assertTrue(group1.version != group1OldVersion)
+        assertTrue(target.root.versionCode != rootOldVersion)
+        assertTrue(group0.versionCode != group0OldVersion)
+        assertTrue(group1.versionCode != group1OldVersion)
     }
 }

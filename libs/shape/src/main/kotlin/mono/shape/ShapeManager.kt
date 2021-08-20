@@ -22,7 +22,7 @@ class ShapeManager {
      * Reflect the version of the root through live data. The other components are able to observe
      * this version to decide update internally.
      */
-    private val versionMutableLiveData: MutableLiveData<Int> = MutableLiveData(root.version)
+    private val versionMutableLiveData: MutableLiveData<Int> = MutableLiveData(root.versionCode)
     val versionLiveData: LiveData<Int> = versionMutableLiveData
 
     init {
@@ -34,13 +34,13 @@ class ShapeManager {
      * This also wipe current stored shapes with shapes in new root.
      */
     fun replaceRoot(newRoot: Group) {
-        val currentVersion = root.version
+        val currentVersion = root.versionCode
         root = newRoot
 
         allShapeMap = createAllShapeMap(newRoot)
 
         versionMutableLiveData.value =
-            if (currentVersion == newRoot.version) currentVersion - 1 else newRoot.version
+            if (currentVersion == newRoot.versionCode) currentVersion - 1 else newRoot.versionCode
     }
 
     private fun createAllShapeMap(group: Group): MutableMap<String, AbstractShape> {
@@ -62,17 +62,17 @@ class ShapeManager {
     fun execute(command: Command) {
         val affectedParent = command.getDirectAffectedParent(this) ?: return
         val allAncestors = affectedParent.getAllAncestors()
-        val currentVersion = affectedParent.version
+        val currentVersion = affectedParent.versionCode
 
         command.execute(this, affectedParent)
 
-        if (currentVersion == affectedParent.version && affectedParent.id in allShapeMap) {
+        if (currentVersion == affectedParent.versionCode && affectedParent.id in allShapeMap) {
             return
         }
         for (parent in allAncestors) {
             parent.update { true }
         }
-        versionMutableLiveData.value = root.version
+        versionMutableLiveData.value = root.versionCode
     }
 
     internal fun getGroup(shapeId: String?): Group? =

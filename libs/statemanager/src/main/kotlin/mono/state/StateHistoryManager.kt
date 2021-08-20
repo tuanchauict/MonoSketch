@@ -56,7 +56,7 @@ internal class StateHistoryManager(
     private fun backupShapes() {
         val root = environment.shapeManager.root
         val serializableGroup = root.toSerializableShape(true) as SerializableGroup
-        historyStack.pushState(root.version, serializableGroup)
+        historyStack.pushState(root.versionCode, serializableGroup)
         val jsonRoot = ShapeSerializationUtil.toJson(serializableGroup)
         storeManager.set(BACKUP_SHAPES_KEY, jsonRoot)
     }

@@ -17,9 +17,9 @@ class MoveLineAnchor(
         shapeManager.getGroup(target.parentId)
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
-        val currentVersion = target.version
+        val currentVersion = target.versionCode
         target.moveAnchorPoint(anchorPointUpdate, isReducedRequired)
-        parent.update { currentVersion != target.version }
+        parent.update { currentVersion != target.versionCode }
     }
 }
 
@@ -36,8 +36,8 @@ class MoveLineEdge(
         shapeManager.getGroup(target.parentId)
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
-        val currentVersion = target.version
+        val currentVersion = target.versionCode
         target.moveEdge(edgeId, point, isReducedRequired)
-        parent.update { currentVersion != target.version }
+        parent.update { currentVersion != target.versionCode }
     }
 }

@@ -14,8 +14,8 @@ import mono.uuid.UUID
  * shapes which have the same ID will be considered identical regardless the other attributes of
  * each kinds of shape class.
  *
- * Each shape's attributes might be changed and [version] reflects the update. To ensure the
- * [version]'s value is accurate, all properties modifying must be wrapped inside [update].
+ * Each shape's attributes might be changed and [versionCode] reflects the update. To ensure the
+ * [versionCode]'s value is accurate, all properties modifying must be wrapped inside [update].
  *
  * @param id with null means the id will be automatically generated.
  */
@@ -25,7 +25,7 @@ sealed class AbstractShape(
 ) : QuickList.Identifier {
     override val id: String = id ?: UUID.generate()
 
-    var version: Int = 0
+    var versionCode: Int = 0
         protected set
     abstract val bound: Rect
 
@@ -49,7 +49,7 @@ sealed class AbstractShape(
     internal fun update(action: () -> Boolean) {
         val isChanged = action()
         if (isChanged) {
-            version++
+            versionCode++
         }
     }
 
