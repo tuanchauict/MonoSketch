@@ -32,15 +32,13 @@ internal class StateHistoryManager(
 
     fun undo() {
         val history = historyStack.undo() ?: return
-        val root =
-            Group(history.serializableGroup, parentId = null, initialVersion = history.version)
+        val root = Group(history.serializableGroup, parentId = null)
         environment.replaceRoot(root)
     }
 
     fun redo() {
         val history = historyStack.redo() ?: return
-        val root =
-            Group(history.serializableGroup, parentId = null, initialVersion = history.version)
+        val root = Group(history.serializableGroup, parentId = null)
         environment.replaceRoot(root)
     }
 
@@ -56,7 +54,9 @@ internal class StateHistoryManager(
     private fun backupShapes() {
         val root = environment.shapeManager.root
         val serializableGroup = root.toSerializableShape(true) as SerializableGroup
-        historyStack.pushState(root.version, serializableGroup)
+
+        historyStack.pushState(root.versionCode, serializableGroup)
+
         val jsonRoot = ShapeSerializationUtil.toJson(serializableGroup)
         storeManager.set(BACKUP_SHAPES_KEY, jsonRoot)
     }
@@ -78,7 +78,7 @@ internal class StateHistoryManager(
         private val redoStack = mutableListOf<History>()
 
         fun pushState(version: Int, state: SerializableGroup) {
-            if (version == undoStack.lastOrNull()?.version) {
+            if (version == undoStack.lastOrNull()?.versionCode) {
                 return
             }
             undoStack.add(History(version, state))
@@ -110,7 +110,7 @@ internal class StateHistoryManager(
         }
     }
 
-    private class History(val version: Int, val serializableGroup: SerializableGroup)
+    private class History(val versionCode: Int, val serializableGroup: SerializableGroup)
 
     companion object {
         private const val BACKUP_SHAPES_KEY = "backup-shapes"

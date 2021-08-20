@@ -7,6 +7,7 @@ import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.shape.extra.NoExtra
 import mono.shape.shape.extra.ShapeExtra
 import mono.uuid.UUID
+import kotlin.random.Random
 
 /**
  * An abstract class which is used for defining all kinds of shape which are supported by the app.
@@ -14,8 +15,8 @@ import mono.uuid.UUID
  * shapes which have the same ID will be considered identical regardless the other attributes of
  * each kinds of shape class.
  *
- * Each shape's attributes might be changed and [version] reflects the update. To ensure the
- * [version]'s value is accurate, all properties modifying must be wrapped inside [update].
+ * Each shape's attributes might be changed and [versionCode] reflects the update. To ensure the
+ * [versionCode]'s value is accurate, all properties modifying must be wrapped inside [update].
  *
  * @param id with null means the id will be automatically generated.
  */
@@ -25,7 +26,7 @@ sealed class AbstractShape(
 ) : QuickList.Identifier {
     override val id: String = id ?: UUID.generate()
 
-    var version: Int = 0
+    var versionCode: Int = nextVersionCode()
         protected set
     abstract val bound: Rect
 
@@ -49,11 +50,26 @@ sealed class AbstractShape(
     internal fun update(action: () -> Boolean) {
         val isChanged = action()
         if (isChanged) {
-            version++
+            versionCode = nextVersionCode(versionCode)
         }
     }
 
     open fun contains(point: Point): Boolean = bound.contains(point)
 
     open fun isOverlapped(rect: Rect): Boolean = bound.isOverlapped(rect)
+
+    companion object {
+        /**
+         * Generates a new version code which is different from [excludedValue].
+         */
+        internal fun nextVersionCode(excludedValue: Int = 0): Int {
+            var nextCode = Random.nextInt()
+            // The probability of a new number is equal to old number is low, therefore, this loop
+            // is short.
+            while (nextCode == excludedValue) {
+                nextCode = Random.nextInt()
+            }
+            return nextCode
+        }
+    }
 }

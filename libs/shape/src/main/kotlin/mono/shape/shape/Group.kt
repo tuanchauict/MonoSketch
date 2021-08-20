@@ -36,30 +36,36 @@ class Group(
 
     constructor(
         serializableGroup: SerializableGroup,
-        parentId: String?,
-        initialVersion: Int? = null
+        parentId: String?
     ) : this(id = serializableGroup.id, parentId = parentId) {
         for (serializableShape in serializableGroup.shapes) {
-            add(toShape(id, serializableShape))
+            addInternal(toShape(id, serializableShape))
         }
-        if (initialVersion != null) {
-            version = initialVersion
-        }
+        versionCode = serializableGroup.versionCode
     }
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
         SerializableGroup(
             id.takeIf { isIdIncluded },
+            versionCode,
             items.map { it.toSerializableShape(isIdIncluded) }
         )
 
     internal fun add(shape: AbstractShape, position: AddPosition = AddPosition.Last) = update {
+        addInternal(shape, position)
+    }
+
+    private fun addInternal(
+        shape: AbstractShape,
+        position: AddPosition = AddPosition.Last
+    ): Boolean {
         if (shape.parentId != null && shape.parentId != id) {
-            return@update false
+            return false
         }
         shape.parentId = id
 
         quickList.add(shape, position)
+        return true
     }
 
     internal fun remove(shape: AbstractShape) = update {

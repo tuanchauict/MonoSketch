@@ -12,11 +12,13 @@ class GroupSerializationTest {
     fun test() {
         val rectangle = SerializableRectangle(
             null,
+            0,
             Rect.byLTRB(0, 0, 1, 1),
             RectangleExtra.withDefault().toSerializableExtra()
         )
         val group = SerializableGroup(
             null,
+            0,
             listOf(rectangle)
         )
         val string = Json.encodeToString(group)

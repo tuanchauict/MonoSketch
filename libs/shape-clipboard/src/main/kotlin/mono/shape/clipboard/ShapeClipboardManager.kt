@@ -55,10 +55,9 @@ class ShapeClipboardManager(private val body: HTMLElement) {
         // Replace space chars with nbsp chars to avoid space chars are being trimmed by the browser
         val toBeUsedText = text.replace(' ', NON_BREAKING_SPACE_CHAR)
         return SerializableText(
-            null,
-            Rect.Companion.byLTWH(0, 0, width, height),
-            toBeUsedText,
-            TextExtra.NO_BOUND.toSerializableExtra()
+            bound = Rect.Companion.byLTWH(0, 0, width, height),
+            text = toBeUsedText,
+            extra = TextExtra.NO_BOUND.toSerializableExtra()
         )
     }
 

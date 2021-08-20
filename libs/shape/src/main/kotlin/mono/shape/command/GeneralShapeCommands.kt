@@ -11,9 +11,9 @@ class ChangeBound(private val target: AbstractShape, private val newBound: Rect)
         shapeManager.getGroup(target.parentId)
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
-        val currentVersion = target.version
+        val currentVersion = target.versionCode
         target.setBound(newBound)
-        if (currentVersion != target.version) {
+        if (currentVersion != target.versionCode) {
             parent.update { true }
         }
     }
@@ -27,9 +27,9 @@ class ChangeExtra(
         shapeManager.getGroup(target.parentId)
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
-        val currentVersion = target.version
+        val currentVersion = target.versionCode
         target.setExtra(newExtra)
-        if (currentVersion != target.version) {
+        if (currentVersion != target.versionCode) {
             parent.update { true }
         }
     }

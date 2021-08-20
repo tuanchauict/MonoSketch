@@ -31,13 +31,13 @@ internal class ShapeZoneAddressManager(private val getBitmap: (AbstractShape) ->
                 addresses.add(address)
             }
         }
-        val versionizedZoneAddresses = VersionizedZoneAddresses(shape.version, addresses)
+        val versionizedZoneAddresses = VersionizedZoneAddresses(shape.versionCode, addresses)
         idToZoneAddressMap[shape.id] = versionizedZoneAddresses
         return versionizedZoneAddresses.addresses
     }
 
     private fun getCachedAddresses(shape: AbstractShape): Set<ZoneAddress>? =
-        idToZoneAddressMap[shape.id]?.takeIf { it.version == shape.version }?.addresses
+        idToZoneAddressMap[shape.id]?.takeIf { it.version == shape.versionCode }?.addresses
 
     private class VersionizedZoneAddresses(val version: Int, val addresses: Set<ZoneAddress>)
 }
