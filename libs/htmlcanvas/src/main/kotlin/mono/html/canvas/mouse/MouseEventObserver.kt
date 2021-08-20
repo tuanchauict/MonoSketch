@@ -10,6 +10,7 @@ import mono.livedata.distinctUntilChange
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.events.WheelEvent
+import kotlin.js.Date
 
 /**
  * A class to attach and observe mouse events happening on the canvas.
@@ -34,12 +35,13 @@ internal class MouseEventObserver(
         MutableLiveData(Point.ZERO)
     val drawingOffsetPointPxLiveData: LiveData<Point> = drawingOffsetPointPxMutableLiveData
 
+    private val mouseDoubleClickDetector = MouseDoubleClickDetector()
+
     init {
         container.onmousedown = ::setMouseDownPointer
         container.onmouseup = ::setMouseUpPointer
         container.onmousemove = ::setMouseMovePointer
         container.onwheel = ::setMouseWheel
-        container.ondblclick = ::setMouseDoubleClick
 
         drawingInfoLiveData.observe(lifecycleOwner) {
             drawingInfo = it
@@ -56,6 +58,7 @@ internal class MouseEventObserver(
     }
 
     private fun setMouseUpPointer(event: MouseEvent) {
+        val isDoubleClick = mouseDoubleClickDetector.onMouseUp()
         val currentValue = mousePointerLiveData.value
         val clickPoint = event.toPoint()
 
@@ -71,13 +74,19 @@ internal class MouseEventObserver(
             is MousePointer.DoubleClick,
             MousePointer.Idle -> MousePointer.Idle
         }
+
         if (currentValue is MousePointer.Down) {
-            mousePointerMutableLiveData.value = MousePointer.Click(clickPoint, event.shiftKey)
+            mousePointerMutableLiveData.value = if (isDoubleClick) {
+                MousePointer.DoubleClick(event.toPoint())
+            } else {
+                MousePointer.Click(clickPoint, event.shiftKey)
+            }
         }
         mousePointerMutableLiveData.value = MousePointer.Idle
     }
 
     private fun setMouseMovePointer(event: MouseEvent) {
+        mouseDoubleClickDetector.reset()
         val newPointer = when (val mousePointer = mousePointerLiveData.value) {
             is MousePointer.Down ->
                 MousePointer.Drag(mousePointer.point, event.toPoint(), event.shiftKey)
@@ -123,11 +132,6 @@ internal class MouseEventObserver(
         mouseWheelDeltaY = accumulateWheelDeltaTop - usableDeltaTop
     }
 
-    private fun setMouseDoubleClick(event: MouseEvent) {
-        mousePointerMutableLiveData.value = MousePointer.DoubleClick(event.toPoint())
-        mousePointerMutableLiveData.value = MousePointer.Idle
-    }
-
     private fun MouseEvent.toPoint(): Point =
         Point(
             drawingInfo.toBoardColumn(offsetX.toInt()),
@@ -135,6 +139,24 @@ internal class MouseEventObserver(
         )
 
     private fun MouseEvent.toPointPx(): Point = Point(offsetX.toInt(), offsetY.toInt())
+
+    private class MouseDoubleClickDetector {
+        private var lastMouseUpMillis: Long = 0
+        private var mouseUpCount: Int = 0
+
+        fun onMouseUp(): Boolean {
+            val isDoubleClick = Date.now().toLong() - lastMouseUpMillis < 500 && mouseUpCount > 0
+            lastMouseUpMillis = Date.now().toLong()
+            mouseUpCount += 1
+
+            return isDoubleClick
+        }
+
+        fun reset() {
+            lastMouseUpMillis = 0L
+            mouseUpCount = 0
+        }
+    }
 
     companion object {
         private const val SCROLL_SPEED_RATIO = 1 / 1.3F
