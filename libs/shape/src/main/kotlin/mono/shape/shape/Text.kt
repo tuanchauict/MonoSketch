@@ -69,7 +69,13 @@ class Text(
     }
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
-        SerializableText(id.takeIf { isIdIncluded }, bound, text, extra.toSerializableExtra())
+        SerializableText(
+            id.takeIf { isIdIncluded },
+            versionCode,
+            bound,
+            text,
+            extra.toSerializableExtra()
+        )
 
     override fun setBound(newBound: Rect) = update {
         val isUpdated = bound != newBound

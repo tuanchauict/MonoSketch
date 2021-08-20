@@ -55,6 +55,7 @@ class Rectangle(
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
         SerializableRectangle(
             id = id.takeIf { isIdIncluded },
+            versionCode,
             bound,
             extra = extra.toSerializableExtra()
         )

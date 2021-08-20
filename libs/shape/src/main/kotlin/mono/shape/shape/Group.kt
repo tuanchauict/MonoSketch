@@ -50,6 +50,7 @@ class Group(
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
         SerializableGroup(
             id.takeIf { isIdIncluded },
+            versionCode,
             items.map { it.toSerializableShape(isIdIncluded) }
         )
 

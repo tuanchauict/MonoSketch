@@ -5,11 +5,13 @@ import kotlinx.serialization.Serializable
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.shape.AbstractShape
 
 @Serializable
 sealed class AbstractSerializableShape {
     // null for not having id.
     abstract val id: String?
+    abstract val versionCode: Int
 }
 
 @Serializable
@@ -17,6 +19,8 @@ sealed class AbstractSerializableShape {
 data class SerializableRectangle(
     @SerialName("i")
     override val id: String? = null,
+    @SerialName("v")
+    override val versionCode: Int,
     @SerialName("b")
     val bound: Rect,
     @SerialName("e")
@@ -41,6 +45,8 @@ data class SerializableRectangle(
 data class SerializableText(
     @SerialName("i")
     override val id: String? = null,
+    @SerialName("v")
+    override val versionCode: Int = AbstractShape.nextVersionCode(),
     @SerialName("b")
     val bound: Rect,
     @SerialName("t")
@@ -65,6 +71,8 @@ data class SerializableText(
 data class SerializableLine(
     @SerialName("i")
     override val id: String? = null,
+    @SerialName("v")
+    override val versionCode: Int,
     @SerialName("ps")
     val startPoint: DirectedPoint,
     @SerialName("pe")
@@ -95,6 +103,8 @@ data class SerializableLine(
 data class SerializableGroup(
     @SerialName("i")
     override val id: String? = null,
+    @SerialName("v")
+    override val versionCode: Int,
     @SerialName("ss")
     val shapes: List<AbstractSerializableShape>
 ) : AbstractSerializableShape()

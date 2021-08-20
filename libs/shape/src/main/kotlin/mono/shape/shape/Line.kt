@@ -123,6 +123,7 @@ class Line(
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
         SerializableLine(
             id.takeIf { isIdIncluded },
+            versionCode,
             startPoint,
             endPoint,
             jointPoints,
