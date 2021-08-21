@@ -2,7 +2,6 @@ package mono.state
 
 import kotlinx.html.currentTimeMillis
 import mono.bitmap.manager.MonoBitmapManager
-import mono.common.nullToFalse
 import mono.environment.Build
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
@@ -66,6 +65,8 @@ class MainStateManager(
 
     private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
 
+    private val editingInProgressMutableLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
+
     init {
         mousePointerLiveData
             .distinctUntilChange()
@@ -126,13 +127,14 @@ class MainStateManager(
             return
         }
 
-        currentMouseCommand = MouseCommandFactory.getCommand(
-            environment,
-            mousePointer,
-            currentRetainableActionType
-        ) ?: currentMouseCommand
+        val mouseCommand =
+            MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
+                ?: currentMouseCommand
+                ?: return
+        currentMouseCommand = mouseCommand
 
-        val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
+        val isFinished = mouseCommand.execute(environment, mousePointer)
+        editingInProgressMutableLiveData.value = !isFinished
         if (isFinished) {
             currentMouseCommand = null
             requestRedraw()
@@ -231,6 +233,9 @@ class MainStateManager(
 
         override val shapeSearcher: ShapeSearcher
             get() = stateManager.shapeSearcher
+
+        override val editingInProgressLiveData: LiveData<Boolean>
+            get() = stateManager.editingInProgressMutableLiveData
 
         override var workingParentGroup: Group
             get() = stateManager.workingParentGroup
