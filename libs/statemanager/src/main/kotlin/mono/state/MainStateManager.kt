@@ -136,6 +136,7 @@ class MainStateManager(
         if (isFinished) {
             currentMouseCommand = null
             requestRedraw()
+            actionManager.setRetainableAction(RetainableActionType.IDLE)
         }
     }
 
