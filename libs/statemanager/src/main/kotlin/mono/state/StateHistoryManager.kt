@@ -1,6 +1,7 @@
 package mono.state
 
 import mono.common.setTimeout
+import mono.environment.Build
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.MediatorLiveData
 import mono.shape.serialization.SerializableGroup
@@ -91,6 +92,9 @@ internal class StateHistoryManager(
             }
             undoStack.add(History(version, state))
             redoStack.clear()
+            if (Build.DEBUG) {
+                println("Push history stack ${undoStack.map { it.versionCode }}")
+            }
         }
 
         fun clear() {
