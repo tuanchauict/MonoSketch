@@ -4,9 +4,7 @@ import mono.common.exhaustive
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
-import mono.shape.add
 import mono.shape.command.MoveLineAnchor
-import mono.shape.remove
 import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
 
@@ -27,7 +25,7 @@ internal class AddLineMouseCommand : MouseCommand {
                     parentId = environment.workingParentGroup.id
                 )
                 workingShape = shape
-                environment.shapeManager.add(shape)
+                environment.addShape(shape)
                 environment.clearSelectedShapes()
                 false
             }
@@ -41,7 +39,7 @@ internal class AddLineMouseCommand : MouseCommand {
                 if (isValidLine()) {
                     environment.addSelectedShape(workingShape)
                 } else {
-                    environment.shapeManager.remove(workingShape)
+                    environment.removeShape(workingShape)
                     environment.clearSelectedShapes()
                 }
                 true

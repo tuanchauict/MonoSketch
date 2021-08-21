@@ -19,7 +19,9 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
+import mono.shape.add
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.remove
 import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -240,6 +242,14 @@ class MainStateManager(
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
         }
+
+        override fun addShape(shape: AbstractShape?) {
+            if (shape != null) {
+                shapeManager.add(shape)
+            }
+        }
+
+        override fun removeShape(shape: AbstractShape?) = shapeManager.remove(shape)
 
         override fun getWindowBound(): Rect = stateManager.windowBoardBound
 

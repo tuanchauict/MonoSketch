@@ -21,6 +21,10 @@ internal interface CommandEnvironment {
 
     fun replaceRoot(newRoot: Group)
 
+    fun addShape(shape: AbstractShape?)
+
+    fun removeShape(shape: AbstractShape?)
+
     fun getWindowBound(): Rect
 
     fun getInteractionPoint(pointPx: Point): InteractionPoint?

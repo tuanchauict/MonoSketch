@@ -14,7 +14,6 @@ import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.TextAlign
-import mono.shape.remove
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.AbstractShape
@@ -135,7 +134,7 @@ internal class OneTimeActionHandler(
 
     private fun deleteSelectedShapes() {
         for (shape in environment.getSelectedShapes()) {
-            environment.shapeManager.remove(shape)
+            environment.removeShape(shape)
         }
         environment.clearSelectedShapes()
     }
