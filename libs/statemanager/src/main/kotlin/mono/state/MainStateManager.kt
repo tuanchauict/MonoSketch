@@ -249,6 +249,10 @@ class MainStateManager(
             clearSelectedShapes()
         }
 
+        override fun setEditingState(isEditing: Boolean) {
+            stateManager.editingInProgressMutableLiveData.value = isEditing
+        }
+
         override fun addShape(shape: AbstractShape?) {
             if (shape != null) {
                 shapeManager.add(shape)

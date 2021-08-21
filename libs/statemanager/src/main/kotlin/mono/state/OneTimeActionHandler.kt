@@ -141,7 +141,12 @@ internal class OneTimeActionHandler(
 
     private fun editSelectedShape(shape: AbstractShape?) {
         when (shape) {
-            is Text -> EditTextShapeHelper.showEditTextDialog(environment, shape)
+            is Text -> {
+                environment.setEditingState(true)
+                EditTextShapeHelper.showEditTextDialog(environment, shape) {
+                    environment.setEditingState(false)
+                }
+            }
             is Line,
             is Rectangle,
             is MockShape,

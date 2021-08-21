@@ -23,6 +23,8 @@ internal interface CommandEnvironment {
 
     fun replaceRoot(newRoot: Group)
 
+    fun setEditingState(isEditing: Boolean)
+
     fun addShape(shape: AbstractShape?)
 
     fun removeShape(shape: AbstractShape?)
