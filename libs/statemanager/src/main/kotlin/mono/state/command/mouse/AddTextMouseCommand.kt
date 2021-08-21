@@ -5,9 +5,7 @@ import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.shape.add
 import mono.shape.command.ChangeBound
-import mono.shape.remove
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
@@ -31,7 +29,7 @@ internal class AddTextMouseCommand : MouseCommand {
                     parentId = environment.workingParentGroup.id
                 )
                 workingShape = shape
-                environment.shapeManager.add(shape)
+                environment.addShape(shape)
                 environment.clearSelectedShapes()
                 false
             }
@@ -53,16 +51,12 @@ internal class AddTextMouseCommand : MouseCommand {
     private fun onMouseUp(environment: CommandEnvironment, mousePointer: MousePointer.Up) {
         environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
         if (!workingShape?.isBoundValid().nullToFalse()) {
-            environment.shapeManager.remove(workingShape)
+            environment.removeShape(workingShape)
             workingShape = null
             return
         }
         environment.addSelectedShape(workingShape)
         EditTextShapeHelper.showEditTextDialog(environment, workingShape) {
-            if (!workingShape?.isValid().nullToFalse()) {
-                environment.shapeManager.remove(workingShape)
-                environment.clearSelectedShapes()
-            }
             workingShape = null
         }
     }

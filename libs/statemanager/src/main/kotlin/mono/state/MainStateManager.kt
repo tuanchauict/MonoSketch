@@ -2,7 +2,6 @@ package mono.state
 
 import kotlinx.html.currentTimeMillis
 import mono.bitmap.manager.MonoBitmapManager
-import mono.common.nullToFalse
 import mono.environment.Build
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
@@ -19,7 +18,9 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
+import mono.shape.add
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.remove
 import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -63,6 +64,8 @@ class MainStateManager(
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
     private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
+
+    private val editingInProgressMutableLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
 
     init {
         mousePointerLiveData
@@ -124,16 +127,18 @@ class MainStateManager(
             return
         }
 
-        currentMouseCommand = MouseCommandFactory.getCommand(
-            environment,
-            mousePointer,
-            currentRetainableActionType
-        ) ?: currentMouseCommand
+        val mouseCommand =
+            MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
+                ?: currentMouseCommand
+                ?: return
+        currentMouseCommand = mouseCommand
 
-        val isFinished = currentMouseCommand?.execute(environment, mousePointer).nullToFalse()
+        val isFinished = mouseCommand.execute(environment, mousePointer)
+        editingInProgressMutableLiveData.value = !isFinished
         if (isFinished) {
             currentMouseCommand = null
             requestRedraw()
+            actionManager.setRetainableAction(RetainableActionType.IDLE)
         }
     }
 
@@ -229,6 +234,9 @@ class MainStateManager(
         override val shapeSearcher: ShapeSearcher
             get() = stateManager.shapeSearcher
 
+        override val editingInProgressLiveData: LiveData<Boolean>
+            get() = stateManager.editingInProgressMutableLiveData
+
         override var workingParentGroup: Group
             get() = stateManager.workingParentGroup
             private set(value) {
@@ -240,6 +248,18 @@ class MainStateManager(
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
         }
+
+        override fun setEditingState(isEditing: Boolean) {
+            stateManager.editingInProgressMutableLiveData.value = isEditing
+        }
+
+        override fun addShape(shape: AbstractShape?) {
+            if (shape != null) {
+                shapeManager.add(shape)
+            }
+        }
+
+        override fun removeShape(shape: AbstractShape?) = shapeManager.remove(shape)
 
         override fun getWindowBound(): Rect = stateManager.windowBoardBound
 

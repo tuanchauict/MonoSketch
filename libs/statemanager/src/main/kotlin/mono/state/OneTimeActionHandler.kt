@@ -14,7 +14,6 @@ import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.TextAlign
-import mono.shape.remove
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.AbstractShape
@@ -135,14 +134,19 @@ internal class OneTimeActionHandler(
 
     private fun deleteSelectedShapes() {
         for (shape in environment.getSelectedShapes()) {
-            environment.shapeManager.remove(shape)
+            environment.removeShape(shape)
         }
         environment.clearSelectedShapes()
     }
 
     private fun editSelectedShape(shape: AbstractShape?) {
         when (shape) {
-            is Text -> EditTextShapeHelper.showEditTextDialog(environment, shape)
+            is Text -> {
+                environment.setEditingState(true)
+                EditTextShapeHelper.showEditTextDialog(environment, shape) {
+                    environment.setEditingState(false)
+                }
+            }
             is Line,
             is Rectangle,
             is MockShape,

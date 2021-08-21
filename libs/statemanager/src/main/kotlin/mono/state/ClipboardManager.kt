@@ -2,9 +2,7 @@ package mono.state
 
 import mono.graphics.geo.Point
 import mono.lifecycle.LifecycleOwner
-import mono.shape.add
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.remove
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -35,7 +33,7 @@ internal class ClipboardManager(
         shapeClipboardManager.setClipboard(serializableShapes)
         if (isRemoveRequired) {
             for (shape in selectedShapes) {
-                commandEnvironment.shapeManager.remove(shape)
+                commandEnvironment.removeShape(shape)
             }
             commandEnvironment.clearSelectedShapes()
         }
@@ -81,7 +79,7 @@ internal class ClipboardManager(
             val newShapeBound = shapeBound.copy(position = shapeBound.position.minus(offset))
             shape.setBound(newShapeBound)
 
-            commandEnvironment.shapeManager.add(shape)
+            commandEnvironment.addShape(shape)
             commandEnvironment.addSelectedShape(shape)
         }
     }

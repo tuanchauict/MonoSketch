@@ -1,13 +1,10 @@
 package mono.state.command.mouse
 
 import mono.common.exhaustive
-import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.shape.add
 import mono.shape.command.ChangeBound
-import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Rectangle
 import mono.state.command.CommandEnvironment
@@ -26,7 +23,7 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
                 val shape =
                     shapeFactory.createShape(mousePointer.point, environment.workingParentGroup.id)
                 workingShape = shape
-                environment.shapeManager.add(shape)
+                environment.addShape(shape)
                 environment.clearSelectedShapes()
                 false
             }
@@ -36,11 +33,7 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
             }
             is MousePointer.Up -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
-                if (workingShape?.isValid().nullToFalse()) {
-                    environment.addSelectedShape(workingShape)
-                } else {
-                    environment.shapeManager.remove(workingShape)
-                }
+                environment.addSelectedShape(workingShape)
                 workingShape = null
                 true
             }

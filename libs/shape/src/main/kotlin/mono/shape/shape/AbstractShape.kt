@@ -41,8 +41,6 @@ sealed class AbstractShape(
 
     open fun setExtra(newExtra: ShapeExtra) = Unit
 
-    open fun isValid(): Boolean = true
-
     /**
      * Updates properties of the shape by [action]. The [action] returns true if the shape's
      * properties are changed.

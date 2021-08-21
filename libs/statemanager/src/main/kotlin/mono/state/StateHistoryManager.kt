@@ -1,7 +1,9 @@
 package mono.state
 
 import mono.common.setTimeout
+import mono.environment.Build
 import mono.lifecycle.LifecycleOwner
+import mono.livedata.MediatorLiveData
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.Group
@@ -21,11 +23,18 @@ internal class StateHistoryManager(
     init {
         restoreShapes()
 
-        environment.shapeManager.versionLiveData.observe(
-            lifecycleOwner,
-            200,
-            ::registerBackupShapes
-        )
+        val mediatorLiveData = MediatorLiveData(Pair(0, false))
+        mediatorLiveData.add(environment.shapeManager.versionLiveData) {
+            value = value.copy(first = it)
+        }
+        mediatorLiveData.add(environment.editingInProgressLiveData) {
+            value = value.copy(second = it)
+        }
+        mediatorLiveData.observe(lifecycleOwner, 300) { (versionCode, isEditing) ->
+            if (!isEditing) {
+                registerBackupShapes(versionCode)
+            }
+        }
     }
 
     fun clear() = historyStack.clear()
@@ -83,6 +92,9 @@ internal class StateHistoryManager(
             }
             undoStack.add(History(version, state))
             redoStack.clear()
+            if (Build.DEBUG) {
+                println("Push history stack ${undoStack.map { it.versionCode }}")
+            }
         }
 
         fun clear() {

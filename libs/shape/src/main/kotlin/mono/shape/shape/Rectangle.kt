@@ -74,6 +74,4 @@ class Rectangle(
             true
         }
     }
-
-    override fun isValid(): Boolean = bound.width > 1 && bound.height > 1
 }
