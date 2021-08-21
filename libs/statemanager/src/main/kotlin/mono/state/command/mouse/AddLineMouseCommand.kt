@@ -35,13 +35,7 @@ internal class AddLineMouseCommand : MouseCommand {
             }
             is MousePointer.Up -> {
                 environment.changeEndAnchor(environment, mousePointer.point, true)
-
-                if (isValidLine()) {
-                    environment.addSelectedShape(workingShape)
-                } else {
-                    environment.removeShape(workingShape)
-                    environment.clearSelectedShapes()
-                }
+                environment.addSelectedShape(workingShape)
                 true
             }
 
@@ -50,11 +44,6 @@ internal class AddLineMouseCommand : MouseCommand {
             is MousePointer.DoubleClick,
             MousePointer.Idle -> true
         }.exhaustive
-
-    private fun isValidLine(): Boolean {
-        val line = workingShape ?: return false
-        return line.bound.width * line.bound.height > 1
-    }
 
     private fun CommandEnvironment.changeEndAnchor(
         environment: CommandEnvironment,
