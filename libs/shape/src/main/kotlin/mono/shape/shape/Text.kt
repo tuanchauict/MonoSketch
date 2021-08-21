@@ -117,8 +117,6 @@ class Text(
         }
     }
 
-    override fun isValid(): Boolean = text.isNotEmpty()
-
     fun isBoundValid(): Boolean {
         val hasBound = extra.hasBorder()
         val textBoundWidth = if (hasBound) bound.width - 2 else bound.width
