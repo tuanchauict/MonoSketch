@@ -15,6 +15,7 @@ import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.isSelected
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
 import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
+import mono.html.toolbar.view.shapetool.Class.CLICKABLE
 import mono.html.toolbar.view.shapetool.Class.COLUMN
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.html.toolbar.view.shapetool.Class.INPUT_CHECK_BOX
@@ -23,6 +24,7 @@ import mono.html.toolbar.view.shapetool.Class.TOOL_TITLE
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.events.Event
 
 internal abstract class AppearanceSectionViewController(
     rootView: HTMLDivElement
@@ -130,10 +132,8 @@ private fun Tag.GridTextIconOptions(
     var optionElements: List<HTMLElement>? = null
     val rootView = Tool(hasMoreBottomSpace = true) {
         Row {
-            checkBox = CheckColumn {
-                setOneTimeAction(type.toActionType(it))
-            }
-            optionElements = OptionsColumn(type.title, options) {
+            checkBox = CheckColumn { setOneTimeAction(type.toActionType(it)) }
+            optionElements = OptionsColumn(checkBox!!, type.title, options) {
                 setOneTimeAction(type.toActionType(selectedId = it.id))
             }
         }
@@ -145,7 +145,7 @@ private fun Tag.CheckColumn(onCheckChange: (Boolean) -> Unit): HTMLInputElement 
     var checkBox: HTMLInputElement? = null
     Column(hasMoreRightSpace = true) {
         Row {
-            checkBox = input(InputType.checkBox, classes = classes(INPUT_CHECK_BOX)) {
+            checkBox = input(InputType.checkBox, classes = classes(INPUT_CHECK_BOX, CLICKABLE)) {
                 onChangeFunction = {
                     onCheckChange(checkBox?.checked.nullToFalse())
                 }
@@ -156,6 +156,7 @@ private fun Tag.CheckColumn(onCheckChange: (Boolean) -> Unit): HTMLInputElement 
 }
 
 private fun Tag.OptionsColumn(
+    checkBox: HTMLInputElement,
     title: String,
     options: List<OptionItem>,
     onOptionSelected: (OptionItem) -> Unit
@@ -163,11 +164,17 @@ private fun Tag.OptionsColumn(
     val optionElements = mutableListOf<HTMLElement>()
     Column {
         Row {
-            span(classes(TOOL_TITLE)) { +title }
+            span(classes(TOOL_TITLE, CLICKABLE)) {
+                +title
+                onClickFunction = {
+                    checkBox.checked = !checkBox.checked
+                    checkBox.dispatchEvent(Event("change"))
+                }
+            }
         }
         Row(isMonoFont = true, isGrid = true) {
             for (option in options) {
-                optionElements += span(classes(ICON_BUTTON, SMALL)) {
+                optionElements += span(classes(ICON_BUTTON, SMALL, CLICKABLE)) {
                     +option.name
 
                     onClickFunction = {
