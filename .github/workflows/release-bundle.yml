@@ -16,7 +16,7 @@ jobs:
         shell: bash
         run: |
           echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-          echo "##[set-output name=sha;]$(echo ${$GITHUB_SHA})"
+          echo "::set-output name=sha::$(git rev-parse HEAD)"
       - run: ./gradlew assemble
       - run: |
           mkdir release
