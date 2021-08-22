@@ -9,7 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: release/demo-0.0.2
+          ref: release/alpha/1.0.0
+      - name: Environment detector
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       - name: Reset alpha branch
         run: |
           git fetch origin main:main
@@ -17,6 +22,7 @@ jobs:
       - name: Create pull request
         uses: peter-evans/create-pull-request@v3
         with:
-          title: "[Auto merge] Update alpha release"
+          title: "[Auto merge] Update alpha release ${{ steps.vars.outputs.branch }}"
           branch: auto-merge-alpha-release
-          labels: "automated pr"
+          labels: "bot"
+          body: "Commit: $GITHUB_SHA"

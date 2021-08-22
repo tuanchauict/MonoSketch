@@ -2,9 +2,7 @@ name: Publish release
 on:
   push:
     branches:
-      - release/**
-    tags:
-      - release/**
+      - release/alpha/**
 jobs:
   bundle_demo_release:
     runs-on: ubuntu-latest
@@ -13,20 +11,24 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Environment detector
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       - run: ./gradlew assemble
       - run: |
           mkdir release
-          mkdir release/demo
-          mv build/distributions/* release/demo
-      - name: Publish to monoflowapp.github.io
+          mv build/distributions/* release/
+      - name: Publish to Alpha release
         id: push_directory
         uses: cpina/github-action-push-to-another-repository@cp_instead_of_deleting
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source-directory: 'release'
-          destination-github-username: 'monoflowapp'
-          destination-repository-name: 'monoflowapp.github.io'
-          target-branch: master
+          destination-github-username: 'monosketch'
+          destination-repository-name: 'monosketch-alpha'
+          target-branch: main
           user-email: tunachauict@gmail.com
-          commit-message: Demo publishing
+          commit-message: Alpha publishing ${{ steps.vars.outputs.branch }}-$GITHUB_SHA
