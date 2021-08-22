@@ -352,4 +352,8 @@ html, body {
   display: none;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=main.css.map */

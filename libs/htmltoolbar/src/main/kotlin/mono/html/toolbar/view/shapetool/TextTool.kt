@@ -11,6 +11,7 @@ import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.SvgPath
 import mono.html.toolbar.view.isSelected
 import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
+import mono.html.toolbar.view.shapetool.Class.CLICKABLE
 import mono.html.toolbar.view.shapetool.Class.COLUMN
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.html.toolbar.view.shapetool.Class.MEDIUM
@@ -118,7 +119,7 @@ private fun Tag.TextTool(name: String, iconBlock: Tag.() -> Unit) {
 private fun Tag.Icon(
     iconType: TextAlignmentIconType,
     setOneTimeAction: (OneTimeActionType) -> Unit
-): HTMLElement = span(classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE)) {
+): HTMLElement = span(classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE, CLICKABLE)) {
     SvgIcon(16, 16, iconType.viewPortSize, iconType.viewPortSize) {
         SvgPath(iconType.iconPath)
     }

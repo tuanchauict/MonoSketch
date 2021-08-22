@@ -8,6 +8,7 @@ enum class Class(val value: String) {
     ADD_RIGHT_SPACE("add-right-space"),
     CENTER_EVEN_SPACE("center-even-space"),
     CENTER_VERTICAL("center-vertical"),
+    CLICKABLE("clickable"),
     COLUMN("tcolumn"),
     DISABLED("disabled"),
     GRID("grid"),
