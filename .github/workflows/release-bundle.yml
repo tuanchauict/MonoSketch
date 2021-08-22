@@ -16,6 +16,7 @@ jobs:
         shell: bash
         run: |
           echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "##[set-output name=sha;]$(echo ${$GITHUB_SHA})"
       - run: ./gradlew assemble
       - run: |
           mkdir release
@@ -31,4 +32,4 @@ jobs:
           destination-repository-name: 'monosketch-alpha'
           target-branch: main
           user-email: tunachauict@gmail.com
-          commit-message: Alpha publishing ${{ steps.vars.outputs.branch }}-$GITHUB_SHA
+          commit-message: Alpha publishing ${{ steps.vars.outputs.branch }}-${{ steps.vars.outputs.sha }}
