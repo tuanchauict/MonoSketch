@@ -23,6 +23,7 @@ import mono.html.toolbar.view.shapetool.Class.TOOL_TITLE
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.events.Event
 
 internal abstract class AppearanceSectionViewController(
     rootView: HTMLDivElement
@@ -130,10 +131,8 @@ private fun Tag.GridTextIconOptions(
     var optionElements: List<HTMLElement>? = null
     val rootView = Tool(hasMoreBottomSpace = true) {
         Row {
-            checkBox = CheckColumn {
-                setOneTimeAction(type.toActionType(it))
-            }
-            optionElements = OptionsColumn(type.title, options) {
+            checkBox = CheckColumn { setOneTimeAction(type.toActionType(it)) }
+            optionElements = OptionsColumn(checkBox!!, type.title, options) {
                 setOneTimeAction(type.toActionType(selectedId = it.id))
             }
         }
@@ -156,6 +155,7 @@ private fun Tag.CheckColumn(onCheckChange: (Boolean) -> Unit): HTMLInputElement 
 }
 
 private fun Tag.OptionsColumn(
+    checkBox: HTMLInputElement,
     title: String,
     options: List<OptionItem>,
     onOptionSelected: (OptionItem) -> Unit
@@ -163,7 +163,13 @@ private fun Tag.OptionsColumn(
     val optionElements = mutableListOf<HTMLElement>()
     Column {
         Row {
-            span(classes(TOOL_TITLE)) { +title }
+            span(classes(TOOL_TITLE)) {
+                +title
+                onClickFunction = {
+                    checkBox.checked = !checkBox.checked
+                    checkBox.dispatchEvent(Event("change"))
+                }
+            }
         }
         Row(isMonoFont = true, isGrid = true) {
             for (option in options) {
