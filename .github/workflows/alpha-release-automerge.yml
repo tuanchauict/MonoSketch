@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: release/alpha/1.0.0
+          ref: ${{ secrets.ALPHA_RELEASE_BRANCH }}
       - name: Environment detector
         id: vars
         shell: bash
@@ -23,7 +23,7 @@ jobs:
       - name: Create pull request
         uses: peter-evans/create-pull-request@v3
         with:
-          title: "[Auto merge][${{ steps.vars.outputs.branch }} -> release/alpha/1.0.0] Update alpha release"
+          title: "[Auto merge][${{ steps.vars.outputs.branch }} -> ${{ secrets.ALPHA_RELEASE_BRANCH }}] Update alpha release"
           branch: auto-merge-alpha-release
           labels: "bot"
           body: |
