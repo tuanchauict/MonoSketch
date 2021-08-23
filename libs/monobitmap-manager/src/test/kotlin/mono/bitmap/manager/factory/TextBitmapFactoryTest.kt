@@ -23,7 +23,7 @@ class TextBitmapFactoryTest {
                 |┌─────┐
                 |│01234│
                 |│5678 │
-                |│abc  │
+                |│ abc │
                 |└─────┘
             """.trimMargin(),
             bitmap.toString()
