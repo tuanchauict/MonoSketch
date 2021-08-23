@@ -28,8 +28,8 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source-directory: 'release'
-          destination-github-username: 'monosketch'
-          destination-repository-name: 'monosketch-alpha'
+          destination-github-username: ${{ secrets.ALPHA_DESTINATION_USERNAME }}
+          destination-repository-name: ${{ secrets.ALPHA_DESTINATION_REPOSITORY }}
           target-branch: main
           user-email: tunachauict@gmail.com
           commit-message: Alpha publishing ${{ steps.vars.outputs.branch }}-${{ steps.vars.outputs.sha }}
