@@ -27,7 +27,7 @@ object ShapeExtraManager {
             startHeadAnchorChar = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
             isEndHeadAnchorCharEnabled = false,
             endHeadAnchorChar = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
-            textAlign = TextAlign(TextAlign.HorizontalAlign.LEFT, TextAlign.VerticalAlign.TOP)
+            textAlign = TextAlign(TextAlign.HorizontalAlign.MIDDLE, TextAlign.VerticalAlign.MIDDLE)
         )
         private set
 
