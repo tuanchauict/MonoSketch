@@ -52,7 +52,9 @@ data class SerializableText(
     @SerialName("t")
     val text: String,
     @SerialName("e")
-    val extra: SerializableExtra
+    val extra: SerializableExtra,
+    @SerialName("te")
+    val isTextEditable: Boolean = true
 ) : AbstractSerializableShape() {
 
     @Serializable
