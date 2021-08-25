@@ -16,7 +16,7 @@ import mono.state.command.text.EditTextShapeHelper
  * 1. Identify the initial bound for the text shape
  * 2. Open a modal for entering text content when mouse up.
  */
-internal class AddTextMouseCommand : MouseCommand {
+internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseCommand {
     override val mouseCursor: String = "crosshair"
 
     private var workingShape: Text? = null
@@ -26,7 +26,8 @@ internal class AddTextMouseCommand : MouseCommand {
                 val shape = Text(
                     mousePointer.point,
                     mousePointer.point,
-                    parentId = environment.workingParentGroup.id
+                    parentId = environment.workingParentGroup.id,
+                    isTextEditable = isTextEditable
                 )
                 workingShape = shape
                 environment.addShape(shape)
@@ -56,8 +57,10 @@ internal class AddTextMouseCommand : MouseCommand {
             return
         }
         environment.addSelectedShape(workingShape)
-        EditTextShapeHelper.showEditTextDialog(environment, workingShape) {
-            workingShape = null
+        if (isTextEditable) {
+            EditTextShapeHelper.showEditTextDialog(environment, workingShape) {
+                workingShape = null
+            }
         }
     }
 

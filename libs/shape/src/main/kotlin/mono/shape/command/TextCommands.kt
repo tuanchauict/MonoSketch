@@ -20,3 +20,14 @@ class ChangeText(
         parent.update { currentVersion != target.versionCode }
     }
 }
+
+class MakeTextEditable(private val target: Text) : Command() {
+    override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
+        shapeManager.getGroup(target.parentId)
+
+    override fun execute(shapeManager: ShapeManager, parent: Group) {
+        val currentVersion = target.versionCode
+        target.makeTextEditable()
+        parent.update { currentVersion != target.versionCode }
+    }
+}

@@ -12,6 +12,7 @@ import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
 import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
+import mono.shape.command.MakeTextEditable
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.TextAlign
 import mono.shape.serialization.SerializableGroup
@@ -143,6 +144,7 @@ internal class OneTimeActionHandler(
         when (shape) {
             is Text -> {
                 environment.setEditingState(true)
+                environment.shapeManager.execute(MakeTextEditable(shape))
                 EditTextShapeHelper.showEditTextDialog(environment, shape) {
                     environment.setEditingState(false)
                 }
