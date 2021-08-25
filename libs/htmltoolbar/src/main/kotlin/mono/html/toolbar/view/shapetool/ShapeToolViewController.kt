@@ -356,7 +356,8 @@ class ShapeToolViewController(
                 it.size > 1 -> TextAlignVisibility.Hide
                 else -> {
                     val text = it.single() as? Text
-                    text?.extra?.textAlign?.let(TextAlignVisibility::Visible)
+                    val editableText = text?.takeIf { it.isTextEditable }
+                    editableText?.extra?.textAlign?.let(TextAlignVisibility::Visible)
                 }
             }
         }
