@@ -50,9 +50,8 @@ internal object MouseCommandFactory {
         }
 
         return when (commandType) {
-            RetainableActionType.ADD_RECTANGLE ->
-                AddShapeMouseCommand(ShapeFactory.RectangleFactory)
-            RetainableActionType.ADD_TEXT -> AddTextMouseCommand()
+            RetainableActionType.ADD_RECTANGLE -> AddTextMouseCommand(false)
+            RetainableActionType.ADD_TEXT -> AddTextMouseCommand(true)
             RetainableActionType.ADD_LINE -> AddLineMouseCommand()
             RetainableActionType.IDLE -> SelectShapeMouseCommand
         }

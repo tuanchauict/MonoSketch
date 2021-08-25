@@ -50,11 +50,13 @@ class Text(
         startPoint: Point,
         endPoint: Point,
         id: String? = null,
-        parentId: String? = null
+        parentId: String? = null,
+        isTextEditable: Boolean
     ) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
         id = id,
-        parentId = parentId
+        parentId = parentId,
+        isTextEditable = isTextEditable
     )
 
     internal constructor(serializableText: SerializableText, parentId: String?) : this(
