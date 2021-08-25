@@ -7,14 +7,12 @@ import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionPoint
 import mono.shapebound.ScaleInteractionPoint
 import mono.state.command.mouse.AddLineMouseCommand
-import mono.state.command.mouse.AddShapeMouseCommand
 import mono.state.command.mouse.AddTextMouseCommand
 import mono.state.command.mouse.LineInteractionMouseCommand
 import mono.state.command.mouse.MouseCommand
 import mono.state.command.mouse.MoveShapeMouseCommand
 import mono.state.command.mouse.ScaleShapeMouseCommand
 import mono.state.command.mouse.SelectShapeMouseCommand
-import mono.state.command.mouse.ShapeFactory
 
 /**
  * A factory of [MouseCommand].
@@ -50,9 +48,8 @@ internal object MouseCommandFactory {
         }
 
         return when (commandType) {
-            RetainableActionType.ADD_RECTANGLE ->
-                AddShapeMouseCommand(ShapeFactory.RectangleFactory)
-            RetainableActionType.ADD_TEXT -> AddTextMouseCommand()
+            RetainableActionType.ADD_RECTANGLE -> AddTextMouseCommand(false)
+            RetainableActionType.ADD_TEXT -> AddTextMouseCommand(true)
             RetainableActionType.ADD_LINE -> AddLineMouseCommand()
             RetainableActionType.IDLE -> SelectShapeMouseCommand
         }

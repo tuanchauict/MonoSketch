@@ -17,7 +17,8 @@ import kotlin.math.max
 class Text(
     rect: Rect,
     id: String? = null,
-    parentId: String? = null
+    parentId: String? = null,
+    isTextEditable: Boolean = true
 ) : AbstractShape(id = id, parentId = parentId) {
     private var userSettingSize: Size = Size.ZERO
         set(value) {
@@ -36,6 +37,8 @@ class Text(
 
     var text: String = ""
         private set
+    var isTextEditable: Boolean = isTextEditable
+        private set
 
     override var extra: TextExtra = TextExtra.withDefault()
         private set
@@ -47,17 +50,20 @@ class Text(
         startPoint: Point,
         endPoint: Point,
         id: String? = null,
-        parentId: String? = null
+        parentId: String? = null,
+        isTextEditable: Boolean
     ) : this(
         Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top),
         id = id,
-        parentId = parentId
+        parentId = parentId,
+        isTextEditable = isTextEditable
     )
 
     internal constructor(serializableText: SerializableText, parentId: String?) : this(
         serializableText.bound,
         id = serializableText.id,
-        parentId = parentId
+        parentId = parentId,
+        isTextEditable = serializableText.isTextEditable
     ) {
         extra = TextExtra(serializableText.extra)
         setText(serializableText.text)
@@ -75,7 +81,8 @@ class Text(
             versionCode,
             bound,
             text,
-            extra.toSerializableExtra()
+            extra.toSerializableExtra(),
+            isTextEditable
         )
 
     override fun setBound(newBound: Rect) = update {
@@ -122,6 +129,16 @@ class Text(
         val textBoundWidth = if (hasBound) bound.width - 2 else bound.width
         val textBoundHeight = if (hasBound) bound.height - 2 else bound.height
         return textBoundWidth >= 1 && textBoundHeight >= 1
+    }
+
+    fun makeTextEditable() {
+        if (isTextEditable) {
+            return
+        }
+        update {
+            isTextEditable = true
+            true
+        }
     }
 
     /**
