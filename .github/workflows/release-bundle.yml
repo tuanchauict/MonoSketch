@@ -1,4 +1,4 @@
-name: Publish release
+name: Publish Alpha release
 on:
   push:
     branches:
@@ -21,8 +21,6 @@ jobs:
       - name: Publish release
         run: |
           dir=$PWD
-          remote="${{ secrets.ALPHA_DESTINATION_USERNAME }}/${{ secrets.ALPHA_DESTINATION_REPOSITORY }}.git"
-          auth="tuanchauict:${{secrets.API_TOKEN_GITHUB}}"
-          git clone "https://$auth@github.com/$remote" "../working"
+          git clone "${{ secrets.TARGET_ALPHA_REMOTE_GIT }}" "../working"
           cd ../working
           sh tools/release.sh "$dir/build/distributions" "${{ steps.vars.outputs.branch }}-${{ steps.vars.outputs.sha }}"
