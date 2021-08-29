@@ -8,8 +8,8 @@ class StraightStrokeStyle(
     val displayName: String,
     val horizontal: Char,
     val vertical: Char,
-    val leftDown: Char,
+    val downLeft: Char,
     val upRight: Char,
-    val leftUp: Char,
+    val upLeft: Char,
     val downRight: Char
 )
