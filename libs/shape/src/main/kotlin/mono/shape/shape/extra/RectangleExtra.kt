@@ -11,12 +11,12 @@ import mono.shape.serialization.SerializableRectangle
  * A [ShapeExtra] for [mono.shape.shape.Rectangle]
  */
 data class RectangleExtra(
-    val isFillEnabled: Boolean = false,
+    val isFillEnabled: Boolean,
     val userSelectedFillStyle: RectangleFillStyle,
     val isBorderEnabled: Boolean,
     val userSelectedBorderStyle: StraightStrokeStyle,
-    // TODO: Store dash pattern
-    val dashPattern: StraightStrokeDashPattern = StraightStrokeDashPattern.SOLID
+    val isDashEnabled: Boolean = false,
+    val userDefinedDashPattern: StraightStrokeDashPattern = StraightStrokeDashPattern.SOLID
 ) : ShapeExtra() {
     val fillStyle: RectangleFillStyle
         get() =
@@ -34,11 +34,21 @@ data class RectangleExtra(
                 PredefinedStraightStrokeStyle.NO_STROKE
             }
 
+    val dashPattern: StraightStrokeDashPattern
+        get() =
+            if (isDashEnabled) {
+                userDefinedDashPattern
+            } else {
+                StraightStrokeDashPattern.SOLID
+            }
+
     constructor(serializableExtra: SerializableRectangle.SerializableExtra) : this(
         serializableExtra.isFillEnabled,
         ShapeExtraManager.getRectangleFillStyle(serializableExtra.userSelectedFillStyleId),
         serializableExtra.isBorderEnabled,
-        ShapeExtraManager.getRectangleBorderStyle(serializableExtra.userSelectedBorderStyleId)
+        ShapeExtraManager.getRectangleBorderStyle(serializableExtra.userSelectedBorderStyleId),
+        serializableExtra.isDashPatternEnabled,
+        createDashPatternFromCombinedNumber(serializableExtra.dashPattern)
     )
 
     fun toSerializableExtra(): SerializableRectangle.SerializableExtra =
@@ -46,7 +56,9 @@ data class RectangleExtra(
             isFillEnabled = isFillEnabled,
             userSelectedFillStyleId = userSelectedFillStyle.id,
             isBorderEnabled = isBorderEnabled,
-            userSelectedBorderStyleId = userSelectedBorderStyle.id
+            userSelectedBorderStyleId = userSelectedBorderStyle.id,
+            isDashEnabled,
+            userDefinedDashPattern.toCombinedNumber()
         )
 
     companion object {
@@ -59,5 +71,16 @@ data class RectangleExtra(
                 defaultExtraState.borderStyle
             )
         }
+
+        private fun StraightStrokeDashPattern.toCombinedNumber(): Int =
+            (segment.toInt() shl 16) or (gap.toInt() shl 8) or offset.toInt()
+
+        private fun createDashPatternFromCombinedNumber(
+            combinedNumber: Int
+        ): StraightStrokeDashPattern = StraightStrokeDashPattern(
+            ((combinedNumber shr 16) and 0x00FF).toByte(),
+            ((combinedNumber shr 8) and 0x00FF).toByte(),
+            (combinedNumber and 0x00FF).toByte()
+        )
     }
 }
