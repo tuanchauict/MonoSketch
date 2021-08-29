@@ -30,13 +30,17 @@ data class SerializableRectangle(
     @Serializable
     data class SerializableExtra(
         @SerialName("fe")
-        val isFillEnabled: Boolean = false,
+        val isFillEnabled: Boolean,
         @SerialName("fu")
         val userSelectedFillStyleId: String,
         @SerialName("be")
         val isBorderEnabled: Boolean,
         @SerialName("bu")
-        val userSelectedBorderStyleId: String
+        val userSelectedBorderStyleId: String,
+        @SerialName("de")
+        val isDashPatternEnabled: Boolean,
+        @SerialName("du")
+        val dashPattern: Int
     )
 }
 
