@@ -6,10 +6,10 @@ package mono.shape.extra.manager.model
 class StraightStrokeStyle(
     val id: String,
     val displayName: String,
-    val horizontalCharacter: Char,
-    val verticalCharacter: Char,
-    val upLeft: Char,
+    val horizontal: Char,
+    val vertical: Char,
+    val leftDown: Char,
     val upRight: Char,
-    val downLeft: Char,
+    val leftUp: Char,
     val downRight: Char
 )

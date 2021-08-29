@@ -1,8 +1,10 @@
 package mono.shape.shape.extra
 
 import mono.shape.extra.manager.ShapeExtraManager
-import mono.shape.extra.manager.model.RectangleBorderStyle
 import mono.shape.extra.manager.model.RectangleFillStyle
+import mono.shape.extra.manager.model.StraightStrokeDashPattern
+import mono.shape.extra.manager.model.StraightStrokeStyle
+import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.serialization.SerializableRectangle
 
 /**
@@ -12,7 +14,9 @@ data class RectangleExtra(
     val isFillEnabled: Boolean = false,
     val userSelectedFillStyle: RectangleFillStyle,
     val isBorderEnabled: Boolean,
-    val userSelectedBorderStyle: RectangleBorderStyle
+    val userSelectedBorderStyle: StraightStrokeStyle,
+    // TODO: Store dash pattern
+    val dashPattern: StraightStrokeDashPattern = StraightStrokeDashPattern.SOLID
 ) : ShapeExtra() {
     val fillStyle: RectangleFillStyle
         get() =
@@ -22,12 +26,12 @@ data class RectangleExtra(
                 ShapeExtraManager.RECTANGLE_STYLE_NO_FILLED
             }
 
-    val borderStyle: RectangleBorderStyle
+    val strokeStyle: StraightStrokeStyle
         get() =
             if (isBorderEnabled) {
                 userSelectedBorderStyle
             } else {
-                ShapeExtraManager.RECTANGLE_STYLE_NO_BORDER
+                PredefinedStraightStrokeStyle.NO_STROKE
             }
 
     constructor(serializableExtra: SerializableRectangle.SerializableExtra) : this(

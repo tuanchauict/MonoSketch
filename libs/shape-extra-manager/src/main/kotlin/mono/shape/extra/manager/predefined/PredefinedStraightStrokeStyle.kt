@@ -10,11 +10,11 @@ object PredefinedStraightStrokeStyle {
     val NO_STROKE = StraightStrokeStyle(
         id = "S0",
         displayName = "No Stroke",
-        horizontalCharacter = Characters.HALF_TRANSPARENT_CHAR,
-        verticalCharacter = Characters.HALF_TRANSPARENT_CHAR,
-        upLeft = Characters.HALF_TRANSPARENT_CHAR,
+        horizontal = Characters.HALF_TRANSPARENT_CHAR,
+        vertical = Characters.HALF_TRANSPARENT_CHAR,
+        leftDown = Characters.HALF_TRANSPARENT_CHAR,
         upRight = Characters.HALF_TRANSPARENT_CHAR,
-        downLeft = Characters.HALF_TRANSPARENT_CHAR,
+        leftUp = Characters.HALF_TRANSPARENT_CHAR,
         downRight = Characters.HALF_TRANSPARENT_CHAR
     )
 
@@ -22,32 +22,35 @@ object PredefinedStraightStrokeStyle {
         StraightStrokeStyle(
             id = "S1",
             displayName = "─",
-            horizontalCharacter = '─',
-            verticalCharacter = '│',
-            upLeft = '┐',
+            horizontal = '─',
+            vertical = '│',
+            leftDown = '┐',
             upRight = '┌',
-            downLeft = '┘',
+            leftUp = '┘',
             downRight = '└'
         ),
         StraightStrokeStyle(
             id = "S2",
             displayName = "━",
-            horizontalCharacter = '━',
-            verticalCharacter = '┃',
-            upLeft = '┓',
+            horizontal = '━',
+            vertical = '┃',
+            leftDown = '┓',
             upRight = '┏',
-            downLeft = '┛',
+            leftUp = '┛',
             downRight = '┗'
         ),
         StraightStrokeStyle(
             id = "S3",
             displayName = "═",
-            horizontalCharacter = '═',
-            verticalCharacter = '║',
-            upLeft = '╗',
+            horizontal = '═',
+            vertical = '║',
+            leftDown = '╗',
             upRight = '╔',
-            downLeft = '╝',
+            leftUp = '╝',
             downRight = '╚'
         )
     )
+
+    val PREDEFINED_STYLE_MAP: Map<String, StraightStrokeStyle> =
+        PREDEFINED_STYLES.associateBy { it.id }
 }
