@@ -48,7 +48,7 @@ kotlin {
 
 val ktlint = configurations.create("ktlint")
 dependencies {
-    add("ktlint", "com.pinterest:ktlint:0.41.0")
+    add("ktlint", "com.pinterest:ktlint:0.42.1")
 }
 
 tasks.create("ktlint", JavaExec::class) {
