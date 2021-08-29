@@ -121,7 +121,7 @@ class ShapeToolViewController(
             .map { OptionItem(it.id, it.displayName) }
 
     private fun getBorderOptions(): List<OptionItem> =
-        ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
+        ShapeExtraManager.getAllPredefinedStrokeStyles()
             .map { OptionItem(it.id, it.displayName) }
 
     private fun getHeadOptions(): List<OptionItem> =
@@ -200,7 +200,7 @@ class ShapeToolViewController(
             }
             if (defaultState != null) {
                 val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedRectangleBorderStyles().indexOf(defaultState)
+                    ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
                 Visibility.Visible(
                     ShapeExtraManager.defaultExtraState.isBorderEnabled,
                     selectedFillPosition
@@ -329,8 +329,7 @@ class ShapeToolViewController(
 
     private fun RectangleExtra.toBorderAppearanceVisibilityState(): Visibility {
         val selectedBorderPosition =
-            ShapeExtraManager.getAllPredefinedRectangleBorderStyles()
-                .indexOf(userSelectedBorderStyle)
+            ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedBorderStyle)
         return Visibility.Visible(isBorderEnabled, selectedBorderPosition)
     }
 
@@ -356,7 +355,7 @@ class ShapeToolViewController(
                 it.size > 1 -> TextAlignVisibility.Hide
                 else -> {
                     val text = it.single() as? Text
-                    val editableText = text?.takeIf { it.isTextEditable }
+                    val editableText = text?.takeIf(Text::isTextEditable)
                     editableText?.extra?.textAlign?.let(TextAlignVisibility::Visible)
                 }
             }
