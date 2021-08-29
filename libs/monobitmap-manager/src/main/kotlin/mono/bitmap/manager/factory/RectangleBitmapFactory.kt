@@ -39,9 +39,9 @@ object RectangleBitmapFactory {
         sequenceOf(
             PointChar.point(left, top, strokeStyle.upRight),
             PointChar.horizontalLine(left + 1, right - 1, top, strokeStyle.horizontal),
-            PointChar.point(right, top, strokeStyle.leftDown),
+            PointChar.point(right, top, strokeStyle.downLeft),
             PointChar.verticalLine(right, top + 1, bottom - 1, strokeStyle.vertical),
-            PointChar.point(right, bottom, strokeStyle.leftUp),
+            PointChar.point(right, bottom, strokeStyle.upLeft),
             PointChar.horizontalLine(right - 1, left + 1, bottom, strokeStyle.horizontal),
             PointChar.point(left, bottom, strokeStyle.downRight),
             PointChar.verticalLine(left, bottom - 1, top + 1, strokeStyle.vertical)

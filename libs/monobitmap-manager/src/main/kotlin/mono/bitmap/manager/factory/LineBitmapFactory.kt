@@ -3,39 +3,27 @@ package mono.bitmap.manager.factory
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.shape.extra.manager.model.AnchorChar
+import mono.shape.extra.manager.model.StraightStrokeStyle
 import mono.shape.shape.extra.LineExtra
-import kotlin.math.max
-import kotlin.math.min
+import kotlin.math.abs
 
 /**
  * A drawable to draw Line shape to bitmap.
  */
 object LineBitmapFactory {
+
     fun toBitmap(
         jointPoints: List<Point>,
-        lineExtra: LineExtra,
+        lineExtra: LineExtra
     ): MonoBitmap {
         val bitmapBuilder = BitmapBuilderDecoration.getInstance(jointPoints)
-        if (jointPoints.size < 2) {
-            return bitmapBuilder.toBitmap()
-        }
 
-        for (i in 0 until jointPoints.lastIndex) {
-            val point0 = jointPoints[i]
-            val point1 = jointPoints[i + 1]
-
-            val char = if (isHorizontal(point0, point1)) '─' else '│'
-            bitmapBuilder.fill(point0, point1, char)
-        }
-
-        for (i in 1 until jointPoints.lastIndex) {
-            val point0 = jointPoints[i - 1]
-            val point1 = jointPoints[i]
-            val point2 = jointPoints[i + 1]
-
-            val rightAngle = getRightAngle(point0, point1, point2) ?: continue
-            bitmapBuilder.put(point1.row, point1.column, rightAngle.char)
-        }
+        val dashPattern = lineExtra.dashPattern
+        createCharPoints(jointPoints, lineExtra.strokeStyle)
+            .forEachIndexed { index, pointChar ->
+                val char = if (dashPattern.isGap(index)) ' ' else pointChar.char
+                bitmapBuilder.put(pointChar.top, pointChar.left, char)
+            }
 
         val startAnchor = lineExtra.startAnchor
         if (startAnchor != null) {
@@ -57,19 +45,79 @@ object LineBitmapFactory {
         return bitmapBuilder.toBitmap()
     }
 
-    private fun getRightAngle(point0: Point, point1: Point, point2: Point): RightAngle? {
-        if (isHorizontal(point0, point1) == isHorizontal(point1, point2)) {
-            // Same line, ignore
-            return null
+    private fun createCharPoints(
+        jointPoints: List<Point>,
+        strokeStyle: StraightStrokeStyle
+    ): Sequence<PointChar> {
+        val lines =
+            jointPoints.zipWithNext().takeIf { it.isNotEmpty() } ?: return emptySequence()
+
+        val firstPoint = lines.first().let { (p0, p1) ->
+            val char = if (isHorizontal(p0, p1)) strokeStyle.horizontal else strokeStyle.vertical
+            PointChar.point(p0.left, p0.top, char)
+        }
+
+        val charPoints = lines.asSequence()
+            .zipWithNext { (p0, p1), (_, p2) -> Triple(p0, p1, p2) }
+            .flatMap { (p0, p1, p2) ->
+                val line = createLineChar(p0, p1, strokeStyle)
+
+                val connectChar = strokeStyle.getRightAngleChar(p0, p1, p2)
+                val connectPoint = PointChar.point(p1.left, p1.top, connectChar)
+                line + connectPoint
+            }
+
+        val lastLine = lines.last()
+        val lastLinePoint = createLineChar(lastLine.first, lastLine.second, strokeStyle)
+        val lastPoint = lastLine.let { (p0, p1) ->
+            val char = if (isHorizontal(p0, p1)) strokeStyle.horizontal else strokeStyle.vertical
+            PointChar.point(p1.left, p1.top, char)
+        }
+        return firstPoint + charPoints + lastLinePoint + lastPoint
+    }
+
+    private fun createLineChar(
+        p0: Point,
+        p1: Point,
+        strokeStyle: StraightStrokeStyle
+    ): Sequence<PointChar> {
+        val isHorizontal = isHorizontal(p0, p1)
+        val isValid = if (isHorizontal) abs(p0.left - p1.left) > 1 else abs(p0.top - p1.top) > 1
+        if (!isValid) {
+            return emptySequence()
+        }
+
+        return if (isHorizontal) {
+            val (begin, end) = adjustBeginEnd(p0.left, p1.left)
+            PointChar.horizontalLine(begin, end, p0.top, strokeStyle.horizontal)
+        } else {
+            val (begin, end) = adjustBeginEnd(p0.top, p1.top)
+            PointChar.verticalLine(p0.left, begin, end, strokeStyle.vertical)
+        }
+    }
+
+    private fun adjustBeginEnd(begin: Int, end: Int): Pair<Int, Int> =
+        if (begin < end) (begin + 1 to end - 1) else (begin - 1 to end + 1)
+
+    private fun StraightStrokeStyle.getRightAngleChar(
+        point0: Point,
+        point1: Point,
+        point2: Point
+    ): Char {
+        val isHorizontal0 = isHorizontal(point0, point1)
+        val isHorizontal1 = isHorizontal(point1, point2)
+        if (isHorizontal0 == isHorizontal1) {
+            // Same line
+            return if (isHorizontal0) horizontal else vertical
         }
 
         val isLeft = point0.left < point1.left || point2.left < point1.left
         val isUpper = point0.top < point1.top || point2.top < point1.top
 
         return if (isLeft) {
-            if (isUpper) RightAngle.UPPER_LEFT else RightAngle.LOWER_LEFT
+            if (isUpper) upLeft else downLeft
         } else {
-            if (isUpper) RightAngle.UPPER_RIGHT else RightAngle.LOWER_RIGHT
+            if (isUpper) downRight else upRight
         }
     }
 
@@ -99,22 +147,6 @@ object LineBitmapFactory {
         fun put(row: Int, column: Int, char: Char) =
             builder.put(row - row0, column - column0, char)
 
-        /**
-         * Fills the bound created by [point1] and [point2] including the edge with [char].
-         */
-        fun fill(point1: Point, point2: Point, char: Char) {
-            val left = min(point1.left, point2.left)
-            val right = max(point1.left, point2.left)
-            val top = min(point1.top, point2.top)
-            val bottom = max(point1.top, point2.top)
-
-            for (row in top..bottom) {
-                for (column in left..right) {
-                    put(row, column, char)
-                }
-            }
-        }
-
         fun toBitmap(): MonoBitmap = builder.toBitmap()
 
         companion object {
@@ -130,12 +162,5 @@ object LineBitmapFactory {
                 return BitmapBuilderDecoration(boundTop, boundLeft, boundWidth, boundHeight)
             }
         }
-    }
-
-    private enum class RightAngle(val char: Char) {
-        UPPER_LEFT('┘'),
-        LOWER_LEFT('┐'),
-        UPPER_RIGHT('└'),
-        LOWER_RIGHT('┌');
     }
 }
