@@ -120,4 +120,3 @@ data class SerializableGroup(
     @SerialName("ss")
     val shapes: List<AbstractSerializableShape>
 ) : AbstractSerializableShape()
-
