@@ -10,7 +10,7 @@ version = "0.0.1"
 
 allprojects {
     ext {
-        set("compilerType", KotlinJsCompilerType.LEGACY)
+        set("compilerType", KotlinJsCompilerType.IR)
     }
 }
 
@@ -22,7 +22,7 @@ dependencies {
     implementation(project(":app"))
     implementation(project(":lifecycle"))
 
-    testImplementation(kotlin("test-js"))
+    testImplementation(libs.kotlin.test.js)
 }
 
 val compilerType: KotlinJsCompilerType by ext
@@ -46,17 +46,11 @@ kotlin {
     }
 }
 
-val ktlint = configurations.create("ktlint")
-dependencies {
-    add("ktlint", "com.pinterest:ktlint:0.41.0")
+// TODO: Remove this. This is a workaround for running on browser for debugging.
+afterEvaluate {
+    rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
+        versions.webpackDevServer.version = "4.0.0"
+    }
 }
 
-tasks.create("ktlint", JavaExec::class) {
-    description = "Check Kotlin code style."
-    main = "com.pinterest.ktlint.Main"
-    classpath = ktlint
-    args("**/*.kt")
-    // to generate report in checkstyle format prepend following args:
-    // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
-    // see https://github.com/pinterest/ktlint#usage for more
-}
+apply(from = "ktlint.gradle")

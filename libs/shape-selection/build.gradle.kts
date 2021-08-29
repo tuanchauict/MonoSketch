@@ -12,7 +12,7 @@ dependencies {
     implementation(project(":shape"))
 
     implementation(kotlin("stdlib-js"))
-    testImplementation(kotlin("test-js"))
+    testImplementation(libs.kotlin.test.js)
 }
 
 val compilerType: org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType by ext
