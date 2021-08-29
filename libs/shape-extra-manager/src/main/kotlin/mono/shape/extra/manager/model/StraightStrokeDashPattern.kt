@@ -17,7 +17,17 @@ data class StraightStrokeDashPattern(val segment: Byte, val gap: Byte, val offse
     fun isGap(index: Int): Boolean =
         if (adjustedGap != 0) (index + adjustedOffset) % totalLength >= adjustedSegment else false
 
+    fun toSerializableValue(): Int =
+        (segment.toInt() shl 16) or (gap.toInt() shl 8) or offset.toInt()
+
     companion object {
         val SOLID = StraightStrokeDashPattern(segment = 1, gap = 0, offset = 0)
+
+        fun fromSerializableValue(value: Int): StraightStrokeDashPattern =
+            StraightStrokeDashPattern(
+                ((value shr 16) and 0x00FF).toByte(),
+                ((value shr 8) and 0x00FF).toByte(),
+                (value and 0x00FF).toByte()
+            )
     }
 }

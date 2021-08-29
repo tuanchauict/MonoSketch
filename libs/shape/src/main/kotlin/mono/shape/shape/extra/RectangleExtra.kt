@@ -47,8 +47,8 @@ data class RectangleExtra(
         ShapeExtraManager.getRectangleFillStyle(serializableExtra.userSelectedFillStyleId),
         serializableExtra.isBorderEnabled,
         ShapeExtraManager.getRectangleBorderStyle(serializableExtra.userSelectedBorderStyleId),
-        serializableExtra.isDashPatternEnabled,
-        createDashPatternFromCombinedNumber(serializableExtra.dashPattern)
+        serializableExtra.isDashEnabled,
+        StraightStrokeDashPattern.fromSerializableValue(serializableExtra.dashPattern)
     )
 
     fun toSerializableExtra(): SerializableRectangle.SerializableExtra =
@@ -57,8 +57,8 @@ data class RectangleExtra(
             userSelectedFillStyleId = userSelectedFillStyle.id,
             isBorderEnabled = isBorderEnabled,
             userSelectedBorderStyleId = userSelectedBorderStyle.id,
-            isDashEnabled,
-            userDefinedDashPattern.toCombinedNumber()
+            isDashEnabled = isDashEnabled,
+            dashPattern = userDefinedDashPattern.toSerializableValue()
         )
 
     companion object {
@@ -73,16 +73,5 @@ data class RectangleExtra(
                 defaultExtraState.dashPattern
             )
         }
-
-        private fun StraightStrokeDashPattern.toCombinedNumber(): Int =
-            (segment.toInt() shl 16) or (gap.toInt() shl 8) or offset.toInt()
-
-        private fun createDashPatternFromCombinedNumber(
-            combinedNumber: Int
-        ): StraightStrokeDashPattern = StraightStrokeDashPattern(
-            ((combinedNumber shr 16) and 0x00FF).toByte(),
-            ((combinedNumber shr 8) and 0x00FF).toByte(),
-            (combinedNumber and 0x00FF).toByte()
-        )
     }
 }
