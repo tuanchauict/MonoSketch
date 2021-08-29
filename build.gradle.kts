@@ -46,6 +46,13 @@ kotlin {
     }
 }
 
+// TODO: Remove this. This is a workaround for running on browser for debugging.
+afterEvaluate {
+    rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
+        versions.webpackDevServer.version = "4.0.0"
+    }
+}
+
 val ktlint = configurations.create("ktlint")
 dependencies {
     add("ktlint", "com.pinterest:ktlint:0.42.1")
