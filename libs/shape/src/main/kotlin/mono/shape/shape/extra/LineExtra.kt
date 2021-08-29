@@ -2,6 +2,9 @@ package mono.shape.shape.extra
 
 import mono.shape.extra.manager.ShapeExtraManager
 import mono.shape.extra.manager.model.AnchorChar
+import mono.shape.extra.manager.model.StraightStrokeDashPattern
+import mono.shape.extra.manager.model.StraightStrokeStyle
+import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.serialization.SerializableLine
 
 /**
@@ -11,13 +14,20 @@ data class LineExtra(
     val isStartAnchorEnabled: Boolean = false,
     val userSelectedStartAnchor: AnchorChar,
     val isEndAnchorEnabled: Boolean = false,
-    val userSelectedEndAnchor: AnchorChar
+    val userSelectedEndAnchor: AnchorChar,
+    val isDashEnabled: Boolean = false,
+    val userDefinedDashPattern: StraightStrokeDashPattern = StraightStrokeDashPattern.SOLID
 ) : ShapeExtra() {
 
     val startAnchor: AnchorChar?
         get() = userSelectedStartAnchor.takeIf { isStartAnchorEnabled }
     val endAnchor: AnchorChar?
         get() = userSelectedEndAnchor.takeIf { isEndAnchorEnabled }
+
+    val strokeStyle: StraightStrokeStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLES[0]
+
+    val dashPattern: StraightStrokeDashPattern
+        get() = if (isDashEnabled) userDefinedDashPattern else StraightStrokeDashPattern.SOLID
 
     constructor(serializableExtra: SerializableLine.SerializableExtra) : this(
         serializableExtra.isStartAnchorEnabled,

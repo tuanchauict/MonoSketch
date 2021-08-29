@@ -12,9 +12,9 @@ object PredefinedStraightStrokeStyle {
         displayName = "No Stroke",
         horizontal = Characters.HALF_TRANSPARENT_CHAR,
         vertical = Characters.HALF_TRANSPARENT_CHAR,
-        leftDown = Characters.HALF_TRANSPARENT_CHAR,
+        downLeft = Characters.HALF_TRANSPARENT_CHAR,
         upRight = Characters.HALF_TRANSPARENT_CHAR,
-        leftUp = Characters.HALF_TRANSPARENT_CHAR,
+        upLeft = Characters.HALF_TRANSPARENT_CHAR,
         downRight = Characters.HALF_TRANSPARENT_CHAR
     )
 
@@ -24,9 +24,9 @@ object PredefinedStraightStrokeStyle {
             displayName = "─",
             horizontal = '─',
             vertical = '│',
-            leftDown = '┐',
+            downLeft = '┐',
             upRight = '┌',
-            leftUp = '┘',
+            upLeft = '┘',
             downRight = '└'
         ),
         StraightStrokeStyle(
@@ -34,9 +34,9 @@ object PredefinedStraightStrokeStyle {
             displayName = "━",
             horizontal = '━',
             vertical = '┃',
-            leftDown = '┓',
+            downLeft = '┓',
             upRight = '┏',
-            leftUp = '┛',
+            upLeft = '┛',
             downRight = '┗'
         ),
         StraightStrokeStyle(
@@ -44,9 +44,9 @@ object PredefinedStraightStrokeStyle {
             displayName = "═",
             horizontal = '═',
             vertical = '║',
-            leftDown = '╗',
+            downLeft = '╗',
             upRight = '╔',
-            leftUp = '╝',
+            upLeft = '╝',
             downRight = '╚'
         )
     )
