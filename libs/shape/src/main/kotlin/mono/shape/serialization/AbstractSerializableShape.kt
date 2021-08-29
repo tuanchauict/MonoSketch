@@ -38,7 +38,7 @@ data class SerializableRectangle(
         @SerialName("bu")
         val userSelectedBorderStyleId: String,
         @SerialName("de")
-        val isDashPatternEnabled: Boolean,
+        val isDashEnabled: Boolean,
         @SerialName("du")
         val dashPattern: Int
     )
@@ -100,7 +100,13 @@ data class SerializableLine(
         @SerialName("aee")
         val isEndAnchorEnabled: Boolean = false,
         @SerialName("aeu")
-        val userSelectedEndAnchorId: String
+        val userSelectedEndAnchorId: String,
+        @SerialName("s")
+        val strokeStyleId: String,
+        @SerialName("de")
+        val isDashEnabled: Boolean,
+        @SerialName("du")
+        val dashPattern: Int
     )
 }
 
