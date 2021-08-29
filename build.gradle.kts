@@ -10,7 +10,7 @@ version = "0.0.1"
 
 allprojects {
     ext {
-        set("compilerType", KotlinJsCompilerType.LEGACY)
+        set("compilerType", KotlinJsCompilerType.IR)
     }
 }
 
