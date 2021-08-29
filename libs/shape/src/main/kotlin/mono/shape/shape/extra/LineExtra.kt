@@ -38,10 +38,13 @@ data class LineExtra(
 
     fun toSerializableExtra(): SerializableLine.SerializableExtra =
         SerializableLine.SerializableExtra(
-            isStartAnchorEnabled,
-            userSelectedStartAnchor.id,
-            isEndAnchorEnabled,
-            userSelectedEndAnchor.id
+            isStartAnchorEnabled = isStartAnchorEnabled,
+            userSelectedStartAnchorId = userSelectedStartAnchor.id,
+            isEndAnchorEnabled = isEndAnchorEnabled,
+            userSelectedEndAnchorId = userSelectedEndAnchor.id,
+            strokeStyleId = strokeStyle.id,
+            isDashEnabled = isDashEnabled,
+            dashPattern = dashPattern.toSerializableValue()
         )
 
     companion object {
