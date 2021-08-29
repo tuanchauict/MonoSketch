@@ -17,7 +17,7 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
 
-    testImplementation(kotlin("test-js"))
+    testImplementation(libs.kotlin.test.js)
 }
 
 val compilerType: org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType by ext

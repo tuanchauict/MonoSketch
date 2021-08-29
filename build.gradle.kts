@@ -22,7 +22,7 @@ dependencies {
     implementation(project(":app"))
     implementation(project(":lifecycle"))
 
-    testImplementation(kotlin("test-js"))
+    testImplementation(libs.kotlin.test.js)
 }
 
 val compilerType: KotlinJsCompilerType by ext
