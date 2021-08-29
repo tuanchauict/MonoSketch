@@ -15,8 +15,8 @@ data class RectangleExtra(
     val userSelectedFillStyle: RectangleFillStyle,
     val isBorderEnabled: Boolean,
     val userSelectedBorderStyle: StraightStrokeStyle,
-    val isDashEnabled: Boolean = false,
-    val userDefinedDashPattern: StraightStrokeDashPattern = StraightStrokeDashPattern.SOLID
+    val isDashEnabled: Boolean,
+    val userDefinedDashPattern: StraightStrokeDashPattern
 ) : ShapeExtra() {
     val fillStyle: RectangleFillStyle
         get() =
@@ -68,7 +68,9 @@ data class RectangleExtra(
                 defaultExtraState.isFillEnabled,
                 defaultExtraState.fillStyle,
                 defaultExtraState.isBorderEnabled,
-                defaultExtraState.borderStyle
+                defaultExtraState.borderStyle,
+                defaultExtraState.isDashEnabled,
+                defaultExtraState.dashPattern
             )
         }
 

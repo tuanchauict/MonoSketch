@@ -4,6 +4,7 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.extra.manager.model.AnchorChar
 import mono.shape.extra.manager.model.RectangleFillStyle
+import mono.shape.extra.manager.model.StraightStrokeDashPattern
 import mono.shape.extra.manager.model.StraightStrokeStyle
 import mono.shape.extra.manager.model.TextAlign
 import mono.shape.extra.manager.predefined.PredefinedAnchorChar
@@ -23,6 +24,8 @@ object ShapeExtraManager {
             isBorderEnabled = true,
             borderStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLES[0],
             isStartHeadAnchorCharEnabled = false,
+            isDashEnabled = false,
+            dashPattern = StraightStrokeDashPattern.SOLID,
             startHeadAnchorChar = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
             isEndHeadAnchorCharEnabled = false,
             endHeadAnchorChar = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
@@ -38,6 +41,8 @@ object ShapeExtraManager {
         fillStyleId: String? = null,
         isBorderEnabled: Boolean? = null,
         borderStyleId: String? = null,
+        isDashEnabled: Boolean? = null,
+        dashPattern: StraightStrokeDashPattern? = null,
         isStartHeadAnchorCharEnabled: Boolean? = null,
         startHeadAnchorCharId: String? = null,
         isEndHeadAnchorCharEnabled: Boolean? = null,
@@ -54,6 +59,8 @@ object ShapeExtraManager {
             fillStyle = getRectangleFillStyle(fillStyleId),
             isBorderEnabled = isBorderEnabled ?: defaultExtraState.isBorderEnabled,
             borderStyle = getRectangleBorderStyle(borderStyleId),
+            isDashEnabled = isDashEnabled ?: defaultExtraState.isDashEnabled,
+            dashPattern = dashPattern ?: defaultExtraState.dashPattern,
             isStartHeadAnchorCharEnabled = isStartHeadAnchorCharEnabled
                 ?: defaultExtraState.isStartHeadAnchorCharEnabled,
             startHeadAnchorChar = getStartHeadAnchorChar(startHeadAnchorCharId),
@@ -99,6 +106,8 @@ object ShapeExtraManager {
         val fillStyle: RectangleFillStyle,
         val isBorderEnabled: Boolean,
         val borderStyle: StraightStrokeStyle,
+        val isDashEnabled: Boolean,
+        val dashPattern: StraightStrokeDashPattern,
         val isStartHeadAnchorCharEnabled: Boolean,
         val startHeadAnchorChar: AnchorChar,
         val isEndHeadAnchorCharEnabled: Boolean,
