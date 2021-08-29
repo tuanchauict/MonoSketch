@@ -5,7 +5,6 @@ import mono.graphics.geo.Point
 import mono.shape.extra.manager.model.AnchorChar
 import mono.shape.extra.manager.model.StraightStrokeStyle
 import mono.shape.shape.extra.LineExtra
-import kotlin.math.abs
 
 /**
  * A drawable to draw Line shape to bitmap.
@@ -64,6 +63,7 @@ object LineBitmapFactory {
 
                 val connectChar = strokeStyle.getRightAngleChar(p0, p1, p2)
                 val connectPoint = PointChar.point(p1.left, p1.top, connectChar)
+
                 line + connectPoint
             }
 
@@ -80,24 +80,11 @@ object LineBitmapFactory {
         p0: Point,
         p1: Point,
         strokeStyle: StraightStrokeStyle
-    ): Sequence<PointChar> {
-        val isHorizontal = isHorizontal(p0, p1)
-        val isValid = if (isHorizontal) abs(p0.left - p1.left) > 1 else abs(p0.top - p1.top) > 1
-        if (!isValid) {
-            return emptySequence()
-        }
-
-        return if (isHorizontal) {
-            val (begin, end) = adjustBeginEnd(p0.left, p1.left)
-            PointChar.horizontalLine(begin, end, p0.top, strokeStyle.horizontal)
-        } else {
-            val (begin, end) = adjustBeginEnd(p0.top, p1.top)
-            PointChar.verticalLine(p0.left, begin, end, strokeStyle.vertical)
-        }
+    ): Sequence<PointChar> = if (isHorizontal(p0, p1)) {
+        PointChar.horizontalLine(p0.left, p1.left, p0.top, strokeStyle.horizontal)
+    } else {
+        PointChar.verticalLine(p0.left, p0.top, p1.top, strokeStyle.vertical)
     }
-
-    private fun adjustBeginEnd(begin: Int, end: Int): Pair<Int, Int> =
-        if (begin < end) (begin + 1 to end - 1) else (begin - 1 to end + 1)
 
     private fun StraightStrokeStyle.getRightAngleChar(
         point0: Point,
