@@ -71,5 +71,4 @@ class StraightStrokeDashPatternTest {
         assertTrue(pattern.isGap(4))
         assertFalse(pattern.isGap(5))
     }
-
 }
