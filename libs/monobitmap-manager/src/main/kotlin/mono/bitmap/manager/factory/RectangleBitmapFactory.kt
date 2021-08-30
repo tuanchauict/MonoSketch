@@ -2,9 +2,9 @@ package mono.bitmap.manager.factory
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Size
-import mono.shape.extra.manager.model.StraightStrokeDashPattern
-import mono.shape.extra.manager.model.StraightStrokeStyle
-import mono.shape.shape.extra.RectangleExtra
+import mono.shape.extra.style.StraightStrokeStyle
+import mono.shape.extra.RectangleExtra
+import mono.shape.extra.style.StraightStrokeDashPattern
 
 object RectangleBitmapFactory {
 

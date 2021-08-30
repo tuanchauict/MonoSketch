@@ -1,12 +1,12 @@
-package mono.shape.extra.manager
+package mono.shape
 
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
-import mono.shape.extra.manager.model.AnchorChar
-import mono.shape.extra.manager.model.RectangleFillStyle
-import mono.shape.extra.manager.model.StraightStrokeDashPattern
-import mono.shape.extra.manager.model.StraightStrokeStyle
-import mono.shape.extra.manager.model.TextAlign
+import mono.shape.extra.style.AnchorChar
+import mono.shape.extra.style.RectangleFillStyle
+import mono.shape.extra.style.StraightStrokeDashPattern
+import mono.shape.extra.style.StraightStrokeStyle
+import mono.shape.extra.style.TextAlign
 import mono.shape.extra.manager.predefined.PredefinedAnchorChar
 import mono.shape.extra.manager.predefined.PredefinedRectangleFillStyle
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle

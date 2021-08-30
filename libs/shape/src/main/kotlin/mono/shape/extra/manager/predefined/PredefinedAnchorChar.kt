@@ -1,6 +1,6 @@
 package mono.shape.extra.manager.predefined
 
-import mono.shape.extra.manager.model.AnchorChar
+import mono.shape.extra.style.AnchorChar
 
 /**
  * An object for listing all predefined anchor chars.

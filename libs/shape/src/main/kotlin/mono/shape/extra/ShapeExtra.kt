@@ -1,4 +1,4 @@
-package mono.shape.shape.extra
+package mono.shape.extra
 
 /**
  * An sealed interface for extra attributes for shapes

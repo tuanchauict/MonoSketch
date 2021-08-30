@@ -4,8 +4,8 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableRectangle
-import mono.shape.shape.extra.RectangleExtra
-import mono.shape.shape.extra.ShapeExtra
+import mono.shape.extra.RectangleExtra
+import mono.shape.extra.ShapeExtra
 
 /**
  * A rectangle shape.

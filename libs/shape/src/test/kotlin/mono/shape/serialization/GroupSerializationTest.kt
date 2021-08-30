@@ -4,7 +4,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mono.graphics.geo.Rect
-import mono.shape.shape.extra.RectangleExtra
+import mono.shape.extra.RectangleExtra
 import kotlin.test.Test
 
 class GroupSerializationTest {

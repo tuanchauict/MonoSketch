@@ -1,4 +1,4 @@
-package mono.shape.extra.manager.model
+package mono.shape.extra.style
 
 import kotlin.test.Test
 import kotlin.test.assertFalse

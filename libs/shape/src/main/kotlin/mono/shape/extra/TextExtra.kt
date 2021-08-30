@@ -1,7 +1,7 @@
-package mono.shape.shape.extra
+package mono.shape.extra
 
-import mono.shape.extra.manager.ShapeExtraManager
-import mono.shape.extra.manager.model.TextAlign
+import mono.shape.ShapeExtraManager
+import mono.shape.extra.style.TextAlign
 import mono.shape.serialization.SerializableText
 
 /**

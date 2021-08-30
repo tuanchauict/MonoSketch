@@ -1,11 +1,11 @@
-package mono.shape.shape.extra
+package mono.shape.extra
 
-import mono.shape.extra.manager.ShapeExtraManager
-import mono.shape.extra.manager.model.AnchorChar
-import mono.shape.extra.manager.model.StraightStrokeDashPattern
-import mono.shape.extra.manager.model.StraightStrokeStyle
+import mono.shape.ShapeExtraManager
+import mono.shape.extra.style.AnchorChar
+import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.serialization.SerializableLine
+import mono.shape.extra.style.StraightStrokeDashPattern
 
 /**
  * A [ShapeExtra] for [mono.shape.shape.Line].

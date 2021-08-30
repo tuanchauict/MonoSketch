@@ -10,14 +10,14 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
 import mono.livedata.map
-import mono.shape.extra.manager.ShapeExtraManager
+import mono.shape.ShapeExtraManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.shape.extra.RectangleExtra
+import mono.shape.extra.RectangleExtra
 import org.w3c.dom.HTMLElement
 
 class ShapeToolViewController(

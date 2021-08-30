@@ -1,4 +1,4 @@
-package mono.shape.extra.manager.model
+package mono.shape.extra.style
 
 /**
  * A model for defining text aligns.

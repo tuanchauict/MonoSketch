@@ -5,8 +5,8 @@ import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableText
-import mono.shape.shape.extra.ShapeExtra
-import mono.shape.shape.extra.TextExtra
+import mono.shape.extra.ShapeExtra
+import mono.shape.extra.TextExtra
 import kotlin.math.max
 
 /**

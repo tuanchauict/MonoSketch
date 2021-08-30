@@ -1,4 +1,4 @@
-package mono.shape.extra.manager.model
+package mono.shape.extra.style
 
 import mono.graphics.bitmap.drawable.Drawable
 

@@ -2,7 +2,7 @@ package mono.shape.extra.manager.predefined
 
 import mono.common.Characters
 import mono.graphics.bitmap.drawable.NinePatchDrawable
-import mono.shape.extra.manager.model.RectangleBorderStyle
+import mono.shape.extra.style.RectangleBorderStyle
 
 /**
  * An object for listing all predefined rectangle border styles.

@@ -1,7 +1,7 @@
 package mono.shape.extra.manager.predefined
 
 import mono.common.Characters
-import mono.shape.extra.manager.model.StraightStrokeStyle
+import mono.shape.extra.style.StraightStrokeStyle
 
 /**
  * An object for listing all predefined [mono.shape.extra.manager.model.StraightStrokeStyle]

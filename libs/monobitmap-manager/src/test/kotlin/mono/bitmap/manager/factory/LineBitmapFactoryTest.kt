@@ -1,8 +1,8 @@
 package mono.bitmap.manager.factory
 
 import mono.graphics.geo.Point
-import mono.shape.extra.manager.model.AnchorChar
-import mono.shape.shape.extra.LineExtra
+import mono.shape.extra.style.AnchorChar
+import mono.shape.extra.LineExtra
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

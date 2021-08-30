@@ -5,8 +5,8 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableLine
-import mono.shape.shape.extra.LineExtra
-import mono.shape.shape.extra.ShapeExtra
+import mono.shape.extra.LineExtra
+import mono.shape.extra.ShapeExtra
 import mono.shape.shape.line.LineHelper
 
 /**

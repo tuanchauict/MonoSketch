@@ -1,4 +1,4 @@
-package mono.shape.extra.manager.model
+package mono.shape.extra.style
 
 /**
  * A class for defining a stroke style of straight line.

@@ -13,8 +13,8 @@ import mono.shape.command.ChangeBound
 import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.MakeTextEditable
-import mono.shape.extra.manager.ShapeExtraManager
-import mono.shape.extra.manager.model.TextAlign
+import mono.shape.ShapeExtraManager
+import mono.shape.extra.style.TextAlign
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.AbstractShape
