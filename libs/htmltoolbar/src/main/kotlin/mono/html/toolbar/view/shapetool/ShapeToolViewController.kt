@@ -238,7 +238,7 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultExtraState.startHeadAnchorChar
+                    ShapeExtraManager.defaultLineExtra.userSelectedStartAnchor
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
@@ -247,7 +247,7 @@ class ShapeToolViewController(
                 val selectedStartHeaderPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isStartHeadAnchorCharEnabled,
+                    ShapeExtraManager.defaultLineExtra.isStartAnchorEnabled,
                     selectedStartHeaderPosition
                 )
             } else {
@@ -283,7 +283,7 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultExtraState.endHeadAnchorChar
+                    ShapeExtraManager.defaultLineExtra.userSelectedEndAnchor
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
@@ -292,7 +292,7 @@ class ShapeToolViewController(
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isEndHeadAnchorCharEnabled,
+                    ShapeExtraManager.defaultLineExtra.isEndAnchorEnabled,
                     selectedFillPosition
                 )
             } else {

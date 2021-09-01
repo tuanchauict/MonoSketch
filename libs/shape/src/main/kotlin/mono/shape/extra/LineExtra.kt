@@ -46,16 +46,4 @@ data class LineExtra(
             isDashEnabled = isDashEnabled,
             dashPattern = dashPattern.toSerializableValue()
         )
-
-    companion object {
-        fun createDefault(): LineExtra {
-            val defaultExtraState = ShapeExtraManager.defaultExtraState
-            return LineExtra(
-                defaultExtraState.isStartHeadAnchorCharEnabled,
-                defaultExtraState.startHeadAnchorChar,
-                defaultExtraState.isEndHeadAnchorCharEnabled,
-                defaultExtraState.endHeadAnchorChar
-            )
-        }
-    }
 }
