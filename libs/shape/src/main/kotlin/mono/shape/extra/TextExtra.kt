@@ -37,7 +37,7 @@ data class TextExtra(
 
         fun withDefault(): TextExtra = TextExtra(
             boundExtra = RectangleExtra.withDefault(),
-            textAlign = ShapeExtraManager.defaultExtraState.textAlign
+            textAlign = ShapeExtraManager.defaultTextAlign
         )
     }
 }

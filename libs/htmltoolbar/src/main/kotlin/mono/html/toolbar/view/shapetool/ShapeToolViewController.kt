@@ -362,7 +362,7 @@ class ShapeToolViewController(
         }
         val defaultTextAlignLiveData = retainableActionTypeLiveData.map {
             if (it == RetainableActionType.ADD_TEXT) {
-                TextAlignVisibility.Visible(ShapeExtraManager.defaultExtraState.textAlign)
+                TextAlignVisibility.Visible(ShapeExtraManager.defaultTextAlign)
             } else {
                 TextAlignVisibility.Hide
             }

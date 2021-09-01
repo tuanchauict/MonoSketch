@@ -28,6 +28,10 @@ object ShapeExtraManager {
     )
         private set
 
+    var defaultTextAlign: TextAlign =
+        TextAlign(TextAlign.HorizontalAlign.MIDDLE, TextAlign.VerticalAlign.MIDDLE)
+        private set
+
     var defaultExtraState: DefaultExtraState =
         DefaultExtraState(
             isFillEnabled = false,
@@ -36,7 +40,6 @@ object ShapeExtraManager {
             borderStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLES[0],
             isDashEnabled = false,
             dashPattern = StraightStrokeDashPattern.SOLID,
-            textAlign = TextAlign(TextAlign.HorizontalAlign.MIDDLE, TextAlign.VerticalAlign.MIDDLE)
         )
         private set
 
@@ -62,18 +65,13 @@ object ShapeExtraManager {
         textHorizontalAlign: TextAlign.HorizontalAlign? = null,
         textVerticalAlign: TextAlign.VerticalAlign? = null
     ) {
-        val newTextHorizontalAlign =
-            textHorizontalAlign ?: defaultExtraState.textAlign.horizontalAlign
-        val newTextVerticalAlign =
-            textVerticalAlign ?: defaultExtraState.textAlign.verticalAlign
         defaultExtraState = DefaultExtraState(
             isFillEnabled = isFillEnabled ?: defaultExtraState.isFillEnabled,
             fillStyle = getRectangleFillStyle(fillStyleId),
             isBorderEnabled = isBorderEnabled ?: defaultExtraState.isBorderEnabled,
             borderStyle = getRectangleBorderStyle(borderStyleId),
             isDashEnabled = isDashEnabled ?: defaultExtraState.isDashEnabled,
-            dashPattern = dashPattern ?: defaultExtraState.dashPattern,
-            textAlign = TextAlign(newTextHorizontalAlign, newTextVerticalAlign)
+            dashPattern = dashPattern ?: defaultExtraState.dashPattern
         )
 
         defaultLineExtra = LineExtra(
@@ -82,6 +80,11 @@ object ShapeExtraManager {
             userSelectedStartAnchor = getStartHeadAnchorChar(startHeadAnchorCharId),
             isEndAnchorEnabled = isEndHeadAnchorCharEnabled ?: defaultLineExtra.isEndAnchorEnabled,
             userSelectedEndAnchor = getEndHeadAnchorChar(endHeadAnchorCharId)
+        )
+
+        defaultTextAlign = TextAlign(
+            textHorizontalAlign ?: defaultTextAlign.horizontalAlign,
+            textVerticalAlign ?: defaultTextAlign.verticalAlign
         )
 
         defaultExtraStateUpdateMutableLiveData.value = Unit
@@ -122,7 +125,6 @@ object ShapeExtraManager {
         val isBorderEnabled: Boolean,
         val borderStyle: StraightStrokeStyle,
         val isDashEnabled: Boolean,
-        val dashPattern: StraightStrokeDashPattern,
-        val textAlign: TextAlign
+        val dashPattern: StraightStrokeDashPattern
     )
 }
