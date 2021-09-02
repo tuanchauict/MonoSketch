@@ -21,7 +21,7 @@ import org.w3c.dom.HTMLElement
 
 class ShapeToolViewController(
     lifecycleOwner: LifecycleOwner,
-    controller: HTMLElement,
+    container: HTMLElement,
     actionManager: ActionManager,
     selectedShapesLiveData: LiveData<Set<AbstractShape>>,
     shapeManagerVersionLiveData: LiveData<Int>
@@ -57,18 +57,18 @@ class ShapeToolViewController(
     init {
         ReorderSectionViewController(
             lifecycleOwner,
-            controller,
+            container,
             singleShapeLiveData,
             actionManager::setOneTimeAction
         )
         TransformToolViewController(
             lifecycleOwner,
-            controller,
+            container,
             singleShapeLiveData,
             actionManager::setOneTimeAction
         )
 
-        val appearanceTool = controller.AppearanceSection(
+        val appearanceTool = container.AppearanceSection(
             fillOptions = getFillOptions(),
             borderOptions = getBorderOptions(),
             headOptions = getHeadOptions(),
@@ -82,7 +82,7 @@ class ShapeToolViewController(
 
         TextSectionViewController(
             lifecycleOwner,
-            controller,
+            container,
             createTextAlignLiveData(shapesLiveData, retainableActionLiveData),
             actionManager::setOneTimeAction
         )

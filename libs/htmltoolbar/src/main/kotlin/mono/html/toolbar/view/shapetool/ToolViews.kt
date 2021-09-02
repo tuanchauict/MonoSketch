@@ -2,10 +2,7 @@
 
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.div
-import kotlinx.html.js.div
 import mono.html.Div
-import mono.html.ext.Tag
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.ADD_BOTTOM_SPACE
@@ -45,21 +42,6 @@ internal fun Element.Section(
         block()
     }
 
-internal fun Tag.Section(
-    title: String,
-    isSmallSpace: Boolean = false,
-    block: Tag.() -> Unit
-): HTMLDivElement {
-    val sectionClasses = classes(SECTION, SMALL_SPACE x isSmallSpace)
-
-    return div(sectionClasses) {
-        if (title.isNotEmpty()) {
-            div(classes(SECTION_TITLE)) { +title }
-        }
-        block()
-    }
-}
-
 internal fun Element.Tool(
     hasMoreBottomSpace: Boolean = false,
     block: HTMLDivElement.() -> Unit
@@ -67,19 +49,6 @@ internal fun Element.Tool(
     Div(classes(TOOL, ADD_BOTTOM_SPACE x hasMoreBottomSpace)) {
         block()
     }
-
-internal fun Tag.Tool(
-    hasMoreBottomSpace: Boolean = false,
-    block: Tag.() -> Unit
-): HTMLDivElement {
-    val toolClasses = classes(
-        TOOL,
-        ADD_BOTTOM_SPACE x hasMoreBottomSpace
-    )
-    return div(toolClasses) {
-        block()
-    }
-}
 
 internal fun Element.Row(
     isMoreBottomSpaceRequired: Boolean = false,
@@ -98,27 +67,6 @@ internal fun Element.Row(
         MONOFONT x isMonoFont
     )
     return Div(classes) {
-        block()
-    }
-}
-
-internal fun Tag.Row(
-    isMoreBottomSpaceRequired: Boolean = false,
-    isCenterEvenSpace: Boolean = false,
-    isVerticalCenter: Boolean = false,
-    isMonoFont: Boolean = false,
-    isGrid: Boolean = false,
-    block: Tag.() -> Unit
-): HTMLDivElement {
-    val classes = classes(
-        ROW,
-        ADD_BOTTOM_SPACE x isMoreBottomSpaceRequired,
-        CENTER_EVEN_SPACE x isCenterEvenSpace,
-        CENTER_VERTICAL x isVerticalCenter,
-        GRID x isGrid,
-        MONOFONT x isMonoFont
-    )
-    return div(classes) {
         block()
     }
 }
