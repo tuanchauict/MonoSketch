@@ -1,6 +1,5 @@
 package mono.html.toolbar
 
-import kotlinx.html.dom.append
 import mono.html.toolbar.view.MiddleToolbar
 import mono.html.toolbar.view.RightToolbar
 import mono.lifecycle.LifecycleOwner
@@ -15,15 +14,13 @@ class ToolbarViewController(
     private val actionManager: ActionManager
 ) {
     init {
-        toolbarContainer.append {
+
+        with(toolbarContainer) {
             MiddleToolbar(
                 lifecycleOwner,
                 actionManager.retainableActionLiveData,
                 actionManager::setRetainableAction
             )
-        }
-
-        with(toolbarContainer) {
             RightToolbar {
                 actionManager.setOneTimeAction(it.actionType)
             }

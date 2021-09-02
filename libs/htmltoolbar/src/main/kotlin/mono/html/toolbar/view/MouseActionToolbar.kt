@@ -2,16 +2,16 @@
 
 package mono.html.toolbar.view
 
-import kotlinx.html.InputType
-import kotlinx.html.div
-import kotlinx.html.id
-import kotlinx.html.js.input
-import kotlinx.html.js.label
-import kotlinx.html.js.onChangeFunction
-import mono.html.ext.Tag
+import mono.html.Div
+import mono.html.Label
+import mono.html.Radio
+import mono.html.SvgPath
+import mono.html.setAttributes
+import mono.html.setOnChangeListener
 import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLInputElement
 import kotlin.random.Random
 import kotlin.random.nextULong
@@ -21,15 +21,17 @@ private val random = Random(100)
 /**
  * A function to create mouse action toolbar UI.
  */
-internal fun Tag.MouseActionGroup(
+internal fun Element.MouseActionGroup(
     lifecycleOwner: LifecycleOwner,
     retainableActionLiveData: LiveData<RetainableActionType>,
     setRetainableAction: (RetainableActionType) -> Unit
 ) {
     val actionTypeToCheckBoxMap = mutableMapOf<RetainableActionType, HTMLInputElement>()
-    div("btn-group btn-group-sm retainable-action-group") {
-        attributes["role"] = "group"
-        attributes["aria-label"] = "Basic radio toggle button group"
+    Div("btn-group btn-group-sm retainable-action-group") {
+        setAttributes(
+            "role" to "group",
+            "aria-label" to "Basic radio toggle button group"
+        )
 
         actionTypeToCheckBoxMap +=
             MouseActionGroupItem(
@@ -65,7 +67,7 @@ private enum class MouseActionType(
     val retainableActionType: RetainableActionType,
     val title: String,
     val isChecked: Boolean,
-    private val icon: Tag.() -> Unit
+    private val icon: Element.() -> Unit
 ) {
     SELECTION(
         RetainableActionType.IDLE,
@@ -87,9 +89,6 @@ private enum class MouseActionType(
         isChecked = false,
         {
             SvgIcon(24, 24) {
-                SvgPath("M0 0h24v24H0V0z") {
-                    attributes["fill"] = "none"
-                }
                 SvgPath("M21 6H3v12h18V6zm-2 10H5V8h14v8z")
             }
         }
@@ -123,36 +122,36 @@ private enum class MouseActionType(
         }
     );
 
-    fun bindIcon(tagConsumer: Tag) {
+    fun bindIcon(tagConsumer: Element) {
         with(tagConsumer) {
             icon()
         }
     }
 }
 
-private fun Tag.MouseActionGroupItem(
+private fun Element.MouseActionGroupItem(
     mouseActionType: MouseActionType,
     onChangeAction: (RetainableActionType) -> Unit
 ): Pair<RetainableActionType, HTMLInputElement> {
     val actionId = "middle-action-${random.nextULong()}"
-    val checkbox = input(type = InputType.radio, classes = "btn-check") {
+    val checkbox = Radio("btn-check") {
         id = actionId
         checked = mouseActionType.isChecked
-        autoComplete = false
         name = "mouse-action-group"
-
-        // Avoid input being focused which voids key event commands.
-        attributes["onfocus"] = "this.blur()"
-
-        onChangeFunction = {
-            onChangeAction(mouseActionType.retainableActionType)
-        }
+        setAttributes(
+            "autoComplete" to "off",
+            // Avoid input being focused which voids key event commands.
+            "onfocus" to "this.blur()"
+        )
+        setOnChangeListener { onChangeAction(mouseActionType.retainableActionType) }
     }
-    label("btn btn-outline-secondary shadow-none icon-action toolbar-btn") {
-        attributes["for"] = actionId
-        attributes["title"] = mouseActionType.title
+    Label("btn btn-outline-secondary shadow-none icon-action toolbar-btn") {
+        setAttributes(
+            "for" to actionId,
+            "title" to mouseActionType.title
+        )
 
-        mouseActionType.bindIcon(this@MouseActionGroupItem)
+        mouseActionType.bindIcon(this)
     }
     return mouseActionType.retainableActionType to checkbox
 }

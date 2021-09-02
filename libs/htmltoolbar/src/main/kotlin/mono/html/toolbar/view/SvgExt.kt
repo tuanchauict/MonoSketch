@@ -27,17 +27,6 @@ internal fun Element.SvgIcon(width: Int, height: Int, pathBlock: Element.() -> U
     }
 }
 
-internal fun Tag.SvgIcon(width: Int, height: Int, pathBlock: SVG.() -> Unit) {
-    svg("bi bi-cursor-fill") {
-        attributes["width"] = "$width"
-        attributes["height"] = "$height"
-        attributes["fill"] = "currentColor"
-        attributes["viewBox"] = "0 0 $width $height"
-
-        pathBlock()
-    }
-}
-
 internal fun Tag.SvgIcon(
     width: Int,
     height: Int,

@@ -1,9 +1,13 @@
 package mono.html
 
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 
 fun Element.setOnClickListener(listener: (Event) -> Unit) = addEventListener("click", listener)
+
+fun HTMLInputElement.setOnChangeListener(listener: (Event) -> Unit) =
+    addEventListener("change", listener)
 
 fun Element.appendElement(vararg children: Element) {
     for (node in children) {
