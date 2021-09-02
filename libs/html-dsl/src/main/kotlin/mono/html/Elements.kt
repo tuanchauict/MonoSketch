@@ -5,8 +5,11 @@ package mono.html
 import kotlinx.browser.document
 import kotlinx.dom.addClass
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLLIElement
 import org.w3c.dom.HTMLSpanElement
+import org.w3c.dom.HTMLUListElement
 
 fun Element.Div(
     classes: String = "",
@@ -29,6 +32,50 @@ fun Span(parent: Element? = null, classes: String = "", text: String): HTMLSpanE
     val span = parent.createElement<HTMLSpanElement>("span", classes)
     span.innerText = text
     return span
+}
+
+fun Element.Ul(classes: String = "", block: HTMLUListElement.() -> Unit): HTMLUListElement =
+    Ul(this, classes, block)
+
+fun Ul(
+    parent: Element?,
+    classes: String = "",
+    block: HTMLUListElement.() -> Unit
+): HTMLUListElement {
+    val ul = parent.createElement<HTMLUListElement>("ul", classes)
+    ul.block()
+    return ul
+}
+
+fun Element.Li(classes: String = "", block: HTMLLIElement.() -> Unit): HTMLLIElement =
+    Li(this, classes, block)
+
+fun Li(
+    parent: Element?,
+    classes: String = "",
+    block: HTMLLIElement.() -> Unit
+): HTMLLIElement {
+    val li = parent.createElement<HTMLLIElement>("li", classes)
+    li.block()
+    return li
+}
+
+fun Element.A(
+    classes: String = "",
+    text: String,
+    block: HTMLAnchorElement.() -> Unit
+): HTMLAnchorElement = A(this, classes, text, block)
+
+fun A(
+    parent: Element?,
+    classes: String = "",
+    text: String,
+    block: HTMLAnchorElement.() -> Unit
+): HTMLAnchorElement {
+    val anchor = parent.createElement<HTMLAnchorElement>("a", classes)
+    anchor.innerText = text
+    anchor.block()
+    return anchor
 }
 
 fun Element.Svg(classes: String = "", block: Element.() -> Unit): Element =
