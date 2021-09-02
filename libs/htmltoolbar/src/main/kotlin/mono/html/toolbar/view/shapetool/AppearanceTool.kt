@@ -2,14 +2,12 @@
 
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.InputType
-import kotlinx.html.js.div
-import kotlinx.html.js.input
-import kotlinx.html.js.onChangeFunction
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.span
 import mono.common.nullToFalse
-import mono.html.ext.Tag
+import mono.html.CheckBox
+import mono.html.Div
+import mono.html.Span
+import mono.html.setOnChangeListener
+import mono.html.setOnClickListener
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.isSelected
@@ -21,6 +19,7 @@ import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.html.toolbar.view.shapetool.Class.INPUT_CHECK_BOX
 import mono.html.toolbar.view.shapetool.Class.SMALL
 import mono.html.toolbar.view.shapetool.Class.TOOL_TITLE
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -105,7 +104,7 @@ private class AppearanceToolViewController(
 
 internal data class OptionItem(val id: String, val name: String)
 
-internal fun Tag.AppearanceSection(
+internal fun Element.AppearanceSection(
     fillOptions: List<OptionItem>,
     borderOptions: List<OptionItem>,
     headOptions: List<OptionItem>,
@@ -123,7 +122,7 @@ internal fun Tag.AppearanceSection(
     return AppearanceSectionViewControllerImpl(rootView, tools.associateBy { it.toolType })
 }
 
-private fun Tag.GridTextIconOptions(
+private fun Element.GridTextIconOptions(
     type: ToolType,
     options: List<OptionItem>,
     setOneTimeAction: (OneTimeActionType) -> Unit
@@ -141,13 +140,13 @@ private fun Tag.GridTextIconOptions(
     return AppearanceToolViewController(type, rootView, checkBox!!, optionElements!!)
 }
 
-private fun Tag.CheckColumn(onCheckChange: (Boolean) -> Unit): HTMLInputElement {
+private fun Element.CheckColumn(onCheckChange: (Boolean) -> Unit): HTMLInputElement {
     var checkBox: HTMLInputElement? = null
     Column(hasMoreRightSpace = true) {
         Row {
-            checkBox = input(InputType.checkBox, classes = classes(INPUT_CHECK_BOX, CLICKABLE)) {
-                onChangeFunction = {
-                    onCheckChange(checkBox?.checked.nullToFalse())
+            checkBox = CheckBox(classes = classes(INPUT_CHECK_BOX, CLICKABLE)) {
+                setOnChangeListener {
+                    onCheckChange(checked.nullToFalse())
                 }
             }
         }
@@ -155,7 +154,7 @@ private fun Tag.CheckColumn(onCheckChange: (Boolean) -> Unit): HTMLInputElement 
     return checkBox!!
 }
 
-private fun Tag.OptionsColumn(
+private fun Element.OptionsColumn(
     checkBox: HTMLInputElement,
     title: String,
     options: List<OptionItem>,
@@ -164,9 +163,8 @@ private fun Tag.OptionsColumn(
     val optionElements = mutableListOf<HTMLElement>()
     Column {
         Row {
-            span(classes(TOOL_TITLE, CLICKABLE)) {
-                +title
-                onClickFunction = {
+            Span(classes(TOOL_TITLE, CLICKABLE), title) {
+                setOnClickListener {
                     checkBox.checked = !checkBox.checked
                     checkBox.dispatchEvent(Event("change"))
                 }
@@ -174,12 +172,8 @@ private fun Tag.OptionsColumn(
         }
         Row(isMonoFont = true, isGrid = true) {
             for (option in options) {
-                optionElements += span(classes(ICON_BUTTON, SMALL, CLICKABLE)) {
-                    +option.name
-
-                    onClickFunction = {
-                        onOptionSelected(option)
-                    }
+                optionElements += Span(classes(ICON_BUTTON, SMALL, CLICKABLE), option.name) {
+                    setOnClickListener { onOptionSelected(option) }
                 }
             }
         }
@@ -187,9 +181,9 @@ private fun Tag.OptionsColumn(
     return optionElements
 }
 
-private fun Tag.Column(hasMoreRightSpace: Boolean = false, block: Tag.() -> Unit) {
+private fun Element.Column(hasMoreRightSpace: Boolean = false, block: Element.() -> Unit) {
     val columnClasses = classes(COLUMN, ADD_RIGHT_SPACE x hasMoreRightSpace)
-    div(columnClasses) {
+    Div(columnClasses) {
         block()
     }
 }

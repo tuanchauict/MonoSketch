@@ -1,6 +1,5 @@
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.dom.append
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.RetainableActionType
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
@@ -11,13 +10,13 @@ import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
 import mono.livedata.map
 import mono.shape.ShapeExtraManager
+import mono.shape.extra.RectangleExtra
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.extra.RectangleExtra
 import org.w3c.dom.HTMLElement
 
 class ShapeToolViewController(
@@ -69,47 +68,45 @@ class ShapeToolViewController(
             actionManager::setOneTimeAction
         )
 
-        controller.append {
-            val appearanceTool = AppearanceSection(
-                fillOptions = getFillOptions(),
-                borderOptions = getBorderOptions(),
-                headOptions = getHeadOptions(),
-                actionManager::setOneTimeAction
-            )
+        val appearanceTool = controller.AppearanceSection(
+            fillOptions = getFillOptions(),
+            borderOptions = getBorderOptions(),
+            headOptions = getHeadOptions(),
+            actionManager::setOneTimeAction
+        )
 
-            val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
-                shapesLiveData,
-                retainableActionLiveData
-            )
-            val borderAppearanceVisibilityLiveData = createBorderAppearanceVisibilityLiveData(
-                shapesLiveData,
-                retainableActionLiveData
-            )
-            val startHeadAppearanceVisibilityLiveData = createStartHeadAppearanceVisibilityLiveData(
-                shapesLiveData,
-                retainableActionLiveData
-            )
-            val endHeadAppearanceVisibilityLiveData = createEndHeadAppearanceVisibilityLiveData(
-                shapesLiveData,
-                retainableActionLiveData
-            )
-            MediatorLiveData(emptyMap<ToolType, Visibility>())
-                .apply {
-                    add(fillAppearanceVisibilityLiveData) {
-                        value = value + (ToolType.FILL to it)
-                    }
-                    add(borderAppearanceVisibilityLiveData) {
-                        value = value + (ToolType.BORDER to it)
-                    }
-                    add(startHeadAppearanceVisibilityLiveData) {
-                        value = value + (ToolType.START_HEAD to it)
-                    }
-                    add(endHeadAppearanceVisibilityLiveData) {
-                        value = value + (ToolType.END_HEAD to it)
-                    }
+        val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
+            shapesLiveData,
+            retainableActionLiveData
+        )
+        val borderAppearanceVisibilityLiveData = createBorderAppearanceVisibilityLiveData(
+            shapesLiveData,
+            retainableActionLiveData
+        )
+        val startHeadAppearanceVisibilityLiveData = createStartHeadAppearanceVisibilityLiveData(
+            shapesLiveData,
+            retainableActionLiveData
+        )
+        val endHeadAppearanceVisibilityLiveData = createEndHeadAppearanceVisibilityLiveData(
+            shapesLiveData,
+            retainableActionLiveData
+        )
+        MediatorLiveData(emptyMap<ToolType, Visibility>())
+            .apply {
+                add(fillAppearanceVisibilityLiveData) {
+                    value = value + (ToolType.FILL to it)
                 }
-                .observe(lifecycleOwner, listener = appearanceTool::setVisibility)
-        }
+                add(borderAppearanceVisibilityLiveData) {
+                    value = value + (ToolType.BORDER to it)
+                }
+                add(startHeadAppearanceVisibilityLiveData) {
+                    value = value + (ToolType.START_HEAD to it)
+                }
+                add(endHeadAppearanceVisibilityLiveData) {
+                    value = value + (ToolType.END_HEAD to it)
+                }
+            }
+            .observe(lifecycleOwner, listener = appearanceTool::setVisibility)
 
         TextSectionViewController(
             lifecycleOwner,
