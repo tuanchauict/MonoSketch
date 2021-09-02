@@ -18,8 +18,7 @@ fun Div(
     classes: String = "",
     block: HTMLDivElement.() -> Unit
 ): HTMLDivElement {
-    val div = parent.createElement<HTMLDivElement>("div")
-    div.addClass(classes)
+    val div = parent.createElement<HTMLDivElement>("div", classes)
     div.block()
     return div
 }
@@ -27,14 +26,15 @@ fun Div(
 fun Element.Span(classes: String = "", text: String): HTMLSpanElement = Span(this, classes, text)
 
 fun Span(parent: Element? = null, classes: String = "", text: String): HTMLSpanElement {
-    val span = parent.createElement<HTMLSpanElement>("span")
+    val span = parent.createElement<HTMLSpanElement>("span", classes)
     span.innerText = text
     return span
 }
 
-private fun <T : Element> Element?.createElement(type: String): T {
+private fun <T : Element> Element?.createElement(type: String, classes: String): T {
     @Suppress("UNCHECKED_CAST")
     val element = document.createElement(type) as T
+    element.addClass(classes)
     this?.append(element)
     return element
 }

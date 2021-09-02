@@ -27,14 +27,15 @@ class ShapeToolViewController(
     selectedShapesLiveData: LiveData<Set<AbstractShape>>,
     shapeManagerVersionLiveData: LiveData<Int>
 ) {
-    private val singleShapeLiveData = MediatorLiveData<AbstractShape?>(null).apply {
-        add(selectedShapesLiveData) {
-            value = it.singleOrNull()
+    private val singleShapeLiveData: LiveData<AbstractShape?> =
+        MediatorLiveData<AbstractShape?>(null).apply {
+            add(selectedShapesLiveData) {
+                value = it.singleOrNull()
+            }
+            add(shapeManagerVersionLiveData) {
+                value = value
+            }
         }
-        add(shapeManagerVersionLiveData) {
-            value = value
-        }
-    }
 
     private val shapesLiveData = MediatorLiveData<Set<AbstractShape>>(emptySet()).apply {
         add(selectedShapesLiveData) {
@@ -55,7 +56,12 @@ class ShapeToolViewController(
         }
 
     init {
-        val moveTool = ReorderSection(controller, actionManager::setOneTimeAction)
+        ReorderSectionViewController(
+            lifecycleOwner,
+            controller,
+            singleShapeLiveData,
+            actionManager::setOneTimeAction
+        )
 
         controller.append {
 
@@ -71,8 +77,6 @@ class ShapeToolViewController(
             val textAlignmentTool = TextSection(actionManager::setOneTimeAction)
 
             singleShapeLiveData.observe(lifecycleOwner) {
-                moveTool.setEnabled(it != null)
-
                 val isSizeChangeable = it is Rectangle || it is Text
                 transformTool.setEnabled(it != null, isSizeChangeable)
                 if (it != null) {

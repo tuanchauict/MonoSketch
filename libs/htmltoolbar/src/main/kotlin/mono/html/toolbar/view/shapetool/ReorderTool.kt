@@ -5,13 +5,19 @@ package mono.html.toolbar.view.shapetool
 import kotlinx.html.dom.append
 import mono.html.Div
 import mono.html.addOnClickListener
+import mono.html.appendElement
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.OneTimeActionType.ReorderShape
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.SvgPath
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
+import mono.lifecycle.LifecycleOwner
+import mono.livedata.LiveData
+import mono.livedata.distinctUntilChange
+import mono.livedata.map
 import mono.shape.command.ChangeOrder
+import mono.shape.shape.AbstractShape
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -19,41 +25,40 @@ import org.w3c.dom.HTMLElement
 /**
  * View controller for shape tool' reorder section.
  */
-private class ReorderSectionViewController(
-    rootDiv: HTMLDivElement,
-    private val icons: List<HTMLDivElement>
-) : ToolViewController(rootDiv) {
-    override fun setEnabled(isEnabled: Boolean) {
-        for (icon in icons) {
-            icon.isEnabled = isEnabled
-        }
-    }
-}
-
-internal fun ReorderSection(
-    parent: Element,
+internal class ReorderSectionViewController(
+    lifecycleOwner: LifecycleOwner,
+    container: Element,
+    singleShapeLiveData: LiveData<AbstractShape?>,
     setOneTimeAction: (OneTimeActionType) -> Unit
-): ToolViewController {
-    val icons = mutableListOf<HTMLDivElement>()
-
-    val div = parent.Section("", isSmallSpace = true) {
-        Tool {
-            Row(isCenterEvenSpace = true) {
-                for (type in ReorderIconType.values()) {
-                    icons += Icon(type) { setOneTimeAction(ReorderShape(it.changeOrderType)) }
+) {
+    init {
+        val icons = ReorderIconType.values().map { type ->
+            Icon(type) { setOneTimeAction(ReorderShape(it.changeOrderType)) }
+        }
+        container.Section("", isSmallSpace = true) {
+            Tool {
+                Row(isCenterEvenSpace = true) {
+                    appendElement(*icons.toTypedArray())
                 }
             }
         }
-    }
 
-    return ReorderSectionViewController(div, icons)
+        singleShapeLiveData
+            .map { it != null }
+            .distinctUntilChange()
+            .observe(lifecycleOwner) {
+                for (icon in icons) {
+                    icon.isEnabled = it
+                }
+            }
+    }
 }
 
-private fun Element.Icon(
+private fun Icon(
     iconType: ReorderIconType,
     onClick: (ReorderIconType) -> Unit
 ): HTMLDivElement =
-    Div(classes(ICON_BUTTON)) {
+    Div(classes = classes(ICON_BUTTON)) {
         addOnClickListener {
             val target = it.currentTarget as HTMLElement
             if (target.isEnabled) {
