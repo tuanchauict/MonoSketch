@@ -3,6 +3,7 @@ package mono.shape
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.extra.LineExtra
+import mono.shape.extra.RectangleExtra
 import mono.shape.extra.style.AnchorChar
 import mono.shape.extra.style.RectangleFillStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
@@ -18,6 +19,16 @@ import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 object ShapeExtraManager {
     val RECTANGLE_STYLE_NO_FILLED = PredefinedRectangleFillStyle.NOFILLED_STYLE
 
+    var defaultRectangleExtra: RectangleExtra = RectangleExtra(
+        isFillEnabled = false,
+        userSelectedFillStyle = PredefinedRectangleFillStyle.PREDEFINED_STYLES[0],
+        isBorderEnabled = true,
+        userSelectedBorderStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLES[0],
+        isDashEnabled = false,
+        userDefinedDashPattern = StraightStrokeDashPattern.SOLID
+    )
+        private set
+
     var defaultLineExtra: LineExtra = LineExtra(
         isStartAnchorEnabled = false,
         userSelectedStartAnchor = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
@@ -30,17 +41,6 @@ object ShapeExtraManager {
 
     var defaultTextAlign: TextAlign =
         TextAlign(TextAlign.HorizontalAlign.MIDDLE, TextAlign.VerticalAlign.MIDDLE)
-        private set
-
-    var defaultExtraState: DefaultExtraState =
-        DefaultExtraState(
-            isFillEnabled = false,
-            fillStyle = PredefinedRectangleFillStyle.PREDEFINED_STYLES[0],
-            isBorderEnabled = true,
-            borderStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLES[0],
-            isDashEnabled = false,
-            dashPattern = StraightStrokeDashPattern.SOLID,
-        )
         private set
 
     private val defaultExtraStateUpdateMutableLiveData = MutableLiveData(Unit)
@@ -65,13 +65,13 @@ object ShapeExtraManager {
         textHorizontalAlign: TextAlign.HorizontalAlign? = null,
         textVerticalAlign: TextAlign.VerticalAlign? = null
     ) {
-        defaultExtraState = DefaultExtraState(
-            isFillEnabled = isFillEnabled ?: defaultExtraState.isFillEnabled,
-            fillStyle = getRectangleFillStyle(fillStyleId),
-            isBorderEnabled = isBorderEnabled ?: defaultExtraState.isBorderEnabled,
-            borderStyle = getRectangleBorderStyle(borderStyleId),
-            isDashEnabled = isDashEnabled ?: defaultExtraState.isDashEnabled,
-            dashPattern = dashPattern ?: defaultExtraState.dashPattern
+        defaultRectangleExtra = RectangleExtra(
+            isFillEnabled ?: defaultRectangleExtra.isFillEnabled,
+            getRectangleFillStyle(fillStyleId),
+            isBorderEnabled ?: defaultRectangleExtra.isBorderEnabled,
+            getRectangleBorderStyle(borderStyleId),
+            isDashEnabled ?: defaultRectangleExtra.isDashEnabled,
+            dashPattern ?: defaultRectangleExtra.userDefinedDashPattern
         )
 
         defaultLineExtra = LineExtra(
@@ -92,7 +92,7 @@ object ShapeExtraManager {
 
     fun getRectangleFillStyle(
         id: String?,
-        default: RectangleFillStyle = defaultExtraState.fillStyle
+        default: RectangleFillStyle = defaultRectangleExtra.userSelectedFillStyle
     ): RectangleFillStyle = PredefinedRectangleFillStyle.PREDEFINED_STYLE_MAP[id] ?: default
 
     fun getAllPredefinedRectangleFillStyles(): List<RectangleFillStyle> =
@@ -100,7 +100,7 @@ object ShapeExtraManager {
 
     fun getRectangleBorderStyle(
         id: String?,
-        default: StraightStrokeStyle = defaultExtraState.borderStyle
+        default: StraightStrokeStyle = defaultRectangleExtra.userSelectedBorderStyle
     ): StraightStrokeStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLE_MAP[id] ?: default
 
     fun getAllPredefinedStrokeStyles(): List<StraightStrokeStyle> =
@@ -118,13 +118,4 @@ object ShapeExtraManager {
 
     fun getAllPredefinedAnchorChars(): List<AnchorChar> =
         PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS
-
-    data class DefaultExtraState(
-        val isFillEnabled: Boolean,
-        val fillStyle: RectangleFillStyle,
-        val isBorderEnabled: Boolean,
-        val borderStyle: StraightStrokeStyle,
-        val isDashEnabled: Boolean,
-        val dashPattern: StraightStrokeDashPattern
-    )
 }

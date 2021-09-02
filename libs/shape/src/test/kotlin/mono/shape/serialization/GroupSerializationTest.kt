@@ -4,7 +4,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mono.graphics.geo.Rect
-import mono.shape.extra.RectangleExtra
+import mono.shape.ShapeExtraManager
 import kotlin.test.Test
 
 class GroupSerializationTest {
@@ -14,7 +14,7 @@ class GroupSerializationTest {
             null,
             0,
             Rect.byLTRB(0, 0, 1, 1),
-            RectangleExtra.withDefault().toSerializableExtra()
+            ShapeExtraManager.defaultRectangleExtra.toSerializableExtra()
         )
         val group = SerializableGroup(
             null,

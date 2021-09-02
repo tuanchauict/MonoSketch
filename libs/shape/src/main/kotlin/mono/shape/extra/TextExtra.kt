@@ -28,7 +28,7 @@ data class TextExtra(
 
     companion object {
         val NO_BOUND = TextExtra(
-            boundExtra = RectangleExtra.withDefault().copy(
+            boundExtra = ShapeExtraManager.defaultRectangleExtra.copy(
                 isFillEnabled = false,
                 isBorderEnabled = false
             ),
@@ -36,7 +36,7 @@ data class TextExtra(
         )
 
         fun withDefault(): TextExtra = TextExtra(
-            boundExtra = RectangleExtra.withDefault(),
+            boundExtra = ShapeExtraManager.defaultRectangleExtra,
             textAlign = ShapeExtraManager.defaultTextAlign
         )
     }

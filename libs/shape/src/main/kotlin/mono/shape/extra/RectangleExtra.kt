@@ -60,18 +60,4 @@ data class RectangleExtra(
             isDashEnabled = isDashEnabled,
             dashPattern = userDefinedDashPattern.toSerializableValue()
         )
-
-    companion object {
-        fun withDefault(): RectangleExtra {
-            val defaultExtraState = ShapeExtraManager.defaultExtraState
-            return RectangleExtra(
-                defaultExtraState.isFillEnabled,
-                defaultExtraState.fillStyle,
-                defaultExtraState.isBorderEnabled,
-                defaultExtraState.borderStyle,
-                defaultExtraState.isDashEnabled,
-                defaultExtraState.dashPattern
-            )
-        }
-    }
 }

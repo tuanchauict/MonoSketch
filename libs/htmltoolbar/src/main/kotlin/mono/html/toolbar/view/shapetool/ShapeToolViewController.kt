@@ -150,7 +150,8 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> ShapeExtraManager.defaultExtraState.fillStyle
+                RetainableActionType.ADD_TEXT ->
+                    ShapeExtraManager.defaultRectangleExtra.userSelectedFillStyle
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -158,7 +159,7 @@ class ShapeToolViewController(
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedRectangleFillStyles().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isFillEnabled,
+                    ShapeExtraManager.defaultRectangleExtra.isFillEnabled,
                     selectedFillPosition
                 )
             } else {
@@ -194,7 +195,8 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> ShapeExtraManager.defaultExtraState.borderStyle
+                RetainableActionType.ADD_TEXT ->
+                    ShapeExtraManager.defaultRectangleExtra.userSelectedBorderStyle
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -202,7 +204,7 @@ class ShapeToolViewController(
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isBorderEnabled,
+                    ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
                     selectedFillPosition
                 )
             } else {

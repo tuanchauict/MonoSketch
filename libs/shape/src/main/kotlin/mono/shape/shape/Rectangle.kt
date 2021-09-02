@@ -2,6 +2,7 @@ package mono.shape.shape
 
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.ShapeExtraManager
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableRectangle
 import mono.shape.extra.RectangleExtra
@@ -23,7 +24,7 @@ class Rectangle(
             isUpdated
         }
 
-    override var extra: RectangleExtra = RectangleExtra.withDefault()
+    override var extra: RectangleExtra = ShapeExtraManager.defaultRectangleExtra
         private set
 
     /**
