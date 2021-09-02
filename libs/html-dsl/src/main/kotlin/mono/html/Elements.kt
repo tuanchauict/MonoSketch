@@ -37,7 +37,7 @@ fun Element.Span(
 fun Span(
     parent: Element? = null,
     classes: String = "",
-    text: String,
+    text: String = "",
     block: HTMLSpanElement.() -> Unit
 ): HTMLSpanElement {
     val span = parent.createElement<HTMLSpanElement>("span", classes)

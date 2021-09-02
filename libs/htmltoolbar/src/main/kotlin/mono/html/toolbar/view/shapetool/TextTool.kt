@@ -5,6 +5,7 @@ package mono.html.toolbar.view.shapetool
 import mono.html.Div
 import mono.html.Span
 import mono.html.SvgPath
+import mono.html.appendElement
 import mono.html.setOnClickListener
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.SvgIcon
@@ -57,45 +58,23 @@ private class TextSectionViewControllerImpl(
 internal fun Element.TextSection(
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): TextSectionViewController {
-    val horizontalIcons = mutableListOf<HTMLElement>()
-    val verticalIcons = mutableListOf<HTMLElement>()
+    val horizontalIcons = listOf(
+        TextAlignmentIconType.HORIZONTAL_LEFT,
+        TextAlignmentIconType.HORIZONTAL_MIDDLE,
+        TextAlignmentIconType.HORIZONTAL_RIGHT
+    ).map { Icon(it, setOneTimeAction) }
+    val verticalIcons = listOf(
+        TextAlignmentIconType.VERTICAL_TOP,
+        TextAlignmentIconType.VERTICAL_MIDDLE,
+        TextAlignmentIconType.VERTICAL_BOTTOM
+    ).map { Icon(it, setOneTimeAction) }
     val rootView = Section("TEXT") {
         Tool(true) {
             TextTool("Alignment") {
-
-                horizontalIcons +=
-                    Icon(
-                        TextAlignmentIconType.HORIZONTAL_LEFT,
-                        setOneTimeAction = setOneTimeAction
-                    )
-                horizontalIcons +=
-                    Icon(
-                        TextAlignmentIconType.HORIZONTAL_MIDDLE,
-                        setOneTimeAction = setOneTimeAction
-                    )
-                horizontalIcons +=
-                    Icon(
-                        TextAlignmentIconType.HORIZONTAL_RIGHT,
-                        setOneTimeAction = setOneTimeAction
-                    )
+                appendElement(*horizontalIcons.toTypedArray())
             }
-
             TextTool("Position") {
-                verticalIcons +=
-                    Icon(
-                        TextAlignmentIconType.VERTICAL_TOP,
-                        setOneTimeAction = setOneTimeAction
-                    )
-                verticalIcons +=
-                    Icon(
-                        TextAlignmentIconType.VERTICAL_MIDDLE,
-                        setOneTimeAction = setOneTimeAction
-                    )
-                verticalIcons +=
-                    Icon(
-                        TextAlignmentIconType.VERTICAL_BOTTOM,
-                        setOneTimeAction = setOneTimeAction
-                    )
+                appendElement(*verticalIcons.toTypedArray())
             }
         }
     }
@@ -116,10 +95,10 @@ private fun Element.TextTool(name: String, iconBlock: Element.() -> Unit) {
     }
 }
 
-private fun Element.Icon(
+private fun Icon(
     iconType: TextAlignmentIconType,
     setOneTimeAction: (OneTimeActionType) -> Unit
-): HTMLElement = Span(classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE, CLICKABLE)) {
+): HTMLElement = Span(null, classes = classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE, CLICKABLE)) {
     SvgIcon(16, 16, iconType.viewPortSize, iconType.viewPortSize) {
         SvgPath(iconType.iconPath)
     }
