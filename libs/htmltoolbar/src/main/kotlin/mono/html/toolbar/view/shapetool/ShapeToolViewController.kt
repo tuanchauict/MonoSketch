@@ -115,9 +115,13 @@ class ShapeToolViewController(
                 }
                 .observe(lifecycleOwner, listener = appearanceTool::setVisibility)
         }
-        val textAlignmentTool = controller.TextSection(actionManager::setOneTimeAction)
-        createTextAlignLiveData(shapesLiveData, retainableActionLiveData)
-            .observe(lifecycleOwner, listener = textAlignmentTool::setCurrentTextAlign)
+
+        TextSectionViewController(
+            lifecycleOwner,
+            controller,
+            createTextAlignLiveData(shapesLiveData, retainableActionLiveData),
+            actionManager::setOneTimeAction
+        )
     }
 
     private fun getFillOptions(): List<OptionItem> =

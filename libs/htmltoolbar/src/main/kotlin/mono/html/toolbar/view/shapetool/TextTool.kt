@@ -10,65 +10,38 @@ import mono.html.setOnClickListener
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.isSelected
+import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
 import mono.html.toolbar.view.shapetool.Class.CLICKABLE
 import mono.html.toolbar.view.shapetool.Class.COLUMN
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.html.toolbar.view.shapetool.Class.MEDIUM
 import mono.html.toolbar.view.shapetool.Class.QUARTER
+import mono.lifecycle.LifecycleOwner
+import mono.livedata.LiveData
 import mono.shape.extra.style.TextAlign
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-internal abstract class TextSectionViewController(
-    rootView: HTMLDivElement
-) : ToolViewController(rootView) {
-
-    abstract fun setCurrentTextAlign(textAlignVisibility: TextAlignVisibility)
-
-    sealed class TextAlignVisibility {
-        object Hide : TextAlignVisibility()
-
-        data class Visible(val textAlign: TextAlign) : TextAlignVisibility()
-    }
-}
-
-private class TextSectionViewControllerImpl(
-    rootView: HTMLDivElement,
-    private val horizontalIcons: List<HTMLElement>,
-    private val verticalIcons: List<HTMLElement>
-) : TextSectionViewController(rootView) {
-    override fun setCurrentTextAlign(textAlignVisibility: TextAlignVisibility) {
-        val textAlignVisible = textAlignVisibility as? TextAlignVisibility.Visible
-        val textAlign = textAlignVisible?.textAlign
-        setVisible(textAlign != null)
-        if (textAlign == null) {
-            return
-        }
-        horizontalIcons.forEachIndexed { index, icon ->
-            icon.isSelected = index == textAlign.horizontalAlign.ordinal
-        }
-        verticalIcons.forEachIndexed { index, icon ->
-            icon.isSelected = index == textAlign.verticalAlign.ordinal
-        }
-    }
-}
-
-internal fun Element.TextSection(
+internal class TextSectionViewController(
+    lifecycleOwner: LifecycleOwner,
+    container: Element,
+    liveData: LiveData<TextAlignVisibility>,
     setOneTimeAction: (OneTimeActionType) -> Unit
-): TextSectionViewController {
-    val horizontalIcons = listOf(
+) {
+    private val horizontalIcons = listOf(
         TextAlignmentIconType.HORIZONTAL_LEFT,
         TextAlignmentIconType.HORIZONTAL_MIDDLE,
         TextAlignmentIconType.HORIZONTAL_RIGHT
     ).map { Icon(it, setOneTimeAction) }
-    val verticalIcons = listOf(
+
+    private val verticalIcons = listOf(
         TextAlignmentIconType.VERTICAL_TOP,
         TextAlignmentIconType.VERTICAL_MIDDLE,
         TextAlignmentIconType.VERTICAL_BOTTOM
     ).map { Icon(it, setOneTimeAction) }
-    val rootView = Section("TEXT") {
+
+    private val rootView = container.Section("TEXT") {
         Tool(true) {
             TextTool("Alignment") {
                 appendElement(*horizontalIcons.toTypedArray())
@@ -79,7 +52,31 @@ internal fun Element.TextSection(
         }
     }
 
-    return TextSectionViewControllerImpl(rootView, horizontalIcons, verticalIcons)
+    init {
+        liveData.observe(lifecycleOwner, listener = this::setCurrentTextAlign)
+    }
+
+    private fun setCurrentTextAlign(textAlignVisibility: TextAlignVisibility) {
+        val textAlignVisible = textAlignVisibility as? TextAlignVisibility.Visible
+        val textAlign = textAlignVisible?.textAlign
+        rootView.isVisible = textAlign != null
+
+        if (textAlign == null) {
+            return
+        }
+        horizontalIcons.forEachIndexed { index, icon ->
+            icon.isSelected = index == textAlign.horizontalAlign.ordinal
+        }
+        verticalIcons.forEachIndexed { index, icon ->
+            icon.isSelected = index == textAlign.verticalAlign.ordinal
+        }
+    }
+
+    sealed class TextAlignVisibility {
+        object Hide : TextAlignVisibility()
+
+        data class Visible(val textAlign: TextAlign) : TextAlignVisibility()
+    }
 }
 
 private fun Element.TextTool(name: String, iconBlock: Element.() -> Unit) {
