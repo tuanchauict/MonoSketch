@@ -62,25 +62,23 @@ class ShapeToolViewController(
             singleShapeLiveData,
             actionManager::setOneTimeAction
         )
+        val transformTool = controller.TransformSection(actionManager::setOneTimeAction)
+
+        singleShapeLiveData.observe(lifecycleOwner) {
+            val isSizeChangeable = it is Rectangle || it is Text
+            transformTool.setEnabled(it != null, isSizeChangeable)
+            if (it != null) {
+                transformTool.setValue(it.bound)
+            }
+        }
 
         controller.append {
-
-            val transformTool = TransformSection(actionManager::setOneTimeAction)
-
             val appearanceTool = AppearanceSection(
                 fillOptions = getFillOptions(),
                 borderOptions = getBorderOptions(),
                 headOptions = getHeadOptions(),
                 actionManager::setOneTimeAction
             )
-
-            singleShapeLiveData.observe(lifecycleOwner) {
-                val isSizeChangeable = it is Rectangle || it is Text
-                transformTool.setEnabled(it != null, isSizeChangeable)
-                if (it != null) {
-                    transformTool.setValue(it.bound)
-                }
-            }
 
             val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
                 shapesLiveData,

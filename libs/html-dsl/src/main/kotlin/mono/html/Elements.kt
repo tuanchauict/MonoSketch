@@ -31,14 +31,14 @@ fun Div(
 fun Element.Span(
     classes: String = "",
     text: String = "",
-    block: HTMLSpanElement.() -> Unit
+    block: HTMLSpanElement.() -> Unit = {}
 ): HTMLSpanElement = Span(this, classes, text, block)
 
 fun Span(
     parent: Element? = null,
     classes: String = "",
     text: String = "",
-    block: HTMLSpanElement.() -> Unit
+    block: HTMLSpanElement.() -> Unit = {}
 ): HTMLSpanElement {
     val span = parent.createElement<HTMLSpanElement>("span", classes)
     span.innerText = text
@@ -94,6 +94,22 @@ fun Element.Radio(
     classes: String = "",
     block: HTMLInputElement.() -> Unit
 ): HTMLInputElement = Radio(this, classes, block)
+
+fun Element.InputNumber(
+    classes: String = "",
+    block: HTMLInputElement.() -> Unit
+): HTMLInputElement = InputNumber(this, classes, block)
+
+fun InputNumber(
+    parent: Element?,
+    classes: String = "",
+    block: HTMLInputElement.() -> Unit
+): HTMLInputElement {
+    val input = parent.createElement<HTMLInputElement>("input", classes)
+    input.type = "number"
+    input.block()
+    return input
+}
 
 fun Radio(
     parent: Element?,

@@ -2,13 +2,12 @@
 
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.InputType
-import kotlinx.html.js.div
-import kotlinx.html.js.input
-import kotlinx.html.js.onChangeFunction
-import kotlinx.html.js.span
 import mono.graphics.geo.Rect
-import mono.html.ext.Tag
+import mono.html.Div
+import mono.html.InputNumber
+import mono.html.Span
+import mono.html.setAttributes
+import mono.html.setOnChangeListener
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
 import mono.html.toolbar.view.shapetool.Class.COLUMN
@@ -18,6 +17,7 @@ import mono.html.toolbar.view.shapetool.Class.INPUT_TEXT
 import mono.html.toolbar.view.shapetool.Class.MEDIUM
 import mono.html.toolbar.view.shapetool.Class.ROW
 import mono.html.toolbar.view.shapetool.Class.SHORT
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLInputElement
 
@@ -51,7 +51,7 @@ private class TransformToolViewControllerImpl(
     }
 }
 
-internal fun Tag.TransformSection(
+internal fun Element.TransformSection(
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): TransformToolViewController {
     var xInput: HTMLInputElement? = null
@@ -81,25 +81,24 @@ internal fun Tag.TransformSection(
     return TransformToolViewControllerImpl(rootView, xInput!!, yInput!!, wInput!!, hInput!!)
 }
 
-private fun Tag.NumberCell(
+private fun Element.NumberCell(
     title: String,
     value: Int,
     minValue: Int? = null,
     onValueChange: (Int) -> Unit
 ): HTMLInputElement {
     var result: HTMLInputElement? = null
-    div(classes(COLUMN, HALF)) {
-        div(classes(ROW, CENTER_VERTICAL)) {
-            span(classes(INLINE_TITLE, SHORT)) { +title }
-            result = input(InputType.number, classes = classes(INPUT_TEXT, MEDIUM)) {
+    Div(classes(COLUMN, HALF)) {
+        Div(classes(ROW, CENTER_VERTICAL)) {
+            Span(classes(INLINE_TITLE, SHORT), title)
+            result = InputNumber(classes(INPUT_TEXT, MEDIUM)) {
                 if (minValue != null) {
-                    attributes["min"] = minValue.toString()
+                    setAttributes("min" to minValue)
                 }
                 this.value = value.toString()
 
-                onChangeFunction = {
-                    val target = it.currentTarget as HTMLInputElement
-                    onValueChange(target.value.toInt())
+                setOnChangeListener {
+                    onValueChange(this.value.toInt())
                 }
             }
         }
