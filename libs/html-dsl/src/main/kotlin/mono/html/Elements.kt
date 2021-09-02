@@ -7,7 +7,9 @@ import kotlinx.dom.addClass
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLLIElement
+import org.w3c.dom.HTMLLabelElement
 import org.w3c.dom.HTMLSpanElement
 import org.w3c.dom.HTMLUListElement
 
@@ -76,6 +78,35 @@ fun A(
     anchor.innerText = text
     anchor.block()
     return anchor
+}
+
+fun Element.Radio(
+    classes: String = "",
+    block: HTMLInputElement.() -> Unit
+): HTMLInputElement = Radio(this, classes, block)
+
+fun Radio(
+    parent: Element?,
+    classes: String = "",
+    block: HTMLInputElement.() -> Unit
+): HTMLInputElement {
+    val radio = parent.createElement<HTMLInputElement>("input", classes)
+    radio.type = "radio"
+    radio.block()
+    return radio
+}
+
+fun Element.Label(classes: String = "", block: HTMLLabelElement.() -> Unit): HTMLLabelElement =
+    Label(this, classes, block)
+
+fun Label(
+    parent: Element?,
+    classes: String = "",
+    block: HTMLLabelElement.() -> Unit
+): HTMLLabelElement {
+    val label = parent.createElement<HTMLLabelElement>("label", classes)
+    label.block()
+    return label
 }
 
 fun Element.Svg(classes: String = "", block: Element.() -> Unit): Element =
