@@ -62,15 +62,12 @@ class ShapeToolViewController(
             singleShapeLiveData,
             actionManager::setOneTimeAction
         )
-        val transformTool = controller.TransformSection(actionManager::setOneTimeAction)
-
-        singleShapeLiveData.observe(lifecycleOwner) {
-            val isSizeChangeable = it is Rectangle || it is Text
-            transformTool.setEnabled(it != null, isSizeChangeable)
-            if (it != null) {
-                transformTool.setValue(it.bound)
-            }
-        }
+        TransformToolViewController(
+            lifecycleOwner,
+            controller,
+            singleShapeLiveData,
+            actionManager::setOneTimeAction
+        )
 
         controller.append {
             val appearanceTool = AppearanceSection(
