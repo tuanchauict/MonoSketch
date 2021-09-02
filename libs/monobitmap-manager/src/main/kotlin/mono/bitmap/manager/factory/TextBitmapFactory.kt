@@ -2,8 +2,8 @@ package mono.bitmap.manager.factory
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Size
-import mono.shape.extra.manager.model.TextAlign
-import mono.shape.shape.extra.TextExtra
+import mono.shape.extra.style.TextAlign
+import mono.shape.extra.TextExtra
 
 object TextBitmapFactory {
     fun toBitmap(boundSize: Size, renderableText: List<String>, extra: TextExtra): MonoBitmap {

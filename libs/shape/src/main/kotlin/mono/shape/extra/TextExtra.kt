@@ -1,7 +1,7 @@
-package mono.shape.shape.extra
+package mono.shape.extra
 
-import mono.shape.extra.manager.ShapeExtraManager
-import mono.shape.extra.manager.model.TextAlign
+import mono.shape.ShapeExtraManager
+import mono.shape.extra.style.TextAlign
 import mono.shape.serialization.SerializableText
 
 /**
@@ -28,7 +28,7 @@ data class TextExtra(
 
     companion object {
         val NO_BOUND = TextExtra(
-            boundExtra = RectangleExtra.withDefault().copy(
+            boundExtra = ShapeExtraManager.defaultRectangleExtra.copy(
                 isFillEnabled = false,
                 isBorderEnabled = false
             ),
@@ -36,8 +36,8 @@ data class TextExtra(
         )
 
         fun withDefault(): TextExtra = TextExtra(
-            boundExtra = RectangleExtra.withDefault(),
-            textAlign = ShapeExtraManager.defaultExtraState.textAlign
+            boundExtra = ShapeExtraManager.defaultRectangleExtra,
+            textAlign = ShapeExtraManager.defaultTextAlign
         )
     }
 }

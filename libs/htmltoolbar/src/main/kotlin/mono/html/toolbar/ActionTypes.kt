@@ -1,7 +1,7 @@
 package mono.html.toolbar
 
 import mono.shape.command.ChangeOrder
-import mono.shape.extra.manager.model.TextAlign
+import mono.shape.extra.style.TextAlign
 import mono.shape.shape.AbstractShape
 
 /**

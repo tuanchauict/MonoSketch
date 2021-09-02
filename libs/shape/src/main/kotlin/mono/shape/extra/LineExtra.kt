@@ -1,11 +1,11 @@
-package mono.shape.shape.extra
+package mono.shape.extra
 
-import mono.shape.extra.manager.ShapeExtraManager
-import mono.shape.extra.manager.model.AnchorChar
-import mono.shape.extra.manager.model.StraightStrokeDashPattern
-import mono.shape.extra.manager.model.StraightStrokeStyle
+import mono.shape.ShapeExtraManager
+import mono.shape.extra.style.AnchorChar
+import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.serialization.SerializableLine
+import mono.shape.extra.style.StraightStrokeDashPattern
 
 /**
  * A [ShapeExtra] for [mono.shape.shape.Line].
@@ -46,16 +46,4 @@ data class LineExtra(
             isDashEnabled = isDashEnabled,
             dashPattern = dashPattern.toSerializableValue()
         )
-
-    companion object {
-        fun createDefault(): LineExtra {
-            val defaultExtraState = ShapeExtraManager.defaultExtraState
-            return LineExtra(
-                defaultExtraState.isStartHeadAnchorCharEnabled,
-                defaultExtraState.startHeadAnchorChar,
-                defaultExtraState.isEndHeadAnchorCharEnabled,
-                defaultExtraState.endHeadAnchorChar
-            )
-        }
-    }
 }

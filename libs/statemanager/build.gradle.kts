@@ -24,7 +24,6 @@ dependencies {
     implementation(project(":monoboard"))
     implementation(project(":shape"))
     implementation(project(":shape-clipboard"))
-    implementation(project(":shape-extra-manager"))
     implementation(project(":shape-interaction-bound"))
     implementation(project(":shape-selection"))
     implementation(project(":shape-serialization"))

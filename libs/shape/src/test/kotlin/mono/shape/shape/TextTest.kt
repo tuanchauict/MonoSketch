@@ -2,7 +2,7 @@ package mono.shape.shape
 
 import mono.graphics.geo.Rect
 import mono.shape.serialization.SerializableText
-import mono.shape.shape.extra.TextExtra
+import mono.shape.extra.TextExtra
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

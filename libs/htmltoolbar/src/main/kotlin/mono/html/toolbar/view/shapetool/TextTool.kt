@@ -16,7 +16,7 @@ import mono.html.toolbar.view.shapetool.Class.COLUMN
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.html.toolbar.view.shapetool.Class.MEDIUM
 import mono.html.toolbar.view.shapetool.Class.QUARTER
-import mono.shape.extra.manager.model.TextAlign
+import mono.shape.extra.style.TextAlign
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 

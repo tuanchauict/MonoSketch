@@ -52,7 +52,6 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
     private fun onMouseUp(environment: CommandEnvironment, mousePointer: MousePointer.Up) {
         environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
         if (!workingShape?.isBoundValid().nullToFalse()) {
-            environment.removeShape(workingShape)
             workingShape = null
             return
         }

@@ -2,7 +2,7 @@ package mono.shape.extra.manager.predefined
 
 import mono.common.Characters
 import mono.graphics.bitmap.drawable.CharDrawable
-import mono.shape.extra.manager.model.RectangleFillStyle
+import mono.shape.extra.style.RectangleFillStyle
 
 /**
  * An object for listing all predefined rectangle fill styles.

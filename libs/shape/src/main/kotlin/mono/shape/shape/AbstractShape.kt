@@ -4,8 +4,8 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.list.QuickList
 import mono.shape.serialization.AbstractSerializableShape
-import mono.shape.shape.extra.NoExtra
-import mono.shape.shape.extra.ShapeExtra
+import mono.shape.extra.NoExtra
+import mono.shape.extra.ShapeExtra
 import mono.uuid.UUID
 import kotlin.random.Random
 

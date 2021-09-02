@@ -1,4 +1,4 @@
-package mono.shape.extra.manager.model
+package mono.shape.extra.style
 
 /**
  * A class to define dash pattern of straight stroke.

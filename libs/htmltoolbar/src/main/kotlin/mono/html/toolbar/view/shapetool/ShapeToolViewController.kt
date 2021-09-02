@@ -10,14 +10,14 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
 import mono.livedata.map
-import mono.shape.extra.manager.ShapeExtraManager
+import mono.shape.ShapeExtraManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.shape.extra.RectangleExtra
+import mono.shape.extra.RectangleExtra
 import org.w3c.dom.HTMLElement
 
 class ShapeToolViewController(
@@ -150,7 +150,8 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> ShapeExtraManager.defaultExtraState.fillStyle
+                RetainableActionType.ADD_TEXT ->
+                    ShapeExtraManager.defaultRectangleExtra.userSelectedFillStyle
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -158,7 +159,7 @@ class ShapeToolViewController(
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedRectangleFillStyles().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isFillEnabled,
+                    ShapeExtraManager.defaultRectangleExtra.isFillEnabled,
                     selectedFillPosition
                 )
             } else {
@@ -194,7 +195,8 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> ShapeExtraManager.defaultExtraState.borderStyle
+                RetainableActionType.ADD_TEXT ->
+                    ShapeExtraManager.defaultRectangleExtra.userSelectedBorderStyle
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -202,7 +204,7 @@ class ShapeToolViewController(
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isBorderEnabled,
+                    ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
                     selectedFillPosition
                 )
             } else {
@@ -238,7 +240,7 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultExtraState.startHeadAnchorChar
+                    ShapeExtraManager.defaultLineExtra.userSelectedStartAnchor
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
@@ -247,7 +249,7 @@ class ShapeToolViewController(
                 val selectedStartHeaderPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isStartHeadAnchorCharEnabled,
+                    ShapeExtraManager.defaultLineExtra.isStartAnchorEnabled,
                     selectedStartHeaderPosition
                 )
             } else {
@@ -283,7 +285,7 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultExtraState.endHeadAnchorChar
+                    ShapeExtraManager.defaultLineExtra.userSelectedEndAnchor
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
@@ -292,7 +294,7 @@ class ShapeToolViewController(
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isEndHeadAnchorCharEnabled,
+                    ShapeExtraManager.defaultLineExtra.isEndAnchorEnabled,
                     selectedFillPosition
                 )
             } else {
@@ -362,7 +364,7 @@ class ShapeToolViewController(
         }
         val defaultTextAlignLiveData = retainableActionTypeLiveData.map {
             if (it == RetainableActionType.ADD_TEXT) {
-                TextAlignVisibility.Visible(ShapeExtraManager.defaultExtraState.textAlign)
+                TextAlignVisibility.Visible(ShapeExtraManager.defaultTextAlign)
             } else {
                 TextAlignVisibility.Hide
             }

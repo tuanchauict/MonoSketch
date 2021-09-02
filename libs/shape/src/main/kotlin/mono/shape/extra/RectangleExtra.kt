@@ -1,11 +1,11 @@
-package mono.shape.shape.extra
+package mono.shape.extra
 
-import mono.shape.extra.manager.ShapeExtraManager
-import mono.shape.extra.manager.model.RectangleFillStyle
-import mono.shape.extra.manager.model.StraightStrokeDashPattern
-import mono.shape.extra.manager.model.StraightStrokeStyle
+import mono.shape.ShapeExtraManager
+import mono.shape.extra.style.RectangleFillStyle
+import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.serialization.SerializableRectangle
+import mono.shape.extra.style.StraightStrokeDashPattern
 
 /**
  * A [ShapeExtra] for [mono.shape.shape.Rectangle]
@@ -60,18 +60,4 @@ data class RectangleExtra(
             isDashEnabled = isDashEnabled,
             dashPattern = userDefinedDashPattern.toSerializableValue()
         )
-
-    companion object {
-        fun withDefault(): RectangleExtra {
-            val defaultExtraState = ShapeExtraManager.defaultExtraState
-            return RectangleExtra(
-                defaultExtraState.isFillEnabled,
-                defaultExtraState.fillStyle,
-                defaultExtraState.isBorderEnabled,
-                defaultExtraState.borderStyle,
-                defaultExtraState.isDashEnabled,
-                defaultExtraState.dashPattern
-            )
-        }
-    }
 }
