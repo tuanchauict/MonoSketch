@@ -31,10 +31,34 @@ fun Span(parent: Element? = null, classes: String = "", text: String): HTMLSpanE
     return span
 }
 
+fun Element.Svg(classes: String = "", block: Element.() -> Unit): Element =
+    Svg(this, classes, block)
+
+fun Svg(parent: Element?, classes: String = "", block: Element.() -> Unit): Element {
+    val svg = parent.createSvgElement("svg", classes)
+    svg.block()
+    return svg
+}
+
+fun Element.SvgPath(path: String): Element = SvgPath(this, path)
+
+fun SvgPath(parent: Element?, path: String): Element {
+    val node = parent.createSvgElement("path", "")
+    node.setAttribute("d", path)
+    return node
+}
+
 private fun <T : Element> Element?.createElement(type: String, classes: String): T {
     @Suppress("UNCHECKED_CAST")
     val element = document.createElement(type) as T
     element.addClass(classes)
+    this?.append(element)
+    return element
+}
+
+private fun Element?.createSvgElement(type: String, classes: String): Element {
+    val element = document.createElementNS("http://www.w3.org/2000/svg", type)
+    element.setAttribute("class", classes)
     this?.append(element)
     return element
 }

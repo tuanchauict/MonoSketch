@@ -2,14 +2,13 @@
 
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.dom.append
 import mono.html.Div
-import mono.html.addOnClickListener
+import mono.html.SvgPath
+import mono.html.setOnClickListener
 import mono.html.appendElement
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.OneTimeActionType.ReorderShape
 import mono.html.toolbar.view.SvgIcon
-import mono.html.toolbar.view.SvgPath
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.lifecycle.LifecycleOwner
@@ -59,18 +58,16 @@ private fun Icon(
     onClick: (ReorderIconType) -> Unit
 ): HTMLDivElement =
     Div(classes = classes(ICON_BUTTON)) {
-        addOnClickListener {
+        SvgIcon(16, 16) {
+            for (path in iconType.iconPaths) {
+                SvgPath(path)
+            }
+        }
+
+        setOnClickListener {
             val target = it.currentTarget as HTMLElement
             if (target.isEnabled) {
                 onClick(iconType)
-            }
-        }
-        // TODO: Remove this append
-        append {
-            SvgIcon(16, 16) {
-                for (path in iconType.iconPaths) {
-                    SvgPath(path)
-                }
             }
         }
     }
