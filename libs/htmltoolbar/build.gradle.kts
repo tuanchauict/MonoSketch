@@ -9,6 +9,7 @@ repositories {
 dependencies {
     implementation(project(":commons"))
     implementation(project(":graphicsgeo"))
+    implementation(project(":html-dsl"))
     implementation(project(":html-ext"))
     implementation(project(":keycommand"))
     implementation(project(":lifecycle"))
