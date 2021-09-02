@@ -90,11 +90,6 @@ fun A(
     return anchor
 }
 
-fun Element.Radio(
-    classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement = Radio(this, classes, block)
-
 fun Element.InputNumber(
     classes: String = "",
     block: HTMLInputElement.() -> Unit
@@ -110,6 +105,25 @@ fun InputNumber(
     input.block()
     return input
 }
+
+fun Element.CheckBox(classes: String = "", block: HTMLInputElement.() -> Unit): HTMLInputElement =
+    CheckBox(this, classes, block)
+
+fun CheckBox(
+    parent: Element?,
+    classes: String = "",
+    block: HTMLInputElement.() -> Unit
+): HTMLInputElement {
+    val radio = parent.createElement<HTMLInputElement>("input", classes)
+    radio.type = "checkbox"
+    radio.block()
+    return radio
+}
+
+fun Element.Radio(
+    classes: String = "",
+    block: HTMLInputElement.() -> Unit
+): HTMLInputElement = Radio(this, classes, block)
 
 fun Radio(
     parent: Element?,
