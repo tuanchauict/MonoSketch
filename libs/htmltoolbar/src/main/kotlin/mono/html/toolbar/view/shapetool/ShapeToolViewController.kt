@@ -27,6 +27,33 @@ class ShapeToolViewController(
     selectedShapesLiveData: LiveData<Set<AbstractShape>>,
     shapeManagerVersionLiveData: LiveData<Int>
 ) {
+    private val singleShapeLiveData = MediatorLiveData<AbstractShape?>(null).apply {
+        add(selectedShapesLiveData) {
+            value = it.singleOrNull()
+        }
+        add(shapeManagerVersionLiveData) {
+            value = value
+        }
+    }
+
+    private val shapesLiveData = MediatorLiveData<Set<AbstractShape>>(emptySet()).apply {
+        add(selectedShapesLiveData) {
+            value = it
+        }
+        add(shapeManagerVersionLiveData) {
+            value = value
+        }
+    }
+    private val retainableActionLiveData =
+        MediatorLiveData(actionManager.retainableActionLiveData.value).apply {
+            add(actionManager.retainableActionLiveData) {
+                value = it
+            }
+            add(ShapeExtraManager.defaultExtraStateUpdateLiveData) {
+                value = value
+            }
+        }
+
     init {
         controller.append {
             val moveTool = ReorderSection(actionManager::setOneTimeAction)
@@ -41,15 +68,6 @@ class ShapeToolViewController(
 
             val textAlignmentTool = TextSection(actionManager::setOneTimeAction)
 
-            val singleShapeLiveData = MediatorLiveData<AbstractShape?>(null).apply {
-                add(selectedShapesLiveData) {
-                    value = it.singleOrNull()
-                }
-                add(shapeManagerVersionLiveData) {
-                    value = value
-                }
-            }
-
             singleShapeLiveData.observe(lifecycleOwner) {
                 moveTool.setEnabled(it != null)
 
@@ -59,24 +77,6 @@ class ShapeToolViewController(
                     transformTool.setValue(it.bound)
                 }
             }
-
-            val shapesLiveData = MediatorLiveData<Set<AbstractShape>>(emptySet()).apply {
-                add(selectedShapesLiveData) {
-                    value = it
-                }
-                add(shapeManagerVersionLiveData) {
-                    value = value
-                }
-            }
-            val retainableActionLiveData =
-                MediatorLiveData(actionManager.retainableActionLiveData.value).apply {
-                    add(actionManager.retainableActionLiveData) {
-                        value = it
-                    }
-                    add(ShapeExtraManager.defaultExtraStateUpdateLiveData) {
-                        value = value
-                    }
-                }
 
             val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
                 shapesLiveData,
