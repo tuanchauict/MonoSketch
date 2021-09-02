@@ -2,9 +2,9 @@
 
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.js.div
-import kotlinx.html.js.onClickFunction
-import mono.html.ext.Tag
+import kotlinx.html.dom.append
+import mono.html.Div
+import mono.html.addOnClickListener
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.OneTimeActionType.ReorderShape
 import mono.html.toolbar.view.SvgIcon
@@ -12,6 +12,7 @@ import mono.html.toolbar.view.SvgPath
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.shape.command.ChangeOrder
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -29,11 +30,13 @@ private class ReorderSectionViewController(
     }
 }
 
-internal fun Tag.ReorderSection(
+internal fun ReorderSection(
+    parent: Element,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): ToolViewController {
     val icons = mutableListOf<HTMLDivElement>()
-    val div = Section("", isSmallSpace = true) {
+
+    val div = parent.Section("", isSmallSpace = true) {
         Tool {
             Row(isCenterEvenSpace = true) {
                 for (type in ReorderIconType.values()) {
@@ -46,21 +49,23 @@ internal fun Tag.ReorderSection(
     return ReorderSectionViewController(div, icons)
 }
 
-private fun Tag.Icon(
+private fun Element.Icon(
     iconType: ReorderIconType,
     onClick: (ReorderIconType) -> Unit
 ): HTMLDivElement =
-    div(classes(ICON_BUTTON)) {
-        onClickFunction = {
+    Div(classes(ICON_BUTTON)) {
+        addOnClickListener {
             val target = it.currentTarget as HTMLElement
             if (target.isEnabled) {
                 onClick(iconType)
             }
         }
-
-        SvgIcon(16, 16) {
-            for (path in iconType.iconPaths) {
-                SvgPath(path)
+        // TODO: Remove this append
+        append {
+            SvgIcon(16, 16) {
+                for (path in iconType.iconPaths) {
+                    SvgPath(path)
+                }
             }
         }
     }

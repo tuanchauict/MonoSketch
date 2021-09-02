@@ -55,8 +55,10 @@ class ShapeToolViewController(
         }
 
     init {
+        val moveTool = ReorderSection(controller, actionManager::setOneTimeAction)
+
         controller.append {
-            val moveTool = ReorderSection(actionManager::setOneTimeAction)
+
             val transformTool = TransformSection(actionManager::setOneTimeAction)
 
             val appearanceTool = AppearanceSection(
