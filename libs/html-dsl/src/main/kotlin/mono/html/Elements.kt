@@ -28,11 +28,21 @@ fun Div(
     return div
 }
 
-fun Element.Span(classes: String = "", text: String): HTMLSpanElement = Span(this, classes, text)
+fun Element.Span(
+    classes: String = "",
+    text: String = "",
+    block: HTMLSpanElement.() -> Unit
+): HTMLSpanElement = Span(this, classes, text, block)
 
-fun Span(parent: Element? = null, classes: String = "", text: String): HTMLSpanElement {
+fun Span(
+    parent: Element? = null,
+    classes: String = "",
+    text: String,
+    block: HTMLSpanElement.() -> Unit
+): HTMLSpanElement {
     val span = parent.createElement<HTMLSpanElement>("span", classes)
     span.innerText = text
+    span.block()
     return span
 }
 

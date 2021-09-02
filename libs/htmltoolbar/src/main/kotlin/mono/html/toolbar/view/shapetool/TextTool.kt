@@ -2,13 +2,12 @@
 
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.js.div
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.span
-import mono.html.ext.Tag
+import mono.html.Div
+import mono.html.Span
+import mono.html.SvgPath
+import mono.html.setOnClickListener
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.SvgIcon
-import mono.html.toolbar.view.SvgPath
 import mono.html.toolbar.view.isSelected
 import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
 import mono.html.toolbar.view.shapetool.Class.CLICKABLE
@@ -17,6 +16,7 @@ import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.html.toolbar.view.shapetool.Class.MEDIUM
 import mono.html.toolbar.view.shapetool.Class.QUARTER
 import mono.shape.extra.style.TextAlign
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -54,7 +54,7 @@ private class TextSectionViewControllerImpl(
     }
 }
 
-internal fun Tag.TextSection(
+internal fun Element.TextSection(
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): TextSectionViewController {
     val horizontalIcons = mutableListOf<HTMLElement>()
@@ -103,12 +103,12 @@ internal fun Tag.TextSection(
     return TextSectionViewControllerImpl(rootView, horizontalIcons, verticalIcons)
 }
 
-private fun Tag.TextTool(name: String, iconBlock: Tag.() -> Unit) {
+private fun Element.TextTool(name: String, iconBlock: Element.() -> Unit) {
     Row(isVerticalCenter = true, isMoreBottomSpaceRequired = true) {
-        div(classes(COLUMN, ADD_RIGHT_SPACE, QUARTER)) {
-            +name
+        Div(classes(COLUMN, ADD_RIGHT_SPACE, QUARTER)) {
+            innerText = name
         }
-        div(classes(COLUMN)) {
+        Div(classes(COLUMN)) {
             Row {
                 iconBlock()
             }
@@ -116,15 +116,15 @@ private fun Tag.TextTool(name: String, iconBlock: Tag.() -> Unit) {
     }
 }
 
-private fun Tag.Icon(
+private fun Element.Icon(
     iconType: TextAlignmentIconType,
     setOneTimeAction: (OneTimeActionType) -> Unit
-): HTMLElement = span(classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE, CLICKABLE)) {
+): HTMLElement = Span(classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE, CLICKABLE)) {
     SvgIcon(16, 16, iconType.viewPortSize, iconType.viewPortSize) {
         SvgPath(iconType.iconPath)
     }
 
-    onClickFunction = {
+    setOnClickListener {
         setOneTimeAction(iconType.toTextAlignment())
     }
 }

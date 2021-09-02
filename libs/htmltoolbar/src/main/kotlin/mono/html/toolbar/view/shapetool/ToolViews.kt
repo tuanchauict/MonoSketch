@@ -33,7 +33,7 @@ internal open class ToolViewController(private val rootView: HTMLDivElement) {
 
 internal fun Element.Section(
     title: String,
-    isSmallSpace: Boolean,
+    isSmallSpace: Boolean = false,
     block: HTMLDivElement.() -> Unit
 ): HTMLDivElement =
     Div(classes(SECTION, SMALL_SPACE x isSmallSpace)) {
