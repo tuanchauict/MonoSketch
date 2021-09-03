@@ -13,8 +13,6 @@ dependencies {
     implementation(project(":lifecycle"))
     implementation(project(":livedata"))
 
-    implementation(libs.kotlinx.html)
-
     testImplementation(libs.kotlin.test.js)
 }
 
