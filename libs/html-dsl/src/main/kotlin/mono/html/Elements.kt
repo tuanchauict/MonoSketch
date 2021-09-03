@@ -26,11 +26,7 @@ fun Div(
     parent: Element? = null,
     classes: String = "",
     block: HTMLDivElement.() -> Unit
-): HTMLDivElement {
-    val div = parent.createElement<HTMLDivElement>("div", classes)
-    div.block()
-    return div
-}
+): HTMLDivElement = parent.createElement("div", classes, block)
 
 fun Element.Heading(
     level: HeadingLevel,
@@ -45,11 +41,9 @@ fun Heading(
     classes: String = "",
     text: String = "",
     block: HTMLHeadingElement.() -> Unit
-): HTMLHeadingElement {
-    val heading = parent.createElement<HTMLHeadingElement>(level.value, classes)
-    heading.innerText = text
-    heading.block()
-    return heading
+): HTMLHeadingElement = parent.createElement(level.value, classes) {
+    innerText = text
+    block()
 }
 
 enum class HeadingLevel(val value: String) {
@@ -67,11 +61,9 @@ fun Pre(
     classes: String = "",
     text: String = "",
     block: HTMLPreElement.() -> Unit = {}
-): HTMLPreElement {
-    val pre = parent.createElement<HTMLPreElement>("pre", classes)
-    pre.innerText = text
-    pre.block()
-    return pre
+): HTMLPreElement = parent.createElement("pre", classes) {
+    innerText = text
+    block()
 }
 
 fun Element.Span(
@@ -85,11 +77,9 @@ fun Span(
     classes: String = "",
     text: String = "",
     block: HTMLSpanElement.() -> Unit = {}
-): HTMLSpanElement {
-    val span = parent.createElement<HTMLSpanElement>("span", classes)
-    span.innerText = text
-    span.block()
-    return span
+): HTMLSpanElement = parent.createElement("span", classes) {
+    innerText = text
+    block()
 }
 
 fun Element.Ul(classes: String = "", block: HTMLUListElement.() -> Unit): HTMLUListElement =
@@ -99,11 +89,7 @@ fun Ul(
     parent: Element?,
     classes: String = "",
     block: HTMLUListElement.() -> Unit
-): HTMLUListElement {
-    val ul = parent.createElement<HTMLUListElement>("ul", classes)
-    ul.block()
-    return ul
-}
+): HTMLUListElement = parent.createElement("ul", classes, block)
 
 fun Element.Li(classes: String = "", block: HTMLLIElement.() -> Unit): HTMLLIElement =
     Li(this, classes, block)
@@ -112,11 +98,7 @@ fun Li(
     parent: Element?,
     classes: String = "",
     block: HTMLLIElement.() -> Unit
-): HTMLLIElement {
-    val li = parent.createElement<HTMLLIElement>("li", classes)
-    li.block()
-    return li
-}
+): HTMLLIElement = parent.createElement("li", classes, block)
 
 fun Element.A(
     classes: String = "",
@@ -129,11 +111,9 @@ fun A(
     classes: String = "",
     text: String = "",
     block: HTMLAnchorElement.() -> Unit
-): HTMLAnchorElement {
-    val anchor = parent.createElement<HTMLAnchorElement>("a", classes)
-    anchor.innerText = text
-    anchor.block()
-    return anchor
+): HTMLAnchorElement = parent.createElement("a", classes) {
+    innerText = text
+    block()
 }
 
 fun Element.TextArea(
@@ -147,11 +127,9 @@ fun TextArea(
     classes: String,
     content: String,
     block: HTMLTextAreaElement.() -> Unit = {}
-): HTMLTextAreaElement {
-    val textArea = parent.createElement<HTMLTextAreaElement>("textarea", classes)
-    textArea.textContent = content
-    textArea.block()
-    return textArea
+): HTMLTextAreaElement = parent.createElement("textarea", classes) {
+    textContent = content
+    block()
 }
 
 fun Element.Input(
@@ -165,11 +143,9 @@ fun Input(
     inputType: InputType,
     classes: String = "",
     block: HTMLInputElement.() -> Unit = {}
-): HTMLInputElement {
-    val input = parent.createElement<HTMLInputElement>("input", classes)
-    input.type = inputType.value
-    input.block()
-    return input
+): HTMLInputElement = parent.createElement("input", classes) {
+    type = inputType.value
+    block()
 }
 
 enum class InputType(val value: String) {
@@ -186,11 +162,7 @@ fun Label(
     parent: Element?,
     classes: String = "",
     block: HTMLLabelElement.() -> Unit
-): HTMLLabelElement {
-    val label = parent.createElement<HTMLLabelElement>("label", classes)
-    label.block()
-    return label
-}
+): HTMLLabelElement = parent.createElement("label", classes, block)
 
 fun Element.Canvas(
     classes: String = "",
@@ -201,11 +173,7 @@ fun Canvas(
     parent: Element?,
     classes: String = "",
     block: HTMLCanvasElement.() -> Unit = {}
-): HTMLCanvasElement {
-    val canvas = parent.createElement<HTMLCanvasElement>("canvas", classes)
-    canvas.block()
-    return canvas
-}
+): HTMLCanvasElement = parent.createElement("canvas", classes, block)
 
 fun Element.Svg(classes: String = "", block: Element.() -> Unit): Element =
     Svg(this, classes, block)
@@ -224,11 +192,16 @@ fun SvgPath(parent: Element?, path: String): Element {
     return node
 }
 
-private fun <T : Element> Element?.createElement(type: String, classes: String): T {
+private fun <T : Element> Element?.createElement(
+    type: String,
+    classes: String,
+    block: T.() -> Unit = {}
+): T {
     @Suppress("UNCHECKED_CAST")
     val element = document.createElement(type) as T
     element.addClass(classes)
     this?.append(element)
+    element.block()
     return element
 }
 
