@@ -3,8 +3,9 @@
 package mono.html.toolbar.view
 
 import mono.html.Div
+import mono.html.Input
+import mono.html.InputType
 import mono.html.Label
-import mono.html.Radio
 import mono.html.SvgPath
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
@@ -134,7 +135,7 @@ private fun Element.MouseActionGroupItem(
     onChangeAction: (RetainableActionType) -> Unit
 ): Pair<RetainableActionType, HTMLInputElement> {
     val actionId = "middle-action-${random.nextULong()}"
-    val checkbox = Radio("btn-check") {
+    val checkbox = Input(InputType.RADIO, "btn-check") {
         id = actionId
         checked = mouseActionType.isChecked
         name = "mouse-action-group"

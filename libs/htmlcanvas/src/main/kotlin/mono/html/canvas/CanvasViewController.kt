@@ -1,14 +1,12 @@
 package mono.html.canvas
 
 import kotlinx.dom.addClass
-import kotlinx.html.dom.append
-import kotlinx.html.js.canvas
-import mono.common.firstOrNull
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
+import mono.html.Canvas
 import mono.html.canvas.canvas.AxisCanvasViewController
 import mono.html.canvas.canvas.BoardCanvasViewController
 import mono.html.canvas.canvas.DrawingInfoController
@@ -22,7 +20,6 @@ import mono.livedata.MediatorLiveData
 import mono.livedata.distinctUntilChange
 import mono.shapebound.InteractionBound
 import mono.shapebound.InteractionPoint
-import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLDivElement
 
 /**
@@ -71,38 +68,31 @@ class CanvasViewController(
 
         container.addClass("top-divider")
 
-        container.append {
-            canvas(CLASS_NAME_GRID) {}
-            canvas(CLASS_NAME_BOARD) {}
-            canvas(CLASS_NAME_INTERACTION) {}
-            canvas(CLASS_NAME_SELECTION) {}
-        }
-        axisContainer.append {
-            val axisCanvas = canvas(CLASS_NAME_AXIS) {}
-            AxisCanvasViewController(lifecycleOwner, axisCanvas, drawingInfoLiveData)
-        }
-
         gridCanvasViewController = GridCanvasViewController(
             lifecycleOwner,
-            getCanvas(CLASS_NAME_GRID),
+            Canvas(container, CLASS_NAME_GRID),
             drawingInfoLiveData
         )
-
         boardCanvasViewController = BoardCanvasViewController(
             lifecycleOwner,
-            getCanvas(CLASS_NAME_BOARD),
+            Canvas(container, CLASS_NAME_BOARD),
             board,
             drawingInfoLiveData
         )
         interactionCanvasViewController = InteractionCanvasViewController(
             lifecycleOwner,
-            getCanvas(CLASS_NAME_INTERACTION),
+            Canvas(container, CLASS_NAME_INTERACTION),
             drawingInfoLiveData,
             mousePointerLiveData
         )
         selectionCanvasViewController = SelectionCanvasViewController(
             lifecycleOwner,
-            getCanvas(CLASS_NAME_SELECTION),
+            Canvas(container, CLASS_NAME_SELECTION),
+            drawingInfoLiveData
+        )
+        AxisCanvasViewController(
+            lifecycleOwner,
+            Canvas(axisContainer, CLASS_NAME_AXIS),
             drawingInfoLiveData
         )
 
@@ -110,10 +100,6 @@ class CanvasViewController(
             updateCanvasSize()
         }
         windowBoardBoundMediatorLiveData.add(drawingInfoLiveData) { value = it.boardBound }
-    }
-
-    private fun getCanvas(className: String): HTMLCanvasElement {
-        return container.getElementsByClassName(className).firstOrNull()!!
     }
 
     fun drawBoard() {

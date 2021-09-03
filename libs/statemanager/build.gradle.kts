@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":commons"))
     implementation(project(":export-shapes-modal"))
     implementation(project(":graphicsgeo"))
+    implementation(project(":html-dsl"))
     implementation(project(":htmlcanvas"))
     implementation(project(":htmlmodal"))
     implementation(project(":htmltoolbar"))

@@ -6,11 +6,15 @@ import kotlinx.browser.document
 import kotlinx.dom.addClass
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLAnchorElement
+import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLHeadingElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLLIElement
 import org.w3c.dom.HTMLLabelElement
+import org.w3c.dom.HTMLPreElement
 import org.w3c.dom.HTMLSpanElement
+import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.HTMLUListElement
 
 fun Element.Div(
@@ -22,10 +26,44 @@ fun Div(
     parent: Element? = null,
     classes: String = "",
     block: HTMLDivElement.() -> Unit
-): HTMLDivElement {
-    val div = parent.createElement<HTMLDivElement>("div", classes)
-    div.block()
-    return div
+): HTMLDivElement = parent.createElement("div", classes, block)
+
+fun Element.Heading(
+    level: HeadingLevel,
+    classes: String = "",
+    text: String = "",
+    block: HTMLHeadingElement.() -> Unit
+): HTMLHeadingElement = Heading(this, level, classes, text, block)
+
+fun Heading(
+    parent: Element?,
+    level: HeadingLevel,
+    classes: String = "",
+    text: String = "",
+    block: HTMLHeadingElement.() -> Unit
+): HTMLHeadingElement = parent.createElement(level.value, classes) {
+    innerText = text
+    block()
+}
+
+enum class HeadingLevel(val value: String) {
+    H1("h1"), H2("h2"), H3("H3"), H4("h4"), H5("h5")
+}
+
+fun Element.Pre(
+    classes: String = "",
+    text: String = "",
+    block: HTMLPreElement.() -> Unit = {}
+): HTMLPreElement = Pre(this, classes, text, block)
+
+fun Pre(
+    parent: Element?,
+    classes: String = "",
+    text: String = "",
+    block: HTMLPreElement.() -> Unit = {}
+): HTMLPreElement = parent.createElement("pre", classes) {
+    innerText = text
+    block()
 }
 
 fun Element.Span(
@@ -39,11 +77,9 @@ fun Span(
     classes: String = "",
     text: String = "",
     block: HTMLSpanElement.() -> Unit = {}
-): HTMLSpanElement {
-    val span = parent.createElement<HTMLSpanElement>("span", classes)
-    span.innerText = text
-    span.block()
-    return span
+): HTMLSpanElement = parent.createElement("span", classes) {
+    innerText = text
+    block()
 }
 
 fun Element.Ul(classes: String = "", block: HTMLUListElement.() -> Unit): HTMLUListElement =
@@ -53,11 +89,7 @@ fun Ul(
     parent: Element?,
     classes: String = "",
     block: HTMLUListElement.() -> Unit
-): HTMLUListElement {
-    val ul = parent.createElement<HTMLUListElement>("ul", classes)
-    ul.block()
-    return ul
-}
+): HTMLUListElement = parent.createElement("ul", classes, block)
 
 fun Element.Li(classes: String = "", block: HTMLLIElement.() -> Unit): HTMLLIElement =
     Li(this, classes, block)
@@ -66,74 +98,61 @@ fun Li(
     parent: Element?,
     classes: String = "",
     block: HTMLLIElement.() -> Unit
-): HTMLLIElement {
-    val li = parent.createElement<HTMLLIElement>("li", classes)
-    li.block()
-    return li
-}
+): HTMLLIElement = parent.createElement("li", classes, block)
 
 fun Element.A(
     classes: String = "",
-    text: String,
+    text: String = "",
     block: HTMLAnchorElement.() -> Unit
 ): HTMLAnchorElement = A(this, classes, text, block)
 
 fun A(
     parent: Element?,
     classes: String = "",
-    text: String,
+    text: String = "",
     block: HTMLAnchorElement.() -> Unit
-): HTMLAnchorElement {
-    val anchor = parent.createElement<HTMLAnchorElement>("a", classes)
-    anchor.innerText = text
-    anchor.block()
-    return anchor
+): HTMLAnchorElement = parent.createElement("a", classes) {
+    innerText = text
+    block()
 }
 
-fun Element.InputNumber(
+fun Element.TextArea(
     classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement = InputNumber(this, classes, block)
+    content: String,
+    block: HTMLTextAreaElement.() -> Unit = {}
+): HTMLTextAreaElement = TextArea(this, classes, content, block)
 
-fun InputNumber(
+fun TextArea(
     parent: Element?,
-    classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement {
-    val input = parent.createElement<HTMLInputElement>("input", classes)
-    input.type = "number"
-    input.block()
-    return input
+    classes: String,
+    content: String,
+    block: HTMLTextAreaElement.() -> Unit = {}
+): HTMLTextAreaElement = parent.createElement("textarea", classes) {
+    textContent = content
+    block()
 }
 
-fun Element.CheckBox(classes: String = "", block: HTMLInputElement.() -> Unit): HTMLInputElement =
-    CheckBox(this, classes, block)
-
-fun CheckBox(
-    parent: Element?,
+fun Element.Input(
+    inputType: InputType,
     classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement {
-    val radio = parent.createElement<HTMLInputElement>("input", classes)
-    radio.type = "checkbox"
-    radio.block()
-    return radio
+    block: HTMLInputElement.() -> Unit = {}
+): HTMLInputElement = Input(this, inputType, classes, block)
+
+fun Input(
+    parent: Element?,
+    inputType: InputType,
+    classes: String = "",
+    block: HTMLInputElement.() -> Unit = {}
+): HTMLInputElement = parent.createElement("input", classes) {
+    type = inputType.value
+    block()
 }
 
-fun Element.Radio(
-    classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement = Radio(this, classes, block)
-
-fun Radio(
-    parent: Element?,
-    classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement {
-    val radio = parent.createElement<HTMLInputElement>("input", classes)
-    radio.type = "radio"
-    radio.block()
-    return radio
+enum class InputType(val value: String) {
+    NUMBER("number"),
+    FILE("file"),
+    RADIO("radio"),
+    CHECK_BOX("checkbox")
 }
 
 fun Element.Label(classes: String = "", block: HTMLLabelElement.() -> Unit): HTMLLabelElement =
@@ -143,11 +162,18 @@ fun Label(
     parent: Element?,
     classes: String = "",
     block: HTMLLabelElement.() -> Unit
-): HTMLLabelElement {
-    val label = parent.createElement<HTMLLabelElement>("label", classes)
-    label.block()
-    return label
-}
+): HTMLLabelElement = parent.createElement("label", classes, block)
+
+fun Element.Canvas(
+    classes: String = "",
+    block: HTMLCanvasElement.() -> Unit = {}
+): HTMLCanvasElement = Canvas(this, classes, block)
+
+fun Canvas(
+    parent: Element?,
+    classes: String = "",
+    block: HTMLCanvasElement.() -> Unit = {}
+): HTMLCanvasElement = parent.createElement("canvas", classes, block)
 
 fun Element.Svg(classes: String = "", block: Element.() -> Unit): Element =
     Svg(this, classes, block)
@@ -166,11 +192,16 @@ fun SvgPath(parent: Element?, path: String): Element {
     return node
 }
 
-private fun <T : Element> Element?.createElement(type: String, classes: String): T {
+private fun <T : Element> Element?.createElement(
+    type: String,
+    classes: String,
+    block: T.() -> Unit = {}
+): T {
     @Suppress("UNCHECKED_CAST")
     val element = document.createElement(type) as T
     element.addClass(classes)
     this?.append(element)
+    element.block()
     return element
 }
 

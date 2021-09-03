@@ -8,10 +8,10 @@ repositories {
 
 dependencies {
     implementation(project(":graphicsgeo"))
+    implementation(project(":html-dsl"))
     implementation(project(":livedata"))
     implementation(project(":shape"))
 
-    implementation(libs.kotlinx.html)
     implementation(libs.kotlinx.serialization.json)
 
     implementation(kotlin("stdlib-js"))

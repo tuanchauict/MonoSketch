@@ -2,6 +2,7 @@ package mono.common
 
 import kotlinx.browser.window
 import org.w3c.dom.Window
+import kotlin.js.Date
 
 fun setTimeout(durationMillis: Int, action: () -> Unit): Cancelable =
     if (durationMillis == 0) {
@@ -30,3 +31,5 @@ private class AnimationFrame(private val id: Int) : Cancelable {
 }
 
 fun Window.isCommandKeySupported(): Boolean = navigator.platform.startsWith("Mac")
+
+fun currentTimeMillis(): Double = Date.now()
