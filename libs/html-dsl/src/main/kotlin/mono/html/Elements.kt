@@ -200,6 +200,31 @@ fun Radio(
     return radio
 }
 
+fun Element.Input(
+    inputType: InputType,
+    classes: String = "",
+    block: HTMLInputElement.() -> Unit = {}
+): HTMLInputElement = Input(this, inputType, classes, block)
+
+fun Input(
+    parent: Element?,
+    inputType: InputType,
+    classes: String = "",
+    block: HTMLInputElement.() -> Unit = {}
+): HTMLInputElement {
+    val input = parent.createElement<HTMLInputElement>("input", classes)
+    input.type = inputType.value
+    input.block()
+    return input
+}
+
+enum class InputType(val value: String) {
+    NUMBER("number"),
+    FILE("file"),
+    RADIO("radio"),
+    CHECK_BOX("checkbox")
+}
+
 fun Element.Label(classes: String = "", block: HTMLLabelElement.() -> Unit): HTMLLabelElement =
     Label(this, classes, block)
 

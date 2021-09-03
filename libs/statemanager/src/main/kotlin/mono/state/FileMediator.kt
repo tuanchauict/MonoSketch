@@ -1,10 +1,10 @@
 package mono.state
 
 import kotlinx.browser.document
-import kotlinx.html.InputType
-import kotlinx.html.a
-import kotlinx.html.dom.append
-import kotlinx.html.js.input
+import mono.html.A
+import mono.html.Input
+import mono.html.InputType
+import mono.html.setAttributes
 import org.w3c.dom.url.URL
 import org.w3c.files.Blob
 import org.w3c.files.FileList
@@ -16,11 +16,11 @@ import org.w3c.files.get
  */
 internal class FileMediator {
     fun saveFile(jsonString: String) {
-        document.body?.append {
+        document.body?.run {
             val fileBlob = Blob(arrayOf(jsonString))
-            val node = a(classes = "hidden") {
+            val node = A(classes = "hidden") {
                 href = URL.Companion.createObjectURL(fileBlob)
-                attributes["download"] = "$DEFAULT_FILENAME.$EXTENSION"
+                setAttributes("download" to "$DEFAULT_FILENAME.$EXTENSION")
             }
             node.click()
             node.remove()
@@ -28,9 +28,9 @@ internal class FileMediator {
     }
 
     fun openFile(onFileLoadedAction: (String) -> Unit) {
-        document.body?.append {
-            val fileInput = input(type = InputType.file, classes = "hidden") {
-                attributes["accept"] = ".$EXTENSION"
+        document.body?.run {
+            val fileInput = Input(InputType.FILE, classes = "hidden") {
+                setAttributes("accept" to ".$EXTENSION")
             }
             fileInput.onchange = {
                 readFile(fileInput.files, onFileLoadedAction)
