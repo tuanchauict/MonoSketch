@@ -12,6 +12,8 @@ fun Element.setOnMouseWheelListener(listener: (Event) -> Unit) =
 fun HTMLInputElement.setOnChangeListener(listener: (Event) -> Unit) =
     addEventListener("change", listener)
 
+fun Element.appendElement(children: List<Element>) = appendElement(*children.toTypedArray())
+
 fun Element.appendElement(vararg children: Element) {
     for (node in children) {
         append(node)

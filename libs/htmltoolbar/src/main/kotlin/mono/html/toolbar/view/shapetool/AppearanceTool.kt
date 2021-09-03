@@ -2,10 +2,10 @@
 
 package mono.html.toolbar.view.shapetool
 
-import mono.common.nullToFalse
 import mono.html.CheckBox
 import mono.html.Div
 import mono.html.Span
+import mono.html.appendElement
 import mono.html.setOnChangeListener
 import mono.html.setOnClickListener
 import mono.html.toolbar.OneTimeActionType
@@ -127,58 +127,41 @@ private fun Element.GridTextIconOptions(
     options: List<OptionItem>,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): AppearanceToolViewController {
-    var checkBox: HTMLInputElement? = null
-    var optionElements: List<HTMLElement>? = null
+    val checkBox = CheckBox(null, classes = classes(INPUT_CHECK_BOX, CLICKABLE)) {
+        setOnChangeListener {
+            setOneTimeAction(type.toActionType(checked))
+        }
+    }
+    val optionElements = options.map { option ->
+        Span(null, classes(ICON_BUTTON, SMALL, CLICKABLE), option.name) {
+            setOnClickListener {
+                setOneTimeAction(type.toActionType(selectedId = option.id))
+            }
+        }
+    }
     val rootView = Tool(hasMoreBottomSpace = true) {
         Row {
-            checkBox = CheckColumn { setOneTimeAction(type.toActionType(it)) }
-            optionElements = OptionsColumn(checkBox!!, type.title, options) {
-                setOneTimeAction(type.toActionType(selectedId = it.id))
+            Column(hasMoreRightSpace = true) {
+                Row {
+                    appendElement(checkBox)
+                }
             }
-        }
-    }
-    return AppearanceToolViewController(type, rootView, checkBox!!, optionElements!!)
-}
-
-private fun Element.CheckColumn(onCheckChange: (Boolean) -> Unit): HTMLInputElement {
-    var checkBox: HTMLInputElement? = null
-    Column(hasMoreRightSpace = true) {
-        Row {
-            checkBox = CheckBox(classes = classes(INPUT_CHECK_BOX, CLICKABLE)) {
-                setOnChangeListener {
-                    onCheckChange(checked.nullToFalse())
+            Column {
+                Row {
+                    Span(classes(TOOL_TITLE, CLICKABLE), type.title) {
+                        setOnClickListener {
+                            checkBox.checked = !checkBox.checked
+                            checkBox.dispatchEvent(Event("change"))
+                        }
+                    }
+                }
+                Row(isMonoFont = true, isGrid = true) {
+                    appendElement(optionElements)
                 }
             }
         }
     }
-    return checkBox!!
-}
-
-private fun Element.OptionsColumn(
-    checkBox: HTMLInputElement,
-    title: String,
-    options: List<OptionItem>,
-    onOptionSelected: (OptionItem) -> Unit
-): List<HTMLElement> {
-    val optionElements = mutableListOf<HTMLElement>()
-    Column {
-        Row {
-            Span(classes(TOOL_TITLE, CLICKABLE), title) {
-                setOnClickListener {
-                    checkBox.checked = !checkBox.checked
-                    checkBox.dispatchEvent(Event("change"))
-                }
-            }
-        }
-        Row(isMonoFont = true, isGrid = true) {
-            for (option in options) {
-                optionElements += Span(classes(ICON_BUTTON, SMALL, CLICKABLE), option.name) {
-                    setOnClickListener { onOptionSelected(option) }
-                }
-            }
-        }
-    }
-    return optionElements
+    return AppearanceToolViewController(type, rootView, checkBox, optionElements)
 }
 
 private fun Element.Column(hasMoreRightSpace: Boolean = false, block: Element.() -> Unit) {

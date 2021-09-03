@@ -37,7 +37,7 @@ internal class ReorderSectionViewController(
         container.Section("", isSmallSpace = true) {
             Tool {
                 Row(isCenterEvenSpace = true) {
-                    appendElement(*icons.toTypedArray())
+                    appendElement(icons)
                 }
             }
         }

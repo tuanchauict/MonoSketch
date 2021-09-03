@@ -44,10 +44,10 @@ internal class TextSectionViewController(
     private val rootView = container.Section("TEXT") {
         Tool(true) {
             TextTool("Alignment") {
-                appendElement(*horizontalIcons.toTypedArray())
+                appendElement(horizontalIcons)
             }
             TextTool("Position") {
-                appendElement(*verticalIcons.toTypedArray())
+                appendElement(verticalIcons)
             }
         }
     }
