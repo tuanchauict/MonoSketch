@@ -7,9 +7,11 @@ import kotlinx.dom.addClass
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLHeadingElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLLIElement
 import org.w3c.dom.HTMLLabelElement
+import org.w3c.dom.HTMLPreElement
 import org.w3c.dom.HTMLSpanElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.HTMLUListElement
@@ -27,6 +29,48 @@ fun Div(
     val div = parent.createElement<HTMLDivElement>("div", classes)
     div.block()
     return div
+}
+
+fun Element.Heading(
+    level: HeadingLevel,
+    classes: String = "",
+    text: String = "",
+    block: HTMLHeadingElement.() -> Unit
+): HTMLHeadingElement = Heading(this, level, classes, text, block)
+
+fun Heading(
+    parent: Element?,
+    level: HeadingLevel,
+    classes: String = "",
+    text: String = "",
+    block: HTMLHeadingElement.() -> Unit
+): HTMLHeadingElement {
+    val heading = parent.createElement<HTMLHeadingElement>(level.value, classes)
+    heading.innerText = text
+    heading.block()
+    return heading
+}
+
+enum class HeadingLevel(val value: String) {
+    H1("h1"), H2("h2"), H3("H3"), H4("h4"), H5("h5")
+}
+
+fun Element.Pre(
+    classes: String = "",
+    text: String = "",
+    block: HTMLPreElement.() -> Unit = {}
+): HTMLPreElement = Pre(this, classes, text, block)
+
+fun Pre(
+    parent: Element?,
+    classes: String = "",
+    text: String = "",
+    block: HTMLPreElement.() -> Unit = {}
+): HTMLPreElement {
+    val pre = parent.createElement<HTMLPreElement>("pre", classes)
+    pre.innerText = text
+    pre.block()
+    return pre
 }
 
 fun Element.Span(
@@ -75,14 +119,14 @@ fun Li(
 
 fun Element.A(
     classes: String = "",
-    text: String,
+    text: String = "",
     block: HTMLAnchorElement.() -> Unit
 ): HTMLAnchorElement = A(this, classes, text, block)
 
 fun A(
     parent: Element?,
     classes: String = "",
-    text: String,
+    text: String = "",
     block: HTMLAnchorElement.() -> Unit
 ): HTMLAnchorElement {
     val anchor = parent.createElement<HTMLAnchorElement>("a", classes)
@@ -94,14 +138,14 @@ fun A(
 fun Element.TextArea(
     classes: String = "",
     content: String,
-    block: HTMLTextAreaElement.() -> Unit
+    block: HTMLTextAreaElement.() -> Unit = {}
 ): HTMLTextAreaElement = TextArea(this, classes, content, block)
 
 fun TextArea(
     parent: Element?,
     classes: String,
     content: String,
-    block: HTMLTextAreaElement.() -> Unit
+    block: HTMLTextAreaElement.() -> Unit = {}
 ): HTMLTextAreaElement {
     val textArea = parent.createElement<HTMLTextAreaElement>("textarea", classes)
     textArea.textContent = content
