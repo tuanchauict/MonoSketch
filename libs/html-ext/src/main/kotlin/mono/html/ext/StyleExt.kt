@@ -1,10 +1,5 @@
 package mono.html.ext
 
-import kotlinx.html.TagConsumer
-import org.w3c.dom.HTMLElement
-
-typealias Tag = TagConsumer<HTMLElement>
-
 val Number.px: String
     get() = "${this}px"
 

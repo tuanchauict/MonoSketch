@@ -1,21 +1,18 @@
 package mono.html.modal
 
 import kotlinx.browser.document
-import kotlinx.html.contentEditable
-import kotlinx.html.div
-import kotlinx.html.dom.append
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onMouseWheelFunction
-import kotlinx.html.style
 import mono.common.Key
 import mono.common.commandKey
 import mono.common.onKeyDown
 import mono.common.setTimeout
-import mono.html.ext.Tag
+import mono.html.Div
 import mono.html.ext.px
 import mono.html.ext.styleOf
+import mono.html.setAttributes
+import mono.html.setOnClickListener
+import mono.html.setOnMouseWheelListener
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 
 /**
@@ -35,32 +32,26 @@ class EditTextModal(
         widthPx: Double,
         heightPx: Double
     ) {
-        val container = document.body ?: return
-        container.append {
-            root = div("modal-edit-text") {
-                div("modal-edit-text-container") {
-                    div("modal-edit-text-area-container") {
-                        style = styleOf(
+        root = document.body?.Div("modal-edit-text") {
+            Div("modal-edit-text-container") {
+                Div("modal-edit-text-area-container") {
+                    setAttributes(
+                        "style" to styleOf(
                             "left" to (leftPx - 1).px,
                             "top" to (topPx - 1).px,
                             "width" to (widthPx + 2).px,
                             "height" to (heightPx + 2).px
                         )
+                    )
 
-                        initTextArea()
+                    initTextArea()
 
-                        onClickFunction = Event::stopPropagation
-                    }
-                }
-
-                onClickFunction = {
-                    dismiss()
-                }
-
-                onMouseWheelFunction = {
-                    it.preventDefault()
+                    setOnClickListener { it.stopPropagation() }
                 }
             }
+
+            setOnClickListener { dismiss() }
+            setOnMouseWheelListener { it.preventDefault() }
         }
     }
 
@@ -73,9 +64,9 @@ class EditTextModal(
         this.onDismiss = onDismiss
     }
 
-    private fun Tag.initTextArea() {
-        val textArea = div("modal-edit-text-area") {
-            contentEditable = true
+    private fun Element.initTextArea() {
+        val textArea = Div("modal-edit-text-area") {
+            setAttributes("contenteditable" to true)
         }
 
         textArea.oninput = {

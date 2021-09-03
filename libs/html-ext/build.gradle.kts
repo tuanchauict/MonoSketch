@@ -7,8 +7,6 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.kotlinx.html)
-
     implementation(kotlin("stdlib-js"))
     testImplementation(libs.kotlin.test.js)
 }

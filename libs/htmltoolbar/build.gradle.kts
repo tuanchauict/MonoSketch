@@ -16,8 +16,6 @@ dependencies {
     implementation(project(":livedata"))
     implementation(project(":shape"))
 
-    implementation(libs.kotlinx.html)
-
     testImplementation(libs.kotlin.test.js)
 }
 
