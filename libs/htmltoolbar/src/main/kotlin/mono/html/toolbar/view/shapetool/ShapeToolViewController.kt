@@ -1,6 +1,5 @@
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.dom.append
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.RetainableActionType
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
@@ -10,110 +9,81 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
 import mono.livedata.map
-import mono.shape.extra.manager.ShapeExtraManager
+import mono.shape.ShapeExtraManager
+import mono.shape.extra.RectangleExtra
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
-import mono.shape.shape.extra.RectangleExtra
 import org.w3c.dom.HTMLElement
 
 class ShapeToolViewController(
     lifecycleOwner: LifecycleOwner,
-    controller: HTMLElement,
+    container: HTMLElement,
     actionManager: ActionManager,
     selectedShapesLiveData: LiveData<Set<AbstractShape>>,
     shapeManagerVersionLiveData: LiveData<Int>
 ) {
-    init {
-        controller.append {
-            val moveTool = ReorderSection(actionManager::setOneTimeAction)
-            val transformTool = TransformSection(actionManager::setOneTimeAction)
-
-            val appearanceTool = AppearanceSection(
-                fillOptions = getFillOptions(),
-                borderOptions = getBorderOptions(),
-                headOptions = getHeadOptions(),
-                actionManager::setOneTimeAction
-            )
-
-            val textAlignmentTool = TextSection(actionManager::setOneTimeAction)
-
-            val singleShapeLiveData = MediatorLiveData<AbstractShape?>(null).apply {
-                add(selectedShapesLiveData) {
-                    value = it.singleOrNull()
-                }
-                add(shapeManagerVersionLiveData) {
-                    value = value
-                }
+    private val singleShapeLiveData: LiveData<AbstractShape?> =
+        MediatorLiveData<AbstractShape?>(null).apply {
+            add(selectedShapesLiveData) {
+                value = it.singleOrNull()
             }
-
-            singleShapeLiveData.observe(lifecycleOwner) {
-                moveTool.setEnabled(it != null)
-
-                val isSizeChangeable = it is Rectangle || it is Text
-                transformTool.setEnabled(it != null, isSizeChangeable)
-                if (it != null) {
-                    transformTool.setValue(it.bound)
-                }
+            add(shapeManagerVersionLiveData) {
+                value = value
             }
-
-            val shapesLiveData = MediatorLiveData<Set<AbstractShape>>(emptySet()).apply {
-                add(selectedShapesLiveData) {
-                    value = it
-                }
-                add(shapeManagerVersionLiveData) {
-                    value = value
-                }
-            }
-            val retainableActionLiveData =
-                MediatorLiveData(actionManager.retainableActionLiveData.value).apply {
-                    add(actionManager.retainableActionLiveData) {
-                        value = it
-                    }
-                    add(ShapeExtraManager.defaultExtraStateUpdateLiveData) {
-                        value = value
-                    }
-                }
-
-            val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
-                shapesLiveData,
-                retainableActionLiveData
-            )
-            val borderAppearanceVisibilityLiveData = createBorderAppearanceVisibilityLiveData(
-                shapesLiveData,
-                retainableActionLiveData
-            )
-            val startHeadAppearanceVisibilityLiveData = createStartHeadAppearanceVisibilityLiveData(
-                shapesLiveData,
-                retainableActionLiveData
-            )
-            val endHeadAppearanceVisibilityLiveData = createEndHeadAppearanceVisibilityLiveData(
-                shapesLiveData,
-                retainableActionLiveData
-            )
-            MediatorLiveData(emptyMap<ToolType, Visibility>())
-                .apply {
-                    add(fillAppearanceVisibilityLiveData) {
-                        value = value + (ToolType.FILL to it)
-                    }
-                    add(borderAppearanceVisibilityLiveData) {
-                        value = value + (ToolType.BORDER to it)
-                    }
-                    add(startHeadAppearanceVisibilityLiveData) {
-                        value = value + (ToolType.START_HEAD to it)
-                    }
-                    add(endHeadAppearanceVisibilityLiveData) {
-                        value = value + (ToolType.END_HEAD to it)
-                    }
-                }
-                .observe(lifecycleOwner, listener = appearanceTool::setVisibility)
-
-            createTextAlignLiveData(shapesLiveData, retainableActionLiveData)
-                .observe(lifecycleOwner, listener = textAlignmentTool::setCurrentTextAlign)
         }
+
+    private val shapesLiveData = MediatorLiveData<Set<AbstractShape>>(emptySet()).apply {
+        add(selectedShapesLiveData) {
+            value = it
+        }
+        add(shapeManagerVersionLiveData) {
+            value = value
+        }
+    }
+    private val retainableActionLiveData =
+        MediatorLiveData(actionManager.retainableActionLiveData.value).apply {
+            add(actionManager.retainableActionLiveData) {
+                value = it
+            }
+            add(ShapeExtraManager.defaultExtraStateUpdateLiveData) {
+                value = value
+            }
+        }
+
+    init {
+        ReorderSectionViewController(
+            lifecycleOwner,
+            container,
+            singleShapeLiveData,
+            actionManager::setOneTimeAction
+        )
+        TransformToolViewController(
+            lifecycleOwner,
+            container,
+            singleShapeLiveData,
+            actionManager::setOneTimeAction
+        )
+
+        AppearanceSectionViewController(
+            lifecycleOwner,
+            container,
+            fillOptions = getFillOptions(),
+            borderOptions = getBorderOptions(),
+            headOptions = getHeadOptions(),
+            createAppearanceVisibilityLiveData(),
+            actionManager::setOneTimeAction
+        )
+
+        TextSectionViewController(
+            lifecycleOwner,
+            container,
+            createTextAlignLiveData(shapesLiveData, retainableActionLiveData),
+            actionManager::setOneTimeAction
+        )
     }
 
     private fun getFillOptions(): List<OptionItem> =
@@ -127,6 +97,39 @@ class ShapeToolViewController(
     private fun getHeadOptions(): List<OptionItem> =
         ShapeExtraManager.getAllPredefinedAnchorChars()
             .map { OptionItem(it.id, it.displayName) }
+
+    private fun createAppearanceVisibilityLiveData(): LiveData<Map<ToolType, Visibility>> {
+        val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
+            shapesLiveData,
+            retainableActionLiveData
+        )
+        val borderAppearanceVisibilityLiveData = createBorderAppearanceVisibilityLiveData(
+            shapesLiveData,
+            retainableActionLiveData
+        )
+        val startHeadAppearanceVisibilityLiveData = createStartHeadAppearanceVisibilityLiveData(
+            shapesLiveData,
+            retainableActionLiveData
+        )
+        val endHeadAppearanceVisibilityLiveData = createEndHeadAppearanceVisibilityLiveData(
+            shapesLiveData,
+            retainableActionLiveData
+        )
+        return MediatorLiveData(emptyMap<ToolType, Visibility>()).apply {
+            add(fillAppearanceVisibilityLiveData) {
+                value = value + (ToolType.FILL to it)
+            }
+            add(borderAppearanceVisibilityLiveData) {
+                value = value + (ToolType.BORDER to it)
+            }
+            add(startHeadAppearanceVisibilityLiveData) {
+                value = value + (ToolType.START_HEAD to it)
+            }
+            add(endHeadAppearanceVisibilityLiveData) {
+                value = value + (ToolType.END_HEAD to it)
+            }
+        }
+    }
 
     private fun createFillAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
@@ -150,7 +153,8 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> ShapeExtraManager.defaultExtraState.fillStyle
+                RetainableActionType.ADD_TEXT ->
+                    ShapeExtraManager.defaultRectangleExtra.userSelectedFillStyle
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -158,7 +162,7 @@ class ShapeToolViewController(
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedRectangleFillStyles().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isFillEnabled,
+                    ShapeExtraManager.defaultRectangleExtra.isFillEnabled,
                     selectedFillPosition
                 )
             } else {
@@ -194,7 +198,8 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> ShapeExtraManager.defaultExtraState.borderStyle
+                RetainableActionType.ADD_TEXT ->
+                    ShapeExtraManager.defaultRectangleExtra.userSelectedBorderStyle
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -202,7 +207,7 @@ class ShapeToolViewController(
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isBorderEnabled,
+                    ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
                     selectedFillPosition
                 )
             } else {
@@ -238,7 +243,7 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultExtraState.startHeadAnchorChar
+                    ShapeExtraManager.defaultLineExtra.userSelectedStartAnchor
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
@@ -247,7 +252,7 @@ class ShapeToolViewController(
                 val selectedStartHeaderPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isStartHeadAnchorCharEnabled,
+                    ShapeExtraManager.defaultLineExtra.isStartAnchorEnabled,
                     selectedStartHeaderPosition
                 )
             } else {
@@ -283,7 +288,7 @@ class ShapeToolViewController(
         val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultExtraState.endHeadAnchorChar
+                    ShapeExtraManager.defaultLineExtra.userSelectedEndAnchor
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
@@ -292,7 +297,7 @@ class ShapeToolViewController(
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
                 Visibility.Visible(
-                    ShapeExtraManager.defaultExtraState.isEndHeadAnchorCharEnabled,
+                    ShapeExtraManager.defaultLineExtra.isEndAnchorEnabled,
                     selectedFillPosition
                 )
             } else {
@@ -362,7 +367,7 @@ class ShapeToolViewController(
         }
         val defaultTextAlignLiveData = retainableActionTypeLiveData.map {
             if (it == RetainableActionType.ADD_TEXT) {
-                TextAlignVisibility.Visible(ShapeExtraManager.defaultExtraState.textAlign)
+                TextAlignVisibility.Visible(ShapeExtraManager.defaultTextAlign)
             } else {
                 TextAlignVisibility.Hide
             }

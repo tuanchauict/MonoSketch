@@ -24,14 +24,11 @@ dependencies {
     implementation(project(":monoboard"))
     implementation(project(":shape"))
     implementation(project(":shape-clipboard"))
-    implementation(project(":shape-extra-manager"))
     implementation(project(":shape-interaction-bound"))
     implementation(project(":shape-selection"))
     implementation(project(":shape-serialization"))
     implementation(project(":shapesearcher"))
     implementation(project(":store-manager"))
-
-    implementation(libs.kotlinx.html)
 
     testImplementation(libs.kotlin.test.js)
 }

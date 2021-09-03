@@ -9,14 +9,12 @@ repositories {
 dependencies {
     implementation(project(":commons"))
     implementation(project(":graphicsgeo"))
+    implementation(project(":html-dsl"))
     implementation(project(":html-ext"))
     implementation(project(":keycommand"))
     implementation(project(":lifecycle"))
     implementation(project(":livedata"))
     implementation(project(":shape"))
-    implementation(project(":shape-extra-manager"))
-
-    implementation(libs.kotlinx.html)
 
     testImplementation(libs.kotlin.test.js)
 }

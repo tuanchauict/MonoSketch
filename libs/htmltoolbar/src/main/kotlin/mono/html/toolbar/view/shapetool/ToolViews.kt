@@ -2,9 +2,7 @@
 
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.div
-import kotlinx.html.js.div
-import mono.html.ext.Tag
+import mono.html.Div
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.ADD_BOTTOM_SPACE
@@ -17,6 +15,7 @@ import mono.html.toolbar.view.shapetool.Class.SECTION
 import mono.html.toolbar.view.shapetool.Class.SECTION_TITLE
 import mono.html.toolbar.view.shapetool.Class.SMALL_SPACE
 import mono.html.toolbar.view.shapetool.Class.TOOL
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 
 internal open class ToolViewController(private val rootView: HTMLDivElement) {
@@ -29,41 +28,35 @@ internal open class ToolViewController(private val rootView: HTMLDivElement) {
     }
 }
 
-internal fun Tag.Section(
+internal fun Element.Section(
     title: String,
     isSmallSpace: Boolean = false,
-    block: Tag.() -> Unit
-): HTMLDivElement {
-    val sectionClasses = classes(SECTION, SMALL_SPACE x isSmallSpace)
-
-    return div(sectionClasses) {
+    block: HTMLDivElement.() -> Unit = {}
+): HTMLDivElement =
+    Div(classes(SECTION, SMALL_SPACE x isSmallSpace)) {
         if (title.isNotEmpty()) {
-            div(classes(SECTION_TITLE)) { +title }
+            Div(classes(SECTION_TITLE)) {
+                innerText = title
+            }
         }
         block()
     }
-}
 
-internal fun Tag.Tool(
+internal fun Element.Tool(
     hasMoreBottomSpace: Boolean = false,
-    block: Tag.() -> Unit
-): HTMLDivElement {
-    val toolClasses = classes(
-        TOOL,
-        ADD_BOTTOM_SPACE x hasMoreBottomSpace
-    )
-    return div(toolClasses) {
+    block: HTMLDivElement.() -> Unit
+): HTMLDivElement =
+    Div(classes(TOOL, ADD_BOTTOM_SPACE x hasMoreBottomSpace)) {
         block()
     }
-}
 
-internal fun Tag.Row(
+internal fun Element.Row(
     isMoreBottomSpaceRequired: Boolean = false,
     isCenterEvenSpace: Boolean = false,
     isVerticalCenter: Boolean = false,
     isMonoFont: Boolean = false,
     isGrid: Boolean = false,
-    block: Tag.() -> Unit
+    block: HTMLDivElement.() -> Unit
 ): HTMLDivElement {
     val classes = classes(
         ROW,
@@ -73,7 +66,7 @@ internal fun Tag.Row(
         GRID x isGrid,
         MONOFONT x isMonoFont
     )
-    return div(classes) {
+    return Div(classes) {
         block()
     }
 }

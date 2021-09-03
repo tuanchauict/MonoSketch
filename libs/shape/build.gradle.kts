@@ -12,7 +12,6 @@ dependencies {
     implementation(project(":graphicsgeo"))
     implementation(project(":livedata"))
     implementation(project(":monobitmap"))
-    implementation(project(":shape-extra-manager"))
     implementation(project(":uuid"))
 
     implementation(libs.kotlinx.serialization.json)

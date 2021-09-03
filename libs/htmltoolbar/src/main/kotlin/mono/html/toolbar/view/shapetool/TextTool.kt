@@ -2,46 +2,65 @@
 
 package mono.html.toolbar.view.shapetool
 
-import kotlinx.html.js.div
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.span
-import mono.html.ext.Tag
+import mono.html.Div
+import mono.html.Span
+import mono.html.SvgPath
+import mono.html.appendElement
+import mono.html.setOnClickListener
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.SvgIcon
-import mono.html.toolbar.view.SvgPath
 import mono.html.toolbar.view.isSelected
+import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
 import mono.html.toolbar.view.shapetool.Class.CLICKABLE
 import mono.html.toolbar.view.shapetool.Class.COLUMN
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.html.toolbar.view.shapetool.Class.MEDIUM
 import mono.html.toolbar.view.shapetool.Class.QUARTER
-import mono.shape.extra.manager.model.TextAlign
-import org.w3c.dom.HTMLDivElement
+import mono.lifecycle.LifecycleOwner
+import mono.livedata.LiveData
+import mono.shape.extra.style.TextAlign
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 
-internal abstract class TextSectionViewController(
-    rootView: HTMLDivElement
-) : ToolViewController(rootView) {
+internal class TextSectionViewController(
+    lifecycleOwner: LifecycleOwner,
+    container: Element,
+    liveData: LiveData<TextAlignVisibility>,
+    setOneTimeAction: (OneTimeActionType) -> Unit
+) {
+    private val horizontalIcons = listOf(
+        TextAlignmentIconType.HORIZONTAL_LEFT,
+        TextAlignmentIconType.HORIZONTAL_MIDDLE,
+        TextAlignmentIconType.HORIZONTAL_RIGHT
+    ).map { Icon(it, setOneTimeAction) }
 
-    abstract fun setCurrentTextAlign(textAlignVisibility: TextAlignVisibility)
+    private val verticalIcons = listOf(
+        TextAlignmentIconType.VERTICAL_TOP,
+        TextAlignmentIconType.VERTICAL_MIDDLE,
+        TextAlignmentIconType.VERTICAL_BOTTOM
+    ).map { Icon(it, setOneTimeAction) }
 
-    sealed class TextAlignVisibility {
-        object Hide : TextAlignVisibility()
-
-        data class Visible(val textAlign: TextAlign) : TextAlignVisibility()
+    private val rootView = container.Section("TEXT") {
+        Tool(true) {
+            TextTool("Alignment") {
+                appendElement(horizontalIcons)
+            }
+            TextTool("Position") {
+                appendElement(verticalIcons)
+            }
+        }
     }
-}
 
-private class TextSectionViewControllerImpl(
-    rootView: HTMLDivElement,
-    private val horizontalIcons: List<HTMLElement>,
-    private val verticalIcons: List<HTMLElement>
-) : TextSectionViewController(rootView) {
-    override fun setCurrentTextAlign(textAlignVisibility: TextAlignVisibility) {
+    init {
+        liveData.observe(lifecycleOwner, listener = this::setCurrentTextAlign)
+    }
+
+    private fun setCurrentTextAlign(textAlignVisibility: TextAlignVisibility) {
         val textAlignVisible = textAlignVisibility as? TextAlignVisibility.Visible
         val textAlign = textAlignVisible?.textAlign
-        setVisible(textAlign != null)
+        rootView.isVisible = textAlign != null
+
         if (textAlign == null) {
             return
         }
@@ -52,63 +71,20 @@ private class TextSectionViewControllerImpl(
             icon.isSelected = index == textAlign.verticalAlign.ordinal
         }
     }
-}
 
-internal fun Tag.TextSection(
-    setOneTimeAction: (OneTimeActionType) -> Unit
-): TextSectionViewController {
-    val horizontalIcons = mutableListOf<HTMLElement>()
-    val verticalIcons = mutableListOf<HTMLElement>()
-    val rootView = Section("TEXT") {
-        Tool(true) {
-            TextTool("Alignment") {
+    sealed class TextAlignVisibility {
+        object Hide : TextAlignVisibility()
 
-                horizontalIcons +=
-                    Icon(
-                        TextAlignmentIconType.HORIZONTAL_LEFT,
-                        setOneTimeAction = setOneTimeAction
-                    )
-                horizontalIcons +=
-                    Icon(
-                        TextAlignmentIconType.HORIZONTAL_MIDDLE,
-                        setOneTimeAction = setOneTimeAction
-                    )
-                horizontalIcons +=
-                    Icon(
-                        TextAlignmentIconType.HORIZONTAL_RIGHT,
-                        setOneTimeAction = setOneTimeAction
-                    )
-            }
-
-            TextTool("Position") {
-                verticalIcons +=
-                    Icon(
-                        TextAlignmentIconType.VERTICAL_TOP,
-                        setOneTimeAction = setOneTimeAction
-                    )
-                verticalIcons +=
-                    Icon(
-                        TextAlignmentIconType.VERTICAL_MIDDLE,
-                        setOneTimeAction = setOneTimeAction
-                    )
-                verticalIcons +=
-                    Icon(
-                        TextAlignmentIconType.VERTICAL_BOTTOM,
-                        setOneTimeAction = setOneTimeAction
-                    )
-            }
-        }
+        data class Visible(val textAlign: TextAlign) : TextAlignVisibility()
     }
-
-    return TextSectionViewControllerImpl(rootView, horizontalIcons, verticalIcons)
 }
 
-private fun Tag.TextTool(name: String, iconBlock: Tag.() -> Unit) {
+private fun Element.TextTool(name: String, iconBlock: Element.() -> Unit) {
     Row(isVerticalCenter = true, isMoreBottomSpaceRequired = true) {
-        div(classes(COLUMN, ADD_RIGHT_SPACE, QUARTER)) {
-            +name
+        Div(classes(COLUMN, ADD_RIGHT_SPACE, QUARTER)) {
+            innerText = name
         }
-        div(classes(COLUMN)) {
+        Div(classes(COLUMN)) {
             Row {
                 iconBlock()
             }
@@ -116,15 +92,15 @@ private fun Tag.TextTool(name: String, iconBlock: Tag.() -> Unit) {
     }
 }
 
-private fun Tag.Icon(
+private fun Icon(
     iconType: TextAlignmentIconType,
     setOneTimeAction: (OneTimeActionType) -> Unit
-): HTMLElement = span(classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE, CLICKABLE)) {
+): HTMLElement = Span(null, classes = classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE, CLICKABLE)) {
     SvgIcon(16, 16, iconType.viewPortSize, iconType.viewPortSize) {
         SvgPath(iconType.iconPath)
     }
 
-    onClickFunction = {
+    setOnClickListener {
         setOneTimeAction(iconType.toTextAlignment())
     }
 }

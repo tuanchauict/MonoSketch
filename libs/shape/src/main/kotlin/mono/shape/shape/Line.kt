@@ -3,10 +3,11 @@ package mono.shape.shape
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.ShapeExtraManager
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableLine
-import mono.shape.shape.extra.LineExtra
-import mono.shape.shape.extra.ShapeExtra
+import mono.shape.extra.LineExtra
+import mono.shape.extra.ShapeExtra
 import mono.shape.shape.line.LineHelper
 
 /**
@@ -87,7 +88,7 @@ class Line(
     var edges: List<Edge> = LineHelper.createEdges(jointPoints)
         private set
 
-    override var extra: LineExtra = LineExtra.createDefault()
+    override var extra: LineExtra = ShapeExtraManager.defaultLineExtra
         private set
 
     /**
