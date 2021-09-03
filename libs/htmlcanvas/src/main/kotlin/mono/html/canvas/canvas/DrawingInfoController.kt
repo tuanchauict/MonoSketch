@@ -1,12 +1,10 @@
 package mono.html.canvas.canvas
 
-import kotlinx.html.dom.append
-import kotlinx.html.js.canvas
-import mono.common.firstOrNull
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 import mono.graphics.geo.SizeF
+import mono.html.Canvas
 import mono.html.ext.px
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
@@ -14,7 +12,6 @@ import mono.livedata.distinctUntilChange
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.CanvasTextBaseline
-import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.LEFT
 import org.w3c.dom.MIDDLE
@@ -33,10 +30,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         drawingInfoMutableLiveData.distinctUntilChange()
 
     init {
-        container.append {
-            canvas(CLASS_NAME) {}
-        }
-        val canvas = container.getElementsByClassName(CLASS_NAME).firstOrNull<HTMLCanvasElement>()!!
+        val canvas = Canvas(container, CLASS_NAME)
         context = canvas.getContext("2d") as CanvasRenderingContext2D
 
         setSize(canvas.width, canvas.height)

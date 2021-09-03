@@ -6,6 +6,7 @@ import kotlinx.browser.document
 import kotlinx.dom.addClass
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLAnchorElement
+import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLHeadingElement
 import org.w3c.dom.HTMLInputElement
@@ -210,6 +211,21 @@ fun Label(
     val label = parent.createElement<HTMLLabelElement>("label", classes)
     label.block()
     return label
+}
+
+fun Element.Canvas(
+    classes: String = "",
+    block: HTMLCanvasElement.() -> Unit = {}
+): HTMLCanvasElement = Canvas(this, classes, block)
+
+fun Canvas(
+    parent: Element?,
+    classes: String = "",
+    block: HTMLCanvasElement.() -> Unit = {}
+): HTMLCanvasElement {
+    val canvas = parent.createElement<HTMLCanvasElement>("canvas", classes)
+    canvas.block()
+    return canvas
 }
 
 fun Element.Svg(classes: String = "", block: Element.() -> Unit): Element =
