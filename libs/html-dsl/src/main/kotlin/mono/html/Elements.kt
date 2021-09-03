@@ -154,52 +154,6 @@ fun TextArea(
     return textArea
 }
 
-fun Element.InputNumber(
-    classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement = InputNumber(this, classes, block)
-
-fun InputNumber(
-    parent: Element?,
-    classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement {
-    val input = parent.createElement<HTMLInputElement>("input", classes)
-    input.type = "number"
-    input.block()
-    return input
-}
-
-fun Element.CheckBox(classes: String = "", block: HTMLInputElement.() -> Unit): HTMLInputElement =
-    CheckBox(this, classes, block)
-
-fun CheckBox(
-    parent: Element?,
-    classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement {
-    val radio = parent.createElement<HTMLInputElement>("input", classes)
-    radio.type = "checkbox"
-    radio.block()
-    return radio
-}
-
-fun Element.Radio(
-    classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement = Radio(this, classes, block)
-
-fun Radio(
-    parent: Element?,
-    classes: String = "",
-    block: HTMLInputElement.() -> Unit
-): HTMLInputElement {
-    val radio = parent.createElement<HTMLInputElement>("input", classes)
-    radio.type = "radio"
-    radio.block()
-    return radio
-}
-
 fun Element.Input(
     inputType: InputType,
     classes: String = "",

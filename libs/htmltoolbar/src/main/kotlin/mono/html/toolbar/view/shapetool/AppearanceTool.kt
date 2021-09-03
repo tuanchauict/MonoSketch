@@ -2,8 +2,9 @@
 
 package mono.html.toolbar.view.shapetool
 
-import mono.html.CheckBox
 import mono.html.Div
+import mono.html.Input
+import mono.html.InputType
 import mono.html.Span
 import mono.html.appendElement
 import mono.html.setOnChangeListener
@@ -126,11 +127,12 @@ private fun GridTextIconOptions(
     options: List<OptionItem>,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): AppearanceToolViewController {
-    val checkBox = CheckBox(null, classes = classes(INPUT_CHECK_BOX, CLICKABLE)) {
-        setOnChangeListener {
-            setOneTimeAction(type.toActionType(checked))
+    val checkBox =
+        Input(parent = null, InputType.CHECK_BOX, classes = classes(INPUT_CHECK_BOX, CLICKABLE)) {
+            setOnChangeListener {
+                setOneTimeAction(type.toActionType(checked))
+            }
         }
-    }
     val optionElements = options.map { option ->
         Span(null, classes(ICON_BUTTON, SMALL, CLICKABLE), option.name) {
             setOnClickListener {
