@@ -1,7 +1,7 @@
 package mono.state
 
-import kotlinx.html.currentTimeMillis
 import mono.bitmap.manager.MonoBitmapManager
+import mono.common.currentTimeMillis
 import mono.environment.Build
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard

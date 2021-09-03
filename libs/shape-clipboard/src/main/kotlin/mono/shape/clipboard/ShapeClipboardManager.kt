@@ -1,12 +1,11 @@
 package mono.shape.clipboard
 
 import kotlinx.browser.document
-import kotlinx.html.dom.append
-import kotlinx.html.js.textArea
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mono.graphics.geo.Rect
+import mono.html.TextArea
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.serialization.AbstractSerializableShape
@@ -67,11 +66,10 @@ class ShapeClipboardManager(private val body: HTMLElement) {
     }
 
     fun setClipboardText(text: String) {
-        body.append {
-            val textBox = textArea(classes = "hidden", content = text)
-            textBox.select()
+        TextArea(body, classes = "hidden", content = text) {
+            select()
             document.execCommand("copy")
-            textBox.remove()
+            remove()
         }
     }
 

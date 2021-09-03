@@ -4,7 +4,8 @@ package mono.html.toolbar.view.shapetool
 
 import mono.graphics.geo.Rect
 import mono.html.Div
-import mono.html.InputNumber
+import mono.html.Input
+import mono.html.InputType
 import mono.html.Span
 import mono.html.appendElement
 import mono.html.setAttributes
@@ -101,7 +102,7 @@ private fun NumberCellInput(
     value: Int,
     minValue: Int? = null,
     onValueChange: (Int) -> Unit
-): HTMLInputElement = InputNumber(null, classes(INPUT_TEXT, MEDIUM)) {
+): HTMLInputElement = Input(null, InputType.NUMBER, classes(INPUT_TEXT, MEDIUM)) {
     if (minValue != null) {
         setAttributes("min" to minValue)
     }

@@ -3,20 +3,18 @@
 package mono.export
 
 import kotlinx.browser.document
-import kotlinx.html.TagConsumer
-import kotlinx.html.button
-import kotlinx.html.classes
-import kotlinx.html.dom.append
-import kotlinx.html.h5
-import kotlinx.html.id
-import kotlinx.html.js.div
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.textArea
-import kotlinx.html.pre
-import kotlinx.html.style
+import kotlinx.dom.addClass
+import mono.html.A
+import mono.html.Div
+import mono.html.Heading
+import mono.html.HeadingLevel
+import mono.html.Pre
+import mono.html.TextArea
 import mono.html.ext.px
 import mono.html.ext.styleOf
-import org.w3c.dom.HTMLElement
+import mono.html.setAttributes
+import mono.html.setOnClickListener
+import org.w3c.dom.Element
 
 /**
  * A modal which is for showing the board rendering selected shapes and allowing users to copy as
@@ -27,24 +25,26 @@ internal class ExportShapesModal {
 
     private fun createModalContent(content: String) {
         val body = document.body ?: return
-        body.append {
-            val rootView = div("modal fade") {
+        with(body) {
+            val rootView = Div("modal fade") {
                 id = MODAL_ID
-                attributes["tabindex"] = "-1"
-                attributes["aria-labelledby"] = "export-shape-modal-title"
-                attributes["aria-hidden"] = "true"
+                setAttributes(
+                    "tabindex" to "-1",
+                    "aria-labelledby" to "export-shape-modal-title",
+                    "aria-hidden" to "true"
+                )
 
-                div {
-                    classes = setOf(
+                Div {
+                    addClass(
                         "modal-dialog",
                         "modal-dialog-scrollable",
                         "modal-dialog-centered",
                         "modal-xl",
                         "modal-fullscreen-lg-down"
                     )
-                    attributes["role"] = "document"
+                    setAttributes("role" to "document")
 
-                    div("modal-content") {
+                    Div("modal-content") {
                         Header()
                         Body(content)
                         Footer(content)
@@ -66,44 +66,43 @@ internal class ExportShapesModal {
         )
     }
 
-    private fun TagConsumer<HTMLElement>.Header() {
-        div("modal-header") {
-            h5("modal-title") {
+    private fun Element.Header() {
+        Div("modal-header") {
+            Heading(HeadingLevel.H5, "modal-title", "Export") {
                 id = "export-shape-modal-title"
-
-                +"Export"
             }
-            button(classes = "btn-close") {
-                attributes["type"] = "button"
-                attributes["data-bs-dismiss"] = "modal"
-                attributes["aria-label"] = "Close"
-            }
-        }
-    }
-
-    private fun TagConsumer<HTMLElement>.Body(content: String) {
-        div("modal-body") {
-            pre {
-                attributes["contenteditable"] = "true"
-                style = styleOf(
-                    "height" to "100%",
-                    "min-height" to 160.px,
-                    "line-height" to 15.px,
-                    "font-size" to 12.px,
-                    "outline" to "none"
+            A(classes = "btn-close") {
+                setAttributes(
+                    "type" to "button",
+                    "data-bs-dismiss" to "modal",
+                    "aria-label" to "Close"
                 )
-                +content
             }
         }
     }
 
-    private fun TagConsumer<HTMLElement>.Footer(content: String) {
-        div("modal-footer") {
-            val textBox = textArea(classes = "hidden", content = content)
-            button(classes = "btn btn-outline-primary btn-sm") {
-                +"Copy"
+    private fun Element.Body(content: String) {
+        Div("modal-body") {
+            Pre(text = content) {
+                setAttributes(
+                    "contenteditable" to true,
+                    "style" to styleOf(
+                        "height" to "100%",
+                        "min-height" to 160.px,
+                        "line-height" to 15.px,
+                        "font-size" to 12.px,
+                        "outline" to "none"
+                    )
+                )
+            }
+        }
+    }
 
-                onClickFunction = {
+    private fun Element.Footer(content: String) {
+        Div("modal-footer") {
+            val textBox = TextArea(classes = "hidden", content = content)
+            A(classes = "btn btn-outline-primary btn-sm", text = "Copy") {
+                setOnClickListener {
                     textBox.select()
                     document.execCommand("copy")
                 }
