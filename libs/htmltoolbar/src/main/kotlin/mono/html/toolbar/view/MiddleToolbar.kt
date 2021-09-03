@@ -2,21 +2,21 @@
 
 package mono.html.toolbar.view
 
-import kotlinx.html.div
-import mono.html.ext.Tag
+import mono.html.Div
 import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import org.w3c.dom.Element
 
 /**
  * A function to create middle toolbars UI.
  */
-internal fun Tag.MiddleToolbar(
+internal fun Element.MiddleToolbar(
     lifecycleOwner: LifecycleOwner,
     retainableActionLiveData: LiveData<RetainableActionType>,
     setRetainableAction: (RetainableActionType) -> Unit
 ) {
-    div("toolbar middle") {
+    Div("toolbar middle") {
         MouseActionGroup(lifecycleOwner, retainableActionLiveData, setRetainableAction)
     }
 }

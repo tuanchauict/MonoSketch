@@ -30,8 +30,6 @@ dependencies {
     implementation(project(":shapesearcher"))
     implementation(project(":store-manager"))
 
-    implementation(libs.kotlinx.html)
-
     testImplementation(libs.kotlin.test.js)
 }
 
