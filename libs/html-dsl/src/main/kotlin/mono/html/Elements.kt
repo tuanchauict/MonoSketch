@@ -11,6 +11,7 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLLIElement
 import org.w3c.dom.HTMLLabelElement
 import org.w3c.dom.HTMLSpanElement
+import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.HTMLUListElement
 
 fun Element.Div(
@@ -88,6 +89,24 @@ fun A(
     anchor.innerText = text
     anchor.block()
     return anchor
+}
+
+fun Element.TextArea(
+    classes: String = "",
+    content: String,
+    block: HTMLTextAreaElement.() -> Unit
+): HTMLTextAreaElement = TextArea(this, classes, content, block)
+
+fun TextArea(
+    parent: Element?,
+    classes: String,
+    content: String,
+    block: HTMLTextAreaElement.() -> Unit
+): HTMLTextAreaElement {
+    val textArea = parent.createElement<HTMLTextAreaElement>("textarea", classes)
+    textArea.textContent = content
+    textArea.block()
+    return textArea
 }
 
 fun Element.InputNumber(
