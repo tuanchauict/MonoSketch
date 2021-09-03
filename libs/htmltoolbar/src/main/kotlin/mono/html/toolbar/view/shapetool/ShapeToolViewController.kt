@@ -68,16 +68,14 @@ class ShapeToolViewController(
             actionManager::setOneTimeAction
         )
 
-        val appearanceTool = container.AppearanceSection(
+        AppearanceSectionViewController(
+            lifecycleOwner,
+            container,
             fillOptions = getFillOptions(),
             borderOptions = getBorderOptions(),
             headOptions = getHeadOptions(),
+            createAppearanceVisibilityLiveData(),
             actionManager::setOneTimeAction
-        )
-
-        createAppearanceVisibilityLiveData().observe(
-            lifecycleOwner,
-            listener = appearanceTool::setVisibility
         )
 
         TextSectionViewController(
