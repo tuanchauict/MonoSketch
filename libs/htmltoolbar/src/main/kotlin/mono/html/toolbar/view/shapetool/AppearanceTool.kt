@@ -69,12 +69,6 @@ internal class AppearanceSectionViewController(
             rootView.isVisible = it
         }
     }
-
-    sealed class Visibility {
-        object Hide : Visibility()
-
-        data class Visible(val isChecked: Boolean, val selectedPosition: Int) : Visibility()
-    }
 }
 
 private enum class ToolType(val title: String) {
@@ -113,13 +107,13 @@ private class AppearanceToolViewController(
 ) {
     fun observe(
         lifecycleOwner: LifecycleOwner,
-        liveData: LiveData<AppearanceSectionViewController.Visibility>
+        liveData: LiveData<AppearanceVisibility>
     ) {
-        liveData.map { it as? AppearanceSectionViewController.Visibility.Visible }
+        liveData.map { it as? AppearanceVisibility.Visible }
             .observe(lifecycleOwner, listener = ::setState)
     }
 
-    fun setState(state: AppearanceSectionViewController.Visibility.Visible?) {
+    fun setState(state: AppearanceVisibility.Visible?) {
         rootView.isVisible = state != null
         if (state == null) {
             return
@@ -132,12 +126,10 @@ private class AppearanceToolViewController(
     }
 }
 
-internal data class OptionItem(val id: String, val name: String)
-
 private fun GridTextIconOptions(
     container: Element,
     type: ToolType,
-    options: List<OptionItem>,
+    options: List<AppearanceOptionItem>,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): AppearanceToolViewController {
     val checkBox =
