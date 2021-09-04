@@ -3,7 +3,6 @@ package mono.shape.extra
 import mono.shape.ShapeExtraManager
 import mono.shape.extra.style.RectangleFillStyle
 import mono.shape.extra.style.StraightStrokeStyle
-import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.serialization.SerializableRectangle
 import mono.shape.extra.style.StraightStrokeDashPattern
 
@@ -18,21 +17,11 @@ data class RectangleExtra(
     val isDashEnabled: Boolean,
     val userDefinedDashPattern: StraightStrokeDashPattern
 ) : ShapeExtra() {
-    val fillStyle: RectangleFillStyle
-        get() =
-            if (isFillEnabled) {
-                userSelectedFillStyle
-            } else {
-                ShapeExtraManager.RECTANGLE_STYLE_NO_FILLED
-            }
+    val fillStyle: RectangleFillStyle?
+        get() = if (isFillEnabled) userSelectedFillStyle else null
 
-    val strokeStyle: StraightStrokeStyle
-        get() =
-            if (isBorderEnabled) {
-                userSelectedBorderStyle
-            } else {
-                PredefinedStraightStrokeStyle.NO_STROKE
-            }
+    val strokeStyle: StraightStrokeStyle?
+        get() = if (isBorderEnabled) userSelectedBorderStyle else null
 
     val dashPattern: StraightStrokeDashPattern
         get() =
