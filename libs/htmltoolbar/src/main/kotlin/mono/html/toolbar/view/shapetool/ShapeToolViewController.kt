@@ -6,7 +6,7 @@ import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.Visibili
 import mono.html.toolbar.view.shapetool.TextSectionViewController.TextAlignVisibility
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
-import mono.livedata.MediatorLiveData
+import mono.livedata.combineLiveData
 import mono.livedata.map
 import mono.shape.ShapeExtraManager
 import mono.shape.extra.RectangleExtra
@@ -26,32 +26,22 @@ class ShapeToolViewController(
     shapeManagerVersionLiveData: LiveData<Int>
 ) {
     private val singleShapeLiveData: LiveData<AbstractShape?> =
-        MediatorLiveData<AbstractShape?>(null).apply {
-            add(selectedShapesLiveData) {
-                value = it.singleOrNull()
-            }
-            add(shapeManagerVersionLiveData) {
-                value = value
-            }
-        }
+        combineLiveData(
+            selectedShapesLiveData,
+            shapeManagerVersionLiveData
+        ) { selected, _ -> selected.singleOrNull() }
 
-    private val shapesLiveData = MediatorLiveData<Set<AbstractShape>>(emptySet()).apply {
-        add(selectedShapesLiveData) {
-            value = it
-        }
-        add(shapeManagerVersionLiveData) {
-            value = value
-        }
-    }
+    private val shapesLiveData: LiveData<Set<AbstractShape>> =
+        combineLiveData(
+            selectedShapesLiveData,
+            shapeManagerVersionLiveData
+        ) { selected, _ -> selected }
+
     private val retainableActionLiveData =
-        MediatorLiveData(actionManager.retainableActionLiveData.value).apply {
-            add(actionManager.retainableActionLiveData) {
-                value = it
-            }
-            add(ShapeExtraManager.defaultExtraStateUpdateLiveData) {
-                value = value
-            }
-        }
+        combineLiveData(
+            actionManager.retainableActionLiveData,
+            ShapeExtraManager.defaultExtraStateUpdateLiveData
+        ) { action, _ -> action }
 
     init {
         ReorderSectionViewController(
@@ -284,16 +274,10 @@ class ShapeToolViewController(
     private fun createAppearanceVisibilityLiveData(
         selectedShapeVisibilityLiveData: LiveData<Visibility?>,
         defaultVisibilityLiveData: LiveData<Visibility>
-    ): LiveData<Visibility> = MediatorLiveData(Pair<Visibility?, Visibility>(null, Visibility.Hide))
-        .apply {
-            add(selectedShapeVisibilityLiveData) {
-                value = value.copy(first = it)
-            }
-            add(defaultVisibilityLiveData) {
-                value = value.copy(second = it)
-            }
-        }
-        .map { it.first ?: it.second }
+    ): LiveData<Visibility> = combineLiveData(
+        selectedShapeVisibilityLiveData,
+        defaultVisibilityLiveData
+    ) { selected, default -> selected ?: default }
 
     private fun RectangleExtra.toFillAppearanceVisibilityState(): Visibility {
         val selectedFillPosition =
@@ -342,17 +326,9 @@ class ShapeToolViewController(
                 TextAlignVisibility.Hide
             }
         }
-        return MediatorLiveData<Pair<TextAlignVisibility?, TextAlignVisibility>>(
-            null to TextAlignVisibility.Hide
-        )
-            .apply {
-                add(selectedTextAlignLiveData) {
-                    value = value.copy(first = it)
-                }
-                add(defaultTextAlignLiveData) {
-                    value = value.copy(second = it)
-                }
-            }
-            .map { it.first ?: it.second }
+        return combineLiveData(
+            selectedTextAlignLiveData,
+            defaultTextAlignLiveData
+        ) { selected, default -> selected ?: default }
     }
 }
