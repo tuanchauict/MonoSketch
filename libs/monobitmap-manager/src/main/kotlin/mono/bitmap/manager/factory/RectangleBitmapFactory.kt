@@ -4,16 +4,32 @@ import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Size
 import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.extra.RectangleExtra
+import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 
 object RectangleBitmapFactory {
 
     fun toBitmap(size: Size, extra: RectangleExtra): MonoBitmap {
-        val fillDrawable = extra.fillStyle.drawable
-
         val bitmapBuilder = MonoBitmap.Builder(size.width, size.height)
-        bitmapBuilder.fill(0, 0, fillDrawable.toBitmap(size.width, size.height))
-        bitmapBuilder.drawBorder(size, extra.strokeStyle, extra.dashPattern)
+
+        val fillDrawable = extra.fillStyle?.drawable
+        val strokeStyle = extra.strokeStyle
+
+        if (fillDrawable == null && strokeStyle == null) {
+            bitmapBuilder.drawBorder(
+                size,
+                PredefinedStraightStrokeStyle.NO_STROKE,
+                StraightStrokeDashPattern.SOLID
+            )
+            return bitmapBuilder.toBitmap()
+        }
+
+        if (fillDrawable != null) {
+            bitmapBuilder.fill(0, 0, fillDrawable.toBitmap(size.width, size.height))
+        }
+        if (strokeStyle != null) {
+            bitmapBuilder.drawBorder(size, strokeStyle, extra.dashPattern)
+        }
 
         return bitmapBuilder.toBitmap()
     }
