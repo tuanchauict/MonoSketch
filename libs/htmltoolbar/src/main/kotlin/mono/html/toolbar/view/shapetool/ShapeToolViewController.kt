@@ -2,19 +2,13 @@ package mono.html.toolbar.view.shapetool
 
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.RetainableActionType
-import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.Visibility
 import mono.html.toolbar.view.shapetool.TextSectionViewController.TextAlignVisibility
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
 import mono.livedata.map
 import mono.shape.ShapeExtraManager
-import mono.shape.extra.RectangleExtra
 import mono.shape.shape.AbstractShape
-import mono.shape.shape.Group
-import mono.shape.shape.Line
-import mono.shape.shape.MockShape
-import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import org.w3c.dom.HTMLElement
 
@@ -66,9 +60,6 @@ class ShapeToolViewController(
         AppearanceSectionViewController(
             lifecycleOwner,
             container,
-            fillOptions = getFillOptions(),
-            strokeOptions = getBorderOptions(),
-            headOptions = getHeadOptions(),
             appearanceDataController,
             actionManager::setOneTimeAction
         )
@@ -80,19 +71,6 @@ class ShapeToolViewController(
             actionManager::setOneTimeAction
         )
     }
-
-    private fun getFillOptions(): List<OptionItem> =
-        ShapeExtraManager.getAllPredefinedRectangleFillStyles()
-            .map { OptionItem(it.id, it.displayName) }
-
-    private fun getBorderOptions(): List<OptionItem> =
-        ShapeExtraManager.getAllPredefinedStrokeStyles()
-            .map { OptionItem(it.id, it.displayName) }
-
-    private fun getHeadOptions(): List<OptionItem> =
-        ShapeExtraManager.getAllPredefinedAnchorChars()
-            .map { OptionItem(it.id, it.displayName) }
-
 
     private fun createTextAlignLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,

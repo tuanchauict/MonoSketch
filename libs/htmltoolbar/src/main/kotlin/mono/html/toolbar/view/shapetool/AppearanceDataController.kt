@@ -54,6 +54,15 @@ internal class AppearanceDataController(
         lineEndHeadToolStateLiveData
     ) { list -> list.any { it != AppearanceSectionViewController.Visibility.Hide } }
 
+    val fillOptions: List<OptionItem> = ShapeExtraManager.getAllPredefinedRectangleFillStyles()
+        .map { OptionItem(it.id, it.displayName) }
+
+    val strokeOptions: List<OptionItem> = ShapeExtraManager.getAllPredefinedStrokeStyles()
+        .map { OptionItem(it.id, it.displayName) }
+
+    val headOptions: List<OptionItem> = ShapeExtraManager.getAllPredefinedAnchorChars()
+        .map { OptionItem(it.id, it.displayName) }
+
     private fun createFillAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
         retainableActionTypeLiveData: LiveData<RetainableActionType>

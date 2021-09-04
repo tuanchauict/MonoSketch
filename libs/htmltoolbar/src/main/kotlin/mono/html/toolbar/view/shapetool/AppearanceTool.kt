@@ -32,23 +32,39 @@ import org.w3c.dom.events.Event
 internal class AppearanceSectionViewController(
     lifecycleOwner: LifecycleOwner,
     container: Element,
-    fillOptions: List<OptionItem>,
-    strokeOptions: List<OptionItem>,
-    headOptions: List<OptionItem>,
     appearanceDataController: AppearanceDataController,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ) {
     private val rootView = container.Section("APPEARANCE")
 
     init {
-        GridTextIconOptions(rootView, ToolType.FILL, fillOptions, setOneTimeAction)
-            .observe(lifecycleOwner, appearanceDataController.fillToolStateLiveData)
-        GridTextIconOptions(rootView, ToolType.BORDER, strokeOptions, setOneTimeAction)
-            .observe(lifecycleOwner, appearanceDataController.borderToolStateLiveData)
-        GridTextIconOptions(rootView, ToolType.START_HEAD, headOptions, setOneTimeAction)
-            .observe(lifecycleOwner, appearanceDataController.lineStartHeadToolStateLiveData)
-        GridTextIconOptions(rootView, ToolType.END_HEAD, headOptions, setOneTimeAction)
-            .observe(lifecycleOwner, appearanceDataController.lineEndHeadToolStateLiveData)
+        GridTextIconOptions(
+            rootView,
+            ToolType.FILL,
+            appearanceDataController.fillOptions,
+            setOneTimeAction
+        ).observe(lifecycleOwner, appearanceDataController.fillToolStateLiveData)
+
+        GridTextIconOptions(
+            rootView,
+            ToolType.BORDER,
+            appearanceDataController.strokeOptions,
+            setOneTimeAction
+        ).observe(lifecycleOwner, appearanceDataController.borderToolStateLiveData)
+
+        GridTextIconOptions(
+            rootView,
+            ToolType.START_HEAD,
+            appearanceDataController.headOptions,
+            setOneTimeAction
+        ).observe(lifecycleOwner, appearanceDataController.lineStartHeadToolStateLiveData)
+
+        GridTextIconOptions(
+            rootView,
+            ToolType.END_HEAD,
+            appearanceDataController.headOptions,
+            setOneTimeAction
+        ).observe(lifecycleOwner, appearanceDataController.lineEndHeadToolStateLiveData)
 
         appearanceDataController.hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
             rootView.isVisible = it
