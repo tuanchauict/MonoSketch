@@ -60,8 +60,7 @@ class ShapeToolViewController(
         AppearanceSectionViewController(
             lifecycleOwner,
             container,
-            appearanceDataController,
-            actionManager::setOneTimeAction
+            appearanceDataController
         )
 
         TextSectionViewController(

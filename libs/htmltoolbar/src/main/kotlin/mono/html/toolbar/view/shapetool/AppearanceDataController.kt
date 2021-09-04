@@ -1,6 +1,7 @@
 package mono.html.toolbar.view.shapetool
 
 import mono.html.toolbar.ActionManager
+import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.RetainableActionType
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
@@ -20,7 +21,7 @@ import mono.shape.shape.Text
 internal class AppearanceDataController(
     selectedShapesLiveData: LiveData<Set<AbstractShape>>,
     shapeManagerVersionLiveData: LiveData<Int>,
-    actionManager: ActionManager
+    private val actionManager: ActionManager
 ) {
     private val shapesLiveData: LiveData<Set<AbstractShape>> =
         combineLiveData(
@@ -62,6 +63,8 @@ internal class AppearanceDataController(
 
     val headOptions: List<OptionItem> = ShapeExtraManager.getAllPredefinedAnchorChars()
         .map { OptionItem(it.id, it.displayName) }
+
+    fun setOneTimeAction(actionType: OneTimeActionType) = actionManager.setOneTimeAction(actionType)
 
     private fun createFillAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,

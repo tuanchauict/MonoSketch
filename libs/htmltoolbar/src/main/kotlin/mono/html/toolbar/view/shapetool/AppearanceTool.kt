@@ -32,8 +32,7 @@ import org.w3c.dom.events.Event
 internal class AppearanceSectionViewController(
     lifecycleOwner: LifecycleOwner,
     container: Element,
-    appearanceDataController: AppearanceDataController,
-    setOneTimeAction: (OneTimeActionType) -> Unit
+    appearanceDataController: AppearanceDataController
 ) {
     private val rootView = container.Section("APPEARANCE")
 
@@ -42,28 +41,28 @@ internal class AppearanceSectionViewController(
             rootView,
             ToolType.FILL,
             appearanceDataController.fillOptions,
-            setOneTimeAction
+            appearanceDataController::setOneTimeAction
         ).observe(lifecycleOwner, appearanceDataController.fillToolStateLiveData)
 
         GridTextIconOptions(
             rootView,
             ToolType.BORDER,
             appearanceDataController.strokeOptions,
-            setOneTimeAction
+            appearanceDataController::setOneTimeAction
         ).observe(lifecycleOwner, appearanceDataController.borderToolStateLiveData)
 
         GridTextIconOptions(
             rootView,
             ToolType.START_HEAD,
             appearanceDataController.headOptions,
-            setOneTimeAction
+            appearanceDataController::setOneTimeAction
         ).observe(lifecycleOwner, appearanceDataController.lineStartHeadToolStateLiveData)
 
         GridTextIconOptions(
             rootView,
             ToolType.END_HEAD,
             appearanceDataController.headOptions,
-            setOneTimeAction
+            appearanceDataController::setOneTimeAction
         ).observe(lifecycleOwner, appearanceDataController.lineEndHeadToolStateLiveData)
 
         appearanceDataController.hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
