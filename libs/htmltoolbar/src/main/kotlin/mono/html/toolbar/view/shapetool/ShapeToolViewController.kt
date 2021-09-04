@@ -37,11 +37,17 @@ class ShapeToolViewController(
             shapeManagerVersionLiveData
         ) { selected, _ -> selected }
 
-    private val retainableActionLiveData =
+    private val retainableActionLiveData: LiveData<RetainableActionType> =
         combineLiveData(
             actionManager.retainableActionLiveData,
             ShapeExtraManager.defaultExtraStateUpdateLiveData
         ) { action, _ -> action }
+
+    private val appearanceDataController = AppearanceDataController(
+        selectedShapesLiveData,
+        shapeManagerVersionLiveData,
+        actionManager
+    )
 
     init {
         ReorderSectionViewController(
@@ -63,11 +69,7 @@ class ShapeToolViewController(
             fillOptions = getFillOptions(),
             strokeOptions = getBorderOptions(),
             headOptions = getHeadOptions(),
-            createFillAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
-            createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
-            createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
-            createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
-            createEndHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
+            appearanceDataController,
             actionManager::setOneTimeAction
         )
 
@@ -91,218 +93,6 @@ class ShapeToolViewController(
         ShapeExtraManager.getAllPredefinedAnchorChars()
             .map { OptionItem(it.id, it.displayName) }
 
-    private fun createFillAppearanceVisibilityLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<Visibility> {
-        val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when {
-                it.isEmpty() -> null
-                it.size > 1 -> Visibility.Hide
-                else -> {
-                    when (val shape = it.single()) {
-                        is Rectangle -> shape.extra.toFillAppearanceVisibilityState()
-                        is Text -> shape.extra.boundExtra.toFillAppearanceVisibilityState()
-                        is Group,
-                        is Line,
-                        is MockShape -> Visibility.Hide
-                    }
-                }
-            }
-        }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT ->
-                    ShapeExtraManager.defaultRectangleExtra.userSelectedFillStyle
-                RetainableActionType.ADD_LINE,
-                RetainableActionType.IDLE -> null
-            }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedRectangleFillStyles().indexOf(defaultState)
-                Visibility.Visible(
-                    ShapeExtraManager.defaultRectangleExtra.isFillEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                Visibility.Hide
-            }
-        }
-
-        return createAppearanceVisibilityLiveData(
-            selectedVisibilityLiveData,
-            defaultVisibilityLiveData
-        )
-    }
-
-    private fun createBorderAppearanceVisibilityLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<Visibility> {
-        val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when {
-                it.isEmpty() -> null
-                it.size > 1 -> Visibility.Hide
-                else -> {
-                    when (val shape = it.single()) {
-                        is Rectangle -> shape.extra.toBorderAppearanceVisibilityState()
-                        is Text -> shape.extra.boundExtra.toBorderAppearanceVisibilityState()
-                        is Group,
-                        is Line,
-                        is MockShape -> Visibility.Hide
-                    }
-                }
-            }
-        }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT ->
-                    ShapeExtraManager.defaultRectangleExtra.userSelectedBorderStyle
-                RetainableActionType.ADD_LINE,
-                RetainableActionType.IDLE -> null
-            }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
-                Visibility.Visible(
-                    ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                Visibility.Hide
-            }
-        }
-
-        return createAppearanceVisibilityLiveData(
-            selectedVisibilityLiveData,
-            defaultVisibilityLiveData
-        )
-    }
-
-    private fun createStartHeadAppearanceVisibilityLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<Visibility> {
-        val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when {
-                it.isEmpty() -> null
-                it.size > 1 -> Visibility.Hide
-                else -> {
-                    when (val shape = it.single()) {
-                        is Line -> shape.toStartHeadAppearanceVisibilityState()
-                        is Rectangle,
-                        is Text,
-                        is Group,
-                        is MockShape -> Visibility.Hide
-                    }
-                }
-            }
-        }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
-                RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultLineExtra.userSelectedStartAnchor
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT,
-                RetainableActionType.IDLE -> null
-            }
-            if (defaultState != null) {
-                val selectedStartHeaderPosition =
-                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                Visibility.Visible(
-                    ShapeExtraManager.defaultLineExtra.isStartAnchorEnabled,
-                    selectedStartHeaderPosition
-                )
-            } else {
-                Visibility.Hide
-            }
-        }
-
-        return createAppearanceVisibilityLiveData(
-            selectedVisibilityLiveData,
-            defaultVisibilityLiveData
-        )
-    }
-
-    private fun createEndHeadAppearanceVisibilityLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<Visibility> {
-        val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when {
-                it.isEmpty() -> null
-                it.size > 1 -> Visibility.Hide
-                else -> {
-                    when (val shape = it.single()) {
-                        is Line -> shape.toEndHeadAppearanceVisibilityState()
-                        is Rectangle,
-                        is Text,
-                        is Group,
-                        is MockShape -> Visibility.Hide
-                    }
-                }
-            }
-        }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
-                RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultLineExtra.userSelectedEndAnchor
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT,
-                RetainableActionType.IDLE -> null
-            }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                Visibility.Visible(
-                    ShapeExtraManager.defaultLineExtra.isEndAnchorEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                Visibility.Hide
-            }
-        }
-
-        return createAppearanceVisibilityLiveData(
-            selectedVisibilityLiveData,
-            defaultVisibilityLiveData
-        )
-    }
-
-    private fun createAppearanceVisibilityLiveData(
-        selectedShapeVisibilityLiveData: LiveData<Visibility?>,
-        defaultVisibilityLiveData: LiveData<Visibility>
-    ): LiveData<Visibility> = combineLiveData(
-        selectedShapeVisibilityLiveData,
-        defaultVisibilityLiveData
-    ) { selected, default -> selected ?: default }
-
-    private fun RectangleExtra.toFillAppearanceVisibilityState(): Visibility {
-        val selectedFillPosition =
-            ShapeExtraManager.getAllPredefinedRectangleFillStyles()
-                .indexOf(userSelectedFillStyle)
-        return Visibility.Visible(isFillEnabled, selectedFillPosition)
-    }
-
-    private fun RectangleExtra.toBorderAppearanceVisibilityState(): Visibility {
-        val selectedBorderPosition =
-            ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedBorderStyle)
-        return Visibility.Visible(isBorderEnabled, selectedBorderPosition)
-    }
-
-    private fun Line.toStartHeadAppearanceVisibilityState(): Visibility {
-        val selectedStartHeadPosition =
-            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedStartAnchor)
-        return Visibility.Visible(extra.isStartAnchorEnabled, selectedStartHeadPosition)
-    }
-
-    private fun Line.toEndHeadAppearanceVisibilityState(): Visibility {
-        val selectedEndHeadPosition =
-            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
-        return Visibility.Visible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
-    }
 
     private fun createTextAlignLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,

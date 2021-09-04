@@ -22,7 +22,6 @@ import mono.html.toolbar.view.shapetool.Class.SMALL
 import mono.html.toolbar.view.shapetool.Class.TOOL_TITLE
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
-import mono.livedata.combineLiveData
 import mono.livedata.map
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
@@ -36,34 +35,22 @@ internal class AppearanceSectionViewController(
     fillOptions: List<OptionItem>,
     strokeOptions: List<OptionItem>,
     headOptions: List<OptionItem>,
-    fillAppearanceLiveData: LiveData<Visibility>,
-    borderAppearanceLiveData: LiveData<Visibility>,
-    lineStrokeAppearanceLiveData: LiveData<Visibility>,
-    lineStartHeadAppearanceLiveData: LiveData<Visibility>,
-    lineEndHeadAppearanceLiveData: LiveData<Visibility>,
+    appearanceDataController: AppearanceDataController,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ) {
     private val rootView = container.Section("APPEARANCE")
 
     init {
         GridTextIconOptions(rootView, ToolType.FILL, fillOptions, setOneTimeAction)
-            .observe(lifecycleOwner, fillAppearanceLiveData)
+            .observe(lifecycleOwner, appearanceDataController.fillToolStateLiveData)
         GridTextIconOptions(rootView, ToolType.BORDER, strokeOptions, setOneTimeAction)
-            .observe(lifecycleOwner, borderAppearanceLiveData)
+            .observe(lifecycleOwner, appearanceDataController.borderToolStateLiveData)
         GridTextIconOptions(rootView, ToolType.START_HEAD, headOptions, setOneTimeAction)
-            .observe(lifecycleOwner, lineStartHeadAppearanceLiveData)
+            .observe(lifecycleOwner, appearanceDataController.lineStartHeadToolStateLiveData)
         GridTextIconOptions(rootView, ToolType.END_HEAD, headOptions, setOneTimeAction)
-            .observe(lifecycleOwner, lineEndHeadAppearanceLiveData)
+            .observe(lifecycleOwner, appearanceDataController.lineEndHeadToolStateLiveData)
 
-        val appearanceVisibilityLiveData = combineLiveData(
-            fillAppearanceLiveData,
-            borderAppearanceLiveData,
-            lineStrokeAppearanceLiveData,
-            lineStartHeadAppearanceLiveData,
-            lineEndHeadAppearanceLiveData
-        ) { list -> list.any { it != Visibility.Hide } }
-
-        appearanceVisibilityLiveData.observe(lifecycleOwner) {
+        appearanceDataController.hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
             rootView.isVisible = it
         }
     }
