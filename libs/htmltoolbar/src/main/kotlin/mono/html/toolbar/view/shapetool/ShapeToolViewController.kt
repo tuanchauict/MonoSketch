@@ -2,7 +2,6 @@ package mono.html.toolbar.view.shapetool
 
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.RetainableActionType
-import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.ToolType
 import mono.html.toolbar.view.shapetool.AppearanceSectionViewController.Visibility
 import mono.html.toolbar.view.shapetool.TextSectionViewController.TextAlignVisibility
 import mono.lifecycle.LifecycleOwner
@@ -72,9 +71,13 @@ class ShapeToolViewController(
             lifecycleOwner,
             container,
             fillOptions = getFillOptions(),
-            borderOptions = getBorderOptions(),
+            strokeOptions = getBorderOptions(),
             headOptions = getHeadOptions(),
-            createAppearanceVisibilityLiveData(),
+            createFillAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
+            createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
+            createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
+            createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
+            createEndHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData),
             actionManager::setOneTimeAction
         )
 
@@ -97,39 +100,6 @@ class ShapeToolViewController(
     private fun getHeadOptions(): List<OptionItem> =
         ShapeExtraManager.getAllPredefinedAnchorChars()
             .map { OptionItem(it.id, it.displayName) }
-
-    private fun createAppearanceVisibilityLiveData(): LiveData<Map<ToolType, Visibility>> {
-        val fillAppearanceVisibilityLiveData = createFillAppearanceVisibilityLiveData(
-            shapesLiveData,
-            retainableActionLiveData
-        )
-        val borderAppearanceVisibilityLiveData = createBorderAppearanceVisibilityLiveData(
-            shapesLiveData,
-            retainableActionLiveData
-        )
-        val startHeadAppearanceVisibilityLiveData = createStartHeadAppearanceVisibilityLiveData(
-            shapesLiveData,
-            retainableActionLiveData
-        )
-        val endHeadAppearanceVisibilityLiveData = createEndHeadAppearanceVisibilityLiveData(
-            shapesLiveData,
-            retainableActionLiveData
-        )
-        return MediatorLiveData(emptyMap<ToolType, Visibility>()).apply {
-            add(fillAppearanceVisibilityLiveData) {
-                value = value + (ToolType.FILL to it)
-            }
-            add(borderAppearanceVisibilityLiveData) {
-                value = value + (ToolType.BORDER to it)
-            }
-            add(startHeadAppearanceVisibilityLiveData) {
-                value = value + (ToolType.START_HEAD to it)
-            }
-            add(endHeadAppearanceVisibilityLiveData) {
-                value = value + (ToolType.END_HEAD to it)
-            }
-        }
-    }
 
     private fun createFillAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
