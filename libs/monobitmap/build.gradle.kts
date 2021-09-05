@@ -10,7 +10,7 @@ dependencies {
     implementation(project(":commons"))
     implementation(project(":graphicsgeo"))
 
-    implementation(kotlin("stdlib-js"))
+    implementation(libs.kotlin.stdlib.js)
 
     testImplementation(libs.kotlin.test.js)
 }
