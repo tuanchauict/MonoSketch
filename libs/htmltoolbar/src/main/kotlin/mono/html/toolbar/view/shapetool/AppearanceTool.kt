@@ -20,6 +20,7 @@ import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
 import mono.html.toolbar.view.shapetool.Class.CLICKABLE
 import mono.html.toolbar.view.shapetool.Class.COLUMN
+import mono.html.toolbar.view.shapetool.Class.GRAY_TEXT
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.html.toolbar.view.shapetool.Class.INLINE_TITLE
 import mono.html.toolbar.view.shapetool.Class.INPUT_CHECK_BOX
@@ -225,7 +226,7 @@ private fun DashPatternTool(
     val offsetInput = DashPatternInput(null) { onChange(null, null, it) }
 
     val rootView = container.Tool(hasMoreBottomSpace = true, hasCheckBox = false) {
-        Row {
+        Row(isMoreBottomSpaceRequired = true) {
             Column {
                 Row {
                     DashPatternRow("Dash", dashInput)
@@ -242,7 +243,7 @@ fun Element.DashPatternRow(name: String, inputBox: HTMLInputElement) {
     Div(classes(COLUMN)) {
         setAttributes("style" to "margin-right: 12px")
         Div(classes(ROW, CENTER_VERTICAL)) {
-            Span(classes(INLINE_TITLE), text = name)
+            Span(classes(INLINE_TITLE, GRAY_TEXT), text = name)
             appendElement(inputBox)
         }
     }

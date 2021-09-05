@@ -11,6 +11,7 @@ enum class Class(val value: String) {
     CLICKABLE("clickable"),
     COLUMN("tcolumn"),
     DISABLED("disabled"),
+    GRAY_TEXT("gray-text"),
     GRID("grid"),
     HALF("half"),
     HIDE("hide"),
