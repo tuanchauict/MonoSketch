@@ -19,8 +19,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":app"))
-    implementation(project(":lifecycle"))
+    implementation(projects.app)
+    implementation(projects.lifecycle)
 
     testImplementation(libs.kotlin.test.js)
 }

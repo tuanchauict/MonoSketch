@@ -7,8 +7,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":commons"))
-    implementation(project(":lifecycle"))
+    implementation(projects.commons)
+    implementation(projects.lifecycle)
 
     testImplementation(libs.kotlin.test.js)
 }

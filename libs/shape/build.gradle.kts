@@ -8,11 +8,11 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":commons"))
-    implementation(project(":graphicsgeo"))
-    implementation(project(":livedata"))
-    implementation(project(":monobitmap"))
-    implementation(project(":uuid"))
+    implementation(projects.commons)
+    implementation(projects.graphicsgeo)
+    implementation(projects.livedata)
+    implementation(projects.monobitmap)
+    implementation(projects.uuid)
 
     implementation(libs.kotlinx.serialization.json)
 
