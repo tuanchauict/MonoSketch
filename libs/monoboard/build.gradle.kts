@@ -8,12 +8,12 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":build-environment"))
-    implementation(project(":commons"))
-    implementation(project(":graphicsgeo"))
-    implementation(project(":monobitmap"))
+    implementation(projects.buildEnvironment)
+    implementation(projects.commons)
+    implementation(projects.graphicsgeo)
+    implementation(projects.monobitmap)
 
-    implementation(kotlin("stdlib-js"))
+    implementation(libs.kotlin.stdlib.js)
 
     testImplementation(libs.kotlin.test.js)
 }

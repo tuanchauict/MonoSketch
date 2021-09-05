@@ -7,14 +7,14 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":commons"))
-    implementation(project(":graphicsgeo"))
-    implementation(project(":html-dsl"))
-    implementation(project(":html-ext"))
-    implementation(project(":keycommand"))
-    implementation(project(":lifecycle"))
-    implementation(project(":livedata"))
-    implementation(project(":shape"))
+    implementation(projects.commons)
+    implementation(projects.graphicsgeo)
+    implementation(projects.htmlDsl)
+    implementation(projects.htmlExt)
+    implementation(projects.keycommand)
+    implementation(projects.lifecycle)
+    implementation(projects.livedata)
+    implementation(projects.shape)
 
     testImplementation(libs.kotlin.test.js)
 }

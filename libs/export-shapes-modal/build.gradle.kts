@@ -7,16 +7,16 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":graphicsgeo"))
-    implementation(project(":html-dsl"))
-    implementation(project(":html-ext"))
-    implementation(project(":lifecycle"))
-    implementation(project(":livedata"))
-    implementation(project(":monobitmap"))
-    implementation(project(":monoboard"))
-    implementation(project(":shape"))
+    implementation(projects.graphicsgeo)
+    implementation(projects.htmlDsl)
+    implementation(projects.htmlExt)
+    implementation(projects.lifecycle)
+    implementation(projects.livedata)
+    implementation(projects.monobitmap)
+    implementation(projects.monoboard)
+    implementation(projects.shape)
 
-    implementation(kotlin("stdlib-js"))
+    implementation(libs.kotlin.stdlib.js)
     testImplementation(libs.kotlin.test.js)
 }
 

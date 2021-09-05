@@ -7,14 +7,14 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":commons"))
-    implementation(project(":graphicsgeo"))
-    implementation(project(":html-dsl"))
-    implementation(project(":html-ext"))
-    implementation(project(":lifecycle"))
-    implementation(project(":livedata"))
-    implementation(project(":monoboard"))
-    implementation(project(":shape-interaction-bound"))
+    implementation(projects.commons)
+    implementation(projects.graphicsgeo)
+    implementation(projects.htmlDsl)
+    implementation(projects.htmlExt)
+    implementation(projects.lifecycle)
+    implementation(projects.livedata)
+    implementation(projects.monoboard)
+    implementation(projects.shapeInteractionBound)
 
     testImplementation(libs.kotlin.test.js)
 }

@@ -7,10 +7,10 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":commons"))
-    implementation(project(":graphicsgeo"))
-    implementation(project(":monobitmap"))
-    implementation(project(":shape"))
+    implementation(projects.commons)
+    implementation(projects.graphicsgeo)
+    implementation(projects.monobitmap)
+    implementation(projects.shape)
 
     testImplementation(libs.kotlin.test.js)
 }

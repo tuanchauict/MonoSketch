@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
     implementation(libs.kotlinx.serialization.json)
-    implementation(kotlin("stdlib-js"))
+    implementation(libs.kotlin.stdlib.js)
     testImplementation(libs.kotlin.test.js)
 }
 
