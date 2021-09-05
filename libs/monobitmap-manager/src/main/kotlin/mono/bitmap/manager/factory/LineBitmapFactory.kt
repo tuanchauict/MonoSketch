@@ -5,6 +5,7 @@ import mono.graphics.geo.Point
 import mono.shape.extra.style.AnchorChar
 import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.extra.LineExtra
+import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 
 /**
  * A drawable to draw Line shape to bitmap.
@@ -18,7 +19,8 @@ object LineBitmapFactory {
         val bitmapBuilder = BitmapBuilderDecoration.getInstance(jointPoints)
 
         val dashPattern = lineExtra.dashPattern
-        createCharPoints(jointPoints, lineExtra.strokeStyle)
+        val strokeStyle = lineExtra.strokeStyle ?: PredefinedStraightStrokeStyle.NO_STROKE
+        createCharPoints(jointPoints, strokeStyle)
             .forEachIndexed { index, pointChar ->
                 val char = if (dashPattern.isGap(index)) ' ' else pointChar.char
                 bitmapBuilder.put(pointChar.top, pointChar.left, char)
