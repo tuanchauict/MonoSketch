@@ -11,6 +11,7 @@ enum class Class(val value: String) {
     CLICKABLE("clickable"),
     COLUMN("tcolumn"),
     DISABLED("disabled"),
+    GRAY_TEXT("gray-text"),
     GRID("grid"),
     HALF("half"),
     HIDE("hide"),
@@ -29,6 +30,7 @@ enum class Class(val value: String) {
     SMALL("small"),
     SMALL_SPACE("small-space"),
     TOOL("tool"),
+    TOOL_NO_CHECK_BOX("no-check-box"),
     TOOL_TITLE("tool-title");
 
     infix fun x(isAccepted: Boolean): Class? = this.takeIf { isAccepted }

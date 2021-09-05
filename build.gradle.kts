@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 
 plugins {
-    kotlin("js") version "1.5.20"
+    kotlin("js") version "1.5.21"
     kotlin("plugin.serialization") version "1.5.0"
 }
 
@@ -48,7 +49,7 @@ kotlin {
 
 // TODO: Remove this. This is a workaround for running on browser for debugging.
 afterEvaluate {
-    rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
+    rootProject.extensions.configure<NodeJsRootExtension> {
         versions.webpackDevServer.version = "4.0.0"
     }
 }

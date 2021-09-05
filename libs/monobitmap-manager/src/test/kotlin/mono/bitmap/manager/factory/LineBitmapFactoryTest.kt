@@ -450,8 +450,7 @@ class LineBitmapFactoryTest {
             userSelectedStartAnchor = AnchorChar("id", "name", '0'),
             isEndAnchorEnabled = true,
             userSelectedEndAnchor = AnchorChar("id", "name", '1'),
-            isDashEnabled = false,
-            userDefinedDashPattern = StraightStrokeDashPattern.SOLID
+            dashPattern = StraightStrokeDashPattern.SOLID
         )
     }
 }

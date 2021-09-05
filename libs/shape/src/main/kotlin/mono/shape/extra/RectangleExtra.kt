@@ -14,8 +14,7 @@ data class RectangleExtra(
     val userSelectedFillStyle: RectangleFillStyle,
     val isBorderEnabled: Boolean,
     val userSelectedBorderStyle: StraightStrokeStyle,
-    val isDashEnabled: Boolean,
-    val userDefinedDashPattern: StraightStrokeDashPattern
+    val dashPattern: StraightStrokeDashPattern
 ) : ShapeExtra() {
     val fillStyle: RectangleFillStyle?
         get() = if (isFillEnabled) userSelectedFillStyle else null
@@ -23,20 +22,11 @@ data class RectangleExtra(
     val strokeStyle: StraightStrokeStyle?
         get() = if (isBorderEnabled) userSelectedBorderStyle else null
 
-    val dashPattern: StraightStrokeDashPattern
-        get() =
-            if (isDashEnabled) {
-                userDefinedDashPattern
-            } else {
-                StraightStrokeDashPattern.SOLID
-            }
-
     constructor(serializableExtra: SerializableRectangle.SerializableExtra) : this(
         serializableExtra.isFillEnabled,
         ShapeExtraManager.getRectangleFillStyle(serializableExtra.userSelectedFillStyleId),
         serializableExtra.isBorderEnabled,
         ShapeExtraManager.getRectangleBorderStyle(serializableExtra.userSelectedBorderStyleId),
-        serializableExtra.isDashEnabled,
         StraightStrokeDashPattern.fromSerializableValue(serializableExtra.dashPattern)
     )
 
@@ -46,7 +36,6 @@ data class RectangleExtra(
             userSelectedFillStyleId = userSelectedFillStyle.id,
             isBorderEnabled = isBorderEnabled,
             userSelectedBorderStyleId = userSelectedBorderStyle.id,
-            isDashEnabled = isDashEnabled,
-            dashPattern = userDefinedDashPattern.toSerializableValue()
+            dashPattern = dashPattern.toSerializableValue()
         )
 }
