@@ -205,6 +205,9 @@ html, body {
   display: flex;
   flex-direction: column;
 }
+.tool.no-check-box {
+  margin-left: 21px;
+}
 
 .add-bottom-space {
   margin-bottom: 12px;
@@ -334,7 +337,7 @@ html, body {
   border-bottom: 1px solid #03a9f4;
 }
 .tool-input-text.small {
-  width: 30px;
+  width: 38px;
 }
 .tool-input-text.medium {
   width: 60px;
