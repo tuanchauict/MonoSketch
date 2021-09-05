@@ -25,7 +25,6 @@ import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
-import kotlin.math.sin
 
 /**
  * A class to handle one time actions.
