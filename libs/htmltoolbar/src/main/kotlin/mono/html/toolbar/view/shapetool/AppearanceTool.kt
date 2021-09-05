@@ -58,8 +58,11 @@ internal class AppearanceSectionViewController(
             appearanceDataController::setOneTimeAction
         ).observe(lifecycleOwner, appearanceDataController.borderToolStateLiveData)
 
-        DashPatternTool(rootView)
-            .observe(lifecycleOwner, appearanceDataController.borderDashPatternLiveData)
+        DashPatternTool(rootView) { dash, gap, offset ->
+            appearanceDataController.setOneTimeAction(
+                OneTimeActionType.ChangeShapeBorderDashPatternExtra(dash, gap, offset)
+            )
+        }.observe(lifecycleOwner, appearanceDataController.borderDashPatternLiveData)
 
         GridTextIconOptions(
             rootView,
@@ -68,8 +71,11 @@ internal class AppearanceSectionViewController(
             appearanceDataController::setOneTimeAction
         ).observe(lifecycleOwner, appearanceDataController.lineStrokeToolStateLiveData)
 
-        DashPatternTool(rootView)
-            .observe(lifecycleOwner, appearanceDataController.lineStrokeDashPatternLiveData)
+        DashPatternTool(rootView) { dash, gap, offset ->
+            appearanceDataController.setOneTimeAction(
+                OneTimeActionType.ChangeLineStrokeDashPatternExtra(dash, gap, offset)
+            )
+        }.observe(lifecycleOwner, appearanceDataController.lineStrokeDashPatternLiveData)
 
         GridTextIconOptions(
             rootView,
@@ -210,10 +216,13 @@ private fun GridTextIconOptions(
     return AppearanceToolViewController(rootView, checkBox, optionElements)
 }
 
-private fun DashPatternTool(container: Element): DashPatternViewController {
-    val dashInput = DashPatternInput(1)
-    val gapInput = DashPatternInput(0)
-    val offsetInput = DashPatternInput(null)
+private fun DashPatternTool(
+    container: Element,
+    onChange: (Int?, Int?, Int?) -> Unit
+): DashPatternViewController {
+    val dashInput = DashPatternInput(1) { onChange(it, null, null) }
+    val gapInput = DashPatternInput(0) { onChange(null, it, null) }
+    val offsetInput = DashPatternInput(null) { onChange(null, null, it) }
 
     val rootView = container.Tool(hasMoreBottomSpace = true, hasCheckBox = false) {
         Row {
@@ -239,11 +248,12 @@ fun Element.DashPatternRow(name: String, inputBox: HTMLInputElement) {
     }
 }
 
-fun DashPatternInput(minValue: Int?): HTMLInputElement =
+fun DashPatternInput(minValue: Int?, onChange: (Int) -> Unit): HTMLInputElement =
     Input(null, InputType.NUMBER, classes(INPUT_TEXT, SMALL)) {
         if (minValue != null) {
             setAttributes("min" to minValue)
         }
+        setOnChangeListener { onChange(value.toInt()) }
     }
 
 private fun Element.Column(hasMoreRightSpace: Boolean = false, block: Element.() -> Unit) {

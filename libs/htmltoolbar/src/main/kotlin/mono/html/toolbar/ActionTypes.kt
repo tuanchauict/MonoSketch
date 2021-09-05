@@ -53,9 +53,21 @@ sealed interface OneTimeActionType {
         val newBorderStyleId: String? = null
     ) : OneTimeActionType
 
+    data class ChangeShapeBorderDashPatternExtra(
+        val dash: Int?,
+        val gap: Int?,
+        val offset: Int?
+    ) : OneTimeActionType
+
     data class ChangeLineStrokeExtra(
         val isEnabled: Boolean? = null,
         val newStrokeStyleId: String? = null
+    ) : OneTimeActionType
+
+    data class ChangeLineStrokeDashPatternExtra(
+        val dash: Int?,
+        val gap: Int?,
+        val offset: Int?
     ) : OneTimeActionType
 
     data class ChangeLineStartAnchorExtra(
