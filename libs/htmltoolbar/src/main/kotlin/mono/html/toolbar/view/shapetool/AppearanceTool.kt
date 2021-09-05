@@ -59,6 +59,7 @@ internal class AppearanceSectionViewController(
         ).observe(lifecycleOwner, appearanceDataController.borderToolStateLiveData)
 
         DashPatternTool(rootView)
+            .observe(lifecycleOwner, appearanceDataController.borderDashPatternLiveData)
 
         GridTextIconOptions(
             rootView,
@@ -149,12 +150,14 @@ private class DashPatternViewController(
     private val gapInput: HTMLInputElement,
     private val offsetInput: HTMLInputElement
 ) {
-    fun observe(lifecycleOwner: LifecycleOwner, liveData: LiveData<DashVisible?>) {
+    fun observe(lifecycleOwner: LifecycleOwner, liveData: LiveData<AppearanceVisibility>) {
         liveData.observe(lifecycleOwner, listener = ::setState)
     }
 
-    private fun setState(dashVisible: DashVisible?) {
+    private fun setState(visibility: AppearanceVisibility) {
+        val dashVisible = visibility as? DashVisible
         rootView.isVisible = dashVisible != null
+
         val dashPattern = dashVisible?.dashPattern ?: return
         dashInput.value = dashPattern.segment.toString()
         gapInput.value = dashPattern.gap.toString()

@@ -1,5 +1,6 @@
 package mono.html.toolbar.view.shapetool
 
+import mono.common.nullToFalse
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.RetainableActionType
@@ -41,6 +42,9 @@ internal class AppearanceDataController(
         createFillAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val borderToolStateLiveData: LiveData<AppearanceVisibility> =
         createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
+    val borderDashPatternLiveData: LiveData<AppearanceVisibility> =
+        createBorderDashPatternLiveData(shapesLiveData)
+
     val lineStrokeToolStateLiveData: LiveData<AppearanceVisibility> =
         createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val lineStartHeadToolStateLiveData: LiveData<AppearanceVisibility> =
@@ -158,6 +162,22 @@ internal class AppearanceDataController(
             selectedVisibilityLiveData,
             defaultVisibilityLiveData
         )
+    }
+
+    private fun createBorderDashPatternLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>
+    ): LiveData<AppearanceVisibility> = selectedShapesLiveData.map {
+        val boundExtra = when (val shape = it.singleOrNull()) {
+            is Text -> shape.extra.boundExtra
+            is Rectangle -> shape.extra
+            is Line,
+            is Group,
+            is MockShape,
+            null -> null
+        }
+        val dashPattern =
+            boundExtra?.dashPattern.takeIf { boundExtra?.isBorderEnabled.nullToFalse() }
+        dashPattern?.let(AppearanceVisibility::DashVisible) ?: AppearanceVisibility.Hide
     }
 
     private fun createLineStrokeAppearanceVisibilityLiveData(
@@ -348,7 +368,6 @@ internal sealed class AppearanceVisibility {
     ) : AppearanceVisibility()
 
     data class DashVisible(
-        val isChecked: Boolean,
         val dashPattern: StraightStrokeDashPattern
-    )
+    ) : AppearanceVisibility()
 }
