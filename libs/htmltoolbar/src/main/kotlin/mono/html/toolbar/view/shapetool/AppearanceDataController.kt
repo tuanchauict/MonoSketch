@@ -7,6 +7,7 @@ import mono.livedata.LiveData
 import mono.livedata.combineLiveData
 import mono.livedata.map
 import mono.shape.ShapeExtraManager
+import mono.shape.extra.LineExtra
 import mono.shape.extra.RectangleExtra
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -40,8 +41,7 @@ internal class AppearanceDataController(
     val borderToolStateLiveData: LiveData<AppearanceVisibility> =
         createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val lineStrokeToolStateLiveData: LiveData<AppearanceVisibility> =
-        // TODO: Correct this
-        createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
+        createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val lineStartHeadToolStateLiveData: LiveData<AppearanceVisibility> =
         createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val lineEndHeadToolStateLiveData: LiveData<AppearanceVisibility> =
@@ -139,6 +139,50 @@ internal class AppearanceDataController(
                 RetainableActionType.ADD_TEXT ->
                     ShapeExtraManager.defaultRectangleExtra.userSelectedBorderStyle
                 RetainableActionType.ADD_LINE,
+                RetainableActionType.IDLE -> null
+            }
+            if (defaultState != null) {
+                val selectedFillPosition =
+                    ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
+                AppearanceVisibility.Visible(
+                    ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
+                    selectedFillPosition
+                )
+            } else {
+                AppearanceVisibility.Hide
+            }
+        }
+
+        return createAppearanceVisibilityLiveData(
+            selectedVisibilityLiveData,
+            defaultVisibilityLiveData
+        )
+    }
+
+    private fun createLineStrokeAppearanceVisibilityLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
+        retainableActionTypeLiveData: LiveData<RetainableActionType>
+    ): LiveData<AppearanceVisibility> {
+        val selectedVisibilityLiveData = selectedShapesLiveData.map {
+            when {
+                it.isEmpty() -> null
+                it.size > 1 -> AppearanceVisibility.Hide
+                else -> {
+                    when (val shape = it.single()) {
+                        is Line -> shape.extra.toStrokeVisibilityState()
+                        is Rectangle,
+                        is Text,
+                        is Group,
+                        is MockShape -> AppearanceVisibility.Hide
+                    }
+                }
+            }
+        }
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
+            val defaultState = when (it) {
+                RetainableActionType.ADD_LINE -> ShapeExtraManager.defaultLineExtra.strokeStyle
+                RetainableActionType.ADD_RECTANGLE,
+                RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
             }
             if (defaultState != null) {
@@ -268,6 +312,12 @@ internal class AppearanceDataController(
         val selectedBorderPosition =
             ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedBorderStyle)
         return AppearanceVisibility.Visible(isBorderEnabled, selectedBorderPosition)
+    }
+
+    private fun LineExtra.toStrokeVisibilityState(): AppearanceVisibility {
+        val selectedStrokePosition =
+            ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedStrokeStyle)
+        return AppearanceVisibility.Visible(isStrokeEnabled, selectedStrokePosition)
     }
 
     private fun Line.toStartHeadAppearanceVisibilityState(): AppearanceVisibility {

@@ -53,6 +53,13 @@ internal class AppearanceSectionViewController(
 
         GridTextIconOptions(
             rootView,
+            ToolType.STROKE,
+            appearanceDataController.strokeOptions,
+            appearanceDataController::setOneTimeAction
+        ).observe(lifecycleOwner, appearanceDataController.lineStrokeToolStateLiveData)
+
+        GridTextIconOptions(
+            rootView,
             ToolType.START_HEAD,
             appearanceDataController.headOptions,
             appearanceDataController::setOneTimeAction
