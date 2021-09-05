@@ -15,6 +15,7 @@ import mono.html.toolbar.view.shapetool.Class.SECTION
 import mono.html.toolbar.view.shapetool.Class.SECTION_TITLE
 import mono.html.toolbar.view.shapetool.Class.SMALL_SPACE
 import mono.html.toolbar.view.shapetool.Class.TOOL
+import mono.html.toolbar.view.shapetool.Class.TOOL_NO_CHECK_BOX
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 
@@ -44,9 +45,10 @@ internal fun Element.Section(
 
 internal fun Element.Tool(
     hasMoreBottomSpace: Boolean = false,
+    hasCheckBox: Boolean = true,
     block: HTMLDivElement.() -> Unit
 ): HTMLDivElement =
-    Div(classes(TOOL, ADD_BOTTOM_SPACE x hasMoreBottomSpace)) {
+    Div(classes(TOOL, ADD_BOTTOM_SPACE x hasMoreBottomSpace, TOOL_NO_CHECK_BOX x !hasCheckBox)) {
         block()
     }
 

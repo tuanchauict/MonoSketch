@@ -17,15 +17,12 @@ import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
  * A manager class for managing shape extras
  */
 object ShapeExtraManager {
-    val RECTANGLE_STYLE_NO_FILLED = PredefinedRectangleFillStyle.NOFILLED_STYLE
-
     var defaultRectangleExtra: RectangleExtra = RectangleExtra(
         isFillEnabled = false,
         userSelectedFillStyle = PredefinedRectangleFillStyle.PREDEFINED_STYLES[0],
         isBorderEnabled = true,
         userSelectedBorderStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLES[0],
-        isDashEnabled = false,
-        userDefinedDashPattern = StraightStrokeDashPattern.SOLID
+        dashPattern = StraightStrokeDashPattern.SOLID
     )
         private set
 
@@ -39,8 +36,7 @@ object ShapeExtraManager {
         isEndAnchorEnabled = false,
         userSelectedEndAnchor = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
 
-        isDashEnabled = false,
-        userDefinedDashPattern = StraightStrokeDashPattern.SOLID,
+        dashPattern = StraightStrokeDashPattern.SOLID
     )
         private set
 
@@ -61,7 +57,6 @@ object ShapeExtraManager {
         isLineStrokeEnabled: Boolean? = null,
         lineStrokeStyleId: String? = null,
 
-        isDashEnabled: Boolean? = null,
         dashPattern: StraightStrokeDashPattern? = null,
 
         isStartHeadAnchorCharEnabled: Boolean? = null,
@@ -78,8 +73,7 @@ object ShapeExtraManager {
             getRectangleFillStyle(fillStyleId),
             isBorderEnabled ?: defaultRectangleExtra.isBorderEnabled,
             getRectangleBorderStyle(borderStyleId),
-            isDashEnabled ?: defaultRectangleExtra.isDashEnabled,
-            dashPattern ?: defaultRectangleExtra.userDefinedDashPattern
+            dashPattern ?: defaultRectangleExtra.dashPattern
         )
 
         defaultLineExtra = LineExtra(
@@ -93,8 +87,7 @@ object ShapeExtraManager {
             isEndAnchorEnabled = isEndHeadAnchorCharEnabled ?: defaultLineExtra.isEndAnchorEnabled,
             userSelectedEndAnchor = getEndHeadAnchorChar(endHeadAnchorCharId),
 
-            isDashEnabled = false,
-            userDefinedDashPattern = StraightStrokeDashPattern.SOLID
+            dashPattern = StraightStrokeDashPattern.SOLID
         )
 
         defaultTextAlign = TextAlign(

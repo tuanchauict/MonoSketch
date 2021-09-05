@@ -83,8 +83,12 @@ internal class OneTimeActionHandler(
                     setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
                 is OneTimeActionType.ChangeShapeBorderExtra ->
                     setSelectedShapeBorderExtra(it.isEnabled, it.newBorderStyleId)
+                is OneTimeActionType.ChangeShapeBorderDashPatternExtra ->
+                    setSelectedShapeBorderDashPatternExtra(it.dash, it.gap, it.offset)
                 is OneTimeActionType.ChangeLineStrokeExtra ->
                     setSelectedLineStrokeExtra(it.isEnabled, it.newStrokeStyleId)
+                is OneTimeActionType.ChangeLineStrokeDashPatternExtra ->
+                    setSelectedLineStrokeDashPattern(it.dash, it.gap, it.offset)
                 is OneTimeActionType.ChangeLineStartAnchorExtra ->
                     setSelectedShapeStartAnchorExtra(it.isEnabled, it.newHeadId)
                 is OneTimeActionType.ChangeLineEndAnchorExtra ->
@@ -276,6 +280,32 @@ internal class OneTimeActionHandler(
         environment.shapeManager.execute(ChangeExtra(singleShape, newExtra))
     }
 
+    private fun setSelectedShapeBorderDashPatternExtra(dash: Int?, gap: Int?, offset: Int?) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        val rectangleExtra = when (singleShape) {
+            is Rectangle -> singleShape.extra
+            is Text -> singleShape.extra.boundExtra
+            is Group,
+            is Line,
+            is MockShape -> null
+        }
+        val currentPattern = rectangleExtra?.dashPattern ?: return
+        val newPattern = currentPattern.copy(
+            dash = dash ?: currentPattern.dash,
+            gap = gap ?: currentPattern.gap,
+            offset = offset ?: currentPattern.offset
+        )
+        val newRectangleExtra = rectangleExtra.copy(dashPattern = newPattern)
+        val newExtra = when (singleShape) {
+            is Rectangle -> newRectangleExtra
+            is Text -> singleShape.extra.copy(boundExtra = newRectangleExtra)
+            is Group,
+            is Line,
+            is MockShape -> null
+        } ?: return
+        environment.shapeManager.execute(ChangeExtra(singleShape, newExtra))
+    }
+
     private fun setSelectedLineStrokeExtra(isEnabled: Boolean?, newStrokeStyleId: String?) {
         val line = environment.getSelectedShapes().singleOrNull() as? Line
         if (line == null) {
@@ -296,6 +326,19 @@ internal class OneTimeActionHandler(
             isStrokeEnabled = newIsEnabled,
             userSelectedStrokeStyle = newStrokeStyle
         )
+        environment.shapeManager.execute(ChangeExtra(line, newExtra))
+    }
+
+    private fun setSelectedLineStrokeDashPattern(dash: Int?, gap: Int?, offset: Int?) {
+        val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
+        val currentExtra = line.extra
+        val currentPattern = currentExtra.dashPattern
+        val newPattern = currentPattern.copy(
+            dash = dash ?: currentPattern.dash,
+            gap = gap ?: currentPattern.gap,
+            offset = offset ?: currentPattern.offset
+        )
+        val newExtra = currentExtra.copy(dashPattern = newPattern)
         environment.shapeManager.execute(ChangeExtra(line, newExtra))
     }
 

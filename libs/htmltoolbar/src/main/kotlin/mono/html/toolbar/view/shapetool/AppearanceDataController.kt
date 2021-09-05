@@ -1,5 +1,6 @@
 package mono.html.toolbar.view.shapetool
 
+import mono.common.nullToFalse
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.RetainableActionType
@@ -9,6 +10,7 @@ import mono.livedata.map
 import mono.shape.ShapeExtraManager
 import mono.shape.extra.LineExtra
 import mono.shape.extra.RectangleExtra
+import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
@@ -40,8 +42,13 @@ internal class AppearanceDataController(
         createFillAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val borderToolStateLiveData: LiveData<AppearanceVisibility> =
         createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
+    val borderDashPatternLiveData: LiveData<AppearanceVisibility> =
+        createBorderDashPatternLiveData(shapesLiveData)
+
     val lineStrokeToolStateLiveData: LiveData<AppearanceVisibility> =
         createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
+    val lineStrokeDashPatternLiveData: LiveData<AppearanceVisibility> =
+        createLineStrokeDashPatternLiveData(shapesLiveData)
     val lineStartHeadToolStateLiveData: LiveData<AppearanceVisibility> =
         createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val lineEndHeadToolStateLiveData: LiveData<AppearanceVisibility> =
@@ -99,7 +106,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedRectangleFillStyles().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultRectangleExtra.isFillEnabled,
                     selectedFillPosition
                 )
@@ -144,7 +151,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
                     selectedFillPosition
                 )
@@ -157,6 +164,22 @@ internal class AppearanceDataController(
             selectedVisibilityLiveData,
             defaultVisibilityLiveData
         )
+    }
+
+    private fun createBorderDashPatternLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>
+    ): LiveData<AppearanceVisibility> = selectedShapesLiveData.map {
+        val boundExtra = when (val shape = it.singleOrNull()) {
+            is Text -> shape.extra.boundExtra
+            is Rectangle -> shape.extra
+            is Line,
+            is Group,
+            is MockShape,
+            null -> null
+        }
+        val dashPattern =
+            boundExtra?.dashPattern.takeIf { boundExtra?.isBorderEnabled.nullToFalse() }
+        dashPattern?.let(AppearanceVisibility::DashVisible) ?: AppearanceVisibility.Hide
     }
 
     private fun createLineStrokeAppearanceVisibilityLiveData(
@@ -188,7 +211,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
                     selectedFillPosition
                 )
@@ -201,6 +224,21 @@ internal class AppearanceDataController(
             selectedVisibilityLiveData,
             defaultVisibilityLiveData
         )
+    }
+
+    private fun createLineStrokeDashPatternLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>
+    ): LiveData<AppearanceVisibility> = selectedShapesLiveData.map {
+        val extra = when (val shape = it.singleOrNull()) {
+            is Line -> shape.extra
+            is Group,
+            is Text,
+            is Rectangle,
+            is MockShape,
+            null -> null
+        }
+        val dashPattern = extra?.dashPattern.takeIf { extra?.isStrokeEnabled.nullToFalse() }
+        dashPattern?.let(AppearanceVisibility::DashVisible) ?: AppearanceVisibility.Hide
     }
 
     private fun createStartHeadAppearanceVisibilityLiveData(
@@ -233,7 +271,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedStartHeaderPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultLineExtra.isStartAnchorEnabled,
                     selectedStartHeaderPosition
                 )
@@ -278,7 +316,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultLineExtra.isEndAnchorEnabled,
                     selectedFillPosition
                 )
@@ -305,31 +343,34 @@ internal class AppearanceDataController(
         val selectedFillPosition =
             ShapeExtraManager.getAllPredefinedRectangleFillStyles()
                 .indexOf(userSelectedFillStyle)
-        return AppearanceVisibility.Visible(isFillEnabled, selectedFillPosition)
+        return AppearanceVisibility.GridVisible(isFillEnabled, selectedFillPosition)
     }
 
     private fun RectangleExtra.toBorderAppearanceVisibilityState(): AppearanceVisibility {
         val selectedBorderPosition =
             ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedBorderStyle)
-        return AppearanceVisibility.Visible(isBorderEnabled, selectedBorderPosition)
+        return AppearanceVisibility.GridVisible(isBorderEnabled, selectedBorderPosition)
     }
 
     private fun LineExtra.toStrokeVisibilityState(): AppearanceVisibility {
         val selectedStrokePosition =
             ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedStrokeStyle)
-        return AppearanceVisibility.Visible(isStrokeEnabled, selectedStrokePosition)
+        return AppearanceVisibility.GridVisible(isStrokeEnabled, selectedStrokePosition)
     }
 
     private fun Line.toStartHeadAppearanceVisibilityState(): AppearanceVisibility {
         val selectedStartHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedStartAnchor)
-        return AppearanceVisibility.Visible(extra.isStartAnchorEnabled, selectedStartHeadPosition)
+        return AppearanceVisibility.GridVisible(
+            extra.isStartAnchorEnabled,
+            selectedStartHeadPosition
+        )
     }
 
     private fun Line.toEndHeadAppearanceVisibilityState(): AppearanceVisibility {
         val selectedEndHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
-        return AppearanceVisibility.Visible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
+        return AppearanceVisibility.GridVisible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
     }
 }
 
@@ -338,5 +379,12 @@ internal data class AppearanceOptionItem(val id: String, val name: String)
 internal sealed class AppearanceVisibility {
     object Hide : AppearanceVisibility()
 
-    data class Visible(val isChecked: Boolean, val selectedPosition: Int) : AppearanceVisibility()
+    data class GridVisible(
+        val isChecked: Boolean,
+        val selectedPosition: Int
+    ) : AppearanceVisibility()
+
+    data class DashVisible(
+        val dashPattern: StraightStrokeDashPattern
+    ) : AppearanceVisibility()
 }

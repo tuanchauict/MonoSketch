@@ -16,8 +16,7 @@ data class LineExtra(
     val userSelectedStartAnchor: AnchorChar,
     val isEndAnchorEnabled: Boolean,
     val userSelectedEndAnchor: AnchorChar,
-    val isDashEnabled: Boolean,
-    val userDefinedDashPattern: StraightStrokeDashPattern
+    val dashPattern: StraightStrokeDashPattern
 ) : ShapeExtra() {
 
     val startAnchor: AnchorChar?
@@ -27,9 +26,6 @@ data class LineExtra(
 
     val strokeStyle: StraightStrokeStyle?
         get() = userSelectedStrokeStyle.takeIf { isStrokeEnabled }
-
-    val dashPattern: StraightStrokeDashPattern
-        get() = if (isDashEnabled) userDefinedDashPattern else StraightStrokeDashPattern.SOLID
 
     constructor(serializableExtra: SerializableLine.SerializableExtra) : this(
         serializableExtra.isStrokeEnabled,
@@ -41,7 +37,6 @@ data class LineExtra(
         serializableExtra.isEndAnchorEnabled,
         ShapeExtraManager.getEndHeadAnchorChar(serializableExtra.userSelectedEndAnchorId),
 
-        serializableExtra.isDashEnabled,
         StraightStrokeDashPattern.fromSerializableValue(serializableExtra.dashPattern)
     )
 
@@ -53,7 +48,6 @@ data class LineExtra(
             userSelectedStartAnchorId = userSelectedStartAnchor.id,
             isEndAnchorEnabled = isEndAnchorEnabled,
             userSelectedEndAnchorId = userSelectedEndAnchor.id,
-            isDashEnabled = isDashEnabled,
             dashPattern = dashPattern.toSerializableValue()
         )
 }
