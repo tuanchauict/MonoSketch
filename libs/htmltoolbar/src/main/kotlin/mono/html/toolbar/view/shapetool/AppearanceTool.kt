@@ -69,6 +69,7 @@ internal class AppearanceSectionViewController(
         ).observe(lifecycleOwner, appearanceDataController.lineStrokeToolStateLiveData)
 
         DashPatternTool(rootView)
+            .observe(lifecycleOwner, appearanceDataController.lineStrokeDashPatternLiveData)
 
         GridTextIconOptions(
             rootView,

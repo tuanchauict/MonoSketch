@@ -47,6 +47,8 @@ internal class AppearanceDataController(
 
     val lineStrokeToolStateLiveData: LiveData<AppearanceVisibility> =
         createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
+    val lineStrokeDashPatternLiveData: LiveData<AppearanceVisibility> =
+        createLineStrokeDashPatternLiveData(shapesLiveData)
     val lineStartHeadToolStateLiveData: LiveData<AppearanceVisibility> =
         createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val lineEndHeadToolStateLiveData: LiveData<AppearanceVisibility> =
@@ -222,6 +224,21 @@ internal class AppearanceDataController(
             selectedVisibilityLiveData,
             defaultVisibilityLiveData
         )
+    }
+
+    private fun createLineStrokeDashPatternLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>
+    ): LiveData<AppearanceVisibility> = selectedShapesLiveData.map {
+        val extra = when (val shape = it.singleOrNull()) {
+            is Line -> shape.extra
+            is Group,
+            is Text,
+            is Rectangle,
+            is MockShape,
+            null -> null
+        }
+        val dashPattern = extra?.dashPattern.takeIf { extra?.isStrokeEnabled.nullToFalse() }
+        dashPattern?.let(AppearanceVisibility::DashVisible) ?: AppearanceVisibility.Hide
     }
 
     private fun createStartHeadAppearanceVisibilityLiveData(
