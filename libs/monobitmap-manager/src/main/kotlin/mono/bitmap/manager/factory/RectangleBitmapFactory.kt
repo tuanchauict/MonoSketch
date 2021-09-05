@@ -19,7 +19,7 @@ object RectangleBitmapFactory {
             bitmapBuilder.drawBorder(
                 size,
                 PredefinedStraightStrokeStyle.NO_STROKE,
-                StraightStrokeDashPattern.SOLID
+                extra.dashPattern
             )
             return bitmapBuilder.toBitmap()
         }
