@@ -17,7 +17,7 @@ data class LineExtra(
     val isEndAnchorEnabled: Boolean,
     val userSelectedEndAnchor: AnchorChar,
     val isDashEnabled: Boolean,
-    val userDefinedDashPattern: StraightStrokeDashPattern = StraightStrokeDashPattern.SOLID
+    val userDefinedDashPattern: StraightStrokeDashPattern
 ) : ShapeExtra() {
 
     val startAnchor: AnchorChar?

@@ -1,8 +1,10 @@
 package mono.bitmap.manager.factory
 
 import mono.graphics.geo.Point
-import mono.shape.extra.style.AnchorChar
 import mono.shape.extra.LineExtra
+import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
+import mono.shape.extra.style.AnchorChar
+import mono.shape.extra.style.StraightStrokeDashPattern
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -356,11 +358,9 @@ class LineBitmapFactoryTest {
     fun testToBitmap_anchorChar_leftToRight() {
         val anchorCharStart = AnchorChar("id", "name", 'L', 'R', 'T', 'B')
         val anchorCharEnd = AnchorChar("id", "name", 'l', 'r', 't', 'b')
-        val lineExtra = LineExtra(
-            isStartAnchorEnabled = true,
-            anchorCharStart,
-            isEndAnchorEnabled = true,
-            anchorCharEnd
+        val lineExtra = LINE_EXTRA.copy(
+            userSelectedStartAnchor = anchorCharStart,
+            userSelectedEndAnchor = anchorCharEnd
         )
         val points = listOf(
             Point(0, 0),
@@ -377,11 +377,9 @@ class LineBitmapFactoryTest {
     fun testToBitmap_anchorChar_rightToLeft() {
         val anchorCharStart = AnchorChar("id", "name", 'L', 'R', 'T', 'B')
         val anchorCharEnd = AnchorChar("id", "name", 'l', 'r', 't', 'b')
-        val lineExtra = LineExtra(
-            isStartAnchorEnabled = true,
-            anchorCharStart,
-            isEndAnchorEnabled = true,
-            anchorCharEnd
+        val lineExtra = LINE_EXTRA.copy(
+            userSelectedStartAnchor = anchorCharStart,
+            userSelectedEndAnchor = anchorCharEnd
         )
         val points = listOf(
             Point(4, 0),
@@ -398,11 +396,9 @@ class LineBitmapFactoryTest {
     fun testToBitmap_anchorChar_topToBottom() {
         val anchorCharStart = AnchorChar("id", "name", 'L', 'R', 'T', 'B')
         val anchorCharEnd = AnchorChar("id", "name", 'l', 'r', 't', 'b')
-        val lineExtra = LineExtra(
-            isStartAnchorEnabled = true,
-            anchorCharStart,
-            isEndAnchorEnabled = true,
-            anchorCharEnd
+        val lineExtra = LINE_EXTRA.copy(
+            userSelectedStartAnchor = anchorCharStart,
+            userSelectedEndAnchor = anchorCharEnd
         )
         val points = listOf(
             Point(0, 0),
@@ -425,11 +421,9 @@ class LineBitmapFactoryTest {
     fun testToBitmap_anchorChar_bottomToTop() {
         val anchorCharStart = AnchorChar("id", "name", 'L', 'R', 'T', 'B')
         val anchorCharEnd = AnchorChar("id", "name", 'l', 'r', 't', 'b')
-        val lineExtra = LineExtra(
-            isStartAnchorEnabled = true,
-            anchorCharStart,
-            isEndAnchorEnabled = true,
-            anchorCharEnd
+        val lineExtra = LINE_EXTRA.copy(
+            userSelectedStartAnchor = anchorCharStart,
+            userSelectedEndAnchor = anchorCharEnd
         )
         val points = listOf(
             Point(0, 4),
@@ -450,10 +444,14 @@ class LineBitmapFactoryTest {
 
     companion object {
         private val LINE_EXTRA = LineExtra(
+            isStrokeEnabled = true,
+            userSelectedStrokeStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLES.first(),
             isStartAnchorEnabled = true,
-            AnchorChar("id", "name", '0'),
+            userSelectedStartAnchor = AnchorChar("id", "name", '0'),
             isEndAnchorEnabled = true,
-            AnchorChar("id", "name", '1')
+            userSelectedEndAnchor = AnchorChar("id", "name", '1'),
+            isDashEnabled = false,
+            userDefinedDashPattern = StraightStrokeDashPattern.SOLID
         )
     }
 }
