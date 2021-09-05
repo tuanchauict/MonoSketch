@@ -93,6 +93,10 @@ data class SerializableLine(
 
     @Serializable
     data class SerializableExtra(
+        @SerialName("se")
+        val isStrokeEnabled: Boolean = true,
+        @SerialName("su")
+        val userSelectedStrokeStyleId: String,
         @SerialName("ase")
         val isStartAnchorEnabled: Boolean = false,
         @SerialName("asu")
@@ -101,10 +105,8 @@ data class SerializableLine(
         val isEndAnchorEnabled: Boolean = false,
         @SerialName("aeu")
         val userSelectedEndAnchorId: String,
-        @SerialName("s")
-        val strokeStyleId: String,
         @SerialName("de")
-        val isDashEnabled: Boolean,
+        val isDashEnabled: Boolean = false,
         @SerialName("du")
         val dashPattern: Int
     )
