@@ -7,8 +7,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":commons"))
-    implementation(project(":graphicsgeo"))
+    implementation(projects.commons)
+    implementation(projects.graphicsgeo)
 
     implementation(libs.kotlin.stdlib.js)
 

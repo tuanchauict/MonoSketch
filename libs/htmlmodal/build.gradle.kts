@@ -7,11 +7,11 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":commons"))
-    implementation(project(":html-dsl"))
-    implementation(project(":html-ext"))
-    implementation(project(":lifecycle"))
-    implementation(project(":livedata"))
+    implementation(projects.commons)
+    implementation(projects.htmlDsl)
+    implementation(projects.htmlExt)
+    implementation(projects.lifecycle)
+    implementation(projects.livedata)
 
     testImplementation(libs.kotlin.test.js)
 }

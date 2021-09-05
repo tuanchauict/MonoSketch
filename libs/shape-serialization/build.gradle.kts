@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":shape"))
+    implementation(projects.shape)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlin.stdlib.js)

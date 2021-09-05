@@ -8,8 +8,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":livedata"))
-    implementation(project(":shape"))
+    implementation(projects.livedata)
+    implementation(projects.shape)
 
     implementation(libs.kotlin.stdlib.js)
     testImplementation(libs.kotlin.test.js)

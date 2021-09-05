@@ -7,9 +7,9 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":build-environment"))
-    implementation(project(":commons"))
-    implementation(project(":livedata"))
+    implementation(projects.buildEnvironment)
+    implementation(projects.commons)
+    implementation(projects.livedata)
 
     implementation(libs.kotlin.stdlib.js)
 

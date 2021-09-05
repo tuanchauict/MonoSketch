@@ -7,10 +7,10 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":graphicsgeo"))
-    implementation(project(":html-dsl"))
-    implementation(project(":livedata"))
-    implementation(project(":shape"))
+    implementation(projects.graphicsgeo)
+    implementation(projects.htmlDsl)
+    implementation(projects.livedata)
+    implementation(projects.shape)
 
     implementation(libs.kotlinx.serialization.json)
 
