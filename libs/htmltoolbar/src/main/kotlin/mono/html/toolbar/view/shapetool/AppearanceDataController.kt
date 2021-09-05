@@ -9,6 +9,7 @@ import mono.livedata.map
 import mono.shape.ShapeExtraManager
 import mono.shape.extra.LineExtra
 import mono.shape.extra.RectangleExtra
+import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
@@ -99,7 +100,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedRectangleFillStyles().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultRectangleExtra.isFillEnabled,
                     selectedFillPosition
                 )
@@ -144,7 +145,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
                     selectedFillPosition
                 )
@@ -188,7 +189,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
                     selectedFillPosition
                 )
@@ -233,7 +234,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedStartHeaderPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultLineExtra.isStartAnchorEnabled,
                     selectedStartHeaderPosition
                 )
@@ -278,7 +279,7 @@ internal class AppearanceDataController(
             if (defaultState != null) {
                 val selectedFillPosition =
                     ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                AppearanceVisibility.Visible(
+                AppearanceVisibility.GridVisible(
                     ShapeExtraManager.defaultLineExtra.isEndAnchorEnabled,
                     selectedFillPosition
                 )
@@ -305,31 +306,34 @@ internal class AppearanceDataController(
         val selectedFillPosition =
             ShapeExtraManager.getAllPredefinedRectangleFillStyles()
                 .indexOf(userSelectedFillStyle)
-        return AppearanceVisibility.Visible(isFillEnabled, selectedFillPosition)
+        return AppearanceVisibility.GridVisible(isFillEnabled, selectedFillPosition)
     }
 
     private fun RectangleExtra.toBorderAppearanceVisibilityState(): AppearanceVisibility {
         val selectedBorderPosition =
             ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedBorderStyle)
-        return AppearanceVisibility.Visible(isBorderEnabled, selectedBorderPosition)
+        return AppearanceVisibility.GridVisible(isBorderEnabled, selectedBorderPosition)
     }
 
     private fun LineExtra.toStrokeVisibilityState(): AppearanceVisibility {
         val selectedStrokePosition =
             ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedStrokeStyle)
-        return AppearanceVisibility.Visible(isStrokeEnabled, selectedStrokePosition)
+        return AppearanceVisibility.GridVisible(isStrokeEnabled, selectedStrokePosition)
     }
 
     private fun Line.toStartHeadAppearanceVisibilityState(): AppearanceVisibility {
         val selectedStartHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedStartAnchor)
-        return AppearanceVisibility.Visible(extra.isStartAnchorEnabled, selectedStartHeadPosition)
+        return AppearanceVisibility.GridVisible(
+            extra.isStartAnchorEnabled,
+            selectedStartHeadPosition
+        )
     }
 
     private fun Line.toEndHeadAppearanceVisibilityState(): AppearanceVisibility {
         val selectedEndHeadPosition =
             ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
-        return AppearanceVisibility.Visible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
+        return AppearanceVisibility.GridVisible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
     }
 }
 
@@ -338,5 +342,13 @@ internal data class AppearanceOptionItem(val id: String, val name: String)
 internal sealed class AppearanceVisibility {
     object Hide : AppearanceVisibility()
 
-    data class Visible(val isChecked: Boolean, val selectedPosition: Int) : AppearanceVisibility()
+    data class GridVisible(
+        val isChecked: Boolean,
+        val selectedPosition: Int
+    ) : AppearanceVisibility()
+
+    data class DashVisible(
+        val isChecked: Boolean,
+        val dashPattern: StraightStrokeDashPattern
+    )
 }
