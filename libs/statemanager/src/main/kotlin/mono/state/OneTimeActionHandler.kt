@@ -83,6 +83,8 @@ internal class OneTimeActionHandler(
                     setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
                 is OneTimeActionType.ChangeShapeBorderExtra ->
                     setSelectedShapeBorderExtra(it.isEnabled, it.newBorderStyleId)
+                is OneTimeActionType.ChangeLineStrokeExtra ->
+                    setSelectedLineStrokeExtra(it.isEnabled, it.newStrokeStyleId)
                 is OneTimeActionType.ChangeLineStartAnchorExtra ->
                     setSelectedShapeStartAnchorExtra(it.isEnabled, it.newHeadId)
                 is OneTimeActionType.ChangeLineEndAnchorExtra ->
@@ -272,6 +274,29 @@ internal class OneTimeActionHandler(
             is Group -> null
         } ?: return
         environment.shapeManager.execute(ChangeExtra(singleShape, newExtra))
+    }
+
+    private fun setSelectedLineStrokeExtra(isEnabled: Boolean?, newStrokeStyleId: String?) {
+        val line = environment.getSelectedShapes().singleOrNull() as? Line
+        if (line == null) {
+            ShapeExtraManager.setDefaultValues(
+                isLineStrokeEnabled = isEnabled,
+                lineStrokeStyleId = newStrokeStyleId
+            )
+            return
+        }
+
+        val currentLineExtra = line.extra
+        val newIsEnabled = isEnabled ?: currentLineExtra.isStrokeEnabled
+        val newStrokeStyle = ShapeExtraManager.getLineStrokeStyle(
+            newStrokeStyleId,
+            currentLineExtra.userSelectedStrokeStyle
+        )
+        val newExtra = currentLineExtra.copy(
+            isStrokeEnabled = newIsEnabled,
+            userSelectedStrokeStyle = newStrokeStyle
+        )
+        environment.shapeManager.execute(ChangeExtra(line, newExtra))
     }
 
     private fun setSelectedShapeStartAnchorExtra(isEnabled: Boolean?, newAnchorId: String?) {

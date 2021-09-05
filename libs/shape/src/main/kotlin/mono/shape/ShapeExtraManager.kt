@@ -30,10 +30,15 @@ object ShapeExtraManager {
         private set
 
     var defaultLineExtra: LineExtra = LineExtra(
+        isStrokeEnabled = true,
+        PredefinedStraightStrokeStyle.PREDEFINED_STYLES[0],
+
         isStartAnchorEnabled = false,
         userSelectedStartAnchor = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
+
         isEndAnchorEnabled = false,
         userSelectedEndAnchor = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
+
         isDashEnabled = false,
         userDefinedDashPattern = StraightStrokeDashPattern.SOLID,
     )
@@ -52,6 +57,9 @@ object ShapeExtraManager {
 
         isBorderEnabled: Boolean? = null,
         borderStyleId: String? = null,
+
+        isLineStrokeEnabled: Boolean? = null,
+        lineStrokeStyleId: String? = null,
 
         isDashEnabled: Boolean? = null,
         dashPattern: StraightStrokeDashPattern? = null,
@@ -75,11 +83,18 @@ object ShapeExtraManager {
         )
 
         defaultLineExtra = LineExtra(
+            isStrokeEnabled = isLineStrokeEnabled ?: defaultLineExtra.isStrokeEnabled,
+            userSelectedStrokeStyle = getLineStrokeStyle(lineStrokeStyleId),
+
             isStartAnchorEnabled = isStartHeadAnchorCharEnabled
                 ?: defaultLineExtra.isStartAnchorEnabled,
             userSelectedStartAnchor = getStartHeadAnchorChar(startHeadAnchorCharId),
+
             isEndAnchorEnabled = isEndHeadAnchorCharEnabled ?: defaultLineExtra.isEndAnchorEnabled,
-            userSelectedEndAnchor = getEndHeadAnchorChar(endHeadAnchorCharId)
+            userSelectedEndAnchor = getEndHeadAnchorChar(endHeadAnchorCharId),
+
+            isDashEnabled = false,
+            userDefinedDashPattern = StraightStrokeDashPattern.SOLID
         )
 
         defaultTextAlign = TextAlign(
@@ -101,6 +116,11 @@ object ShapeExtraManager {
     fun getRectangleBorderStyle(
         id: String?,
         default: StraightStrokeStyle = defaultRectangleExtra.userSelectedBorderStyle
+    ): StraightStrokeStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLE_MAP[id] ?: default
+
+    fun getLineStrokeStyle(
+        id: String?,
+        default: StraightStrokeStyle = defaultLineExtra.userSelectedStrokeStyle
     ): StraightStrokeStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLE_MAP[id] ?: default
 
     fun getAllPredefinedStrokeStyles(): List<StraightStrokeStyle> =

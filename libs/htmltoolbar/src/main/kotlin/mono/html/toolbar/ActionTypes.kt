@@ -53,6 +53,11 @@ sealed interface OneTimeActionType {
         val newBorderStyleId: String? = null
     ) : OneTimeActionType
 
+    data class ChangeLineStrokeExtra(
+        val isEnabled: Boolean? = null,
+        val newStrokeStyleId: String? = null
+    ) : OneTimeActionType
+
     data class ChangeLineStartAnchorExtra(
         val isEnabled: Boolean? = null,
         val newHeadId: String? = null

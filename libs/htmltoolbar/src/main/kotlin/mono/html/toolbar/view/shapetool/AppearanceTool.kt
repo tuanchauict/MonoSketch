@@ -53,6 +53,13 @@ internal class AppearanceSectionViewController(
 
         GridTextIconOptions(
             rootView,
+            ToolType.STROKE,
+            appearanceDataController.strokeOptions,
+            appearanceDataController::setOneTimeAction
+        ).observe(lifecycleOwner, appearanceDataController.lineStrokeToolStateLiveData)
+
+        GridTextIconOptions(
+            rootView,
             ToolType.START_HEAD,
             appearanceDataController.headOptions,
             appearanceDataController::setOneTimeAction
@@ -81,9 +88,8 @@ private enum class ToolType(val title: String) {
             OneTimeActionType.ChangeShapeBorderExtra(isChecked, selectedId)
     },
     STROKE("Stroke") {
-        override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType {
-            TODO("Not yet implemented")
-        }
+        override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType =
+            OneTimeActionType.ChangeLineStrokeExtra(isChecked, selectedId)
     },
     START_HEAD("Start head") {
         override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType =

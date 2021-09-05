@@ -15,7 +15,7 @@ dependencies {
     implementation(project(":livedata"))
     implementation(project(":monoboard"))
     implementation(project(":shape-interaction-bound"))
-    
+
     testImplementation(libs.kotlin.test.js)
 }
 
