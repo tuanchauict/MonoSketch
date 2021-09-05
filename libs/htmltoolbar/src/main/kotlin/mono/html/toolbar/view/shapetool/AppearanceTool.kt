@@ -167,7 +167,7 @@ private class DashPatternViewController(
         rootView.isVisible = dashVisible != null
 
         val dashPattern = dashVisible?.dashPattern ?: return
-        dashInput.value = dashPattern.segment.toString()
+        dashInput.value = dashPattern.dash.toString()
         gapInput.value = dashPattern.gap.toString()
         offsetInput.value = dashPattern.offset.toString()
     }

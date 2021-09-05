@@ -291,9 +291,9 @@ internal class OneTimeActionHandler(
         }
         val currentPattern = rectangleExtra?.dashPattern ?: return
         val newPattern = currentPattern.copy(
-            segment = dash?.toByte() ?: currentPattern.segment,
-            gap = gap?.toByte() ?: currentPattern.gap,
-            offset = offset?.toByte() ?: currentPattern.offset
+            dash = dash ?: currentPattern.dash,
+            gap = gap ?: currentPattern.gap,
+            offset = offset ?: currentPattern.offset
         )
         val newRectangleExtra = rectangleExtra.copy(dashPattern = newPattern)
         val newExtra = when (singleShape) {
@@ -334,9 +334,9 @@ internal class OneTimeActionHandler(
         val currentExtra = line.extra
         val currentPattern = currentExtra.dashPattern
         val newPattern = currentPattern.copy(
-            segment = dash?.toByte() ?: currentPattern.segment,
-            gap = gap?.toByte() ?: currentPattern.gap,
-            offset = offset?.toByte() ?: currentPattern.offset
+            dash = dash ?: currentPattern.dash,
+            gap = gap ?: currentPattern.gap,
+            offset = offset ?: currentPattern.offset
         )
         val newExtra = currentExtra.copy(dashPattern = newPattern)
         environment.shapeManager.execute(ChangeExtra(line, newExtra))
