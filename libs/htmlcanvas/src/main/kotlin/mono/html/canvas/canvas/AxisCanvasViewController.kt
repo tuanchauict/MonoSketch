@@ -2,6 +2,7 @@ package mono.html.canvas.canvas
 
 import kotlinx.browser.window
 import mono.graphics.geo.Size
+import mono.html.canvas.canvas.DrawingInfoController.Companion.DEFAULT_FONT
 import mono.html.ext.px
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -46,10 +47,12 @@ internal class AxisCanvasViewController(
         }
     }
 
-    override fun drawInternal() = drawAxis()
+    override fun drawInternal() {
+        context.font = "normal normal normal 10.5px $DEFAULT_FONT"
+        drawAxis()
+    }
 
     private fun drawAxis() {
-        context.font = "normal normal normal 10.5px 'Menlo'"
         val cellSizePx = drawingInfo.cellSizePx
         val canvasSizePx = drawingInfo.canvasSizePx
 
@@ -57,7 +60,7 @@ internal class AxisCanvasViewController(
         val yAxisWidth = AXIS_Y_WIDTH
 
         val path = Path2D()
-
+        context.lineWidth = 1.0
         context.fillStyle = AXIS_BG_COLOR
         context.fillRect(
             x = 0.0,
