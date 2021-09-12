@@ -19,7 +19,8 @@ import kotlin.js.Date
 internal class MouseEventObserver(
     lifecycleOwner: LifecycleOwner,
     container: HTMLDivElement,
-    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
+    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>,
+    shiftKeyStateLiveData: LiveData<Boolean>
 ) {
     private val mousePointerMutableLiveData = MutableLiveData<MousePointer>(MousePointer.Idle)
     val mousePointerLiveData: LiveData<MousePointer> =
@@ -43,6 +44,12 @@ internal class MouseEventObserver(
 
         drawingInfoLiveData.observe(lifecycleOwner) {
             drawingInfo = it
+        }
+        shiftKeyStateLiveData.observe(lifecycleOwner) {
+            val currentMouseValue = mousePointerLiveData.value
+            if (currentMouseValue is MousePointer.Drag) {
+                mousePointerMutableLiveData.value = currentMouseValue.copy(isWithShiftKey = it)
+            }
         }
     }
 

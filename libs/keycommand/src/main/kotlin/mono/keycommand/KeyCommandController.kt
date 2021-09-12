@@ -17,6 +17,7 @@ class KeyCommandController(private val body: HTMLElement) {
 
     init {
         body.onkeydown = ::updateCommand
+        body.onkeyup = { resetKeyCommand() }
     }
 
     private fun updateCommand(event: KeyboardEvent) {
@@ -34,6 +35,9 @@ class KeyCommandController(private val body: HTMLElement) {
         if (Build.DEBUG) {
             println("Key press ${event.code} : ${event.keyCode} cmd ${event.commandKey}")
         }
+    }
+
+    private fun resetKeyCommand() {
         keyCommandMutableLiveData.value = KeyCommand.IDLE
     }
 }
