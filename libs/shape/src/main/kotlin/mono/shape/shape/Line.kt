@@ -73,11 +73,16 @@ import mono.shape.shape.line.LineHelper
  * ```
  */
 class Line(
-    private var startPoint: DirectedPoint,
-    private var endPoint: DirectedPoint,
+    startPoint: DirectedPoint,
+    endPoint: DirectedPoint,
     id: String? = null,
     parentId: String? = null
 ) : AbstractShape(id = id, parentId = parentId) {
+
+    var startPoint: DirectedPoint = startPoint
+        private set
+    var endPoint: DirectedPoint = endPoint
+        private set
 
     private var jointPoints: List<Point> =
         LineHelper.createJointPoints(listOf(startPoint, endPoint))
