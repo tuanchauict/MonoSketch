@@ -66,6 +66,8 @@ class ActionManager(
 
             KeyCommand.UNDO -> setOneTimeAction(OneTimeActionType.Undo)
             KeyCommand.REDO -> setOneTimeAction(OneTimeActionType.Redo)
+
+            KeyCommand.SHIFT_KEY -> Unit
         }.exhaustive
     }
 
