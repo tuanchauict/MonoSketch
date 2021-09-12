@@ -39,7 +39,6 @@ class CanvasViewController(
     private val interactionCanvasViewController: InteractionCanvasViewController
     private val selectionCanvasViewController: SelectionCanvasViewController
 
-
     val windowBoundPx: Rect
         get() = gridCanvasViewController.drawingInfo.boundPx
 
