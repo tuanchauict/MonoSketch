@@ -18,7 +18,6 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
 import mono.livedata.distinctUntilChange
-import mono.livedata.map
 import mono.shapebound.InteractionBound
 import mono.shapebound.InteractionPoint
 import org.w3c.dom.HTMLDivElement
@@ -96,9 +95,11 @@ class CanvasViewController(
         )
         AxisCanvasViewController(
             lifecycleOwner,
-            Canvas(axisContainer, CLASS_NAME_AXIS),
+            axisContainer,
             drawingInfoLiveData
-        )
+        ) {
+            mouseEventController.forceUpdateOffset(Point.ZERO)
+        }
 
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
             updateCanvasSize()
@@ -161,6 +162,5 @@ class CanvasViewController(
         private const val CLASS_NAME_BOARD = "board-canvas"
         private const val CLASS_NAME_INTERACTION = "interaction-canvas"
         private const val CLASS_NAME_SELECTION = "selection-canvas"
-        private const val CLASS_NAME_AXIS = "axis-canvas"
     }
 }
