@@ -5,6 +5,7 @@ package mono.common
  */
 object Key {
     const val KEY_ESC = 27
+    const val KEY_SHIFT = 16
     const val KEY_ENTER = 13
     const val KEY_BACKSPACE = 8
     const val KEY_DELETE = 46

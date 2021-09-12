@@ -30,7 +30,8 @@ class CanvasViewController(
     private val container: HTMLDivElement,
     axisContainer: HTMLDivElement,
     board: MonoBoard,
-    windowSizeLiveData: LiveData<Size>
+    windowSizeLiveData: LiveData<Size>,
+    shiftKeyStateLiveData: LiveData<Boolean>
 ) {
     private val drawingInfoController = DrawingInfoController(container)
 
@@ -52,7 +53,8 @@ class CanvasViewController(
     private val mouseEventController = MouseEventObserver(
         lifecycleOwner,
         container,
-        drawingInfoController.drawingInfoLiveData
+        drawingInfoController.drawingInfoLiveData,
+        shiftKeyStateLiveData
     )
 
     val mousePointerLiveData: LiveData<MousePointer> = mouseEventController.mousePointerLiveData
