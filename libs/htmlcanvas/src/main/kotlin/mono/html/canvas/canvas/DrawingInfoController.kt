@@ -41,7 +41,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         drawingInfoMutableLiveData.value =
             drawingInfoMutableLiveData.value.copy(
                 cellSizePx = context.getCellSizePx(fontSize),
-                font = "normal normal normal ${fontSize.px} 'Fira Code'",
+                font = "normal normal normal ${fontSize.px} $DEFAULT_FONT",
                 fontSize = fontSize
             )
     }
@@ -93,6 +93,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
     }
 
     companion object {
+        const val DEFAULT_FONT = "'Fira Code'"
         private const val CLASS_NAME = "drawing-info"
     }
 }

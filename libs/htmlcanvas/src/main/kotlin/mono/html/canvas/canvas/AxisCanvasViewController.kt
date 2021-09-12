@@ -2,10 +2,17 @@ package mono.html.canvas.canvas
 
 import kotlinx.browser.window
 import mono.graphics.geo.Size
+import mono.html.Canvas
+import mono.html.Div
+import mono.html.canvas.canvas.DrawingInfoController.Companion.DEFAULT_FONT
 import mono.html.ext.px
+import mono.html.ext.styleOf
+import mono.html.setAttributes
+import mono.html.setOnClickListener
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import org.w3c.dom.CanvasTextAlign
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.LEFT
 import org.w3c.dom.Path2D
@@ -14,10 +21,30 @@ import kotlin.math.max
 
 internal class AxisCanvasViewController(
     lifecycleOwner: LifecycleOwner,
-    private val canvas: HTMLCanvasElement,
-    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
+    private val axisContainer: Element,
+    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>,
+    private val canvas: HTMLCanvasElement = Canvas(axisContainer),
+    resetOffsetPx: () -> Unit
 ) : BaseCanvasViewController(canvas) {
     init {
+        Div(axisContainer) {
+            setAttributes(
+                "style" to styleOf(
+                    "position" to "absolute",
+                    "left" to 0.px,
+                    "top" to 0.px,
+                    "width" to AXIS_Y_WIDTH.px,
+                    "height" to AXIS_X_HEIGHT.px,
+                    "cursor" to "pointer"
+                ),
+                "title" to "Jump to (0, 0)"
+            )
+
+            setOnClickListener {
+                resetOffsetPx()
+            }
+        }
+
         drawingInfoLiveData.observe(lifecycleOwner, listener = ::updateCanvasSize)
         drawingInfoLiveData.observe(lifecycleOwner, 0) { draw() }
     }
@@ -46,10 +73,12 @@ internal class AxisCanvasViewController(
         }
     }
 
-    override fun drawInternal() = drawAxis()
+    override fun drawInternal() {
+        context.font = "normal normal normal 10.5px $DEFAULT_FONT"
+        drawAxis()
+    }
 
     private fun drawAxis() {
-        context.font = "normal normal normal 10.5px 'Menlo'"
         val cellSizePx = drawingInfo.cellSizePx
         val canvasSizePx = drawingInfo.canvasSizePx
 
@@ -57,7 +86,7 @@ internal class AxisCanvasViewController(
         val yAxisWidth = AXIS_Y_WIDTH
 
         val path = Path2D()
-
+        context.lineWidth = 1.0
         context.fillStyle = AXIS_BG_COLOR
         context.fillRect(
             x = 0.0,

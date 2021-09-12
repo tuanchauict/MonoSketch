@@ -2,8 +2,10 @@ package mono.state
 
 import mono.common.setTimeout
 import mono.environment.Build
+import mono.graphics.geo.Point
+import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
-import mono.livedata.MediatorLiveData
+import mono.livedata.combineLiveData
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.Group
@@ -16,24 +18,26 @@ import mono.store.manager.StoreManager
 internal class StateHistoryManager(
     lifecycleOwner: LifecycleOwner,
     private val environment: CommandEnvironment,
-    private val storeManager: StoreManager
+    private val storeManager: StoreManager,
+    private val canvasViewController: CanvasViewController
 ) {
     private val historyStack = HistoryStack()
 
     init {
         restoreShapes()
+        restoreOffset()
 
-        val mediatorLiveData = MediatorLiveData(Pair(0, false))
-        mediatorLiveData.add(environment.shapeManager.versionLiveData) {
-            value = value.copy(first = it)
-        }
-        mediatorLiveData.add(environment.editingInProgressLiveData) {
-            value = value.copy(second = it)
-        }
-        mediatorLiveData.observe(lifecycleOwner, 300) { (versionCode, isEditing) ->
+        combineLiveData(
+            environment.shapeManager.versionLiveData,
+            environment.editingInProgressLiveData
+        ).observe(lifecycleOwner, 300) { (versionCode, isEditing) ->
             if (!isEditing) {
                 registerBackupShapes(versionCode)
             }
+        }
+
+        canvasViewController.drawingOffsetPointPxLiveData.observe(lifecycleOwner) {
+            storeManager.set(BACKUP_OFFSET_KEY, "${it.left}|${it.top}")
         }
     }
 
@@ -82,6 +86,16 @@ internal class StateHistoryManager(
         }
     }
 
+    private fun restoreOffset() {
+        val storedOffsetString = storeManager.get(BACKUP_OFFSET_KEY) ?: return
+        val (leftString, topString) = storedOffsetString.split('|').takeIf { it.size == 2 }
+            ?: return
+        val left = leftString.toIntOrNull() ?: return
+        val top = topString.toIntOrNull() ?: return
+        val offset = Point(left, top)
+        canvasViewController.setOffset(offset)
+    }
+
     private class HistoryStack {
         private val undoStack = mutableListOf<History>()
         private val redoStack = mutableListOf<History>()
@@ -126,5 +140,6 @@ internal class StateHistoryManager(
 
     companion object {
         private const val BACKUP_SHAPES_KEY = "backup-shapes"
+        private const val BACKUP_OFFSET_KEY = "offset"
     }
 }
