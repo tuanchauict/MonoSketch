@@ -18,6 +18,7 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MediatorLiveData
 import mono.livedata.distinctUntilChange
+import mono.livedata.map
 import mono.shapebound.InteractionBound
 import mono.shapebound.InteractionPoint
 import org.w3c.dom.HTMLDivElement
@@ -39,7 +40,6 @@ class CanvasViewController(
     private val interactionCanvasViewController: InteractionCanvasViewController
     private val selectionCanvasViewController: SelectionCanvasViewController
 
-    val mousePointerLiveData: LiveData<MousePointer>
 
     val windowBoundPx: Rect
         get() = gridCanvasViewController.drawingInfo.boundPx
@@ -51,15 +51,19 @@ class CanvasViewController(
     private val drawingInfo: DrawingInfoController.DrawingInfo
         get() = drawingInfoController.drawingInfoLiveData.value
 
+    private val mouseEventController = MouseEventObserver(
+        lifecycleOwner,
+        container,
+        drawingInfoController.drawingInfoLiveData
+    )
+
+    val mousePointerLiveData: LiveData<MousePointer> = mouseEventController.mousePointerLiveData
+    val drawingOffsetPointPxLiveData: LiveData<Point> =
+        mouseEventController.drawingOffsetPointPxLiveData
+
     init {
         val drawingInfoLiveData = drawingInfoController.drawingInfoLiveData
 
-        val mouseEventController = MouseEventObserver(
-            lifecycleOwner,
-            container,
-            drawingInfoLiveData
-        )
-        mousePointerLiveData = mouseEventController.mousePointerLiveData
         mouseEventController.drawingOffsetPointPxLiveData.observe(
             lifecycleOwner,
             throttleDurationMillis = 0,
@@ -83,7 +87,7 @@ class CanvasViewController(
             lifecycleOwner,
             Canvas(container, CLASS_NAME_INTERACTION),
             drawingInfoLiveData,
-            mousePointerLiveData
+            mouseEventController.mousePointerLiveData
         )
         selectionCanvasViewController = SelectionCanvasViewController(
             lifecycleOwner,
@@ -123,6 +127,10 @@ class CanvasViewController(
 
     fun setFont(fontSize: Int) {
         drawingInfoController.setFont(fontSize)
+    }
+
+    fun setOffset(offsetPx: Point) {
+        mouseEventController.forceUpdateOffset(offsetPx)
     }
 
     private fun updateCanvasSize() {

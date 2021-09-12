@@ -21,8 +21,7 @@ internal class MouseEventObserver(
     container: HTMLDivElement,
     drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
 ) {
-    private val mousePointerMutableLiveData: MutableLiveData<MousePointer> =
-        MutableLiveData(MousePointer.Idle)
+    private val mousePointerMutableLiveData = MutableLiveData<MousePointer>(MousePointer.Idle)
     val mousePointerLiveData: LiveData<MousePointer> =
         mousePointerMutableLiveData.distinctUntilChange()
 
@@ -31,8 +30,7 @@ internal class MouseEventObserver(
 
     private var mouseWheelDeltaX: Float = 0F
     private var mouseWheelDeltaY: Float = 0F
-    private val drawingOffsetPointPxMutableLiveData: MutableLiveData<Point> =
-        MutableLiveData(Point.ZERO)
+    private val drawingOffsetPointPxMutableLiveData = MutableLiveData(Point.ZERO)
     val drawingOffsetPointPxLiveData: LiveData<Point> = drawingOffsetPointPxMutableLiveData
 
     private val mouseDoubleClickDetector = MouseDoubleClickDetector()
@@ -46,6 +44,10 @@ internal class MouseEventObserver(
         drawingInfoLiveData.observe(lifecycleOwner) {
             drawingInfo = it
         }
+    }
+
+    fun forceUpdateOffset(offsetPx: Point) {
+        drawingOffsetPointPxMutableLiveData.value = offsetPx
     }
 
     private fun setMouseDownPointer(event: MouseEvent) {
