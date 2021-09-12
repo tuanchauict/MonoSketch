@@ -107,7 +107,12 @@ class MainStateManager(
             currentRetainableActionType = it
         }
 
-        val stateHistoryManager = StateHistoryManager(lifecycleOwner, environment, storeManager)
+        val stateHistoryManager = StateHistoryManager(
+            lifecycleOwner,
+            environment,
+            storeManager,
+            canvasManager
+        )
 
         OneTimeActionHandler(
             lifecycleOwner,

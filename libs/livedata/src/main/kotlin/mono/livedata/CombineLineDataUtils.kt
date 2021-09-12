@@ -8,6 +8,11 @@ fun <T1, T2, R> combineLiveData(
 ): LiveData<R> = combineLiveData(listOf(liveData1, liveData2))
     .map { conversion(it[0] as T1, it[1] as T2) }
 
+fun <T1, T2> combineLiveData(
+    liveData1: LiveData<T1>,
+    liveData2: LiveData<T2>
+): LiveData<Pair<T1, T2>> = combineLiveData(liveData1, liveData2) { t1, t2 -> t1 to t2 }
+
 fun <R> combineLiveData(
     liveData1: LiveData<*>,
     liveData2: LiveData<*>,
