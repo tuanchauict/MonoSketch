@@ -8,8 +8,10 @@ import mono.html.canvas.CanvasViewController
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.ToolbarViewController
 import mono.html.toolbar.view.shapetool.ShapeToolViewController
+import mono.keycommand.KeyCommand
 import mono.keycommand.KeyCommandController
 import mono.lifecycle.LifecycleOwner
+import mono.livedata.map
 import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.selection.SelectedShapeManager
@@ -41,14 +43,16 @@ class MonoSketchApplication : LifecycleOwner() {
         val axisCanvasContainer =
             document.getElementById(AXIS_CONTAINER_ID) as? HTMLDivElement ?: return
 
+        val keyCommandController = KeyCommandController(body)
+
         val canvasViewController = CanvasViewController(
             this,
             boardCanvasContainer,
             axisCanvasContainer,
             mainBoard,
-            model.windowSizeLiveData
+            model.windowSizeLiveData,
+            keyCommandController.keyCommandLiveData.map { it == KeyCommand.SHIFT_KEY }
         )
-        val keyCommandController = KeyCommandController(body)
 
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
 
