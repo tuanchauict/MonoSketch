@@ -5,7 +5,7 @@ import mono.environment.Build
 import mono.graphics.geo.Point
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
-import mono.livedata.MediatorLiveData
+import mono.livedata.combineLiveData
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.Group
@@ -27,18 +27,15 @@ internal class StateHistoryManager(
         restoreShapes()
         restoreOffset()
 
-        val mediatorLiveData = MediatorLiveData(Pair(0, false))
-        mediatorLiveData.add(environment.shapeManager.versionLiveData) {
-            value = value.copy(first = it)
-        }
-        mediatorLiveData.add(environment.editingInProgressLiveData) {
-            value = value.copy(second = it)
-        }
-        mediatorLiveData.observe(lifecycleOwner, 300) { (versionCode, isEditing) ->
+        combineLiveData(
+            environment.shapeManager.versionLiveData,
+            environment.editingInProgressLiveData
+        ).observe(lifecycleOwner, 300) { (versionCode, isEditing) ->
             if (!isEditing) {
                 registerBackupShapes(versionCode)
             }
         }
+
         canvasViewController.drawingOffsetPointPxLiveData.observe(lifecycleOwner) {
             storeManager.set(BACKUP_OFFSET_KEY, "${it.left}|${it.top}")
         }
