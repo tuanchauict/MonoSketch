@@ -17,7 +17,10 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
 
     private var workingShape: AbstractShape? = null
 
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
+    override fun execute(
+        environment: CommandEnvironment,
+        mousePointer: MousePointer
+    ): MouseCommand.CommandResultType =
         when (mousePointer) {
             is MousePointer.Down -> {
                 val shape =
@@ -25,23 +28,23 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
                 workingShape = shape
                 environment.addShape(shape)
                 environment.clearSelectedShapes()
-                false
+                MouseCommand.CommandResultType.WORKING
             }
             is MousePointer.Drag -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
-                false
+                MouseCommand.CommandResultType.WORKING
             }
             is MousePointer.Up -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
                 environment.addSelectedShape(workingShape)
                 workingShape = null
-                true
+                MouseCommand.CommandResultType.DONE
             }
 
             is MousePointer.Move,
             is MousePointer.Click,
             is MousePointer.DoubleClick,
-            MousePointer.Idle -> true
+            MousePointer.Idle -> MouseCommand.CommandResultType.UNKNOWN
         }.exhaustive
 
     private fun CommandEnvironment.changeShapeBound(point1: Point, point2: Point) {
