@@ -17,13 +17,15 @@ internal interface CommandEnvironment {
     val shapeManager: ShapeManager
     val shapeSearcher: ShapeSearcher
 
-    val editingInProgressLiveData: LiveData<Boolean>
+    val editingModeLiveData: LiveData<EditingMode>
 
     val workingParentGroup: Group
 
     fun replaceRoot(newRoot: Group)
 
-    fun setEditingState(isEditing: Boolean)
+    fun enterEditingMode()
+
+    fun exitEditingMode(isNewStateAccepted: Boolean)
 
     fun addShape(shape: AbstractShape?)
 
@@ -57,4 +59,15 @@ internal interface CommandEnvironment {
     fun toYPx(row: Double): Double
     fun toWidthPx(width: Double): Double
     fun toHeightPx(height: Double): Double
+
+    class EditingMode private constructor(val isEditing: Boolean, val skippedVersion: Int?) {
+        companion object {
+            private val EDIT = EditingMode(true, null)
+            private val IDLE = EditingMode(false, null)
+
+            fun edit(): EditingMode = EDIT
+            fun idle(skippedVersion: Int?): EditingMode =
+                if (skippedVersion == null) IDLE else EditingMode(false, skippedVersion)
+        }
+    }
 }

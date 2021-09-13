@@ -33,6 +33,7 @@ import mono.shapebound.LineInteractionBound
 import mono.shapebound.ScalableInteractionBound
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
+import mono.state.command.CommandEnvironment.EditingMode
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
 import mono.store.manager.StoreManager
@@ -58,14 +59,14 @@ class MainStateManager(
 
     private var windowBoardBound: Rect = Rect.ZERO
 
-    private val environment: CommandEnvironmentImpl = CommandEnvironmentImpl(this)
+    private val environment = CommandEnvironmentImpl(this)
 
     private var currentMouseCommand: MouseCommand? = null
     private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
-    private val redrawRequestMutableLiveData: MutableLiveData<Unit> = MutableLiveData(Unit)
+    private val redrawRequestMutableLiveData = MutableLiveData(Unit)
 
-    private val editingInProgressMutableLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val editingModeLiveData = MutableLiveData(EditingMode.idle(null))
 
     init {
         mousePointerLiveData
@@ -139,7 +140,7 @@ class MainStateManager(
         currentMouseCommand = mouseCommand
 
         val isFinished = mouseCommand.execute(environment, mousePointer)
-        editingInProgressMutableLiveData.value = !isFinished
+
         if (isFinished) {
             currentMouseCommand = null
             requestRedraw()
@@ -239,8 +240,8 @@ class MainStateManager(
         override val shapeSearcher: ShapeSearcher
             get() = stateManager.shapeSearcher
 
-        override val editingInProgressLiveData: LiveData<Boolean>
-            get() = stateManager.editingInProgressMutableLiveData
+        override val editingModeLiveData: LiveData<EditingMode>
+            get() = stateManager.editingModeLiveData
 
         override var workingParentGroup: Group
             get() = stateManager.workingParentGroup
@@ -254,8 +255,14 @@ class MainStateManager(
             clearSelectedShapes()
         }
 
-        override fun setEditingState(isEditing: Boolean) {
-            stateManager.editingInProgressMutableLiveData.value = isEditing
+        override fun enterEditingMode() {
+            stateManager.editingModeLiveData.value = EditingMode.edit()
+        }
+
+        override fun exitEditingMode(isNewStateAccepted: Boolean) {
+            val skippedVersion =
+                if (isNewStateAccepted) null else shapeManager.versionLiveData.value
+            stateManager.editingModeLiveData.value = EditingMode.idle(skippedVersion)
         }
 
         override fun addShape(shape: AbstractShape?) {

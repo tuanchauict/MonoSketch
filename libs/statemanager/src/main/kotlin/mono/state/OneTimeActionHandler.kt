@@ -149,10 +149,11 @@ internal class OneTimeActionHandler(
     private fun editSelectedShape(shape: AbstractShape?) {
         when (shape) {
             is Text -> {
-                environment.setEditingState(true)
+                environment.enterEditingMode()
+                val oldText = shape.text
                 environment.shapeManager.execute(MakeTextEditable(shape))
                 EditTextShapeHelper.showEditTextDialog(environment, shape) {
-                    environment.setEditingState(false)
+                    environment.exitEditingMode(oldText != shape.text)
                 }
             }
             is Line,
