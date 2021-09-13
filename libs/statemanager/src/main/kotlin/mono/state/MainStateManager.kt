@@ -139,7 +139,12 @@ class MainStateManager(
                 ?: return
         currentMouseCommand = mouseCommand
 
+        environment.enterEditingMode()
         val commandResultType = mouseCommand.execute(environment, mousePointer)
+
+        if (commandResultType == MouseCommand.CommandResultType.DONE) {
+            environment.exitEditingMode(true)
+        }
 
         if (commandResultType == MouseCommand.CommandResultType.DONE ||
             commandResultType == MouseCommand.CommandResultType.WORKING_PHASE2

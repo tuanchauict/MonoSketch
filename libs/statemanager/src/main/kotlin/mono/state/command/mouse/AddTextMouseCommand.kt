@@ -60,9 +60,13 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
         }
         environment.addSelectedShape(workingShape)
         if (isTextEditable) {
+            environment.enterEditingMode()
             EditTextShapeHelper.showEditTextDialog(environment, workingShape) {
+                environment.exitEditingMode(it.isNotEmpty())
                 workingShape = null
             }
+        } else {
+            environment.exitEditingMode(true)
         }
     }
 
