@@ -29,9 +29,9 @@ internal class StateHistoryManager(
 
         combineLiveData(
             environment.shapeManager.versionLiveData,
-            environment.editingInProgressLiveData
-        ).observe(lifecycleOwner, 300) { (versionCode, isEditing) ->
-            if (!isEditing) {
+            environment.editingModeLiveData
+        ) { versionCode, editingMode ->
+            if (!editingMode.isEditing && versionCode != editingMode.skippedVersion) {
                 registerBackupShapes(versionCode)
             }
         }

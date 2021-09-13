@@ -12,7 +12,7 @@ internal object EditTextShapeHelper {
     fun showEditTextDialog(
         environment: CommandEnvironment,
         textShape: Text?,
-        onFinish: () -> Unit = {}
+        onFinish: (String) -> Unit = {}
     ) {
         if (textShape == null) {
             return
@@ -22,7 +22,9 @@ internal object EditTextShapeHelper {
         val dialog = EditTextModal(textShape.text) {
             environment.shapeManager.execute(ChangeText(textShape, it))
         }
-        dialog.setOnDismiss(onFinish)
+        dialog.setOnDismiss {
+            onFinish(textShape.text)
+        }
         dialog.show(
             environment.toXPx(contentBound.left.toDouble()),
             environment.toYPx(contentBound.top.toDouble()),

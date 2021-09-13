@@ -14,7 +14,10 @@ internal class AddLineMouseCommand : MouseCommand {
 
     private var workingShape: Line? = null
 
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
+    override fun execute(
+        environment: CommandEnvironment,
+        mousePointer: MousePointer
+    ): MouseCommand.CommandResultType =
         when (mousePointer) {
             is MousePointer.Down -> {
                 val edgeDirection = environment.getEdgeDirection(mousePointer.point)
@@ -28,7 +31,7 @@ internal class AddLineMouseCommand : MouseCommand {
                 workingShape = shape
                 environment.addShape(shape)
                 environment.clearSelectedShapes()
-                false
+                MouseCommand.CommandResultType.WORKING
             }
             is MousePointer.Drag -> {
                 environment.changeEndAnchor(
@@ -37,7 +40,7 @@ internal class AddLineMouseCommand : MouseCommand {
                     mousePointer.isWithShiftKey,
                     isReducedRequired = false
                 )
-                false
+                MouseCommand.CommandResultType.WORKING
             }
             is MousePointer.Up -> {
                 environment.changeEndAnchor(
@@ -47,13 +50,13 @@ internal class AddLineMouseCommand : MouseCommand {
                     isReducedRequired = true
                 )
                 environment.addSelectedShape(workingShape)
-                true
+                MouseCommand.CommandResultType.DONE
             }
 
             is MousePointer.Move,
             is MousePointer.Click,
             is MousePointer.DoubleClick,
-            MousePointer.Idle -> true
+            MousePointer.Idle -> MouseCommand.CommandResultType.UNKNOWN
         }.exhaustive
 
     private fun CommandEnvironment.changeEndAnchor(

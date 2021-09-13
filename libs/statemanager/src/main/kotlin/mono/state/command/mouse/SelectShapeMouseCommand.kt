@@ -1,6 +1,5 @@
 package mono.state.command.mouse
 
-import mono.common.exhaustive
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Rect
 import mono.state.command.CommandEnvironment
@@ -11,9 +10,12 @@ import mono.state.command.CommandEnvironment
 internal object SelectShapeMouseCommand : MouseCommand {
     override val mouseCursor: String = "default"
 
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
+    override fun execute(
+        environment: CommandEnvironment,
+        mousePointer: MousePointer
+    ): MouseCommand.CommandResultType =
         when (mousePointer) {
-            is MousePointer.Down -> false
+            is MousePointer.Down -> MouseCommand.CommandResultType.WORKING
             is MousePointer.Drag -> {
                 environment.setSelectionBound(
                     Rect.byLTRB(
@@ -23,7 +25,7 @@ internal object SelectShapeMouseCommand : MouseCommand {
                         mousePointer.point.top
                     )
                 )
-                false
+                MouseCommand.CommandResultType.WORKING
             }
             is MousePointer.Up -> {
                 environment.setSelectionBound(null)
@@ -47,7 +49,7 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 for (shape in shapes) {
                     environment.addSelectedShape(shape)
                 }
-                false
+                MouseCommand.CommandResultType.WORKING
             }
             is MousePointer.Click -> {
                 val shapes = environment.shapeSearcher.getShapes(mousePointer.point)
@@ -60,10 +62,10 @@ internal object SelectShapeMouseCommand : MouseCommand {
                         environment.addSelectedShape(shape)
                     }
                 }
-                true
+                MouseCommand.CommandResultType.DONE
             }
-            is MousePointer.DoubleClick -> true
+            is MousePointer.DoubleClick,
             is MousePointer.Move,
-            MousePointer.Idle -> true
-        }.exhaustive
+            MousePointer.Idle -> MouseCommand.CommandResultType.DONE
+        }
 }

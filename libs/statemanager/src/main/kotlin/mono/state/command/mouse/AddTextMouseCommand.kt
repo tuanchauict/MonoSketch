@@ -20,7 +20,10 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
     override val mouseCursor: String = "crosshair"
 
     private var workingShape: Text? = null
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean =
+    override fun execute(
+        environment: CommandEnvironment,
+        mousePointer: MousePointer
+    ): MouseCommand.CommandResultType =
         when (mousePointer) {
             is MousePointer.Down -> {
                 val shape = Text(
@@ -32,21 +35,21 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
                 workingShape = shape
                 environment.addShape(shape)
                 environment.clearSelectedShapes()
-                false
+                MouseCommand.CommandResultType.WORKING
             }
             is MousePointer.Drag -> {
                 environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
-                false
+                MouseCommand.CommandResultType.WORKING
             }
             is MousePointer.Up -> {
                 onMouseUp(environment, mousePointer)
-                true
+                MouseCommand.CommandResultType.WORKING_PHASE2
             }
 
             is MousePointer.Move,
             is MousePointer.Click,
             is MousePointer.DoubleClick,
-            MousePointer.Idle -> true
+            MousePointer.Idle -> MouseCommand.CommandResultType.UNKNOWN
         }.exhaustive
 
     private fun onMouseUp(environment: CommandEnvironment, mousePointer: MousePointer.Up) {
@@ -57,9 +60,13 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
         }
         environment.addSelectedShape(workingShape)
         if (isTextEditable) {
+            environment.enterEditingMode()
             EditTextShapeHelper.showEditTextDialog(environment, workingShape) {
+                environment.exitEditingMode(it.isNotEmpty())
                 workingShape = null
             }
+        } else {
+            environment.exitEditingMode(true)
         }
     }
 

@@ -17,5 +17,12 @@ internal sealed interface MouseCommand {
      * Handles mouse events.
      * Returns true when the action finishes.
      */
-    fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean
+    fun execute(environment: CommandEnvironment, mousePointer: MousePointer): CommandResultType
+
+    enum class CommandResultType {
+        WORKING,
+        WORKING_PHASE2,
+        DONE,
+        UNKNOWN
+    }
 }
