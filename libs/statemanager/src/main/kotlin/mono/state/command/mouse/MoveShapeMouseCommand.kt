@@ -5,6 +5,7 @@ import mono.graphics.geo.Point
 import mono.shape.command.ChangeBound
 import mono.shape.shape.AbstractShape
 import mono.state.command.CommandEnvironment
+import mono.state.command.mouse.MouseCommand.CommandResultType
 
 /**
  * A [MouseCommand] for moving selected shapes.
@@ -14,7 +15,10 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
 
     private val initialPositions = shapes.associate { it.id to it.bound.position }
 
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
+    override fun execute(
+        environment: CommandEnvironment,
+        mousePointer: MousePointer
+    ): CommandResultType {
         val offset = when (mousePointer) {
             is MousePointer.Drag -> mousePointer.point - mousePointer.mouseDownPoint
             is MousePointer.Up -> mousePointer.point - mousePointer.mouseDownPoint
@@ -34,6 +38,7 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
 
         environment.updateInteractionBounds()
 
-        return mousePointer is MousePointer.Up || mousePointer == MousePointer.Idle
+        val isDone = mousePointer is MousePointer.Up || mousePointer == MousePointer.Idle
+        return if (isDone) CommandResultType.DONE else CommandResultType.WORKING
     }
 }

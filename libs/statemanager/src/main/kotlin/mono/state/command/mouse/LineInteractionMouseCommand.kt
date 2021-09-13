@@ -19,7 +19,10 @@ internal class LineInteractionMouseCommand(
 ) : MouseCommand {
     override val mouseCursor: String? = null
 
-    override fun execute(environment: CommandEnvironment, mousePointer: MousePointer): Boolean {
+    override fun execute(
+        environment: CommandEnvironment,
+        mousePointer: MousePointer
+    ): MouseCommand.CommandResultType {
         when (mousePointer) {
             is MousePointer.Drag -> move(environment, mousePointer.point, false)
             is MousePointer.Up -> move(environment, mousePointer.point, true)
@@ -30,7 +33,11 @@ internal class LineInteractionMouseCommand(
             MousePointer.Idle -> Unit
         }.exhaustive
 
-        return mousePointer == MousePointer.Idle
+        return if (mousePointer == MousePointer.Idle) {
+            MouseCommand.CommandResultType.DONE
+        } else {
+            MouseCommand.CommandResultType.WORKING
+        }
     }
 
     private fun move(environment: CommandEnvironment, point: Point, isReducedRequired: Boolean) {

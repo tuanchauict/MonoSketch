@@ -139,9 +139,11 @@ class MainStateManager(
                 ?: return
         currentMouseCommand = mouseCommand
 
-        val isFinished = mouseCommand.execute(environment, mousePointer)
+        val commandResultType = mouseCommand.execute(environment, mousePointer)
 
-        if (isFinished) {
+        if (commandResultType == MouseCommand.CommandResultType.DONE ||
+            commandResultType == MouseCommand.CommandResultType.WORKING_PHASE2
+        ) {
             currentMouseCommand = null
             requestRedraw()
             actionManager.setRetainableAction(RetainableActionType.IDLE)
