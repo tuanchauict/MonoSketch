@@ -6,12 +6,25 @@ import mono.shape.extra.style.TextAlign
 import mono.shape.extra.TextExtra
 
 object TextBitmapFactory {
-    fun toBitmap(boundSize: Size, renderableText: List<String>, extra: TextExtra): MonoBitmap {
+    fun toBitmap(
+        boundSize: Size,
+        renderableText: List<String>,
+        extra: TextExtra
+    ): MonoBitmap {
         val bgBitmap =
             RectangleBitmapFactory.toBitmap(boundSize, extra.boundExtra)
         val bitmapBuilder = MonoBitmap.Builder(boundSize.width, boundSize.height)
         bitmapBuilder.fill(0, 0, bgBitmap)
 
+        bitmapBuilder.fillText(renderableText, boundSize, extra)
+        return bitmapBuilder.toBitmap()
+    }
+
+    private fun MonoBitmap.Builder.fillText(
+        renderableText: List<String>,
+        boundSize: Size,
+        extra: TextExtra
+    ) {
         val hasBorder = extra.hasBorder()
         val rowOffset = if (hasBorder) 1 else 0
         val colOffset = if (hasBorder) 1 else 0
@@ -46,10 +59,9 @@ object TextBitmapFactory {
             for (colIndex in row.indices) {
                 val char = row[colIndex]
                 if (char != ' ') {
-                    bitmapBuilder.put(row0 + rowIndex, col0 + colIndex, char)
+                    put(row0 + rowIndex, col0 + colIndex, char)
                 }
             }
         }
-        return bitmapBuilder.toBitmap()
     }
 }
