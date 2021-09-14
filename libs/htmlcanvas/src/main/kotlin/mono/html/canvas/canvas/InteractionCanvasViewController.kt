@@ -37,12 +37,6 @@ internal class InteractionCanvasViewController(
     }
 
     override fun drawInternal() {
-        if (isMouseMoving) {
-            return
-        }
-        context.strokeStyle = "#6b6b6b"
-        context.fillStyle = "#6b6b6b"
-
         for (bound in interactionBounds) {
             when (bound) {
                 is ScalableInteractionBound -> drawScalableInteractionBound(bound)
@@ -67,6 +61,10 @@ internal class InteractionCanvasViewController(
         context.lineWidth = 1.0
         context.stroke(path)
 
+        if (isMouseMoving) {
+            return
+        }
+
         val dotPath = Path2D()
         context.beginPath()
         for (point in bound.interactionPoints) {
@@ -80,6 +78,9 @@ internal class InteractionCanvasViewController(
     }
 
     private fun drawLineInteractionBound(bound: LineInteractionBound) {
+        if (isMouseMoving) {
+            return
+        }
         context.strokeStyle = "#6b6b6b"
         context.lineWidth = 2.5
 
