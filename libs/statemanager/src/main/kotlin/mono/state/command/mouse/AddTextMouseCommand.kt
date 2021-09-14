@@ -6,6 +6,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.command.ChangeBound
+import mono.shape.command.UpdateTextEditingMode
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
@@ -53,20 +54,24 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
         }.exhaustive
 
     private fun onMouseUp(environment: CommandEnvironment, mousePointer: MousePointer.Up) {
+        val text = workingShape ?: return
         environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
-        if (!workingShape?.isBoundValid().nullToFalse()) {
+
+        if (!text.isBoundValid()) {
             workingShape = null
             return
         }
-        environment.addSelectedShape(workingShape)
+
+        environment.addSelectedShape(text)
+
         if (isTextEditable) {
             environment.enterEditingMode()
-            EditTextShapeHelper.showEditTextDialog(environment, workingShape) {
+            environment.shapeManager.execute(UpdateTextEditingMode(text, true))
+            EditTextShapeHelper.showEditTextDialog(environment, text) {
+                environment.shapeManager.execute(UpdateTextEditingMode(text, false))
                 environment.exitEditingMode(it.isNotEmpty())
                 workingShape = null
             }
-        } else {
-            environment.exitEditingMode(true)
         }
     }
 

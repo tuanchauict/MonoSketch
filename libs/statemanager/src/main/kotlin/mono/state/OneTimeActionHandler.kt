@@ -14,6 +14,7 @@ import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.MakeTextEditable
 import mono.shape.ShapeExtraManager
+import mono.shape.command.UpdateTextEditingMode
 import mono.shape.extra.style.TextAlign
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
@@ -152,7 +153,9 @@ internal class OneTimeActionHandler(
                 environment.enterEditingMode()
                 val oldText = shape.text
                 environment.shapeManager.execute(MakeTextEditable(shape))
+                environment.shapeManager.execute(UpdateTextEditingMode(shape, true))
                 EditTextShapeHelper.showEditTextDialog(environment, shape) {
+                    environment.shapeManager.execute(UpdateTextEditingMode(shape, false))
                     environment.exitEditingMode(oldText != shape.text)
                 }
             }
