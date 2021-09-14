@@ -52,11 +52,15 @@ internal class InteractionCanvasViewController(
     }
 
     private fun drawScalableInteractionBound(bound: ScalableInteractionBound) {
+        val leftPx = drawingInfo.toXPx(bound.left)
+        val rightPx = drawingInfo.toXPx(bound.right)
+        val topPx = drawingInfo.toYPx(bound.top)
+        val bottomPx = drawingInfo.toYPx(bound.bottom)
         val path = Path2D().apply {
-            moveTo(drawingInfo.toXPx(bound.left), drawingInfo.toYPx(bound.top))
-            lineTo(drawingInfo.toXPx(bound.right), drawingInfo.toYPx(bound.top))
-            lineTo(drawingInfo.toXPx(bound.right), drawingInfo.toYPx(bound.bottom))
-            lineTo(drawingInfo.toXPx(bound.left), drawingInfo.toYPx(bound.bottom))
+            moveTo(leftPx, topPx)
+            lineTo(rightPx, topPx)
+            lineTo(rightPx, bottomPx)
+            lineTo(leftPx, bottomPx)
             closePath()
         }
         context.strokeStyle = "#64b5f6"

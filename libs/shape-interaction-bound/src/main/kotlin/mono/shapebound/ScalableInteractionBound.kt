@@ -9,10 +9,10 @@ class ScalableInteractionBound(
     targetedShapeId: String,
     shapeBound: Rect
 ) : InteractionBound() {
-    val left: Double = shapeBound.left.toDouble()
-    val top: Double = shapeBound.top.toDouble()
-    val right: Double = shapeBound.right + 1.0
-    val bottom: Double = shapeBound.bottom + 1.0
+    val left: Double = shapeBound.left.toDouble() - 0.25
+    val top: Double = shapeBound.top.toDouble() - 0.25
+    val right: Double = shapeBound.right + 1.0 + 0.25
+    val bottom: Double = shapeBound.bottom + 1.0 + 0.25
 
     private val horizontalMiddle: Double = (left + right) / 2.0
     private val verticalMiddle: Double = (top + bottom) / 2.0
