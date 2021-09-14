@@ -1,7 +1,6 @@
 package mono.state.command.mouse
 
 import mono.common.exhaustive
-import mono.common.nullToFalse
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
