@@ -40,6 +40,9 @@ class Text(
     var isTextEditable: Boolean = isTextEditable
         private set
 
+    var isTextEditing: Boolean = false
+        private set
+
     override var extra: TextExtra = TextExtra.withDefault()
         private set
 
@@ -100,6 +103,12 @@ class Text(
         text = newText
         updateRenderableText()
         isTextChanged
+    }
+
+    fun setTextEditingMode(isEditing: Boolean) = update {
+        val isUpdated = isTextEditing != isEditing
+        isTextEditing = isEditing
+        isUpdated
     }
 
     override fun setExtra(newExtra: ShapeExtra) {
