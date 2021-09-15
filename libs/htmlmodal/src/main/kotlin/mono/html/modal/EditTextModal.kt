@@ -5,7 +5,6 @@ import mono.common.Key
 import mono.common.commandKey
 import mono.common.onKeyDown
 import mono.common.post
-import mono.common.setTimeout
 import mono.html.Div
 import mono.html.ext.px
 import mono.html.ext.styleOf
