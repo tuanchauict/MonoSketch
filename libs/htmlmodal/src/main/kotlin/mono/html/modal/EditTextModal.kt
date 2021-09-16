@@ -68,9 +68,19 @@ class EditTextModal(
         val textArea = Div("modal-edit-text-area") {
             setAttributes("contenteditable" to true)
         }
-
+        // This div is for HTML decoding
+        val converterDiv = Div {
+            setAttributes("style" to styleOf("display" to "none"))
+        }
+        val htmlAdjustmentRegex = "(^<div>|</div>|<br/?>)".toRegex()
         textArea.oninput = {
-            onTextChange(textArea.innerText)
+            val html = textArea.innerHTML.replace(htmlAdjustmentRegex, "")
+            val lines = html.split("<div>")
+            val text = lines.joinToString("\n") {
+                converterDiv.innerHTML = it
+                converterDiv.innerText
+            }
+            onTextChange(text)
         }
         textArea.onpaste = {
             it.preventDefault()
