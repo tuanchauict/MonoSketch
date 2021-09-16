@@ -4,7 +4,7 @@ import kotlinx.browser.document
 import mono.common.Key
 import mono.common.commandKey
 import mono.common.onKeyDown
-import mono.common.setTimeout
+import mono.common.post
 import mono.html.Div
 import mono.html.ext.px
 import mono.html.ext.styleOf
@@ -80,7 +80,7 @@ class EditTextModal(
         }
         textArea.onKeyDown(action = ::checkKeyCommand)
         // Suspend down a trampoline to let the environment cleans up previous event (like ENTER key)
-        setTimeout(0) {
+        post {
             textArea.focus()
             insertText(initText)
         }

@@ -11,12 +11,10 @@ import mono.state.command.CommandEnvironment
 internal object EditTextShapeHelper {
     fun showEditTextDialog(
         environment: CommandEnvironment,
-        textShape: Text?,
+        textShape: Text,
+        isFreeText: Boolean,
         onFinish: (String) -> Unit = {}
     ) {
-        if (textShape == null) {
-            return
-        }
         val contentBound = textShape.contentBound
 
         val dialog = EditTextModal(textShape.text) {
@@ -25,11 +23,23 @@ internal object EditTextShapeHelper {
         dialog.setOnDismiss {
             onFinish(textShape.text)
         }
+        val contentWidth =
+            if (isFreeText) {
+                environment.getWindowBound().width - contentBound.left
+            } else {
+                contentBound.width
+            }
+        val contentHeight =
+            if (isFreeText) {
+                environment.getWindowBound().height - contentBound.top
+            } else {
+                contentBound.height
+            }
         dialog.show(
             environment.toXPx(contentBound.left.toDouble()),
             environment.toYPx(contentBound.top.toDouble()),
-            environment.toWidthPx(contentBound.width.toDouble()),
-            environment.toHeightPx(contentBound.height.toDouble()),
+            environment.toWidthPx(contentWidth.toDouble()),
+            environment.toHeightPx(contentHeight.toDouble()),
         )
     }
 }

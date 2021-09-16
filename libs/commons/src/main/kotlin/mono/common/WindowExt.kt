@@ -4,6 +4,8 @@ import kotlinx.browser.window
 import org.w3c.dom.Window
 import kotlin.js.Date
 
+fun post(action: () -> Unit): Cancelable = setTimeout(0, action)
+
 fun setTimeout(durationMillis: Int, action: () -> Unit): Cancelable =
     if (durationMillis == 0) {
         AnimationFrame(window.requestAnimationFrame { action() })
