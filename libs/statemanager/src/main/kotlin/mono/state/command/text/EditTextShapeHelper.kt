@@ -1,5 +1,6 @@
 package mono.state.command.text
 
+import kotlinx.browser.document
 import mono.html.modal.EditTextModal
 import mono.shape.command.ChangeText
 import mono.shape.shape.Text
@@ -25,16 +26,11 @@ internal object EditTextShapeHelper {
         }
         val contentWidth =
             if (isFreeText) {
-                environment.getWindowBound().width - contentBound.left
+                (environment.getWindowBound().width - contentBound.left).coerceAtLeast(30)
             } else {
                 contentBound.width
             }
-        val contentHeight =
-            if (isFreeText) {
-                environment.getWindowBound().height - contentBound.top
-            } else {
-                contentBound.height
-            }
+        val contentHeight = if (isFreeText) 4 else contentBound.height
         dialog.show(
             environment.toXPx(contentBound.left.toDouble()),
             environment.toYPx(contentBound.top.toDouble()),
