@@ -16,7 +16,8 @@ class TextBitmapFactoryTest {
         val bitmap = TextBitmapFactory.toBitmap(
             text.bound.size,
             text.renderableText.getRenderableText(),
-            text.extra
+            text.extra,
+            isTextEditingMode = false
         )
         assertEquals(
             """

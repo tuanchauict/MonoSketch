@@ -60,7 +60,7 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
         val text = workingShape ?: return
         environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
 
-        val isFreeText = !text.isBoundValid() && isTextEditable
+        val isFreeText = text.isFreeText()
         if (isFreeText) {
             environment.makeTextFree(text)
         } else {
@@ -71,6 +71,9 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
             enterTextTypeMode(environment, text, isFreeText)
         }
     }
+
+    private fun Text.isFreeText(): Boolean =
+        isTextEditable && bound.width == 1 && bound.height == 1
 
     private fun CommandEnvironment.makeTextFree(text: Text) {
         val boundExtra =

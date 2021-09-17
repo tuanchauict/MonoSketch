@@ -27,7 +27,9 @@ object RectangleBitmapFactory {
         if (fillDrawable != null) {
             bitmapBuilder.fill(0, 0, fillDrawable.toBitmap(size.width, size.height))
         }
-        if (strokeStyle != null) {
+
+        val isStrokeAllowed = fillDrawable == null || size.width > 1 && size.height > 1
+        if (isStrokeAllowed && strokeStyle != null) {
             bitmapBuilder.drawBorder(size, strokeStyle, extra.dashPattern)
         }
 
@@ -43,25 +45,34 @@ object RectangleBitmapFactory {
             put(0, 0, '▫')
             return
         }
-        if (size.width == 1 || size.height == 1) {
-            return
-        }
 
         val left = 0
         val top = 0
         val right = size.width - 1
         val bottom = size.height - 1
 
-        sequenceOf(
-            PointChar.point(left, top, strokeStyle.upRight),
-            PointChar.horizontalLine(left, right, top, strokeStyle.horizontal),
-            PointChar.point(right, top, strokeStyle.downLeft),
-            PointChar.verticalLine(right, top, bottom, strokeStyle.vertical),
-            PointChar.point(right, bottom, strokeStyle.upLeft),
-            PointChar.horizontalLine(right, left, bottom, strokeStyle.horizontal),
-            PointChar.point(left, bottom, strokeStyle.downRight),
-            PointChar.verticalLine(left, bottom, top, strokeStyle.vertical)
-        )
+        val pointChars = when {
+            size.width == 1 ->
+                sequenceOf(
+                    PointChar.verticalLine(left, top - 1, bottom, strokeStyle.vertical)
+                )
+            size.height == 1 ->
+                sequenceOf(
+                    PointChar.horizontalLine(left - 1, right, top, strokeStyle.horizontal)
+                )
+            else -> sequenceOf(
+                PointChar.point(left, top, strokeStyle.upRight),
+                PointChar.horizontalLine(left, right, top, strokeStyle.horizontal),
+                PointChar.point(right, top, strokeStyle.downLeft),
+                PointChar.verticalLine(right, top, bottom, strokeStyle.vertical),
+                PointChar.point(right, bottom, strokeStyle.upLeft),
+                PointChar.horizontalLine(right, left, bottom, strokeStyle.horizontal),
+                PointChar.point(left, bottom, strokeStyle.downRight),
+                PointChar.verticalLine(left, bottom, top, strokeStyle.vertical)
+            )
+        }
+
+        pointChars
             .flatMap { it }
             .forEachIndexed { index, pointChar ->
                 val char = if (dashPattern.isGap(index)) ' ' else pointChar.char
