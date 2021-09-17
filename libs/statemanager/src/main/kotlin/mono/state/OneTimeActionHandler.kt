@@ -154,7 +154,7 @@ internal class OneTimeActionHandler(
                 val oldText = shape.text
                 environment.shapeManager.execute(MakeTextEditable(shape))
                 environment.shapeManager.execute(UpdateTextEditingMode(shape, true))
-                EditTextShapeHelper.showEditTextDialog(environment, shape) {
+                EditTextShapeHelper.showEditTextDialog(environment, shape, false) {
                     environment.shapeManager.execute(UpdateTextEditingMode(shape, false))
                     environment.exitEditingMode(oldText != shape.text)
                 }

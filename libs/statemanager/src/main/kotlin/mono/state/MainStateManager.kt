@@ -2,6 +2,7 @@ package mono.state
 
 import mono.bitmap.manager.MonoBitmapManager
 import mono.common.currentTimeMillis
+import mono.common.post
 import mono.environment.Build
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
@@ -151,7 +152,8 @@ class MainStateManager(
         ) {
             currentMouseCommand = null
             requestRedraw()
-            actionManager.setRetainableAction(RetainableActionType.IDLE)
+            // Avoid click when adding shape cause shape selection command
+            post { actionManager.setRetainableAction(RetainableActionType.IDLE) }
         }
     }
 

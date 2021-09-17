@@ -4,7 +4,7 @@ import kotlinx.browser.document
 import mono.common.Key
 import mono.common.commandKey
 import mono.common.onKeyDown
-import mono.common.setTimeout
+import mono.common.post
 import mono.html.Div
 import mono.html.ext.px
 import mono.html.ext.styleOf
@@ -68,10 +68,21 @@ class EditTextModal(
         val textArea = Div("modal-edit-text-area") {
             setAttributes("contenteditable" to true)
         }
-
-        textArea.oninput = {
-            onTextChange(textArea.innerText)
+        // This div is for HTML decoding
+        val converterDiv = Div {
+            setAttributes("style" to styleOf("display" to "none"))
         }
+        val htmlAdjustmentRegex = "(^<div>|</div>|<br/?>)".toRegex()
+        textArea.oninput = {
+            val html = textArea.innerHTML.replace(htmlAdjustmentRegex, "")
+            val lines = html.split("<div>")
+            val text = lines.joinToString("\n") {
+                converterDiv.innerHTML = it
+                converterDiv.innerText
+            }
+            onTextChange(text)
+        }
+
         textArea.onpaste = {
             it.preventDefault()
             it.stopPropagation()
@@ -80,7 +91,7 @@ class EditTextModal(
         }
         textArea.onKeyDown(action = ::checkKeyCommand)
         // Suspend down a trampoline to let the environment cleans up previous event (like ENTER key)
-        setTimeout(0) {
+        post {
             textArea.focus()
             insertText(initText)
         }
