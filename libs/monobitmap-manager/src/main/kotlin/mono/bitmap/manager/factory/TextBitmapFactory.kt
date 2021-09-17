@@ -30,7 +30,7 @@ object TextBitmapFactory {
         val colOffset = if (hasBorder) 1 else 0
 
         val maxTextWidth = boundSize.width - colOffset * 2
-        val maxTextHeight = boundSize.height - rowOffset * 2
+        val maxTextHeight = (boundSize.height - rowOffset * 2).coerceAtLeast(0)
 
         val row0 = when (extra.textAlign.verticalAlign) {
             TextAlign.VerticalAlign.TOP -> rowOffset
@@ -49,7 +49,7 @@ object TextBitmapFactory {
         }
 
         val horizontalAlign = extra.textAlign.horizontalAlign
-        for (rowIndex in renderableText.indices) {
+        for (rowIndex in renderableText.indices.take(maxTextHeight)) {
             val row = renderableText[rowIndex]
             val col0 = when (horizontalAlign) {
                 TextAlign.HorizontalAlign.LEFT -> colOffset
