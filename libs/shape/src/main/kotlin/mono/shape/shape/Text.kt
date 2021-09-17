@@ -133,13 +133,6 @@ class Text(
         }
     }
 
-    fun isBoundValid(): Boolean {
-        val hasBound = extra.hasBorder()
-        val textBoundWidth = if (hasBound) bound.width - 2 else bound.width
-        val textBoundHeight = if (hasBound) bound.height - 2 else bound.height
-        return textBoundWidth >= 1 && textBoundHeight >= 1
-    }
-
     fun makeTextEditable() {
         if (isTextEditable) {
             return
