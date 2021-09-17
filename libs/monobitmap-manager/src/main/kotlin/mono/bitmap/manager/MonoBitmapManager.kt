@@ -31,8 +31,9 @@ class MonoBitmapManager {
             )
             is Text -> TextBitmapFactory.toBitmap(
                 shape.bound.size,
-                if (!shape.isTextEditing) shape.renderableText.getRenderableText() else emptyList(),
+                shape.renderableText.getRenderableText(),
                 shape.extra,
+                shape.isTextEditing
             )
             is Line -> LineBitmapFactory.toBitmap(
                 shape.reducedJoinPoints,
