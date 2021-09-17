@@ -82,6 +82,7 @@ class EditTextModal(
             }
             onTextChange(text)
         }
+
         textArea.onpaste = {
             it.preventDefault()
             it.stopPropagation()

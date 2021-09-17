@@ -1,6 +1,5 @@
 package mono.state.command.text
 
-import kotlinx.browser.document
 import mono.graphics.geo.Size
 import mono.html.modal.EditTextModal
 import mono.shape.command.ChangeBound
