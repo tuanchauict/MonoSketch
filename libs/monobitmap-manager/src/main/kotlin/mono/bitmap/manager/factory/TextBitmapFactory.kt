@@ -9,14 +9,18 @@ object TextBitmapFactory {
     fun toBitmap(
         boundSize: Size,
         renderableText: List<String>,
-        extra: TextExtra
+        extra: TextExtra,
+        isTextEditingMode: Boolean
     ): MonoBitmap {
         val bgBitmap =
             RectangleBitmapFactory.toBitmap(boundSize, extra.boundExtra)
         val bitmapBuilder = MonoBitmap.Builder(boundSize.width, boundSize.height)
-        bitmapBuilder.fill(0, 0, bgBitmap)
+        if (!(boundSize.width == 1 && boundSize.height == 1 && isTextEditingMode)) {
+            bitmapBuilder.fill(0, 0, bgBitmap)
+        }
 
-        bitmapBuilder.fillText(renderableText, boundSize, extra)
+        val adjustedRenderableText = if (!isTextEditingMode) renderableText else emptyList()
+        bitmapBuilder.fillText(adjustedRenderableText, boundSize, extra)
         return bitmapBuilder.toBitmap()
     }
 
