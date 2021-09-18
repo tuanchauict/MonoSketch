@@ -9,7 +9,6 @@ repositories {
 dependencies {
     implementation(projects.commons)
     implementation(projects.htmlDsl)
-    implementation(projects.htmlExt)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
 

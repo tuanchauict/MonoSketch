@@ -1,4 +1,4 @@
-package mono.html.ext
+package mono.html
 
 val Number.px: String
     get() = "${this}px"

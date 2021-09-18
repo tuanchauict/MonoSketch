@@ -7,8 +7,8 @@ import mono.html.Div
 import mono.html.Li
 import mono.html.SvgPath
 import mono.html.Ul
-import mono.html.ext.px
-import mono.html.ext.styleOf
+import mono.html.px
+import mono.html.styleOf
 import mono.html.setAttributes
 import mono.html.setOnClickListener
 import mono.html.toolbar.OneTimeActionType

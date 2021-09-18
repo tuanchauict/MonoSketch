@@ -6,8 +6,8 @@ import mono.common.commandKey
 import mono.common.onKeyDown
 import mono.common.post
 import mono.html.Div
-import mono.html.ext.px
-import mono.html.ext.styleOf
+import mono.html.px
+import mono.html.styleOf
 import mono.html.setAttributes
 import mono.html.setOnClickListener
 import mono.html.setOnMouseWheelListener
