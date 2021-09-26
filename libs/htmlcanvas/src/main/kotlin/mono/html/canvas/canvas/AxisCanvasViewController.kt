@@ -5,8 +5,8 @@ import mono.graphics.geo.Size
 import mono.html.Canvas
 import mono.html.Div
 import mono.html.canvas.canvas.DrawingInfoController.Companion.DEFAULT_FONT
-import mono.html.ext.px
-import mono.html.ext.styleOf
+import mono.html.px
+import mono.html.styleOf
 import mono.html.setAttributes
 import mono.html.setOnClickListener
 import mono.lifecycle.LifecycleOwner

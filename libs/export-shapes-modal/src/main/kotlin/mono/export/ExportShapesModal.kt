@@ -10,8 +10,8 @@ import mono.html.Heading
 import mono.html.HeadingLevel
 import mono.html.Pre
 import mono.html.TextArea
-import mono.html.ext.px
-import mono.html.ext.styleOf
+import mono.html.px
+import mono.html.styleOf
 import mono.html.setAttributes
 import mono.html.setOnClickListener
 import org.w3c.dom.Element

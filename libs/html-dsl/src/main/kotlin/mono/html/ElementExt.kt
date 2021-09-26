@@ -25,3 +25,5 @@ fun Element.setAttributes(vararg attrs: Pair<String, Any>) {
         setAttribute(key, value.toString())
     }
 }
+
+fun Element.style(vararg attrs: Pair<String, String>) = setAttributes("style" to styleOf(*attrs))
