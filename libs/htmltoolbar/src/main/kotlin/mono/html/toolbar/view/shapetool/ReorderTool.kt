@@ -6,6 +6,8 @@ import mono.html.Div
 import mono.html.SvgPath
 import mono.html.setOnClickListener
 import mono.html.appendElement
+import mono.html.px
+import mono.html.style
 import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.OneTimeActionType.ReorderShape
 import mono.html.toolbar.view.SvgIcon
@@ -37,6 +39,7 @@ internal class ReorderSectionViewController(
         container.Section("", isSmallSpace = true) {
             Tool {
                 Row(isCenterEvenSpace = true) {
+                    style("padding-bottom" to 2.px)
                     appendElement(icons)
                 }
             }
@@ -58,7 +61,12 @@ private fun Icon(
     onClick: (ReorderIconType) -> Unit
 ): HTMLDivElement =
     Div(classes = classes(ICON_BUTTON)) {
-        SvgIcon(16, 16) {
+        style(
+            "padding-left" to 7.px,
+            "padding-top" to 7.px
+        )
+
+        SvgIcon(18, 18) {
             for (path in iconType.iconPaths) {
                 SvgPath(path)
             }
@@ -72,7 +80,6 @@ private fun Icon(
         }
     }
 
-/* ktlint-disable max-line-length */
 private enum class ReorderIconType(
     val changeOrderType: ChangeOrder.ChangeOrderType,
     val iconPaths: List<String>
@@ -80,28 +87,25 @@ private enum class ReorderIconType(
     FRONT(
         ChangeOrder.ChangeOrderType.FRONT,
         listOf(
-            "M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z",
-            "M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+            "M18,18h-9V15h-6V9h-3V0h9V3h6V9h3v9h0Zm-4-4V4H4V14h10Z"
         )
     ),
     UPWARD(
         ChangeOrder.ChangeOrderType.FORWARD,
         listOf(
-            "M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+            "M18,18h-12v-5h-6v-13h13v6h5v12h0Zm-17-6h11v-11h-11Z",
         )
     ),
     BACKWARD(
         ChangeOrder.ChangeOrderType.BACKWARD,
         listOf(
-            "M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+            "M6,18V13h-6V0h13V6h5V18Zm-5-6h5V6h6V1H1Z"
         )
     ),
     BACK(
         ChangeOrder.ChangeOrderType.BACK,
         listOf(
-            "M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z",
-            "M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+            "M9,18V15h-6V9h-3V0h9V3h6V9h3v9Zm-5-4h5V9h-5Zm10-5V4h-5V9Z"
         )
     )
 }
-/* ktlint-enable max-line-length */

@@ -2,7 +2,7 @@ package mono.html.canvas.canvas
 
 import kotlinx.browser.window
 import mono.graphics.geo.Size
-import mono.html.ext.px
+import mono.html.px
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.CanvasTextBaseline
