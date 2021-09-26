@@ -7,6 +7,7 @@ import mono.html.Input
 import mono.html.InputType
 import mono.html.Label
 import mono.html.SvgPath
+import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
 import mono.html.toolbar.RetainableActionType
@@ -138,10 +139,8 @@ private fun Element.MouseActionGroupItem(
         setOnChangeListener { onChangeAction(mouseActionType.retainableActionType) }
     }
     Label("btn btn-outline-secondary shadow-none icon-action toolbar-btn") {
-        setAttributes(
-            "for" to actionId,
-            "title" to mouseActionType.title
-        )
+        setAttributes("for" to actionId)
+        tooltip(mouseActionType.title)
 
         mouseActionType.bindIcon(this)
     }
