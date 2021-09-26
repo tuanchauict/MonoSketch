@@ -12,7 +12,7 @@ downloading worker                  time                      time
                      ■────────────────────■           │            │      
                   Download           Resources is     │            │      
                   resource           downloaded       │            │      
-                  Retry if           succeeded        │            │      
+                  Retry if           successfully     │            │      
                   failed                          1st open      Delete    
                                                                resources
 ```
