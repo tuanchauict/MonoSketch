@@ -43,8 +43,9 @@ private class Tooltip(
     }
 
     private fun showInternal() {
-        view?.remove()
-
+        if (view != null) {
+            return
+        }
         val boundingRect = anchor.getBoundingClientRect()
         val tooltipArrowLeft = boundingRect.tooltipArrowLeft
         val tooltipArrowTop = boundingRect.tooltipArrowTop
