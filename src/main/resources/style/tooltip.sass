@@ -2,7 +2,7 @@
 
 $tooltip-background-color: #000000DD
 
-.base-tooltip-arrow
+%base-tooltip-arrow
     content: " "
     position: absolute
     border-width: 5px
@@ -22,7 +22,7 @@ $tooltip-background-color: #000000DD
         margin-left: -5px
 
         &::after
-            @extend .base-tooltip-arrow
+            @extend %base-tooltip-arrow
             top: 50%
             left: 100%
             margin-top: -5px
@@ -32,7 +32,7 @@ $tooltip-background-color: #000000DD
         margin-left: 5px
 
         &::after
-            @extend .base-tooltip-arrow
+            @extend %base-tooltip-arrow
             top: 50%
             right: 100%
             margin-top: -5px
@@ -42,7 +42,7 @@ $tooltip-background-color: #000000DD
         margin-top: -5px
 
         &::after
-            @extend .base-tooltip-arrow
+            @extend %base-tooltip-arrow
             top: 100%
             left: 50%
             margin-left: -5px
@@ -52,7 +52,7 @@ $tooltip-background-color: #000000DD
         margin-top: 5px
 
         &::after
-            @extend .base-tooltip-arrow
+            @extend %base-tooltip-arrow
             bottom: 100%
             left: 50%
             margin-left: -5px

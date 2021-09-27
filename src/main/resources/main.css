@@ -362,7 +362,7 @@ html, body {
   color: #a0a0a0;
 }
 
-.base-tooltip-arrow, .mono-tooltip.bottom::after, .mono-tooltip.top::after, .mono-tooltip.right::after, .mono-tooltip.left::after {
+.mono-tooltip.bottom::after, .mono-tooltip.top::after, .mono-tooltip.right::after, .mono-tooltip.left::after {
   content: " ";
   position: absolute;
   border-width: 5px;
