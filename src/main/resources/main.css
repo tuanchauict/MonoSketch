@@ -362,4 +362,58 @@ html, body {
   color: #a0a0a0;
 }
 
+.mono-tooltip.bottom::after, .mono-tooltip.top::after, .mono-tooltip.right::after, .mono-tooltip.left::after {
+  content: " ";
+  position: absolute;
+  border-width: 5px;
+  border-style: solid;
+}
+
+.mono-tooltip {
+  position: absolute;
+  z-index: 10000;
+  background: #000000DD;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
+}
+.mono-tooltip.left {
+  margin-left: -5px;
+}
+.mono-tooltip.left::after {
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-color: transparent transparent transparent #000000DD;
+}
+.mono-tooltip.right {
+  margin-left: 5px;
+}
+.mono-tooltip.right::after {
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-color: transparent #000000DD transparent transparent;
+}
+.mono-tooltip.top {
+  margin-top: -5px;
+}
+.mono-tooltip.top::after {
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-color: #000000DD transparent transparent transparent;
+}
+.mono-tooltip.bottom {
+  margin-top: 5px;
+}
+.mono-tooltip.bottom::after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-color: transparent transparent #000000DD transparent;
+}
+
 /*# sourceMappingURL=main.css.map */
