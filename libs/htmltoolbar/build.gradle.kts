@@ -10,6 +10,7 @@ dependencies {
     implementation(projects.commons)
     implementation(projects.graphicsgeo)
     implementation(projects.htmlDsl)
+    implementation(projects.htmlmodal)
     implementation(projects.keycommand)
     implementation(projects.lifecycle)
     implementation(projects.livedata)

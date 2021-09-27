@@ -5,6 +5,8 @@ import mono.graphics.geo.Size
 import mono.html.Canvas
 import mono.html.Div
 import mono.html.canvas.canvas.DrawingInfoController.Companion.DEFAULT_FONT
+import mono.html.modal.TooltipPosition
+import mono.html.modal.tooltip
 import mono.html.px
 import mono.html.styleOf
 import mono.html.setAttributes
@@ -36,9 +38,9 @@ internal class AxisCanvasViewController(
                     "width" to AXIS_Y_WIDTH.px,
                     "height" to AXIS_X_HEIGHT.px,
                     "cursor" to "pointer"
-                ),
-                "title" to "Jump to (0, 0)"
+                )
             )
+            tooltip("Jump to (0, 0)", TooltipPosition.RIGHT)
 
             setOnClickListener {
                 resetOffsetPx()
