@@ -12,7 +12,7 @@ import org.w3c.dom.Element
 /**
  * Registers a tooltip for the targeting element.
  * The tooltip will be displayed along with of the anchor element based on the relative [position]
- * after 400ms hovering.
+ * after 600ms hovering.
  */
 fun Element.tooltip(text: String, position: TooltipPosition = TooltipPosition.BOTTOM) {
     val tooltip = Tooltip(this, text, position)
@@ -39,7 +39,7 @@ private class Tooltip(
         if (showTask != null) {
             return
         }
-        showTask = setTimeout(400, ::showInternal)
+        showTask = setTimeout(600, ::showInternal)
     }
 
     private fun showInternal() {

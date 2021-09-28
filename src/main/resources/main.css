@@ -374,9 +374,9 @@ html, body {
   z-index: 10000;
   background: #000000DD;
   color: #fff;
-  padding: 2px 10px;
+  padding: 2px 8px 1px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 11px;
   font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
 }
 .mono-tooltip.left {
