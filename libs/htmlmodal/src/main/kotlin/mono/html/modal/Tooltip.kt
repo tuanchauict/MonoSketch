@@ -5,6 +5,8 @@ import mono.common.Cancelable
 import mono.common.setTimeout
 import mono.html.Span
 import mono.html.px
+import mono.html.setOnMouseOutListener
+import mono.html.setOnMouseOverListener
 import mono.html.style
 import org.w3c.dom.DOMRect
 import org.w3c.dom.Element
@@ -16,8 +18,8 @@ import org.w3c.dom.Element
  */
 fun Element.tooltip(text: String, position: TooltipPosition = TooltipPosition.BOTTOM) {
     val tooltip = Tooltip(this, text, position)
-    addEventListener("mouseover", { tooltip.show() })
-    addEventListener("mouseout", { tooltip.hide() })
+    setOnMouseOverListener { tooltip.show() }
+    setOnMouseOutListener { tooltip.hide() }
 }
 
 enum class TooltipPosition(val clazz: String) {

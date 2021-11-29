@@ -9,7 +9,7 @@ import mono.html.Div
 import mono.html.px
 import mono.html.styleOf
 import mono.html.setAttributes
-import mono.html.setOnClickListener
+import mono.html.setOnFocusOut
 import mono.html.setOnMouseWheelListener
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -45,12 +45,9 @@ class EditTextModal(
                     )
 
                     initTextArea()
-
-                    setOnClickListener { it.stopPropagation() }
                 }
             }
 
-            setOnClickListener { dismiss() }
             setOnMouseWheelListener { it.preventDefault() }
         }
     }
@@ -95,6 +92,8 @@ class EditTextModal(
             textArea.focus()
             insertText(initText)
         }
+
+        textArea.setOnFocusOut { dismiss() }
     }
 
     private fun insertText(text: String) {
