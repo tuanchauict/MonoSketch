@@ -20,9 +20,11 @@ enum class RetainableActionType {
 sealed interface OneTimeActionType {
     object Idle : OneTimeActionType
 
+    // Main dropdown menu
     object SaveShapesAs : OneTimeActionType
     object OpenShapes : OneTimeActionType
     object ExportSelectedShapes : OneTimeActionType
+    object ShowKeyboardShortcuts : OneTimeActionType
 
     object SelectAllShapes : OneTimeActionType
     object DeselectShapes : OneTimeActionType

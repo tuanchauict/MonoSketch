@@ -6,6 +6,7 @@ import mono.export.ExportShapesHelper
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.toolbar.OneTimeActionType
+import mono.html.toolbar.view.keyboardshortcut.KeyboardShortcuts
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.shape.clipboard.ShapeClipboardManager
@@ -58,6 +59,8 @@ internal class OneTimeActionHandler(
                     loadShapesFromFile()
                 OneTimeActionType.ExportSelectedShapes ->
                     exportSelectedShapes(true)
+                OneTimeActionType.ShowKeyboardShortcuts ->
+                    KeyboardShortcuts.showHint()
 
                 OneTimeActionType.CopyText ->
                     exportSelectedShapes(false)

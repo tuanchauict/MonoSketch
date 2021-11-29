@@ -27,8 +27,9 @@ internal fun Element.RightToolbar(
                 val items = listOf(
                     Text("Save As...", OneTimeActionType.SaveShapesAs),
                     Text("Open File...", OneTimeActionType.OpenShapes),
+                    Text("Export Text", OneTimeActionType.ExportSelectedShapes),
                     DropDownMenu.Item.Divider,
-                    Text("Export Text", OneTimeActionType.ExportSelectedShapes)
+                    Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
                 )
                 DropDownMenu("main-menu", items) {
                     val textItem = it as Text
