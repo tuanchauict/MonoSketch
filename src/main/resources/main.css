@@ -125,6 +125,52 @@ html, body {
   position: absolute;
 }
 
+.drop-down-menu {
+  z-index: 10000;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #d0d7de;
+  padding: 6px 0;
+  position: absolute;
+}
+.drop-down-menu .hidden-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  left: -100000px;
+}
+.drop-down-menu .drop-down-divider {
+  border-top: 1px solid #d0d7de;
+  margin: 8px 0;
+}
+.drop-down-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.drop-down-menu .drop-down-item {
+  padding: 5px 8px 5px 16px;
+  margin: 0;
+  cursor: pointer;
+  overflow: hidden;
+  color: #24292f;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 21px;
+}
+.drop-down-menu .drop-down-item:hover {
+  background: #f0f0f0;
+}
+.drop-down-menu .drop-down-item:last-child {
+  border-bottom: none;
+}
+
+.main-menu {
+  width: 160px;
+  right: 8px;
+  top: 48px;
+}
+
 .modal-edit-text {
   position: absolute;
   left: 0;
