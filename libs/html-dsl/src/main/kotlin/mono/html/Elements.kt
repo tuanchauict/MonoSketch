@@ -91,13 +91,13 @@ fun Ul(
     block: HTMLUListElement.() -> Unit
 ): HTMLUListElement = parent.createElement("ul", classes, block)
 
-fun Element.Li(classes: String = "", block: HTMLLIElement.() -> Unit): HTMLLIElement =
+fun Element.Li(classes: String = "", block: HTMLLIElement.() -> Unit = {}): HTMLLIElement =
     Li(this, classes, block)
 
 fun Li(
     parent: Element?,
     classes: String = "",
-    block: HTMLLIElement.() -> Unit
+    block: HTMLLIElement.() -> Unit = {}
 ): HTMLLIElement = parent.createElement("li", classes, block)
 
 fun Element.A(
