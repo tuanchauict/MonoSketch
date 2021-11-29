@@ -17,3 +17,6 @@ fun Element.setOnMouseOverListener(listener: (Event) -> Unit) =
 
 fun Element.setOnMouseOutListener(listener: (Event) -> Unit) =
     addEventListener("mouseout", listener)
+
+fun Element.setOnFocusOut(listener: (Event) -> Unit) =
+    addEventListener("focusout", listener)
