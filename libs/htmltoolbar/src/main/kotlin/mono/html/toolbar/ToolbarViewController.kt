@@ -21,9 +21,7 @@ class ToolbarViewController(
                 actionManager.retainableActionLiveData,
                 actionManager::setRetainableAction
             )
-            RightToolbar {
-                actionManager.setOneTimeAction(it.actionType)
-            }
+            RightToolbar(actionManager::setOneTimeAction)
         }
     }
 }

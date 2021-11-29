@@ -2,65 +2,47 @@
 
 package mono.html.toolbar.view
 
-import mono.html.A
 import mono.html.Div
-import mono.html.Li
 import mono.html.SvgPath
-import mono.html.Ul
+import mono.html.modal.DropDownMenu
+import mono.html.modal.DropDownMenu.Item.Text
 import mono.html.px
-import mono.html.styleOf
 import mono.html.setAttributes
 import mono.html.setOnClickListener
+import mono.html.styleOf
 import mono.html.toolbar.OneTimeActionType
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 
 /**
- * An enum for right actions on drop down menu
- */
-enum class RightAction(val title: String, val actionType: OneTimeActionType) {
-    SAVE_AS("Save As...", OneTimeActionType.SaveShapesAs),
-    OPEN_FILE("Open File...", OneTimeActionType.OpenShapes),
-    EXPORT("Export Text", OneTimeActionType.ExportSelectedShapes)
-}
-
-/**
  * A function to create right toolbar UI.
  */
 internal fun Element.RightToolbar(
-    onActionSelected: (RightAction) -> Unit
+    onActionSelected: (OneTimeActionType) -> Unit
 ) {
     val dropdownMenuId = "right-toolbar-dropdown-menu"
     Div("toolbar right") {
         Div("dropdown") {
-            Icon(dropdownMenuId)
-            Items(dropdownMenuId, onActionSelected)
-        }
-    }
-}
-
-private fun HTMLDivElement.Items(
-    dropdownMenuId: String,
-    onActionSelected: (RightAction) -> Unit
-) {
-    Ul("dropdown-menu dropdown-menu-light") {
-        setAttributes("aria-labelledby" to dropdownMenuId)
-
-        for (action in RightAction.values()) {
-            RightToolbarMenuItem(action.title) {
-                onActionSelected(action)
+            Icon(dropdownMenuId) {
+                val items = listOf(
+                    Text("Save As...", OneTimeActionType.SaveShapesAs),
+                    Text("Open File...", OneTimeActionType.OpenShapes),
+                    DropDownMenu.Item.Divider,
+                    Text("Export Text", OneTimeActionType.ExportSelectedShapes)
+                )
+                DropDownMenu("main-menu", items) {
+                    val textItem = it as Text
+                    onActionSelected(textItem.key as OneTimeActionType)
+                }
             }
         }
     }
 }
 
-private fun HTMLDivElement.Icon(dropdownMenuId: String) {
+private fun HTMLDivElement.Icon(dropdownMenuId: String, onClickAction: () -> Unit) {
     Div(classes = "btn btn-outline-secondary btn-sm toolbar-btn shadow-none") {
         id = dropdownMenuId
         setAttributes(
-            "data-bs-toggle" to "dropdown",
-            "aria-expanded" to "false",
-            // Avoid input being focused which voids key event commands.
             "onfocus" to "this.blur()",
             "style" to styleOf("padding" to "0 3px")
         )
@@ -71,16 +53,7 @@ private fun HTMLDivElement.Icon(dropdownMenuId: String) {
             SvgPath("M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z")
             /* ktlint-enable max-line-length */
         }
-    }
-}
 
-private fun Element.RightToolbarMenuItem(
-    title: String,
-    onClickAction: () -> Unit
-) {
-    Li {
-        A("dropdown-item", title) {
-            setOnClickListener { onClickAction() }
-        }
+        setOnClickListener { onClickAction() }
     }
 }
