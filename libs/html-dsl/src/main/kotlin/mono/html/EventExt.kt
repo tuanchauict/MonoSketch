@@ -12,3 +12,8 @@ fun Element.setOnMouseWheelListener(listener: (Event) -> Unit) =
 fun HTMLInputElement.setOnChangeListener(listener: (Event) -> Unit) =
     addEventListener("change", listener)
 
+fun Element.setOnMouseOverListener(listener: (Event) -> Unit) =
+    addEventListener("mouseover", listener)
+
+fun Element.setOnMouseOutListener(listener: (Event) -> Unit) =
+    addEventListener("mouseout", listener)
