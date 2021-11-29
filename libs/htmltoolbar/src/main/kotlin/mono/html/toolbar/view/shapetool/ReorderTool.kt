@@ -70,7 +70,7 @@ private fun Icon(
 
         tooltip(iconType.title, TooltipPosition.TOP)
 
-        SvgIcon(18, 18) {
+        SvgIcon(18) {
             for (path in iconType.iconPaths) {
                 SvgPath(path)
             }

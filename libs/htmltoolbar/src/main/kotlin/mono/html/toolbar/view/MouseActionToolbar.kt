@@ -76,7 +76,7 @@ private enum class MouseActionType(
         "Select (V)",
         isChecked = true,
         {
-            SvgIcon(24, 24) {
+            SvgIcon(24) {
                 SvgPath("M7.436 20.61L7.275 3.914l12.296 11.29-7.165.235-4.97 5.168z")
             }
         }
@@ -86,7 +86,7 @@ private enum class MouseActionType(
         "Rectangle (R)",
         isChecked = false,
         {
-            SvgIcon(24, 24) {
+            SvgIcon(24) {
                 SvgPath("M22 19H2V5h20v14zM4 7v10h16V7z")
             }
         }
@@ -96,7 +96,7 @@ private enum class MouseActionType(
         "Text (T)",
         isChecked = false,
         {
-            SvgIcon(24, 24) {
+            SvgIcon(24) {
                 SvgPath(
                     "M5.635 21v-2h12.731v2zm3.27-4v-1.12h2.005V4.12H7.425l-.39.44v2.58h-1.4" +
                         "V3h12.731v4.14h-1.4V4.56l-.39-.44h-3.485v11.76h2.005V17z"
@@ -109,7 +109,7 @@ private enum class MouseActionType(
         "Line (L)",
         isChecked = false,
         {
-            SvgIcon(24, 24) {
+            SvgIcon(24) {
                 SvgPath("M18 15v-2H6v2H0V9h6v2h12V9h6v6z")
             }
         }

@@ -6,6 +6,9 @@ import mono.html.Svg
 import mono.html.setAttributes
 import org.w3c.dom.Element
 
+internal fun Element.SvgIcon(size: Int, pathBlock: Element.() -> Unit = {}) =
+    SvgIcon(size, size, pathBlock)
+
 internal fun Element.SvgIcon(width: Int, height: Int, pathBlock: Element.() -> Unit) {
     Svg("bi bi-cursor-fill") {
         setAttributes(
