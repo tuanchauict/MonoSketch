@@ -462,4 +462,88 @@ html, body {
   border-color: transparent transparent #000000DD transparent;
 }
 
+.keyboard-shortcuts {
+  height: 230px;
+  background: #f3f3f3;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+}
+.keyboard-shortcuts .keyboard-shortcuts__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 15px;
+  cursor: pointer;
+  color: #666;
+  vertical-align: middle;
+  line-height: 16px;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: "Roboto", Arial, serif;
+  padding: 16px;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-title {
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 300;
+  font-size: 18px;
+  font-family: "Roboto", Arial, serif;
+  color: rgba(0, 0, 0, 0.68);
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-list {
+  table-layout: auto;
+  font-size: 14px;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-list tr.space {
+  height: 10px;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-list tr {
+  line-height: 26px;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-list td {
+  white-space: nowrap;
+  padding: 0px 6px 2px;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-list td:first-child {
+  width: 1%;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-list td:last-child {
+  width: 99%;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-list .key {
+  display: inline-block;
+  text-align: center;
+  padding: 3px 4px;
+  min-width: 24px;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 13px;
+  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
+  color: rgba(0, 0, 0, 0.54);
+  line-height: 1.2;
+  margin-right: 4px;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-list .key.bold {
+  font-weight: bold;
+}
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-list .description {
+  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
+  font-weight: 300;
+  line-height: 15px;
+}
+
 /*# sourceMappingURL=main.css.map */
