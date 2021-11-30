@@ -495,7 +495,7 @@ html, body {
   text-align: center;
   font-weight: 300;
   font-size: 18px;
-  font-family: "Roboto", Arial, serif;
+  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
   color: rgba(0, 0, 0, 0.68);
 }
 .keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-container {
