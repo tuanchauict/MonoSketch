@@ -17,7 +17,6 @@ import org.w3c.dom.HTMLSpanElement
 import org.w3c.dom.HTMLTableColElement
 import org.w3c.dom.HTMLTableElement
 import org.w3c.dom.HTMLTableRowElement
-import org.w3c.dom.HTMLTableSectionElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.HTMLUListElement
 
