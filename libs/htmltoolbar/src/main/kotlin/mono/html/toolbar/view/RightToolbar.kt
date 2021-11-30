@@ -27,8 +27,9 @@ internal fun Element.RightToolbar(
                 val items = listOf(
                     Text("Save As...", OneTimeActionType.SaveShapesAs),
                     Text("Open File...", OneTimeActionType.OpenShapes),
+                    Text("Export Text", OneTimeActionType.ExportSelectedShapes),
                     DropDownMenu.Item.Divider,
-                    Text("Export Text", OneTimeActionType.ExportSelectedShapes)
+                    Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
                 )
                 DropDownMenu("main-menu", items) {
                     val textItem = it as Text
@@ -47,7 +48,7 @@ private fun HTMLDivElement.Icon(dropdownMenuId: String, onClickAction: () -> Uni
             "style" to styleOf("padding" to "0 3px")
         )
 
-        SvgIcon(16, 16) {
+        SvgIcon(16) {
             setAttributes("style" to styleOf("margin-bottom" to 3.px))
             /* ktlint-disable max-line-length */
             SvgPath("M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z")

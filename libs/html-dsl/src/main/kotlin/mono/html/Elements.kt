@@ -14,6 +14,9 @@ import org.w3c.dom.HTMLLIElement
 import org.w3c.dom.HTMLLabelElement
 import org.w3c.dom.HTMLPreElement
 import org.w3c.dom.HTMLSpanElement
+import org.w3c.dom.HTMLTableColElement
+import org.w3c.dom.HTMLTableElement
+import org.w3c.dom.HTMLTableRowElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.HTMLUListElement
 
@@ -174,6 +177,44 @@ fun Canvas(
     classes: String = "",
     block: HTMLCanvasElement.() -> Unit = {}
 ): HTMLCanvasElement = parent.createElement("canvas", classes, block)
+
+fun Element.Table(
+    classes: String = "",
+    block: HTMLTableElement.() -> Unit
+): HTMLTableElement = Table(this, classes, block)
+
+fun Table(
+    parent: Element?,
+    classes: String = "",
+    block: HTMLTableElement.() -> Unit
+): HTMLTableElement = parent.createElement("table", classes, block)
+
+fun Element.Row(
+    classes: String = "",
+    block: HTMLTableRowElement.() -> Unit
+): HTMLTableRowElement = Row(this, classes, block)
+
+fun Row(
+    parent: Element?,
+    classes: String,
+    block: HTMLTableRowElement.() -> Unit
+): HTMLTableRowElement = parent.createElement("tr", classes, block)
+
+fun Element.Cell(
+    classes: String = "",
+    text: String = "",
+    block: HTMLTableColElement.() -> Unit = {}
+): HTMLTableColElement = Cell(this, classes, text, block)
+
+fun Cell(
+    parent: Element?,
+    classes: String = "",
+    text: String = "",
+    block: HTMLTableColElement.() -> Unit = {}
+): HTMLTableColElement = parent.createElement("td", classes) {
+    innerText = text
+    block()
+}
 
 fun Element.Svg(classes: String = "", block: Element.() -> Unit): Element =
     Svg(this, classes, block)
