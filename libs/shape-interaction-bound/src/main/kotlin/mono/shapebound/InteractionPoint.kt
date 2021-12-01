@@ -1,5 +1,6 @@
 package mono.shapebound
 
+import mono.common.MouseCursor
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.shape.Line
@@ -13,7 +14,7 @@ sealed class InteractionPoint(
     val shapeId: String,
     val left: Double,
     val top: Double,
-    val mouseCursor: String
+    val mouseCursor: MouseCursor
 )
 
 /**
@@ -23,7 +24,7 @@ sealed class ScaleInteractionPoint(
     shapeId: String,
     left: Double,
     top: Double,
-    mouseCursor: String
+    mouseCursor: MouseCursor
 ) : InteractionPoint(shapeId, left, top, mouseCursor) {
     abstract fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect
 
@@ -31,7 +32,7 @@ sealed class ScaleInteractionPoint(
         shapeId: String,
         left: Double,
         top: Double
-    ) : ScaleInteractionPoint(shapeId, left, top, "nwse-resize") {
+    ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NWSE) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(newPoint.left, newPoint.top, currentBound.right, currentBound.bottom)
     }
@@ -40,7 +41,7 @@ sealed class ScaleInteractionPoint(
         shapeId: String,
         left: Double,
         top: Double
-    ) : ScaleInteractionPoint(shapeId, left, top, "ns-resize") {
+    ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NS) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, newPoint.top, currentBound.right, currentBound.bottom)
     }
@@ -49,7 +50,7 @@ sealed class ScaleInteractionPoint(
         shapeId: String,
         left: Double,
         top: Double
-    ) : ScaleInteractionPoint(shapeId, left, top, "nesw-resize") {
+    ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NESW) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, newPoint.top, newPoint.left, currentBound.bottom)
     }
@@ -58,7 +59,7 @@ sealed class ScaleInteractionPoint(
         shapeId: String,
         left: Double,
         top: Double
-    ) : ScaleInteractionPoint(shapeId, left, top, "ew-resize") {
+    ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_EW) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(newPoint.left, currentBound.top, currentBound.right, currentBound.bottom)
     }
@@ -67,7 +68,7 @@ sealed class ScaleInteractionPoint(
         shapeId: String,
         left: Double,
         top: Double
-    ) : ScaleInteractionPoint(shapeId, left, top, "ew-resize") {
+    ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_EW) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, currentBound.top, newPoint.left, currentBound.bottom)
     }
@@ -76,7 +77,7 @@ sealed class ScaleInteractionPoint(
         shapeId: String,
         left: Double,
         top: Double
-    ) : ScaleInteractionPoint(shapeId, left, top, "nesw-resize") {
+    ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NESW) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(newPoint.left, currentBound.top, currentBound.right, newPoint.top)
     }
@@ -85,7 +86,7 @@ sealed class ScaleInteractionPoint(
         shapeId: String,
         left: Double,
         top: Double
-    ) : ScaleInteractionPoint(shapeId, left, top, "ns-resize") {
+    ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NS) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, currentBound.top, currentBound.right, newPoint.top)
     }
@@ -94,7 +95,7 @@ sealed class ScaleInteractionPoint(
         shapeId: String,
         left: Double,
         top: Double
-    ) : ScaleInteractionPoint(shapeId, left, top, "nwse-resize") {
+    ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NWSE) {
         override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
             Rect.byLTRB(currentBound.left, currentBound.top, newPoint.left, newPoint.top)
     }
@@ -107,7 +108,7 @@ sealed class LineInteractionPoint(
     shapeId: String,
     left: Double,
     top: Double,
-    mouseCursor: String
+    mouseCursor: MouseCursor
 ) : InteractionPoint(shapeId, left, top, mouseCursor) {
 
     class Anchor(
@@ -115,7 +116,7 @@ sealed class LineInteractionPoint(
         val anchor: Line.Anchor,
         left: Double,
         top: Double
-    ) : LineInteractionPoint(shapeId, left, top, "move")
+    ) : LineInteractionPoint(shapeId, left, top, MouseCursor.MOVE)
 
     class Edge(
         shapeId: String,
@@ -123,5 +124,10 @@ sealed class LineInteractionPoint(
         left: Double,
         top: Double,
         isHorizontal: Boolean
-    ) : LineInteractionPoint(shapeId, left, top, if (isHorizontal) "row-resize" else "col-resize")
+    ) : LineInteractionPoint(
+        shapeId,
+        left,
+        top,
+        if (isHorizontal) MouseCursor.RESIZE_ROW else MouseCursor.RESIZE_COL
+    )
 }

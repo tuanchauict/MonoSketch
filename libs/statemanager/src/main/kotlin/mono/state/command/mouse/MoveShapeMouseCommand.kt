@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.MouseCursor
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.ChangeBound
@@ -11,7 +12,7 @@ import mono.state.command.mouse.MouseCommand.CommandResultType
  * A [MouseCommand] for moving selected shapes.
  */
 internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : MouseCommand {
-    override val mouseCursor: String = "move"
+    override val mouseCursor: MouseCursor = MouseCursor.MOVE
 
     private val initialPositions = shapes.associate { it.id to it.bound.position }
 

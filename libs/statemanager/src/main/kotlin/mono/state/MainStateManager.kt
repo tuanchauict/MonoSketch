@@ -1,6 +1,7 @@
 package mono.state
 
 import mono.bitmap.manager.MonoBitmapManager
+import mono.common.MouseCursor
 import mono.common.currentTimeMillis
 import mono.common.post
 import mono.environment.Build
@@ -208,13 +209,13 @@ class MainStateManager(
         val mouseCursor = when (mousePointer) {
             is MousePointer.Move -> {
                 val interactionPoint = canvasManager.getInteractionPoint(mousePointer.pointPx)
-                interactionPoint?.mouseCursor ?: "default"
+                interactionPoint?.mouseCursor ?: MouseCursor.DEFAULT
             }
             is MousePointer.Drag -> {
                 val mouseCommand = currentMouseCommand
-                if (mouseCommand != null) mouseCommand.mouseCursor else "default"
+                if (mouseCommand != null) mouseCommand.mouseCursor else MouseCursor.DEFAULT
             }
-            is MousePointer.Up -> "default"
+            is MousePointer.Up -> MouseCursor.DEFAULT
 
             MousePointer.Idle,
             is MousePointer.Down,
@@ -222,7 +223,7 @@ class MainStateManager(
             is MousePointer.DoubleClick -> null
         }
         if (mouseCursor != null) {
-            canvasManager.setMouseCursor(mouseCursor)
+            canvasManager.setMouseCursor(mouseCursor.value)
         }
     }
 
