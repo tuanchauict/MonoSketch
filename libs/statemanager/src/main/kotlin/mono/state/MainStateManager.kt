@@ -223,7 +223,7 @@ class MainStateManager(
             is MousePointer.DoubleClick -> null
         }
         if (mouseCursor != null) {
-            canvasManager.setMouseCursor(mouseCursor.value)
+            canvasManager.setMouseCursor(mouseCursor)
         }
     }
 

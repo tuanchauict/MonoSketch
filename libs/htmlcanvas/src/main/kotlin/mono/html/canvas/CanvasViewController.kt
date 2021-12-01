@@ -1,6 +1,7 @@
 package mono.html.canvas
 
 import kotlinx.dom.addClass
+import mono.common.MouseCursor
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
@@ -146,8 +147,8 @@ class CanvasViewController(
         drawingInfoController.setSize(widthPx, heightPx)
     }
 
-    fun setMouseCursor(mouseCursor: String) {
-        container.style.cursor = mouseCursor
+    fun setMouseCursor(mouseCursor: MouseCursor) {
+        container.style.cursor = mouseCursor.value
     }
 
     fun toXPx(column: Double): Double = drawingInfo.toXPx(column)
