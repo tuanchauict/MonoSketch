@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.MouseCursor
 import mono.common.exhaustive
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
@@ -17,7 +18,7 @@ internal class LineInteractionMouseCommand(
     private val lineShape: Line,
     private val interactionPoint: LineInteractionPoint
 ) : MouseCommand {
-    override val mouseCursor: String? = null
+    override val mouseCursor: MouseCursor? = null
 
     override fun execute(
         environment: CommandEnvironment,

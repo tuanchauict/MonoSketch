@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.MouseCursor
 import mono.common.exhaustive
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
@@ -15,7 +16,7 @@ internal class ScaleShapeMouseCommand(
     private val shape: AbstractShape,
     private val interactionPoint: ScaleInteractionPoint
 ) : MouseCommand {
-    override val mouseCursor: String? = null
+    override val mouseCursor: MouseCursor? = null
 
     private val initialBound = shape.bound
     override fun execute(

@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.MouseCursor
 import mono.graphics.geo.MousePointer
 import mono.state.MainStateManager
 import mono.state.command.CommandEnvironment
@@ -11,7 +12,7 @@ internal sealed interface MouseCommand {
     /**
      * CSS mouse cursor value to show during command execution.
      */
-    val mouseCursor: String?
+    val mouseCursor: MouseCursor?
 
     /**
      * Handles mouse events.

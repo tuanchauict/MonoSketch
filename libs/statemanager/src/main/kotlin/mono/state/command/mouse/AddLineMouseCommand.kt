@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.MouseCursor
 import mono.common.exhaustive
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
@@ -10,7 +11,7 @@ import mono.state.command.CommandEnvironment
 import kotlin.math.abs
 
 internal class AddLineMouseCommand : MouseCommand {
-    override val mouseCursor: String = "crosshair"
+    override val mouseCursor: MouseCursor = MouseCursor.CROSSHAIR
 
     private var workingShape: Line? = null
 
