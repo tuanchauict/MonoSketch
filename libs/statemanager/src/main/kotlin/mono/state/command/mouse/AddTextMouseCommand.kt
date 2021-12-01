@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.MouseCursor
 import mono.common.exhaustive
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
@@ -21,7 +22,7 @@ import mono.state.command.text.EditTextShapeHelper
  * 2. Open a modal for entering text content when mouse up.
  */
 internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseCommand {
-    override val mouseCursor: String = "crosshair"
+    override val mouseCursor: MouseCursor = MouseCursor.CROSSHAIR
 
     private var workingShape: Text? = null
     override fun execute(

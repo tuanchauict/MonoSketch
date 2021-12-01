@@ -1,5 +1,6 @@
 package mono.state.command.mouse
 
+import mono.common.MouseCursor
 import mono.common.exhaustive
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
@@ -13,7 +14,7 @@ import mono.state.command.CommandEnvironment
  * A [MouseCommand] to add new shape.
  */
 internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : MouseCommand {
-    override val mouseCursor: String = "crosshair"
+    override val mouseCursor: MouseCursor = MouseCursor.CROSSHAIR
 
     private var workingShape: AbstractShape? = null
 
