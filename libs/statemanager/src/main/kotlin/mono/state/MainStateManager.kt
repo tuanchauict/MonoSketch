@@ -207,10 +207,7 @@ class MainStateManager(
 
     private fun updateMouseCursor(mousePointer: MousePointer) {
         val mouseCursor = when (mousePointer) {
-            is MousePointer.Move -> {
-                val interactionPoint = canvasManager.getInteractionPoint(mousePointer.pointPx)
-                interactionPoint?.mouseCursor ?: MouseCursor.DEFAULT
-            }
+            is MousePointer.Move -> getMouseMovingCursor(mousePointer)
             is MousePointer.Drag -> {
                 val mouseCommand = currentMouseCommand
                 if (mouseCommand != null) mouseCommand.mouseCursor else MouseCursor.DEFAULT
@@ -224,6 +221,15 @@ class MainStateManager(
         }
         if (mouseCursor != null) {
             canvasManager.setMouseCursor(mouseCursor)
+        }
+    }
+
+    private fun getMouseMovingCursor(mousePointer: MousePointer.Move): MouseCursor {
+        val interactionPoint = canvasManager.getInteractionPoint(mousePointer.pointPx)
+        return when {
+            interactionPoint != null -> interactionPoint.mouseCursor
+            currentRetainableActionType != RetainableActionType.IDLE -> MouseCursor.CROSSHAIR
+            else -> MouseCursor.DEFAULT
         }
     }
 
