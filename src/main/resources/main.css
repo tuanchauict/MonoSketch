@@ -206,6 +206,87 @@ html, body {
   outline: none;
 }
 
+.keyboard-shortcuts, .export-text .export-text__modal {
+  background: #f3f3f3;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-title, .export-text div.export-text__modal .export-text__title {
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 300;
+  font-size: 18px;
+  font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
+  color: rgba(0, 0, 0, 0.68);
+}
+
+.keyboard-shortcuts .keyboard-shortcuts__close, .export-text div.export-text__modal .export-text__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 15px;
+  cursor: pointer;
+  color: #666;
+  vertical-align: middle;
+  line-height: 16px;
+}
+
+.export-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+.export-text div.export-text__modal {
+  top: 100px;
+  background: #fff;
+}
+.export-text div.export-text__modal .export-text__title {
+  display: block;
+  padding: 16px 0;
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+}
+.export-text div.export-text__modal .export-text__content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 60px;
+  bottom: 0;
+}
+.export-text div.export-text__modal .export-text__content .export-text__copy {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 8px;
+  color: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.export-text div.export-text__modal .export-text__content .export-text__copy:hover {
+  color: rgba(0, 0, 0, 0.6);
+}
+.export-text div.export-text__modal .export-text__content .export-text__copy:active {
+  color: rgba(0, 0, 0, 0.4);
+}
+.export-text div.export-text__modal .export-text__content pre {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 32px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 15px;
+  outline: none;
+}
+
 .monofont {
   font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
 }
@@ -463,7 +544,7 @@ html, body {
   border-color: transparent transparent #000000DD transparent;
 }
 
-.keyboard-shortcuts {
+.keyboard-shortcuts, .export-text .export-text__modal {
   background: #f3f3f3;
   position: fixed;
   left: 0;
@@ -471,7 +552,7 @@ html, body {
   bottom: 0;
 }
 
-.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-title {
+.keyboard-shortcuts .keyboard-shortcuts__content .keyboard-shortcuts__content-title, .export-text div.export-text__modal .export-text__title {
   margin-bottom: 20px;
   text-align: center;
   font-weight: 300;
@@ -480,7 +561,7 @@ html, body {
   color: rgba(0, 0, 0, 0.68);
 }
 
-.keyboard-shortcuts .keyboard-shortcuts__close {
+.keyboard-shortcuts .keyboard-shortcuts__close, .export-text div.export-text__modal .export-text__close {
   position: absolute;
   top: 0;
   right: 0;
