@@ -1,0 +1,61 @@
+@import 'variables'
+@import 'commons'
+
+
+.export-text
+    position: absolute
+    left: 0
+    right: 0
+    top: 0
+    bottom: 0
+    background: rgba(0, 0, 0, 0.5)
+    z-index: $export-text-zindex
+
+    .export-text__modal
+        @extend %common-modal-container
+
+    div.export-text__modal
+        top: 100px
+        background: #fff
+
+        & .export-text__close
+            @extend %common-modal-close-button
+
+        & .export-text__title
+            @extend %common-modal-title
+            display: block
+            padding: 16px 0
+            width: 100%
+            border-bottom: 1px solid #e5e5e5
+
+        & .export-text__content
+            position: absolute
+            left: 0
+            right: 0
+            top: 60px
+            bottom: 0
+
+            & .export-text__copy
+                position: absolute
+                left: 0
+                top: 0
+                padding: 8px
+                color: rgba(0, 0, 0, 0.3)
+                cursor: pointer
+
+                &:hover
+                    color: rgba(0, 0, 0, 0.6)
+                &:active
+                    color: rgba(0, 0, 0, 0.4)
+
+            & pre
+                position: absolute
+                left: 0
+                right: 0
+                top: 0
+                bottom: 0
+                padding: 32px
+                margin: 0
+                font-size: 12px
+                line-height: 15px
+                outline: none
