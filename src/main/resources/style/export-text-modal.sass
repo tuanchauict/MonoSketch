@@ -1,4 +1,5 @@
-@import 'commons.sass'
+@import 'variables'
+@import 'commons'
 
 
 .export-text
@@ -8,7 +9,7 @@
     top: 0
     bottom: 0
     background: rgba(0, 0, 0, 0.5)
-    z-index: 100
+    z-index: $export-text-zindex
 
     .export-text__modal
         @extend %common-modal-container

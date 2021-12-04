@@ -127,7 +127,7 @@ html, body {
 }
 
 .drop-down-menu {
-  z-index: 10000;
+  z-index: 203;
   background: white;
   border-radius: 6px;
   border: 1px solid #d0d7de;
@@ -178,7 +178,7 @@ html, body {
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 202;
   background-color: #00000000;
 }
 .modal-edit-text .modal-edit-text-container {
@@ -241,7 +241,7 @@ html, body {
   top: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 100;
+  z-index: 201;
 }
 .export-text div.export-text__modal {
   top: 100px;
@@ -499,7 +499,7 @@ html, body {
 
 .mono-tooltip {
   position: absolute;
-  z-index: 10000;
+  z-index: 204;
   background: #000000DD;
   color: #fff;
   padding: 2px 8px 1px;
