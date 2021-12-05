@@ -14,6 +14,7 @@ import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.OneTimeActionType.ReorderShape
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.isEnabled
+import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -34,11 +35,15 @@ internal class ReorderSectionViewController(
     singleShapeLiveData: LiveData<AbstractShape?>,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ) {
+
+    val visibilityStateLiveData: LiveData<Boolean>
+
     init {
         val icons = ReorderIconType.values().map { type ->
             Icon(type) { setOneTimeAction(ReorderShape(it.changeOrderType)) }
         }
-        container.Section("", isSmallSpace = true) {
+
+        val section = container.Section("", isSmallSpace = true) {
             Tool {
                 Row(isCenterEvenSpace = true) {
                     style("padding-bottom" to 2.px)
@@ -47,14 +52,16 @@ internal class ReorderSectionViewController(
             }
         }
 
-        singleShapeLiveData
+        visibilityStateLiveData = singleShapeLiveData
             .map { it != null }
             .distinctUntilChange()
-            .observe(lifecycleOwner) {
-                for (icon in icons) {
-                    icon.isEnabled = it
-                }
+
+        visibilityStateLiveData.observe(lifecycleOwner) {
+            section.isVisible = it
+            for (icon in icons) {
+                icon.isEnabled = it
             }
+        }
     }
 }
 

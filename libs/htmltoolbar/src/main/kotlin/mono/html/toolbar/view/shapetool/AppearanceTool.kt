@@ -43,6 +43,8 @@ internal class AppearanceSectionViewController(
     appearanceDataController: AppearanceDataController
 ) {
     private val rootView = container.Section("APPEARANCE")
+    val visibilityStateLiveData: LiveData<Boolean> =
+        appearanceDataController.hasAnyVisibleToolLiveData
 
     init {
         GridTextIconOptions(

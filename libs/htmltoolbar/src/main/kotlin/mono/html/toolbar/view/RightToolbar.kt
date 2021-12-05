@@ -9,6 +9,7 @@ import mono.html.modal.DropDownMenu.Item.Text
 import mono.html.px
 import mono.html.setAttributes
 import mono.html.setOnClickListener
+import mono.html.style
 import mono.html.styleOf
 import mono.html.toolbar.OneTimeActionType
 import org.w3c.dom.Element
@@ -20,33 +21,30 @@ import org.w3c.dom.HTMLDivElement
 internal fun Element.RightToolbar(
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
-    val dropdownMenuId = "right-toolbar-dropdown-menu"
     Div("toolbar right") {
-        Div("dropdown") {
-            Icon(dropdownMenuId) {
-                val items = listOf(
-                    Text("Save As...", OneTimeActionType.SaveShapesAs),
-                    Text("Open File...", OneTimeActionType.OpenShapes),
-                    Text("Export Text", OneTimeActionType.ExportSelectedShapes),
-                    DropDownMenu.Item.Divider,
-                    Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
-                )
-                DropDownMenu("main-menu", items) {
-                    val textItem = it as Text
-                    onActionSelected(textItem.key as OneTimeActionType)
-                }
+        DropDownMenuIcon {
+            val items = listOf(
+                Text("Save As...", OneTimeActionType.SaveShapesAs),
+                Text("Open File...", OneTimeActionType.OpenShapes),
+                Text("Export Text", OneTimeActionType.ExportSelectedShapes),
+                DropDownMenu.Item.Divider,
+                Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
+            )
+            DropDownMenu("main-menu", items) {
+                val textItem = it as Text
+                onActionSelected(textItem.key as OneTimeActionType)
             }
         }
     }
 }
 
-private fun HTMLDivElement.Icon(dropdownMenuId: String, onClickAction: () -> Unit) {
-    Div(classes = "btn btn-outline-secondary btn-sm toolbar-btn shadow-none") {
-        id = dropdownMenuId
-        setAttributes(
-            "onfocus" to "this.blur()",
-            "style" to styleOf("padding" to "0 3px")
+private fun HTMLDivElement.DropDownMenuIcon(onClickAction: () -> Unit) {
+    Div {
+        style(
+            "cursor" to "pointer",
+            "padding" to "4px 8px 4px 4px"
         )
+        setAttributes("onfocus" to "this.blur()")
 
         SvgIcon(16) {
             setAttributes("style" to styleOf("margin-bottom" to 3.px))
