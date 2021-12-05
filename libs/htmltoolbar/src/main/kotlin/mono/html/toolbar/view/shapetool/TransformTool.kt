@@ -11,6 +11,7 @@ import mono.html.appendElement
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
 import mono.html.toolbar.OneTimeActionType
+import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
 import mono.html.toolbar.view.shapetool.Class.COLUMN
 import mono.html.toolbar.view.shapetool.Class.HALF
@@ -47,23 +48,23 @@ internal class TransformToolViewController(
     }
 
     init {
-        with(container) {
-            Section("TRANSFORM") {
-                Tool(hasMoreBottomSpace = true) {
-                    Row(true) {
-                        NumberCell("X", xInput)
-                        NumberCell("W", wInput)
-                    }
-                    Row {
-                        NumberCell("Y", yInput)
-                        NumberCell("H", hInput)
-                    }
+        val section = container.Section("TRANSFORM") {
+            Tool(hasMoreBottomSpace = true) {
+                Row(true) {
+                    NumberCell("X", xInput)
+                    NumberCell("W", wInput)
+                }
+                Row {
+                    NumberCell("Y", yInput)
+                    NumberCell("H", hInput)
                 }
             }
         }
 
         singleShapeLiveData.observe(lifecycleOwner) {
             val isSizeChangeable = it is Rectangle || it is Text
+            section.isVisible = isSizeChangeable
+
             setEnabled(it != null, isSizeChangeable)
             if (it != null) {
                 setValue(it.bound)
