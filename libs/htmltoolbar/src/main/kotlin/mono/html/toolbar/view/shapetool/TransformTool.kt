@@ -22,6 +22,7 @@ import mono.html.toolbar.view.shapetool.Class.ROW
 import mono.html.toolbar.view.shapetool.Class.SHORT
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.livedata.map
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
@@ -46,6 +47,8 @@ internal class TransformToolViewController(
     private val hInput = NumberCellInput(10, 1) {
         setOneTimeAction(OneTimeActionType.ChangeShapeBound(newHeight = it))
     }
+    
+    val visibilityStateLiveData: LiveData<Boolean>
 
     init {
         val section = container.Section("TRANSFORM") {
@@ -60,10 +63,12 @@ internal class TransformToolViewController(
                 }
             }
         }
+        
+        visibilityStateLiveData = singleShapeLiveData.map { it != null }
 
         singleShapeLiveData.observe(lifecycleOwner) {
             val isSizeChangeable = it is Rectangle || it is Text
-            section.isVisible = isSizeChangeable
+            section.isVisible = it != null
 
             setEnabled(it != null, isSizeChangeable)
             if (it != null) {

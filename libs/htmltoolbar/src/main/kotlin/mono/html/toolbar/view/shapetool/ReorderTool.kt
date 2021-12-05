@@ -35,6 +35,9 @@ internal class ReorderSectionViewController(
     singleShapeLiveData: LiveData<AbstractShape?>,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ) {
+
+    val visibilityStateLiveData: LiveData<Boolean>
+
     init {
         val icons = ReorderIconType.values().map { type ->
             Icon(type) { setOneTimeAction(ReorderShape(it.changeOrderType)) }
@@ -49,15 +52,16 @@ internal class ReorderSectionViewController(
             }
         }
 
-        singleShapeLiveData
+        visibilityStateLiveData = singleShapeLiveData
             .map { it != null }
             .distinctUntilChange()
-            .observe(lifecycleOwner) {
-                section.isVisible = it
-                for (icon in icons) {
-                    icon.isEnabled = it
-                }
+
+        visibilityStateLiveData.observe(lifecycleOwner) {
+            section.isVisible = it
+            for (icon in icons) {
+                icon.isEnabled = it
             }
+        }
     }
 }
 
