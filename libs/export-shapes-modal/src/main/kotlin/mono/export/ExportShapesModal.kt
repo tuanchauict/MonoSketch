@@ -3,6 +3,9 @@
 package mono.export
 
 import kotlinx.browser.document
+import kotlinx.dom.addClass
+import kotlinx.dom.removeClass
+import mono.common.setTimeout
 import mono.html.Div
 import mono.html.Pre
 import mono.html.Span
@@ -11,6 +14,7 @@ import mono.html.SvgPath
 import mono.html.TextArea
 import mono.html.setAttributes
 import mono.html.setOnClickListener
+import mono.html.style
 import org.w3c.dom.Element
 
 /**
@@ -21,6 +25,8 @@ internal class ExportShapesModal {
     private var root: Element? = null
     fun show(content: String) {
         root = document.body?.Div(classes = "export-text") {
+            Div(classes = "background fade-in")
+
             Div(classes = "export-text__modal") {
                 CloseButton()
                 Span(text = "Export", classes = "export-text__title")
@@ -33,6 +39,7 @@ internal class ExportShapesModal {
 
             setOnClickListener { dismiss() }
         }
+        root?.addClass("in")
     }
 
     private fun Element.CloseButton() {
@@ -92,6 +99,10 @@ internal class ExportShapesModal {
     }
 
     private fun dismiss() {
-        root?.remove()
+        val nonNullRoot = root ?: return
+        nonNullRoot.addClass("out")
+        setTimeout(300) {
+            nonNullRoot.remove()
+        }
     }
 }

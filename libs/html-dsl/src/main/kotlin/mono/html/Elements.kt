@@ -22,13 +22,13 @@ import org.w3c.dom.HTMLUListElement
 
 fun Element.Div(
     classes: String = "",
-    block: HTMLDivElement.() -> Unit
+    block: HTMLDivElement.() -> Unit = {}
 ): HTMLDivElement = Div(this, classes, block)
 
 fun Div(
     parent: Element? = null,
     classes: String = "",
-    block: HTMLDivElement.() -> Unit
+    block: HTMLDivElement.() -> Unit = {}
 ): HTMLDivElement = parent.createElement("div", classes, block)
 
 fun Element.Heading(
