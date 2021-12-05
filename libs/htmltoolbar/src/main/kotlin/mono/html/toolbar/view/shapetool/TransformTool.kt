@@ -47,7 +47,7 @@ internal class TransformToolViewController(
     private val hInput = NumberCellInput(10, 1) {
         setOneTimeAction(OneTimeActionType.ChangeShapeBound(newHeight = it))
     }
-    
+
     val visibilityStateLiveData: LiveData<Boolean>
 
     init {
@@ -63,7 +63,7 @@ internal class TransformToolViewController(
                 }
             }
         }
-        
+
         visibilityStateLiveData = singleShapeLiveData.map { it != null }
 
         singleShapeLiveData.observe(lifecycleOwner) {
