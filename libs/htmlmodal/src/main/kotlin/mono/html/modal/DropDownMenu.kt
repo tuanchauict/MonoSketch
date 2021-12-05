@@ -1,6 +1,9 @@
 package mono.html.modal
 
 import kotlinx.browser.document
+import mono.common.Cancelable
+import mono.common.Key
+import mono.common.onKeyDown
 import mono.common.setTimeout
 import mono.html.Div
 import mono.html.Input
@@ -14,16 +17,31 @@ import org.w3c.dom.Element
 /**
  * A modal for dropdown menu
  */
-class DropDownMenu(classes: String, items: List<Item>, private val onClickAction: (Any) -> Unit) {
+class DropDownMenu(classes: String, items: List<Item>, private val onClickAction: (Item) -> Unit) {
     private val menu: Element?
+
+    private var dismissTimeout: Cancelable? = null
 
     init {
         menu = document.body?.Div(classes = "drop-down-menu $classes") {
             initItems(items)
 
-            Input(inputType = InputType.CHECK_BOX, classes = "hidden-input") {
+            val hiddenInput = Input(inputType = InputType.CHECK_BOX, classes = "hidden-input") {
                 setOnFocusOut { dismiss() }
                 focus()
+
+                onKeyDown {
+                    if (it.which == Key.KEY_ESC) {
+                        dismiss()
+                    }
+                }
+            }
+
+            onmousedown = {
+                setTimeout(5) {
+                    dismissTimeout?.cancel()
+                    hiddenInput.focus()
+                }
             }
         }
     }
@@ -35,7 +53,10 @@ class DropDownMenu(classes: String, items: List<Item>, private val onClickAction
                     Item.Divider -> Li(classes = "drop-down-divider")
                     is Item.Text -> Li(classes = "drop-down-item") {
                         innerText = item.title
-                        setOnClickListener { onClickAction(item) }
+                        setOnClickListener {
+                            onClickAction(item)
+                            dismiss()
+                        }
                     }
                 }
             }
@@ -43,7 +64,7 @@ class DropDownMenu(classes: String, items: List<Item>, private val onClickAction
     }
 
     private fun dismiss() {
-        setTimeout(120) {
+        dismissTimeout = setTimeout(20) {
             menu?.remove()
         }
     }

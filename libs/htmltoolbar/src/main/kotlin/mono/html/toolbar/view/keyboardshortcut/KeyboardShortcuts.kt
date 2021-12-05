@@ -22,6 +22,7 @@ class KeyboardShortcuts private constructor() {
 
     init {
         root = document.body?.Div(classes = "keyboard-shortcuts") {
+            id = KEYBOARD_SHORTCUTS_ID
             CloseButton()
             Content()
         }
@@ -96,7 +97,12 @@ class KeyboardShortcuts private constructor() {
     }
 
     companion object {
+        private const val KEYBOARD_SHORTCUTS_ID = "keyboard-shortcuts"
         fun showHint() {
+            if (document.getElementById(KEYBOARD_SHORTCUTS_ID) != null) {
+                // Keyboard shortcuts is already shown.
+                return
+            }
             KeyboardShortcuts()
         }
     }
