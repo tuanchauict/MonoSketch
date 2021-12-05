@@ -2,6 +2,8 @@ package mono.html.modal
 
 import kotlinx.browser.document
 import mono.common.Cancelable
+import mono.common.Key
+import mono.common.onKeyDown
 import mono.common.setTimeout
 import mono.html.Div
 import mono.html.Input
@@ -27,6 +29,12 @@ class DropDownMenu(classes: String, items: List<Item>, private val onClickAction
             val hiddenInput = Input(inputType = InputType.CHECK_BOX, classes = "hidden-input") {
                 setOnFocusOut { dismiss() }
                 focus()
+                
+                onKeyDown { 
+                    if (it.which == Key.KEY_ESC) {
+                        dismiss()
+                    }
+                }
             }
 
             onmousedown = {
