@@ -19,6 +19,8 @@ import mono.html.toolbar.view.shapetool.Class.MEDIUM
 import mono.html.toolbar.view.shapetool.Class.QUARTER
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.livedata.distinctUntilChange
+import mono.livedata.map
 import mono.shape.extra.style.TextAlign
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -52,13 +54,20 @@ internal class TextSectionViewController(
         }
     }
 
+    val visibilityStateLiveData: LiveData<Boolean>
+
     init {
-        liveData.observe(lifecycleOwner, listener = this::setCurrentTextAlign)
+        val textAlignLiveData = liveData
+            .map { (it as? TextAlignVisibility.Visible)?.textAlign }
+            .distinctUntilChange()
+        visibilityStateLiveData = textAlignLiveData
+            .map { it != null }
+            .distinctUntilChange()
+
+        textAlignLiveData.observe(lifecycleOwner, listener = ::setCurrentTextAlign)
     }
 
-    private fun setCurrentTextAlign(textAlignVisibility: TextAlignVisibility) {
-        val textAlignVisible = textAlignVisibility as? TextAlignVisibility.Visible
-        val textAlign = textAlignVisible?.textAlign
+    private fun setCurrentTextAlign(textAlign: TextAlign?) {
         rootView.isVisible = textAlign != null
 
         if (textAlign == null) {

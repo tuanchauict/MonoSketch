@@ -11,6 +11,7 @@ import mono.html.appendElement
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
 import mono.html.toolbar.OneTimeActionType
+import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
 import mono.html.toolbar.view.shapetool.Class.COLUMN
 import mono.html.toolbar.view.shapetool.Class.HALF
@@ -21,6 +22,7 @@ import mono.html.toolbar.view.shapetool.Class.ROW
 import mono.html.toolbar.view.shapetool.Class.SHORT
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.livedata.map
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
@@ -46,24 +48,28 @@ internal class TransformToolViewController(
         setOneTimeAction(OneTimeActionType.ChangeShapeBound(newHeight = it))
     }
 
+    val visibilityStateLiveData: LiveData<Boolean>
+
     init {
-        with(container) {
-            Section("TRANSFORM") {
-                Tool(hasMoreBottomSpace = true) {
-                    Row(true) {
-                        NumberCell("X", xInput)
-                        NumberCell("W", wInput)
-                    }
-                    Row {
-                        NumberCell("Y", yInput)
-                        NumberCell("H", hInput)
-                    }
+        val section = container.Section("TRANSFORM") {
+            Tool(hasMoreBottomSpace = true) {
+                Row(true) {
+                    NumberCell("X", xInput)
+                    NumberCell("W", wInput)
+                }
+                Row {
+                    NumberCell("Y", yInput)
+                    NumberCell("H", hInput)
                 }
             }
         }
 
+        visibilityStateLiveData = singleShapeLiveData.map { it != null }
+
         singleShapeLiveData.observe(lifecycleOwner) {
             val isSizeChangeable = it is Rectangle || it is Text
+            section.isVisible = it != null
+
             setEnabled(it != null, isSizeChangeable)
             if (it != null) {
                 setValue(it.bound)

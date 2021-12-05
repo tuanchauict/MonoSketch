@@ -1,7 +1,10 @@
 package mono.html.toolbar.view.shapetool
 
+import mono.html.Div
+import mono.html.Span
 import mono.html.toolbar.ActionManager
 import mono.html.toolbar.RetainableActionType
+import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.TextSectionViewController.TextAlignVisibility
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -19,56 +22,64 @@ class ShapeToolViewController(
     selectedShapesLiveData: LiveData<Set<AbstractShape>>,
     shapeManagerVersionLiveData: LiveData<Int>
 ) {
-    private val singleShapeLiveData: LiveData<AbstractShape?> =
-        combineLiveData(
-            selectedShapesLiveData,
-            shapeManagerVersionLiveData
-        ) { selected, _ -> selected.singleOrNull() }
+    private val singleShapeLiveData: LiveData<AbstractShape?> = combineLiveData(
+        selectedShapesLiveData, shapeManagerVersionLiveData
+    ) { selected, _ -> selected.singleOrNull() }
 
-    private val shapesLiveData: LiveData<Set<AbstractShape>> =
-        combineLiveData(
-            selectedShapesLiveData,
-            shapeManagerVersionLiveData
-        ) { selected, _ -> selected }
+    private val shapesLiveData: LiveData<Set<AbstractShape>> = combineLiveData(
+        selectedShapesLiveData, shapeManagerVersionLiveData
+    ) { selected, _ -> selected }
 
-    private val retainableActionLiveData: LiveData<RetainableActionType> =
-        combineLiveData(
-            actionManager.retainableActionLiveData,
-            ShapeExtraManager.defaultExtraStateUpdateLiveData
-        ) { action, _ -> action }
+    private val retainableActionLiveData: LiveData<RetainableActionType> = combineLiveData(
+        actionManager.retainableActionLiveData, ShapeExtraManager.defaultExtraStateUpdateLiveData
+    ) { action, _ -> action }
 
     private val appearanceDataController = AppearanceDataController(
-        selectedShapesLiveData,
-        shapeManagerVersionLiveData,
-        actionManager
+        selectedShapesLiveData, shapeManagerVersionLiveData, actionManager
     )
 
     init {
-        ReorderSectionViewController(
-            lifecycleOwner,
-            container,
-            singleShapeLiveData,
-            actionManager::setOneTimeAction
-        )
-        TransformToolViewController(
-            lifecycleOwner,
-            container,
-            singleShapeLiveData,
-            actionManager::setOneTimeAction
+        val reorderSectionViewController = ReorderSectionViewController(
+            lifecycleOwner, container, singleShapeLiveData, actionManager::setOneTimeAction
         )
 
-        AppearanceSectionViewController(
-            lifecycleOwner,
-            container,
-            appearanceDataController
+        val transformToolViewController = TransformToolViewController(
+            lifecycleOwner, container, singleShapeLiveData, actionManager::setOneTimeAction
         )
 
-        TextSectionViewController(
+        val appearanceSectionViewController = AppearanceSectionViewController(
+            lifecycleOwner, container, appearanceDataController
+        )
+
+        val textSectionViewController = TextSectionViewController(
             lifecycleOwner,
             container,
             createTextAlignLiveData(shapesLiveData, retainableActionLiveData),
             actionManager::setOneTimeAction
         )
+
+        val toolIndicator = container.Section("") {
+            isVisible = false
+            Div {
+                Span(
+                    classes = "indicator-text",
+                    text = "Select a shape for updating its properties here"
+                )
+            }
+        }
+
+        val hasAnyVisibleToolLiveData = combineLiveData(
+            reorderSectionViewController.visibilityStateLiveData,
+            transformToolViewController.visibilityStateLiveData,
+            appearanceSectionViewController.visibilityStateLiveData,
+            textSectionViewController.visibilityStateLiveData
+        ) { visibilities ->
+            visibilities.any { it == true }
+        }
+
+        hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
+            toolIndicator.isVisible = !it
+        }
     }
 
     private fun createTextAlignLiveData(
@@ -94,8 +105,7 @@ class ShapeToolViewController(
             }
         }
         return combineLiveData(
-            selectedTextAlignLiveData,
-            defaultTextAlignLiveData
+            selectedTextAlignLiveData, defaultTextAlignLiveData
         ) { selected, default -> selected ?: default }
     }
 }
