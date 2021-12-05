@@ -234,14 +234,63 @@ html, body {
   line-height: 16px;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
+@keyframes moveIn {
+  0% {
+    transform: translateY(10%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+@keyframes moveOut {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(10%);
+  }
+}
 .export-text {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
   z-index: 201;
+}
+.export-text.in .background {
+  animation: fadeIn 0.3s;
+}
+.export-text.in .export-text__modal {
+  animation: moveIn 0.3s, fadeIn 0.3s;
+}
+.export-text.out .background {
+  animation: fadeOut 0.3s;
+}
+.export-text.out .export-text__modal {
+  animation: moveOut 0.3s, fadeOut 0.3s;
+}
+.export-text .background {
+  background: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
 }
 .export-text div.export-text__modal {
   top: 100px;
