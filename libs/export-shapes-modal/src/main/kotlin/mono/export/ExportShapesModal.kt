@@ -4,7 +4,6 @@ package mono.export
 
 import kotlinx.browser.document
 import kotlinx.dom.addClass
-import kotlinx.dom.removeClass
 import mono.common.setTimeout
 import mono.html.Div
 import mono.html.Pre
@@ -14,7 +13,6 @@ import mono.html.SvgPath
 import mono.html.TextArea
 import mono.html.setAttributes
 import mono.html.setOnClickListener
-import mono.html.style
 import org.w3c.dom.Element
 
 /**

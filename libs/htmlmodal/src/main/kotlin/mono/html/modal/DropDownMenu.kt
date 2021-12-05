@@ -29,8 +29,8 @@ class DropDownMenu(classes: String, items: List<Item>, private val onClickAction
             val hiddenInput = Input(inputType = InputType.CHECK_BOX, classes = "hidden-input") {
                 setOnFocusOut { dismiss() }
                 focus()
-                
-                onKeyDown { 
+
+                onKeyDown {
                     if (it.which == Key.KEY_ESC) {
                         dismiss()
                     }
