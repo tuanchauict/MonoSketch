@@ -349,13 +349,38 @@ html, body {
   flex-direction: column;
   font-family: "Roboto", Arial, serif;
   font-size: 12px;
-  overflow-y: scroll;
 }
-.shape-tools > .tsection {
+.shape-tools .shape-tools__body {
+  height: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+}
+.shape-tools .shape-tools__body > .tsection {
   border-top: 0.75px solid #BBB;
 }
-.shape-tools > .tsection:first-child {
+.shape-tools .shape-tools__body > .tsection:first-child {
   border-top: none;
+}
+.shape-tools .shape-tools__footer {
+  padding: 10px 8px 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-direction: row;
+}
+.shape-tools .shape-tools__footer > a {
+  line-height: 14px;
+  font-size: 14px;
+  text-decoration: none;
+  color: #aaa;
+}
+.shape-tools .shape-tools__footer > a:hover {
+  color: #888;
+}
+.shape-tools .shape-tools__footer > a:active {
+  color: #999;
 }
 
 .tsection {

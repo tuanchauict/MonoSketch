@@ -16,13 +16,39 @@ $shape-tool-box-border-selected-color: #0091ff
     flex-direction: column
     font-family: $uiTextFont
     font-size: 12px
-    overflow-y: scroll
 
-    & > .tsection
-        border-top: 0.75px solid $shape-tool-divider-color
+    .shape-tools__body
+        height: 100%
+        overflow-y: scroll
+        display: flex
+        flex-direction: column
 
-    & > .tsection:first-child
-        border-top: none
+        & > .tsection
+            border-top: 0.75px solid $shape-tool-divider-color
+
+        & > .tsection:first-child
+            border-top: none
+
+    .shape-tools__footer
+        padding: 10px 8px 4px
+        display: flex
+        justify-content: center
+        align-items: center
+        align-content: center
+        flex-direction: row
+
+        & > a
+            line-height: 14px
+            font-size: 14px
+            text-decoration: none
+            color: #aaa
+
+            &:hover
+                color: #888
+
+            &:active
+                color: #999
+
 
 .tsection
     display: flex
