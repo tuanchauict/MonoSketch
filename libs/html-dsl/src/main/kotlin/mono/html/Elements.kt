@@ -106,16 +106,21 @@ fun Li(
 fun Element.A(
     classes: String = "",
     text: String = "",
+    href: String = "",
     block: HTMLAnchorElement.() -> Unit
-): HTMLAnchorElement = A(this, classes, text, block)
+): HTMLAnchorElement = A(this, classes, text, href, block)
 
 fun A(
     parent: Element?,
     classes: String = "",
     text: String = "",
+    href: String = "",
     block: HTMLAnchorElement.() -> Unit
 ): HTMLAnchorElement = parent.createElement("a", classes) {
     innerText = text
+    if (href.isNotEmpty()) {
+        setAttributes("href" to href)
+    }
     block()
 }
 
