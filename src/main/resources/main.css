@@ -52,6 +52,7 @@ html, body {
   height: 100%;
   margin: 0;
   overflow-y: hidden;
+  font-family: "Roboto", Arial, serif;
 }
 
 #root {
