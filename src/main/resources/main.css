@@ -182,6 +182,7 @@ html, body {
   border: 1px solid #d0d7de;
   padding: 6px 0;
   position: absolute;
+  font-family: "Roboto", Arial, serif;
 }
 .drop-down-menu .hidden-input {
   position: absolute;
@@ -449,6 +450,7 @@ html, body {
   color: #616161;
   margin-bottom: 10px;
   user-select: none;
+  letter-spacing: 1.2px;
 }
 
 .tool {
