@@ -1,4 +1,48 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600;700&family=Roboto:wght@300;400&display=swap");
+.button, .icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  cursor: pointer;
+  user-select: none;
+}
+.button:hover, .icon-button:hover {
+  background: #eeeeee;
+}
+.button:active, .icon-button:active {
+  background: #e0e0e0;
+}
+.button:disabled, .icon-button:disabled, .button.disabled, .disabled.icon-button {
+  background: #00000000;
+  cursor: default;
+}
+
+.button-group {
+  position: relative;
+  display: inline-flex;
+  box-sizing: border-box;
+  vertical-align: middle;
+  border-radius: 3.5px;
+  border: 1px solid #555;
+}
+.button-group .button, .button-group .icon-button {
+  border-left: 1px solid #555;
+  color: #555;
+  padding: 2px 4px;
+}
+.button-group .button:first-child, .button-group .icon-button:first-child {
+  border-left: none;
+}
+.button-group .button:hover, .button-group .icon-button:hover {
+  background: #626262;
+  color: #fff;
+}
+.button-group .button.selected, .button-group .selected.icon-button {
+  background: #555;
+  color: #fff;
+}
+
 html, body {
   width: 100%;
   height: 100%;
@@ -61,9 +105,6 @@ html, body {
   margin: 0px 20px;
   width: 100%;
 }
-.toolbar.middle .retainable-action-group .btn {
-  width: 65px;
-}
 .toolbar.right {
   margin: 0px 8px;
 }
@@ -79,9 +120,13 @@ html, body {
   background: none;
   color: #252525;
 }
-.toolbar .btn.toolbar-btn {
-  padding: 0.15rem 0.5rem;
+.toolbar .retainable-action-group {
   height: 31px;
+}
+.toolbar .retainable-action-group > .button, .toolbar .retainable-action-group > .icon-button {
+  width: 65px;
+  padding: 0;
+  box-sizing: content-box;
 }
 
 #workspace {
@@ -442,26 +487,8 @@ html, body {
   margin-top: 6px;
   margin-right: 6px;
 }
-
-.button, .icon-button {
-  padding: 4px;
-  cursor: pointer;
+.trow .button, .trow .icon-button {
   border-radius: 3px;
-  user-select: none;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-}
-.button:hover, .icon-button:hover {
-  background: #eeeeee;
-}
-.button:active, .icon-button:active {
-  background: #e0e0e0;
-}
-.button:disabled, .icon-button:disabled, .button.disabled, .disabled.icon-button {
-  background: #00000000;
-  cursor: default;
 }
 
 .icon-button {
