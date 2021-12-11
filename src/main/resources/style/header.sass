@@ -38,9 +38,6 @@
         margin: 0px 20px
         width: 100%
 
-    &.middle .retainable-action-group .btn
-        width: 65px
-
     &.right
         margin: 0px 8px
 
@@ -56,7 +53,10 @@
                 background: none
                 color: #252525
 
-
-    & .btn.toolbar-btn
-        padding: 0.15rem 0.5rem
+    & .retainable-action-group
         height: 31px
+
+        & > .button
+            width: 65px
+            padding: 0
+            box-sizing: content-box
