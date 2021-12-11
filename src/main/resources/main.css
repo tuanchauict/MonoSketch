@@ -438,6 +438,7 @@ html, body {
   width: 100%;
   flex-direction: column;
   padding: 10px 10px;
+  box-sizing: border-box;
 }
 .tsection.small-space {
   padding-top: 4px;
@@ -595,6 +596,10 @@ html, body {
 
 .gray-text {
   color: #a0a0a0;
+}
+
+.gray-icon {
+  color: #424242;
 }
 
 .indicator-text {
