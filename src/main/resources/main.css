@@ -43,6 +43,10 @@
   color: #fff;
 }
 
+input {
+  margin: 0;
+}
+
 html, body {
   width: 100%;
   height: 100%;
@@ -75,10 +79,8 @@ html, body {
 #header-layout > .nav-brand {
   height: 100%;
   display: flex;
-  -webkit-box-align: center;
   align-items: center;
   margin-left: 32px;
-  padding-top: 10px;
 }
 #header-layout h2 {
   font-size: 20px;
@@ -86,6 +88,7 @@ html, body {
   font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
   font-weight: 500;
   line-height: 18px;
+  margin: 0;
 }
 
 #header-toolbar {
@@ -133,7 +136,7 @@ html, body {
   width: 100%;
   left: 0;
   right: 0;
-  top: 64px;
+  top: 65px;
   bottom: 0;
   position: absolute;
 }
