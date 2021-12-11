@@ -6,5 +6,4 @@ kotlinxSerialization = "1.2.1"
 kotlin-stdlib-js = { module = "org.jetbrains.kotlin:kotlin-stdlib-js", version.ref = "kotlinJs" }
 kotlin-test-js = { module = "org.jetbrains.kotlin:kotlin-test-js", version.ref = "kotlinJs" }
 
-kotlinx-html = "org.jetbrains.kotlinx:kotlinx-html:0.7.3"
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }

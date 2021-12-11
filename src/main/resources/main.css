@@ -43,11 +43,16 @@
   color: #fff;
 }
 
+input {
+  margin: 0;
+}
+
 html, body {
   width: 100%;
   height: 100%;
   margin: 0;
   overflow-y: hidden;
+  font-family: "Roboto", Arial, serif;
 }
 
 #root {
@@ -75,10 +80,8 @@ html, body {
 #header-layout > .nav-brand {
   height: 100%;
   display: flex;
-  -webkit-box-align: center;
   align-items: center;
   margin-left: 32px;
-  padding-top: 10px;
 }
 #header-layout h2 {
   font-size: 20px;
@@ -86,6 +89,7 @@ html, body {
   font-family: "Fira Code", Menlo, "Courier New", Courier, monospace;
   font-weight: 500;
   line-height: 18px;
+  margin: 0;
 }
 
 #header-toolbar {
@@ -133,7 +137,7 @@ html, body {
   width: 100%;
   left: 0;
   right: 0;
-  top: 64px;
+  top: 65px;
   bottom: 0;
   position: absolute;
 }
@@ -178,6 +182,7 @@ html, body {
   border: 1px solid #d0d7de;
   padding: 6px 0;
   position: absolute;
+  font-family: "Roboto", Arial, serif;
 }
 .drop-down-menu .hidden-input {
   position: absolute;
@@ -433,6 +438,7 @@ html, body {
   width: 100%;
   flex-direction: column;
   padding: 10px 10px;
+  box-sizing: border-box;
 }
 .tsection.small-space {
   padding-top: 4px;
@@ -445,6 +451,7 @@ html, body {
   color: #616161;
   margin-bottom: 10px;
   user-select: none;
+  letter-spacing: 1.2px;
 }
 
 .tool {
@@ -521,13 +528,11 @@ html, body {
   background: #fafafa;
 }
 .icon-button.small {
-  width: 20px;
-  height: 26px;
+  width: 19px;
+  height: 23px;
   font-size: 15px;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  padding-top: 5px;
+  line-height: 15px;
+  padding: 0 0 1.2px;
 }
 .icon-button.medium {
   padding: 6px;
@@ -589,6 +594,10 @@ html, body {
 
 .gray-text {
   color: #a0a0a0;
+}
+
+.gray-icon {
+  color: #424242;
 }
 
 .indicator-text {
