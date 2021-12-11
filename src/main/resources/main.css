@@ -408,7 +408,7 @@ html, body {
   border-top: none;
 }
 .shape-tools .shape-tools__footer {
-  padding: 10px 8px 4px;
+  padding: 10px 8px 8px;
   display: flex;
   justify-content: center;
   align-items: center;
