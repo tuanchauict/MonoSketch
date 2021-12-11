@@ -528,13 +528,11 @@ html, body {
   background: #fafafa;
 }
 .icon-button.small {
-  width: 20px;
-  height: 26px;
+  width: 19px;
+  height: 23px;
   font-size: 15px;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  padding-top: 5px;
+  line-height: 15px;
+  padding: 0 0 1.2px;
 }
 .icon-button.medium {
   padding: 6px;
