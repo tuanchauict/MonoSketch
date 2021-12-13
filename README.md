@@ -1,6 +1,10 @@
-Mono Sketch is a client-side only web based sketch tool for drawing ASCII diagrams. You can use the app at [app.monosketch.io](https://app.monosketch.io/).
+# README.md
 
-```
+# What is it?
+
+Mono Sketch is a client-side only web based sketch tool for drawing *ASCII diagrams*. You can use the app at [app.monosketch.io](https://app.monosketch.io/). 
+
+```bash
 Upgrade app:                        Event                     Event       
 Schedule resource                   start                     stop        
 downloading worker                  time                      time        
@@ -10,38 +14,82 @@ downloading worker                  time                      time
                      ■────────────────────■           │            │      
                   Download           Resources is     │            │      
                   resource           downloaded       │            │      
-                  Retry if           successfully     │            │      
+                  Retry if           succeeded        │            │      
                   failed                          1st open      Delete    
                                                                resources
 ```
 
+# Features
+
+## Supporting features
+
+Draw tools:
+
+- Rectangle
+- Text
+- Line
+
+Shape formats:
+
+- Fill
+- Border
+- Line start/end heads
+
+Editting:
+
+- Infinity scroll, no limitation for 4 directions
+- Auto save
+- Copy / Cut / Paste / Duplicate
+- Move and change shapes' order
+
+Exporting:
+
+- Export selected shapes
+- Copy as text (`cmd + shift + C` or `ctrl + shift + C`)
+
+## Future features
+
+### Version 1.1 - Grouping
+
+> Group is added as a kind of shape but until now, there are no features that are applying Group except for rendering. Besides, the shape tool does not work with groups or multiple selected shapes. 
+This project aims to make the tool able to work with Group and also add a Shape tree on the left of the tool.
+> 
+
+### Version 1.2 - Paint tool
+
+> Currently, Mono sketch provides only three tools: Rectangle, Text, Line. One tool which is also used frequently when drawing with ASCII is paint - draw with a specific character.
+This project also aims for providing richer options of Fill, Border, Line Start/End head
+> 
+
+### Version 1.3 - Line snapping
+
+> Make Line's heads able to snap to a shape and position is updated along with the shape
+> 
+
 # Contributing
 
-Although this is a web based application, it is written fully with [KotlinJS](https://kotlinlang.org/docs/js-overview.html). The project is compiled with Gradle.
+This project is fully written with [KotlinJS](https://kotlinlang.org/docs/js-overview.html) and SASS for CSS. There is no environment setup requires except for Java.
 
-To run debugging:
+To run debug:
 
 ```bash
 ./gradlew browserDevelopmentRun --continuous -Dorg.gradle.parallel=false
 ```
 
-Or with production configuration:
+Or with production configuration
 
 ```bash
 ./gradlew browserProductionRun --continuous -Dorg.gradle.parallel=false
 ```
 
-(Note that `-Dorg.gradle.parallel=false` is a workaround for a bug on KotlinJS build with `--continuous`.)
-
-To generate deployable bundle:
-```bash
-./gradlew assemble
-```
+* `-Dorg.gradle.parallel=false` is a workaround for a bug on KotlinJS build with `--continuous`.
 
 There is no needs to setting up the environment except for Java.
 
-### Note:
-This project uses [SASS](https://sass-lang.com/) for CSS, however, I haven't configed the gradle for compiling SASS, therefore, you need to compile yourself if you change the style.
-```bash
+## Note
+
+An inconvenience requirement for SASS: I haven't configured the Gradle for generating CSS from SASS, therefore, if you update the style, please compile the SASS yourself with
+
+```
 sass src/main/resources/main.sass src/main/resources/main.css
 ```
