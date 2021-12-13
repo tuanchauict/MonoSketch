@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 
 plugins {
-    kotlin("js") version "1.5.21"
+    kotlin("js") version "1.6.0"
     kotlin("plugin.serialization") version "1.5.0"
 }
 
