@@ -49,19 +49,22 @@ Exporting:
 
 ## Future features
 
-### Version 1.1 - Grouping
+### Versopm 1.1 - Multi-project
+> Supporting multiple working files at one. 
+
+### Version 1.2 - Grouping
 
 > Group is added as a kind of shape but until now, there are no features that are applying Group except for rendering. Besides, the shape tool does not work with groups or multiple selected shapes. 
 This project aims to make the tool able to work with Group and also add a Shape tree on the left of the tool.
 > 
 
-### Version 1.2 - Paint tool
+### Version 1.3 - Paint tool
 
 > Currently, Mono sketch provides only three tools: Rectangle, Text, Line. One tool which is also used frequently when drawing with ASCII is paint - draw with a specific character.
 This project also aims for providing richer options of Fill, Border, Line Start/End head
 > 
 
-### Version 1.3 - Line snapping
+### Version 1.4 - Line snapping
 
 > Make Line's heads able to snap to a shape and position is updated along with the shape
 > 
