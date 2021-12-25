@@ -2,6 +2,7 @@ package mono.lifecycle
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
@@ -15,8 +16,8 @@ class LifecycleOwnerTest {
     fun testLifecycle_beforeStarted_fullFlow() {
         mockLifecycleOwner.addObserver(mockLifecycleObserver)
 
-        assertEquals(1, mockLifecycleOwner.lifecycleObservers.size)
-        assertTrue(mockLifecycleObserver in mockLifecycleOwner.lifecycleObservers)
+        assertEquals(1, mockLifecycleOwner.getObserverCount())
+        assertTrue(mockLifecycleOwner.hasObserver(mockLifecycleObserver))
 
         assertEquals(1, mockLifecycleOwner.value)
         assertEquals(10, mockLifecycleObserver.value)
@@ -29,7 +30,7 @@ class LifecycleOwnerTest {
         assertEquals(3, mockLifecycleOwner.value)
         assertEquals(12, mockLifecycleObserver.value)
 
-        assertTrue(mockLifecycleOwner.lifecycleObservers.isEmpty())
+        assertFalse(mockLifecycleOwner.hasObserver(mockLifecycleObserver))
     }
 
     @Test
@@ -43,7 +44,7 @@ class LifecycleOwnerTest {
     fun testLifecycle_afterStopped() {
         mockLifecycleOwner.onStop()
         mockLifecycleOwner.addObserver(mockLifecycleObserver)
-        assertTrue(mockLifecycleOwner.lifecycleObservers.isEmpty())
+        assertFalse(mockLifecycleOwner.hasObserver(mockLifecycleObserver))
     }
 
     private class MockLifecycleOwner : LifecycleOwner() {

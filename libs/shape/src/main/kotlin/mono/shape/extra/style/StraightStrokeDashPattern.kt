@@ -10,7 +10,7 @@ data class StraightStrokeDashPattern(val dash: Int, val gap: Int, val offset: In
     private val adjustedGap: Int = gap.coerceAtLeast(0)
     private val totalLength: Int = adjustedSegment + adjustedGap
 
-    // Adjust offset to be in [0, length). Calculation for `isGap` does not work well with 
+    // Adjust offset to be in [0, length). Calculation for `isGap` does not work well with
     // negative number
     private val adjustedOffset: Int = ((offset % totalLength) + totalLength) % totalLength
 

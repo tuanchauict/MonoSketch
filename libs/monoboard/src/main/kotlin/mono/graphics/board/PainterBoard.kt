@@ -101,7 +101,7 @@ internal class PainterBoard(internal val bound: Rect) {
                     pixel.char == char ||
                     char !in CrossingResources.CONNECTABLE_CHARS
                 ) {
-                    // Not drawing half transparent character 
+                    // Not drawing half transparent character
                     // (full transparent character is removed by bitmap)
                     if (!char.isHalfTransparent) {
                         pixel.set(char, highlight)

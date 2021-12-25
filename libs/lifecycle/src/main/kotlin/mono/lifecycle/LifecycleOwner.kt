@@ -5,8 +5,7 @@ package mono.lifecycle
  * The other classes can use this to self-aware lifecycle via [addObserver] method.
  */
 abstract class LifecycleOwner {
-    // Visible for testing only
-    internal val lifecycleObservers: MutableList<LifecycleObserver> = mutableListOf()
+    private val lifecycleObservers: MutableList<LifecycleObserver> = mutableListOf()
     private var state: State = State.INITIAL
 
     val isStopped: Boolean
@@ -43,6 +42,11 @@ abstract class LifecycleOwner {
     }
 
     protected open fun onStopInternal() = Unit
+
+    fun hasObserver(lifecycleObserver: LifecycleObserver): Boolean =
+        lifecycleObserver in lifecycleObservers
+
+    fun getObserverCount(): Int = lifecycleObservers.size
 
     private enum class State {
         INITIAL, STARTED, STOPPED
