@@ -1,13 +1,12 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 
 plugins {
-    kotlin("js") version "1.5.21"
+    kotlin("js") version "1.6.0"
     kotlin("plugin.serialization") version "1.5.0"
 }
 
 group = "com.monosketch"
-version = "1.0.0-alpha"
+version = "1.1.0-alpha"
 
 allprojects {
     ext {
@@ -44,13 +43,6 @@ kotlin {
                 }
             }
         }
-    }
-}
-
-// TODO: Remove this. This is a workaround for running on browser for debugging.
-afterEvaluate {
-    rootProject.extensions.configure<NodeJsRootExtension> {
-        versions.webpackDevServer.version = "4.0.0"
     }
 }
 
