@@ -384,6 +384,7 @@ html, body {
   font-size: 12px;
   line-height: 15px;
   outline: none;
+  overflow: scroll;
 }
 
 .monofont {
