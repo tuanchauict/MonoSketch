@@ -9,7 +9,8 @@ enum class KeyCommand(
     vararg val keyCodes: Int,
     private val commandKeyState: MetaKeyState = MetaKeyState.ANY,
     private val shiftKeyState: MetaKeyState = MetaKeyState.ANY,
-    val isKeyEventPropagationAllowed: Boolean = true
+    val isKeyEventPropagationAllowed: Boolean = true,
+    val isRepeatable: Boolean = false
 ) {
     IDLE,
 
@@ -17,10 +18,10 @@ enum class KeyCommand(
     DESELECTION(Key.KEY_ESC),
     DELETE(Key.KEY_BACKSPACE, Key.KEY_DELETE),
 
-    MOVE_LEFT(Key.KEY_ARROW_LEFT),
-    MOVE_UP(Key.KEY_ARROW_UP),
-    MOVE_RIGHT(Key.KEY_ARROW_RIGHT),
-    MOVE_DOWN(Key.KEY_ARROW_DOWN),
+    MOVE_LEFT(Key.KEY_ARROW_LEFT, isRepeatable = true),
+    MOVE_UP(Key.KEY_ARROW_UP, isRepeatable = true),
+    MOVE_RIGHT(Key.KEY_ARROW_RIGHT, isRepeatable = true),
+    MOVE_DOWN(Key.KEY_ARROW_DOWN, isRepeatable = true),
 
     ADD_RECTANGLE(Key.KEY_R),
     ADD_TEXT(Key.KEY_T),
