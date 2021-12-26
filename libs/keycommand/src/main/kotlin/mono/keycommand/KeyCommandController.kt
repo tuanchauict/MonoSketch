@@ -35,6 +35,9 @@ class KeyCommandController(private val body: HTMLElement) {
         if (Build.DEBUG) {
             println("Key press ${event.code} : ${event.keyCode} cmd ${event.commandKey}")
         }
+        if (keyCommand.isRepeatable) {
+            keyCommandMutableLiveData.value = KeyCommand.IDLE
+        }
     }
 
     private fun resetKeyCommand() {

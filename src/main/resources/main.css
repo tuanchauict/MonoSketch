@@ -384,6 +384,7 @@ html, body {
   font-size: 12px;
   line-height: 15px;
   outline: none;
+  overflow: scroll;
 }
 
 .monofont {
@@ -425,6 +426,9 @@ html, body {
   font-size: 14px;
   text-decoration: none;
   color: #aaa;
+  display: flex;
+  align-items: center;
+  align-content: center;
 }
 .shape-tools .shape-tools__footer > a:hover {
   color: #888;
