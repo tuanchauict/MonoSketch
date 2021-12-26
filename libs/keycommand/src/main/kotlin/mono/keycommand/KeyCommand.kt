@@ -22,7 +22,7 @@ enum class KeyCommand(
     MOVE_UP(Key.KEY_ARROW_UP, shiftKeyState = MetaKeyState.OFF, isRepeatable = true),
     MOVE_RIGHT(Key.KEY_ARROW_RIGHT, shiftKeyState = MetaKeyState.OFF, isRepeatable = true),
     MOVE_DOWN(Key.KEY_ARROW_DOWN, shiftKeyState = MetaKeyState.OFF, isRepeatable = true),
-    
+
     FAST_MOVE_LEFT(Key.KEY_ARROW_LEFT, shiftKeyState = MetaKeyState.ON, isRepeatable = true),
     FAST_MOVE_UP(Key.KEY_ARROW_UP, shiftKeyState = MetaKeyState.ON, isRepeatable = true),
     FAST_MOVE_RIGHT(Key.KEY_ARROW_RIGHT, shiftKeyState = MetaKeyState.ON, isRepeatable = true),
