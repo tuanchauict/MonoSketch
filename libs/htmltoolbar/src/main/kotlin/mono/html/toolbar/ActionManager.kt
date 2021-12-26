@@ -46,6 +46,15 @@ class ActionManager(
             KeyCommand.MOVE_DOWN ->
                 setOneTimeAction(OneTimeActionType.MoveShapes(1, 0))
 
+            KeyCommand.FAST_MOVE_LEFT ->
+                setOneTimeAction(OneTimeActionType.MoveShapes(0, -5))
+            KeyCommand.FAST_MOVE_UP ->
+                setOneTimeAction(OneTimeActionType.MoveShapes(-5, 0))
+            KeyCommand.FAST_MOVE_RIGHT ->
+                setOneTimeAction(OneTimeActionType.MoveShapes(0, 5))
+            KeyCommand.FAST_MOVE_DOWN ->
+                setOneTimeAction(OneTimeActionType.MoveShapes(5, 0))
+
             KeyCommand.ADD_RECTANGLE ->
                 setRetainableAction(RetainableActionType.ADD_RECTANGLE)
             KeyCommand.ADD_TEXT ->

@@ -18,10 +18,15 @@ enum class KeyCommand(
     DESELECTION(Key.KEY_ESC),
     DELETE(Key.KEY_BACKSPACE, Key.KEY_DELETE),
 
-    MOVE_LEFT(Key.KEY_ARROW_LEFT, isRepeatable = true),
-    MOVE_UP(Key.KEY_ARROW_UP, isRepeatable = true),
-    MOVE_RIGHT(Key.KEY_ARROW_RIGHT, isRepeatable = true),
-    MOVE_DOWN(Key.KEY_ARROW_DOWN, isRepeatable = true),
+    MOVE_LEFT(Key.KEY_ARROW_LEFT, shiftKeyState = MetaKeyState.OFF, isRepeatable = true),
+    MOVE_UP(Key.KEY_ARROW_UP, shiftKeyState = MetaKeyState.OFF, isRepeatable = true),
+    MOVE_RIGHT(Key.KEY_ARROW_RIGHT, shiftKeyState = MetaKeyState.OFF, isRepeatable = true),
+    MOVE_DOWN(Key.KEY_ARROW_DOWN, shiftKeyState = MetaKeyState.OFF, isRepeatable = true),
+    
+    FAST_MOVE_LEFT(Key.KEY_ARROW_LEFT, shiftKeyState = MetaKeyState.ON, isRepeatable = true),
+    FAST_MOVE_UP(Key.KEY_ARROW_UP, shiftKeyState = MetaKeyState.ON, isRepeatable = true),
+    FAST_MOVE_RIGHT(Key.KEY_ARROW_RIGHT, shiftKeyState = MetaKeyState.ON, isRepeatable = true),
+    FAST_MOVE_DOWN(Key.KEY_ARROW_DOWN, shiftKeyState = MetaKeyState.ON, isRepeatable = true),
 
     ADD_RECTANGLE(Key.KEY_R),
     ADD_TEXT(Key.KEY_T),
