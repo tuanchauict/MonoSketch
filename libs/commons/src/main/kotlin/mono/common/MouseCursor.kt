@@ -5,6 +5,7 @@ package mono.common
  */
 enum class MouseCursor(val value: String) {
     DEFAULT("default"),
+    TEXT("text"),
     CROSSHAIR("crosshair"),
     MOVE("move"),
     RESIZE_NWSE("nwse-resize"),

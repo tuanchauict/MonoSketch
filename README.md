@@ -92,5 +92,3 @@ Or with production configuration
 ```
 
 * `-Dorg.gradle.parallel=false` is a workaround for a bug on KotlinJS build with `--continuous`.
-
-There is no needs to setting up the environment except for Java.

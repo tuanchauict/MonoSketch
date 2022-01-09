@@ -120,9 +120,13 @@ internal class MouseEventObserver(
         val scrollHorizontalThresholdPx = SCROLL_THRESHOLD_PIXEL
         val scrollVerticalThresholdPx = SCROLL_THRESHOLD_PIXEL
 
-        val wheelDeltaLeft =
-            event.deltaX.toFloat() * SCROLL_SPEED_RATIO / scrollHorizontalThresholdPx
-        val wheelDeltaTop = event.deltaY.toFloat() * SCROLL_SPEED_RATIO / scrollVerticalThresholdPx
+        val deltaX = event.deltaX.toFloat()
+        val deltaY = event.deltaY.toFloat()
+        val scrollDeltaX = if (event.altKey) deltaY else deltaX
+        val scrollDeltaY = if (event.altKey) deltaX else deltaY
+
+        val wheelDeltaLeft = scrollDeltaX * SCROLL_SPEED_RATIO / scrollHorizontalThresholdPx
+        val wheelDeltaTop = scrollDeltaY * SCROLL_SPEED_RATIO / scrollVerticalThresholdPx
         val accumulateWheelDeltaLeft = mouseWheelDeltaX + wheelDeltaLeft
         val accumulateWheelDeltaTop = mouseWheelDeltaY + wheelDeltaTop
 
