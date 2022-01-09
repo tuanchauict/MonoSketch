@@ -72,6 +72,7 @@ class CanvasViewController(
         )
 
         container.addClass("top-divider")
+        container.oncontextmenu = { false }
 
         gridCanvasViewController = GridCanvasViewController(
             lifecycleOwner,
