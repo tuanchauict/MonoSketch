@@ -226,11 +226,7 @@ class MainStateManager(
 
     private fun getMouseMovingCursor(mousePointer: MousePointer.Move): MouseCursor {
         val interactionPoint = canvasManager.getInteractionPoint(mousePointer.pointPx)
-        return when {
-            interactionPoint != null -> interactionPoint.mouseCursor
-            currentRetainableActionType != RetainableActionType.IDLE -> MouseCursor.CROSSHAIR
-            else -> MouseCursor.DEFAULT
-        }
+        return interactionPoint?.mouseCursor ?: currentRetainableActionType.mouseCursor
     }
 
     private fun updateInteractionBounds(selectedShapes: Collection<AbstractShape>) {
