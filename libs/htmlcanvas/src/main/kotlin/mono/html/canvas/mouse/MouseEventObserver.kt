@@ -149,15 +149,15 @@ internal class MouseEventObserver(
      * - When Command/CTRL and Shift keys are pressed, scroll horizontally (delta y = 0)
      * - When Shift key is pressed, scroll vertically (delta x = 0)
      * - Otherwise, return the event's delta x and delta y values.
-     * 
+     *
      * Note: Alt/Option key can be combined with the other keys.
      */
     private fun WheelEvent.getScrollDelta(): Pair<Float, Float> {
         val deltaX = deltaX.toFloat()
         val deltaY = deltaY.toFloat()
-        val scrollDeltaX = if (altKey)  deltaY else deltaX
+        val scrollDeltaX = if (altKey) deltaY else deltaX
         val scrollDeltaY = if (altKey) deltaX else deltaY
-        
+
         return when {
             commandKey && shiftKey -> scrollDeltaX to 0.0F
             shiftKey -> 0.0F to scrollDeltaY
