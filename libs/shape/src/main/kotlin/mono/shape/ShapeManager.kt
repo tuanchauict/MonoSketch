@@ -9,12 +9,13 @@ import mono.shape.command.RemoveShape
 import mono.shape.command.Ungroup
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
+import mono.shape.shape.RootGroup
 
 /**
  * A model class which contains all shapes of the app and also defines all shape handling logics.
  */
 class ShapeManager {
-    var root: Group = Group(parentId = null)
+    var root: RootGroup = RootGroup(id = null)
         private set
     private var allShapeMap: MutableMap<String, AbstractShape> = mutableMapOf(root.id to root)
 
@@ -33,7 +34,7 @@ class ShapeManager {
      * Replace [root] with [newRoot].
      * This also wipe current stored shapes with shapes in new root.
      */
-    fun replaceRoot(newRoot: Group) {
+    fun replaceRoot(newRoot: RootGroup) {
         val currentVersion = root.versionCode
         root = newRoot
 

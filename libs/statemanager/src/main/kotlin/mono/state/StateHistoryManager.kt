@@ -8,7 +8,7 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.combineLiveData
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
-import mono.shape.shape.Group
+import mono.shape.shape.RootGroup
 import mono.state.command.CommandEnvironment
 import mono.store.manager.StoreManager
 
@@ -45,13 +45,13 @@ internal class StateHistoryManager(
 
     fun undo() {
         val history = historyStack.undo() ?: return
-        val root = Group(history.serializableGroup, parentId = null)
+        val root = RootGroup(history.serializableGroup)
         environment.replaceRoot(root)
     }
 
     fun redo() {
         val history = historyStack.redo() ?: return
-        val root = Group(history.serializableGroup, parentId = null)
+        val root = RootGroup(history.serializableGroup)
         environment.replaceRoot(root)
     }
 
@@ -78,7 +78,7 @@ internal class StateHistoryManager(
         val rootJson = storeManager.get(BACKUP_SHAPES_KEY) ?: return
         val serializableGroup = ShapeSerializationUtil.fromJson(rootJson) as? SerializableGroup
         if (serializableGroup != null) {
-            val rootGroup = Group(serializableGroup, parentId = null)
+            val rootGroup = RootGroup(serializableGroup)
             environment.replaceRoot(rootGroup)
         } else {
             // Wipe local data with current shapes.

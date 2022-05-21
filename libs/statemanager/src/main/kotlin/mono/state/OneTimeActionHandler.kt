@@ -24,6 +24,7 @@ import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
+import mono.shape.shape.RootGroup
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
@@ -124,7 +125,7 @@ internal class OneTimeActionHandler(
             val serializableRoot = ShapeSerializationUtil.fromJson(jsonString) as? SerializableGroup
             if (serializableRoot != null) {
                 stateHistoryManager.clear()
-                environment.replaceRoot(Group(serializableRoot, parentId = null))
+                environment.replaceRoot(RootGroup(serializableRoot))
             }
         }
     }

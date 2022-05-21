@@ -13,7 +13,7 @@ import mono.shape.serialization.SerializableText
 /**
  * A special shape which manages a collection of shapes.
  */
-class Group(
+open class Group(
     id: String? = null,
     parentId: String?
 ) : AbstractShape(id = id, parentId = parentId) {
