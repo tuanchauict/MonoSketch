@@ -33,7 +33,8 @@ internal class StateHistoryManager(
         }
 
         canvasViewController.drawingOffsetPointPxLiveData.observe(lifecycleOwner) {
-            storeManager.set(BACKUP_OFFSET_KEY, "${it.left}|${it.top}")
+            val backupKey = getBackupKey(BACKUP_OFFSET_KEY, environment.shapeManager.root.id)
+            storeManager.set(backupKey, "${it.left}|${it.top}")
         }
     }
 
@@ -77,21 +78,22 @@ internal class StateHistoryManager(
 
         historyStack.pushState(root.versionCode, serializableGroup)
 
+        val backupKey = getBackupKey(BACKUP_SHAPES_KEY, root.id)
         val jsonRoot = ShapeSerializationUtil.toJson(serializableGroup)
-        storeManager.set(BACKUP_SHAPES_KEY, jsonRoot)
+        storeManager.set(backupKey, jsonRoot)
     }
 
     private fun restoreShapes(rootId: String = "") {
         val backupKey = getBackupKey(BACKUP_SHAPES_KEY, rootId)
-        val rootJson = storeManager.get(backupKey) ?: return
-        val serializableGroup = ShapeSerializationUtil.fromJson(rootJson) as? SerializableGroup
-        if (serializableGroup != null) {
-            val rootGroup = RootGroup(serializableGroup)
-            environment.replaceRoot(rootGroup)
+        val rootJson = storeManager.get(backupKey)
+        val serializableGroup =
+            rootJson?.let(ShapeSerializationUtil::fromJson) as? SerializableGroup
+        val rootGroup = if (serializableGroup != null) {
+            RootGroup(serializableGroup)
         } else {
-            // Wipe local data with current shapes.
-            backupShapes()
+            RootGroup(rootId)
         }
+        environment.replaceRoot(rootGroup)
     }
 
     private fun restoreOffset(rootId: String = "") {
