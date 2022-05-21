@@ -25,8 +25,7 @@ internal class StateHistoryManager(
 
     init {
         combineLiveData(
-            environment.shapeManager.versionLiveData,
-            environment.editingModeLiveData
+            environment.shapeManager.versionLiveData, environment.editingModeLiveData
         ) { versionCode, editingMode ->
             if (!editingMode.isEditing && versionCode != editingMode.skippedVersion) {
                 registerBackupShapes(versionCode)
@@ -37,10 +36,16 @@ internal class StateHistoryManager(
             storeManager.set(BACKUP_OFFSET_KEY, "${it.left}|${it.top}")
         }
     }
-    
+
     fun restore(rootId: String) {
-        restoreShapes(rootId)
-        restoreOffset(rootId)
+        val adjustedRootId = rootId.ifEmpty {
+            storeManager.get(BACKUP_LAST_OPEN_PROJECT_KEY).orEmpty()
+        }
+
+        restoreShapes(adjustedRootId)
+        restoreOffset(adjustedRootId)
+
+        storeManager.set(BACKUP_LAST_OPEN_PROJECT_KEY, adjustedRootId)
     }
 
     fun clear() = historyStack.clear()
@@ -99,7 +104,7 @@ internal class StateHistoryManager(
         val offset = Point(left, top)
         canvasViewController.setOffset(offset)
     }
-    
+
     private fun getBackupKey(prefix: String, rootId: String): String =
         if (rootId.isEmpty()) prefix else "$prefix:$rootId"
 
@@ -148,5 +153,6 @@ internal class StateHistoryManager(
     companion object {
         private const val BACKUP_SHAPES_KEY = "backup-shapes"
         private const val BACKUP_OFFSET_KEY = "offset"
+        private const val BACKUP_LAST_OPEN_PROJECT_KEY = "last-open"
     }
 }
