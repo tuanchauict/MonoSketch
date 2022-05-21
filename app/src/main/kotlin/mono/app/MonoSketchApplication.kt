@@ -1,6 +1,7 @@
 package mono.app
 
 import kotlinx.browser.document
+import kotlinx.browser.window
 import mono.bitmap.manager.MonoBitmapManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
@@ -19,6 +20,7 @@ import mono.state.MainStateManager
 import mono.store.manager.StoreManager
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.url.URLSearchParams
 
 /**
  * Main class of the app to handle all kinds of events, UI, actions, etc.
@@ -66,7 +68,8 @@ class MonoSketchApplication : LifecycleOwner() {
             ShapeClipboardManager(body),
             canvasViewController.mousePointerLiveData,
             actionManager,
-            StoreManager()
+            StoreManager(),
+            initialRootId = getInitialRootIdFromUrl()
         )
 
         ToolbarViewController(
@@ -90,8 +93,15 @@ class MonoSketchApplication : LifecycleOwner() {
         model.setWindowSize(newSize)
     }
 
+    private fun getInitialRootIdFromUrl(): String {
+        val urlParams = URLSearchParams(window.location.search)
+        return urlParams.get(URL_PARAM_ID).orEmpty()
+    }
+
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
         private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
+
+        private const val URL_PARAM_ID = "id"
     }
 }

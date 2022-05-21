@@ -248,3 +248,5 @@ gradle-app.setting
 .idea/saveactions_settings.xml
 .idea/libraries-with-intellij-classes.xml
 src/main/resources/main.css.map
+.idea/GitLink.xml
+kotlin-js-store/yarn.lock
