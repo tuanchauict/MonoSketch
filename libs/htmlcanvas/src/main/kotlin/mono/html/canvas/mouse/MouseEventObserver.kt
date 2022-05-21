@@ -1,5 +1,6 @@
 package mono.html.canvas.mouse
 
+import mono.common.commandKey
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.html.canvas.canvas.DrawingInfoController
@@ -120,10 +121,7 @@ internal class MouseEventObserver(
         val scrollHorizontalThresholdPx = SCROLL_THRESHOLD_PIXEL
         val scrollVerticalThresholdPx = SCROLL_THRESHOLD_PIXEL
 
-        val deltaX = event.deltaX.toFloat()
-        val deltaY = event.deltaY.toFloat()
-        val scrollDeltaX = if (event.altKey) deltaY else deltaX
-        val scrollDeltaY = if (event.altKey) deltaX else deltaY
+        val (scrollDeltaX, scrollDeltaY) = event.getScrollDelta()
 
         val wheelDeltaLeft = scrollDeltaX * SCROLL_SPEED_RATIO / scrollHorizontalThresholdPx
         val wheelDeltaTop = scrollDeltaY * SCROLL_SPEED_RATIO / scrollVerticalThresholdPx
@@ -143,6 +141,28 @@ internal class MouseEventObserver(
 
         mouseWheelDeltaX = accumulateWheelDeltaLeft - usableDeltaLeft
         mouseWheelDeltaY = accumulateWheelDeltaTop - usableDeltaTop
+    }
+
+    /**
+     * Returns scroll delta x and y of the wheel event after adjusting with meta keys:
+     * - When Alt/Option key is pressed, swap delta x and delta y
+     * - When Command/CTRL and Shift keys are pressed, scroll horizontally (delta y = 0)
+     * - When Shift key is pressed, scroll vertically (delta x = 0)
+     * - Otherwise, return the event's delta x and delta y values.
+     *
+     * Note: Alt/Option key can be combined with the other keys.
+     */
+    private fun WheelEvent.getScrollDelta(): Pair<Float, Float> {
+        val deltaX = deltaX.toFloat()
+        val deltaY = deltaY.toFloat()
+        val scrollDeltaX = if (altKey) deltaY else deltaX
+        val scrollDeltaY = if (altKey) deltaX else deltaY
+
+        return when {
+            commandKey && shiftKey -> scrollDeltaX to 0.0F
+            shiftKey -> 0.0F to scrollDeltaY
+            else -> scrollDeltaX to scrollDeltaY
+        }
     }
 
     private fun MouseEvent.toPoint(): Point =

@@ -7,6 +7,7 @@ import mono.livedata.LiveData
 import mono.shape.ShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
+import mono.shape.shape.RootGroup
 import mono.shapebound.InteractionPoint
 import mono.shapesearcher.ShapeSearcher
 
@@ -21,7 +22,7 @@ internal interface CommandEnvironment {
 
     val workingParentGroup: Group
 
-    fun replaceRoot(newRoot: Group)
+    fun replaceRoot(newRoot: RootGroup)
 
     fun enterEditingMode()
 

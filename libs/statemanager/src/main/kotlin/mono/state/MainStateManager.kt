@@ -29,6 +29,7 @@ import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
+import mono.shape.shape.RootGroup
 import mono.shape.shape.Text
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
@@ -41,7 +42,7 @@ import mono.state.command.mouse.MouseCommand
 import mono.store.manager.StoreManager
 
 /**
- * A class which is connect components in the app.
+ * A class which connects components in the app.
  */
 class MainStateManager(
     lifecycleOwner: LifecycleOwner,
@@ -53,7 +54,8 @@ class MainStateManager(
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
     private val actionManager: ActionManager,
-    storeManager: StoreManager
+    storeManager: StoreManager,
+    initialRootId: String = ""
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
@@ -116,6 +118,7 @@ class MainStateManager(
             storeManager,
             canvasManager
         )
+        stateHistoryManager.restoreAndStartObserveStateChange(initialRootId)
 
         OneTimeActionHandler(
             lifecycleOwner,
@@ -261,7 +264,7 @@ class MainStateManager(
                 stateManager.workingParentGroup = value
             }
 
-        override fun replaceRoot(newRoot: Group) {
+        override fun replaceRoot(newRoot: RootGroup) {
             shapeManager.replaceRoot(newRoot)
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
