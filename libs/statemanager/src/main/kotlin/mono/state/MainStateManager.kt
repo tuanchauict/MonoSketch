@@ -118,7 +118,7 @@ class MainStateManager(
             storeManager,
             canvasManager
         )
-        stateHistoryManager.restore(initialRootId)
+        stateHistoryManager.restoreAndStartObserveStateChange(initialRootId)
 
         OneTimeActionHandler(
             lifecycleOwner,
