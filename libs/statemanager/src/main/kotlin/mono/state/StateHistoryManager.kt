@@ -24,9 +24,6 @@ internal class StateHistoryManager(
     private val historyStack = HistoryStack()
 
     init {
-        restoreShapes()
-        restoreOffset()
-
         combineLiveData(
             environment.shapeManager.versionLiveData,
             environment.editingModeLiveData
@@ -39,6 +36,11 @@ internal class StateHistoryManager(
         canvasViewController.drawingOffsetPointPxLiveData.observe(lifecycleOwner) {
             storeManager.set(BACKUP_OFFSET_KEY, "${it.left}|${it.top}")
         }
+    }
+    
+    fun restore(rootId: String) {
+        restoreShapes(rootId)
+        restoreOffset(rootId)
     }
 
     fun clear() = historyStack.clear()
@@ -74,8 +76,9 @@ internal class StateHistoryManager(
         storeManager.set(BACKUP_SHAPES_KEY, jsonRoot)
     }
 
-    private fun restoreShapes() {
-        val rootJson = storeManager.get(BACKUP_SHAPES_KEY) ?: return
+    private fun restoreShapes(rootId: String = "") {
+        val backupKey = getBackupKey(BACKUP_SHAPES_KEY, rootId)
+        val rootJson = storeManager.get(backupKey) ?: return
         val serializableGroup = ShapeSerializationUtil.fromJson(rootJson) as? SerializableGroup
         if (serializableGroup != null) {
             val rootGroup = RootGroup(serializableGroup)
@@ -86,8 +89,9 @@ internal class StateHistoryManager(
         }
     }
 
-    private fun restoreOffset() {
-        val storedOffsetString = storeManager.get(BACKUP_OFFSET_KEY) ?: return
+    private fun restoreOffset(rootId: String = "") {
+        val backupKey = getBackupKey(BACKUP_OFFSET_KEY, rootId)
+        val storedOffsetString = storeManager.get(backupKey) ?: return
         val (leftString, topString) = storedOffsetString.split('|').takeIf { it.size == 2 }
             ?: return
         val left = leftString.toIntOrNull() ?: return
@@ -95,6 +99,9 @@ internal class StateHistoryManager(
         val offset = Point(left, top)
         canvasViewController.setOffset(offset)
     }
+    
+    private fun getBackupKey(prefix: String, rootId: String): String =
+        if (rootId.isEmpty()) prefix else "$prefix:$rootId"
 
     private class HistoryStack {
         private val undoStack = mutableListOf<History>()
