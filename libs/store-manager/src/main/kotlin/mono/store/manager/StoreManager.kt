@@ -13,7 +13,7 @@ class StoreManager {
     }
 
     fun get(key: String): String? = localStorage[key]
-    
+
     fun remove(key: String) {
         localStorage.removeItem(key)
     }
