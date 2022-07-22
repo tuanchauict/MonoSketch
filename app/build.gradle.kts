@@ -37,6 +37,5 @@ kotlin {
                 }
             }
         }
-        binaries.executable()
     }
 }
