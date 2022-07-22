@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 
 plugins {
-    kotlin("js") version "1.6.0"
-    kotlin("plugin.serialization") version "1.5.0"
+    kotlin("js") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.10"
     id("io.miret.etienne.sass") version "1.1.2"
 }
 
