@@ -2,6 +2,7 @@
 
 package mono.html.toolbar.view.shapetool
 
+import mono.actionmanager.OneTimeActionType
 import mono.html.Div
 import mono.html.SvgPath
 import mono.html.setOnClickListener
@@ -10,8 +11,6 @@ import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.px
 import mono.html.style
-import mono.html.toolbar.OneTimeActionType
-import mono.html.toolbar.OneTimeActionType.ReorderShape
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.isVisible
@@ -41,7 +40,7 @@ internal class ReorderSectionViewController(
 
     init {
         val icons = ReorderIconType.values().map { type ->
-            Icon(type) { setOneTimeAction(ReorderShape(it.changeOrderType)) }
+            Icon(type) { setOneTimeAction(OneTimeActionType.ReorderShape(it.changeOrderType)) }
         }
 
         val section = container.Section("", isSmallSpace = true) {

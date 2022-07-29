@@ -1,4 +1,4 @@
-package mono.html.toolbar
+package mono.actionmanager
 
 import mono.common.exhaustive
 import mono.keycommand.KeyCommand

@@ -2,11 +2,11 @@ package mono.app
 
 import kotlinx.browser.document
 import kotlinx.browser.window
+import mono.actionmanager.ActionManager
 import mono.bitmap.manager.MonoBitmapManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
-import mono.html.toolbar.ActionManager
 import mono.html.toolbar.ToolbarViewController
 import mono.html.toolbar.view.shapetool.ShapeToolViewController
 import mono.keycommand.KeyCommand

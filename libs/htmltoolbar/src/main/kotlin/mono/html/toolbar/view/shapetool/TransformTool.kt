@@ -2,6 +2,7 @@
 
 package mono.html.toolbar.view.shapetool
 
+import mono.actionmanager.OneTimeActionType
 import mono.graphics.geo.Rect
 import mono.html.Div
 import mono.html.Input
@@ -10,7 +11,6 @@ import mono.html.Span
 import mono.html.appendElement
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
-import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
 import mono.html.toolbar.view.shapetool.Class.COLUMN

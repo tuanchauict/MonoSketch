@@ -7,12 +7,12 @@ repositories {
 }
 
 dependencies {
-    implementation(projects.actionManager)
-    implementation(projects.htmlDsl)
-    implementation(projects.htmlmodal)
-    implementation(projects.lifecycle)
+    implementation(projects.commons)
+    implementation(projects.keycommand)
     implementation(projects.livedata)
-
+    implementation(projects.shape)
+    
+    implementation(libs.kotlin.stdlib.js)
     testImplementation(libs.kotlin.test.js)
 }
 

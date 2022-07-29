@@ -1,12 +1,12 @@
 package mono.html.toolbar.view.shapetool
 
+import mono.actionmanager.ActionManager
+import mono.actionmanager.RetainableActionType
 import mono.html.A
 import mono.html.Div
 import mono.html.Span
 import mono.html.SvgPath
 import mono.html.style
-import mono.html.toolbar.ActionManager
-import mono.html.toolbar.RetainableActionType
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.TextSectionViewController.TextAlignVisibility

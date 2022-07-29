@@ -2,6 +2,7 @@
 
 package mono.html.toolbar.view
 
+import mono.actionmanager.OneTimeActionType
 import mono.html.Div
 import mono.html.SvgPath
 import mono.html.modal.DropDownMenu
@@ -11,7 +12,6 @@ import mono.html.setAttributes
 import mono.html.setOnClickListener
 import mono.html.style
 import mono.html.styleOf
-import mono.html.toolbar.OneTimeActionType
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 
