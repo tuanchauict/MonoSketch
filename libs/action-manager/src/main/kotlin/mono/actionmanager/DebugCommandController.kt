@@ -14,7 +14,7 @@ internal class DebugCommandController(private val setOneTimeAction: (OneTimeActi
 
         console.error("Not support '$command' yet")
     }
-    
+
     companion object {
         private val NO_PARAMS_ACTIONS = listOf(
             OneTimeActionType.SaveShapesAs,

@@ -90,7 +90,7 @@ class ActionManager(
         oneTimeActionMutableLiveData.value = actionType
         oneTimeActionMutableLiveData.value = OneTimeActionType.Idle
     }
-    
+
     fun installDebugCommand() {
         if (!Build.DEBUG) {
             return
