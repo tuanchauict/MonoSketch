@@ -2,8 +2,8 @@
 
 package mono.html.toolbar.view
 
+import mono.actionmanager.RetainableActionType
 import mono.html.Div
-import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import org.w3c.dom.Element

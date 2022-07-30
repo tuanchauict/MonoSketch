@@ -1,5 +1,8 @@
 package mono.state
 
+import mono.actionmanager.ActionManager
+import mono.actionmanager.OneTimeActionType
+import mono.actionmanager.RetainableActionType
 import mono.bitmap.manager.MonoBitmapManager
 import mono.common.MouseCursor
 import mono.common.currentTimeMillis
@@ -12,9 +15,6 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
-import mono.html.toolbar.ActionManager
-import mono.html.toolbar.OneTimeActionType
-import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData

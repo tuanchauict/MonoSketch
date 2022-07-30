@@ -1,5 +1,6 @@
 package mono.html.toolbar
 
+import mono.actionmanager.ActionManager
 import mono.html.toolbar.view.MiddleToolbar
 import mono.html.toolbar.view.RightToolbar
 import mono.lifecycle.LifecycleOwner

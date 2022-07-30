@@ -2,12 +2,12 @@
 
 package mono.html.toolbar.view
 
+import mono.actionmanager.RetainableActionType
 import mono.html.Div
 import mono.html.SvgPath
 import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnClickListener
-import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import org.w3c.dom.Element

@@ -2,6 +2,7 @@
 
 package mono.html.toolbar.view.shapetool
 
+import mono.actionmanager.OneTimeActionType
 import mono.html.Div
 import mono.html.Input
 import mono.html.InputType
@@ -10,7 +11,6 @@ import mono.html.appendElement
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
 import mono.html.setOnClickListener
-import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.isEnabled
 import mono.html.toolbar.view.isSelected
 import mono.html.toolbar.view.isVisible

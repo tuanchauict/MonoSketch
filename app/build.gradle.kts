@@ -7,6 +7,7 @@ repositories {
 }
 
 dependencies {
+    implementation(projects.actionManager)
     implementation(projects.commons)
     implementation(projects.graphicsgeo)
     implementation(projects.htmlcanvas)
