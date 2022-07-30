@@ -57,6 +57,7 @@ class MonoSketchApplication : LifecycleOwner() {
         )
 
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
+        actionManager.installDebugCommand()
 
         mainStateManager = MainStateManager(
             this,

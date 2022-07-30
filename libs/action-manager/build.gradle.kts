@@ -7,6 +7,7 @@ repositories {
 }
 
 dependencies {
+    implementation(projects.buildEnvironment)
     implementation(projects.commons)
     implementation(projects.keycommand)
     implementation(projects.livedata)
