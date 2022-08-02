@@ -49,3 +49,11 @@ kotlin {
 
 apply(from = "ktlint.gradle")
 apply(from = "sass.gradle")
+
+// TODO: Move this into a separate script inside buildSrc
+tasks.register<io.miret.etienne.gradle.sass.CompileSass>("watchSass") {
+    setSourceDir(project.file("${projectDir}/src/main/sass"))
+    outputDir = project.file("${buildDir}/processedResources/js/main")
+
+    watch()
+}
