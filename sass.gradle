@@ -5,6 +5,8 @@ sass {
 compileSass {
     sourceDir = project.file("${projectDir}/src/main/sass")
     outputDir = project.file("${buildDir}/processedResources/js/main")
+
+    style = compressed
 }
 
 processResources.dependsOn(compileSass)

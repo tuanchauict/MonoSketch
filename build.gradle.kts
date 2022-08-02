@@ -51,6 +51,9 @@ apply(from = "ktlint.gradle")
 apply(from = "sass.gradle")
 
 // TODO: Move this into a separate script inside buildSrc
+// watchSass. This is not required when running the project.
+// Only run this task (along with run task) if you want to see the UI update immediately when 
+// editing the style
 tasks.register<io.miret.etienne.gradle.sass.CompileSass>("watchSass") {
     setSourceDir(project.file("${projectDir}/src/main/sass"))
     outputDir = project.file("${buildDir}/processedResources/js/main")
