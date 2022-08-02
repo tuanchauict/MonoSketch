@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 plugins {
     kotlin("js") version "1.7.10"
     kotlin("plugin.serialization") version "1.7.10"
-    id("io.miret.etienne.sass") version "1.1.2"
+    id("io.miret.etienne.sass") version "1.4.0"
 }
 
 group = "com.monosketch"
