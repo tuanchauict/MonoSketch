@@ -13,7 +13,6 @@ import mono.html.setOnClickListener
 import mono.html.style
 import mono.html.styleOf
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLDivElement
 
 /**
  * A function to create right toolbar UI.
@@ -21,24 +20,22 @@ import org.w3c.dom.HTMLDivElement
 internal fun Element.RightToolbar(
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
-    Div("nav-toolbar nav-right") {
-        DropDownMenuIcon {
-            val items = listOf(
-                Text("Save As...", OneTimeActionType.SaveShapesAs),
-                Text("Open File...", OneTimeActionType.OpenShapes),
-                Text("Export Text", OneTimeActionType.ExportSelectedShapes),
-                DropDownMenu.Item.Divider,
-                Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
-            )
-            DropDownMenu("main-dropdown-menu", items) {
-                val textItem = it as Text
-                onActionSelected(textItem.key as OneTimeActionType)
-            }
+    DropDownMenuIcon {
+        val items = listOf(
+            Text("Save As...", OneTimeActionType.SaveShapesAs),
+            Text("Open File...", OneTimeActionType.OpenShapes),
+            Text("Export Text", OneTimeActionType.ExportSelectedShapes),
+            DropDownMenu.Item.Divider,
+            Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
+        )
+        DropDownMenu("main-dropdown-menu", items) {
+            val textItem = it as Text
+            onActionSelected(textItem.key as OneTimeActionType)
         }
     }
 }
 
-private fun HTMLDivElement.DropDownMenuIcon(onClickAction: () -> Unit) {
+private fun Element.DropDownMenuIcon(onClickAction: () -> Unit) {
     Div {
         style(
             "cursor" to "pointer",
@@ -48,9 +45,7 @@ private fun HTMLDivElement.DropDownMenuIcon(onClickAction: () -> Unit) {
 
         SvgIcon(16) {
             setAttributes("style" to styleOf("margin-bottom" to 3.px))
-            /* ktlint-disable max-line-length */
-            SvgPath("M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z")
-            /* ktlint-enable max-line-length */
+            SvgPath("M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z") // ktlint-disable max-line-length
         }
 
         setOnClickListener { onClickAction() }
