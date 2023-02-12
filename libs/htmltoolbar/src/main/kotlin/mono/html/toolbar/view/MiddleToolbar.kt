@@ -16,7 +16,7 @@ internal fun Element.MiddleToolbar(
     retainableActionLiveData: LiveData<RetainableActionType>,
     setRetainableAction: (RetainableActionType) -> Unit
 ) {
-    Div("toolbar middle") {
+    Div("nav-toolbar nav-middle") {
         MouseActionGroup(lifecycleOwner, retainableActionLiveData, setRetainableAction)
     }
 }
