@@ -75,7 +75,6 @@ class MonoSketchApplication : LifecycleOwner() {
 
         ToolbarViewController(
             this,
-            document.getElementById("header-toolbar") as HTMLDivElement,
             actionManager
         )
         ShapeToolViewController(
