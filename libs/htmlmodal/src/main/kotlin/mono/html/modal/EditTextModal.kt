@@ -6,6 +6,7 @@ import mono.common.commandKey
 import mono.common.onKeyDown
 import mono.common.post
 import mono.html.Div
+import mono.html.Span
 import mono.html.px
 import mono.html.styleOf
 import mono.html.setAttributes
@@ -62,9 +63,15 @@ class EditTextModal(
     }
 
     private fun Element.initTextArea() {
+        // This div and span is for setting the white background under text.
+        // This helps the editing text on filled box is readable.
+        val backgroundAreaContainer = Div("modal-edit-text-area")
+        val textBackgroundArea = Span(backgroundAreaContainer)
+        
         val textArea = Div("modal-edit-text-area") {
             setAttributes("contenteditable" to true)
         }
+        
         // This div is for HTML decoding
         val converterDiv = Div {
             setAttributes("style" to styleOf("display" to "none"))
@@ -77,6 +84,7 @@ class EditTextModal(
                 converterDiv.innerHTML = it
                 converterDiv.innerText
             }
+            textBackgroundArea.innerText = text
             onTextChange(text)
         }
 
