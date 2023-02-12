@@ -21,7 +21,7 @@ import org.w3c.dom.HTMLDivElement
 internal fun Element.RightToolbar(
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
-    Div("toolbar right") {
+    Div("nav-toolbar nav-right") {
         DropDownMenuIcon {
             val items = listOf(
                 Text("Save As...", OneTimeActionType.SaveShapesAs),
@@ -30,7 +30,7 @@ internal fun Element.RightToolbar(
                 DropDownMenu.Item.Divider,
                 Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
             )
-            DropDownMenu("main-menu", items) {
+            DropDownMenu("main-dropdown-menu", items) {
                 val textItem = it as Text
                 onActionSelected(textItem.key as OneTimeActionType)
             }

@@ -1,6 +1,6 @@
 @import 'variables'
 
-$divider-color: rgb(208, 215, 222)
+$divider-color: rgba(0, 0, 0, 0.1)
 $background-color: rgb(255, 255, 255)
 
 .drop-down-menu
@@ -11,6 +11,7 @@ $background-color: rgb(255, 255, 255)
     padding: 6px 0
     position: absolute
     font-family: $uiTextFont
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.3)
 
     .hidden-input
         position: absolute
@@ -41,9 +42,3 @@ $background-color: rgb(255, 255, 255)
             background: #f0f0f0
         &:last-child
             border-bottom: none
-
-
-.main-menu
-    width: 160px
-    right: 8px
-    top: 48px
