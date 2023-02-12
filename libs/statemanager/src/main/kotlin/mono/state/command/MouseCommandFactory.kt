@@ -1,7 +1,7 @@
 package mono.state.command
 
+import mono.actionmanager.RetainableActionType
 import mono.graphics.geo.MousePointer
-import mono.html.toolbar.RetainableActionType
 import mono.shape.shape.Line
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionPoint

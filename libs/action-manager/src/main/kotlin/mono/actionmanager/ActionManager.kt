@@ -1,6 +1,8 @@
-package mono.html.toolbar
+package mono.actionmanager
 
+import kotlinx.browser.window
 import mono.common.exhaustive
+import mono.environment.Build
 import mono.keycommand.KeyCommand
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -87,5 +89,13 @@ class ActionManager(
     fun setOneTimeAction(actionType: OneTimeActionType) {
         oneTimeActionMutableLiveData.value = actionType
         oneTimeActionMutableLiveData.value = OneTimeActionType.Idle
+    }
+
+    fun installDebugCommand() {
+        if (!Build.DEBUG) {
+            return
+        }
+        val debugCommand = DebugCommandController(::setOneTimeAction)
+        window.asDynamic().cmd = debugCommand::executeCommand
     }
 }

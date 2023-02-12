@@ -17,13 +17,15 @@ import org.w3c.dom.Element
 /**
  * A modal for dropdown menu
  */
-class DropDownMenu(classes: String, items: List<Item>, private val onClickAction: (Item) -> Unit) {
+class DropDownMenu(id: String, items: List<Item>, private val onClickAction: (Item) -> Unit) {
     private val menu: Element?
 
     private var dismissTimeout: Cancelable? = null
 
     init {
-        menu = document.body?.Div(classes = "drop-down-menu $classes") {
+        menu = document.body?.Div(classes = "drop-down-menu") {
+            this.id = id
+
             initItems(items)
 
             val hiddenInput = Input(inputType = InputType.CHECK_BOX, classes = "hidden-input") {

@@ -2,12 +2,12 @@
 
 package mono.html.toolbar.view.shapetool
 
+import mono.actionmanager.OneTimeActionType
 import mono.html.Div
 import mono.html.Span
 import mono.html.SvgPath
 import mono.html.appendElement
 import mono.html.setOnClickListener
-import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.isSelected
 import mono.html.toolbar.view.isVisible

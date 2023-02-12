@@ -1,9 +1,9 @@
 package mono.html.toolbar.view.shapetool
 
+import mono.actionmanager.ActionManager
+import mono.actionmanager.OneTimeActionType
+import mono.actionmanager.RetainableActionType
 import mono.common.nullToFalse
-import mono.html.toolbar.ActionManager
-import mono.html.toolbar.OneTimeActionType
-import mono.html.toolbar.RetainableActionType
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
 import mono.livedata.map

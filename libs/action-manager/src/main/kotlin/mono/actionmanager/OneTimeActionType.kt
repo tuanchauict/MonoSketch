@@ -1,19 +1,8 @@
-package mono.html.toolbar
+package mono.actionmanager
 
-import mono.common.MouseCursor
 import mono.shape.command.ChangeOrder
 import mono.shape.extra.style.TextAlign
 import mono.shape.shape.AbstractShape
-
-/**
- * An enum class which defines all action types which repeatedly have effects after triggered.
- */
-enum class RetainableActionType(val mouseCursor: MouseCursor) {
-    IDLE(MouseCursor.DEFAULT),
-    ADD_RECTANGLE(MouseCursor.CROSSHAIR),
-    ADD_TEXT(MouseCursor.TEXT),
-    ADD_LINE(MouseCursor.CROSSHAIR)
-}
 
 /**
  * An enum class which defines all action types which are only have affect once.

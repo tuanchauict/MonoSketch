@@ -1,61 +1,47 @@
 @import 'variables.sass'
+@import 'commons'
 
-#header-layout
-    width: 100%
-    height: $headerHeight
+#main-nav
     border-bottom: 1px solid $mainBorderColor
     display: flex
-    flex-direction: row
+    justify-content: space-between
 
-    & > .nav-brand
-        height: 100%
-        display: flex
-        align-items: center
-        margin-left: 32px
+#nav-left
+    @extend %common-flex-center-vertical
+    padding-left: 24px
 
-    & h2
-        font-size: 20px
-        letter-spacing: 0.2px
-        font-family: $monospaceFont
-        font-weight: 500
-        line-height: 18px
+    & .main-title
         margin: 0
 
-#header-toolbar
-    width: 100%
-    height: 100%
-    display: flex
-
-.toolbar
-    height: 100%
-    display: flex
-    -webkit-box-align: center
-    align-items: center
-    justify-content: center
-
-    &.middle
-        margin: 0px 20px
-        width: 100%
-
-    &.right
-        margin: 0px 8px
-
-        & ul.dropdown-menu a.dropdown-item
-            cursor: pointer
-
-        & #right-toolbar-dropdown-menu
-            border: none
-            width: 30px
-            height: 30px
+        & a
+            font-size: 24px
+            font-weight: bold
+            letter-spacing: 0.2px
+            font-family: $monospaceFont
+            font-weight: 500
+            line-height: 18px
+            text-decoration: none
+            color: black
 
             &:hover, &:active
-                background: none
-                color: #252525
+                color: black
 
-    & .retainable-action-group
-        height: 31px
+#nav-toolbar-center
+    @extend %common-flex-center-vertical
 
-        & > .button
-            width: 65px
-            padding: 0
-            box-sizing: content-box
+.retainable-action-group
+    height: 31px
+
+    & > .button
+        width: 65px
+        padding: 0
+        box-sizing: content-box
+
+#nav-toolbar-right
+    @extend %common-flex-center-vertical
+    padding: 0 8px
+
+#main-dropdown-menu
+    width: 160px
+    right: 8px
+    top: 48px

@@ -9,6 +9,7 @@ repositories {
 dependencies {
     implementation(libs.kotlin.stdlib.js)
 
+    implementation(projects.actionManager)
     implementation(projects.buildEnvironment)
     implementation(projects.commons)
     implementation(projects.exportShapesModal)
@@ -45,6 +46,5 @@ kotlin {
                 }
             }
         }
-        binaries.executable()
     }
 }

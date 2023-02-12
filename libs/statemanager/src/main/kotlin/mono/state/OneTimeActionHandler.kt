@@ -1,11 +1,11 @@
 package mono.state
 
+import mono.actionmanager.OneTimeActionType
 import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
 import mono.export.ExportShapesHelper
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.html.toolbar.OneTimeActionType
 import mono.html.toolbar.view.keyboardshortcut.KeyboardShortcuts
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
