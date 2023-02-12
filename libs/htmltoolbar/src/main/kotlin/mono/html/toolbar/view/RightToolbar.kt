@@ -45,7 +45,7 @@ private fun Element.DropDownMenuIcon(onClickAction: () -> Unit) {
 
         SvgIcon(16) {
             setAttributes("style" to styleOf("margin-bottom" to 3.px))
-            SvgPath("M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z") //ktlint-disable max-line-length
+            SvgPath("M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z") // ktlint-disable max-line-length
         }
 
         setOnClickListener { onClickAction() }
