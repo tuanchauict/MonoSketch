@@ -25,7 +25,7 @@ class DropDownMenu(id: String, items: List<Item>, private val onClickAction: (It
     init {
         menu = document.body?.Div(classes = "drop-down-menu") {
             this.id = id
-            
+
             initItems(items)
 
             val hiddenInput = Input(inputType = InputType.CHECK_BOX, classes = "hidden-input") {
