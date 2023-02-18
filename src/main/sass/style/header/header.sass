@@ -1,5 +1,5 @@
-@import 'variables.sass'
-@import 'commons'
+@import '../variables'
+@import '../commons'
 
 #main-nav
     border-bottom: 1px solid $mainBorderColor
@@ -27,14 +27,8 @@
 
 #nav-toolbar-center
     @extend %common-flex-center-vertical
-
-.retainable-action-group
-    height: 31px
-
-    & > .button
-        width: 65px
-        padding: 0
-        box-sizing: content-box
+    flex-grow: 1
+    justify-content: center
 
 #nav-toolbar-right
     @extend %common-flex-center-vertical

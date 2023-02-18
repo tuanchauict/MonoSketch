@@ -21,7 +21,7 @@ internal fun Element.MouseActionGroup(
     retainableActionLiveData: LiveData<RetainableActionType>,
     setRetainableAction: (RetainableActionType) -> Unit
 ) {
-    Div("button-group retainable-action-group") {
+    Div("main-mouse-actions") {
         val actionElements = MouseActionType.values().map {
             MouseActionGroupItem(it, setRetainableAction)
         }
@@ -80,8 +80,8 @@ private enum class MouseActionType(
 private fun Element.MouseActionGroupItem(
     mouseActionType: MouseActionType,
     onClick: (RetainableActionType) -> Unit
-): HTMLElement = Div(classes = "button") {
-    SvgIcon(24) {
+): HTMLElement = Div(classes = "action-button") {
+    SvgIcon(21, 21, 24, 24) {
         SvgPath(mouseActionType.iconPath)
     }
 
