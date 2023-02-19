@@ -1,13 +1,13 @@
 @import '../commons'
 
 #shape-tools
-    & .section
-        & .tool-title
+    .section
+        .tool-title
             display: inline-block
             font-size: 11px
             user-select: none
 
-        & .tool-input-text
+        .tool-input-text
             height: 24px
             width: 100%
             margin-left: 4px
@@ -16,11 +16,11 @@
             background: #0000
             font-size: 12px
 
-        & .option-group
+        .option-group
             $option-border-color: #ddd
             $option-selected-border-color: #0091ff
 
-            & .option
+            .option
                 @extend %common-button
                 padding: 4px
                 border: 1px solid $option-border-color
