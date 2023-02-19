@@ -1,4 +1,4 @@
-@import 'variables.sass'
+@import '../variables'
 
 $shape-tool-divider-color: #BBB
 $shape-tool-box-border-color: #DDDDDD
@@ -8,10 +8,12 @@ $shape-tool-box-border-selected-color: #0091ff
     font-family: $monospaceFont
 
 #shape-tools
-    border-left: 1.5px solid $shape-tool-divider-color
-    background: #FAFAFA
     display: flex
     flex-direction: column
+
+    border-left: 1.5px solid $shape-tool-divider-color
+    background: #FAFAFA
+    
     font-family: $uiTextFont
     font-size: 12px
 
