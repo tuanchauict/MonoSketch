@@ -3,6 +3,8 @@
 package mono.html.toolbar.view.shapetool
 
 import mono.html.Div
+import mono.html.Span
+import mono.html.bindClass
 import mono.html.toolbar.view.shapetool.Class.ADD_BOTTOM_SPACE
 import mono.html.toolbar.view.shapetool.Class.CENTER_EVEN_SPACE
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
@@ -16,6 +18,25 @@ import mono.html.toolbar.view.shapetool.Class.TOOL
 import mono.html.toolbar.view.shapetool.Class.TOOL_NO_CHECK_BOX
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
+
+internal fun Element.Section(
+    title: String = "",
+    hasBorderTop: Boolean = true,
+    block: HTMLDivElement.() -> Unit
+): HTMLDivElement = Div("section") {
+    bindClass("notitle", title.isEmpty())
+    bindClass("border-top", hasBorderTop)
+    if (title.isNotEmpty()) {
+        Div("section-title") {
+            Span(text = title)
+        }
+    }
+
+    Div("section-body") {
+
+        block()
+    }
+}
 
 internal fun Element.SectionObsolete(
     title: String,
