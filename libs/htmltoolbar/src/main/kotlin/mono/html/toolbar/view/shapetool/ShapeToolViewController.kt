@@ -64,7 +64,7 @@ class ShapeToolViewController(
             actionManager::setOneTimeAction
         )
 
-        val toolIndicator = toolContainer.Section("") {
+        val toolIndicator = toolContainer.SectionObsolete("") {
             isVisible = false
             style("border-top" to "none")
             Div {

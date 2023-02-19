@@ -51,7 +51,7 @@ internal class TransformToolViewController(
     val visibilityStateLiveData: LiveData<Boolean>
 
     init {
-        val section = container.Section("TRANSFORM") {
+        val section = container.SectionObsolete("TRANSFORM") {
             Tool(hasMoreBottomSpace = true) {
                 Row(true) {
                     NumberCell("X", xInput)

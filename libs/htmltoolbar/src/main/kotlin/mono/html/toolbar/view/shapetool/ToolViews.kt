@@ -3,8 +3,6 @@
 package mono.html.toolbar.view.shapetool
 
 import mono.html.Div
-import mono.html.toolbar.view.isEnabled
-import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.Class.ADD_BOTTOM_SPACE
 import mono.html.toolbar.view.shapetool.Class.CENTER_EVEN_SPACE
 import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
@@ -19,17 +17,7 @@ import mono.html.toolbar.view.shapetool.Class.TOOL_NO_CHECK_BOX
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 
-internal open class ToolViewController(private val rootView: HTMLDivElement) {
-    open fun setVisible(isVisible: Boolean) {
-        rootView.isVisible = isVisible
-    }
-
-    open fun setEnabled(isEnabled: Boolean) {
-        rootView.isEnabled = isEnabled
-    }
-}
-
-internal fun Element.Section(
+internal fun Element.SectionObsolete(
     title: String,
     isSmallSpace: Boolean = false,
     block: HTMLDivElement.() -> Unit = {}

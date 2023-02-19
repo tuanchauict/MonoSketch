@@ -5,11 +5,11 @@ package mono.html.toolbar.view.shapetool
 import mono.actionmanager.OneTimeActionType
 import mono.html.Div
 import mono.html.SvgPath
-import mono.html.setOnClickListener
 import mono.html.appendElement
 import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.px
+import mono.html.setOnClickListener
 import mono.html.style
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.isEnabled
@@ -43,7 +43,7 @@ internal class ReorderSectionViewController(
             Icon(type) { setOneTimeAction(OneTimeActionType.ReorderShape(it.changeOrderType)) }
         }
 
-        val section = container.Section("", isSmallSpace = true) {
+        val section = container.SectionObsolete("", isSmallSpace = true) {
             Tool {
                 Row(isCenterEvenSpace = true) {
                     style("padding-bottom" to 2.px)

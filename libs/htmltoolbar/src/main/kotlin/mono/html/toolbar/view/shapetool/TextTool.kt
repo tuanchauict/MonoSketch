@@ -43,7 +43,7 @@ internal class TextSectionViewController(
         TextAlignmentIconType.VERTICAL_BOTTOM
     ).map { Icon(it, setOneTimeAction) }
 
-    private val rootView = container.Section("TEXT") {
+    private val rootView = container.SectionObsolete("TEXT") {
         Tool(true) {
             TextTool("Alignment") {
                 appendElement(horizontalIcons)

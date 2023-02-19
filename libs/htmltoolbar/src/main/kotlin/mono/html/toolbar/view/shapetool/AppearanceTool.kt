@@ -42,7 +42,7 @@ internal class AppearanceSectionViewController(
     container: Element,
     appearanceDataController: AppearanceDataController
 ) {
-    private val rootView = container.Section("APPEARANCE")
+    private val rootView = container.SectionObsolete("APPEARANCE")
     val visibilityStateLiveData: LiveData<Boolean> =
         appearanceDataController.hasAnyVisibleToolLiveData
 
