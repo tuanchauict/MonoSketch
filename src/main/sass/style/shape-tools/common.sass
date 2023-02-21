@@ -26,6 +26,7 @@
                 border: 1px solid $option-border-color
                 border-radius: 3px
                 background: white
+                font-size: 15px
 
                 &:hover
                     border-color: darken($option-border-color, 10%)
@@ -37,8 +38,8 @@
                         border-color: darken($option-selected-border-color, 5%)
 
             &.disabled
-                &.option
+                .option
                     border-color: lighten($option-border-color, 5%)
 
                     &.selected
-                        border: darken($option-border-color, 10%)
+                        border-color: darken($option-border-color, 10%)

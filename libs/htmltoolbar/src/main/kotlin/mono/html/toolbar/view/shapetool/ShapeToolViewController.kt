@@ -1,14 +1,15 @@
 package mono.html.toolbar.view.shapetool
 
+import kotlinx.dom.addClass
 import mono.actionmanager.ActionManager
 import mono.actionmanager.RetainableActionType
 import mono.html.A
 import mono.html.Div
 import mono.html.Span
 import mono.html.SvgPath
+import mono.html.bindClass
 import mono.html.style
 import mono.html.toolbar.view.SvgIcon
-import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.TextSectionViewController.TextAlignVisibility
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -64,9 +65,8 @@ class ShapeToolViewController(
             actionManager::setOneTimeAction
         )
 
-        val toolIndicator = toolContainer.SectionObsolete("") {
-            isVisible = false
-            style("border-top" to "none")
+        val toolIndicator = toolContainer.Section("") {
+            addClass("hide")
             Div {
                 Span(
                     classes = "indicator-text",
@@ -85,7 +85,7 @@ class ShapeToolViewController(
         }
 
         hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
-            toolIndicator.isVisible = !it
+            toolIndicator.bindClass("hide", it)
         }
 
         container.Div(classes = "shape-tools__footer") {
