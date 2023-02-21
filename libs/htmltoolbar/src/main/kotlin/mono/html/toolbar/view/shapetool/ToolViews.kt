@@ -22,7 +22,6 @@ internal fun Element.Section(
     }
 
     Div("section-body") {
-
         block()
     }
 }

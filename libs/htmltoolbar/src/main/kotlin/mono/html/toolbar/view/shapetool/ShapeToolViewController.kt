@@ -65,7 +65,7 @@ class ShapeToolViewController(
             actionManager::setOneTimeAction
         )
 
-        val toolIndicator = toolContainer.Section("") {
+        val toolIndicator = toolContainer.Section(hasBorderTop = false) {
             addClass("hide")
             Div {
                 Span(

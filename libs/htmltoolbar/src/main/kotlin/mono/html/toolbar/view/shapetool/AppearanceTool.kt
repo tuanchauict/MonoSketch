@@ -28,7 +28,7 @@ internal class AppearanceSectionViewController(
         appearanceDataController.hasAnyVisibleToolLiveData
 
     init {
-        container.Section("APPEARANCE") {
+        val rootView = container.Section("APPEARANCE") {
             Tool(
                 ToolType.FILL,
                 appearanceDataController.fillOptions,
@@ -74,13 +74,11 @@ internal class AppearanceSectionViewController(
                 appearanceDataController.headOptions,
                 appearanceDataController.lineEndHeadToolStateLiveData
             )
-
-            appearanceDataController.hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
-                bindClass("hide", !it)
-            }
         }
 
-
+        appearanceDataController.hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
+            rootView.bindClass("hide", !it)
+        }
     }
 
     private fun Element.Tool(
