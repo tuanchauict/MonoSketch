@@ -9,14 +9,6 @@ import mono.html.SvgPath
 import mono.html.appendElement
 import mono.html.setOnClickListener
 import mono.html.toolbar.view.SvgIcon
-import mono.html.toolbar.view.isSelected
-import mono.html.toolbar.view.isVisible
-import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
-import mono.html.toolbar.view.shapetool.Class.CLICKABLE
-import mono.html.toolbar.view.shapetool.Class.COLUMN
-import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
-import mono.html.toolbar.view.shapetool.Class.MEDIUM
-import mono.html.toolbar.view.shapetool.Class.QUARTER
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.distinctUntilChange
@@ -44,11 +36,13 @@ internal class TextSectionViewController(
     ).map { Icon(it, setOneTimeAction) }
 
     private val rootView = container.Section("TEXT") {
-        Tool(true) {
-            TextTool("Alignment") {
+        Div("tool-text") {
+            Div("option-group") {
+                Span("tool-title", text = "Alignment")
                 appendElement(horizontalIcons)
             }
-            TextTool("Position") {
+            Div("option-group") {
+                Span("tool-title", "Position")
                 appendElement(verticalIcons)
             }
         }
@@ -68,16 +62,16 @@ internal class TextSectionViewController(
     }
 
     private fun setCurrentTextAlign(textAlign: TextAlign?) {
-        rootView.isVisible = textAlign != null
+        rootView.bindClass(CssClass.HIDE, textAlign == null)
 
         if (textAlign == null) {
             return
         }
         horizontalIcons.forEachIndexed { index, icon ->
-            icon.isSelected = index == textAlign.horizontalAlign.ordinal
+            icon.bindClass(CssClass.SELECTED, index == textAlign.horizontalAlign.ordinal)
         }
         verticalIcons.forEachIndexed { index, icon ->
-            icon.isSelected = index == textAlign.verticalAlign.ordinal
+            icon.bindClass(CssClass.SELECTED, index == textAlign.verticalAlign.ordinal)
         }
     }
 
@@ -88,23 +82,10 @@ internal class TextSectionViewController(
     }
 }
 
-private fun Element.TextTool(name: String, iconBlock: Element.() -> Unit) {
-    Row(isVerticalCenter = true, isMoreBottomSpaceRequired = true) {
-        Div(classes(COLUMN, ADD_RIGHT_SPACE, QUARTER)) {
-            innerText = name
-        }
-        Div(classes(COLUMN)) {
-            Row {
-                iconBlock()
-            }
-        }
-    }
-}
-
 private fun Icon(
     iconType: TextAlignmentIconType,
     setOneTimeAction: (OneTimeActionType) -> Unit
-): HTMLElement = Span(null, classes = classes(ICON_BUTTON, MEDIUM, ADD_RIGHT_SPACE, CLICKABLE)) {
+): HTMLElement = Span(null, classes = "option") {
     SvgIcon(16, 16, iconType.viewPortSize, iconType.viewPortSize) {
         SvgPath(iconType.iconPath)
     }

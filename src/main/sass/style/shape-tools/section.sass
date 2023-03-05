@@ -1,0 +1,27 @@
+#shape-tools
+    .section
+        display: flex
+        flex-direction: column
+        padding: 10px
+
+        &.notitle
+            padding: 4px 10px
+
+        &.border-top
+            border-top: 0.75px solid #bbb
+
+        &.hide
+            display: none
+
+        & > .section-title
+            font-weight: 300
+            font-size: 11px
+            color: #616161
+            margin-bottom: 10px
+            user-select: none
+            letter-spacing: 1.2px
+
+        & > .section-body
+            display: flex
+            flex-direction: column
+            width: 100%
