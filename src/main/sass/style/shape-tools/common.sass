@@ -1,0 +1,45 @@
+@import '../commons'
+
+#shape-tools
+    .section
+        .tool-title
+            display: inline-block
+            font-size: 11px
+            user-select: none
+
+        .tool-input-text
+            height: 24px
+            width: 100%
+            margin-left: 4px
+            border: none
+            border-bottom: 1px solid #AAA
+            background: #0000
+            font-size: 12px
+
+        .option-group
+            $option-border-color: #ddd
+            $option-selected-border-color: #0091ff
+
+            .option
+                @extend %common-button
+                padding: 4px
+                border: 1px solid $option-border-color
+                border-radius: 3px
+                background: white
+                font-size: 15px
+
+                &:hover
+                    border-color: darken($option-border-color, 10%)
+
+                &.selected
+                    border-color: $option-selected-border-color
+
+                    &:hover
+                        border-color: darken($option-selected-border-color, 5%)
+
+            &.disabled
+                .option
+                    border-color: lighten($option-border-color, 5%)
+
+                    &.selected
+                        border-color: darken($option-border-color, 10%)
