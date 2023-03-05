@@ -38,15 +38,19 @@ abstract class LiveData<T>(initValue: T) {
         }
         observers.add(liveDataObserver)
         lifecycleOwner.addObserver(lifecycleObserver)
-        liveDataObserver.onChanged(value)
+        delegateValueToObserver(liveDataObserver, value)
     }
 
     protected fun setValue(value: T) {
         valueInternal = value
 
         for (observer in observers) {
-            observer.onChanged(value)
+            delegateValueToObserver(observer, value)
         }
+    }
+
+    protected open fun delegateValueToObserver(observer: Observer<T>, value: T) {
+        observer.onChanged(value)
     }
 
     private class OnStopLifecycleObserver(private val callback: () -> Unit) : LifecycleObserver {
@@ -94,8 +98,29 @@ private class DistinctOnlyLiveData<T>(liveData: LiveData<T>) : LiveData<T>(liveD
     }
 }
 
+private class NonNullOnlyLiveData<T>(
+    liveData: LiveData<T?>
+) : LiveData<T?>(liveData.value) {
+    init {
+        liveData.observe(LiveDataLifecycleOwner()) {
+            if (it != null) {
+                setValue(it)
+            }
+        }
+    }
+
+    override fun delegateValueToObserver(observer: Observer<T?>, value: T?) {
+        if (value != null) {
+            observer.onChanged(value)
+        }
+    }
+}
+
 fun <T, R> LiveData<T>.map(transform: (T) -> R): LiveData<R> = TransformLiveData(this, transform)
 
 fun <T> LiveData<T>.distinctUntilChange(): LiveData<T> = DistinctOnlyLiveData(this)
+
+@Suppress("UNCHECKED_CAST")
+fun <T> LiveData<T?>.filterNotNull(): LiveData<T> = NonNullOnlyLiveData(this) as LiveData<T>
 
 private class LiveDataLifecycleOwner : LifecycleOwner()

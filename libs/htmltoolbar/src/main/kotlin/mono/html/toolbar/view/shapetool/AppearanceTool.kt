@@ -16,6 +16,7 @@ import mono.html.toolbar.view.shapetool.AppearanceVisibility.DashVisible
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.GridVisible
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.livedata.filterNotNull
 import mono.livedata.map
 import org.w3c.dom.Element
 
@@ -145,11 +146,7 @@ internal class AppearanceSectionViewController(
                 }
             }
 
-            visibilityLiveData.observe(lifecycleOwner) { state ->
-                if (state == null) {
-                    return@observe
-                }
-
+            visibilityLiveData.filterNotNull().observe(lifecycleOwner) { state ->
                 bindClass("disabled", !state.isChecked)
 
                 optionViews.forEachIndexed { index, optionView ->
@@ -199,10 +196,8 @@ internal class AppearanceSectionViewController(
             }
             setOnChangeListener { onChange(value.toInt()) }
 
-            liveData.observe(lifecycleOwner) {
-                if (it != null) {
-                    value = it.toString()
-                }
+            liveData.filterNotNull().observe(lifecycleOwner) {
+                value = it.toString()
             }
         }
     }
