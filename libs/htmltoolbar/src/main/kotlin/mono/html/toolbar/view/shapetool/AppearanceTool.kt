@@ -39,7 +39,7 @@ internal class AppearanceSectionViewController(
             Tool(
                 ToolType.BORDER,
                 appearanceDataController.strokeOptions,
-                appearanceDataController.borderToolStateLiveData,
+                appearanceDataController.borderToolStateLiveData
             ) {
                 DashPattern(
                     appearanceDataController.borderDashPatternLiveData.map { (it as? DashVisible) }
@@ -119,7 +119,7 @@ internal class AppearanceSectionViewController(
 
     private fun Element.ToolCheckBox(
         type: ToolType,
-        isCheckedLiveData: LiveData<Boolean>,
+        isCheckedLiveData: LiveData<Boolean>
     ) {
         Input(InputType.CHECK_BOX, classes = "") {
             setOnChangeListener {
