@@ -10,8 +10,6 @@ import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.setOnClickListener
 import mono.html.toolbar.view.SvgIcon
-import mono.html.toolbar.view.isEnabled
-import mono.html.toolbar.view.isVisible
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.distinctUntilChange
@@ -50,9 +48,9 @@ internal class ReorderSectionViewController(
             .distinctUntilChange()
 
         visibilityStateLiveData.observe(lifecycleOwner) {
-            section.isVisible = it
+            section.bindClass(CssClass.HIDE, !it)
             for (icon in icons) {
-                icon.isEnabled = it
+                icon.bindClass(CssClass.DISABLED, !it)
             }
         }
     }
@@ -71,7 +69,7 @@ private fun Icon(
 
         setOnClickListener {
             val target = it.currentTarget as HTMLElement
-            if (target.isEnabled) {
+            if (!target.hasClass(CssClass.DISABLED)) {
                 onClick(iconType)
             }
         }

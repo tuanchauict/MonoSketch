@@ -7,7 +7,6 @@ import mono.html.A
 import mono.html.Div
 import mono.html.Span
 import mono.html.SvgPath
-import mono.html.bindClass
 import mono.html.style
 import mono.html.toolbar.view.SvgIcon
 import mono.html.toolbar.view.shapetool.TextSectionViewController.TextAlignVisibility
@@ -127,7 +126,7 @@ class ShapeToolViewController(
 
         toolIndicatorView.addClass("tool-indicator")
         hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
-            toolIndicatorView.bindClass("hide", it)
+            toolIndicatorView.bindClass(CssClass.HIDE, it)
         }
     }
 

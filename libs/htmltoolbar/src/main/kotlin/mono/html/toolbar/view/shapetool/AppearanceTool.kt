@@ -8,7 +8,6 @@ import mono.html.Div
 import mono.html.Input
 import mono.html.InputType
 import mono.html.Span
-import mono.html.bindClass
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
 import mono.html.setOnClickListener
@@ -78,7 +77,7 @@ internal class AppearanceSectionViewController(
         }
 
         appearanceDataController.hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
-            rootView.bindClass("hide", !it)
+            rootView.bindClass(CssClass.HIDE, !it)
         }
     }
 
@@ -112,7 +111,7 @@ internal class AppearanceSectionViewController(
             }
 
             liveData.observe(lifecycleOwner) {
-                bindClass("hide", it == null)
+                bindClass(CssClass.HIDE, it == null)
             }
         }
     }
@@ -147,10 +146,10 @@ internal class AppearanceSectionViewController(
             }
 
             visibilityLiveData.filterNotNull().observe(lifecycleOwner) { state ->
-                bindClass("disabled", !state.isChecked)
+                bindClass(CssClass.DISABLED, !state.isChecked)
 
                 optionViews.forEachIndexed { index, optionView ->
-                    optionView.bindClass("selected", index == state.selectedPosition)
+                    optionView.bindClass(CssClass.SELECTED, index == state.selectedPosition)
                 }
             }
         }

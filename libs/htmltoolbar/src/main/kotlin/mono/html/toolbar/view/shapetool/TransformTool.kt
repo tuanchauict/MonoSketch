@@ -11,7 +11,6 @@ import mono.html.Span
 import mono.html.appendElement
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
-import mono.html.toolbar.view.isVisible
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.map
@@ -56,7 +55,7 @@ internal class TransformToolViewController(
 
         singleShapeLiveData.observe(lifecycleOwner) {
             val isSizeChangeable = it is Rectangle || it is Text
-            section.isVisible = it != null
+            section.bindClass(CssClass.HIDE, it == null)
 
             setEnabled(it != null, isSizeChangeable)
             if (it != null) {

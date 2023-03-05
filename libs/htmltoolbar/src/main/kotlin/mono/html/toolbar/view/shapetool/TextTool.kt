@@ -7,7 +7,6 @@ import mono.html.Div
 import mono.html.Span
 import mono.html.SvgPath
 import mono.html.appendElement
-import mono.html.bindClass
 import mono.html.setOnClickListener
 import mono.html.toolbar.view.SvgIcon
 import mono.lifecycle.LifecycleOwner
@@ -63,16 +62,16 @@ internal class TextSectionViewController(
     }
 
     private fun setCurrentTextAlign(textAlign: TextAlign?) {
-        rootView.bindClass("hide", textAlign == null)
+        rootView.bindClass(CssClass.HIDE, textAlign == null)
 
         if (textAlign == null) {
             return
         }
         horizontalIcons.forEachIndexed { index, icon ->
-            icon.bindClass("selected", index == textAlign.horizontalAlign.ordinal)
+            icon.bindClass(CssClass.SELECTED, index == textAlign.horizontalAlign.ordinal)
         }
         verticalIcons.forEachIndexed { index, icon ->
-            icon.bindClass("selected", index == textAlign.verticalAlign.ordinal)
+            icon.bindClass(CssClass.SELECTED, index == textAlign.verticalAlign.ordinal)
         }
     }
 

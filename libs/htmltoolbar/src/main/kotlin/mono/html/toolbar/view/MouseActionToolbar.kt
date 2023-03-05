@@ -8,6 +8,8 @@ import mono.html.SvgPath
 import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnClickListener
+import mono.html.toolbar.view.shapetool.CssClass
+import mono.html.toolbar.view.shapetool.bindClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import org.w3c.dom.Element
@@ -30,7 +32,7 @@ internal fun Element.MouseActionGroup(
             val selectedAction = MouseActionType.fromRetainableAction(it)
 
             for (element in actionElements) {
-                element.isSelected = element.mouseAction == selectedAction
+                element.bindClass(CssClass.SELECTED, element.mouseAction == selectedAction)
             }
         }
     }
@@ -85,7 +87,7 @@ private fun Element.MouseActionGroupItem(
         SvgPath(mouseActionType.iconPath)
     }
 
-    isSelected = mouseActionType.isDefaultSelected
+    bindClass(CssClass.SELECTED, mouseActionType.isDefaultSelected)
     setAttributes(ATTR_ACTION to mouseActionType.name)
 
     tooltip(mouseActionType.title)
