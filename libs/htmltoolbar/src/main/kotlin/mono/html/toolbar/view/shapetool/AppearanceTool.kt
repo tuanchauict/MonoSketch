@@ -55,7 +55,8 @@ internal class AppearanceSectionViewController(
                 appearanceDataController.lineStrokeToolStateLiveData
             ) {
                 DashPattern(
-                    appearanceDataController.lineStrokeDashPatternLiveData.map { it as? DashVisible }
+                    appearanceDataController.lineStrokeDashPatternLiveData
+                        .map { it as? DashVisible }
                 ) { dash, gap, offset ->
                     appearanceDataController.setOneTimeAction(
                         OneTimeActionType.ChangeLineStrokeDashPatternExtra(dash, gap, offset)
