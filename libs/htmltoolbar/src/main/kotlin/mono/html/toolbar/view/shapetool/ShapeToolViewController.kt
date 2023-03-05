@@ -18,6 +18,7 @@ import mono.livedata.map
 import mono.shape.ShapeExtraManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Text
+import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 class ShapeToolViewController(
@@ -65,16 +66,6 @@ class ShapeToolViewController(
             actionManager::setOneTimeAction
         )
 
-        val toolIndicator = toolContainer.Section(hasBorderTop = false) {
-            addClass("hide")
-            Div {
-                Span(
-                    classes = "indicator-text",
-                    text = "Select a shape for updating its properties here"
-                )
-            }
-        }
-
         val hasAnyVisibleToolLiveData = combineLiveData(
             reorderSectionViewController.visibilityStateLiveData,
             transformToolViewController.visibilityStateLiveData,
@@ -83,10 +74,11 @@ class ShapeToolViewController(
         ) { visibilities ->
             visibilities.any { it == true }
         }
-
-        hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
-            toolIndicator.bindClass("hide", it)
-        }
+        addToolIndicatorView(
+            lifecycleOwner,
+            toolContainer,
+            hasAnyVisibleToolLiveData
+        )
 
         container.Div(classes = "shape-tools__footer") {
             A(href = "https://github.com/tuanchauict/MonoSketch") {
@@ -101,6 +93,26 @@ class ShapeToolViewController(
                     style("margin-left" to "6px")
                 }
             }
+        }
+    }
+
+    private fun addToolIndicatorView(
+        lifecycleOwner: LifecycleOwner,
+        toolContainer: HTMLDivElement,
+        hasAnyVisibleToolLiveData: LiveData<Boolean>
+    ) {
+        val toolIndicatorView = toolContainer.Section(hasBorderTop = false) {
+            Div {
+                Span(
+                    classes = "indicator-text",
+                    text = "Select a shape for updating its properties here"
+                )
+            }
+        }
+
+        toolIndicatorView.addClass("tool-indicator")
+        hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
+            toolIndicatorView.bindClass("hide", it)
         }
     }
 
