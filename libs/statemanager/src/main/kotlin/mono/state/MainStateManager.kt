@@ -188,8 +188,11 @@ class MainStateManager(
             return
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
-        val highlight =
-            if (shape in environment.getSelectedShapes()) Highlight.SELECTED else Highlight.NO
+        val highlight = when {
+            shape is Text && shape.isTextEditing -> Highlight.TEXT_EDITING
+            shape in environment.getSelectedShapes() -> Highlight.SELECTED
+            else -> Highlight.NO
+        }
         mainBoard.fill(shape.bound.position, bitmap, highlight)
         shapeSearcher.register(shape)
     }
@@ -211,10 +214,12 @@ class MainStateManager(
     private fun updateMouseCursor(mousePointer: MousePointer) {
         val mouseCursor = when (mousePointer) {
             is MousePointer.Move -> getMouseMovingCursor(mousePointer)
+
             is MousePointer.Drag -> {
                 val mouseCommand = currentMouseCommand
                 if (mouseCommand != null) mouseCommand.mouseCursor else MouseCursor.DEFAULT
             }
+
             is MousePointer.Up -> MouseCursor.DEFAULT
 
             MousePointer.Idle,
@@ -237,7 +242,9 @@ class MainStateManager(
             when (it) {
                 is Rectangle,
                 is Text -> ScalableInteractionBound(it.id, it.bound)
+
                 is Line -> LineInteractionBound(it.id, it.edges)
+
                 is Group -> null // TODO: Add new Interaction bound type for Group
                 is MockShape -> null
             }
