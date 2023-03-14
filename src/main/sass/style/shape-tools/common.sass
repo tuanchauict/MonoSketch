@@ -18,7 +18,7 @@
 
         .option-group
             $option-border-color: #ddd
-            $option-selected-border-color: #0091ff
+            $option-selected-color: #0d47a1
 
             .option
                 @extend %common-button
@@ -32,10 +32,11 @@
                     border-color: darken($option-border-color, 10%)
 
                 &.selected
-                    border-color: $option-selected-border-color
+                    border-color: $option-selected-color
+                    color: $option-selected-color
 
                     &:hover
-                        border-color: darken($option-selected-border-color, 5%)
+                        border-color: darken($option-selected-color, 5%)
 
             &.disabled
                 .option
@@ -43,3 +44,4 @@
 
                     &.selected
                         border-color: darken($option-border-color, 10%)
+                        color: darken($option-border-color, 10%)

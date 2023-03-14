@@ -51,5 +51,6 @@ class Pixel(
  */
 enum class Highlight(val paintColor: String) {
     NO("#000000"),
-    SELECTED("#0000FF")
+    SELECTED("#0d47a1"),
+    TEXT_EDITING("#1976d2")
 }
