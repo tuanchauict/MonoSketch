@@ -1,14 +1,14 @@
 @import '../commons'
-    
+
+$border-radius: 4px
+
 .main-mouse-actions
     display: flex
     justify-content: space-between
     width: 250px
 
-    border: 1px solid rgba(0,0,0,0.1)
-    border-radius: 6px
-    background: rgba(0,0,0,0.01)
-    
+    border: 1px solid rgb(185, 185, 185)
+    border-radius: $border-radius
 
     & > .action-button
         @extend %common-button
@@ -17,11 +17,18 @@
         justify-content: center
         width: 58px
         height: 32px
-        
-        border-radius: 4px
+        border: 1px solid rgba(0, 0, 0, 0)
+        border-radius: $border-radius
+        margin: -1px 0
 
-        &.selected
-            background: rgba(0, 0, 0, 0.08)
+        &:first-child
+            margin-left: -1px
+
+        &:last-child
+            margin-right: -1px
 
         &:hover 
-            background: rgba(0, 0, 0, 0.05)
+            background: rgba(0, 0, 0, 0.03)
+
+        &.selected
+            border-color: rgba(0,0,0,0.6)
