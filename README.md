@@ -1,5 +1,3 @@
-# README.md
-
 # What is it?
 
 Mono Sketch is a client-side only web based sketch tool for drawing *ASCII diagrams*. You can use
