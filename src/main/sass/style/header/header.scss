@@ -46,6 +46,19 @@ $bg-color: #2c2c2c;
     @extend %common-flex-center-vertical;
 
     padding: 0 8px;
+
+    .app-main-menu-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+            background: #181818;
+        }
+    }
 }
 
 #main-dropdown-menu {
