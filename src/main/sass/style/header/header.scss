@@ -1,0 +1,51 @@
+@import '../variables';
+@import '../commons';
+
+#main-nav {
+    border-bottom: 1px solid $mainBorderColor;
+    display: flex;
+    justify-content: space-between;
+}
+
+#nav-left {
+    @extend %common-flex-center-vertical;
+    padding-left: 16px;
+
+    .main-title {
+        margin: 0;
+
+        a {
+            font-size: 22px;
+            letter-spacing: 0.2px;
+            font-family: $monospaceFont;
+            font-weight: 600;
+            line-height: 18px;
+            text-decoration: none;
+            color: black;
+
+            &:hover,
+            &:active {
+                color: black;
+            }
+        }
+    }
+}
+
+#nav-toolbar-center {
+    @extend %common-flex-center-vertical;
+
+    flex-grow: 1;
+    justify-content: center;
+}
+
+#nav-toolbar-right {
+    @extend %common-flex-center-vertical;
+    
+    padding: 0 8px;
+}
+
+#main-dropdown-menu {
+    width: 160px;
+    right: 8px;
+    top: 48px;
+}
