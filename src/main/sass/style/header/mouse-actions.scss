@@ -1,0 +1,25 @@
+@import '../commons';
+
+$border-radius: 4px;
+
+.main-mouse-actions {
+    display: flex;
+    height: 100%;
+
+    &>.action-button {
+        @extend %common-button;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+
+        &:hover {
+            background: #111;
+        }
+
+        &.selected {
+            background: #0D99FF;
+        }
+    }
+}
