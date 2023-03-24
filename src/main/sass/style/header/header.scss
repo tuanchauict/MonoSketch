@@ -1,10 +1,14 @@
 @import '../variables';
 @import '../commons';
 
+$conten-color: white;
+$bg-color: #2c2c2c;
+
 #main-nav {
-    border-bottom: 1px solid $mainBorderColor;
     display: flex;
     justify-content: space-between;
+    background: $bg-color;
+    color: $conten-color;
 }
 
 #nav-left {
@@ -18,14 +22,14 @@
             font-size: 22px;
             letter-spacing: 0.2px;
             font-family: $monospaceFont;
-            font-weight: 600;
+            font-weight: 400;
             line-height: 18px;
             text-decoration: none;
-            color: black;
+            color: $conten-color;
 
             &:hover,
             &:active {
-                color: black;
+                color: $conten-color;
             }
         }
     }
@@ -40,7 +44,7 @@
 
 #nav-toolbar-right {
     @extend %common-flex-center-vertical;
-    
+
     padding: 0 8px;
 }
 
