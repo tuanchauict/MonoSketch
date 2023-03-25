@@ -1,0 +1,59 @@
+@import '../variables';
+
+#shape-tools {
+    display: flex;
+    flex-direction: column;
+
+    border-left: 1px solid #bbb;
+    background: #FAFAFA;
+
+    font-family: $uiTextFont;
+    font-size: 12px;
+
+    .shape-tools__body {
+        height: 100%;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .shape-tools__footer {
+        padding: 10px 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &>a {
+            line-height: 14px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+
+            &:hover {
+                color: #888;
+            }
+
+            &:active {
+                color: #999;
+            }
+        }
+    }
+
+    .tool-indicator {
+        height: 100%;
+        justify-content: center;
+        margin-bottom: 200px;
+    }
+
+    .indicator-text {
+        font-size: 13px;
+        font-family: $monospaceFont;
+        color: #888;
+        font-weight: 300;
+        display: block;
+        text-align: center;
+        margin: 120px 8px;
+    }
+}
