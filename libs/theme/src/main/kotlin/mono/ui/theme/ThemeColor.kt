@@ -5,6 +5,11 @@ package mono.ui.theme
  * [lightColorCode] and [darkColorCode] are the hex color code of RGB or RGBA used in CSS.
  */
 enum class ThemeColor(internal val lightColorCode: String, internal val darkColorCode: String) {
+    // Drawing space - Axis
+    AxisBackground("#EEEEEE", "#1E1E1E"),
+    AxisText("#666666", "#666666"),
+    AxisRule("#444444", "#666666"),
+
     // Drawing space - Grid
     GridBackground("#FFFFFF", "#121212"),
     GridLine("#d9d9d9", "#282828"),
