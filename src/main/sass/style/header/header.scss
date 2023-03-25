@@ -1,0 +1,68 @@
+@import '../variables';
+@import '../commons';
+
+$conten-color: white;
+$bg-color: #2c2c2c;
+
+#main-nav {
+    display: flex;
+    justify-content: space-between;
+    background: $bg-color;
+    color: $conten-color;
+}
+
+#nav-left {
+    @extend %common-flex-center-vertical;
+    padding-left: 16px;
+
+    .main-title {
+        margin: 0;
+
+        a {
+            font-size: 22px;
+            letter-spacing: 0.2px;
+            font-family: $monospaceFont;
+            font-weight: 400;
+            line-height: 18px;
+            text-decoration: none;
+            color: $conten-color;
+
+            &:hover,
+            &:active {
+                color: $conten-color;
+            }
+        }
+    }
+}
+
+#nav-toolbar-center {
+    @extend %common-flex-center-vertical;
+
+    flex-grow: 1;
+    justify-content: center;
+}
+
+#nav-toolbar-right {
+    @extend %common-flex-center-vertical;
+
+    padding: 0 8px;
+
+    .app-main-menu-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+            background: #181818;
+        }
+    }
+}
+
+#main-dropdown-menu {
+    width: 160px;
+    right: 8px;
+    top: 48px;
+}
