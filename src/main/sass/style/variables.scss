@@ -1,7 +1,14 @@
+// Font
 $monospaceFont: 'Fira Code', Menlo, 'Courier New', Courier, monospace;
 $uiTextFont: 'Roboto', Arial, serif;
+
+// Color
 $mainBorderColor: #EEEEEE;
 
+$option-border-color: #ddd;
+$option-selected-color: #0d47a1;
+
+// Size
 $nav-height: 48px;
 
 $canvas-left: 33px;
@@ -9,6 +16,7 @@ $canvas-top: 18px;
 
 $shape-tool: 270px;
 
+// Index
 $keyboard-shortcuts-zindex: 200;
 $export-text-zindex: 201;
 $edit-text-zindex: 202;
