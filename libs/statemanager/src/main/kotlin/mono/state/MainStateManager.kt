@@ -161,7 +161,7 @@ class MainStateManager(
         }
     }
 
-    private fun requestRedraw() {
+    fun requestRedraw() {
         redrawRequestMutableLiveData.value = Unit
     }
 

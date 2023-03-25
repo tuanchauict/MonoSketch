@@ -85,6 +85,8 @@ class MonoSketchApplication : LifecycleOwner() {
             shapeManager.versionLiveData
         )
         onResize()
+
+        AppThemeManager().observeTheme(this, document.documentElement!!, mainStateManager!!)
     }
 
     fun onResize() {
@@ -92,6 +94,7 @@ class MonoSketchApplication : LifecycleOwner() {
         val newSize = Size(body.clientWidth, body.clientHeight)
         model.setWindowSize(newSize)
     }
+
 
     private fun getInitialRootIdFromUrl(): String {
         val urlParams = URLSearchParams(window.location.search)
@@ -101,6 +104,7 @@ class MonoSketchApplication : LifecycleOwner() {
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
         private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
+
 
         private const val URL_PARAM_ID = "id"
     }
