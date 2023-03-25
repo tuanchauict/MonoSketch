@@ -1,8 +1,8 @@
 @import '../variables';
 @import '../commons';
 
-$conten-color: white;
-$bg-color: #2c2c2c;
+$conten-color: var(--header-color);
+$bg-color: var(--header-bg);
 
 #main-nav {
     display: flex;
@@ -56,7 +56,7 @@ $bg-color: #2c2c2c;
         cursor: pointer;
 
         &:hover {
-            background: #181818;
+            background: var(--header-main-menu-hover-bg);
         }
     }
 }

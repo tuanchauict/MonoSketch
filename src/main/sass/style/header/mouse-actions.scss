@@ -1,3 +1,4 @@
+@import '../variables';
 @import '../commons';
 
 $border-radius: 4px;
@@ -15,11 +16,11 @@ $border-radius: 4px;
         width: 58px;
 
         &:hover {
-            background: #111;
+            background: var(--header-mouse-action-hover-bg);
         }
 
         &.selected {
-            background: #0D99FF;
+            background: var(--header-mouse-action-selected-bg);
         }
     }
 }

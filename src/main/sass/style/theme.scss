@@ -1,0 +1,35 @@
+// Header
+:root,
+:root.light {
+    --header-bg: #2c2c2c;
+    --header-color: #FFF;
+
+    // Mouse action
+    --header-mouse-action-hover-bg: #111;
+    --header-mouse-action-selected-bg: #0D99FF;
+
+    // Right action
+    --header-main-menu-hover-bg: #424242;
+}
+
+:root.dark {
+    --header-bg: #2c2c2c;
+    --header-color: #FFF;
+
+    // Mouse action
+    --header-mouse-action-hover-bg: #111;
+    --header-mouse-action-selected-bg: #C89000;
+
+    // Right action
+    --header-main-menu-hover-bg: #424242;
+}
+
+// Workspace
+:root,
+:root.light {
+    --workspace-bg-color: #FFF;
+}
+
+:root.dark {
+    --workspace-bg-color: #121212;
+}
