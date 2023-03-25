@@ -49,8 +49,8 @@ class Pixel(
 /**
  * An enum to describe all kinds of highlight
  */
-enum class Highlight(val paintColor: String) {
-    NO("#000000"),
-    SELECTED("#0d47a1"),
-    TEXT_EDITING("#1976d2")
+enum class Highlight {
+    NO,
+    SELECTED,
+    TEXT_EDITING
 }

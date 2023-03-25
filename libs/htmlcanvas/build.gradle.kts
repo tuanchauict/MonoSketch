@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.livedata)
     implementation(projects.monoboard)
     implementation(projects.shapeInteractionBound)
+    implementation(projects.theme)
 
     testImplementation(libs.kotlin.test.js)
 }
