@@ -17,8 +17,14 @@ enum class ThemeColor(internal val lightColorCode: String, internal val darkColo
 
     // Drawing space - Shape
     Shape("#000000", "#F0F0F0"),
-    ShapeSelected("#0d47a1", "#1772DC"),
-    ShapeTextEditing("#1976d2", "#005FCE"),
+    ShapeSelected("#4597F7", "#FFD82F"),
+    ShapeTextEditing("#1976d2", "#FFCF00"),
+
+    // Drawing space - Selection
+    SelectionAreaStroke("#858585", "#858585"),
+    SelectionBoundStroke("#64b5f6", "#FFE884"),
+    SelectionDotStroke("#64b5f6", "#f2ae00"),
+    SelectionDotFill("#FFFFFF", "#FFD51F"),
     ;
 
     val colorCode: String

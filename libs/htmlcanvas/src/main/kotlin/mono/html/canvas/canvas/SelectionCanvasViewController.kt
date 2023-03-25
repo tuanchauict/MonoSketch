@@ -3,6 +3,7 @@ package mono.html.canvas.canvas
 import mono.graphics.geo.Rect
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.ui.theme.ThemeColor
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
 
@@ -35,14 +36,13 @@ internal class SelectionCanvasViewController(
             lineTo(leftPx, bottomPx)
             closePath()
         }
-        context.strokeStyle = BOUND_COLOR
+        context.strokeStyle = ThemeColor.SelectionAreaStroke.colorCode
         context.lineWidth = 1.0
         context.setLineDash(DASH_PATTERN)
         context.stroke(path)
     }
 
     companion object {
-        private const val BOUND_COLOR = "#858585"
         private val DASH_PATTERN = arrayOf(8.0, 6.0)
     }
 }
