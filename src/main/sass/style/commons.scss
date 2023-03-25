@@ -1,0 +1,12 @@
+@import 'variables';
+
+%common-flex-center-vertical {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+%common-button {
+    cursor: pointer;
+    user-select: none;
+}
