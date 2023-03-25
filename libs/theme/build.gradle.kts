@@ -7,6 +7,8 @@ repositories {
 }
 
 dependencies {
+    implementation(projects.livedata)
+
     implementation(libs.kotlin.stdlib.js)
     testImplementation(libs.kotlin.test.js)
 }
