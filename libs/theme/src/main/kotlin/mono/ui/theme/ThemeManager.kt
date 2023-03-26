@@ -30,7 +30,7 @@ class ThemeManager private constructor(initialThemeMode: ThemeMode) {
         private var instance: ThemeManager? = null
 
         fun getInstance(): ThemeManager {
-            val nonNullInstance = instance ?: ThemeManager(ThemeMode.LIGHT)
+            val nonNullInstance = instance ?: ThemeManager(ThemeMode.DARK)
             instance = nonNullInstance
             return nonNullInstance
         }
