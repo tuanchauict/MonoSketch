@@ -1,11 +1,15 @@
 @import '../variables';
 
-%common-modal-container {
-    background: var(--modal-container-bg);
+%common-modal-container-position {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+%common-modal-container-color {
+    background: var(--modal-container-bg);
+    color: var(--modal-content-color);
 }
 
 %common-modal-title {

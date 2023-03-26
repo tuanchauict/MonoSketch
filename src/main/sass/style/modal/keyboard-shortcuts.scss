@@ -2,7 +2,8 @@
 @import 'commons';
 
 .keyboard-shortcuts {
-    @extend %common-modal-container;
+    @extend %common-modal-container-position;
+    @extend %common-modal-container-color;
 
     height: 230px;
     z-index: $keyboard-shortcuts-zindex;
