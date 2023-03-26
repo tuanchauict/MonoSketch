@@ -22,6 +22,8 @@ ij_continuation_indent_size = 4
 ij_kotlin_name_count_to_use_star_import = 2147483647
 ij_kotlin_name_count_to_use_star_import_for_members = 2147483647
 trim_trailing_whitespace = false
+ij_kotlin_allow_trailing_comma_on_call_site = false
+ij_kotlin_allow_trailing_comma = false
 
 [{*.yml,*.yaml}]
 indent_size = 2
