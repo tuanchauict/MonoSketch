@@ -8,6 +8,7 @@
     bottom: 0;
     z-index: $edit-text-zindex;
     background-color: #00000000;
+    color: var(--workspace-edittext-color);
 
     &-container {
         position: absolute;

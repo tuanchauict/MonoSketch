@@ -28,10 +28,12 @@
 :root,
 :root.light {
     --workspace-bg-color: #FFF;
+    --workspace-edittext-color: #000;
 }
 
 :root.dark {
     --workspace-bg-color: #121212;
+    --workspace-edittext-color: #fff;
 }
 
 // Shape tool
