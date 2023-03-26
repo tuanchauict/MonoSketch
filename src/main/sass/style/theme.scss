@@ -138,7 +138,7 @@
     --modal-container-bg: #313131;
     --modal-close-button-color: #FFFFFF;
     --modal-title-color: #FFF;
-    --modal-content-color: #FFFFFF;    
+    --modal-content-color: #FFFFFF;
 }
 
 // Keyboard shortcuts
@@ -153,4 +153,18 @@
     --keyboard-content-key-bg: #262626;
     --keyboard-content-key-border-color: rgba(255, 255, 255, .15);
     --keyboard-content-key-color: rgba(255, 255, 255, 0.88);
+}
+
+// Main dropdown menu
+:root, 
+:root.light {
+    --mainmenu-divider-color: #d8d8d8;
+    --mainmenu-item-color: rgb(36, 41, 47);
+    --mainmenu-item-hover-bg: #e7e6e6;
+}
+
+:root.dark {
+    --mainmenu-divider-color: #6b6b6b;
+    --mainmenu-item-color: #fff;
+    --mainmenu-item-hover-bg: #414141;
 }
