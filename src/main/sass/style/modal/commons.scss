@@ -1,7 +1,7 @@
 @import '../variables';
 
 %common-modal-container {
-    background: #f3f3f3;
+    background: var(--modal-container-bg);
     position: fixed;
     left: 0;
     right: 0;
@@ -14,7 +14,7 @@
     font-weight: 300;
     font-size: 18px;
     font-family: $monospaceFont;
-    color: rgba(0, 0, 0, .68);
+    color: var(--modal-title-color);
 }
 
 %common-modal-close-button {
@@ -23,7 +23,7 @@
     right: 0;
     padding: 15px;
     cursor: pointer;
-    color: #666;
+    color: var(--modal-close-button-color);
     vertical-align: middle;
     line-height: 16px;
 }
