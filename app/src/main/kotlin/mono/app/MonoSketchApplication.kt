@@ -17,7 +17,6 @@ import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.selection.SelectedShapeManager
 import mono.state.MainStateManager
-import mono.store.manager.StoreManager
 import mono.ui.appstate.AppUiStateManager
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -34,8 +33,7 @@ class MonoSketchApplication : LifecycleOwner() {
     private val selectedShapeManager = SelectedShapeManager()
     private val bitmapManager = MonoBitmapManager()
 
-    private val storeManager: StoreManager = StoreManager.getInstance()
-
+    // Init AppUiStateManager here to apply theme as soon as possible.
     private val appUiStateManager = AppUiStateManager(this)
 
     private var mainStateManager: MainStateManager? = null
@@ -81,6 +79,7 @@ class MonoSketchApplication : LifecycleOwner() {
 
         ToolbarViewController(
             this,
+            appUiStateManager.shapeToolVisibilityLiveData,
             actionManager
         )
         ShapeToolViewController(

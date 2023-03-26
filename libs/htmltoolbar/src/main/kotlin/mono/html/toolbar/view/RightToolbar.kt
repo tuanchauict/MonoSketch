@@ -11,6 +11,7 @@ import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnClickListener
+import mono.livedata.LiveData
 import mono.ui.theme.ThemeManager
 import mono.ui.theme.ThemeMode
 import org.w3c.dom.Element
@@ -19,6 +20,7 @@ import org.w3c.dom.Element
  * A function to create right toolbar UI.
  */
 internal fun Element.RightToolbar(
+    shapeToolVisibilityLiveData: LiveData<Boolean>,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     ThemeIcon {
@@ -29,7 +31,15 @@ internal fun Element.RightToolbar(
             Text("Save As...", OneTimeActionType.SaveShapesAs),
             Text("Open File...", OneTimeActionType.OpenShapes),
             Text("Export Text", OneTimeActionType.ExportSelectedShapes),
-            DropDownMenu.Item.Divider,
+            DropDownMenu.Item.Divider(),
+            Text(
+                "Show Format panel",
+                OneTimeActionType.ShowFormatPanel
+            ) { !shapeToolVisibilityLiveData.value },
+            Text(
+                "Hide Format panel",
+                OneTimeActionType.HideFormatPanel
+            ) { shapeToolVisibilityLiveData.value },
             Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
         )
         DropDownMenu("main-dropdown-menu", items) {
