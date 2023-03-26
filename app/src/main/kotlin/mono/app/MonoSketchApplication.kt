@@ -87,7 +87,8 @@ class MonoSketchApplication : LifecycleOwner() {
             document.getElementById("shape-tools") as HTMLElement,
             actionManager,
             selectedShapeManager.selectedShapesLiveData,
-            shapeManager.versionLiveData
+            shapeManager.versionLiveData,
+            appUiStateManager.shapeToolVisibilityLiveData
         )
         onResize()
 
