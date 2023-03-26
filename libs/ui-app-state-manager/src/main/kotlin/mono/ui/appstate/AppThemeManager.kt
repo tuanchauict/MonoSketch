@@ -27,7 +27,6 @@ internal class AppThemeManager(
         documentElement: Element,
         forceUiUpdate: () -> Unit
     ) {
-
         themeManager.themeModeLiveData.observe(appLifecycleOwner) {
             documentElement.className = when (it) {
                 ThemeMode.LIGHT -> THEME_LIGHT

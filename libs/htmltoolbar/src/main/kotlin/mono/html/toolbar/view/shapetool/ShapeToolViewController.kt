@@ -100,7 +100,6 @@ class ShapeToolViewController(
         }
     }
 
-
     private fun addToolIndicatorView(
         lifecycleOwner: LifecycleOwner,
         toolContainer: HTMLDivElement,
