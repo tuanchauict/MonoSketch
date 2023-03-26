@@ -7,6 +7,11 @@ repositories {
 }
 
 dependencies {
+    implementation(projects.lifecycle)
+    implementation(projects.livedata)
+    implementation(projects.storeManager)
+    implementation(projects.uiTheme)
+
     implementation(libs.kotlin.stdlib.js)
     testImplementation(libs.kotlin.test.js)
 }

@@ -18,7 +18,7 @@ import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.selection.SelectedShapeManager
 import mono.state.MainStateManager
 import mono.store.manager.StoreManager
-import mono.ui.theme.ThemeManager
+import mono.ui.appstate.AppUiStateManager
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.url.URLSearchParams
@@ -36,7 +36,7 @@ class MonoSketchApplication : LifecycleOwner() {
 
     private val storeManager: StoreManager = StoreManager.getInstance()
 
-    private val appThemeManager = AppThemeManager(ThemeManager.getInstance(), storeManager)
+    private val appUiStateManager = AppUiStateManager(this)
 
     private var mainStateManager: MainStateManager? = null
 
@@ -75,7 +75,6 @@ class MonoSketchApplication : LifecycleOwner() {
             ShapeClipboardManager(body),
             canvasViewController.mousePointerLiveData,
             actionManager,
-            storeManager,
             initialRootId = getInitialRootIdFromUrl()
         )
 
@@ -92,10 +91,9 @@ class MonoSketchApplication : LifecycleOwner() {
         )
         onResize()
 
-        appThemeManager.observeTheme(
-            this,
+        appUiStateManager.observeTheme(
             document.documentElement!!,
-            mainStateManager!!
+            mainStateManager!!::forceFullyRedrawWorkspace
         )
     }
 

@@ -24,7 +24,7 @@ dependencies {
     implementation(projects.shapeSerialization)
     implementation(projects.statemanager)
     implementation(projects.storeManager)
-    implementation(projects.uiTheme)
+    implementation(projects.uiAppStateManager)
 
     testImplementation(libs.kotlin.test.js)
 }

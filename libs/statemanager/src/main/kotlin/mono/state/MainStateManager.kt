@@ -54,7 +54,7 @@ class MainStateManager(
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
     private val actionManager: ActionManager,
-    storeManager: StoreManager,
+    storeManager: StoreManager = StoreManager.getInstance(),
     initialRootId: String = ""
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
