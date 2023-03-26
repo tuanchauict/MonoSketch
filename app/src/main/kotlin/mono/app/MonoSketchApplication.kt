@@ -95,7 +95,6 @@ class MonoSketchApplication : LifecycleOwner() {
         model.setWindowSize(newSize)
     }
 
-
     private fun getInitialRootIdFromUrl(): String {
         val urlParams = URLSearchParams(window.location.search)
         return urlParams.get(URL_PARAM_ID).orEmpty()
@@ -104,7 +103,6 @@ class MonoSketchApplication : LifecycleOwner() {
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
         private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
-
 
         private const val URL_PARAM_ID = "id"
     }

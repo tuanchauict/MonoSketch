@@ -9,7 +9,7 @@ import org.w3c.dom.Path2D
 internal class GridCanvasViewController(
     lifecycleOwner: LifecycleOwner,
     canvas: HTMLCanvasElement,
-    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>,
+    drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>
 ) : BaseCanvasViewController(canvas) {
 
     init {
