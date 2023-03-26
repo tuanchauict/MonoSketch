@@ -59,6 +59,32 @@ $bg-color: var(--header-bg);
             background: var(--header-main-menu-hover-bg);
         }
     }
+
+    .theme-icon {
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2px;
+        margin-right: 8px;
+        
+        &:hover {
+            background: var(--header-main-menu-hover-bg);
+        }
+    }
+
+    .theme-dark-mode {
+        :root.dark &{
+            display: none;
+        }
+    }
+
+    .theme-light-mode {
+        :root.light & {
+            display: none;
+        }
+    }
 }
 
 #main-dropdown-menu {
