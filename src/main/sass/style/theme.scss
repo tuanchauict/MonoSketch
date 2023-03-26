@@ -112,7 +112,7 @@
     --shapetool-tool-option-selected-disabled-border-color: #c4c4c4;
 
     --shapetool-tool-option-bg-color: #00000000;
-    
+
     --shapetool-tool-option-disabled-color: #c4c4c4;
     --shapetool-tool-option-selected-disabled-color: #c4c4c4;
     --shapetool-tool-option-selected-color: #ffb800;
@@ -124,3 +124,62 @@
     // Reorder
     --shapetool-reorder-hover-bg: #333333;
 }
+
+// Common modal
+:root,
+:root.light {
+    --modal-background-bg: rgba(0, 0, 0, 0.7);
+    --modal-container-bg: #f3f3f3;
+    --modal-close-button-color: #666;
+    --modal-title-color: rgba(0, 0, 0, 0.68);
+    --modal-content-color: #000;
+}
+
+:root.dark {
+    --modal-background-bg: rgba(0, 15, 70, 0.3);
+    --modal-container-bg: #313131;
+    --modal-close-button-color: #FFFFFF;
+    --modal-title-color: #FFF;
+    --modal-content-color: #FFFFFF;
+}
+
+// Keyboard shortcuts
+:root,
+:root.light {
+    --keyboard-content-key-bg: #fff;
+    --keyboard-content-key-border-color: rgba(0, 0, 0, 0.15);
+    --keyboard-content-key-color: rgba(0, 0, 0, 0.54);
+}
+
+:root.dark {
+    --keyboard-content-key-bg: #262626;
+    --keyboard-content-key-border-color: rgba(255, 255, 255, 0.15);
+    --keyboard-content-key-color: rgba(255, 255, 255, 0.88);
+}
+
+// Main dropdown menu
+:root,
+:root.light {
+    --mainmenu-divider-color: #d8d8d8;
+    --mainmenu-item-color: rgb(36, 41, 47);
+    --mainmenu-item-hover-bg: #e7e6e6;
+}
+
+:root.dark {
+    --mainmenu-divider-color: #6b6b6b;
+    --mainmenu-item-color: #fff;
+    --mainmenu-item-hover-bg: #414141;
+}
+
+// Export text
+:root,
+:root.light {
+    --exporttext-container-bg: #fff;
+    --exporttext-content-color: #000;
+}
+
+:root.dark {
+    --exporttext-container-bg: #151515;
+    --exporttext-content-color: #fff;
+}
+

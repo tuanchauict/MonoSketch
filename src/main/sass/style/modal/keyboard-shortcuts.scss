@@ -2,7 +2,8 @@
 @import 'commons';
 
 .keyboard-shortcuts {
-    @extend %common-modal-container;
+    @extend %common-modal-container-position;
+    @extend %common-modal-container-color;
 
     height: 230px;
     z-index: $keyboard-shortcuts-zindex;
@@ -17,6 +18,7 @@
         justify-content: center;
         flex-direction: column;
         font-family: $monospaceFont;
+        color: var(--modal-content-color);
     }
 
     &__content-title {
@@ -67,10 +69,10 @@
             padding: 3px 4px;
             min-width: 24px;
             border-radius: 4px;
-            background: #fff;
-            border: 1px solid rgba(0, 0, 0, .15);
+            background: var(--keyboard-content-key-bg);
+            border: 1px solid var(--keyboard-content-key-border-color);
             font-size: 13px;
-            color: rgba(0, 0, 0, 0.54);
+            color: var(--keyboard-content-key-color);
             line-height: 1.2;
             margin-right: 4px;
 
