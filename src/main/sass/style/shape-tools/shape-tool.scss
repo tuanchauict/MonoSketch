@@ -4,8 +4,8 @@
     display: flex;
     flex-direction: column;
 
-    border-left: 1px solid #bbb;
-    background: #FAFAFA;
+    border-left: 1px solid var(--shapetool-main-divider-color);
+    background: var(--shapetool-bg-color);
 
     font-family: $uiTextFont;
     font-size: 12px;
@@ -27,16 +27,16 @@
             line-height: 14px;
             font-size: 14px;
             text-decoration: none;
-            color: #aaa;
+            color: var(--shapetool-footer-color);
             display: flex;
             align-items: center;
 
             &:hover {
-                color: #888;
+                color: var(--shapetool-footer-hover-color);
             }
 
             &:active {
-                color: #999;
+                color: var(--shapetool-footer-active-color);
             }
         }
     }
@@ -50,7 +50,7 @@
     .indicator-text {
         font-size: 13px;
         font-family: $monospaceFont;
-        color: #888;
+        color: var(--shapetool-indicator-color);
         font-weight: 300;
         display: block;
         text-align: center;

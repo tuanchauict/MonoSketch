@@ -10,6 +10,7 @@ import mono.shapebound.InteractionBound
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
 import mono.shapebound.ScalableInteractionBound
+import mono.ui.theme.ThemeColor
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
 import kotlin.math.PI
@@ -57,7 +58,7 @@ internal class InteractionCanvasViewController(
             lineTo(leftPx, bottomPx)
             closePath()
         }
-        context.strokeStyle = "#64b5f6"
+        context.strokeStyle = ThemeColor.SelectionBoundStroke.colorCode
         context.lineWidth = 1.0
         context.stroke(path)
 
@@ -70,9 +71,9 @@ internal class InteractionCanvasViewController(
         for (point in bound.interactionPoints) {
             dotPath.addDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
         }
-        context.strokeStyle = "#64b5f6"
+        context.strokeStyle = ThemeColor.SelectionDotStroke.colorCode
         context.lineWidth = 2.0
-        context.fillStyle = "#FFFFFF"
+        context.fillStyle = ThemeColor.SelectionDotFill.colorCode
         context.stroke(dotPath)
         context.fill(dotPath)
     }
@@ -81,17 +82,15 @@ internal class InteractionCanvasViewController(
         if (isMouseMoving) {
             return
         }
-        context.strokeStyle = "#6b6b6b"
-        context.lineWidth = 2.5
 
         val dotPath = Path2D()
         context.beginPath()
         for (point in bound.interactionPoints) {
             dotPath.addDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
         }
-        context.strokeStyle = "#64b5f6"
+        context.strokeStyle = ThemeColor.SelectionDotStroke.colorCode
         context.lineWidth = 2.0
-        context.fillStyle = "#FFFFFF"
+        context.fillStyle = ThemeColor.SelectionDotFill.colorCode
         context.stroke(dotPath)
         context.fill(dotPath)
     }
