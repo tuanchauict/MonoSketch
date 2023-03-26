@@ -1,8 +1,8 @@
 @import '../variables';
 @import '../commons';
 
-$conten-color: white;
-$bg-color: #2c2c2c;
+$conten-color: var(--header-color);
+$bg-color: var(--header-bg);
 
 #main-nav {
     display: flex;
@@ -56,7 +56,33 @@ $bg-color: #2c2c2c;
         cursor: pointer;
 
         &:hover {
-            background: #181818;
+            background: var(--header-main-menu-hover-bg);
+        }
+    }
+
+    .theme-icon {
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2px;
+        margin-right: 8px;
+        
+        &:hover {
+            background: var(--header-main-menu-hover-bg);
+        }
+    }
+
+    .theme-dark-mode {
+        :root.dark &{
+            display: none;
+        }
+    }
+
+    .theme-light-mode {
+        :root.light & {
+            display: none;
         }
     }
 }

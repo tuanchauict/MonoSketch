@@ -40,6 +40,7 @@ class CanvasViewController(
     private val boardCanvasViewController: BoardCanvasViewController
     private val interactionCanvasViewController: InteractionCanvasViewController
     private val selectionCanvasViewController: SelectionCanvasViewController
+    private val axisCanvasViewController: AxisCanvasViewController
 
     val windowBoundPx: Rect
         get() = gridCanvasViewController.drawingInfo.boundPx
@@ -74,6 +75,14 @@ class CanvasViewController(
         container.addClass("top-divider")
         container.oncontextmenu = { false }
 
+        axisCanvasViewController = AxisCanvasViewController(
+            lifecycleOwner,
+            axisContainer,
+            drawingInfoLiveData
+        ) {
+            mouseEventController.forceUpdateOffset(Point.ZERO)
+        }
+
         gridCanvasViewController = GridCanvasViewController(
             lifecycleOwner,
             Canvas(container, CLASS_NAME_GRID),
@@ -96,18 +105,22 @@ class CanvasViewController(
             Canvas(container, CLASS_NAME_SELECTION),
             drawingInfoLiveData
         )
-        AxisCanvasViewController(
-            lifecycleOwner,
-            axisContainer,
-            drawingInfoLiveData
-        ) {
-            mouseEventController.forceUpdateOffset(Point.ZERO)
-        }
 
         windowSizeLiveData.distinctUntilChange().observe(lifecycleOwner) {
             updateCanvasSize()
         }
         windowBoardBoundMediatorLiveData.add(drawingInfoLiveData) { value = it.boardBound }
+    }
+
+    /**
+     * Redraws all content on the canvas.
+     */
+    fun fullyRedraw() {
+        gridCanvasViewController.draw()
+        axisCanvasViewController.draw()
+        boardCanvasViewController.draw()
+        interactionCanvasViewController.draw()
+        selectionCanvasViewController.draw()
     }
 
     fun drawBoard() {

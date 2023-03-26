@@ -85,6 +85,8 @@ class MonoSketchApplication : LifecycleOwner() {
             shapeManager.versionLiveData
         )
         onResize()
+
+        AppThemeManager().observeTheme(this, document.documentElement!!, mainStateManager!!)
     }
 
     fun onResize() {

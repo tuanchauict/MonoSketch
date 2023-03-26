@@ -13,7 +13,7 @@
                 border-radius: 3px;
 
                 &:hover {
-                    background: #efefef;
+                    background: var(--shapetool-reorder-hover-bg);
                 }
             }
         }

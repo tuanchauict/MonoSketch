@@ -7,6 +7,7 @@
             display: inline-block;
             font-size: 11px;
             user-select: none;
+            color: var(--shapetool-tool-title-color);
         }
 
         .tool-input-text {
@@ -14,8 +15,9 @@
             width: 100%;
             margin-left: 4px;
             border: none;
-            border-bottom: 1px solid #AAA;
-            background: #0000;
+            color: var(--shapetool-section-content-color);
+            border-bottom: 1px solid var(--shapetool-tool-input-border-color);
+            background: transparent;
             font-size: 12px;
         }
 
@@ -24,35 +26,41 @@
             .option {
                 @extend %common-button;
                 padding: 4px;
-                border: 1px solid $option-border-color;
+                border: 1px solid var(--shapetool-tool-option-border-color);
                 border-radius: 3px;
-                background: white;
+                background: var(--shapetool-tool-option-bg-color);
                 font-size: 15px;
 
                 &:hover {
-                    border-color: darken($option-border-color, 10%);
+                    border-color: var(--shapetool-tool-option-hover-border-color);
                 }
 
                 &.selected {
-                    border-color: $option-selected-color;
-                    color: $option-selected-color;
+                    border-color: var(--shapetool-tool-option-selected-border-color);
+                    color: var(--shapetool-tool-option-selected-color);
 
                     &:hover {
-                        border-color: darken($option-selected-color, 5%);
+                        border-color: var(--shapetool-tool-option-selected-hover-border-color);
+                        color: var(--shapetool-tool-option-selected-hover-color);
                     }
                 }
             }
 
             &.disabled {
                 .option {
-                    border-color: lighten($option-border-color, 5%);
+                    border-color: var(--shapetool-tool-option-disabled-border-color);
+                    color: var(--shapetool-tool-option-disabled-color);
 
                     &.selected {
-                        border-color: darken($option-border-color, 10%);
-                        color: darken($option-border-color, 10%);
+                        border-color: var(--shapetool-tool-option-selected-disabled-border-color);
+                        color: var(--shapetool-tool-option-selected-disabled-color);
                     }
                 }
             }
+        }
+
+        input[type='checkbox'] {
+            accent-color: var(--shapetool-checkbox-color);
         }
     }
 }
