@@ -16,7 +16,7 @@ internal class AppThemeManager {
                 ThemeMode.LIGHT -> THEME_LIGHT
                 ThemeMode.DARK -> THEME_DARK
             }
-            mainStateManager.requestRedraw()
+            mainStateManager.forceFullyRedrawWorkspace()
             // TODO: Save theme to local storage
         }
 

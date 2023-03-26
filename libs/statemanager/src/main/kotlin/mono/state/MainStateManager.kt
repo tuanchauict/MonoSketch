@@ -161,7 +161,15 @@ class MainStateManager(
         }
     }
 
-    fun requestRedraw() {
+    /**
+     * Redraws all content on the workspace.
+     * This is used when the theme is updated.
+     */
+    fun forceFullyRedrawWorkspace() {
+        canvasManager.fullyRedraw()
+    }
+
+    private fun requestRedraw() {
         redrawRequestMutableLiveData.value = Unit
     }
 
