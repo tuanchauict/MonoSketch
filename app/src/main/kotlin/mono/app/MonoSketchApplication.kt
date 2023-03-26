@@ -34,7 +34,7 @@ class MonoSketchApplication : LifecycleOwner() {
     private val selectedShapeManager = SelectedShapeManager()
     private val bitmapManager = MonoBitmapManager()
 
-    private val storeManager = StoreManager()
+    private val storeManager: StoreManager = StoreManager.getInstance()
 
     private val appThemeManager = AppThemeManager(ThemeManager.getInstance(), storeManager)
 
@@ -64,7 +64,6 @@ class MonoSketchApplication : LifecycleOwner() {
 
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
         actionManager.installDebugCommand()
-        val storeManager = StoreManager()
 
         mainStateManager = MainStateManager(
             this,

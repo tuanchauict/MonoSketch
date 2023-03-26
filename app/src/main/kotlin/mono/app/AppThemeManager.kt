@@ -34,7 +34,10 @@ internal class AppThemeManager(
             storeManager.set(StoreKeys.THEME_MODE, it.name)
         }
 
-        // TODO: Observe theme value in local storage
+        storeManager.setObserver(StoreKeys.THEME_MODE) { _, _, newValue ->
+            val themeMode = newValue?.let(ThemeMode::valueOf) ?: ThemeMode.DARK
+            themeManager.setTheme(themeMode)
+        }
     }
 
     companion object {
