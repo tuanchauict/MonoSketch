@@ -39,7 +39,7 @@ internal object EditTextShapeHelper {
             environment.toXPx(contentBound.left.toDouble()),
             environment.toYPx(contentBound.top.toDouble()),
             environment.toWidthPx(contentWidth.toDouble()),
-            environment.toHeightPx(contentHeight.toDouble()),
+            environment.toHeightPx(contentHeight.toDouble())
         )
     }
 

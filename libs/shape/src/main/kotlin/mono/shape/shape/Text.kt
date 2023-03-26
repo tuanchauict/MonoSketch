@@ -3,10 +3,10 @@ package mono.shape.shape
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
-import mono.shape.serialization.AbstractSerializableShape
-import mono.shape.serialization.SerializableText
 import mono.shape.extra.ShapeExtra
 import mono.shape.extra.TextExtra
+import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.serialization.SerializableText
 import kotlin.math.max
 
 /**

@@ -2,9 +2,9 @@ package mono.shape.extra
 
 import mono.shape.ShapeExtraManager
 import mono.shape.extra.style.AnchorChar
+import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.serialization.SerializableLine
-import mono.shape.extra.style.StraightStrokeDashPattern
 
 /**
  * A [ShapeExtra] for [mono.shape.shape.Line].
