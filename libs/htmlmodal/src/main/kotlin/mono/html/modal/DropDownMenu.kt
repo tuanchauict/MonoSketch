@@ -23,6 +23,7 @@ class DropDownMenu(id: String, items: List<Item>, private val onClickAction: (It
     private var dismissTimeout: Cancelable? = null
 
     init {
+        println(items.filterIsInstance<Item.Text>().map { it.title })
         menu = document.body?.Div(classes = "drop-down-menu") {
             this.id = id
 
@@ -50,9 +51,9 @@ class DropDownMenu(id: String, items: List<Item>, private val onClickAction: (It
 
     private fun Element.initItems(items: List<Item>) {
         Ul {
-            for (item in items) {
+            for (item in items.filter { it.isVisible() }) {
                 when (item) {
-                    Item.Divider -> Li(classes = "drop-down-divider")
+                    is Item.Divider -> Li(classes = "drop-down-divider")
                     is Item.Text -> Li(classes = "drop-down-item") {
                         innerText = item.title
                         setOnClickListener {
@@ -71,8 +72,9 @@ class DropDownMenu(id: String, items: List<Item>, private val onClickAction: (It
         }
     }
 
-    sealed class Item {
-        object Divider : Item()
-        class Text(val title: String, val key: Any) : Item()
+    sealed class Item(internal val isVisible: () -> Boolean) {
+        class Divider(isVisible: () -> Boolean = { true }) : Item(isVisible)
+        class Text(val title: String, val key: Any, isVisible: () -> Boolean = { true }) :
+            Item(isVisible)
     }
 }

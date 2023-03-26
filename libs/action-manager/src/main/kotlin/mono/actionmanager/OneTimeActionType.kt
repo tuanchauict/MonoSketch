@@ -14,6 +14,8 @@ sealed interface OneTimeActionType {
     object SaveShapesAs : OneTimeActionType
     object OpenShapes : OneTimeActionType
     object ExportSelectedShapes : OneTimeActionType
+    object ShowFormatPanel : OneTimeActionType
+    object HideFormatPanel : OneTimeActionType
     object ShowKeyboardShortcuts : OneTimeActionType
 
     object SelectAllShapes : OneTimeActionType

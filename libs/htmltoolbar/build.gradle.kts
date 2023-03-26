@@ -12,7 +12,7 @@ dependencies {
     implementation(projects.htmlmodal)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
-    implementation(projects.theme)
+    implementation(projects.uiTheme)
 
     testImplementation(libs.kotlin.test.js)
 }
