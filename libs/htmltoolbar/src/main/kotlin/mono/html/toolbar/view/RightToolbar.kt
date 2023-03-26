@@ -7,6 +7,8 @@ import mono.html.Div
 import mono.html.SvgPath
 import mono.html.modal.DropDownMenu
 import mono.html.modal.DropDownMenu.Item.Text
+import mono.html.modal.TooltipPosition
+import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnClickListener
 import mono.ui.theme.ThemeManager
@@ -46,6 +48,8 @@ private fun Element.ThemeIcon(onClickAction: (ThemeMode) -> Unit) {
         setOnClickListener {
             onClickAction(ThemeMode.DARK)
         }
+
+        tooltip("Dark mode", TooltipPosition.BOTTOM)
     }
     Div("theme-light-mode theme-icon") {
         SvgIcon(24, 24, 16, 16) {
@@ -55,6 +59,8 @@ private fun Element.ThemeIcon(onClickAction: (ThemeMode) -> Unit) {
         setOnClickListener {
             onClickAction(ThemeMode.LIGHT)
         }
+
+        tooltip("Light mode", TooltipPosition.BOTTOM)
     }
 }
 
