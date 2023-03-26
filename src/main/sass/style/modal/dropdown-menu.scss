@@ -1,7 +1,7 @@
 @import '../variables';
 
-$divider-color: rgba(0, 0, 0, 0.1);
-$background-color: rgb(255, 255, 255);
+$divider-color: var(--mainmenu-divider-color);
+$background-color: var(--modal-container-bg);
 
 .drop-down-menu {
     z-index: $dropdown-menu-zindex;
@@ -11,7 +11,6 @@ $background-color: rgb(255, 255, 255);
     padding: 6px 0;
     position: absolute;
     font-family: $uiTextFont;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 
     .hidden-input {
         position: absolute;
@@ -36,13 +35,13 @@ $background-color: rgb(255, 255, 255);
         margin: 0;
         cursor: pointer;
         overflow: hidden;
-        color: rgb(36, 41, 47);
+        color: var(--mainmenu-item-color);
         white-space: nowrap;
         font-size: 14px;
         line-height: 21px;
 
         &:hover {
-            background: #f0f0f0;
+            background: var(--mainmenu-item-hover-bg);
         }
 
         &:last-child {
