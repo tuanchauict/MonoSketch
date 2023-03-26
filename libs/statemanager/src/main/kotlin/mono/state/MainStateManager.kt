@@ -40,6 +40,7 @@ import mono.state.command.CommandEnvironment.EditingMode
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
 import mono.store.manager.StoreManager
+import mono.ui.appstate.AppUiStateManager
 
 /**
  * A class which connects components in the app.
@@ -54,6 +55,7 @@ class MainStateManager(
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
     private val actionManager: ActionManager,
+    appUiStateManager: AppUiStateManager,
     storeManager: StoreManager = StoreManager.getInstance(),
     initialRootId: String = ""
 ) {
@@ -126,7 +128,8 @@ class MainStateManager(
             environment,
             bitmapManager,
             shapeClipboardManager,
-            stateHistoryManager
+            stateHistoryManager,
+            appUiStateManager
         )
     }
 

@@ -75,6 +75,7 @@ class MonoSketchApplication : LifecycleOwner() {
             ShapeClipboardManager(body),
             canvasViewController.mousePointerLiveData,
             actionManager,
+            appUiStateManager,
             initialRootId = getInitialRootIdFromUrl()
         )
 

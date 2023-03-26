@@ -9,12 +9,12 @@ import mono.graphics.geo.Rect
 import mono.html.toolbar.view.keyboardshortcut.KeyboardShortcuts
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.shape.ShapeExtraManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.command.ChangeBound
 import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.MakeTextEditable
-import mono.shape.ShapeExtraManager
 import mono.shape.command.UpdateTextEditingMode
 import mono.shape.extra.style.TextAlign
 import mono.shape.serialization.SerializableGroup
@@ -28,6 +28,8 @@ import mono.shape.shape.RootGroup
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
+import mono.ui.appstate.AppUiStateManager
+import mono.ui.appstate.AppUiStateManager.UiStatePayload
 
 /**
  * A class to handle one time actions.
@@ -38,7 +40,8 @@ internal class OneTimeActionHandler(
     private val environment: CommandEnvironment,
     bitmapManager: MonoBitmapManager,
     shapeClipboardManager: ShapeClipboardManager,
-    private val stateHistoryManager: StateHistoryManager
+    private val stateHistoryManager: StateHistoryManager,
+    uiStateManager: AppUiStateManager
 ) {
     private val fileMediator: FileMediator = FileMediator()
     private val exportShapesHelper = ExportShapesHelper(
@@ -54,61 +57,86 @@ internal class OneTimeActionHandler(
             when (it) {
                 OneTimeActionType.Idle -> Unit
 
+                // Main drop down menu
                 OneTimeActionType.SaveShapesAs ->
                     saveCurrentShapesToFile()
+
                 OneTimeActionType.OpenShapes ->
                     loadShapesFromFile()
+
                 OneTimeActionType.ExportSelectedShapes ->
                     exportSelectedShapes(true)
+
+                OneTimeActionType.ShowFormatPanel ->
+                    uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(true))
+
+                OneTimeActionType.HideFormatPanel ->
+                    uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(false))
+
                 OneTimeActionType.ShowKeyboardShortcuts ->
                     KeyboardShortcuts.showHint()
 
+                // ---------
                 OneTimeActionType.CopyText ->
                     exportSelectedShapes(false)
-
+                // ---------
                 OneTimeActionType.SelectAllShapes ->
                     environment.selectAllShapes()
+
                 OneTimeActionType.DeselectShapes ->
                     environment.clearSelectedShapes()
+
                 OneTimeActionType.DeleteSelectedShapes ->
                     deleteSelectedShapes()
+
                 OneTimeActionType.EditSelectedShapes ->
                     editSelectedShape(environment.getSelectedShapes().singleOrNull())
+
                 is OneTimeActionType.EditSelectedShape ->
                     editSelectedShape(it.shape)
+
                 is OneTimeActionType.TextAlignment ->
                     setTextAlignment(it.newHorizontalAlign, it.newVerticalAlign)
-
+                // ---------
                 is OneTimeActionType.MoveShapes ->
                     moveSelectedShapes(it.offsetRow, it.offsetCol)
+
                 is OneTimeActionType.ChangeShapeBound ->
                     setSelectedShapeBound(it.newLeft, it.newTop, it.newWidth, it.newHeight)
-
+                // ---------
                 is OneTimeActionType.ChangeShapeFillExtra ->
                     setSelectedShapeFillExtra(it.isEnabled, it.newFillStyleId)
+
                 is OneTimeActionType.ChangeShapeBorderExtra ->
                     setSelectedShapeBorderExtra(it.isEnabled, it.newBorderStyleId)
+
                 is OneTimeActionType.ChangeShapeBorderDashPatternExtra ->
                     setSelectedShapeBorderDashPatternExtra(it.dash, it.gap, it.offset)
+
                 is OneTimeActionType.ChangeLineStrokeExtra ->
                     setSelectedLineStrokeExtra(it.isEnabled, it.newStrokeStyleId)
+
                 is OneTimeActionType.ChangeLineStrokeDashPatternExtra ->
                     setSelectedLineStrokeDashPattern(it.dash, it.gap, it.offset)
+
                 is OneTimeActionType.ChangeLineStartAnchorExtra ->
                     setSelectedShapeStartAnchorExtra(it.isEnabled, it.newHeadId)
+
                 is OneTimeActionType.ChangeLineEndAnchorExtra ->
                     setSelectedShapeEndAnchorExtra(it.isEnabled, it.newHeadId)
-
+                // ---------
                 is OneTimeActionType.ReorderShape ->
                     changeShapeOrder(it.orderType)
-
+                // ---------
                 is OneTimeActionType.Copy ->
                     clipboardManager.copySelectedShapes(it.isRemoveRequired)
+
                 OneTimeActionType.Duplicate ->
                     clipboardManager.duplicateSelectedShapes()
-
+                // ---------
                 OneTimeActionType.Undo ->
                     stateHistoryManager.undo()
+
                 OneTimeActionType.Redo ->
                     stateHistoryManager.redo()
             }.exhaustive
@@ -135,8 +163,10 @@ internal class OneTimeActionHandler(
         val extractableShapes = when {
             selectedShapes.isNotEmpty() ->
                 environment.workingParentGroup.items.filter { it in selectedShapes }
+
             isModalRequired ->
                 listOf(environment.workingParentGroup)
+
             else ->
                 emptyList()
         }
@@ -163,6 +193,7 @@ internal class OneTimeActionHandler(
                     environment.exitEditingMode(oldText != shape.text)
                 }
             }
+
             is Line,
             is Rectangle,
             is MockShape,
