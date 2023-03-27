@@ -93,7 +93,7 @@ internal class DrawingInfoController(container: HTMLDivElement) {
     }
 
     companion object {
-        const val DEFAULT_FONT = "'Fira Code'"
+        const val DEFAULT_FONT = "'Jetbrains Mono'"
         private const val CLASS_NAME = "drawing-info"
     }
 }
