@@ -1,4 +1,4 @@
-@file:Suppress("FunctionName")
+@file:Suppress("FunctionName", "ktlint:filename")
 
 package mono.html.toolbar.view.shapetool
 
