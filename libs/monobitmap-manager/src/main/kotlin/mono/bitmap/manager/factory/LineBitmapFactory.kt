@@ -2,10 +2,10 @@ package mono.bitmap.manager.factory
 
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
-import mono.shape.extra.style.AnchorChar
-import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.extra.LineExtra
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
+import mono.shape.extra.style.AnchorChar
+import mono.shape.extra.style.StraightStrokeStyle
 
 /**
  * A drawable to draw Line shape to bitmap.

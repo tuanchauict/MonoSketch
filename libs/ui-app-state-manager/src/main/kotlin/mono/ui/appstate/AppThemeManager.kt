@@ -1,12 +1,15 @@
-package mono.app
+package mono.ui.appstate
 
-import mono.state.MainStateManager
+import mono.lifecycle.LifecycleOwner
 import mono.store.manager.StoreKeys
 import mono.store.manager.StoreManager
 import mono.ui.theme.ThemeManager
 import mono.ui.theme.ThemeMode
 import org.w3c.dom.Element
 
+/**
+ * A class for managing theme
+ */
 internal class AppThemeManager(
     private val themeManager: ThemeManager,
     private val storeManager: StoreManager
@@ -20,17 +23,16 @@ internal class AppThemeManager(
     }
 
     fun observeTheme(
-        application: MonoSketchApplication,
+        appLifecycleOwner: LifecycleOwner,
         documentElement: Element,
-        mainStateManager: MainStateManager
+        forceUiUpdate: () -> Unit
     ) {
-
-        themeManager.themeModeLiveData.observe(application) {
+        themeManager.themeModeLiveData.observe(appLifecycleOwner) {
             documentElement.className = when (it) {
                 ThemeMode.LIGHT -> THEME_LIGHT
                 ThemeMode.DARK -> THEME_DARK
             }
-            mainStateManager.forceFullyRedrawWorkspace()
+            forceUiUpdate()
             storeManager.set(StoreKeys.THEME_MODE, it.name)
         }
 

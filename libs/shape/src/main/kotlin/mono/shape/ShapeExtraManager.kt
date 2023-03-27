@@ -4,14 +4,14 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.extra.LineExtra
 import mono.shape.extra.RectangleExtra
+import mono.shape.extra.manager.predefined.PredefinedAnchorChar
+import mono.shape.extra.manager.predefined.PredefinedRectangleFillStyle
+import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.AnchorChar
 import mono.shape.extra.style.RectangleFillStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.extra.style.TextAlign
-import mono.shape.extra.manager.predefined.PredefinedAnchorChar
-import mono.shape.extra.manager.predefined.PredefinedRectangleFillStyle
-import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 
 /**
  * A manager class for managing shape extras

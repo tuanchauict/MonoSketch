@@ -25,6 +25,6 @@ class ScalableInteractionBound(
         ScaleInteractionPoint.MiddleRight(targetedShapeId, right, verticalMiddle),
         ScaleInteractionPoint.BottomLeft(targetedShapeId, left, bottom),
         ScaleInteractionPoint.BottomMiddle(targetedShapeId, horizontalMiddle, bottom),
-        ScaleInteractionPoint.BottomRight(targetedShapeId, right, bottom),
+        ScaleInteractionPoint.BottomRight(targetedShapeId, right, bottom)
     )
 }

@@ -31,6 +31,7 @@ dependencies {
     implementation(projects.shapeSerialization)
     implementation(projects.shapesearcher)
     implementation(projects.storeManager)
+    implementation(projects.uiAppStateManager)
 
     testImplementation(libs.kotlin.test.js)
 }

@@ -25,7 +25,8 @@ val moduleMap = mapOf(
     "shapesearcher" to "libs/shapesearcher",
     "statemanager" to "libs/statemanager",
     "store-manager" to "libs/store-manager",
-    "theme" to "libs/theme",
+    "ui-app-state-manager" to "libs/ui-app-state-manager",
+    "ui-theme" to "libs/ui-theme",
     "uuid" to "libs/uuid"
 )
 

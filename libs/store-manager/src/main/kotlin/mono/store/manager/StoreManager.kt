@@ -9,7 +9,7 @@ import org.w3c.dom.set
 /**
  * A class for managing storage.
  */
-class StoreManager {
+class StoreManager private constructor() {
     private val keyToObserverMap: MutableMap<String, StoreObserver> = mutableMapOf()
 
     init {

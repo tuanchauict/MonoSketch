@@ -7,16 +7,12 @@ repositories {
 }
 
 dependencies {
-    implementation(projects.commons)
-    implementation(projects.graphicsgeo)
-    implementation(projects.htmlDsl)
-    implementation(projects.htmlmodal)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
-    implementation(projects.monoboard)
-    implementation(projects.shapeInteractionBound)
+    implementation(projects.storeManager)
     implementation(projects.uiTheme)
 
+    implementation(libs.kotlin.stdlib.js)
     testImplementation(libs.kotlin.test.js)
 }
 

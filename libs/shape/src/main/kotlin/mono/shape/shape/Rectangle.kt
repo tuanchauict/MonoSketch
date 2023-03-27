@@ -3,10 +3,10 @@ package mono.shape.shape
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.ShapeExtraManager
-import mono.shape.serialization.AbstractSerializableShape
-import mono.shape.serialization.SerializableRectangle
 import mono.shape.extra.RectangleExtra
 import mono.shape.extra.ShapeExtra
+import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.serialization.SerializableRectangle
 
 /**
  * A rectangle shape.
