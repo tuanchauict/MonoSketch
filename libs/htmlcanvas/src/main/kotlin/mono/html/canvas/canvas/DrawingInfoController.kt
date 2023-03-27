@@ -38,9 +38,12 @@ internal class DrawingInfoController(container: HTMLDivElement) {
     }
 
     fun setFont(fontSize: Int) {
+        val cellSizePx = context.getCellSizePx(fontSize)
+        val cellCharOffsetPx = SizeF(0.0, cellSizePx.height * 0.2)
         drawingInfoMutableLiveData.value =
             drawingInfoMutableLiveData.value.copy(
-                cellSizePx = context.getCellSizePx(fontSize),
+                cellSizePx = cellSizePx,
+                cellCharOffsetPx = cellCharOffsetPx,
                 font = "normal normal normal ${fontSize.px} $DEFAULT_FONT",
                 fontSize = fontSize
             )
@@ -59,14 +62,15 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         context.font = font
         context.textAlign = CanvasTextAlign.LEFT
         context.textBaseline = CanvasTextBaseline.MIDDLE
-        val cWidth = floor(fontSize.toDouble() / 1.6)
-        val cHeight = fontSize.toDouble()
+        val cWidth = floor(fontSize.toDouble() * 0.63)
+        val cHeight = fontSize.toDouble() * 1.312
         return SizeF(cWidth, cHeight)
     }
 
     internal data class DrawingInfo(
         val offsetPx: Point = Point.ZERO,
         val cellSizePx: SizeF = SizeF(1.0, 1.0),
+        val cellCharOffsetPx: SizeF = SizeF(0.0, 0.0),
         val canvasSizePx: Size = Size(1, 1),
         val font: String = "",
         val fontSize: Int = 0
