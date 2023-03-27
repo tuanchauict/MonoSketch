@@ -8,7 +8,7 @@ import org.w3c.dom.HTMLElement
 internal enum class CssClass(val value: String) {
     DISABLED("disabled"),
     HIDE("hide"),
-    SELECTED("selected");
+    SELECTED("selected")
 }
 
 internal fun HTMLElement.hasClass(cls: CssClass) = hasClass(cls.value)

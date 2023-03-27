@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:filename")
+
 import kotlinx.browser.window
 import mono.app.MonoSketchApplication
 

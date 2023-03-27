@@ -39,7 +39,8 @@ internal class StateHistoryManager(
         storeManager.set(BACKUP_LAST_OPEN_PROJECT_KEY, adjustedRootId)
 
         combineLiveData(
-            environment.shapeManager.versionLiveData, environment.editingModeLiveData
+            environment.shapeManager.versionLiveData,
+            environment.editingModeLiveData
         ) { versionCode, editingMode ->
             if (!editingMode.isEditing && versionCode != editingMode.skippedVersion) {
                 registerBackupShapes(versionCode)

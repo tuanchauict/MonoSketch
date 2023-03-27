@@ -39,7 +39,7 @@ class LineInteractionBound(
     }
 
     private fun createInteractionAnchor(
-        anchor: Line.Anchor,
+        anchor: Line.Anchor
     ): LineInteractionPoint.Anchor {
         val edge = if (anchor == Line.Anchor.START) reducedEdges.first() else reducedEdges.last()
         val (point, anotherPoint) =

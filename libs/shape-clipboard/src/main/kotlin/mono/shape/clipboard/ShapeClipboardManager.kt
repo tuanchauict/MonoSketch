@@ -8,9 +8,9 @@ import mono.graphics.geo.Rect
 import mono.html.TextArea
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
+import mono.shape.extra.TextExtra
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableText
-import mono.shape.extra.TextExtra
 import org.w3c.dom.HTMLElement
 
 /**

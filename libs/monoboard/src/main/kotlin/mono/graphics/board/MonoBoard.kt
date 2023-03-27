@@ -64,7 +64,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
                     hasTop = charPoint.topChar in TOP_IN_CHARS ||
                         get(charPoint.left, charPoint.top - 1).char in TOP_IN_CHARS,
                     hasBottom = charPoint.bottomChar in BOTTOM_IN_CHARS ||
-                        get(charPoint.left, charPoint.top + 1).char in BOTTOM_IN_CHARS,
+                        get(charPoint.left, charPoint.top + 1).char in BOTTOM_IN_CHARS
                 )
 
             if (Build.DEBUG && DEBUG) {
@@ -78,7 +78,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
                     get(charPoint.left - 1, charPoint.top).char,
                     get(charPoint.left + 1, charPoint.top).char,
                     get(charPoint.left, charPoint.top - 1).char,
-                    get(charPoint.left, charPoint.top + 1).char,
+                    get(charPoint.left, charPoint.top + 1).char
                 ).joinToString("•")
                 println(
                     "${charPoint.char}${currentPixel.char} " +
@@ -230,7 +230,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         val leftChar: Char,
         val rightChar: Char,
         val topChar: Char,
-        val bottomChar: Char,
+        val bottomChar: Char
     ) {
         val left: Int = boardColumn
         val top: Int = boardRow
