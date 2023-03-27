@@ -1,5 +1,8 @@
 package mono.state
 
+import mono.actionmanager.ActionManager
+import mono.actionmanager.OneTimeActionType
+import mono.actionmanager.RetainableActionType
 import mono.bitmap.manager.MonoBitmapManager
 import mono.common.MouseCursor
 import mono.common.currentTimeMillis
@@ -12,9 +15,6 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.html.canvas.CanvasViewController
-import mono.html.toolbar.ActionManager
-import mono.html.toolbar.OneTimeActionType
-import mono.html.toolbar.RetainableActionType
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
@@ -29,6 +29,7 @@ import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
+import mono.shape.shape.RootGroup
 import mono.shape.shape.Text
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
@@ -39,9 +40,10 @@ import mono.state.command.CommandEnvironment.EditingMode
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
 import mono.store.manager.StoreManager
+import mono.ui.appstate.AppUiStateManager
 
 /**
- * A class which is connect components in the app.
+ * A class which connects components in the app.
  */
 class MainStateManager(
     lifecycleOwner: LifecycleOwner,
@@ -53,7 +55,9 @@ class MainStateManager(
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
     private val actionManager: ActionManager,
-    storeManager: StoreManager
+    appUiStateManager: AppUiStateManager,
+    storeManager: StoreManager = StoreManager.getInstance(),
+    initialRootId: String = ""
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
@@ -116,6 +120,7 @@ class MainStateManager(
             storeManager,
             canvasManager
         )
+        stateHistoryManager.restoreAndStartObserveStateChange(initialRootId)
 
         OneTimeActionHandler(
             lifecycleOwner,
@@ -123,7 +128,8 @@ class MainStateManager(
             environment,
             bitmapManager,
             shapeClipboardManager,
-            stateHistoryManager
+            stateHistoryManager,
+            appUiStateManager
         )
     }
 
@@ -158,6 +164,14 @@ class MainStateManager(
         }
     }
 
+    /**
+     * Redraws all content on the workspace.
+     * This is used when the theme is updated.
+     */
+    fun forceFullyRedrawWorkspace() {
+        canvasManager.fullyRedraw()
+    }
+
     private fun requestRedraw() {
         redrawRequestMutableLiveData.value = Unit
     }
@@ -185,8 +199,11 @@ class MainStateManager(
             return
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
-        val highlight =
-            if (shape in environment.getSelectedShapes()) Highlight.SELECTED else Highlight.NO
+        val highlight = when {
+            shape is Text && shape.isTextEditing -> Highlight.TEXT_EDITING
+            shape in environment.getSelectedShapes() -> Highlight.SELECTED
+            else -> Highlight.NO
+        }
         mainBoard.fill(shape.bound.position, bitmap, highlight)
         shapeSearcher.register(shape)
     }
@@ -208,10 +225,12 @@ class MainStateManager(
     private fun updateMouseCursor(mousePointer: MousePointer) {
         val mouseCursor = when (mousePointer) {
             is MousePointer.Move -> getMouseMovingCursor(mousePointer)
+
             is MousePointer.Drag -> {
                 val mouseCommand = currentMouseCommand
                 if (mouseCommand != null) mouseCommand.mouseCursor else MouseCursor.DEFAULT
             }
+
             is MousePointer.Up -> MouseCursor.DEFAULT
 
             MousePointer.Idle,
@@ -234,7 +253,9 @@ class MainStateManager(
             when (it) {
                 is Rectangle,
                 is Text -> ScalableInteractionBound(it.id, it.bound)
+
                 is Line -> LineInteractionBound(it.id, it.edges)
+
                 is Group -> null // TODO: Add new Interaction bound type for Group
                 is MockShape -> null
             }
@@ -261,7 +282,7 @@ class MainStateManager(
                 stateManager.workingParentGroup = value
             }
 
-        override fun replaceRoot(newRoot: Group) {
+        override fun replaceRoot(newRoot: RootGroup) {
             shapeManager.replaceRoot(newRoot)
             workingParentGroup = shapeManager.root
             clearSelectedShapes()

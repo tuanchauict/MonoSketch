@@ -44,8 +44,12 @@ internal class ExportShapesModal {
         Span(classes = "export-text__close") {
             SvgIcon(16) {
                 /* ktlint-disable max-line-length */
-                SvgPath("M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z")
-                SvgPath("M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z")
+                SvgPath(
+                    "M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"
+                )
+                SvgPath(
+                    "M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"
+                )
                 /* ktlint-enable max-line-length */
             }
 
@@ -71,7 +75,9 @@ internal class ExportShapesModal {
         Span(classes = "export-text__copy") {
             SvgIcon(24, 24) {
                 /* ktlint-disable max-line-length */
-                SvgPath("M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z")
+                SvgPath(
+                    "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+                )
                 /* ktlint-enable max-line-length */
             }
 

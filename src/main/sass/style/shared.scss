@@ -1,0 +1,13 @@
+@import 'variables';
+
+input {
+    margin: 0;
+}
+
+.hidden {
+    position: absolute;
+    left: -1000px;
+    top: -1000px;
+    width: 0;
+    height: 0;
+}

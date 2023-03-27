@@ -1,9 +1,11 @@
 package mono.html.canvas.canvas
 
+import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
 import mono.graphics.board.Pixel
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.ui.theme.ThemeColor
 import org.w3c.dom.HTMLCanvasElement
 
 internal class BoardCanvasViewController(
@@ -28,7 +30,12 @@ internal class BoardCanvasViewController(
 
     private fun drawPixel(pixel: Pixel, row: Int, column: Int) {
         if (!pixel.isTransparent) {
-            context.fillStyle = pixel.highlight.paintColor
+            val color = when (pixel.highlight) {
+                Highlight.NO -> ThemeColor.Shape
+                Highlight.SELECTED -> ThemeColor.ShapeSelected
+                Highlight.TEXT_EDITING -> ThemeColor.ShapeTextEditing
+            }
+            context.fillStyle = color.colorCode
             drawText(pixel.char.toString(), row, column)
         }
     }

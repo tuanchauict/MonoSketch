@@ -1,101 +1,204 @@
-@file:Suppress("FunctionName")
+@file:Suppress("FunctionName", "ktlint:filename")
 
 package mono.html.toolbar.view.shapetool
 
+import mono.actionmanager.OneTimeActionType
+import mono.common.nullToFalse
 import mono.html.Div
 import mono.html.Input
 import mono.html.InputType
 import mono.html.Span
-import mono.html.appendElement
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
 import mono.html.setOnClickListener
-import mono.html.toolbar.OneTimeActionType
-import mono.html.toolbar.view.isEnabled
-import mono.html.toolbar.view.isSelected
-import mono.html.toolbar.view.isVisible
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.DashVisible
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.GridVisible
-import mono.html.toolbar.view.shapetool.Class.ADD_RIGHT_SPACE
-import mono.html.toolbar.view.shapetool.Class.CENTER_VERTICAL
-import mono.html.toolbar.view.shapetool.Class.CLICKABLE
-import mono.html.toolbar.view.shapetool.Class.COLUMN
-import mono.html.toolbar.view.shapetool.Class.GRAY_TEXT
-import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
-import mono.html.toolbar.view.shapetool.Class.INLINE_TITLE
-import mono.html.toolbar.view.shapetool.Class.INPUT_CHECK_BOX
-import mono.html.toolbar.view.shapetool.Class.INPUT_TEXT
-import mono.html.toolbar.view.shapetool.Class.ROW
-import mono.html.toolbar.view.shapetool.Class.SMALL
-import mono.html.toolbar.view.shapetool.Class.TOOL_TITLE
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.livedata.filterNotNull
 import mono.livedata.map
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.events.Event
 
 internal class AppearanceSectionViewController(
-    lifecycleOwner: LifecycleOwner,
+    private val lifecycleOwner: LifecycleOwner,
     container: Element,
-    appearanceDataController: AppearanceDataController
+    private val appearanceDataController: AppearanceDataController
 ) {
-    private val rootView = container.Section("APPEARANCE")
     val visibilityStateLiveData: LiveData<Boolean> =
         appearanceDataController.hasAnyVisibleToolLiveData
 
     init {
-        GridTextIconOptions(
-            rootView,
-            ToolType.FILL,
-            appearanceDataController.fillOptions,
-            appearanceDataController::setOneTimeAction
-        ).observe(lifecycleOwner, appearanceDataController.fillToolStateLiveData)
-
-        GridTextIconOptions(
-            rootView,
-            ToolType.BORDER,
-            appearanceDataController.strokeOptions,
-            appearanceDataController::setOneTimeAction
-        ).observe(lifecycleOwner, appearanceDataController.borderToolStateLiveData)
-
-        DashPatternTool(rootView) { dash, gap, offset ->
-            appearanceDataController.setOneTimeAction(
-                OneTimeActionType.ChangeShapeBorderDashPatternExtra(dash, gap, offset)
+        val rootView = container.Section("APPEARANCE") {
+            Tool(
+                ToolType.FILL,
+                appearanceDataController.fillOptions,
+                appearanceDataController.fillToolStateLiveData
             )
-        }.observe(lifecycleOwner, appearanceDataController.borderDashPatternLiveData)
 
-        GridTextIconOptions(
-            rootView,
-            ToolType.STROKE,
-            appearanceDataController.strokeOptions,
-            appearanceDataController::setOneTimeAction
-        ).observe(lifecycleOwner, appearanceDataController.lineStrokeToolStateLiveData)
+            Tool(
+                ToolType.BORDER,
+                appearanceDataController.strokeOptions,
+                appearanceDataController.borderToolStateLiveData
+            ) {
+                DashPattern(
+                    appearanceDataController.borderDashPatternLiveData.map { (it as? DashVisible) }
+                ) { dash, gap, offset ->
+                    appearanceDataController.setOneTimeAction(
+                        OneTimeActionType.ChangeShapeBorderDashPatternExtra(dash, gap, offset)
+                    )
+                }
+            }
 
-        DashPatternTool(rootView) { dash, gap, offset ->
-            appearanceDataController.setOneTimeAction(
-                OneTimeActionType.ChangeLineStrokeDashPatternExtra(dash, gap, offset)
+            Tool(
+                ToolType.STROKE,
+                appearanceDataController.strokeOptions,
+                appearanceDataController.lineStrokeToolStateLiveData
+            ) {
+                DashPattern(
+                    appearanceDataController.lineStrokeDashPatternLiveData
+                        .map { it as? DashVisible }
+                ) { dash, gap, offset ->
+                    appearanceDataController.setOneTimeAction(
+                        OneTimeActionType.ChangeLineStrokeDashPatternExtra(dash, gap, offset)
+                    )
+                }
+            }
+
+            Tool(
+                ToolType.START_HEAD,
+                appearanceDataController.headOptions,
+                appearanceDataController.lineStartHeadToolStateLiveData
             )
-        }.observe(lifecycleOwner, appearanceDataController.lineStrokeDashPatternLiveData)
 
-        GridTextIconOptions(
-            rootView,
-            ToolType.START_HEAD,
-            appearanceDataController.headOptions,
-            appearanceDataController::setOneTimeAction
-        ).observe(lifecycleOwner, appearanceDataController.lineStartHeadToolStateLiveData)
-
-        GridTextIconOptions(
-            rootView,
-            ToolType.END_HEAD,
-            appearanceDataController.headOptions,
-            appearanceDataController::setOneTimeAction
-        ).observe(lifecycleOwner, appearanceDataController.lineEndHeadToolStateLiveData)
+            Tool(
+                ToolType.END_HEAD,
+                appearanceDataController.headOptions,
+                appearanceDataController.lineEndHeadToolStateLiveData
+            )
+        }
 
         appearanceDataController.hasAnyVisibleToolLiveData.observe(lifecycleOwner) {
-            rootView.isVisible = it
+            rootView.bindClass(CssClass.HIDE, !it)
+        }
+    }
+
+    private fun Element.Tool(
+        type: ToolType,
+        options: List<AppearanceOptionItem>,
+        liveData: LiveData<AppearanceVisibility>,
+        block: Element.() -> Unit = {}
+    ) {
+        val gridVisibleLiveData = liveData.map { it as? GridVisible }
+        CheckableTool(type, gridVisibleLiveData) {
+            Options(type, options, gridVisibleLiveData)
+            block()
+        }
+    }
+
+    private fun Element.CheckableTool(
+        type: ToolType,
+        liveData: LiveData<GridVisible?>,
+        block: Element.() -> Unit
+    ) {
+        Div("tool-appearance") {
+            Div("checkbox-column") {
+                ToolCheckBox(type, liveData.map { it?.isChecked.nullToFalse() })
+            }
+
+            Div("tool-column") {
+                Span(classes = "tool-title", type.title)
+
+                block()
+            }
+
+            liveData.observe(lifecycleOwner) {
+                bindClass(CssClass.HIDE, it == null)
+            }
+        }
+    }
+
+    private fun Element.ToolCheckBox(
+        type: ToolType,
+        isCheckedLiveData: LiveData<Boolean>
+    ) {
+        Input(InputType.CHECK_BOX, classes = "") {
+            setOnChangeListener {
+                appearanceDataController.setOneTimeAction(type.toActionType(checked))
+            }
+
+            isCheckedLiveData.observe(lifecycleOwner) { isChecked -> this.checked = isChecked }
+        }
+    }
+
+    private fun Element.Options(
+        type: ToolType,
+        options: List<AppearanceOptionItem>,
+        visibilityLiveData: LiveData<GridVisible?>
+    ) {
+        Div(classes = "option-group monofont") {
+            val optionViews = options.map { option ->
+                Span(classes = "option", option.name) {
+                    setOnClickListener {
+                        appearanceDataController.setOneTimeAction(
+                            type.toActionType(selectedId = option.id)
+                        )
+                    }
+                }
+            }
+
+            visibilityLiveData.filterNotNull().observe(lifecycleOwner) { state ->
+                bindClass(CssClass.DISABLED, !state.isChecked)
+
+                optionViews.forEachIndexed { index, optionView ->
+                    optionView.bindClass(CssClass.SELECTED, index == state.selectedPosition)
+                }
+            }
+        }
+    }
+
+    private fun Element.DashPattern(
+        liveData: LiveData<DashVisible?>,
+        onChange: (Int?, Int?, Int?) -> Unit
+    ) {
+        Div("dash-pattern") {
+            Div("pattern") {
+                Span(text = "Dash")
+                DashPatternInput(
+                    minValue = 1,
+                    liveData.map { it?.dashPattern?.dash }
+                ) { onChange(it, null, null) }
+            }
+            Div("pattern") {
+                Span(text = "Gap")
+                DashPatternInput(
+                    minValue = 0,
+                    liveData.map { it?.dashPattern?.gap }
+                ) { onChange(null, it, null) }
+            }
+            Div("pattern") {
+                Span(text = "Shift")
+                DashPatternInput(
+                    minValue = null,
+                    liveData.map { it?.dashPattern?.offset }
+                ) { onChange(null, null, it) }
+            }
+        }
+    }
+
+    private fun Element.DashPatternInput(
+        minValue: Int?,
+        liveData: LiveData<Int?>,
+        onChange: (Int) -> Unit
+    ) {
+        Input(InputType.NUMBER, "tool-input-text") {
+            if (minValue != null) {
+                setAttributes("min" to minValue)
+            }
+            setOnChangeListener { onChange(value.toInt()) }
+
+            liveData.filterNotNull().observe(lifecycleOwner) {
+                value = it.toString()
+            }
         }
     }
 }
@@ -126,142 +229,4 @@ private enum class ToolType(val title: String) {
         isChecked: Boolean? = null,
         selectedId: String? = null
     ): OneTimeActionType
-}
-
-private class AppearanceToolViewController(
-    private val rootView: HTMLDivElement,
-    private val checkBox: HTMLInputElement,
-    private val options: List<HTMLElement>
-) {
-    fun observe(
-        lifecycleOwner: LifecycleOwner,
-        liveData: LiveData<AppearanceVisibility>
-    ) {
-        liveData.map { it as? GridVisible }
-            .observe(lifecycleOwner, listener = ::setState)
-    }
-
-    private fun setState(state: GridVisible?) {
-        rootView.isVisible = state != null
-        if (state == null) {
-            return
-        }
-        checkBox.checked = state.isChecked
-        options.forEachIndexed { index, optionView ->
-            optionView.isEnabled = state.isChecked
-            optionView.isSelected = index == state.selectedPosition
-        }
-    }
-}
-
-private class DashPatternViewController(
-    private val rootView: HTMLDivElement,
-    private val dashInput: HTMLInputElement,
-    private val gapInput: HTMLInputElement,
-    private val offsetInput: HTMLInputElement
-) {
-    fun observe(lifecycleOwner: LifecycleOwner, liveData: LiveData<AppearanceVisibility>) {
-        liveData.observe(lifecycleOwner, listener = ::setState)
-    }
-
-    private fun setState(visibility: AppearanceVisibility) {
-        val dashVisible = visibility as? DashVisible
-        rootView.isVisible = dashVisible != null
-
-        val dashPattern = dashVisible?.dashPattern ?: return
-        dashInput.value = dashPattern.dash.toString()
-        gapInput.value = dashPattern.gap.toString()
-        offsetInput.value = dashPattern.offset.toString()
-    }
-}
-
-private fun GridTextIconOptions(
-    container: Element,
-    type: ToolType,
-    options: List<AppearanceOptionItem>,
-    setOneTimeAction: (OneTimeActionType) -> Unit
-): AppearanceToolViewController {
-    val checkBox =
-        Input(parent = null, InputType.CHECK_BOX, classes = classes(INPUT_CHECK_BOX, CLICKABLE)) {
-            setOnChangeListener {
-                setOneTimeAction(type.toActionType(checked))
-            }
-        }
-    val optionElements = options.map { option ->
-        Span(null, classes(ICON_BUTTON, SMALL, CLICKABLE), option.name) {
-            setOnClickListener {
-                setOneTimeAction(type.toActionType(selectedId = option.id))
-            }
-        }
-    }
-    val rootView = container.Tool(hasMoreBottomSpace = true) {
-        Row {
-            Column(hasMoreRightSpace = true) {
-                Row {
-                    appendElement(checkBox)
-                }
-            }
-            Column {
-                Row {
-                    Span(classes(TOOL_TITLE, CLICKABLE), type.title) {
-                        setOnClickListener {
-                            checkBox.checked = !checkBox.checked
-                            checkBox.dispatchEvent(Event("change"))
-                        }
-                    }
-                }
-                Row(isMonoFont = true, isGrid = true) {
-                    appendElement(optionElements)
-                }
-            }
-        }
-    }
-    return AppearanceToolViewController(rootView, checkBox, optionElements)
-}
-
-private fun DashPatternTool(
-    container: Element,
-    onChange: (Int?, Int?, Int?) -> Unit
-): DashPatternViewController {
-    val dashInput = DashPatternInput(1) { onChange(it, null, null) }
-    val gapInput = DashPatternInput(0) { onChange(null, it, null) }
-    val offsetInput = DashPatternInput(null) { onChange(null, null, it) }
-
-    val rootView = container.Tool(hasMoreBottomSpace = true, hasCheckBox = false) {
-        Row(isMoreBottomSpaceRequired = true) {
-            Column {
-                Row {
-                    DashPatternRow("Dash", dashInput)
-                    DashPatternRow("Gap", gapInput)
-                    DashPatternRow("Shift", offsetInput)
-                }
-            }
-        }
-    }
-    return DashPatternViewController(rootView, dashInput, gapInput, offsetInput)
-}
-
-fun Element.DashPatternRow(name: String, inputBox: HTMLInputElement) {
-    Div(classes(COLUMN)) {
-        setAttributes("style" to "margin-right: 12px")
-        Div(classes(ROW, CENTER_VERTICAL)) {
-            Span(classes(INLINE_TITLE, GRAY_TEXT), text = name)
-            appendElement(inputBox)
-        }
-    }
-}
-
-fun DashPatternInput(minValue: Int?, onChange: (Int) -> Unit): HTMLInputElement =
-    Input(null, InputType.NUMBER, classes(INPUT_TEXT, SMALL)) {
-        if (minValue != null) {
-            setAttributes("min" to minValue)
-        }
-        setOnChangeListener { onChange(value.toInt()) }
-    }
-
-private fun Element.Column(hasMoreRightSpace: Boolean = false, block: Element.() -> Unit) {
-    val columnClasses = classes(COLUMN, ADD_RIGHT_SPACE x hasMoreRightSpace)
-    Div(columnClasses) {
-        block()
-    }
 }

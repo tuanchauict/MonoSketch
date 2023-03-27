@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.livedata)
     implementation(projects.monoboard)
     implementation(projects.shapeInteractionBound)
+    implementation(projects.uiTheme)
 
     testImplementation(libs.kotlin.test.js)
 }
@@ -30,6 +31,5 @@ kotlin {
                 }
             }
         }
-        binaries.executable()
     }
 }

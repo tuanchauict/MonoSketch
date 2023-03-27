@@ -1,32 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-    <link rel="icon" href="favicon.png">
+    <link href="favicon.png" rel="icon">
     <meta charset="UTF-8"/>
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport"/>
     <title>Mono Sketch</title>
 
     <link href="main.css" rel="stylesheet"/>
 </head>
 
 <body>
+
+<nav id="main-nav">
+    <div id="nav-left">
+        <h2 class="main-title">
+            <a href="https://monosketch.io" target="_blank">MonoSketch</a>
+        </h2>
+    </div>
+    <div id="nav-toolbar-center"></div>
+    <div id="nav-toolbar-right"></div>
+</nav>
+
+<main id="workspace">
+    <div class="canvas-layout">
+        <div id="monoboard-canvas-container"></div>
+        <div id="monoboard-axis-container"></div>
+    </div>
+</main>
+
+<div class="shape-tools" id="shape-tools"></div>
+
 <script src="MonoSketch.js"></script>
-<div id="root">
-    <div id="header-layout">
-        <div class="nav-brand">
-            <h2 id="main-title">Mono<br/>Sketch</h2>
-        </div>
-        <div id="header-toolbar"></div>
-    </div>
-    <div id="workspace">
-        <div class="canvas-layout">
-            <div id="monoboard-canvas-container"></div>
-            <div id="monoboard-axis-container"></div>
-        </div>
-        <div id="shape-tools" class="shape-tools"></div>
-    </div>
-</div>
 </body>
 
 </html>

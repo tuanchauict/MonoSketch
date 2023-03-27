@@ -1,27 +1,34 @@
 package mono.html.toolbar
 
-import mono.html.toolbar.view.MiddleToolbar
+import kotlinx.browser.document
+import mono.actionmanager.ActionManager
+import mono.html.select
+import mono.html.toolbar.view.MouseActionGroup
 import mono.html.toolbar.view.RightToolbar
 import mono.lifecycle.LifecycleOwner
-import org.w3c.dom.HTMLDivElement
+import mono.livedata.LiveData
 
 /**
  * A view controller to manage toolbar.
  */
 class ToolbarViewController(
     lifecycleOwner: LifecycleOwner,
-    toolbarContainer: HTMLDivElement,
+    shapeToolVisibilityLiveData: LiveData<Boolean>,
     private val actionManager: ActionManager
 ) {
     init {
-
-        with(toolbarContainer) {
-            MiddleToolbar(
+        with(document.select("#nav-toolbar-center")) {
+            MouseActionGroup(
                 lifecycleOwner,
                 actionManager.retainableActionLiveData,
                 actionManager::setRetainableAction
             )
-            RightToolbar(actionManager::setOneTimeAction)
+        }
+        with(document.select("#nav-toolbar-right")) {
+            RightToolbar(
+                shapeToolVisibilityLiveData,
+                actionManager::setOneTimeAction
+            )
         }
     }
 }

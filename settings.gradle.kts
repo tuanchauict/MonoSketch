@@ -2,6 +2,7 @@ rootProject.name = "MonoSketch"
 
 val moduleMap = mapOf(
     "app" to "app",
+    "action-manager" to "libs/action-manager",
     "build-environment" to "libs/build-environment",
     "commons" to "libs/commons",
     "export-shapes-modal" to "libs/export-shapes-modal",
@@ -24,6 +25,8 @@ val moduleMap = mapOf(
     "shapesearcher" to "libs/shapesearcher",
     "statemanager" to "libs/statemanager",
     "store-manager" to "libs/store-manager",
+    "ui-app-state-manager" to "libs/ui-app-state-manager",
+    "ui-theme" to "libs/ui-theme",
     "uuid" to "libs/uuid"
 )
 

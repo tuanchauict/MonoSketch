@@ -32,8 +32,12 @@ class KeyboardShortcuts private constructor() {
         Span(classes = "keyboard-shortcuts__close") {
             SvgIcon(16) {
                 /* ktlint-disable max-line-length */
-                SvgPath("M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z")
-                SvgPath("M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z")
+                SvgPath(
+                    "M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"
+                )
+                SvgPath(
+                    "M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"
+                )
                 /* ktlint-enable max-line-length */
             }
 

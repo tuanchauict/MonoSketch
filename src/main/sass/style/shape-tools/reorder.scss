@@ -1,0 +1,21 @@
+@import '../commons';
+
+#shape-tools {
+    .section {
+        .tool-reorder {
+            display: flex;
+            justify-content: space-around;
+            padding: 0 12px;
+
+            .icon {
+                @extend %common-button;
+                padding: 8px;
+                border-radius: 3px;
+
+                &:hover {
+                    background: var(--shapetool-reorder-hover-bg);
+                }
+            }
+        }
+    }
+}

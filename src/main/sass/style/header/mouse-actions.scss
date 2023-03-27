@@ -1,0 +1,26 @@
+@import '../variables';
+@import '../commons';
+
+$border-radius: 4px;
+
+.main-mouse-actions {
+    display: flex;
+    height: 100%;
+
+    &>.action-button {
+        @extend %common-button;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+
+        &:hover {
+            background: var(--header-mouse-action-hover-bg);
+        }
+
+        &.selected {
+            background: var(--header-mouse-action-selected-bg);
+        }
+    }
+}

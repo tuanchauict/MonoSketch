@@ -7,14 +7,12 @@ repositories {
 }
 
 dependencies {
-    implementation(projects.commons)
-    implementation(projects.graphicsgeo)
+    implementation(projects.actionManager)
     implementation(projects.htmlDsl)
     implementation(projects.htmlmodal)
-    implementation(projects.keycommand)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
-    implementation(projects.shape)
+    implementation(projects.uiTheme)
 
     testImplementation(libs.kotlin.test.js)
 }
@@ -30,6 +28,5 @@ kotlin {
                 }
             }
         }
-        binaries.executable()
     }
 }

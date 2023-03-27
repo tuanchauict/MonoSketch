@@ -17,13 +17,16 @@ import org.w3c.dom.Element
 /**
  * A modal for dropdown menu
  */
-class DropDownMenu(classes: String, items: List<Item>, private val onClickAction: (Item) -> Unit) {
+class DropDownMenu(id: String, items: List<Item>, private val onClickAction: (Item) -> Unit) {
     private val menu: Element?
 
     private var dismissTimeout: Cancelable? = null
 
     init {
-        menu = document.body?.Div(classes = "drop-down-menu $classes") {
+        println(items.filterIsInstance<Item.Text>().map { it.title })
+        menu = document.body?.Div(classes = "drop-down-menu") {
+            this.id = id
+
             initItems(items)
 
             val hiddenInput = Input(inputType = InputType.CHECK_BOX, classes = "hidden-input") {
@@ -48,9 +51,9 @@ class DropDownMenu(classes: String, items: List<Item>, private val onClickAction
 
     private fun Element.initItems(items: List<Item>) {
         Ul {
-            for (item in items) {
+            for (item in items.filter { it.isVisible() }) {
                 when (item) {
-                    Item.Divider -> Li(classes = "drop-down-divider")
+                    is Item.Divider -> Li(classes = "drop-down-divider")
                     is Item.Text -> Li(classes = "drop-down-item") {
                         innerText = item.title
                         setOnClickListener {
@@ -69,8 +72,9 @@ class DropDownMenu(classes: String, items: List<Item>, private val onClickAction
         }
     }
 
-    sealed class Item {
-        object Divider : Item()
-        class Text(val title: String, val key: Any) : Item()
+    sealed class Item(internal val isVisible: () -> Boolean) {
+        class Divider(isVisible: () -> Boolean = { true }) : Item(isVisible)
+        class Text(val title: String, val key: Any, isVisible: () -> Boolean = { true }) :
+            Item(isVisible)
     }
 }

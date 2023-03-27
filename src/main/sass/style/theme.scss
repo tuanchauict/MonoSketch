@@ -1,0 +1,185 @@
+// Header
+:root,
+:root.light {
+    --header-bg: #2c2c2c;
+    --header-color: #FFF;
+
+    // Mouse action
+    --header-mouse-action-hover-bg: #111;
+    --header-mouse-action-selected-bg: #0D99FF;
+
+    // Right action
+    --header-main-menu-hover-bg: #424242;
+}
+
+:root.dark {
+    --header-bg: #2c2c2c;
+    --header-color: #FFF;
+
+    // Mouse action
+    --header-mouse-action-hover-bg: #111;
+    --header-mouse-action-selected-bg: #C89000;
+
+    // Right action
+    --header-main-menu-hover-bg: #424242;
+}
+
+// Workspace
+:root,
+:root.light {
+    --workspace-bg-color: #FFF;
+    --workspace-edittext-color: #000;
+}
+
+:root.dark {
+    --workspace-bg-color: #121212;
+    --workspace-edittext-color: #fff;
+}
+
+// Shape tool
+:root,
+:root.light {
+    --shapetool-bg-color: #FAFAFA;
+    --shapetool-main-divider-color: #BBB;
+
+    // Footer
+    --shapetool-footer-color: #aaa;
+    --shapetool-footer-hover-color: #888;
+    --shapetool-footer-active-color: #999;
+
+    // Indicator
+    --shapetool-indicator-color: #888;
+
+    // Section
+    --shapetool-section-divider-color: #bbb;
+    --shapetool-section-title-color: #6d6d6d;
+    --shapetool-section-content-color: #000;
+
+    // Tool
+    --shapetool-tool-title-color: #1f1f1f;
+    --shapetool-tool-subtitle-color: #a0a0a0;
+
+    // Tool option
+    --shapetool-tool-option-border-color: #ddd;
+    --shapetool-tool-option-hover-border-color: #ddd;
+    --shapetool-tool-option-selected-border-color: #0366fc;
+    --shapetool-tool-option-selected-hover-border-color: #0047b2;
+    --shapetool-tool-option-disabled-border-color: #c4c4c4;
+    --shapetool-tool-option-selected-disabled-border-color: #aaaaaa;
+
+    --shapetool-tool-option-bg-color: #ffffff;
+
+    --shapetool-tool-option-disabled-color: #c4c4c4;
+    --shapetool-tool-option-selected-disabled-color: #aaaaaa;
+    --shapetool-tool-option-selected-color: #0366fc;
+    --shapetool-tool-option-selected-hover-color: #0047b2;
+
+    // Tool input
+    --shapetool-tool-input-border-color: #AAA;
+
+    // Reorder
+    --shapetool-reorder-hover-bg: #efefef;
+}
+
+:root.dark {
+    --shapetool-bg-color: #1f1f1f;
+    --shapetool-main-divider-color: #616161;
+
+    // Footer
+    --shapetool-footer-color: #aaa;
+    --shapetool-footer-hover-color: #888;
+    --shapetool-footer-active-color: #999;
+
+    // Indicator
+    --shapetool-indicator-color: #888;
+
+    // Section
+    --shapetool-section-divider-color: #6d6d6d;
+    --shapetool-section-title-color: #b1b1b1;
+    --shapetool-section-content-color: #F0F0F0;
+
+    // Tool
+    --shapetool-tool-title-color: #cccccc;
+    --shapetool-tool-subtitle-color: #979797;
+    --shapetool-checkbox-color: #ffb800; // only dark mode
+
+    // Tool option
+    --shapetool-tool-option-border-color: #f0f0f0;
+    --shapetool-tool-option-hover-border-color: #767676;
+    --shapetool-tool-option-selected-border-color: #ffb800;
+    --shapetool-tool-option-selected-hover-border-color: #956d04;
+    --shapetool-tool-option-disabled-border-color: #6f6f6f;
+    --shapetool-tool-option-selected-disabled-border-color: #c4c4c4;
+
+    --shapetool-tool-option-bg-color: #00000000;
+
+    --shapetool-tool-option-disabled-color: #c4c4c4;
+    --shapetool-tool-option-selected-disabled-color: #c4c4c4;
+    --shapetool-tool-option-selected-color: #ffb800;
+    --shapetool-tool-option-selected-hover-color: #956d04;
+
+    // Tool input
+    --shapetool-tool-input-border-color: #565656;
+
+    // Reorder
+    --shapetool-reorder-hover-bg: #333333;
+}
+
+// Common modal
+:root,
+:root.light {
+    --modal-background-bg: rgba(0, 0, 0, 0.7);
+    --modal-container-bg: #f3f3f3;
+    --modal-close-button-color: #666;
+    --modal-title-color: rgba(0, 0, 0, 0.68);
+    --modal-content-color: #000;
+}
+
+:root.dark {
+    --modal-background-bg: rgba(0, 15, 70, 0.3);
+    --modal-container-bg: #313131;
+    --modal-close-button-color: #FFFFFF;
+    --modal-title-color: #FFF;
+    --modal-content-color: #FFFFFF;
+}
+
+// Keyboard shortcuts
+:root,
+:root.light {
+    --keyboard-content-key-bg: #fff;
+    --keyboard-content-key-border-color: rgba(0, 0, 0, 0.15);
+    --keyboard-content-key-color: rgba(0, 0, 0, 0.54);
+}
+
+:root.dark {
+    --keyboard-content-key-bg: #262626;
+    --keyboard-content-key-border-color: rgba(255, 255, 255, 0.15);
+    --keyboard-content-key-color: rgba(255, 255, 255, 0.88);
+}
+
+// Main dropdown menu
+:root,
+:root.light {
+    --mainmenu-divider-color: #d8d8d8;
+    --mainmenu-item-color: rgb(36, 41, 47);
+    --mainmenu-item-hover-bg: #e7e6e6;
+}
+
+:root.dark {
+    --mainmenu-divider-color: #6b6b6b;
+    --mainmenu-item-color: #fff;
+    --mainmenu-item-hover-bg: #414141;
+}
+
+// Export text
+:root,
+:root.light {
+    --exporttext-container-bg: #fff;
+    --exporttext-content-color: #000;
+}
+
+:root.dark {
+    --exporttext-container-bg: #151515;
+    --exporttext-content-color: #fff;
+}
+

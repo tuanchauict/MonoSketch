@@ -1,22 +1,15 @@
-@file:Suppress("FunctionName")
+@file:Suppress("FunctionName", "ktlint:filename")
 
 package mono.html.toolbar.view.shapetool
 
+import mono.actionmanager.OneTimeActionType
 import mono.html.Div
 import mono.html.SvgPath
-import mono.html.setOnClickListener
 import mono.html.appendElement
 import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
-import mono.html.px
-import mono.html.style
-import mono.html.toolbar.OneTimeActionType
-import mono.html.toolbar.OneTimeActionType.ReorderShape
+import mono.html.setOnClickListener
 import mono.html.toolbar.view.SvgIcon
-import mono.html.toolbar.view.isEnabled
-import mono.html.toolbar.view.isVisible
-import mono.html.toolbar.view.shapetool.Class.GRAY_ICON
-import mono.html.toolbar.view.shapetool.Class.ICON_BUTTON
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.distinctUntilChange
@@ -28,7 +21,7 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 /**
- * View controller for shape tool' reorder section.
+ * View controller for shape tool's reorder section.
  */
 internal class ReorderSectionViewController(
     lifecycleOwner: LifecycleOwner,
@@ -41,15 +34,12 @@ internal class ReorderSectionViewController(
 
     init {
         val icons = ReorderIconType.values().map { type ->
-            Icon(type) { setOneTimeAction(ReorderShape(it.changeOrderType)) }
+            Icon(type) { setOneTimeAction(OneTimeActionType.ReorderShape(it.changeOrderType)) }
         }
 
-        val section = container.Section("", isSmallSpace = true) {
-            Tool {
-                Row(isCenterEvenSpace = true) {
-                    style("padding-bottom" to 2.px)
-                    appendElement(icons)
-                }
+        val section = container.Section(hasBorderTop = false) {
+            Div("tool-reorder") {
+                appendElement(icons)
             }
         }
 
@@ -58,9 +48,9 @@ internal class ReorderSectionViewController(
             .distinctUntilChange()
 
         visibilityStateLiveData.observe(lifecycleOwner) {
-            section.isVisible = it
+            section.bindClass(CssClass.HIDE, !it)
             for (icon in icons) {
-                icon.isEnabled = it
+                icon.bindClass(CssClass.DISABLED, !it)
             }
         }
     }
@@ -70,12 +60,7 @@ private fun Icon(
     iconType: ReorderIconType,
     onClick: (ReorderIconType) -> Unit
 ): HTMLDivElement =
-    Div(classes = classes(ICON_BUTTON, GRAY_ICON)) {
-        style(
-            "padding-left" to 7.px,
-            "padding-top" to 7.px
-        )
-
+    Div(classes = "icon") {
         tooltip(iconType.title, TooltipPosition.TOP)
 
         SvgIcon(18) {
@@ -84,7 +69,7 @@ private fun Icon(
 
         setOnClickListener {
             val target = it.currentTarget as HTMLElement
-            if (target.isEnabled) {
+            if (!target.hasClass(CssClass.DISABLED)) {
                 onClick(iconType)
             }
         }

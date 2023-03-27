@@ -1,11 +1,12 @@
 package mono.app
 
 import kotlinx.browser.document
+import kotlinx.browser.window
+import mono.actionmanager.ActionManager
 import mono.bitmap.manager.MonoBitmapManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
-import mono.html.toolbar.ActionManager
 import mono.html.toolbar.ToolbarViewController
 import mono.html.toolbar.view.shapetool.ShapeToolViewController
 import mono.keycommand.KeyCommand
@@ -16,9 +17,10 @@ import mono.shape.ShapeManager
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.selection.SelectedShapeManager
 import mono.state.MainStateManager
-import mono.store.manager.StoreManager
+import mono.ui.appstate.AppUiStateManager
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.url.URLSearchParams
 
 /**
  * Main class of the app to handle all kinds of events, UI, actions, etc.
@@ -30,6 +32,10 @@ class MonoSketchApplication : LifecycleOwner() {
     private val shapeManager = ShapeManager()
     private val selectedShapeManager = SelectedShapeManager()
     private val bitmapManager = MonoBitmapManager()
+
+    // Init AppUiStateManager here to apply theme as soon as possible.
+    private val appUiStateManager = AppUiStateManager(this)
+
     private var mainStateManager: MainStateManager? = null
 
     /**
@@ -55,6 +61,7 @@ class MonoSketchApplication : LifecycleOwner() {
         )
 
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
+        actionManager.installDebugCommand()
 
         mainStateManager = MainStateManager(
             this,
@@ -66,12 +73,13 @@ class MonoSketchApplication : LifecycleOwner() {
             ShapeClipboardManager(body),
             canvasViewController.mousePointerLiveData,
             actionManager,
-            StoreManager()
+            appUiStateManager,
+            initialRootId = getInitialRootIdFromUrl()
         )
 
         ToolbarViewController(
             this,
-            document.getElementById("header-toolbar") as HTMLDivElement,
+            appUiStateManager.shapeToolVisibilityLiveData,
             actionManager
         )
         ShapeToolViewController(
@@ -79,9 +87,15 @@ class MonoSketchApplication : LifecycleOwner() {
             document.getElementById("shape-tools") as HTMLElement,
             actionManager,
             selectedShapeManager.selectedShapesLiveData,
-            shapeManager.versionLiveData
+            shapeManager.versionLiveData,
+            appUiStateManager.shapeToolVisibilityLiveData
         )
         onResize()
+
+        appUiStateManager.observeTheme(
+            document.documentElement!!,
+            mainStateManager!!::forceFullyRedrawWorkspace
+        )
     }
 
     fun onResize() {
@@ -90,8 +104,15 @@ class MonoSketchApplication : LifecycleOwner() {
         model.setWindowSize(newSize)
     }
 
+    private fun getInitialRootIdFromUrl(): String {
+        val urlParams = URLSearchParams(window.location.search)
+        return urlParams.get(URL_PARAM_ID).orEmpty()
+    }
+
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
         private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
+
+        private const val URL_PARAM_ID = "id"
     }
 }

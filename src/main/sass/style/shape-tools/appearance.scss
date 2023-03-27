@@ -1,0 +1,63 @@
+@import '../variables';
+
+#shape-tools {
+    .section {
+        .monofont {
+            font-family: $monospaceFont;
+        }
+
+        .tool-appearance {
+            display: flex;
+            margin-bottom: 16px;
+
+            &.hide {
+                display: none;
+            }
+
+            .checkbox-column {
+                flex-basis: 20px;
+                flex-shrink: 0;
+            }
+
+            .tool-column {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+
+                .tool-content {
+                    margin: 8px 0;
+                }
+            }
+
+            .option-group {
+                display: flex;
+                margin-top: 8px;
+
+                .option {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 18px;
+                    padding: 0 0 2px;
+                    margin-right: 6px;
+                }
+            }
+
+            .dash-pattern {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 8px;
+
+                .pattern {
+                    display: flex;
+                    align-items: center;
+                    width: 30%;
+                }
+
+                span {
+                    color: var(--shapetool-tool-subtitle-color);
+                }
+            }
+        }
+    }
+}

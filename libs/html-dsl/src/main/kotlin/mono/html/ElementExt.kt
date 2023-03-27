@@ -1,5 +1,6 @@
 package mono.html
 
+import org.w3c.dom.Document
 import org.w3c.dom.Element
 
 fun Element.appendElement(children: List<Element>) = appendElement(*children.toTypedArray())
@@ -17,3 +18,13 @@ fun Element.setAttributes(vararg attrs: Pair<String, Any>) {
 }
 
 fun Element.style(vararg attrs: Pair<String, String>) = setAttributes("style" to styleOf(*attrs))
+
+fun Element.bindClass(clazz: String, isApplicable: Boolean) {
+    if (isApplicable) {
+        classList.add(clazz)
+    } else {
+        classList.remove(clazz)
+    }
+}
+
+fun Document.select(query: String): Element = querySelector(query) as Element

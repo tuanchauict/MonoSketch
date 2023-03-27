@@ -8,11 +8,12 @@ import mono.html.canvas.canvas.DrawingInfoController.Companion.DEFAULT_FONT
 import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.px
-import mono.html.styleOf
 import mono.html.setAttributes
 import mono.html.setOnClickListener
+import mono.html.styleOf
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.ui.theme.ThemeColor
 import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLCanvasElement
@@ -89,14 +90,14 @@ internal class AxisCanvasViewController(
 
         val path = Path2D()
         context.lineWidth = 1.0
-        context.fillStyle = AXIS_BG_COLOR
+        context.fillStyle = ThemeColor.AxisBackground.colorCode
         context.fillRect(
             x = 0.0,
             y = 0.0,
             w = yAxisWidth,
             h = canvasSizePx.height.toDouble()
         )
-        context.fillStyle = AXIS_TEXT_COLOR
+        context.fillStyle = ThemeColor.AxisText.colorCode
         context.textAlign = CanvasTextAlign.RIGHT
 
         path.addHLine(0.0, xAxisHeight, canvasSizePx.width.toDouble())
@@ -108,14 +109,14 @@ internal class AxisCanvasViewController(
             context.fillText(text, xPx, yPx + 3)
         }
 
-        context.fillStyle = AXIS_BG_COLOR
+        context.fillStyle = ThemeColor.AxisBackground.colorCode
         context.fillRect(
             x = 0.0,
             y = 0.0,
             w = canvasSizePx.width.toDouble(),
             h = xAxisHeight
         )
-        context.fillStyle = AXIS_TEXT_COLOR
+        context.fillStyle = ThemeColor.AxisText.colorCode
         context.textAlign = CanvasTextAlign.LEFT
 
         path.addVLine(yAxisWidth, xAxisHeight, canvasSizePx.height.toDouble())
@@ -127,14 +128,11 @@ internal class AxisCanvasViewController(
             path.addVLine(xPx, xAxisHeight - AXIS_RULER_SIZE, AXIS_RULER_SIZE)
         }
 
-        context.strokeStyle = AXIS_RULER_COLOR
+        context.strokeStyle = ThemeColor.AxisRule.colorCode
         context.stroke(path)
     }
 
     companion object {
-        private const val AXIS_BG_COLOR = "#EEEEEE"
-        private const val AXIS_TEXT_COLOR = "#666666"
-        private const val AXIS_RULER_COLOR = "#444444"
         private const val AXIS_RULER_SIZE = 12.0
 
         private const val AXIS_Y_WIDTH = 33.0

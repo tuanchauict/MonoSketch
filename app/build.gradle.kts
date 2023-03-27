@@ -7,6 +7,7 @@ repositories {
 }
 
 dependencies {
+    implementation(projects.actionManager)
     implementation(projects.commons)
     implementation(projects.graphicsgeo)
     implementation(projects.htmlcanvas)
@@ -23,6 +24,7 @@ dependencies {
     implementation(projects.shapeSerialization)
     implementation(projects.statemanager)
     implementation(projects.storeManager)
+    implementation(projects.uiAppStateManager)
 
     testImplementation(libs.kotlin.test.js)
 }
@@ -37,6 +39,5 @@ kotlin {
                 }
             }
         }
-        binaries.executable()
     }
 }

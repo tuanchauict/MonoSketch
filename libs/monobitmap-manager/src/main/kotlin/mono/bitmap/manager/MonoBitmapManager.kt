@@ -37,7 +37,7 @@ class MonoBitmapManager {
             )
             is Line -> LineBitmapFactory.toBitmap(
                 shape.reducedJoinPoints,
-                shape.extra,
+                shape.extra
             )
 
             is Group -> null // No draw group since it change very frequently.

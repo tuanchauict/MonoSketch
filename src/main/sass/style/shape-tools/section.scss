@@ -1,0 +1,35 @@
+#shape-tools {
+    .section {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        color: var(--shapetool-section-content-color);
+
+        &.notitle {
+            padding: 4px 10px;
+        }
+
+        &.border-top {
+            border-top: 0.75px solid var(--shapetool-section-divider-color);
+        }
+
+        &.hide {
+            display: none;
+        }
+
+        &>.section-title {
+            font-weight: 500;
+            font-size: 11px;
+            color: var(--shapetool-section-title-color);
+            margin-bottom: 10px;
+            user-select: none;
+            letter-spacing: 1.2px;
+        }
+
+        &>.section-body {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+    }
+}
