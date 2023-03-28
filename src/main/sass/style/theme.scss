@@ -36,6 +36,24 @@
     --workspace-edittext-color: #fff;
 }
 
+// Shape tool - Text Input component
+:root {
+    &,
+    &.light {
+        --text-input-border-color: #E6E6E6;
+        --text-input-border-focus-color: #4597F7;
+        --text-input-label-color: #6b6a6a;
+        --text-input-value-color: #000;
+    }
+
+    &.dark {
+        --text-input-border-color: #565656;
+        --text-input-border-focus-color: #e8b32f;
+        --text-input-label-color: #9f9f9f;
+        --text-input-value-color: #FFF;
+    }
+}
+
 // Shape tool
 :root,
 :root.light {
@@ -74,8 +92,6 @@
     --shapetool-tool-option-selected-color: #0366fc;
     --shapetool-tool-option-selected-hover-color: #0047b2;
 
-    // Tool input
-    --shapetool-tool-input-border-color: #AAA;
 
     // Reorder
     --shapetool-reorder-hover-bg: #efefef;
@@ -117,9 +133,6 @@
     --shapetool-tool-option-selected-disabled-color: #c4c4c4;
     --shapetool-tool-option-selected-color: #ffb800;
     --shapetool-tool-option-selected-hover-color: #956d04;
-
-    // Tool input
-    --shapetool-tool-input-border-color: #565656;
 
     // Reorder
     --shapetool-reorder-hover-bg: #333333;
@@ -182,4 +195,3 @@
     --exporttext-container-bg: #151515;
     --exporttext-content-color: #fff;
 }
-

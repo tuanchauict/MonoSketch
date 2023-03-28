@@ -9,7 +9,10 @@ import mono.html.appendElement
 import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.setOnClickListener
-import mono.html.toolbar.view.SvgIcon
+import mono.html.toolbar.view.utils.CssClass
+import mono.html.toolbar.view.utils.SvgIcon
+import mono.html.toolbar.view.utils.bindClass
+import mono.html.toolbar.view.utils.hasClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.distinctUntilChange

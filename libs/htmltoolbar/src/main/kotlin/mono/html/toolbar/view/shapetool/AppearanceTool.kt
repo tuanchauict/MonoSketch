@@ -13,6 +13,8 @@ import mono.html.setOnChangeListener
 import mono.html.setOnClickListener
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.DashVisible
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.GridVisible
+import mono.html.toolbar.view.utils.CssClass
+import mono.html.toolbar.view.utils.bindClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.filterNotNull

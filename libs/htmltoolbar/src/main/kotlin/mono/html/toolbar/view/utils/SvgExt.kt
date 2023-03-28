@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName", "ClassName")
 
-package mono.html.toolbar.view
+package mono.html.toolbar.view.utils
 
 import mono.html.Svg
 import mono.html.setAttributes
