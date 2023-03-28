@@ -11,8 +11,9 @@ import org.w3c.dom.HTMLDivElement
 internal fun Element.Section(
     title: String = "",
     hasBorderTop: Boolean = true,
-    block: HTMLDivElement.() -> Unit
+    block: HTMLDivElement.(sectionElement: Element) -> Unit
 ): HTMLDivElement = Div("section") {
+    val sectionElement = this
     bindClass("notitle", title.isEmpty())
     bindClass("border-top", hasBorderTop)
     if (title.isNotEmpty()) {
@@ -22,6 +23,6 @@ internal fun Element.Section(
     }
 
     Div("section-body") {
-        block()
+        block(sectionElement)
     }
 }
