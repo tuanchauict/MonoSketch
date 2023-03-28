@@ -11,7 +11,7 @@ import mono.html.SvgPath
 import mono.html.Table
 import mono.html.setOnClickListener
 import mono.html.style
-import mono.html.toolbar.view.SvgIcon
+import mono.html.toolbar.view.utils.SvgIcon
 import org.w3c.dom.Element
 
 /**

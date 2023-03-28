@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package mono.html.toolbar.view
+package mono.html.toolbar.view.nav
 
 import mono.actionmanager.RetainableActionType
 import mono.html.Div
@@ -8,8 +8,9 @@ import mono.html.SvgPath
 import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnClickListener
-import mono.html.toolbar.view.shapetool.CssClass
-import mono.html.toolbar.view.shapetool.bindClass
+import mono.html.toolbar.view.utils.CssClass
+import mono.html.toolbar.view.utils.SvgIcon
+import mono.html.toolbar.view.utils.bindClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import org.w3c.dom.Element

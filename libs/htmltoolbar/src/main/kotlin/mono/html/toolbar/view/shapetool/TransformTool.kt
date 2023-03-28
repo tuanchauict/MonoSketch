@@ -11,6 +11,8 @@ import mono.html.Span
 import mono.html.appendElement
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
+import mono.html.toolbar.view.utils.CssClass
+import mono.html.toolbar.view.utils.bindClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.map

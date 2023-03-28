@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package mono.html.toolbar.view
+package mono.html.toolbar.view.nav
 
 import mono.actionmanager.OneTimeActionType
 import mono.html.Div
@@ -11,6 +11,7 @@ import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnClickListener
+import mono.html.toolbar.view.utils.SvgIcon
 import mono.livedata.LiveData
 import mono.ui.theme.ThemeManager
 import mono.ui.theme.ThemeMode

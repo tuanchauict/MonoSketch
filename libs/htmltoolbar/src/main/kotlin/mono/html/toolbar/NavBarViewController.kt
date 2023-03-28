@@ -3,15 +3,15 @@ package mono.html.toolbar
 import kotlinx.browser.document
 import mono.actionmanager.ActionManager
 import mono.html.select
-import mono.html.toolbar.view.MouseActionGroup
-import mono.html.toolbar.view.RightToolbar
+import mono.html.toolbar.view.nav.MouseActionGroup
+import mono.html.toolbar.view.nav.RightToolbar
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 
 /**
  * A view controller to manage toolbar.
  */
-class ToolbarViewController(
+class NavBarViewController(
     lifecycleOwner: LifecycleOwner,
     shapeToolVisibilityLiveData: LiveData<Boolean>,
     private val actionManager: ActionManager

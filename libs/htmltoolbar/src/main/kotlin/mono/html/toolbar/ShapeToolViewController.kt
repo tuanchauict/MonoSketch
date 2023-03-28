@@ -1,4 +1,4 @@
-package mono.html.toolbar.view.shapetool
+package mono.html.toolbar
 
 import kotlinx.dom.addClass
 import mono.actionmanager.ActionManager
@@ -8,8 +8,16 @@ import mono.html.Div
 import mono.html.Span
 import mono.html.SvgPath
 import mono.html.style
-import mono.html.toolbar.view.SvgIcon
+import mono.html.toolbar.view.shapetool.AppearanceDataController
+import mono.html.toolbar.view.shapetool.AppearanceSectionViewController
+import mono.html.toolbar.view.shapetool.ReorderSectionViewController
+import mono.html.toolbar.view.shapetool.Section
+import mono.html.toolbar.view.shapetool.TextSectionViewController
 import mono.html.toolbar.view.shapetool.TextSectionViewController.TextAlignVisibility
+import mono.html.toolbar.view.shapetool.TransformToolViewController
+import mono.html.toolbar.view.utils.CssClass
+import mono.html.toolbar.view.utils.SvgIcon
+import mono.html.toolbar.view.utils.bindClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
