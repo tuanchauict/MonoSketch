@@ -32,6 +32,7 @@
             .option-group {
                 display: flex;
                 margin-top: 8px;
+                margin-bottom: 8px;
 
                 .option {
                     display: flex;
@@ -40,22 +41,6 @@
                     width: 18px;
                     padding: 0 0 2px;
                     margin-right: 6px;
-                }
-            }
-
-            .dash-pattern {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 8px;
-
-                .pattern {
-                    display: flex;
-                    align-items: center;
-                    width: 30%;
-                }
-
-                span {
-                    color: var(--shapetool-tool-subtitle-color);
                 }
             }
         }

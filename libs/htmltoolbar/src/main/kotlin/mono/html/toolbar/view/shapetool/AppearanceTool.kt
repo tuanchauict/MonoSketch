@@ -8,9 +8,9 @@ import mono.html.Div
 import mono.html.Input
 import mono.html.InputType
 import mono.html.Span
-import mono.html.setAttributes
 import mono.html.setOnChangeListener
 import mono.html.setOnClickListener
+import mono.html.toolbar.view.components.DashPattern
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.DashVisible
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.GridVisible
 import mono.html.toolbar.view.utils.CssClass
@@ -162,45 +162,10 @@ internal class AppearanceSectionViewController(
         liveData: LiveData<DashVisible?>,
         onChange: (Int?, Int?, Int?) -> Unit
     ) {
-        Div("dash-pattern") {
-            Div("pattern") {
-                Span(text = "Dash")
-                DashPatternInput(
-                    minValue = 1,
-                    liveData.map { it?.dashPattern?.dash }
-                ) { onChange(it, null, null) }
-            }
-            Div("pattern") {
-                Span(text = "Gap")
-                DashPatternInput(
-                    minValue = 0,
-                    liveData.map { it?.dashPattern?.gap }
-                ) { onChange(null, it, null) }
-            }
-            Div("pattern") {
-                Span(text = "Shift")
-                DashPatternInput(
-                    minValue = null,
-                    liveData.map { it?.dashPattern?.offset }
-                ) { onChange(null, null, it) }
-            }
-        }
-    }
-
-    private fun Element.DashPatternInput(
-        minValue: Int?,
-        liveData: LiveData<Int?>,
-        onChange: (Int) -> Unit
-    ) {
-        Input(InputType.NUMBER, "tool-input-text") {
-            if (minValue != null) {
-                setAttributes("min" to minValue)
-            }
-            setOnChangeListener { onChange(value.toInt()) }
-
-            liveData.filterNotNull().observe(lifecycleOwner) {
-                value = it.toString()
-            }
+        val dashPattern = DashPattern(onChange)
+        liveData.map { it?.dashPattern }.filterNotNull().observe(lifecycleOwner) {
+            println(it)
+            dashPattern.set(it.dash, it.gap, it.offset)
         }
     }
 }
