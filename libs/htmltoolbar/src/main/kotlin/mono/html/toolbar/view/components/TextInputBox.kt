@@ -5,6 +5,7 @@ package mono.html.toolbar.view.components
 import mono.html.Div
 import mono.html.Input
 import mono.html.Span
+import mono.html.bindClass
 import mono.html.setAttributes
 import mono.html.setOnChangeListener
 import org.w3c.dom.Element
@@ -16,16 +17,20 @@ import org.w3c.dom.HTMLInputElement
 internal fun Element.TextInputBox(
     label: String,
     inputSettings: InputSettings,
+    isBoundIncludingParent: Boolean = true,
     onValueChange: (String) -> Unit
-): TextInputBoxViewHolder = TextInputBox(this, label, inputSettings, onValueChange)
+): TextInputBoxViewHolder =
+    TextInputBox(this, label, inputSettings, isBoundIncludingParent, onValueChange)
 
 internal fun TextInputBox(
     parent: Element,
     label: String,
     inputSettings: InputSettings,
+    isBoundIncludingParent: Boolean = true,
     onValueChange: (String) -> Unit
 ): TextInputBoxViewHolder {
     val container = parent.Div("text-input-layout") {
+        bindClass("child-bounds", !isBoundIncludingParent)
         Span("text-input-label", text = label)
     }
 
