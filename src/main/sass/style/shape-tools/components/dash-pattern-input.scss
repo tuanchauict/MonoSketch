@@ -1,0 +1,22 @@
+.comp-dash-layout {
+    display: flex;
+    justify-content: space-between;
+
+    span {
+        color: var(--shapetool-tool-subtitle-color);
+    }
+
+    .pattern {
+        display: flex;
+        align-items: center;
+        width: 30%;
+    }
+
+    .text-input-layout {
+        padding-left: 0;
+
+        .text-input {
+            margin-left: 6px;
+        }
+    }
+}
