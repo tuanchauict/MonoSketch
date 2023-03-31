@@ -3,6 +3,7 @@
 package mono.html.toolbar.view.shapetool
 
 import mono.actionmanager.OneTimeActionType
+import mono.common.Characters
 import mono.html.Div
 import mono.html.Span
 import mono.html.bindClass
@@ -107,8 +108,8 @@ internal class AppearanceSectionViewController(
         visibilityLiveData: LiveData<GridVisible?>
     ) {
         val factory = CloudItemFactory(options.size + 1) { index ->
-            bindClass("dash-border", index == 0)
-            val text = if (index > 0) options[index - 1].name else "ø"
+            bindClass("dash-border", type == ToolType.FILL && index == 0)
+            val text = if (index > 0) options[index - 1].name else type.disableDisplayText
             Span(classes = "monofont", text)
         }
         val cloud = OptionCloud(factory) {
@@ -139,8 +140,11 @@ internal class AppearanceSectionViewController(
     }
 }
 
-private enum class ToolType(val title: String) {
-    FILL("Fill") {
+private enum class ToolType(
+    val title: String,
+    val disableDisplayText: String = "${Characters.NBSP}"
+) {
+    FILL("Fill", "×") {
         override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType =
             OneTimeActionType.ChangeShapeFillExtra(isChecked, selectedId)
     },
