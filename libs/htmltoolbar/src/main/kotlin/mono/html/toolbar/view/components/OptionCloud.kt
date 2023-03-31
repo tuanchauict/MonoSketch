@@ -31,4 +31,3 @@ internal class CloudViewBinder(private val items: List<Element>) {
 }
 
 internal class CloudItemFactory(val size: Int, val create: Element.(Int) -> Element)
-
