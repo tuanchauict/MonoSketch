@@ -38,6 +38,7 @@
 
 // Shape tool - Text Input component
 :root {
+
     &,
     &.light {
         --text-input-border-color: #E6E6E6;
@@ -51,6 +52,21 @@
         --text-input-border-focus-color: #e8b32f;
         --text-input-label-color: #9f9f9f;
         --text-input-value-color: #FFF;
+    }
+}
+
+// Shape tool - Option cloud
+:root {
+
+    &,
+    &.light {
+        --comp-option-cloud-border-color: #ddd;
+        --comp-option-cloud-border-selected-color: #2da0ff;
+    }
+
+    &.dark {
+        --comp-option-cloud-border-color: #f0f0f0;
+        --comp-option-cloud-border-selected-color: #ffb800;
     }
 }
 

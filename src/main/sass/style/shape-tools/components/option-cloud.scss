@@ -1,0 +1,47 @@
+$border-color: var(--comp-option-cloud-border-color);
+$border-selected-color: var(--comp-option-cloud-border-selected-color);
+
+.comp-option-cloud-layout {
+    display: flex;
+    flex-wrap: wrap;
+
+    .cloud-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid $border-color;
+        border-radius: 3px;
+        cursor: pointer;
+        padding: 3px;
+        margin: 4px;
+
+        &:hover {
+            border-color: transparent;
+            outline: 1.5px solid $border-color;
+        }
+
+        &.selected {
+            border-color: transparent;
+            outline: 1.5px solid $border-selected-color;
+            color: $border-selected-color;
+        }
+
+        &:first-child {
+            margin-left: 0;
+        }
+        &:last-child {
+            margin-right: 0;
+        }
+
+        &.dash-border {
+            border-style: dashed;
+
+            &:hover {
+                outline-style: dashed;
+            }
+            &.selected {
+                outline-style: dashed;
+            }
+        }
+    }
+}
