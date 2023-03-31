@@ -29,18 +29,9 @@
                 }
             }
 
-            .option-group {
-                display: flex;
-                margin-top: 8px;
-                margin-bottom: 8px;
-
-                .option {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 18px;
-                    padding: 0 0 2px;
-                    margin-right: 6px;
+            .cloud-item {
+                span {
+                    font-size: 18px;
                 }
             }
         }

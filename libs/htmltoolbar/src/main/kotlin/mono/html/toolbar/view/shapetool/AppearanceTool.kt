@@ -8,9 +8,11 @@ import mono.html.Div
 import mono.html.Input
 import mono.html.InputType
 import mono.html.Span
+import mono.html.bindClass
 import mono.html.setOnChangeListener
-import mono.html.setOnClickListener
+import mono.html.toolbar.view.components.CloudItemFactory
 import mono.html.toolbar.view.components.DashPattern
+import mono.html.toolbar.view.components.OptionCloud
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.DashVisible
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.GridVisible
 import mono.html.toolbar.view.utils.CssClass
@@ -137,24 +139,23 @@ internal class AppearanceSectionViewController(
         options: List<AppearanceOptionItem>,
         visibilityLiveData: LiveData<GridVisible?>
     ) {
-        Div(classes = "option-group monofont") {
-            val optionViews = options.map { option ->
-                Span(classes = "option", option.name) {
-                    setOnClickListener {
-                        appearanceDataController.setOneTimeAction(
-                            type.toActionType(selectedId = option.id)
-                        )
-                    }
-                }
-            }
+        val factory = CloudItemFactory(options.size + 1) { index ->
+            bindClass("dash-border", index == 0)
+            val text = if (index > 0) options[index - 1].name else "ø"
+            Span(classes = "monofont", text)
+        }
+        val cloud = OptionCloud(factory) {
+            val selectedIndex = it - 1
 
-            visibilityLiveData.filterNotNull().observe(lifecycleOwner) { state ->
-                bindClass(CssClass.DISABLED, !state.isChecked)
-
-                optionViews.forEachIndexed { index, optionView ->
-                    optionView.bindClass(CssClass.SELECTED, index == state.selectedPosition)
-                }
-            }
+            appearanceDataController.setOneTimeAction(
+                type.toActionType(
+                    isChecked = selectedIndex >= 0,
+                    selectedId = options.getOrNull(selectedIndex)?.id
+                )
+            )
+        }
+        visibilityLiveData.filterNotNull().observe(lifecycleOwner) {
+            cloud.setSelectedItem(it.selectedPosition + 1)
         }
     }
 
