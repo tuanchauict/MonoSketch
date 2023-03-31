@@ -3,13 +3,9 @@
 package mono.html.toolbar.view.shapetool
 
 import mono.actionmanager.OneTimeActionType
-import mono.common.nullToFalse
 import mono.html.Div
-import mono.html.Input
-import mono.html.InputType
 import mono.html.Span
 import mono.html.bindClass
-import mono.html.setOnChangeListener
 import mono.html.toolbar.view.components.CloudItemFactory
 import mono.html.toolbar.view.components.DashPattern
 import mono.html.toolbar.view.components.OptionCloud
@@ -93,44 +89,15 @@ internal class AppearanceSectionViewController(
         block: Element.() -> Unit = {}
     ) {
         val gridVisibleLiveData = liveData.map { it as? GridVisible }
-        CheckableTool(type, gridVisibleLiveData) {
+
+        Div("tool-appearance") {
+            Span(classes = "tool-title", type.title)
             Options(type, options, gridVisibleLiveData)
             block()
-        }
-    }
 
-    private fun Element.CheckableTool(
-        type: ToolType,
-        liveData: LiveData<GridVisible?>,
-        block: Element.() -> Unit
-    ) {
-        Div("tool-appearance") {
-            Div("checkbox-column") {
-                ToolCheckBox(type, liveData.map { it?.isChecked.nullToFalse() })
-            }
-
-            Div("tool-column") {
-                Span(classes = "tool-title", type.title)
-
-                block()
-            }
-
-            liveData.observe(lifecycleOwner) {
+            gridVisibleLiveData.observe(lifecycleOwner) {
                 bindClass(CssClass.HIDE, it == null)
             }
-        }
-    }
-
-    private fun Element.ToolCheckBox(
-        type: ToolType,
-        isCheckedLiveData: LiveData<Boolean>
-    ) {
-        Input(InputType.CHECK_BOX, classes = "") {
-            setOnChangeListener {
-                appearanceDataController.setOneTimeAction(type.toActionType(checked))
-            }
-
-            isCheckedLiveData.observe(lifecycleOwner) { isChecked -> this.checked = isChecked }
         }
     }
 
@@ -155,7 +122,8 @@ internal class AppearanceSectionViewController(
             )
         }
         visibilityLiveData.filterNotNull().observe(lifecycleOwner) {
-            cloud.setSelectedItem(it.selectedPosition + 1)
+            val selectedIndex = if (it.isChecked) it.selectedPosition + 1 else 0
+            cloud.setSelectedItem(selectedIndex)
         }
     }
 

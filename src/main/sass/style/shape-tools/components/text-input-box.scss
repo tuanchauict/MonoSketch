@@ -48,6 +48,7 @@
         .text-input {
             padding-left: 4px;
             padding-right: 4px;
+            border-radius: 2px;
 
             &:hover {
                 outline: 1px solid var(--text-input-border-color);
