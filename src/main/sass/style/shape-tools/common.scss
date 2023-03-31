@@ -34,18 +34,6 @@
                     }
                 }
             }
-
-            &.disabled {
-                .option {
-                    border-color: var(--shapetool-tool-option-disabled-border-color);
-                    color: var(--shapetool-tool-option-disabled-color);
-
-                    &.selected {
-                        border-color: var(--shapetool-tool-option-selected-disabled-border-color);
-                        color: var(--shapetool-tool-option-selected-disabled-color);
-                    }
-                }
-            }
         }
 
         input[type='checkbox'] {
