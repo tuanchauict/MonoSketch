@@ -3,14 +3,13 @@
 package mono.html.toolbar.view.shapetool
 
 import mono.actionmanager.OneTimeActionType
-import mono.common.nullToFalse
+import mono.common.Characters
 import mono.html.Div
-import mono.html.Input
-import mono.html.InputType
 import mono.html.Span
-import mono.html.setAttributes
-import mono.html.setOnChangeListener
-import mono.html.setOnClickListener
+import mono.html.bindClass
+import mono.html.toolbar.view.components.CloudItemFactory
+import mono.html.toolbar.view.components.DashPattern
+import mono.html.toolbar.view.components.OptionCloud
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.DashVisible
 import mono.html.toolbar.view.shapetool.AppearanceVisibility.GridVisible
 import mono.html.toolbar.view.utils.CssClass
@@ -91,44 +90,15 @@ internal class AppearanceSectionViewController(
         block: Element.() -> Unit = {}
     ) {
         val gridVisibleLiveData = liveData.map { it as? GridVisible }
-        CheckableTool(type, gridVisibleLiveData) {
+
+        Div("tool-appearance") {
+            Span(classes = "tool-title", type.title)
             Options(type, options, gridVisibleLiveData)
             block()
-        }
-    }
 
-    private fun Element.CheckableTool(
-        type: ToolType,
-        liveData: LiveData<GridVisible?>,
-        block: Element.() -> Unit
-    ) {
-        Div("tool-appearance") {
-            Div("checkbox-column") {
-                ToolCheckBox(type, liveData.map { it?.isChecked.nullToFalse() })
-            }
-
-            Div("tool-column") {
-                Span(classes = "tool-title", type.title)
-
-                block()
-            }
-
-            liveData.observe(lifecycleOwner) {
+            gridVisibleLiveData.observe(lifecycleOwner) {
                 bindClass(CssClass.HIDE, it == null)
             }
-        }
-    }
-
-    private fun Element.ToolCheckBox(
-        type: ToolType,
-        isCheckedLiveData: LiveData<Boolean>
-    ) {
-        Input(InputType.CHECK_BOX, classes = "") {
-            setOnChangeListener {
-                appearanceDataController.setOneTimeAction(type.toActionType(checked))
-            }
-
-            isCheckedLiveData.observe(lifecycleOwner) { isChecked -> this.checked = isChecked }
         }
     }
 
@@ -137,24 +107,24 @@ internal class AppearanceSectionViewController(
         options: List<AppearanceOptionItem>,
         visibilityLiveData: LiveData<GridVisible?>
     ) {
-        Div(classes = "option-group monofont") {
-            val optionViews = options.map { option ->
-                Span(classes = "option", option.name) {
-                    setOnClickListener {
-                        appearanceDataController.setOneTimeAction(
-                            type.toActionType(selectedId = option.id)
-                        )
-                    }
-                }
-            }
+        val factory = CloudItemFactory(options.size + 1) { index ->
+            bindClass("dash-border", type == ToolType.FILL && index == 0)
+            val text = if (index > 0) options[index - 1].name else type.disableDisplayText
+            Span(classes = "monofont", text)
+        }
+        val cloud = OptionCloud(factory) {
+            val selectedIndex = it - 1
 
-            visibilityLiveData.filterNotNull().observe(lifecycleOwner) { state ->
-                bindClass(CssClass.DISABLED, !state.isChecked)
-
-                optionViews.forEachIndexed { index, optionView ->
-                    optionView.bindClass(CssClass.SELECTED, index == state.selectedPosition)
-                }
-            }
+            appearanceDataController.setOneTimeAction(
+                type.toActionType(
+                    isChecked = selectedIndex >= 0,
+                    selectedId = options.getOrNull(selectedIndex)?.id
+                )
+            )
+        }
+        visibilityLiveData.filterNotNull().observe(lifecycleOwner) {
+            val selectedIndex = if (it.isChecked) it.selectedPosition + 1 else 0
+            cloud.setSelectedItem(selectedIndex)
         }
     }
 
@@ -162,51 +132,19 @@ internal class AppearanceSectionViewController(
         liveData: LiveData<DashVisible?>,
         onChange: (Int?, Int?, Int?) -> Unit
     ) {
-        Div("dash-pattern") {
-            Div("pattern") {
-                Span(text = "Dash")
-                DashPatternInput(
-                    minValue = 1,
-                    liveData.map { it?.dashPattern?.dash }
-                ) { onChange(it, null, null) }
-            }
-            Div("pattern") {
-                Span(text = "Gap")
-                DashPatternInput(
-                    minValue = 0,
-                    liveData.map { it?.dashPattern?.gap }
-                ) { onChange(null, it, null) }
-            }
-            Div("pattern") {
-                Span(text = "Shift")
-                DashPatternInput(
-                    minValue = null,
-                    liveData.map { it?.dashPattern?.offset }
-                ) { onChange(null, null, it) }
-            }
-        }
-    }
-
-    private fun Element.DashPatternInput(
-        minValue: Int?,
-        liveData: LiveData<Int?>,
-        onChange: (Int) -> Unit
-    ) {
-        Input(InputType.NUMBER, "tool-input-text") {
-            if (minValue != null) {
-                setAttributes("min" to minValue)
-            }
-            setOnChangeListener { onChange(value.toInt()) }
-
-            liveData.filterNotNull().observe(lifecycleOwner) {
-                value = it.toString()
-            }
+        val dashPattern = DashPattern(onChange)
+        liveData.map { it?.dashPattern }.filterNotNull().observe(lifecycleOwner) {
+            println(it)
+            dashPattern.set(it.dash, it.gap, it.offset)
         }
     }
 }
 
-private enum class ToolType(val title: String) {
-    FILL("Fill") {
+private enum class ToolType(
+    val title: String,
+    val disableDisplayText: String = "${Characters.NBSP}"
+) {
+    FILL("Fill", "×") {
         override fun toActionType(isChecked: Boolean?, selectedId: String?): OneTimeActionType =
             OneTimeActionType.ChangeShapeFillExtra(isChecked, selectedId)
     },

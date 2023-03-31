@@ -4,21 +4,10 @@
 #shape-tools {
     .section {
         .tool-title {
-            display: inline-block;
-            font-size: 11px;
+            font-size: 12px;
             user-select: none;
             color: var(--shapetool-tool-title-color);
-        }
-
-        .tool-input-text {
-            height: 24px;
-            width: 100%;
-            margin-left: 4px;
-            border: none;
-            color: var(--shapetool-section-content-color);
-            border-bottom: 1px solid var(--shapetool-tool-input-border-color);
-            background: transparent;
-            font-size: 12px;
+            margin-bottom: 8px
         }
 
         .option-group {
@@ -42,18 +31,6 @@
                     &:hover {
                         border-color: var(--shapetool-tool-option-selected-hover-border-color);
                         color: var(--shapetool-tool-option-selected-hover-color);
-                    }
-                }
-            }
-
-            &.disabled {
-                .option {
-                    border-color: var(--shapetool-tool-option-disabled-border-color);
-                    color: var(--shapetool-tool-option-disabled-color);
-
-                    &.selected {
-                        border-color: var(--shapetool-tool-option-selected-disabled-border-color);
-                        color: var(--shapetool-tool-option-selected-disabled-color);
                     }
                 }
             }

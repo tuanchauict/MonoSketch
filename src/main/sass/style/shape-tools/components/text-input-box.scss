@@ -36,13 +36,38 @@
         }
     }
 
+    &.child-bounds {
+        &:hover {
+            outline: none;
+        }
+
+        &:focus-within {
+            outline: none;
+        }
+
+        .text-input {
+            padding-left: 4px;
+            padding-right: 4px;
+            border-radius: 2px;
+
+            &:hover {
+                outline: 1px solid var(--text-input-border-color);
+            }
+
+            &:focus-within {
+                outline: 2px solid var(--text-input-border-focus-color);
+            }
+        }
+    }
+
     // Hide up-down arrows
     .text-input[type='number'] {
         // Firefox
-        -moz-appearance:textfield;
+        -moz-appearance: textfield;
 
         // Webkit browsers like Safari, Chrome, etc.
-        &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }

@@ -17,7 +17,7 @@ internal object PredefinedRectangleFillStyle {
     val PREDEFINED_STYLES = listOf(
         RectangleFillStyle(
             id = "F1",
-            displayName = " ",
+            displayName = "${Characters.NBSP}",
             CharDrawable(' ')
         ),
         RectangleFillStyle(
