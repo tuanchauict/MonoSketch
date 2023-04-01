@@ -6,8 +6,15 @@ import mono.actionmanager.OneTimeActionType
 import mono.html.Div
 import mono.html.Span
 import mono.html.SvgPath
-import mono.html.appendElement
-import mono.html.setOnClickListener
+import mono.html.toolbar.view.components.CloudItemFactory
+import mono.html.toolbar.view.components.CloudViewBinder
+import mono.html.toolbar.view.components.OptionCloud
+import mono.html.toolbar.view.shapetool.TextAlignmentIconType.HORIZONTAL_LEFT
+import mono.html.toolbar.view.shapetool.TextAlignmentIconType.HORIZONTAL_MIDDLE
+import mono.html.toolbar.view.shapetool.TextAlignmentIconType.HORIZONTAL_RIGHT
+import mono.html.toolbar.view.shapetool.TextAlignmentIconType.VERTICAL_BOTTOM
+import mono.html.toolbar.view.shapetool.TextAlignmentIconType.VERTICAL_MIDDLE
+import mono.html.toolbar.view.shapetool.TextAlignmentIconType.VERTICAL_TOP
 import mono.html.toolbar.view.utils.CssClass
 import mono.html.toolbar.view.utils.SvgIcon
 import mono.html.toolbar.view.utils.bindClass
@@ -17,39 +24,13 @@ import mono.livedata.distinctUntilChange
 import mono.livedata.map
 import mono.shape.extra.style.TextAlign
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLElement
 
 internal class TextSectionViewController(
     lifecycleOwner: LifecycleOwner,
     container: Element,
     liveData: LiveData<TextAlignVisibility>,
-    setOneTimeAction: (OneTimeActionType) -> Unit
+    private val setOneTimeAction: (OneTimeActionType) -> Unit
 ) {
-    private val horizontalIcons = listOf(
-        TextAlignmentIconType.HORIZONTAL_LEFT,
-        TextAlignmentIconType.HORIZONTAL_MIDDLE,
-        TextAlignmentIconType.HORIZONTAL_RIGHT
-    ).map { Icon(it, setOneTimeAction) }
-
-    private val verticalIcons = listOf(
-        TextAlignmentIconType.VERTICAL_TOP,
-        TextAlignmentIconType.VERTICAL_MIDDLE,
-        TextAlignmentIconType.VERTICAL_BOTTOM
-    ).map { Icon(it, setOneTimeAction) }
-
-    private val rootView = container.Section("TEXT") {
-        Div("tool-text") {
-            Div("option-group") {
-                Span("tool-title", text = "Alignment")
-                appendElement(horizontalIcons)
-            }
-            Div("option-group") {
-                Span("tool-title", "Position")
-                appendElement(verticalIcons)
-            }
-        }
-    }
-
     val visibilityStateLiveData: LiveData<Boolean>
 
     init {
@@ -60,20 +41,34 @@ internal class TextSectionViewController(
             .map { it != null }
             .distinctUntilChange()
 
-        textAlignLiveData.observe(lifecycleOwner, listener = ::setCurrentTextAlign)
+        container.Section("TEXT") { section ->
+            val toolContainer = Div("tool-text")
+            val horizontalAlignBinder = toolContainer.Group(
+                "Alignment",
+                listOf(HORIZONTAL_LEFT, HORIZONTAL_MIDDLE, HORIZONTAL_RIGHT)
+            )
+
+            val verticalAlignBinder = toolContainer.Group(
+                "Position",
+                listOf(VERTICAL_TOP, VERTICAL_MIDDLE, VERTICAL_BOTTOM)
+            )
+
+            textAlignLiveData.observe(lifecycleOwner) {
+                section.bindClass(CssClass.HIDE, it == null)
+                if (it != null) {
+                    horizontalAlignBinder.setSelectedItem(it.horizontalAlign.ordinal)
+                    verticalAlignBinder.setSelectedItem(it.verticalAlign.ordinal)
+                }
+            }
+        }
     }
 
-    private fun setCurrentTextAlign(textAlign: TextAlign?) {
-        rootView.bindClass(CssClass.HIDE, textAlign == null)
-
-        if (textAlign == null) {
-            return
+    private fun Element.Group(label: String, icons: List<TextAlignmentIconType>): CloudViewBinder {
+        val alignmentDiv = Div("row") {
+            Span("tool-title", text = label)
         }
-        horizontalIcons.forEachIndexed { index, icon ->
-            icon.bindClass(CssClass.SELECTED, index == textAlign.horizontalAlign.ordinal)
-        }
-        verticalIcons.forEachIndexed { index, icon ->
-            icon.bindClass(CssClass.SELECTED, index == textAlign.verticalAlign.ordinal)
+        return alignmentDiv.Icons(icons) {
+            setOneTimeAction(it.toTextAlignment())
         }
     }
 
@@ -84,16 +79,17 @@ internal class TextSectionViewController(
     }
 }
 
-private fun Icon(
-    iconType: TextAlignmentIconType,
-    setOneTimeAction: (OneTimeActionType) -> Unit
-): HTMLElement = Span(null, classes = "option") {
-    SvgIcon(20, 14) {
-        SvgPath(iconType.iconPath)
+private fun Element.Icons(
+    icons: List<TextAlignmentIconType>,
+    onSelect: (TextAlignmentIconType) -> Unit
+): CloudViewBinder {
+    val factory = CloudItemFactory(icons.size) {
+        SvgIcon(20, 14) {
+            SvgPath(icons[it].iconPath)
+        }
     }
-
-    setOnClickListener {
-        setOneTimeAction(iconType.toTextAlignment())
+    return OptionCloud(factory) {
+        onSelect(icons[it])
     }
 }
 

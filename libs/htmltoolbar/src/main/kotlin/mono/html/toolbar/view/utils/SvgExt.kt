@@ -9,7 +9,7 @@ import org.w3c.dom.Element
 internal fun Element.SvgIcon(size: Int, pathBlock: Element.() -> Unit = {}) =
     SvgIcon(size, size, pathBlock)
 
-internal fun Element.SvgIcon(width: Int, height: Int, pathBlock: Element.() -> Unit) {
+internal fun Element.SvgIcon(width: Int, height: Int, pathBlock: Element.() -> Unit): Element =
     Svg("bi bi-cursor-fill") {
         setAttributes(
             "width" to width,
@@ -20,7 +20,6 @@ internal fun Element.SvgIcon(width: Int, height: Int, pathBlock: Element.() -> U
 
         pathBlock()
     }
-}
 
 internal fun Element.SvgIcon(
     width: Int,
