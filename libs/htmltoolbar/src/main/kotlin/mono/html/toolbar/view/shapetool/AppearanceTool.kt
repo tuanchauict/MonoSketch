@@ -18,6 +18,7 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.filterNotNull
 import mono.livedata.map
+import mono.shape.extra.style.StraightStrokeDashPattern
 import org.w3c.dom.Element
 
 internal class AppearanceSectionViewController(
@@ -133,9 +134,9 @@ internal class AppearanceSectionViewController(
         onChange: (Int?, Int?, Int?) -> Unit
     ) {
         val dashPattern = DashPattern(onChange)
-        liveData.map { it?.dashPattern }.filterNotNull().observe(lifecycleOwner) {
-            println(it)
-            dashPattern.set(it.dash, it.gap, it.offset)
+        liveData.map { it?.dashPattern }.observe(lifecycleOwner) {
+            val pattern = it ?: StraightStrokeDashPattern.SOLID
+            dashPattern.set(pattern.dash, pattern.gap, pattern.offset)
         }
     }
 }
