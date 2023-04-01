@@ -11,6 +11,10 @@
             flex-direction: column;
             margin-bottom: 16px;
 
+            .tool-title {
+                margin-bottom: 4px;
+            }
+
             &.hide {
                 display: none;
             }
