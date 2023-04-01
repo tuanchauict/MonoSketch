@@ -70,19 +70,39 @@
     }
 }
 
+// Shape tool - Footer
+:root {
+    &,
+    &.light {
+        --shapetool-footer-color: #aaa;
+        --shapetool-footer-hover-color: #888;
+        --shapetool-footer-active-color: #999;
+    }
+
+    &.dark {
+        --shapetool-footer-color: #aaa;
+        --shapetool-footer-hover-color: #888;
+        --shapetool-footer-active-color: #999;
+    }
+}
+
+// Shape tool - Indicator
+:root {
+    &,
+    &.light {
+        --shapetool-indicator-color: #888;
+    }
+
+    &.dark {
+        --shapetool-indicator-color: #888;
+    }
+}
+
 // Shape tool
 :root,
 :root.light {
     --shapetool-bg-color: #FAFAFA;
     --shapetool-main-divider-color: #BBB;
-
-    // Footer
-    --shapetool-footer-color: #aaa;
-    --shapetool-footer-hover-color: #888;
-    --shapetool-footer-active-color: #999;
-
-    // Indicator
-    --shapetool-indicator-color: #888;
 
     // Section
     --shapetool-section-divider-color: #bbb;
@@ -100,14 +120,6 @@
 :root.dark {
     --shapetool-bg-color: #1f1f1f;
     --shapetool-main-divider-color: #616161;
-
-    // Footer
-    --shapetool-footer-color: #aaa;
-    --shapetool-footer-hover-color: #888;
-    --shapetool-footer-active-color: #999;
-
-    // Indicator
-    --shapetool-indicator-color: #888;
 
     // Section
     --shapetool-section-divider-color: #6d6d6d;
