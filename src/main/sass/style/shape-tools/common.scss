@@ -8,35 +8,5 @@
             user-select: none;
             color: var(--shapetool-tool-title-color);
         }
-
-        .option-group {
-
-            .option {
-                @extend %common-button;
-                padding: 4px;
-                border: 1px solid var(--shapetool-tool-option-border-color);
-                border-radius: 3px;
-                background: var(--shapetool-tool-option-bg-color);
-                font-size: 15px;
-
-                &:hover {
-                    border-color: var(--shapetool-tool-option-hover-border-color);
-                }
-
-                &.selected {
-                    border-color: var(--shapetool-tool-option-selected-border-color);
-                    color: var(--shapetool-tool-option-selected-color);
-
-                    &:hover {
-                        border-color: var(--shapetool-tool-option-selected-hover-border-color);
-                        color: var(--shapetool-tool-option-selected-hover-color);
-                    }
-                }
-            }
-        }
-
-        input[type='checkbox'] {
-            accent-color: var(--shapetool-checkbox-color);
-        }
     }
 }

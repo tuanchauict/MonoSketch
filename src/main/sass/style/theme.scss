@@ -70,19 +70,39 @@
     }
 }
 
+// Shape tool - Footer
+:root {
+    &,
+    &.light {
+        --shapetool-footer-color: #aaa;
+        --shapetool-footer-hover-color: #888;
+        --shapetool-footer-active-color: #999;
+    }
+
+    &.dark {
+        --shapetool-footer-color: #aaa;
+        --shapetool-footer-hover-color: #888;
+        --shapetool-footer-active-color: #999;
+    }
+}
+
+// Shape tool - Indicator
+:root {
+    &,
+    &.light {
+        --shapetool-indicator-color: #888;
+    }
+
+    &.dark {
+        --shapetool-indicator-color: #888;
+    }
+}
+
 // Shape tool
 :root,
 :root.light {
     --shapetool-bg-color: #FAFAFA;
     --shapetool-main-divider-color: #BBB;
-
-    // Footer
-    --shapetool-footer-color: #aaa;
-    --shapetool-footer-hover-color: #888;
-    --shapetool-footer-active-color: #999;
-
-    // Indicator
-    --shapetool-indicator-color: #888;
 
     // Section
     --shapetool-section-divider-color: #bbb;
@@ -93,20 +113,6 @@
     --shapetool-tool-title-color: #1f1f1f;
     --shapetool-tool-subtitle-color: #a0a0a0;
 
-    // Tool option
-    --shapetool-tool-option-border-color: #ddd;
-    --shapetool-tool-option-hover-border-color: #ddd;
-    --shapetool-tool-option-selected-border-color: #0366fc;
-    --shapetool-tool-option-selected-hover-border-color: #0047b2;
-    --shapetool-tool-option-selected-disabled-border-color: #aaaaaa;
-
-    --shapetool-tool-option-bg-color: #ffffff;
-
-    --shapetool-tool-option-selected-disabled-color: #aaaaaa;
-    --shapetool-tool-option-selected-color: #0366fc;
-    --shapetool-tool-option-selected-hover-color: #0047b2;
-
-
     // Reorder
     --shapetool-reorder-hover-bg: #efefef;
 }
@@ -114,14 +120,6 @@
 :root.dark {
     --shapetool-bg-color: #1f1f1f;
     --shapetool-main-divider-color: #616161;
-
-    // Footer
-    --shapetool-footer-color: #aaa;
-    --shapetool-footer-hover-color: #888;
-    --shapetool-footer-active-color: #999;
-
-    // Indicator
-    --shapetool-indicator-color: #888;
 
     // Section
     --shapetool-section-divider-color: #6d6d6d;
@@ -131,20 +129,6 @@
     // Tool
     --shapetool-tool-title-color: #e0e0e0;
     --shapetool-tool-subtitle-color: #979797;
-    --shapetool-checkbox-color: #ffb800; // only dark mode
-
-    // Tool option
-    --shapetool-tool-option-border-color: #f0f0f0;
-    --shapetool-tool-option-hover-border-color: #767676;
-    --shapetool-tool-option-selected-border-color: #ffb800;
-    --shapetool-tool-option-selected-hover-border-color: #956d04;
-    --shapetool-tool-option-selected-disabled-border-color: #c4c4c4;
-
-    --shapetool-tool-option-bg-color: #00000000;
-
-    --shapetool-tool-option-selected-disabled-color: #c4c4c4;
-    --shapetool-tool-option-selected-color: #ffb800;
-    --shapetool-tool-option-selected-hover-color: #956d04;
 
     // Reorder
     --shapetool-reorder-hover-bg: #333333;

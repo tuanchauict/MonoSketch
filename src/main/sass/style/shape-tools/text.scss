@@ -4,19 +4,13 @@
             display: flex;
             flex-direction: column;
 
-            .option-group {
+            .row {
                 display: flex;
                 align-items: center;
                 padding-bottom: 8px;
 
                 .tool-title {
                     width: 60px;
-                }
-
-                .option {
-                    display: flex;
-                    margin-left: 8px;
-                    padding: 6px;
                 }
             }
         }
