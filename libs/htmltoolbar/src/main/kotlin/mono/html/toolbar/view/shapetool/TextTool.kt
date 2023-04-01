@@ -88,7 +88,7 @@ private fun Icon(
     iconType: TextAlignmentIconType,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ): HTMLElement = Span(null, classes = "option") {
-    SvgIcon(16, 16, iconType.viewPortSize, iconType.viewPortSize) {
+    SvgIcon(20, 14) {
         SvgPath(iconType.iconPath)
     }
 
@@ -97,42 +97,36 @@ private fun Icon(
     }
 }
 
-/* ktlint-disable max-line-length */
 private enum class TextAlignmentIconType(
     val iconPath: String,
-    val viewPortSize: Int = 16,
     val horizontalAlign: TextAlign.HorizontalAlign? = null,
     val verticalAlign: TextAlign.VerticalAlign? = null
 ) {
     HORIZONTAL_LEFT(
-        "M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z",
+        "M3 2h14v2H3zM3 6h8v2H3zM3 10h10v2H3z",
         horizontalAlign = TextAlign.HorizontalAlign.LEFT
     ),
     HORIZONTAL_MIDDLE(
-        "M4 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z",
+        "M3 2h14v2H3zM6 6h8v2H6zM5 10h10v2H5z",
         horizontalAlign = TextAlign.HorizontalAlign.MIDDLE
     ),
     HORIZONTAL_RIGHT(
-        "M6 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z",
+        "M3 2h14v2H3zM9 6h8v2H9zM7 10h10v2H7z",
         horizontalAlign = TextAlign.HorizontalAlign.RIGHT
     ),
     VERTICAL_TOP(
-        "M8 11h3v10h2V11h3l-4-4-4 4zM4 3v2h16V3H4z",
-        viewPortSize = 24,
+        "M3 0h14v2H3zM3 4h14v2H3z",
         verticalAlign = TextAlign.VerticalAlign.TOP
     ),
     VERTICAL_MIDDLE(
-        "M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z",
-        viewPortSize = 24,
+        "M3 4h14v2H3zM3 8h14v2H3z",
         verticalAlign = TextAlign.VerticalAlign.MIDDLE
     ),
     VERTICAL_BOTTOM(
-        "M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z",
-        viewPortSize = 24,
+        "M3 8h14v2H3zM3 12h14v2H3z",
         verticalAlign = TextAlign.VerticalAlign.BOTTOM
     );
 
     fun toTextAlignment(): OneTimeActionType.TextAlignment =
         OneTimeActionType.TextAlignment(horizontalAlign, verticalAlign)
 }
-/* ktlint-enable max-line-length */
