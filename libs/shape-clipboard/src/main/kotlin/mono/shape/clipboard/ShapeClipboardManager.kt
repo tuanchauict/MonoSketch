@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.shape.clipboard
 
 import kotlinx.browser.document

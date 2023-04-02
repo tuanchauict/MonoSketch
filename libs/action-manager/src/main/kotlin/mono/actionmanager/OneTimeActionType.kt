@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.actionmanager
 
 import mono.shape.command.ChangeOrder

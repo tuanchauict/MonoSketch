@@ -1,5 +1,9 @@
 #!/bin/sh
 
+#
+# Copyright (c) 2023, tuanchauict
+#
+
 remove_test_result_for_success() {
     path="$1/build/reports/tests/test"
     index_file="$path/index.html"

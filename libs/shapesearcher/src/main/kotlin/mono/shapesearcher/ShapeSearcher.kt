@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.shapesearcher
 
 import mono.common.Characters.isTransparent
