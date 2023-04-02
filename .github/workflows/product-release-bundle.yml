@@ -1,5 +1,6 @@
 name: Publish Product release
 on:
+  workflow_dispatch:
   push:
     branches:
       - release/product
