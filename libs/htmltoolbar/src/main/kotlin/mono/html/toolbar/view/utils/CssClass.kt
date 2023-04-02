@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.html.toolbar.view.utils
 
 import kotlinx.dom.hasClass

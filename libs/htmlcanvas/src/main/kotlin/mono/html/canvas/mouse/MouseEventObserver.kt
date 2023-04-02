@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.html.canvas.mouse
 
 import mono.common.commandKey
@@ -75,6 +79,7 @@ internal class MouseEventObserver(
         mousePointerMutableLiveData.value = when (currentValue) {
             is MousePointer.Down ->
                 MousePointer.Up(currentValue.point, clickPoint, event.shiftKey)
+
             is MousePointer.Drag ->
                 MousePointer.Up(currentValue.mouseDownPoint, clickPoint, event.shiftKey)
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 rootProject.name = "MonoSketch"
 
 val moduleMap = mapOf(

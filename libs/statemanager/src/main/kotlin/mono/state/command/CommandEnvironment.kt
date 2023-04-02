@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.state.command
 
 import mono.graphics.geo.DirectedPoint

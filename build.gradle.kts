@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 
 plugins {
