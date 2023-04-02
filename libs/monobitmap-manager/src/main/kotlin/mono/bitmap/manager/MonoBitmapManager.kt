@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.bitmap.manager
 
 import mono.bitmap.manager.factory.LineBitmapFactory

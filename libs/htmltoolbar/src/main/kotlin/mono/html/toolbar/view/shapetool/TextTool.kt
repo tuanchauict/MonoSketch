@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 @file:Suppress("FunctionName", "ktlint:filename")
 
 package mono.html.toolbar.view.shapetool

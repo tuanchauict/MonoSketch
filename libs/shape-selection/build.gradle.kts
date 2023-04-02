@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 plugins {
     kotlin("js")
     kotlin("plugin.serialization")

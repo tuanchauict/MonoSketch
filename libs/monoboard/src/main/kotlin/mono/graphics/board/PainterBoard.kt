@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.graphics.board
 
 import mono.common.Characters.TRANSPARENT_CHAR
