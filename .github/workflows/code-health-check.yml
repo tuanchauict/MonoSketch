@@ -8,10 +8,11 @@ jobs:
   unit_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-          java-version: 11
+          distribution: 'zulu'
+          java-version: 17
       - run: ./gradlew test --continue
       - name: Clean up test result
         if: failure()
@@ -25,23 +26,25 @@ jobs:
             build/reports/tests/
             app/build/reports/tests/
             libs/**/reports/tests/
-            
+
   ktlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-          java-version: 11
+          distribution: 'zulu'
+          java-version: 17
       - run: ./gradlew ktlint
 
   assemble:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-          java-version: 11
+          distribution: 'zulu'
+          java-version: 17
       - run: ./gradlew assemble
       - name: Publish artifact
         uses: actions/upload-artifact@v2
