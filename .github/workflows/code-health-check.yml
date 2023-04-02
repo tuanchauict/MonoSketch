@@ -18,7 +18,7 @@ jobs:
         if: failure()
         run: sh tools/devops/remove_success_test_report
       - name: Publish test result
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: test-result
@@ -47,7 +47,7 @@ jobs:
           java-version: 17
       - run: ./gradlew assemble
       - name: Publish artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: bundle
           path: build/distributions/
