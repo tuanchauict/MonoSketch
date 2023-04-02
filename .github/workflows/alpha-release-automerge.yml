@@ -21,7 +21,7 @@ jobs:
           git fetch origin main:main
           git reset --hard main
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
           title: "[Auto merge][${{ steps.vars.outputs.branch }} -> ${{ secrets.ALPHA_RELEASE_BRANCH }}] Update alpha release"
           branch: auto-merge-alpha-release
