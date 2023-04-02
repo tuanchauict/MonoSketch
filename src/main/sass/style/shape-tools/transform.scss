@@ -5,14 +5,12 @@
             flex-wrap: wrap;
 
             .cell {
-                display: flex;
-                align-items: center;
                 width: 50%;
-                padding: 0 32px 12px 0;
+                padding: 0 8px 12px 0;
             }
 
-            .tool-input-text {
-                margin-left: 8px;
+            .cell:nth-child(even) {
+                padding: 0 0 12px 8px;
             }
         }
     }

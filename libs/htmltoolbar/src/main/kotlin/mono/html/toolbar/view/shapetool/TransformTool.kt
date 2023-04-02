@@ -3,14 +3,13 @@
 package mono.html.toolbar.view.shapetool
 
 import mono.actionmanager.OneTimeActionType
-import mono.graphics.geo.Rect
 import mono.html.Div
-import mono.html.Input
 import mono.html.InputType
-import mono.html.Span
-import mono.html.appendElement
-import mono.html.setAttributes
-import mono.html.setOnChangeListener
+import mono.html.toolbar.view.components.InputSettings
+import mono.html.toolbar.view.components.TextInputBox
+import mono.html.toolbar.view.components.TextInputBoxViewHolder
+import mono.html.toolbar.view.utils.CssClass
+import mono.html.toolbar.view.utils.bindClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.map
@@ -18,7 +17,6 @@ import mono.shape.shape.AbstractShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLInputElement
 
 internal class TransformToolViewController(
     lifecycleOwner: LifecycleOwner,
@@ -26,80 +24,54 @@ internal class TransformToolViewController(
     singleShapeLiveData: LiveData<AbstractShape?>,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ) {
-    private val xInput = NumberCellInput(0) {
-        setOneTimeAction(OneTimeActionType.ChangeShapeBound(newLeft = it))
-    }
-    private val yInput = NumberCellInput(0) {
-        setOneTimeAction(OneTimeActionType.ChangeShapeBound(newTop = it))
-    }
-    private val wInput = NumberCellInput(10, 1) {
-        setOneTimeAction(OneTimeActionType.ChangeShapeBound(newWidth = it))
-    }
-    private val hInput = NumberCellInput(10, 1) {
-        setOneTimeAction(OneTimeActionType.ChangeShapeBound(newHeight = it))
-    }
-
     val visibilityStateLiveData: LiveData<Boolean>
 
     init {
-        val section = container.Section("TRANSFORM") {
-            Div("transform-grid") {
-                NumberCell("X", xInput)
-                NumberCell("W", wInput)
-                NumberCell("Y", yInput)
-                NumberCell("H", hInput)
+        container.Section("TRANSFORM") { section ->
+            val gridNode = Div("transform-grid")
+            val posSettings = InputSettings(InputType.NUMBER)
+            val sizeSettings = InputSettings(InputType.NUMBER, "min" to "1")
+            val xInput = gridNode.NumberCell("X", posSettings) {
+                setOneTimeAction(OneTimeActionType.ChangeShapeBound(newLeft = it))
+            }
+            val yInput = gridNode.NumberCell("Y", posSettings) {
+                setOneTimeAction(OneTimeActionType.ChangeShapeBound(newTop = it))
+            }
+            val wInput = gridNode.NumberCell("W", sizeSettings) {
+                setOneTimeAction(OneTimeActionType.ChangeShapeBound(newWidth = it))
+            }
+
+            val hInput = gridNode.NumberCell("H", sizeSettings) {
+                setOneTimeAction(OneTimeActionType.ChangeShapeBound(newHeight = it))
+            }
+
+            singleShapeLiveData.observe(lifecycleOwner) {
+                section.bindClass(CssClass.HIDE, it == null)
+
+                val isPositionEnabled = it != null
+                val isSizeChangeable = it is Rectangle || it is Text
+                xInput.isEnabled = isPositionEnabled
+                yInput.isEnabled = isPositionEnabled
+                wInput.isEnabled = isSizeChangeable
+                hInput.isEnabled = isSizeChangeable
+
+                if (it != null) {
+                    xInput.value = it.bound.left
+                    yInput.value = it.bound.top
+                    wInput.value = it.bound.width
+                    hInput.value = it.bound.height
+                }
             }
         }
 
         visibilityStateLiveData = singleShapeLiveData.map { it != null }
-
-        singleShapeLiveData.observe(lifecycleOwner) {
-            val isSizeChangeable = it is Rectangle || it is Text
-            section.bindClass(CssClass.HIDE, it == null)
-
-            setEnabled(it != null, isSizeChangeable)
-            if (it != null) {
-                setValue(it.bound)
-            }
-        }
     }
 
-    private fun setValue(bound: Rect) {
-        xInput.value = bound.left.toString()
-        yInput.value = bound.top.toString()
-        wInput.value = bound.width.toString()
-        hInput.value = bound.height.toString()
-    }
-
-    private fun setEnabled(isPositionEnabled: Boolean, isSizeEnabled: Boolean) {
-        xInput.disabled = !isPositionEnabled
-        yInput.disabled = !isPositionEnabled
-        wInput.disabled = !isSizeEnabled
-        hInput.disabled = !isSizeEnabled
-    }
-}
-
-private fun Element.NumberCell(
-    title: String,
-    inputElement: Element
-) {
-    Div("cell") {
-        Span("tool-title", text = title)
-        appendElement(inputElement)
-    }
-}
-
-private fun NumberCellInput(
-    value: Int,
-    minValue: Int? = null,
-    onValueChange: (Int) -> Unit
-): HTMLInputElement = Input(null, InputType.NUMBER, classes = "tool-input-text") {
-    if (minValue != null) {
-        setAttributes("min" to minValue)
-    }
-    this.value = value.toString()
-
-    setOnChangeListener {
-        onValueChange(this.value.toInt())
+    private fun Element.NumberCell(
+        title: String,
+        inputSettings: InputSettings,
+        onValueChange: (Int) -> Unit
+    ): TextInputBoxViewHolder = Div("cell").TextInputBox(title, inputSettings) {
+        onValueChange(it.toInt())
     }
 }

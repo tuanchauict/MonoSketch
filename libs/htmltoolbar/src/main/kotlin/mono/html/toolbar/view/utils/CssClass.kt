@@ -1,4 +1,4 @@
-package mono.html.toolbar.view.shapetool
+package mono.html.toolbar.view.utils
 
 import kotlinx.dom.hasClass
 import mono.html.bindClass

@@ -36,19 +36,73 @@
     --workspace-edittext-color: #fff;
 }
 
+// Shape tool - Text Input component
+:root {
+
+    &,
+    &.light {
+        --text-input-border-color: #E6E6E6;
+        --text-input-border-focus-color: #4597F7;
+        --text-input-label-color: #6b6a6a;
+        --text-input-value-color: #000;
+    }
+
+    &.dark {
+        --text-input-border-color: #565656;
+        --text-input-border-focus-color: #e8b32f;
+        --text-input-label-color: #9f9f9f;
+        --text-input-value-color: #FFF;
+    }
+}
+
+// Shape tool - Option cloud
+:root {
+
+    &,
+    &.light {
+        --comp-option-cloud-border-color: #bbb;
+        --comp-option-cloud-border-selected-color: #2da0ff;
+    }
+
+    &.dark {
+        --comp-option-cloud-border-color: #f0f0f0;
+        --comp-option-cloud-border-selected-color: #ffb800;
+    }
+}
+
+// Shape tool - Footer
+:root {
+    &,
+    &.light {
+        --shapetool-footer-color: #aaa;
+        --shapetool-footer-hover-color: #888;
+        --shapetool-footer-active-color: #999;
+    }
+
+    &.dark {
+        --shapetool-footer-color: #aaa;
+        --shapetool-footer-hover-color: #888;
+        --shapetool-footer-active-color: #999;
+    }
+}
+
+// Shape tool - Indicator
+:root {
+    &,
+    &.light {
+        --shapetool-indicator-color: #888;
+    }
+
+    &.dark {
+        --shapetool-indicator-color: #888;
+    }
+}
+
 // Shape tool
 :root,
 :root.light {
     --shapetool-bg-color: #FAFAFA;
     --shapetool-main-divider-color: #BBB;
-
-    // Footer
-    --shapetool-footer-color: #aaa;
-    --shapetool-footer-hover-color: #888;
-    --shapetool-footer-active-color: #999;
-
-    // Indicator
-    --shapetool-indicator-color: #888;
 
     // Section
     --shapetool-section-divider-color: #bbb;
@@ -59,24 +113,6 @@
     --shapetool-tool-title-color: #1f1f1f;
     --shapetool-tool-subtitle-color: #a0a0a0;
 
-    // Tool option
-    --shapetool-tool-option-border-color: #ddd;
-    --shapetool-tool-option-hover-border-color: #ddd;
-    --shapetool-tool-option-selected-border-color: #0366fc;
-    --shapetool-tool-option-selected-hover-border-color: #0047b2;
-    --shapetool-tool-option-disabled-border-color: #c4c4c4;
-    --shapetool-tool-option-selected-disabled-border-color: #aaaaaa;
-
-    --shapetool-tool-option-bg-color: #ffffff;
-
-    --shapetool-tool-option-disabled-color: #c4c4c4;
-    --shapetool-tool-option-selected-disabled-color: #aaaaaa;
-    --shapetool-tool-option-selected-color: #0366fc;
-    --shapetool-tool-option-selected-hover-color: #0047b2;
-
-    // Tool input
-    --shapetool-tool-input-border-color: #AAA;
-
     // Reorder
     --shapetool-reorder-hover-bg: #efefef;
 }
@@ -85,41 +121,14 @@
     --shapetool-bg-color: #1f1f1f;
     --shapetool-main-divider-color: #616161;
 
-    // Footer
-    --shapetool-footer-color: #aaa;
-    --shapetool-footer-hover-color: #888;
-    --shapetool-footer-active-color: #999;
-
-    // Indicator
-    --shapetool-indicator-color: #888;
-
     // Section
     --shapetool-section-divider-color: #6d6d6d;
-    --shapetool-section-title-color: #b1b1b1;
+    --shapetool-section-title-color: #eaeaea;
     --shapetool-section-content-color: #F0F0F0;
 
     // Tool
-    --shapetool-tool-title-color: #cccccc;
+    --shapetool-tool-title-color: #e0e0e0;
     --shapetool-tool-subtitle-color: #979797;
-    --shapetool-checkbox-color: #ffb800; // only dark mode
-
-    // Tool option
-    --shapetool-tool-option-border-color: #f0f0f0;
-    --shapetool-tool-option-hover-border-color: #767676;
-    --shapetool-tool-option-selected-border-color: #ffb800;
-    --shapetool-tool-option-selected-hover-border-color: #956d04;
-    --shapetool-tool-option-disabled-border-color: #6f6f6f;
-    --shapetool-tool-option-selected-disabled-border-color: #c4c4c4;
-
-    --shapetool-tool-option-bg-color: #00000000;
-
-    --shapetool-tool-option-disabled-color: #c4c4c4;
-    --shapetool-tool-option-selected-disabled-color: #c4c4c4;
-    --shapetool-tool-option-selected-color: #ffb800;
-    --shapetool-tool-option-selected-hover-color: #956d04;
-
-    // Tool input
-    --shapetool-tool-input-border-color: #565656;
 
     // Reorder
     --shapetool-reorder-hover-bg: #333333;
@@ -182,4 +191,3 @@
     --exporttext-container-bg: #151515;
     --exporttext-content-color: #fff;
 }
-

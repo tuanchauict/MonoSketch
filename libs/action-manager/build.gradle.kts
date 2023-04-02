@@ -12,7 +12,7 @@ dependencies {
     implementation(projects.keycommand)
     implementation(projects.livedata)
     implementation(projects.shape)
-    
+
     implementation(libs.kotlin.stdlib.js)
     testImplementation(libs.kotlin.test.js)
 }
@@ -24,7 +24,6 @@ kotlin {
             testTask {
                 useKarma {
                     useChromeHeadless()
-                    webpackConfig.cssSupport.enabled = true
                 }
             }
         }

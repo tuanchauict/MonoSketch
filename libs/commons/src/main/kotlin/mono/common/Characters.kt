@@ -7,6 +7,8 @@ object Characters {
     // Transparent in rendering but visible for selection
     const val HALF_TRANSPARENT_CHAR: Char = 1.toChar()
 
+    const val NBSP: Char = 0x00A0.toChar()
+
     /**
      * Copies [length] characters from [src] from [srcOffset] into [dest] from [destOffset].
      * If the character is [TRANSPARENT_CHAR], ignore.

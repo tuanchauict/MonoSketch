@@ -1,6 +1,6 @@
 [versions]
-kotlinJs = "1.7.10"
-kotlinxSerialization = "1.3.3"
+kotlinJs = "1.8.10"
+kotlinxSerialization = "1.4.1"
 
 [libraries]
 kotlin-stdlib-js = { module = "org.jetbrains.kotlin:kotlin-stdlib-js", version.ref = "kotlinJs" }
