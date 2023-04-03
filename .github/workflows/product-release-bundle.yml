@@ -13,6 +13,16 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+      - name: Cache local maven repository
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+            
       - name: Environment detector
         id: vars
         shell: bash
