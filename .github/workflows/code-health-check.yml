@@ -46,8 +46,3 @@ jobs:
           distribution: 'zulu'
           java-version: 17
       - run: ./gradlew assemble
-      - name: Publish artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: bundle
-          path: build/distributions/
