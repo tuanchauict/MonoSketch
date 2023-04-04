@@ -13,6 +13,16 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+      - name: Cache local maven repository
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - run: ./gradlew test --continue
       - name: Clean up test result
         if: failure()
@@ -35,6 +45,16 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+      - name: Cache local maven repository
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - run: ./gradlew ktlint
 
   assemble:
@@ -45,9 +65,14 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-      - run: ./gradlew assemble
-      - name: Publish artifact
-        uses: actions/upload-artifact@v3
+      - name: Cache local maven repository
+        uses: actions/cache@v3
         with:
-          name: bundle
-          path: build/distributions/
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+            
+      - run: ./gradlew assemble

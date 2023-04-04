@@ -5,7 +5,7 @@ on:
     branches:
       - release/product
 jobs:
-  publish_product_release:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -13,6 +13,16 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+      - name: Cache local maven repository
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+            
       - name: Environment detector
         id: vars
         shell: bash
@@ -20,9 +30,24 @@ jobs:
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
       - run: ./gradlew assemble
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: product-release-artifact
+          path: build/distributions
+
+  deploy_to_production:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get built artifact
+        uses: actions/download-artifact@v3
+        with: 
+          name: product-release-artifact
+          path: distributions
       - name: Publish release
         run: |
           dir=$PWD
           git clone "${{ secrets.TARGET_PRODUCT_REMOTE_GIT }}" "../working"
           cd ../working
-          sh tools/release.sh "$dir/build/distributions" "${{ steps.vars.outputs.branch }}-${{ steps.vars.outputs.sha }}"
+          sh tools/release.sh "$dir/distributions" "${{ steps.vars.outputs.branch }}-${{ steps.vars.outputs.sha }}"
