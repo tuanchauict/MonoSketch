@@ -36,7 +36,7 @@ jobs:
           name: product-release-artifact
           path: build/distributions
 
-  deploy_to_production:
+  deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
