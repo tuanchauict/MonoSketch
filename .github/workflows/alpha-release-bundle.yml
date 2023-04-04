@@ -35,7 +35,7 @@ jobs:
           name: alpha-release-artifact
           path: build/distributions
 
-  deploy_to_production:
+  deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -47,6 +47,6 @@ jobs:
       - name: Publish release
         run: |
           dir=$PWD
-          git clone "${{ secrets.TARGET_PRODUCT_REMOTE_GIT }}" "../working"
+          git clone "${{ secrets.TARGET_ALPHA_REMOTE_GIT }}" "../working"
           cd ../working
           sh tools/release.sh "$dir/distributions" "${{ steps.vars.outputs.branch }}-${{ steps.vars.outputs.sha }}"
