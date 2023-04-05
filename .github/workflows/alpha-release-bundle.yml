@@ -50,7 +50,7 @@ jobs:
           name: alpha-release-artifact
           path: distributions
       - name: Fetch current alpha code
-        run: git clone "${{ secrets.TARGET_ALPHA_REMOTE_GIT }}" "../working"
+        run: git clone "${{ secrets.TARGET_ALPHA_REMOTE_GIT }}" "working"
       - name: Publish release
         working-directory: working
         run: |
