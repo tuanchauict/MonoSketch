@@ -1,4 +1,4 @@
-name: Publish Product release
+name: Publish Production release
 on:
   workflow_dispatch:
   push:
@@ -48,9 +48,9 @@ jobs:
         with: 
           name: product-release-artifact
           path: distributions
+      - name: Fetch current alpha code
+        run: git clone "${{ secrets.TARGET_PRODUCT_REMOTE_GIT }}" "working"
       - name: Publish release
+        working-directory: working
         run: |
-          dir=$PWD
-          git clone "${{ secrets.TARGET_PRODUCT_REMOTE_GIT }}" "../working"
-          cd ../working
-          sh tools/release.sh "$dir/distributions" "${{ needs.build.outputs.git_branch }}-${{ needs.build.outputs.git_sha }}"
+          sh tools/release.sh "../distributions" "${{ needs.build.outputs.git_branch }}-${{ needs.build.outputs.git_sha }}"

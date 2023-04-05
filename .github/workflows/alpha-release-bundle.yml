@@ -6,6 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      git_sha: ${{ steps.vars.outputs.sha }}
+      git_branch: ${{ steps.vars.outputs.branch }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -39,14 +42,16 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Debug
+        run: echo "${{ needs.build.outputs.git_branch }}"
       - name: Get built artifact
         uses: actions/download-artifact@v3
         with: 
           name: alpha-release-artifact
           path: distributions
+      - name: Fetch current alpha code
+        run: git clone "${{ secrets.TARGET_ALPHA_REMOTE_GIT }}" "working"
       - name: Publish release
+        working-directory: working
         run: |
-          dir=$PWD
-          git clone "${{ secrets.TARGET_ALPHA_REMOTE_GIT }}" "../working"
-          cd ../working
-          sh tools/release.sh "$dir/distributions" "${{ steps.vars.outputs.branch }}-${{ steps.vars.outputs.sha }}"
+          sh tools/release.sh "../distributions" "${{ needs.build.outputs.git_branch }}-${{ needs.build.outputs.git_sha }}"
