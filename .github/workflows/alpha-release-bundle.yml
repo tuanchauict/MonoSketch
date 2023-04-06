@@ -47,8 +47,6 @@ jobs:
       SRC_GIT_BRANCH: ${{ needs.build.outputs.git_branch }}
       SRC_GIT_SHA: ${{ needs.build.outputs.git_sha }}
     steps:
-      - name: Debug
-        run: echo "${{ needs.build.outputs.git_branch }}"
       - name: Get built artifact
         uses: actions/download-artifact@v3
         with: 
