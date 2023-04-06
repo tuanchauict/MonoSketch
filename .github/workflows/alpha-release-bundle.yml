@@ -52,7 +52,7 @@ jobs:
         with: 
           name: alpha-release-artifact
           path: distributions
-      - name: Fetch current alpha code
+      - name: Fetch current code
         run: git clone "${{ env.TARGET_RELEASE_REPOSITORY }}" "working"
       - name: Publish release
         working-directory: working
