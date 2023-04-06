@@ -41,17 +41,20 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    environment: alpha
+    env:
+      TARGET_RELEASE_REPOSITORY: "https://${{ secrets.TARGET_AUTH_KEY }}@${{ vars.TARGET_RELEASE_REPOSITORY }}"
+      SRC_GIT_BRANCH: ${{ needs.build.outputs.git_branch }}
+      SRC_GIT_SHA: ${{ needs.build.outputs.git_sha }}
     steps:
-      - name: Debug
-        run: echo "${{ needs.build.outputs.git_branch }}"
       - name: Get built artifact
         uses: actions/download-artifact@v3
         with: 
           name: alpha-release-artifact
           path: distributions
-      - name: Fetch current alpha code
-        run: git clone "${{ secrets.TARGET_ALPHA_REMOTE_GIT }}" "working"
+      - name: Fetch current code
+        run: git clone "${{ env.TARGET_RELEASE_REPOSITORY }}" "working"
       - name: Publish release
         working-directory: working
         run: |
-          sh tools/release.sh "../distributions" "${{ needs.build.outputs.git_branch }}-${{ needs.build.outputs.git_sha }}"
+          sh tools/release.sh "../distributions" "${{ env.SRC_GIT_BRANCH }}-${{ env.SRC_GIT_SHA }}"
