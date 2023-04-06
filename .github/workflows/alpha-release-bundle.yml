@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: alpha
     env:
-      TARGET_RELEASE_REPOSITORY: ${{ vars.TARGET_RELEASE_REPOSITORY }}
+      TARGET_RELEASE_REPOSITORY: "https://${{ secrets.TARGET_AUTH_KEY }}@${{ vars.TARGET_RELEASE_REPOSITORY }}"
       SRC_GIT_BRANCH: ${{ needs.build.outputs.git_branch }}
       SRC_GIT_SHA: ${{ needs.build.outputs.git_sha }}
     steps:
