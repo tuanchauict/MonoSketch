@@ -1,193 +1,88 @@
-// Header
-:root,
-:root.light {
-    --header-bg: #2c2c2c;
-    --header-color: #FFF;
+$themeMap: (
+    // Header overall
+    --header-bg: (#2c2c2c, #2c2c2c),
+    --header-color: (#FFF, #FFF),
+    // Header - Mouse action
+    --header-mouse-action-hover-bg: (#111, #111),
+    --header-mouse-action-selected-bg: (#0D99FF, #C89000),
+    // Header - App action icon
+    --header-main-menu-hover-bg: (#424242, #424242),
 
-    // Mouse action
-    --header-mouse-action-hover-bg: #111;
-    --header-mouse-action-selected-bg: #0D99FF;
+    // Tooltip
+    --tooltip-bg: (#000000DD, #000000DD),
+    --tooltip-color: (#fff, #fff),
 
-    // Right action
-    --header-main-menu-hover-bg: #424242;
-}
+    // Workspace
+    --workspace-bg-color: (#FFF, #121212),
+    --workspace-edittext-color: (#000, #fff),
 
-:root.dark {
-    --header-bg: #2c2c2c;
-    --header-color: #FFF;
+    // Shape tool - Overall
+    --shapetool-bg-color: (#FAFAFA, #1f1f1f),
+    --shapetool-main-divider-color: (#BBB, #616161),
+    // Shape tool - Text Input component
+    --text-input-border-color: (#E6E6E6, #565656),
+    --text-input-border-focus-color: (#4597F7, #e8b32f),
+    --text-input-label-color: (#6b6a6a, #9f9f9f),
+    --text-input-value-color: (#000, #FFF),
+    // Shape tool - Option cloud
+    --comp-option-cloud-border-color: (#bbb, #f0f0f0),
+    --comp-option-cloud-border-selected-color: (#2da0ff, #ffb800),
+    // Shape tool - Footer
+    --shapetool-footer-color: (#aaa, #aaa),
+    --shapetool-footer-hover-color: (#888, #888),
+    --shapetool-footer-active-color: (#999, #999),
+    // Shape tool - Indicator
+    --shapetool-indicator-color: (#888, #888),
+    // Shape tool - Section
+    --shapetool-section-divider-color: (#bbb, #6d6d6d),
+    --shapetool-section-title-color: (#6d6d6d, #eaeaea),
+    --shapetool-section-content-color: (#000, #F0F0F0),
+    // Shape tool - Tool
+    --shapetool-tool-title-color: (#1f1f1f, #e0e0e0),
+    --shapetool-tool-subtitle-color: (#a0a0a0, #979797),
+    // Shape tool - Reorder
+    --shapetool-reorder-hover-bg: (#efefef, #333333),
 
-    // Mouse action
-    --header-mouse-action-hover-bg: #111;
-    --header-mouse-action-selected-bg: #C89000;
+    // Common modal
+    --modal-background-bg: (rgba(0, 0, 0, 0.7), rgba(0, 15, 70, 0.3)),
+    --modal-container-bg: (#f3f3f3, #313131),
+    --modal-close-button-color: (#666, #FFFFFF),
+    --modal-title-color: (rgba(0, 0, 0, 0.68), #FFF),
+    --modal-content-color: (#000, #FFFFFF),
 
-    // Right action
-    --header-main-menu-hover-bg: #424242;
-}
+    // Keyboard shortcuts
+    --keyboard-content-key-bg: (#fff, #262626),
+    --keyboard-content-key-border-color: (rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15)),
+    --keyboard-content-key-color: (rgba(0, 0, 0, 0.54), rgba(255, 255, 255, 0.88)),
 
-// Workspace
-:root,
-:root.light {
-    --workspace-bg-color: #FFF;
-    --workspace-edittext-color: #000;
-}
+    // Main dropdown menu
+    --mainmenu-divider-color:(#d8d8d8, #6b6b6b),
+    --mainmenu-item-color:(rgb(36, 41, 47), #fff),
+    --mainmenu-item-hover-bg:(#e7e6e6, #414141),
 
-:root.dark {
-    --workspace-bg-color: #121212;
-    --workspace-edittext-color: #fff;
-}
+    // Export text
+    --exporttext-container-bg: (#fff, #151515),
+    --exporttext-content-color: (#000, #fff),
+);
 
-// Shape tool - Text Input component
-:root {
+// Define the theme mixin
+@mixin theme() {
 
     &,
     &.light {
-        --text-input-border-color: #E6E6E6;
-        --text-input-border-focus-color: #4597F7;
-        --text-input-label-color: #6b6a6a;
-        --text-input-value-color: #000;
+        @each $property, $values in $themeMap {
+            #{$property}: nth($values, 1);
+        }
     }
 
     &.dark {
-        --text-input-border-color: #565656;
-        --text-input-border-focus-color: #e8b32f;
-        --text-input-label-color: #9f9f9f;
-        --text-input-value-color: #FFF;
+        @each $property, $values in $themeMap {
+            #{$property}: nth($values, 2);
+        }
     }
 }
 
-// Shape tool - Option cloud
+// Apply the theme values
 :root {
-
-    &,
-    &.light {
-        --comp-option-cloud-border-color: #bbb;
-        --comp-option-cloud-border-selected-color: #2da0ff;
-    }
-
-    &.dark {
-        --comp-option-cloud-border-color: #f0f0f0;
-        --comp-option-cloud-border-selected-color: #ffb800;
-    }
-}
-
-// Shape tool - Footer
-:root {
-    &,
-    &.light {
-        --shapetool-footer-color: #aaa;
-        --shapetool-footer-hover-color: #888;
-        --shapetool-footer-active-color: #999;
-    }
-
-    &.dark {
-        --shapetool-footer-color: #aaa;
-        --shapetool-footer-hover-color: #888;
-        --shapetool-footer-active-color: #999;
-    }
-}
-
-// Shape tool - Indicator
-:root {
-    &,
-    &.light {
-        --shapetool-indicator-color: #888;
-    }
-
-    &.dark {
-        --shapetool-indicator-color: #888;
-    }
-}
-
-// Shape tool
-:root,
-:root.light {
-    --shapetool-bg-color: #FAFAFA;
-    --shapetool-main-divider-color: #BBB;
-
-    // Section
-    --shapetool-section-divider-color: #bbb;
-    --shapetool-section-title-color: #6d6d6d;
-    --shapetool-section-content-color: #000;
-
-    // Tool
-    --shapetool-tool-title-color: #1f1f1f;
-    --shapetool-tool-subtitle-color: #a0a0a0;
-
-    // Reorder
-    --shapetool-reorder-hover-bg: #efefef;
-}
-
-:root.dark {
-    --shapetool-bg-color: #1f1f1f;
-    --shapetool-main-divider-color: #616161;
-
-    // Section
-    --shapetool-section-divider-color: #6d6d6d;
-    --shapetool-section-title-color: #eaeaea;
-    --shapetool-section-content-color: #F0F0F0;
-
-    // Tool
-    --shapetool-tool-title-color: #e0e0e0;
-    --shapetool-tool-subtitle-color: #979797;
-
-    // Reorder
-    --shapetool-reorder-hover-bg: #333333;
-}
-
-// Common modal
-:root,
-:root.light {
-    --modal-background-bg: rgba(0, 0, 0, 0.7);
-    --modal-container-bg: #f3f3f3;
-    --modal-close-button-color: #666;
-    --modal-title-color: rgba(0, 0, 0, 0.68);
-    --modal-content-color: #000;
-}
-
-:root.dark {
-    --modal-background-bg: rgba(0, 15, 70, 0.3);
-    --modal-container-bg: #313131;
-    --modal-close-button-color: #FFFFFF;
-    --modal-title-color: #FFF;
-    --modal-content-color: #FFFFFF;
-}
-
-// Keyboard shortcuts
-:root,
-:root.light {
-    --keyboard-content-key-bg: #fff;
-    --keyboard-content-key-border-color: rgba(0, 0, 0, 0.15);
-    --keyboard-content-key-color: rgba(0, 0, 0, 0.54);
-}
-
-:root.dark {
-    --keyboard-content-key-bg: #262626;
-    --keyboard-content-key-border-color: rgba(255, 255, 255, 0.15);
-    --keyboard-content-key-color: rgba(255, 255, 255, 0.88);
-}
-
-// Main dropdown menu
-:root,
-:root.light {
-    --mainmenu-divider-color: #d8d8d8;
-    --mainmenu-item-color: rgb(36, 41, 47);
-    --mainmenu-item-hover-bg: #e7e6e6;
-}
-
-:root.dark {
-    --mainmenu-divider-color: #6b6b6b;
-    --mainmenu-item-color: #fff;
-    --mainmenu-item-hover-bg: #414141;
-}
-
-// Export text
-:root,
-:root.light {
-    --exporttext-container-bg: #fff;
-    --exporttext-content-color: #000;
-}
-
-:root.dark {
-    --exporttext-container-bg: #151515;
-    --exporttext-content-color: #fff;
+    @include theme();
 }
