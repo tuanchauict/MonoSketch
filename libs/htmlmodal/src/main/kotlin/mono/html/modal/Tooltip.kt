@@ -6,9 +6,14 @@ package mono.html.modal
 
 import kotlinx.browser.document
 import mono.common.Cancelable
+import mono.common.post
 import mono.common.setTimeout
+import mono.html.Div
 import mono.html.Span
+import mono.html.Svg
+import mono.html.SvgPath
 import mono.html.px
+import mono.html.setAttributes
 import mono.html.setOnMouseOutListener
 import mono.html.setOnMouseOverListener
 import mono.html.style
@@ -22,15 +27,19 @@ import org.w3c.dom.Element
  */
 fun Element.tooltip(text: String, position: TooltipPosition = TooltipPosition.BOTTOM) {
     val tooltip = Tooltip(this, text, position)
-    setOnMouseOverListener { tooltip.show() }
-    setOnMouseOutListener { tooltip.hide() }
+    setOnMouseOverListener {
+        tooltip.show()
+    }
+    setOnMouseOutListener {
+        tooltip.hide()
+    }
 }
 
-enum class TooltipPosition(val clazz: String) {
-    LEFT("left"),
-    RIGHT("right"),
-    TOP("top"),
-    BOTTOM("bottom")
+enum class TooltipPosition {
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM
 }
 
 private class Tooltip(
@@ -38,7 +47,8 @@ private class Tooltip(
     private val text: String,
     private val position: TooltipPosition
 ) {
-    private var view: Element? = null
+    private var arrowView: Element? = null
+    private var bodyView: Element? = null
     private var showTask: Cancelable? = null
 
     fun show() {
@@ -48,53 +58,146 @@ private class Tooltip(
         showTask = setTimeout(600, ::showInternal)
     }
 
+    fun hide() {
+        showTask?.cancel()
+        showTask = null
+        arrowView?.remove()
+        arrowView = null
+        bodyView?.remove()
+        bodyView = null
+    }
+
     private fun showInternal() {
-        if (view != null) {
+        if (arrowView != null) {
             return
         }
-        val boundingRect = anchor.getBoundingClientRect()
-        val tooltipArrowLeft = boundingRect.tooltipArrowLeft
-        val tooltipArrowTop = boundingRect.tooltipArrowTop
-        view = document.body?.Span("mono-tooltip ${position.clazz}", text) {
-            val tooltipLeft = when (position) {
-                TooltipPosition.LEFT -> tooltipArrowLeft - clientWidth
-                TooltipPosition.RIGHT -> tooltipArrowLeft
-                TooltipPosition.TOP,
-                TooltipPosition.BOTTOM -> tooltipArrowLeft - clientWidth / 2
-            }
-            val tooltipTop = when (position) {
-                TooltipPosition.LEFT,
-                TooltipPosition.RIGHT -> tooltipArrowTop - clientHeight / 2
-                TooltipPosition.TOP -> tooltipArrowTop - clientHeight
-                TooltipPosition.BOTTOM -> tooltipArrowTop
-            }
-            style(
-                "left" to tooltipLeft.px,
-                "top" to tooltipTop.px
+        val body = document.body ?: return
+        createTooltip(body)
+    }
+
+    private fun createTooltip(body: Element) {
+        val anchorPositionRect = anchor.getBoundingClientRect()
+
+        val arrow = body.Div("mono-tooltip tooltip-arrow") {
+            ArrowIcon()
+        }
+
+        arrowView = arrow
+        bodyView = body.Span("mono-tooltip tooltip-body", text) {
+            style("visibility" to "hidden")
+            println("tooltip $clientWidth $clientHeight")
+        }
+        post {
+            arrow.adjustArrowPosition(anchorPositionRect)
+            bodyView?.adjustTooltipBodyPosition(
+                body,
+                anchorPositionRect,
+                arrow.getBoundingClientRect()
+            )
+
+            println("tooltip ${bodyView?.clientWidth} ${bodyView?.clientHeight}")
+        }
+    }
+
+    private fun Element.adjustArrowPosition(anchorPositionRect: DOMRect) {
+        when (position) {
+            TooltipPosition.LEFT -> style(
+                "left" to (anchorPositionRect.left - clientWidth).px,
+                "top" to (anchorPositionRect.centerYPx - halfHeightPx).px
+            )
+
+            TooltipPosition.RIGHT -> style(
+                "left" to anchorPositionRect.right.px,
+                "top" to (anchorPositionRect.centerYPx - halfHeightPx).px
+            )
+
+            TooltipPosition.TOP -> style(
+                "left" to (anchorPositionRect.centerXPx - halfWidthPx).px,
+                "top" to (anchorPositionRect.top - clientHeight).px
+            )
+
+            TooltipPosition.BOTTOM -> style(
+                "left" to (anchorPositionRect.centerXPx - halfWidthPx).px,
+                "top" to anchorPositionRect.bottom.px
             )
         }
     }
 
-    private val DOMRect.tooltipArrowLeft: Double
-        get() = when (position) {
-            TooltipPosition.LEFT -> left
-            TooltipPosition.RIGHT -> right
-            TooltipPosition.TOP,
-            TooltipPosition.BOTTOM -> (left + right) / 2
-        }
+    private fun Element.adjustTooltipBodyPosition(
+        body: Element,
+        anchorPositionRect: DOMRect,
+        arrowPositionRect: DOMRect
+    ) {
+        val leftMost = body.clientWidth - clientWidth - 4
+        when (position) {
+            TooltipPosition.LEFT -> {
+                style(
+                    "left" to (arrowPositionRect.left - clientWidth).px,
+                    "top" to (anchorPositionRect.centerYPx - halfHeightPx).px
+                )
+            }
 
-    private val DOMRect.tooltipArrowTop: Double
-        get() = when (position) {
-            TooltipPosition.LEFT,
-            TooltipPosition.RIGHT -> (top + bottom) / 2
-            TooltipPosition.TOP -> top
-            TooltipPosition.BOTTOM -> bottom
-        }
+            TooltipPosition.RIGHT -> {
+                style(
+                    "left" to arrowPositionRect.right.px,
+                    "top" to (anchorPositionRect.centerYPx - halfHeightPx).px
+                )
+            }
 
-    fun hide() {
-        showTask?.cancel()
-        showTask = null
-        view?.remove()
-        view = null
+            TooltipPosition.TOP -> {
+                val leftPx = (anchorPositionRect.centerXPx - halfWidthPx)
+                style(
+                    "top" to (arrowPositionRect.top - clientHeight + 0.5).px,
+                    "left" to leftPx.coerceIn(0.0, leftMost.toDouble()).px
+                )
+            }
+
+            TooltipPosition.BOTTOM -> {
+                val leftPx = (anchorPositionRect.centerXPx - halfWidthPx)
+                style(
+                    "top" to arrowPositionRect.bottom.px,
+                    "left" to leftPx.coerceIn(4.0, leftMost.toDouble()).px
+                )
+            }
+        }
+    }
+
+    private fun Element.ArrowIcon() {
+        when (position) {
+            TooltipPosition.LEFT ->
+                SvgIcon(5, 10, "M10 10L0 20V0L10 10Z")
+
+            TooltipPosition.RIGHT ->
+                SvgIcon(5, 10, "M0 10L10 0V20L0 10Z")
+
+            TooltipPosition.TOP ->
+                SvgIcon(10, 5, "M10 10L0 0H20L10 10Z")
+
+            TooltipPosition.BOTTOM ->
+                SvgIcon(10, 5, "M10 0L20 10H0L10 0Z")
+        }
+    }
+
+    private val DOMRect.centerXPx: Double
+        get() = (left + right) / 2
+    private val DOMRect.centerYPx: Double
+        get() = (top + bottom) / 2
+    private val Element.halfWidthPx: Double
+        get() = clientWidth.toDouble() / 2
+    private val Element.halfHeightPx: Double
+        get() = clientHeight.toDouble() / 2
+
+    @Suppress("FunctionName")
+    private fun Element.SvgIcon(width: Int, height: Int, path: String) {
+        Svg {
+            setAttributes(
+                "width" to width,
+                "height" to height,
+                "fill" to "currentColor",
+                "viewBox" to "0 0 ${width * 2}  ${height * 2}"
+            )
+
+            SvgPath(path)
+        }
     }
 }
