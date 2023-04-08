@@ -76,7 +76,6 @@ private class Tooltip(
     }
 
     private fun createTooltip(body: Element) {
-
         val anchorPositionRect = anchor.getBoundingClientRect()
 
         val arrow = body.Div("mono-tooltip tooltip-arrow") {
@@ -111,7 +110,6 @@ private class Tooltip(
                 "left" to anchorPositionRect.right.px,
                 "top" to (anchorPositionRect.centerYPx - halfHeightPx).px
             )
-
 
             TooltipPosition.TOP -> style(
                 "left" to (anchorPositionRect.centerXPx - halfWidthPx).px,
@@ -163,7 +161,6 @@ private class Tooltip(
             }
         }
     }
-
 
     private fun Element.ArrowIcon() {
         when (position) {
