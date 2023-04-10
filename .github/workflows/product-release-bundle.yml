@@ -6,38 +6,9 @@ on:
       - release/product
 jobs:
   build:
-    runs-on: ubuntu-latest
-    outputs:
-      git_sha: ${{ steps.vars.outputs.sha }}
-      git_branch: ${{ steps.vars.outputs.branch }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-      - name: Cache local maven repository
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-            
-      - name: Environment detector
-        id: vars
-        shell: bash
-        run: |
-          echo "sha=${{ github.sha }}" >> $GITHUB_OUTPUT
-          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
-      - run: ./gradlew assemble
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: product-release-artifact
-          path: build/distributions
+    uses: ./.github/workflows/shared-build-and-upload-artifact.yml
+    with:
+      artifact: production-release-artifact
 
   deploy:
     needs: build
@@ -51,7 +22,7 @@ jobs:
       - name: Get built artifact
         uses: actions/download-artifact@v3
         with: 
-          name: product-release-artifact
+          name: production-release-artifact
           path: distributions
       - name: Fetch current code
         run: git clone "${{ env.TARGET_RELEASE_REPOSITORY }}" "working"
