@@ -83,7 +83,7 @@ class MonoSketchApplication : LifecycleOwner() {
 
         NavBarViewController(
             this,
-            appUiStateManager.shapeToolVisibilityLiveData,
+            appUiStateManager,
             actionManager
         )
         ShapeToolViewController(

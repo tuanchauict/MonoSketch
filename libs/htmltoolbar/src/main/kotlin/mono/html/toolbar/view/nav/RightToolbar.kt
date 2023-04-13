@@ -15,8 +15,12 @@ import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnClickListener
+import mono.html.style
 import mono.html.toolbar.view.utils.SvgIcon
+import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.ui.appstate.AppUiStateManager
+import mono.ui.appstate.state.ScrollMode
 import mono.ui.theme.ThemeManager
 import mono.ui.theme.ThemeMode
 import org.w3c.dom.Element
@@ -25,9 +29,13 @@ import org.w3c.dom.Element
  * A function to create right toolbar UI.
  */
 internal fun Element.RightToolbar(
-    shapeToolVisibilityLiveData: LiveData<Boolean>,
+    lifecycleOwner: LifecycleOwner,
+    appUiStateManager: AppUiStateManager,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
+    ScrollModeIcon(lifecycleOwner, appUiStateManager.scrollModeLiveData) {
+        appUiStateManager.updateUiState(AppUiStateManager.UiStatePayload.ChangeScrollMode(it))
+    }
     ThemeIcon {
         ThemeManager.getInstance().setTheme(it)
     }
@@ -40,11 +48,11 @@ internal fun Element.RightToolbar(
             Text(
                 "Show Format panel",
                 OneTimeActionType.ShowFormatPanel
-            ) { !shapeToolVisibilityLiveData.value },
+            ) { !appUiStateManager.shapeToolVisibilityLiveData.value },
             Text(
                 "Hide Format panel",
                 OneTimeActionType.HideFormatPanel
-            ) { shapeToolVisibilityLiveData.value },
+            ) { appUiStateManager.shapeToolVisibilityLiveData.value },
             Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
         )
         DropDownMenu("main-dropdown-menu", items) {
@@ -54,8 +62,50 @@ internal fun Element.RightToolbar(
     }
 }
 
+private fun Element.ScrollModeIcon(
+    lifecycleOwner: LifecycleOwner,
+    scrollModeLiveData: LiveData<ScrollMode>,
+    onClickAction: (ScrollMode) -> Unit
+) {
+    val container = Div("app-icon") {
+        tooltip("Scroll mode", TooltipPosition.BOTTOM)
+    }
+    val scrollBothIcon = container.SvgIcon(18, 18, 40, 40) {
+        SvgPath("M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM19.01.582a1.134 1.134 0 0 1 1.98 0l4.87 8.834c.41.744-.133 1.651-.99 1.651h-9.74c-.857 0-1.4-.907-.99-1.651L19.01.582ZM20.99 39.418a1.134 1.134 0 0 1-1.98 0l-4.87-8.834c-.41-.744.133-1.651.99-1.651h9.74c.857 0 1.4.907.99 1.651l-4.87 8.834ZM.582 20.99a1.134 1.134 0 0 1 0-1.98l8.834-4.87c.744-.41 1.651.133 1.651.99v9.74c0 .857-.907 1.4-1.651.99L.582 20.99ZM39.418 19.01a1.134 1.134 0 0 1 0 1.98l-8.834 4.87c-.744.41-1.651-.133-1.651-.99v-9.74c0-.857.907-1.4 1.651-.99l8.834 4.87Z") // ktlint-disable max-line-length
+    }
+
+    val scrollVerticalIcon = container.SvgIcon(18, 18, 40, 40) {
+        SvgPath("M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM19.01.582a1.134 1.134 0 0 1 1.98 0l4.87 8.834c.41.744-.133 1.651-.99 1.651h-9.74c-.857 0-1.4-.907-.99-1.651L19.01.582ZM20.99 39.418a1.134 1.134 0 0 1-1.98 0l-4.87-8.834c-.41-.744.133-1.651.99-1.651h9.74c.857 0 1.4.907.99 1.651l-4.87 8.834Z") // ktlint-disable max-line-length
+    }
+
+    val scrollHorizontalIcon = container.SvgIcon(18, 18, 40, 40) {
+        SvgPath("M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM.582 20.99a1.134 1.134 0 0 1 0-1.98l8.834-4.87c.744-.41 1.651.133 1.651.99v9.74c0 .857-.907 1.4-1.651.99L.582 20.99ZM39.418 19.01a1.134 1.134 0 0 1 0 1.98l-8.834 4.87c-.744.41-1.651-.133-1.651-.99v-9.74c0-.857.907-1.4 1.651-.99l8.834 4.87Z") // ktlint-disable max-line-length
+    }
+
+    val icons = mapOf(
+        ScrollMode.BOTH to scrollBothIcon,
+        ScrollMode.VERTICAL to scrollVerticalIcon,
+        ScrollMode.HORIZONTAL to scrollHorizontalIcon
+    )
+
+    container.setOnClickListener {
+        val nextMode = when (scrollModeLiveData.value) {
+            ScrollMode.BOTH -> ScrollMode.VERTICAL
+            ScrollMode.VERTICAL -> ScrollMode.HORIZONTAL
+            ScrollMode.HORIZONTAL -> ScrollMode.BOTH
+        }
+        onClickAction(nextMode)
+    }
+
+    scrollModeLiveData.observe(lifecycleOwner) { scrollMode ->
+        icons.values.forEach { it.style("display" to "none") }
+        icons[scrollMode]?.style("display" to "block")
+    }
+}
+
 private fun Element.ThemeIcon(onClickAction: (ThemeMode) -> Unit) {
-    Div("theme-dark-mode theme-icon") {
+    // The theme icon visibility is controlled by the global theme mode at root.
+    Div("app-icon theme-dark-mode") {
         SvgIcon(24, 24, 16, 16) {
             SvgPath(
                 "M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm.5-9.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm5-5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm-11 0a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9.743-4.036a.5.5 0 1 1-.707-.707.5.5 0 0 1 .707.707zm-7.779 7.779a.5.5 0 1 1-.707-.707.5.5 0 0 1 .707.707zm7.072 0a.5.5 0 1 1 .707-.707.5.5 0 0 1-.707.707zM3.757 4.464a.5.5 0 1 1 .707-.707.5.5 0 0 1-.707.707z" // ktlint-disable max-line-length
@@ -68,7 +118,7 @@ private fun Element.ThemeIcon(onClickAction: (ThemeMode) -> Unit) {
 
         tooltip("Dark mode", TooltipPosition.BOTTOM)
     }
-    Div("theme-light-mode theme-icon") {
+    Div("app-icon theme-light-mode theme-icon") {
         SvgIcon(24, 24, 16, 16) {
             SvgPath(
                 "M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM8.5 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm5-5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm-11 0a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9.743-4.036a.5.5 0 1 1-.707-.707.5.5 0 0 1 .707.707zm-7.779 7.779a.5.5 0 1 1-.707-.707.5.5 0 0 1 .707.707zm7.072 0a.5.5 0 1 1 .707-.707.5.5 0 0 1-.707.707zM3.757 4.464a.5.5 0 1 1 .707-.707.5.5 0 0 1-.707.707z" // ktlint-disable max-line-length
@@ -84,7 +134,7 @@ private fun Element.ThemeIcon(onClickAction: (ThemeMode) -> Unit) {
 }
 
 private fun Element.DropDownMenuIcon(onClickAction: () -> Unit) {
-    Div("app-main-menu-icon") {
+    Div("app-icon") {
         setAttributes("onfocus" to "this.blur()")
 
         SvgIcon(20, 20) {
