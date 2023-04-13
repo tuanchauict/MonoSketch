@@ -25,6 +25,7 @@ import mono.livedata.MediatorLiveData
 import mono.livedata.distinctUntilChange
 import mono.shapebound.InteractionBound
 import mono.shapebound.InteractionPoint
+import mono.ui.appstate.state.ScrollMode
 import org.w3c.dom.HTMLDivElement
 
 /**
@@ -36,7 +37,8 @@ class CanvasViewController(
     axisContainer: HTMLDivElement,
     board: MonoBoard,
     windowSizeLiveData: LiveData<Size>,
-    shiftKeyStateLiveData: LiveData<Boolean>
+    shiftKeyStateLiveData: LiveData<Boolean>,
+    scrollModeLiveData: LiveData<ScrollMode>
 ) {
     private val drawingInfoController = DrawingInfoController(container)
 
@@ -60,7 +62,8 @@ class CanvasViewController(
         lifecycleOwner,
         container,
         drawingInfoController.drawingInfoLiveData,
-        shiftKeyStateLiveData
+        shiftKeyStateLiveData,
+        scrollModeLiveData
     )
 
     val mousePointerLiveData: LiveData<MousePointer> = mouseEventController.mousePointerLiveData

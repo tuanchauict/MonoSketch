@@ -10,14 +10,14 @@ import mono.html.select
 import mono.html.toolbar.view.nav.MouseActionGroup
 import mono.html.toolbar.view.nav.RightToolbar
 import mono.lifecycle.LifecycleOwner
-import mono.livedata.LiveData
+import mono.ui.appstate.AppUiStateManager
 
 /**
  * A view controller to manage toolbar.
  */
 class NavBarViewController(
     lifecycleOwner: LifecycleOwner,
-    shapeToolVisibilityLiveData: LiveData<Boolean>,
+    appUiStateManager: AppUiStateManager,
     private val actionManager: ActionManager
 ) {
     init {
@@ -30,7 +30,8 @@ class NavBarViewController(
         }
         with(document.select("#nav-toolbar-right")) {
             RightToolbar(
-                shapeToolVisibilityLiveData,
+                lifecycleOwner,
+                appUiStateManager,
                 actionManager::setOneTimeAction
             )
         }

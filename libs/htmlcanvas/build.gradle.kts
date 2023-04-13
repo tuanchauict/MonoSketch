@@ -19,6 +19,7 @@ dependencies {
     implementation(projects.livedata)
     implementation(projects.monoboard)
     implementation(projects.shapeInteractionBound)
+    implementation(projects.uiAppStateManager)
     implementation(projects.uiTheme)
 
     testImplementation(libs.kotlin.test.js)

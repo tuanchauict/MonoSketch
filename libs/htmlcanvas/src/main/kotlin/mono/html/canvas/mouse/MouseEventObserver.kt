@@ -4,7 +4,6 @@
 
 package mono.html.canvas.mouse
 
-import mono.common.commandKey
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.html.canvas.canvas.DrawingInfoController
@@ -12,6 +11,7 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
+import mono.ui.appstate.state.ScrollMode
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.events.WheelEvent
@@ -25,7 +25,8 @@ internal class MouseEventObserver(
     lifecycleOwner: LifecycleOwner,
     container: HTMLDivElement,
     drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>,
-    shiftKeyStateLiveData: LiveData<Boolean>
+    shiftKeyStateLiveData: LiveData<Boolean>,
+    private val scrollModeLiveData: LiveData<ScrollMode>
 ) {
     private val mousePointerMutableLiveData = MutableLiveData<MousePointer>(MousePointer.Idle)
     val mousePointerLiveData: LiveData<MousePointer> =
@@ -150,12 +151,14 @@ internal class MouseEventObserver(
 
     /**
      * Returns scroll delta x and y of the wheel event after adjusting with meta keys:
-     * - When Alt/Option key is pressed, swap delta x and delta y
-     * - When Command/CTRL and Shift keys are pressed, scroll horizontally (delta y = 0)
-     * - When Shift key is pressed, scroll vertically (delta x = 0)
-     * - Otherwise, return the event's delta x and delta y values.
-     *
-     * Note: Alt/Option key can be combined with the other keys.
+     * - When Alt/Option key is pressed, swap delta x and delta y (this is for those who use mouse)
+     * - When Shift key is pressed, scroll mode other than [ScrollMode.BOTH] will be flipped
+     *   (vertical -> horizontal, horizontal -> vertical)
+     * - Returns the delta x and delta y of the wheel event according to adjusted scroll mode (with
+     *   Shift key) and delta value (with Alt/Option key):
+     *   - Vertical: delta x = 0
+     *   - Horizontal: delta y = 0
+     *   - Both: delta x and delta y = delta value
      */
     private fun WheelEvent.getScrollDelta(): Pair<Float, Float> {
         val deltaX = deltaX.toFloat()
@@ -163,10 +166,15 @@ internal class MouseEventObserver(
         val scrollDeltaX = if (altKey) deltaY else deltaX
         val scrollDeltaY = if (altKey) deltaX else deltaY
 
-        return when {
-            commandKey && shiftKey -> scrollDeltaX to 0.0F
-            shiftKey -> 0.0F to scrollDeltaY
-            else -> scrollDeltaX to scrollDeltaY
+        val scrollMode = when (scrollModeLiveData.value) {
+            ScrollMode.BOTH -> ScrollMode.BOTH
+            ScrollMode.VERTICAL -> if (shiftKey) ScrollMode.HORIZONTAL else ScrollMode.VERTICAL
+            ScrollMode.HORIZONTAL -> if (shiftKey) ScrollMode.VERTICAL else ScrollMode.HORIZONTAL
+        }
+        return when (scrollMode) {
+            ScrollMode.BOTH -> scrollDeltaX to scrollDeltaY
+            ScrollMode.VERTICAL -> 0.0F to scrollDeltaY
+            ScrollMode.HORIZONTAL -> scrollDeltaX to 0.0F
         }
     }
 

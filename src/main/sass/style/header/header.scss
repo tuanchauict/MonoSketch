@@ -47,28 +47,16 @@ $bg-color: var(--header-bg);
 
     padding: 0 8px;
 
-    .app-main-menu-icon {
+    .app-icon {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 4px;
-        border-radius: 4px;
-        cursor: pointer;
-
-        &:hover {
-            background: var(--header-main-menu-hover-bg);
-        }
-    }
-
-    .theme-icon {
         border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 2px;
         margin-right: 8px;
-        
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+
         &:hover {
             background: var(--header-main-menu-hover-bg);
         }
