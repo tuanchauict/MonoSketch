@@ -61,7 +61,8 @@ class MonoSketchApplication : LifecycleOwner() {
             axisCanvasContainer,
             mainBoard,
             model.windowSizeLiveData,
-            keyCommandController.keyCommandLiveData.map { it == KeyCommand.SHIFT_KEY }
+            keyCommandController.keyCommandLiveData.map { it == KeyCommand.SHIFT_KEY },
+            appUiStateManager.scrollModeLiveData
         )
 
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
@@ -83,7 +84,7 @@ class MonoSketchApplication : LifecycleOwner() {
 
         NavBarViewController(
             this,
-            appUiStateManager.shapeToolVisibilityLiveData,
+            appUiStateManager,
             actionManager
         )
         ShapeToolViewController(

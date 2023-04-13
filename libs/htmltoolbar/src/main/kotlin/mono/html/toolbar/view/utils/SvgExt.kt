@@ -31,15 +31,13 @@ internal fun Element.SvgIcon(
     viewPortWidth: Int,
     viewPortHeight: Int,
     pathBlock: Element.() -> Unit
-) {
-    Svg("bi bi-cursor-fill") {
-        setAttributes(
-            "width" to width,
-            "height" to height,
-            "fill" to "currentColor",
-            "viewBox" to "0 0 $viewPortWidth $viewPortHeight"
-        )
+): Element = Svg("bi bi-cursor-fill") {
+    setAttributes(
+        "width" to width,
+        "height" to height,
+        "fill" to "currentColor",
+        "viewBox" to "0 0 $viewPortWidth $viewPortHeight"
+    )
 
-        pathBlock()
-    }
+    pathBlock()
 }

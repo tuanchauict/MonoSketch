@@ -12,6 +12,7 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
+import mono.ui.appstate.state.ScrollMode
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.events.WheelEvent
@@ -25,7 +26,8 @@ internal class MouseEventObserver(
     lifecycleOwner: LifecycleOwner,
     container: HTMLDivElement,
     drawingInfoLiveData: LiveData<DrawingInfoController.DrawingInfo>,
-    shiftKeyStateLiveData: LiveData<Boolean>
+    shiftKeyStateLiveData: LiveData<Boolean>,
+    private val scrollModeLiveData: LiveData<ScrollMode>
 ) {
     private val mousePointerMutableLiveData = MutableLiveData<MousePointer>(MousePointer.Idle)
     val mousePointerLiveData: LiveData<MousePointer> =
@@ -163,10 +165,15 @@ internal class MouseEventObserver(
         val scrollDeltaX = if (altKey) deltaY else deltaX
         val scrollDeltaY = if (altKey) deltaX else deltaY
 
+        val scrollMode = scrollModeLiveData.value
         return when {
             commandKey && shiftKey -> scrollDeltaX to 0.0F
             shiftKey -> 0.0F to scrollDeltaY
-            else -> scrollDeltaX to scrollDeltaY
+            else -> when (scrollMode) {
+                ScrollMode.BOTH -> scrollDeltaX to scrollDeltaY
+                ScrollMode.VERTICAL -> 0.0F to scrollDeltaY
+                ScrollMode.HORIZONTAL -> scrollDeltaX to 0.0F
+            }
         }
     }
 
