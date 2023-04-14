@@ -8,6 +8,7 @@ package mono.html.toolbar.view.nav
 
 import mono.actionmanager.OneTimeActionType
 import mono.html.Div
+import mono.html.SvgIcon
 import mono.html.SvgPath
 import mono.html.modal.DropDownMenu
 import mono.html.modal.DropDownMenu.Item.Text
@@ -16,7 +17,6 @@ import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnClickListener
 import mono.html.style
-import mono.html.toolbar.view.utils.SvgIcon
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.ui.appstate.AppUiStateManager
@@ -70,17 +70,21 @@ private fun Element.ScrollModeIcon(
     val container = Div("app-icon") {
         tooltip("Scroll mode", TooltipPosition.BOTTOM)
     }
-    val scrollBothIcon = container.SvgIcon(18, 18, 40, 40) {
-        SvgPath(
-            "M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM19.01.582a1.134 1.134 0 0 1 1.98 0l4.87 8.834c.41.744-.133 1.651-.99 1.651h-9.74c-.857 0-1.4-.907-.99-1.651L19.01.582ZM20.99 39.418a1.134 1.134 0 0 1-1.98 0l-4.87-8.834c-.41-.744.133-1.651.99-1.651h9.74c.857 0 1.4.907.99 1.651l-4.87 8.834ZM.582 20.99a1.134 1.134 0 0 1 0-1.98l8.834-4.87c.744-.41 1.651.133 1.651.99v9.74c0 .857-.907 1.4-1.651.99L.582 20.99ZM39.418 19.01a1.134 1.134 0 0 1 0 1.98l-8.834 4.87c-.744.41-1.651-.133-1.651-.99v-9.74c0-.857.907-1.4 1.651-.99l8.834 4.87Z" // ktlint-disable max-line-length
-        )
-    }
+    val scrollBothIcon = container.SvgIcon(
+        width = 18,
+        height = 18,
+        viewPortWidth = 40,
+        viewPortHeight = 40,
+        "M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM19.01.582a1.134 1.134 0 0 1 1.98 0l4.87 8.834c.41.744-.133 1.651-.99 1.651h-9.74c-.857 0-1.4-.907-.99-1.651L19.01.582ZM20.99 39.418a1.134 1.134 0 0 1-1.98 0l-4.87-8.834c-.41-.744.133-1.651.99-1.651h9.74c.857 0 1.4.907.99 1.651l-4.87 8.834ZM.582 20.99a1.134 1.134 0 0 1 0-1.98l8.834-4.87c.744-.41 1.651.133 1.651.99v9.74c0 .857-.907 1.4-1.651.99L.582 20.99ZM39.418 19.01a1.134 1.134 0 0 1 0 1.98l-8.834 4.87c-.744.41-1.651-.133-1.651-.99v-9.74c0-.857.907-1.4 1.651-.99l8.834 4.87Z" // ktlint-disable max-line-length
+    )
 
-    val scrollVerticalIcon = container.SvgIcon(18, 18, 40, 40) {
-        SvgPath(
-            "M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM19.01.582a1.134 1.134 0 0 1 1.98 0l4.87 8.834c.41.744-.133 1.651-.99 1.651h-9.74c-.857 0-1.4-.907-.99-1.651L19.01.582ZM20.99 39.418a1.134 1.134 0 0 1-1.98 0l-4.87-8.834c-.41-.744.133-1.651.99-1.651h9.74c.857 0 1.4.907.99 1.651l-4.87 8.834Z" // ktlint-disable max-line-length
-        )
-    }
+    val scrollVerticalIcon = container.SvgIcon(
+        width = 18,
+        height = 18,
+        viewPortWidth = 40,
+        viewPortHeight = 40,
+        "M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM19.01.582a1.134 1.134 0 0 1 1.98 0l4.87 8.834c.41.744-.133 1.651-.99 1.651h-9.74c-.857 0-1.4-.907-.99-1.651L19.01.582ZM20.99 39.418a1.134 1.134 0 0 1-1.98 0l-4.87-8.834c-.41-.744.133-1.651.99-1.651h9.74c.857 0 1.4.907.99 1.651l-4.87 8.834Z" // ktlint-disable max-line-length
+    )
 
     val scrollHorizontalIcon = container.SvgIcon(18, 18, 40, 40) {
         SvgPath(

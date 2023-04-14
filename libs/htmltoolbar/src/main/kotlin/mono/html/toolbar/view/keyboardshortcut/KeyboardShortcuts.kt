@@ -2,6 +2,8 @@
  * Copyright (c) 2023, tuanchauict
  */
 
+@file:Suppress("FunctionName")
+
 package mono.html.toolbar.view.keyboardshortcut
 
 import kotlinx.browser.document
@@ -11,11 +13,10 @@ import mono.html.Cell
 import mono.html.Div
 import mono.html.Row
 import mono.html.Span
-import mono.html.SvgPath
+import mono.html.SvgIcon
 import mono.html.Table
 import mono.html.setOnClickListener
 import mono.html.style
-import mono.html.toolbar.view.utils.SvgIcon
 import org.w3c.dom.Element
 
 /**
@@ -34,16 +35,13 @@ class KeyboardShortcuts private constructor() {
 
     private fun Element.CloseButton() {
         Span(classes = "keyboard-shortcuts__close") {
-            SvgIcon(16) {
-                /* ktlint-disable max-line-length */
-                SvgPath(
-                    "M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"
-                )
-                SvgPath(
-                    "M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"
-                )
-                /* ktlint-enable max-line-length */
-            }
+            /* ktlint-disable max-line-length */
+            SvgIcon(
+                16,
+                "M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z",
+                "M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"
+            )
+            /* ktlint-enable max-line-length */
 
             setOnClickListener { dismiss() }
         }

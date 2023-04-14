@@ -8,13 +8,12 @@ package mono.html.toolbar.view.shapetool
 
 import mono.actionmanager.OneTimeActionType
 import mono.html.Div
-import mono.html.SvgPath
+import mono.html.SvgIcon
 import mono.html.appendElement
 import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.setOnClickListener
 import mono.html.toolbar.view.utils.CssClass
-import mono.html.toolbar.view.utils.SvgIcon
 import mono.html.toolbar.view.utils.bindClass
 import mono.html.toolbar.view.utils.hasClass
 import mono.lifecycle.LifecycleOwner
@@ -70,9 +69,7 @@ private fun Icon(
     Div(classes = "icon") {
         tooltip(iconType.title, TooltipPosition.TOP)
 
-        SvgIcon(18) {
-            SvgPath(iconType.iconPath)
-        }
+        SvgIcon(18, iconType.iconPath)
 
         setOnClickListener {
             val target = it.currentTarget as HTMLElement
