@@ -13,7 +13,6 @@ import mono.html.Div
 import mono.html.Pre
 import mono.html.Span
 import mono.html.SvgIcon
-import mono.html.SvgPath
 import mono.html.TextArea
 import mono.html.setAttributes
 import mono.html.setOnClickListener
@@ -46,16 +45,13 @@ internal class ExportShapesModal {
 
     private fun Element.CloseButton() {
         Span(classes = "export-text__close") {
-            SvgIcon(16) {
-                /* ktlint-disable max-line-length */
-                SvgPath(
-                    "M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"
-                )
-                SvgPath(
-                    "M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"
-                )
-                /* ktlint-enable max-line-length */
-            }
+            /* ktlint-disable max-line-length */
+            SvgIcon(
+                16,
+                "M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z",
+                "M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"
+            )
+            /* ktlint-enable max-line-length */
 
             setOnClickListener { dismiss() }
         }
