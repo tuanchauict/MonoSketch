@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.graphics.bitmap.drawable
 
 import mono.graphics.bitmap.MonoBitmap

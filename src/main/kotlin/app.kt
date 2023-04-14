@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 @file:Suppress("ktlint:filename")
 
 import kotlinx.browser.window

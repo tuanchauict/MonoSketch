@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 plugins {
     kotlin("js")
 }
@@ -12,6 +16,7 @@ dependencies {
     implementation(projects.htmlmodal)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
+    implementation(projects.uiAppStateManager)
     implementation(projects.uiTheme)
 
     testImplementation(libs.kotlin.test.js)

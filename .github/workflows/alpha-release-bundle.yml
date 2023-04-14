@@ -4,23 +4,28 @@ on:
     branches:
       - release/alpha/**
 jobs:
-  publish_alpha_release:
+  build:
+    uses: ./.github/workflows/shared-build-and-upload-artifact.yml
+    with:
+      artifact: alpha-release-artifact
+
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
+    environment: alpha
+    env:
+      TARGET_RELEASE_REPOSITORY: "https://${{ secrets.TARGET_AUTH_KEY }}@${{ vars.TARGET_RELEASE_REPOSITORY }}"
+      SRC_GIT_BRANCH: ${{ needs.build.outputs.git-branch }}
+      SRC_GIT_SHA: ${{ needs.build.outputs.git-sha }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Environment detector
-        id: vars
-        shell: bash
-        run: |
-          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-          echo "::set-output name=sha::$(git rev-parse HEAD)"
-      - run: ./gradlew assemble
+      - name: Get built artifact
+        uses: actions/download-artifact@v3
+        with: 
+          name: alpha-release-artifact
+          path: distributions
+      - name: Fetch current code
+        run: git clone "${{ env.TARGET_RELEASE_REPOSITORY }}" "working"
       - name: Publish release
+        working-directory: working
         run: |
-          dir=$PWD
-          git clone "${{ secrets.TARGET_ALPHA_REMOTE_GIT }}" "../working"
-          cd ../working
-          sh tools/release.sh "$dir/build/distributions" "${{ steps.vars.outputs.branch }}-${{ steps.vars.outputs.sha }}"
+          sh tools/release.sh "../distributions" "${{ env.SRC_GIT_BRANCH }}-${{ env.SRC_GIT_SHA }}"

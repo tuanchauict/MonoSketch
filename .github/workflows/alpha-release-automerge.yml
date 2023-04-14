@@ -7,21 +7,21 @@ jobs:
   automerge:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ secrets.ALPHA_RELEASE_BRANCH }}
       - name: Environment detector
         id: vars
         shell: bash
         run: |
-          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-          echo "::set-output name=sha::$(git rev-parse HEAD)"
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
       - name: Reset alpha branch
         run: |
           git fetch origin main:main
           git reset --hard main
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
           title: "[Auto merge][${{ steps.vars.outputs.branch }} -> ${{ secrets.ALPHA_RELEASE_BRANCH }}] Update alpha release"
           branch: auto-merge-alpha-release

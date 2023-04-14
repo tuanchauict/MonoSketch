@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023, tuanchauict
+ */
+
 package mono.html.toolbar.view.shapetool
 
 import mono.actionmanager.ActionManager
