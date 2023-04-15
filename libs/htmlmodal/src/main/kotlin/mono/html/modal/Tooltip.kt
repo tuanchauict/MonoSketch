@@ -2,6 +2,8 @@
  * Copyright (c) 2023, tuanchauict
  */
 
+@file:Suppress("FunctionName")
+
 package mono.html.modal
 
 import kotlinx.browser.document
@@ -10,10 +12,8 @@ import mono.common.post
 import mono.common.setTimeout
 import mono.html.Div
 import mono.html.Span
-import mono.html.Svg
-import mono.html.SvgPath
+import mono.html.SvgIcon
 import mono.html.px
-import mono.html.setAttributes
 import mono.html.setOnMouseOutListener
 import mono.html.setOnMouseOverListener
 import mono.html.style
@@ -186,18 +186,4 @@ private class Tooltip(
         get() = clientWidth.toDouble() / 2
     private val Element.halfHeightPx: Double
         get() = clientHeight.toDouble() / 2
-
-    @Suppress("FunctionName")
-    private fun Element.SvgIcon(width: Int, height: Int, path: String) {
-        Svg {
-            setAttributes(
-                "width" to width,
-                "height" to height,
-                "fill" to "currentColor",
-                "viewBox" to "0 0 ${width * 2}  ${height * 2}"
-            )
-
-            SvgPath(path)
-        }
-    }
 }
