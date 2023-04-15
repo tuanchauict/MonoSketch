@@ -15,7 +15,6 @@ dependencies {
     implementation(projects.commons)
     implementation(projects.graphicsgeo)
     implementation(projects.htmlcanvas)
-    implementation(projects.htmltoolbar)
     implementation(projects.keycommand)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
@@ -29,6 +28,7 @@ dependencies {
     implementation(projects.statemanager)
     implementation(projects.storeManager)
     implementation(projects.uiAppStateManager)
+    implementation(projects.uiToolbar)
 
     testImplementation(libs.kotlin.test.js)
 }

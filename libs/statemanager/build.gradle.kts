@@ -21,7 +21,6 @@ dependencies {
     implementation(projects.htmlDsl)
     implementation(projects.htmlcanvas)
     implementation(projects.htmlmodal)
-    implementation(projects.htmltoolbar)
     implementation(projects.keycommand)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
@@ -36,7 +35,7 @@ dependencies {
     implementation(projects.shapesearcher)
     implementation(projects.storeManager)
     implementation(projects.uiAppStateManager)
-
+    implementation(projects.uiToolbar)
     testImplementation(libs.kotlin.test.js)
 }
 

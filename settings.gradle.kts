@@ -14,7 +14,6 @@ val moduleMap = mapOf(
     "html-dsl" to "libs/html-dsl",
     "htmlcanvas" to "libs/htmlcanvas",
     "htmlmodal" to "libs/htmlmodal",
-    "htmltoolbar" to "libs/htmltoolbar",
     "keycommand" to "libs/keycommand",
     "lifecycle" to "libs/lifecycle",
     "livedata" to "libs/livedata",
@@ -31,6 +30,7 @@ val moduleMap = mapOf(
     "store-manager" to "libs/store-manager",
     "ui-app-state-manager" to "libs/ui-app-state-manager",
     "ui-theme" to "libs/ui-theme",
+    "ui-toolbar" to "libs/ui-toolbar",
     "uuid" to "libs/uuid"
 )
 
