@@ -8,12 +8,11 @@ package mono.html.toolbar.view.nav
 
 import mono.actionmanager.RetainableActionType
 import mono.html.Div
-import mono.html.SvgPath
+import mono.html.SvgIcon
 import mono.html.modal.tooltip
 import mono.html.setAttributes
 import mono.html.setOnClickListener
 import mono.html.toolbar.view.utils.CssClass
-import mono.html.toolbar.view.utils.SvgIcon
 import mono.html.toolbar.view.utils.bindClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -88,9 +87,7 @@ private fun Element.MouseActionGroupItem(
     mouseActionType: MouseActionType,
     onClick: (RetainableActionType) -> Unit
 ): HTMLElement = Div(classes = "action-button") {
-    SvgIcon(21, 21, 24, 24) {
-        SvgPath(mouseActionType.iconPath)
-    }
+    SvgIcon(21, 21, 24, 24, mouseActionType.iconPath)
 
     bindClass(CssClass.SELECTED, mouseActionType.isDefaultSelected)
     setAttributes(ATTR_ACTION to mouseActionType.name)

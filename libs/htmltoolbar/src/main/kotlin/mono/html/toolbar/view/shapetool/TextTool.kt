@@ -9,7 +9,7 @@ package mono.html.toolbar.view.shapetool
 import mono.actionmanager.OneTimeActionType
 import mono.html.Div
 import mono.html.Span
-import mono.html.SvgPath
+import mono.html.SvgIcon
 import mono.html.toolbar.view.components.CloudItemFactory
 import mono.html.toolbar.view.components.CloudViewBinder
 import mono.html.toolbar.view.components.OptionCloud
@@ -20,7 +20,6 @@ import mono.html.toolbar.view.shapetool.TextAlignmentIconType.VERTICAL_BOTTOM
 import mono.html.toolbar.view.shapetool.TextAlignmentIconType.VERTICAL_MIDDLE
 import mono.html.toolbar.view.shapetool.TextAlignmentIconType.VERTICAL_TOP
 import mono.html.toolbar.view.utils.CssClass
-import mono.html.toolbar.view.utils.SvgIcon
 import mono.html.toolbar.view.utils.bindClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -88,9 +87,7 @@ private fun Element.Icons(
     onSelect: (TextAlignmentIconType) -> Unit
 ): CloudViewBinder {
     val factory = CloudItemFactory(icons.size) {
-        SvgIcon(20, 14) {
-            SvgPath(icons[it].iconPath)
-        }
+        SvgIcon(20, 14, icons[it].iconPath)
     }
     return OptionCloud(factory) {
         onSelect(icons[it])
