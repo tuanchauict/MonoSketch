@@ -13,10 +13,10 @@ repositories {
 dependencies {
     implementation(projects.actionManager)
     implementation(projects.htmlDsl)
-    implementation(projects.htmlmodal)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
     implementation(projects.uiAppStateManager)
+    implementation(projects.uiModal)
     implementation(projects.uiTheme)
 
     testImplementation(libs.kotlin.test.js)
