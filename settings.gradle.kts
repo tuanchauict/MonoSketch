@@ -13,7 +13,6 @@ val moduleMap = mapOf(
     "graphicsgeo" to "libs/graphicsgeo",
     "html-dsl" to "libs/html-dsl",
     "htmlcanvas" to "libs/htmlcanvas",
-    "htmlmodal" to "libs/htmlmodal",
     "keycommand" to "libs/keycommand",
     "lifecycle" to "libs/lifecycle",
     "livedata" to "libs/livedata",
@@ -29,6 +28,7 @@ val moduleMap = mapOf(
     "statemanager" to "libs/statemanager",
     "store-manager" to "libs/store-manager",
     "ui-app-state-manager" to "libs/ui-app-state-manager",
+    "ui-modal" to "libs/ui-modal",
     "ui-theme" to "libs/ui-theme",
     "ui-toolbar" to "libs/ui-toolbar",
     "uuid" to "libs/uuid"

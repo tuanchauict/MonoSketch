@@ -14,12 +14,12 @@ dependencies {
     implementation(projects.commons)
     implementation(projects.graphicsgeo)
     implementation(projects.htmlDsl)
-    implementation(projects.htmlmodal)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
     implementation(projects.monoboard)
     implementation(projects.shapeInteractionBound)
     implementation(projects.uiAppStateManager)
+    implementation(projects.uiModal)
     implementation(projects.uiTheme)
 
     testImplementation(libs.kotlin.test.js)

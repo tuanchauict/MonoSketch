@@ -20,7 +20,6 @@ dependencies {
     implementation(projects.graphicsgeo)
     implementation(projects.htmlDsl)
     implementation(projects.htmlcanvas)
-    implementation(projects.htmlmodal)
     implementation(projects.keycommand)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
@@ -35,6 +34,7 @@ dependencies {
     implementation(projects.shapesearcher)
     implementation(projects.storeManager)
     implementation(projects.uiAppStateManager)
+    implementation(projects.uiModal)
     implementation(projects.uiToolbar)
     testImplementation(libs.kotlin.test.js)
 }
