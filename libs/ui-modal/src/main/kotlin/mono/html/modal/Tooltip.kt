@@ -85,7 +85,6 @@ private class Tooltip(
         arrowView = arrow
         bodyView = body.Span("mono-tooltip tooltip-body", text) {
             style("visibility" to "hidden")
-            println("tooltip $clientWidth $clientHeight")
         }
         post {
             arrow.adjustArrowPosition(anchorPositionRect)
@@ -94,8 +93,6 @@ private class Tooltip(
                 anchorPositionRect,
                 arrow.getBoundingClientRect()
             )
-
-            println("tooltip ${bodyView?.clientWidth} ${bodyView?.clientHeight}")
         }
     }
 
