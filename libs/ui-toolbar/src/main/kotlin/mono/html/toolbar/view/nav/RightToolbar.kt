@@ -38,7 +38,7 @@ internal fun Element.RightToolbar(
     ThemeIcon {
         ThemeManager.getInstance().setTheme(it)
     }
-    DropDownMenuIcon {
+    DropDownMenuIcon { anchor ->
         val items = listOf(
             Text(
                 "Show Format panel",
@@ -50,10 +50,11 @@ internal fun Element.RightToolbar(
             ) { appUiStateManager.shapeToolVisibilityLiveData.value },
             Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
         )
-        DropDownMenu("main-dropdown-menu", items) {
+        DropDownMenu(items) {
             val textItem = it as Text
             onActionSelected(textItem.key as OneTimeActionType)
         }
+            .show(anchor)
     }
 }
 
@@ -144,7 +145,7 @@ private fun Element.ThemeIcon(onClickAction: (ThemeMode) -> Unit) {
     }
 }
 
-private fun Element.DropDownMenuIcon(onClickAction: () -> Unit) {
+private fun Element.DropDownMenuIcon(onClickAction: (Element) -> Unit) {
     Div("app-icon") {
         setAttributes("onfocus" to "this.blur()")
 
@@ -158,6 +159,6 @@ private fun Element.DropDownMenuIcon(onClickAction: () -> Unit) {
         )
         /* ktlint-enable max-line-length */
 
-        setOnClickListener { onClickAction() }
+        setOnClickListener { onClickAction(this@DropDownMenuIcon) }
     }
 }
