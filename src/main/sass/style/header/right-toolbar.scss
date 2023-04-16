@@ -1,7 +1,14 @@
 .right-toolbar-container {
     display: flex;
     flex-direction: row;
+    height: 100%;
     align-items: center;
+
+    .app-icon-container {
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
 
     .app-icon {
         display: flex;
