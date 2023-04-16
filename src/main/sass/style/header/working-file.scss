@@ -1,0 +1,42 @@
+@import '../variables';
+
+.working-file-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 200px;
+
+    .divider  {
+        width: 1px;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.6);
+    }
+
+    .file-info {
+        display: flex;
+        align-items: center;
+        margin-left: 2px;
+        height: 100%;
+        padding: 6px 4px 6px 8px;
+        font-family: $monospaceFont;
+        cursor: pointer;
+
+        &:hover {
+            background: var(--header-mouse-action-hover-bg);
+        }
+
+        .title {
+            font-size: 14px;
+            max-width: 169px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .menu-down-icon {
+            display: flex;
+            margin-left: 4px;
+            padding-top: 4px;
+        }
+    }
+}

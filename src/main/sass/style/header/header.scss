@@ -42,3 +42,9 @@ $bg-color: var(--header-bg);
 
     padding: 0 8px;
 }
+
+.middle-toolbar-container,
+.left-toolbar-container {
+    display: flex;
+    height: 100%;
+}
