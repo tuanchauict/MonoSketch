@@ -11,7 +11,7 @@ $bg-color: var(--header-bg);
     color: $conten-color;
 }
 
-#nav-left {
+#nav-brand {
     @extend %common-flex-center-vertical;
     padding-left: 16px;
 
@@ -35,48 +35,10 @@ $bg-color: var(--header-bg);
     }
 }
 
-#nav-toolbar-center {
+#nav-toolbar {
     @extend %common-flex-center-vertical;
-
     flex-grow: 1;
-    justify-content: center;
-}
-
-#nav-toolbar-right {
-    @extend %common-flex-center-vertical;
+    justify-content: space-between;
 
     padding: 0 8px;
-
-    .app-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        margin-right: 8px;
-        width: 28px;
-        height: 28px;
-        cursor: pointer;
-
-        &:hover {
-            background: var(--header-main-menu-hover-bg);
-        }
-    }
-
-    .theme-dark-mode {
-        :root.dark &{
-            display: none;
-        }
-    }
-
-    .theme-light-mode {
-        :root.light & {
-            display: none;
-        }
-    }
-}
-
-#main-dropdown-menu {
-    width: 160px;
-    right: 8px;
-    top: 48px;
 }

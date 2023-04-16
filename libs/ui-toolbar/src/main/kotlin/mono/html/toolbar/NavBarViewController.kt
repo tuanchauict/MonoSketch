@@ -6,6 +6,7 @@ package mono.html.toolbar
 
 import kotlinx.browser.document
 import mono.actionmanager.ActionManager
+import mono.html.Div
 import mono.html.select
 import mono.html.toolbar.view.nav.MouseActionGroup
 import mono.html.toolbar.view.nav.RightToolbar
@@ -21,19 +22,24 @@ class NavBarViewController(
     private val actionManager: ActionManager
 ) {
     init {
-        with(document.select("#nav-toolbar-center")) {
-            MouseActionGroup(
-                lifecycleOwner,
-                actionManager.retainableActionLiveData,
-                actionManager::setRetainableAction
-            )
-        }
-        with(document.select("#nav-toolbar-right")) {
-            RightToolbar(
-                lifecycleOwner,
-                appUiStateManager,
-                actionManager::setOneTimeAction
-            )
+        document.select("#nav-toolbar").run {
+            Div("left-toolbar-container") {
+
+            }
+            Div("middle-toolbar-container") {
+                MouseActionGroup(
+                    lifecycleOwner,
+                    actionManager.retainableActionLiveData,
+                    actionManager::setRetainableAction
+                )
+            }
+            Div("right-toolbar-container") {
+                RightToolbar(
+                    lifecycleOwner,
+                    appUiStateManager,
+                    actionManager::setOneTimeAction
+                )
+            }
         }
     }
 }
