@@ -14,7 +14,11 @@ import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.RootGroup
 import mono.state.command.CommandEnvironment
-import mono.store.manager.StoreManager
+import mono.store.manager.StorageDocument
+import mono.store.manager.StoreKeys.LAST_OPEN
+import mono.store.manager.StoreKeys.OBJECT_CONTENT
+import mono.store.manager.StoreKeys.OBJECT_OFFSET
+import mono.store.manager.StoreKeys.WORKSPACE
 import mono.uuid.UUID
 
 /**
@@ -23,24 +27,20 @@ import mono.uuid.UUID
 internal class StateHistoryManager(
     private val lifecycleOwner: LifecycleOwner,
     private val environment: CommandEnvironment,
-    private val storeManager: StoreManager,
-    private val canvasViewController: CanvasViewController
+    private val canvasViewController: CanvasViewController,
+    private val workspaceDocument: StorageDocument = StorageDocument.get(WORKSPACE)
 ) {
     private val historyStack = HistoryStack()
 
-    init {
-        migrationTo1_1_0()
-    }
-
     fun restoreAndStartObserveStateChange(rootId: String) {
         val adjustedRootId = rootId.ifEmpty {
-            storeManager.get(BACKUP_LAST_OPEN_PROJECT_KEY) ?: UUID.generate()
+            workspaceDocument.get(LAST_OPEN) ?: UUID.generate()
         }
 
         restoreShapes(adjustedRootId)
         restoreOffset(adjustedRootId)
 
-        storeManager.set(BACKUP_LAST_OPEN_PROJECT_KEY, adjustedRootId)
+        workspaceDocument.set(LAST_OPEN, adjustedRootId)
 
         combineLiveData(
             environment.shapeManager.versionLiveData,
@@ -52,8 +52,8 @@ internal class StateHistoryManager(
         }
 
         canvasViewController.drawingOffsetPointPxLiveData.observe(lifecycleOwner) {
-            val backupKey = getBackupKey(BACKUP_OFFSET_KEY, environment.shapeManager.root.id)
-            storeManager.set(backupKey, "${it.left}|${it.top}")
+            workspaceDocument.childDocument(environment.shapeManager.root.id)
+                .set(OBJECT_OFFSET, "${it.left}|${it.top}")
         }
     }
 
@@ -86,14 +86,12 @@ internal class StateHistoryManager(
 
         historyStack.pushState(root.versionCode, serializableGroup)
 
-        val backupKey = getBackupKey(BACKUP_SHAPES_KEY, root.id)
         val jsonRoot = ShapeSerializationUtil.toJson(serializableGroup)
-        storeManager.set(backupKey, jsonRoot)
+        workspaceDocument.childDocument(root.id).set(OBJECT_CONTENT, jsonRoot)
     }
 
     private fun restoreShapes(rootId: String = "") {
-        val backupKey = getBackupKey(BACKUP_SHAPES_KEY, rootId)
-        val rootJson = storeManager.get(backupKey)
+        val rootJson = workspaceDocument.childDocument(rootId).get(OBJECT_CONTENT)
         val serializableGroup =
             rootJson?.let(ShapeSerializationUtil::fromJson) as? SerializableGroup
         val rootGroup = if (serializableGroup != null) {
@@ -105,8 +103,9 @@ internal class StateHistoryManager(
     }
 
     private fun restoreOffset(rootId: String = "") {
-        val backupKey = getBackupKey(BACKUP_OFFSET_KEY, rootId)
-        val storedOffsetString = storeManager.get(backupKey) ?: return
+        workspaceDocument.childDocument(rootId).get(OBJECT_OFFSET)
+        val storedOffsetString =
+            workspaceDocument.childDocument(rootId).get(OBJECT_OFFSET) ?: return
         val (leftString, topString) = storedOffsetString.split('|').takeIf { it.size == 2 }
             ?: return
         val left = leftString.toIntOrNull() ?: return
@@ -114,30 +113,6 @@ internal class StateHistoryManager(
         val offset = Point(left, top)
         canvasViewController.setOffset(offset)
     }
-
-    @Suppress("FunctionName")
-    private fun migrationTo1_1_0() {
-        val defaultBackupShapeJson = storeManager.get(BACKUP_SHAPES_KEY)
-        if (defaultBackupShapeJson.isNullOrEmpty()) {
-            return
-        }
-        val serializableGroup =
-            ShapeSerializationUtil.fromJson(defaultBackupShapeJson)
-        val id = serializableGroup?.id ?: return
-        storeManager.set(getBackupKey(BACKUP_SHAPES_KEY, id), defaultBackupShapeJson)
-
-        val defaultBackupOffsetValue = storeManager.get(BACKUP_OFFSET_KEY)
-        if (defaultBackupOffsetValue != null) {
-            storeManager.set(getBackupKey(BACKUP_OFFSET_KEY, id), defaultBackupOffsetValue)
-        }
-
-        storeManager.remove(BACKUP_SHAPES_KEY)
-        storeManager.remove(BACKUP_OFFSET_KEY)
-
-        storeManager.set(BACKUP_LAST_OPEN_PROJECT_KEY, id)
-    }
-
-    private fun getBackupKey(prefix: String, rootId: String): String = "$prefix:$rootId"
 
     private class HistoryStack {
         private val undoStack = mutableListOf<History>()
@@ -180,10 +155,4 @@ internal class StateHistoryManager(
     }
 
     private class History(val versionCode: Int, val serializableGroup: SerializableGroup)
-
-    companion object {
-        private const val BACKUP_SHAPES_KEY = "backup-shapes"
-        private const val BACKUP_OFFSET_KEY = "offset"
-        private const val BACKUP_LAST_OPEN_PROJECT_KEY = "last-open"
-    }
 }

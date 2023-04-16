@@ -43,7 +43,6 @@ import mono.state.command.CommandEnvironment
 import mono.state.command.CommandEnvironment.EditingMode
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
-import mono.store.manager.StoreManager
 import mono.ui.appstate.AppUiStateManager
 
 /**
@@ -60,7 +59,6 @@ class MainStateManager(
     mousePointerLiveData: LiveData<MousePointer>,
     private val actionManager: ActionManager,
     appUiStateManager: AppUiStateManager,
-    storeManager: StoreManager = StoreManager.getInstance(),
     initialRootId: String = ""
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
@@ -118,12 +116,7 @@ class MainStateManager(
             currentRetainableActionType = it
         }
 
-        val stateHistoryManager = StateHistoryManager(
-            lifecycleOwner,
-            environment,
-            storeManager,
-            canvasManager
-        )
+        val stateHistoryManager = StateHistoryManager(lifecycleOwner, environment, canvasManager)
         stateHistoryManager.restoreAndStartObserveStateChange(initialRootId)
 
         OneTimeActionHandler(

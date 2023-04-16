@@ -15,6 +15,8 @@ class StorageDocument private constructor(
 
     private fun getFullPath(key: String): String = StoreKeys.getPath(path, key)
 
+    fun childDocument(key: String): StorageDocument = Companion.get(getFullPath(key))
+
     fun get(key: String, defaultValue: String? = null): String? =
         storeManager.get(getFullPath(key)) ?: defaultValue
 
