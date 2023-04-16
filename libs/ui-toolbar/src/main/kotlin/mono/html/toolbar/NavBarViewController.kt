@@ -25,7 +25,7 @@ class NavBarViewController(
     init {
         document.select("#nav-toolbar").run {
             Div("left-toolbar-container") {
-                WorkingFileToolbar()
+                WorkingFileToolbar(actionManager::setOneTimeAction)
             }
             Div("middle-toolbar-container") {
                 MouseActionGroup(
