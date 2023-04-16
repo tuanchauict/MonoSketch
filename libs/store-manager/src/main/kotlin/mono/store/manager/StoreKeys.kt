@@ -10,5 +10,11 @@ package mono.store.manager
  * TODO: Move all store keys which are in use to this object.
  */
 object StoreKeys {
-    const val THEME_MODE = "local-theme-mode"
+    const val DB_VERSION = "DB_VERSION"
+
+    const val SETTINGS = "settings"
+    const val THEME_MODE = "theme-mode"
+
+    fun getPath(parent: String, key: String): String =
+        if (parent.isNotEmpty()) "$parent/$key" else key
 }
