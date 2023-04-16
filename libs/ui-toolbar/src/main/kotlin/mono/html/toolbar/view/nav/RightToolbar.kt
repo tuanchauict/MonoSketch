@@ -38,22 +38,8 @@ internal fun Element.RightToolbar(
     ThemeIcon {
         ThemeManager.getInstance().setTheme(it)
     }
-    DropDownMenuIcon {
-        val items = listOf(
-            Text(
-                "Show Format panel",
-                OneTimeActionType.ShowFormatPanel
-            ) { !appUiStateManager.shapeToolVisibilityLiveData.value },
-            Text(
-                "Hide Format panel",
-                OneTimeActionType.HideFormatPanel
-            ) { appUiStateManager.shapeToolVisibilityLiveData.value },
-            Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
-        )
-        DropDownMenu("main-dropdown-menu", items) {
-            val textItem = it as Text
-            onActionSelected(textItem.key as OneTimeActionType)
-        }
+    AppMenuIcon { anchor ->
+        showDropDownMenu(appUiStateManager, onActionSelected, anchor)
     }
 }
 
@@ -144,8 +130,9 @@ private fun Element.ThemeIcon(onClickAction: (ThemeMode) -> Unit) {
     }
 }
 
-private fun Element.DropDownMenuIcon(onClickAction: () -> Unit) {
-    Div("app-icon") {
+private fun Element.AppMenuIcon(onClickAction: (Element) -> Unit) {
+    val container = Div("app-icon-container")
+    container.Div("app-icon") {
         setAttributes("onfocus" to "this.blur()")
 
         /* ktlint-disable max-line-length */
@@ -158,6 +145,29 @@ private fun Element.DropDownMenuIcon(onClickAction: () -> Unit) {
         )
         /* ktlint-enable max-line-length */
 
-        setOnClickListener { onClickAction() }
+        setOnClickListener { onClickAction(container) }
     }
+}
+
+private fun showDropDownMenu(
+    appUiStateManager: AppUiStateManager,
+    onActionSelected: (OneTimeActionType) -> Unit,
+    anchor: Element
+) {
+    val items = listOf(
+        Text(
+            "Show Format panel",
+            OneTimeActionType.ShowFormatPanel
+        ) { !appUiStateManager.shapeToolVisibilityLiveData.value },
+        Text(
+            "Hide Format panel",
+            OneTimeActionType.HideFormatPanel
+        ) { appUiStateManager.shapeToolVisibilityLiveData.value },
+        Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
+    )
+    DropDownMenu(items) {
+        val textItem = it as Text
+        onActionSelected(textItem.key as OneTimeActionType)
+    }
+        .show(anchor)
 }

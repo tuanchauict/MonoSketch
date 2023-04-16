@@ -89,13 +89,13 @@ fun Span(
     block()
 }
 
-fun Element.Ul(classes: String = "", block: HTMLUListElement.() -> Unit): HTMLUListElement =
+fun Element.Ul(classes: String = "", block: HTMLUListElement.() -> Unit = {}): HTMLUListElement =
     Ul(this, classes, block)
 
 fun Ul(
     parent: Element?,
     classes: String = "",
-    block: HTMLUListElement.() -> Unit
+    block: HTMLUListElement.() -> Unit = {}
 ): HTMLUListElement = parent.createElement("ul", classes, block)
 
 fun Element.Li(classes: String = "", block: HTMLLIElement.() -> Unit = {}): HTMLLIElement =

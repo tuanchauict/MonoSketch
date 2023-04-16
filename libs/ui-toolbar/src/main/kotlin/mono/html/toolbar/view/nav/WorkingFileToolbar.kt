@@ -19,7 +19,8 @@ internal fun Element.WorkingFileToolbar(
 ) {
     Div("working-file-container") {
         Div("divider")
-        Div("file-info") {
+
+        val fileInfo = Div("file-info") {
             Span("title", "File name")
             Div("menu-down-icon") {
                 SvgIcon(
@@ -30,20 +31,21 @@ internal fun Element.WorkingFileToolbar(
                     "M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" // ktlint-disable max-line-length
                 )
             }
-
-            setOnClickListener { showWorkingFileMenu(onActionSelected) }
         }
+
+        fileInfo.setOnClickListener { showWorkingFileMenu(fileInfo, onActionSelected) }
     }
 }
 
-private fun showWorkingFileMenu(onActionSelected: (OneTimeActionType) -> Unit) {
+private fun showWorkingFileMenu(anchor: Element, onActionSelected: (OneTimeActionType) -> Unit) {
     val items = listOf(
         DropDownMenu.Item.Text("Save As...", OneTimeActionType.SaveShapesAs),
         DropDownMenu.Item.Text("Open File...", OneTimeActionType.OpenShapes),
         DropDownMenu.Item.Text("Export Text", OneTimeActionType.ExportSelectedShapes)
     )
-    DropDownMenu("working-file-dropdown-menu", items) {
+    DropDownMenu(items) {
         val textItem = it as DropDownMenu.Item.Text
         onActionSelected(textItem.key as OneTimeActionType)
     }
+        .show(anchor)
 }
