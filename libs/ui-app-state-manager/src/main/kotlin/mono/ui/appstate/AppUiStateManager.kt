@@ -8,7 +8,6 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
-import mono.store.manager.StoreManager
 import mono.ui.appstate.state.ScrollMode
 import mono.ui.theme.ThemeManager
 import org.w3c.dom.Element
@@ -19,10 +18,9 @@ import org.w3c.dom.Element
  */
 class AppUiStateManager(
     private val appLifecycleOwner: LifecycleOwner,
-    themeManager: ThemeManager = ThemeManager.getInstance(),
-    storageManager: StoreManager = StoreManager.getInstance()
+    themeManager: ThemeManager = ThemeManager.getInstance()
 ) {
-    private val appThemeManager = AppThemeManager(themeManager, storageManager)
+    private val appThemeManager = AppThemeManager(themeManager)
 
     private val shapeToolVisibilityMutableLiveData = MutableLiveData(true)
     val shapeToolVisibilityLiveData = shapeToolVisibilityMutableLiveData.distinctUntilChange()
