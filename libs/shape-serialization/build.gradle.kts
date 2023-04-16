@@ -25,7 +25,6 @@ kotlin {
             testTask {
                 useKarma {
                     useChromeHeadless()
-
                 }
             }
         }
