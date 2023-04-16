@@ -1,4 +1,4 @@
-name: alpha release auto merge
+name: Auto merge
 on:
   push:
     branches:
@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ secrets.ALPHA_RELEASE_BRANCH }}
+          ref: ${{ vars.ALPHA_BRANCH }}
       - name: Environment detector
         id: vars
         shell: bash
@@ -23,7 +23,7 @@ jobs:
       - name: Create pull request
         uses: peter-evans/create-pull-request@v4
         with:
-          title: "[Auto merge][${{ steps.vars.outputs.branch }} -> ${{ secrets.ALPHA_RELEASE_BRANCH }}] Update alpha release"
+          title: "[Auto merge][${{ steps.vars.outputs.branch }} -> ${{ vars.ALPHA_BRANCH }}] Update alpha release"
           branch: auto-merge-alpha-release
           labels: "bot"
           body: |
