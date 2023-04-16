@@ -52,8 +52,8 @@ apply(from = "sass.gradle")
 // Only run this task (along with run task) if you want to see the UI update immediately when
 // editing the style
 tasks.register<io.miret.etienne.gradle.sass.CompileSass>("watchSass") {
-    setSourceDir(project.file("${projectDir}/src/main/sass"))
-    outputDir = project.file("${buildDir}/processedResources/js/main")
+    setSourceDir(project.file("$projectDir/src/main/sass"))
+    outputDir = project.file("$buildDir/processedResources/js/main")
 
     watch()
 }
