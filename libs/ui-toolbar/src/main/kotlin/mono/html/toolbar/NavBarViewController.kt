@@ -10,6 +10,7 @@ import mono.html.Div
 import mono.html.select
 import mono.html.toolbar.view.nav.MouseActionGroup
 import mono.html.toolbar.view.nav.RightToolbar
+import mono.html.toolbar.view.nav.WorkingFileToolbar
 import mono.lifecycle.LifecycleOwner
 import mono.ui.appstate.AppUiStateManager
 
@@ -24,7 +25,7 @@ class NavBarViewController(
     init {
         document.select("#nav-toolbar").run {
             Div("left-toolbar-container") {
-
+                WorkingFileToolbar()
             }
             Div("middle-toolbar-container") {
                 MouseActionGroup(
