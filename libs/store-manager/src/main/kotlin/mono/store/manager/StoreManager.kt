@@ -6,6 +6,7 @@ package mono.store.manager
 
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
+import mono.store.manager.migrations.MigrateTo2
 import mono.store.manager.migrations.Migration
 import org.w3c.dom.StorageEvent
 import org.w3c.dom.get
@@ -14,16 +15,26 @@ import org.w3c.dom.set
 /**
  * A class for managing storage.
  */
-class StoreManager private constructor() {
+internal class StoreManager private constructor() {
     private val keyToObserverMap: MutableMap<String, StoreObserver> = mutableMapOf()
     private val migrations: Map<Int, Migration> =
         listOf<Migration>(
+            MigrateTo2
         ).associateBy { it.targetVersion }
 
     init {
         migrate()
 
         window.onstorage = ::onStorageChange
+    }
+
+    internal fun getKeys(predicate: (String) -> Boolean): Sequence<String> = sequence {
+        for (index in 0 until localStorage.length) {
+            val key = localStorage.key(index)
+            if (key != null && predicate(key)) {
+                yield(key)
+            }
+        }
     }
 
     private fun migrate() {
@@ -63,15 +74,8 @@ class StoreManager private constructor() {
         keyToObserverMap[key]?.onChange(key, event.oldValue, event.newValue)
     }
 
-    /**
-     * An interface for observing storage change.
-     */
-    fun interface StoreObserver {
-        fun onChange(key: String, oldValue: String?, newValue: String?)
-    }
-
     companion object {
-        private const val DB_VERSION = 1
+        private const val DB_VERSION = 2
 
         private var instance: StoreManager? = null
 

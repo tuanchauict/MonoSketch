@@ -24,7 +24,7 @@ class StorageDocument private constructor(
 
     fun remove(key: String) = storeManager.remove(getFullPath(key))
 
-    fun setObserver(key: String, observer: StoreManager.StoreObserver) =
+    fun setObserver(key: String, observer: StoreObserver) =
         storeManager.setObserver(getFullPath(key), observer)
 
     fun removeObserver(key: String) = storeManager.removeObserver(getFullPath(key))
