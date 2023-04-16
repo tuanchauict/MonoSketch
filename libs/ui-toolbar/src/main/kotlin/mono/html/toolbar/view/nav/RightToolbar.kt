@@ -133,7 +133,6 @@ private fun Element.ThemeIcon(onClickAction: (ThemeMode) -> Unit) {
 private fun Element.AppMenuIcon(onClickAction: (Element) -> Unit) {
     val container = Div("app-icon-container")
     container.Div("app-icon") {
-
         setAttributes("onfocus" to "this.blur()")
 
         /* ktlint-disable max-line-length */
