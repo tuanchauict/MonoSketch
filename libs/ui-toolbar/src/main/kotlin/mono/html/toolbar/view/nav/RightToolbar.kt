@@ -40,10 +40,6 @@ internal fun Element.RightToolbar(
     }
     DropDownMenuIcon {
         val items = listOf(
-            Text("Save As...", OneTimeActionType.SaveShapesAs),
-            Text("Open File...", OneTimeActionType.OpenShapes),
-            Text("Export Text", OneTimeActionType.ExportSelectedShapes),
-            DropDownMenu.Item.Divider(),
             Text(
                 "Show Format panel",
                 OneTimeActionType.ShowFormatPanel
