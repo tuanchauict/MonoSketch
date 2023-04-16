@@ -6,6 +6,7 @@ package mono.store.manager
 
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
+import mono.store.manager.migrations.Migration
 import org.w3c.dom.StorageEvent
 import org.w3c.dom.get
 import org.w3c.dom.set
@@ -15,9 +16,25 @@ import org.w3c.dom.set
  */
 class StoreManager private constructor() {
     private val keyToObserverMap: MutableMap<String, StoreObserver> = mutableMapOf()
+    private val migrations: Map<Int, Migration> =
+        listOf<Migration>(
+        ).associateBy { it.targetVersion }
 
     init {
+        migrate()
+
         window.onstorage = ::onStorageChange
+    }
+
+    private fun migrate() {
+        // handle migration, default does not have app version
+        val currentDbVersion = get(StoreKeys.DB_VERSION)?.toIntOrNull() ?: 1
+
+        for (version in currentDbVersion + 1..DB_VERSION) {
+            migrations[version]?.migrate(this)
+        }
+
+        set(StoreKeys.DB_VERSION, DB_VERSION.toString())
     }
 
     fun set(key: String, json: String) {
@@ -54,6 +71,8 @@ class StoreManager private constructor() {
     }
 
     companion object {
+        private const val DB_VERSION = 1
+
         private var instance: StoreManager? = null
 
         fun getInstance(): StoreManager {
