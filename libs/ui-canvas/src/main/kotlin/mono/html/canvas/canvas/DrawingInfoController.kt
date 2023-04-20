@@ -71,6 +71,10 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         return SizeF(cWidth, cHeight)
     }
 
+    /**
+     * A data class to hold drawing info and provide conversion functions for converting between
+     * pixel unit and board unit.
+     */
     internal data class DrawingInfo(
         val offsetPx: Point = Point.ZERO,
         val cellSizePx: SizeF = SizeF(1.0, 1.0),
@@ -92,11 +96,46 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         internal val boardColumnRange: IntRange =
             boardOffsetColumn..(boardOffsetColumn + columnCount)
 
+        /**
+         * Converts the board column to pixel X coordinate.
+         * Algorithm:
+         * 1. Multiply the board column by the cell width.
+         * 2. Add the left offset.
+         */
         fun toXPx(column: Double): Double = floor(offsetPx.left + cellSizePx.width * column)
+
+        /**
+         * Converts the board row to pixel Y coordinate.
+         * Algorithm:
+         * 1. Multiply the board row by the cell height.
+         * 2. Add the top offset.
+         */
         fun toYPx(row: Double): Double = floor(offsetPx.top + cellSizePx.height * row)
+
+        /**
+         * Converts the screen Y coordinate (pixel) to the board row.
+         * Algorithm:
+         * 1. Subtract the top offset from the Y coordinate.
+         * 2. Divide the result by the cell height.
+         */
         fun toBoardRow(yPx: Int): Int = floor((yPx - offsetPx.top) / cellSizePx.height).toInt()
+
+        /**
+         * Converts the screen X coordinate (pixel) to the board column.
+         * Algorithm:
+         * 1. Subtract the left offset from the X coordinate.
+         * 2. Divide the result by the cell width.
+         */
         fun toBoardColumn(xPx: Int): Int = floor((xPx - offsetPx.left) / cellSizePx.width).toInt()
+
+        /**
+         * Converts the width in the board unit to pixel unit.
+         */
         fun toWidthPx(width: Double) = floor(cellSizePx.width * width)
+
+        /**
+         * Converts the height in the board unit to pixel unit.
+         */
         fun toHeightPx(height: Double) = floor(cellSizePx.height * height)
     }
 
