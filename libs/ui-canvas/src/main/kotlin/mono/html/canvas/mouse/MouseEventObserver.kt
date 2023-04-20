@@ -186,6 +186,10 @@ internal class MouseEventObserver(
 
     private fun MouseEvent.toPointPx(): Point = Point(offsetX.toInt(), offsetY.toInt())
 
+    /**
+     * A class for detecting double click.
+     * If two mouse ups happen within 500ms, it's a double click.
+     */
     private class MouseDoubleClickDetector {
         private var lastMouseUpMillis: Long = 0
         private var mouseUpCount: Int = 0
