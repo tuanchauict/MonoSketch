@@ -21,6 +21,7 @@ import org.w3c.dom.LEFT
 import org.w3c.dom.MIDDLE
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.round
 
 /**
  * A controller class to manage drawing info for the other canvas.
@@ -129,6 +130,24 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         fun toBoardColumn(xPx: Int): Int = floor((xPx - offsetPx.left) / cellSizePx.width).toInt()
 
         /**
+         * Converts the pixel Y coordinate (pixel) to the board row with 1 decimal place.
+         * Algorithm:
+         * 1. Subtract the top offset from the Y coordinate.
+         * 2. Divide the result by the cell height.
+         */
+        fun toBoardRowF(yPx: Int): Double =
+            roundTo1DecimalPlace((yPx - offsetPx.top) / cellSizePx.height)
+
+        /**
+         * Converts the screen X coordinate (pixel) to the board column with 1 decimal place.
+         * Algorithm:
+         * 1. Subtract the left offset from the X coordinate.
+         * 2. Divide the result by the cell width.
+         */
+        fun toBoardColumnF(xPx: Int): Double =
+            roundTo1DecimalPlace((xPx - offsetPx.left) / cellSizePx.width)
+
+        /**
          * Converts the width in the board unit to pixel unit.
          */
         fun toWidthPx(width: Double) = floor(cellSizePx.width * width)
@@ -137,6 +156,13 @@ internal class DrawingInfoController(container: HTMLDivElement) {
          * Converts the height in the board unit to pixel unit.
          */
         fun toHeightPx(height: Double) = floor(cellSizePx.height * height)
+
+        /**
+         * Rounds the value to 1 decimal place.
+         */
+        private fun roundTo1DecimalPlace(value: Double): Double {
+            return round(value * 10.0) / 10.0
+        }
     }
 
     companion object {
