@@ -7,7 +7,7 @@ package mono.state.command.mouse
 import mono.common.MouseCursor
 import mono.common.exhaustive
 import mono.graphics.geo.MousePointer
-import mono.graphics.geo.Point
+import mono.graphics.geo.PointF
 import mono.shape.command.ChangeBound
 import mono.shape.shape.AbstractShape
 import mono.shapebound.ScaleInteractionPoint
@@ -28,8 +28,8 @@ internal class ScaleShapeMouseCommand(
         mousePointer: MousePointer
     ): MouseCommand.CommandResultType {
         when (mousePointer) {
-            is MousePointer.Drag -> scale(environment, mousePointer.point)
-            is MousePointer.Up -> scale(environment, mousePointer.point)
+            is MousePointer.Drag -> scale(environment, mousePointer.boardCoordinateF)
+            is MousePointer.Up -> scale(environment, mousePointer.boardCoordinateF)
             is MousePointer.Down,
             is MousePointer.Click,
             is MousePointer.DoubleClick,
@@ -44,8 +44,9 @@ internal class ScaleShapeMouseCommand(
         }
     }
 
-    private fun scale(environment: CommandEnvironment, point: Point) {
-        val newBound = interactionPoint.createNewShapeBound(initialBound, point)
+    private fun scale(environment: CommandEnvironment, pointF: PointF) {
+        val newBound =
+            interactionPoint.createNewShapeBound(initialBound, pointF)
         environment.shapeManager.execute(ChangeBound(shape, newBound))
 
         environment.updateInteractionBounds()

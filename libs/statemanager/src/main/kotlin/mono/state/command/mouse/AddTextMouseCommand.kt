@@ -36,8 +36,8 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
         when (mousePointer) {
             is MousePointer.Down -> {
                 val shape = Text(
-                    mousePointer.point,
-                    mousePointer.point,
+                    mousePointer.boardCoordinate,
+                    mousePointer.boardCoordinate,
                     parentId = environment.workingParentGroup.id,
                     isTextEditable = isTextEditable
                 )
@@ -46,10 +46,15 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
                 environment.clearSelectedShapes()
                 MouseCommand.CommandResultType.WORKING
             }
+
             is MousePointer.Drag -> {
-                environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
+                environment.changeShapeBound(
+                    mousePointer.mouseDownPoint,
+                    mousePointer.boardCoordinate
+                )
                 MouseCommand.CommandResultType.WORKING
             }
+
             is MousePointer.Up -> {
                 onMouseUp(environment, mousePointer)
                 MouseCommand.CommandResultType.WORKING_PHASE2
@@ -63,7 +68,7 @@ internal class AddTextMouseCommand(private val isTextEditable: Boolean) : MouseC
 
     private fun onMouseUp(environment: CommandEnvironment, mousePointer: MousePointer.Up) {
         val text = workingShape ?: return
-        environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
+        environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.boardCoordinate)
 
         val isFreeText = text.isFreeText()
         if (isFreeText) {

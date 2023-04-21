@@ -32,8 +32,10 @@ internal object MouseCommandFactory {
             mousePointer,
             commandType
         )
+
         is MousePointer.Click ->
             if (commandType == RetainableActionType.IDLE) SelectShapeMouseCommand else null
+
         is MousePointer.DoubleClick -> null
         is MousePointer.Move,
         is MousePointer.Drag,
@@ -77,7 +79,7 @@ internal object MouseCommandFactory {
         }
 
         if (!mousePointer.isWithShiftKey &&
-            commandEnvironment.isPointInInteractionBounds(mousePointer.point)
+            commandEnvironment.isPointInInteractionBounds(mousePointer.boardCoordinate)
         ) {
             return MoveShapeMouseCommand(selectedShapes)
         }
@@ -97,6 +99,7 @@ internal object MouseCommandFactory {
             is ScaleInteractionPoint -> ScaleShapeMouseCommand(shape, interactionPoint)
             is LineInteractionPoint ->
                 if (shape is Line) LineInteractionMouseCommand(shape, interactionPoint) else null
+
             null -> null
         }
     }
