@@ -24,12 +24,14 @@ sealed interface MousePointer {
     data class Drag(
         val mouseDownPoint: Point,
         val point: Point,
+        val boardCoordinateF: PointF,
         val isWithShiftKey: Boolean
     ) : MousePointer
 
     data class Up(
         val mouseDownPoint: Point,
         val point: Point,
+        val boardCoordinateF: PointF,
         val isWithShiftKey: Boolean
     ) : MousePointer
 

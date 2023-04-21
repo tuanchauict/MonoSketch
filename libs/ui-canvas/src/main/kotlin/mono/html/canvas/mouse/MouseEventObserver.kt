@@ -6,6 +6,7 @@ package mono.html.canvas.mouse
 
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
+import mono.graphics.geo.PointF
 import mono.html.canvas.canvas.DrawingInfoController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -68,21 +69,30 @@ internal class MouseEventObserver(
             mousePointerLiveData.value is MousePointer.Move
         ) {
             mousePointerMutableLiveData.value =
-                MousePointer.Down(event.toPoint(), event.toPointPx(), event.shiftKey)
+                MousePointer.Down(event.toBoardCoordinate(), event.toPointPx(), event.shiftKey)
         }
     }
 
     private fun setMouseUpPointer(event: MouseEvent) {
         val isDoubleClick = mouseDoubleClickDetector.onMouseUp()
         val currentValue = mousePointerLiveData.value
-        val clickPoint = event.toPoint()
 
         mousePointerMutableLiveData.value = when (currentValue) {
             is MousePointer.Down ->
-                MousePointer.Up(currentValue.point, clickPoint, event.shiftKey)
+                MousePointer.Up(
+                    currentValue.point,
+                    event.toBoardCoordinate(),
+                    event.toBoardCoordinateF(),
+                    event.shiftKey
+                )
 
             is MousePointer.Drag ->
-                MousePointer.Up(currentValue.mouseDownPoint, clickPoint, event.shiftKey)
+                MousePointer.Up(
+                    currentValue.mouseDownPoint,
+                    event.toBoardCoordinate(),
+                    event.toBoardCoordinateF(),
+                    event.shiftKey
+                )
 
             is MousePointer.Move,
             is MousePointer.Up,
@@ -93,9 +103,9 @@ internal class MouseEventObserver(
 
         if (currentValue is MousePointer.Down) {
             mousePointerMutableLiveData.value = if (isDoubleClick) {
-                MousePointer.DoubleClick(event.toPoint())
+                MousePointer.DoubleClick(event.toBoardCoordinate())
             } else {
-                MousePointer.Click(clickPoint, event.shiftKey)
+                MousePointer.Click(event.toBoardCoordinate(), event.shiftKey)
             }
         }
         mousePointerMutableLiveData.value = MousePointer.Idle
@@ -105,17 +115,27 @@ internal class MouseEventObserver(
         mouseDoubleClickDetector.reset()
         val newPointer = when (val mousePointer = mousePointerLiveData.value) {
             is MousePointer.Down ->
-                MousePointer.Drag(mousePointer.point, event.toPoint(), event.shiftKey)
+                MousePointer.Drag(
+                    mousePointer.point,
+                    event.toBoardCoordinate(),
+                    event.toBoardCoordinateF(),
+                    event.shiftKey
+                )
                     .takeIf { it.point != mousePointer.point }
 
             is MousePointer.Drag ->
-                MousePointer.Drag(mousePointer.mouseDownPoint, event.toPoint(), event.shiftKey)
+                MousePointer.Drag(
+                    mousePointer.mouseDownPoint,
+                    event.toBoardCoordinate(),
+                    event.toBoardCoordinateF(),
+                    event.shiftKey
+                )
 
             is MousePointer.Move,
             is MousePointer.Up,
             is MousePointer.Click,
             is MousePointer.DoubleClick,
-            MousePointer.Idle -> MousePointer.Move(event.toPoint(), event.toPointPx())
+            MousePointer.Idle -> MousePointer.Move(event.toBoardCoordinate(), event.toPointPx())
         } ?: return
         mousePointerMutableLiveData.value = newPointer
     }
@@ -178,10 +198,16 @@ internal class MouseEventObserver(
         }
     }
 
-    private fun MouseEvent.toPoint(): Point =
+    private fun MouseEvent.toBoardCoordinate(): Point =
         Point(
             drawingInfo.toBoardColumn(offsetX.toInt()),
             drawingInfo.toBoardRow(offsetY.toInt())
+        )
+
+    private fun MouseEvent.toBoardCoordinateF(): PointF =
+        PointF(
+            drawingInfo.toBoardColumnF(offsetX.toInt()),
+            drawingInfo.toBoardRowF(offsetY.toInt())
         )
 
     private fun MouseEvent.toPointPx(): Point = Point(offsetX.toInt(), offsetY.toInt())
