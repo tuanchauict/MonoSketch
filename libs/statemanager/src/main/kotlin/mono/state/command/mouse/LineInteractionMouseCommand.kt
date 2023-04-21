@@ -29,8 +29,8 @@ internal class LineInteractionMouseCommand(
         mousePointer: MousePointer
     ): MouseCommand.CommandResultType {
         when (mousePointer) {
-            is MousePointer.Drag -> move(environment, mousePointer.point, false)
-            is MousePointer.Up -> move(environment, mousePointer.point, true)
+            is MousePointer.Drag -> move(environment, mousePointer.boardCoordinate, false)
+            is MousePointer.Up -> move(environment, mousePointer.boardCoordinate, true)
             is MousePointer.Down,
             is MousePointer.Click,
             is MousePointer.DoubleClick,
@@ -49,6 +49,7 @@ internal class LineInteractionMouseCommand(
         when (interactionPoint) {
             is LineInteractionPoint.Anchor ->
                 moveAnchor(environment, interactionPoint, point, isReducedRequired)
+
             is LineInteractionPoint.Edge ->
                 moveEdge(environment, interactionPoint, point, isReducedRequired)
         }

@@ -25,8 +25,8 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
         mousePointer: MousePointer
     ): CommandResultType {
         val offset = when (mousePointer) {
-            is MousePointer.Drag -> mousePointer.point - mousePointer.mouseDownPoint
-            is MousePointer.Up -> mousePointer.point - mousePointer.mouseDownPoint
+            is MousePointer.Drag -> mousePointer.boardCoordinate - mousePointer.mouseDownPoint
+            is MousePointer.Up -> mousePointer.boardCoordinate - mousePointer.mouseDownPoint
             is MousePointer.Down,
             is MousePointer.Click,
             is MousePointer.DoubleClick,

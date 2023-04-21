@@ -80,7 +80,7 @@ internal class MouseEventObserver(
         mousePointerMutableLiveData.value = when (currentValue) {
             is MousePointer.Down ->
                 MousePointer.Up(
-                    currentValue.point,
+                    currentValue.boardCoordinate,
                     event.toBoardCoordinate(),
                     event.toBoardCoordinateF(),
                     event.shiftKey
@@ -116,12 +116,12 @@ internal class MouseEventObserver(
         val newPointer = when (val mousePointer = mousePointerLiveData.value) {
             is MousePointer.Down ->
                 MousePointer.Drag(
-                    mousePointer.point,
+                    mousePointer.boardCoordinate,
                     event.toBoardCoordinate(),
                     event.toBoardCoordinateF(),
                     event.shiftKey
                 )
-                    .takeIf { it.point != mousePointer.point }
+                    .takeIf { it.boardCoordinate != mousePointer.boardCoordinate }
 
             is MousePointer.Drag ->
                 MousePointer.Drag(

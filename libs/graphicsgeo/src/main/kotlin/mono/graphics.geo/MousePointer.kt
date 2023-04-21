@@ -11,31 +11,31 @@ sealed interface MousePointer {
     object Idle : MousePointer
 
     data class Move(
-        val point: Point,
+        val boardCoordinate: Point,
         val pointPx: Point
     ) : MousePointer
 
     data class Down(
-        val point: Point,
+        val boardCoordinate: Point,
         val pointPx: Point,
         val isWithShiftKey: Boolean
     ) : MousePointer
 
     data class Drag(
         val mouseDownPoint: Point,
-        val point: Point,
+        val boardCoordinate: Point,
         val boardCoordinateF: PointF,
         val isWithShiftKey: Boolean
     ) : MousePointer
 
     data class Up(
         val mouseDownPoint: Point,
-        val point: Point,
+        val boardCoordinate: Point,
         val boardCoordinateF: PointF,
         val isWithShiftKey: Boolean
     ) : MousePointer
 
-    data class Click(val point: Point, val isWithShiftKey: Boolean) : MousePointer
+    data class Click(val boardCoordinate: Point, val isWithShiftKey: Boolean) : MousePointer
 
-    data class DoubleClick(val point: Point) : MousePointer
+    data class DoubleClick(val boardCoordinate: Point) : MousePointer
 }
