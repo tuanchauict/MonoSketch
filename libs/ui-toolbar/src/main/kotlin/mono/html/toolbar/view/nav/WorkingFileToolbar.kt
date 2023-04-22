@@ -39,6 +39,7 @@ internal fun Element.WorkingFileToolbar(
 
 private fun showWorkingFileMenu(anchor: Element, onActionSelected: (OneTimeActionType) -> Unit) {
     val items = listOf(
+        DropDownMenu.Item.Text("New project", OneTimeActionType.NewProject),
         DropDownMenu.Item.Text("Save As...", OneTimeActionType.SaveShapesAs),
         DropDownMenu.Item.Text("Open File...", OneTimeActionType.OpenShapes),
         DropDownMenu.Item.Text("Export Text", OneTimeActionType.ExportSelectedShapes)
