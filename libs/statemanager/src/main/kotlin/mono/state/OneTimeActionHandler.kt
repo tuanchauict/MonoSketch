@@ -32,6 +32,7 @@ import mono.shape.shape.RootGroup
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
+import mono.state.onetimeaction.FileRelatedActionsHelper
 import mono.ui.appstate.AppUiStateManager
 import mono.ui.appstate.AppUiStateManager.UiStatePayload
 
@@ -56,12 +57,16 @@ internal class OneTimeActionHandler(
     private val clipboardManager: ClipboardManager =
         ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
 
+    private val fileRelatedActions = FileRelatedActionsHelper(environment, stateHistoryManager)
+
     init {
         oneTimeActionLiveData.observe(lifecycleOwner) {
             when (it) {
                 OneTimeActionType.Idle -> Unit
 
-                // Main drop down menu
+                // File drop down menu
+                OneTimeActionType.NewProject -> fileRelatedActions.newProject()
+
                 OneTimeActionType.SaveShapesAs ->
                     saveCurrentShapesToFile()
 
@@ -71,6 +76,7 @@ internal class OneTimeActionHandler(
                 OneTimeActionType.ExportSelectedShapes ->
                     exportSelectedShapes(true)
 
+                // Main drop down menu
                 OneTimeActionType.ShowFormatPanel ->
                     uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(true))
 

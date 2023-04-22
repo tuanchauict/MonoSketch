@@ -15,6 +15,7 @@ sealed interface OneTimeActionType {
     object Idle : OneTimeActionType
 
     // Main dropdown menu
+    object NewProject : OneTimeActionType
     object SaveShapesAs : OneTimeActionType
     object OpenShapes : OneTimeActionType
     object ExportSelectedShapes : OneTimeActionType
