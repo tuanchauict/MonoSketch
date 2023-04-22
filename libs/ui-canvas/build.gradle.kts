@@ -11,27 +11,20 @@ repositories {
 }
 
 dependencies {
-    implementation(projects.actionManager)
     implementation(projects.commons)
     implementation(projects.graphicsgeo)
-    implementation(projects.keycommand)
+    implementation(projects.htmlDsl)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
     implementation(projects.monoboard)
-    implementation(projects.monobitmap)
-    implementation(projects.monobitmapManager)
-    implementation(projects.shape)
-    implementation(projects.shapeClipboard)
-    implementation(projects.shapeSelection)
-    implementation(projects.shapeSerialization)
-    implementation(projects.statemanager)
-    implementation(projects.storeManager)
+    implementation(projects.shapeInteractionBound)
     implementation(projects.uiAppStateManager)
-    implementation(projects.uiCanvas)
-    implementation(projects.uiToolbar)
+    implementation(projects.uiModal)
+    implementation(projects.uiTheme)
 
     testImplementation(libs.kotlin.test.js)
 }
+
 val compilerType: org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType by ext
 kotlin {
     js(compilerType) {

@@ -26,20 +26,21 @@ internal object SelectShapeMouseCommand : MouseCommand {
                     Rect.byLTRB(
                         mousePointer.mouseDownPoint.left,
                         mousePointer.mouseDownPoint.top,
-                        mousePointer.point.left,
-                        mousePointer.point.top
+                        mousePointer.boardCoordinate.left,
+                        mousePointer.boardCoordinate.top
                     )
                 )
                 MouseCommand.CommandResultType.WORKING
             }
+
             is MousePointer.Up -> {
                 environment.setSelectionBound(null)
 
                 val area = Rect.byLTRB(
                     mousePointer.mouseDownPoint.left,
                     mousePointer.mouseDownPoint.top,
-                    mousePointer.point.left,
-                    mousePointer.point.top
+                    mousePointer.boardCoordinate.left,
+                    mousePointer.boardCoordinate.top
                 )
 
                 val shapes = if (area.width * area.height > 1) {
@@ -56,8 +57,9 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 }
                 MouseCommand.CommandResultType.WORKING
             }
+
             is MousePointer.Click -> {
-                val shapes = environment.shapeSearcher.getShapes(mousePointer.point)
+                val shapes = environment.shapeSearcher.getShapes(mousePointer.boardCoordinate)
                 if (shapes.isNotEmpty()) {
                     val shape = shapes.last()
                     if (mousePointer.isWithShiftKey) {
@@ -69,6 +71,7 @@ internal object SelectShapeMouseCommand : MouseCommand {
                 }
                 MouseCommand.CommandResultType.DONE
             }
+
             is MousePointer.DoubleClick,
             is MousePointer.Move,
             MousePointer.Idle -> MouseCommand.CommandResultType.DONE

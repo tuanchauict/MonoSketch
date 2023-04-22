@@ -4,18 +4,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
-  </component>
-  <component name="SuppressABINotification">
-    <option name="modulesWithSuppressedNotConfigured">
-      <set>
-        <option value="MonoFlow.htmlcanvas" />
-        <option value="MonoFlow.monobitmap" />
-        <option value="MonoFlow.monobitmap-manager" />
-        <option value="MonoFlow.monoboard" />
-        <option value="MonoFlow.shape" />
-      </set>
-    </option>
   </component>
 </project>

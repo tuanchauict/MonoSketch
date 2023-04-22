@@ -140,7 +140,8 @@ class MainStateManager(
     private fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.DoubleClick) {
             val targetedShape =
-                environment.getSelectedShapes().firstOrNull { it.contains(mousePointer.point) }
+                environment.getSelectedShapes()
+                    .firstOrNull { it.contains(mousePointer.boardCoordinate) }
             actionManager.setOneTimeAction(OneTimeActionType.EditSelectedShape(targetedShape))
             return
         }
