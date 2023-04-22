@@ -29,18 +29,29 @@ internal class AddShapeMouseCommand(private val shapeFactory: ShapeFactory) : Mo
         when (mousePointer) {
             is MousePointer.Down -> {
                 val shape =
-                    shapeFactory.createShape(mousePointer.point, environment.workingParentGroup.id)
+                    shapeFactory.createShape(
+                        mousePointer.boardCoordinate,
+                        environment.workingParentGroup.id
+                    )
                 workingShape = shape
                 environment.addShape(shape)
                 environment.clearSelectedShapes()
                 MouseCommand.CommandResultType.WORKING
             }
+
             is MousePointer.Drag -> {
-                environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
+                environment.changeShapeBound(
+                    mousePointer.mouseDownPoint,
+                    mousePointer.boardCoordinate
+                )
                 MouseCommand.CommandResultType.WORKING
             }
+
             is MousePointer.Up -> {
-                environment.changeShapeBound(mousePointer.mouseDownPoint, mousePointer.point)
+                environment.changeShapeBound(
+                    mousePointer.mouseDownPoint,
+                    mousePointer.boardCoordinate
+                )
                 environment.addSelectedShape(workingShape)
                 workingShape = null
                 MouseCommand.CommandResultType.DONE

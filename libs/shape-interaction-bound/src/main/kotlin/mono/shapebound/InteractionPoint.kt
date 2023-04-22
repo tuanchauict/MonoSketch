@@ -5,9 +5,10 @@
 package mono.shapebound
 
 import mono.common.MouseCursor
-import mono.graphics.geo.Point
+import mono.graphics.geo.PointF
 import mono.graphics.geo.Rect
 import mono.shape.shape.Line
+import kotlin.math.floor
 
 /**
  * A sealed class for defining all possible interaction point types for a shape and common apis.
@@ -30,15 +31,20 @@ sealed class ScaleInteractionPoint(
     top: Double,
     mouseCursor: MouseCursor
 ) : InteractionPoint(shapeId, left, top, mouseCursor) {
-    abstract fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect
+    abstract fun createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect
 
     class TopLeft(
         shapeId: String,
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NWSE) {
-        override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
-            Rect.byLTRB(newPoint.left, newPoint.top, currentBound.right, currentBound.bottom)
+
+        override fun createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect = Rect.byLTRB(
+            adjustUpperBound(newPoint.left),
+            adjustUpperBound(newPoint.top),
+            currentBound.right,
+            currentBound.bottom
+        )
     }
 
     class TopMiddle(
@@ -46,8 +52,13 @@ sealed class ScaleInteractionPoint(
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NS) {
-        override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
-            Rect.byLTRB(currentBound.left, newPoint.top, currentBound.right, currentBound.bottom)
+
+        override fun createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect = Rect.byLTRB(
+            currentBound.left,
+            adjustUpperBound(newPoint.top),
+            currentBound.right,
+            currentBound.bottom
+        )
     }
 
     class TopRight(
@@ -55,8 +66,13 @@ sealed class ScaleInteractionPoint(
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NESW) {
-        override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
-            Rect.byLTRB(currentBound.left, newPoint.top, newPoint.left, currentBound.bottom)
+
+        override fun createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect = Rect.byLTRB(
+            currentBound.left,
+            adjustUpperBound(newPoint.top),
+            adjustLowerBound(newPoint.left),
+            currentBound.bottom
+        )
     }
 
     class MiddleLeft(
@@ -64,8 +80,13 @@ sealed class ScaleInteractionPoint(
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_EW) {
-        override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
-            Rect.byLTRB(newPoint.left, currentBound.top, currentBound.right, currentBound.bottom)
+
+        override fun createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect = Rect.byLTRB(
+            adjustUpperBound(newPoint.left),
+            currentBound.top,
+            currentBound.right,
+            currentBound.bottom
+        )
     }
 
     class MiddleRight(
@@ -73,8 +94,13 @@ sealed class ScaleInteractionPoint(
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_EW) {
-        override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
-            Rect.byLTRB(currentBound.left, currentBound.top, newPoint.left, currentBound.bottom)
+
+        override fun createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect = Rect.byLTRB(
+            currentBound.left,
+            currentBound.top,
+            adjustLowerBound(newPoint.left),
+            currentBound.bottom
+        )
     }
 
     class BottomLeft(
@@ -82,8 +108,13 @@ sealed class ScaleInteractionPoint(
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NESW) {
-        override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
-            Rect.byLTRB(newPoint.left, currentBound.top, currentBound.right, newPoint.top)
+
+        override fun createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect = Rect.byLTRB(
+            adjustUpperBound(newPoint.left),
+            currentBound.top,
+            currentBound.right,
+            adjustLowerBound(newPoint.top)
+        )
     }
 
     class BottomMiddle(
@@ -91,8 +122,13 @@ sealed class ScaleInteractionPoint(
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NS) {
-        override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
-            Rect.byLTRB(currentBound.left, currentBound.top, currentBound.right, newPoint.top)
+
+        override fun createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect = Rect.byLTRB(
+            currentBound.left,
+            currentBound.top,
+            currentBound.right,
+            adjustLowerBound(newPoint.top)
+        )
     }
 
     class BottomRight(
@@ -100,8 +136,29 @@ sealed class ScaleInteractionPoint(
         left: Double,
         top: Double
     ) : ScaleInteractionPoint(shapeId, left, top, MouseCursor.RESIZE_NWSE) {
-        override fun createNewShapeBound(currentBound: Rect, newPoint: Point): Rect =
-            Rect.byLTRB(currentBound.left, currentBound.top, newPoint.left, newPoint.top)
+
+        override fun createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect {
+            return Rect.byLTRB(
+                currentBound.left,
+                currentBound.top,
+                adjustLowerBound(newPoint.left),
+                adjustLowerBound(newPoint.top)
+            )
+        }
+    }
+
+    companion object {
+        /**
+         * Adjust the value of interaction bound to ensure the mouse cursor is located at the
+         * interaction point for left and top edges.
+         */
+        private fun adjustUpperBound(value: Double): Int = floor(value + 0.8).toInt()
+
+        /**
+         * Adjust the value of interaction bound to ensure the mouse cursor is located at the
+         * interaction point for bottom and right edges.
+         */
+        private fun adjustLowerBound(value: Double): Int = floor(value - 0.8).toInt()
     }
 }
 
