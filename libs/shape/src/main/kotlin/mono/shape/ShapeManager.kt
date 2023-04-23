@@ -23,6 +23,10 @@ class ShapeManager {
         private set
     private var allShapeMap: MutableMap<String, AbstractShape> = mutableMapOf(root.id to root)
 
+    // TODO: Consider consolidate `root` and `rootMutableLiveData`.
+    private val rootMutableLiveData = MutableLiveData(root)
+    val rootLiveData: LiveData<RootGroup> = rootMutableLiveData
+
     /**
      * Reflect the version of the root through live data. The other components are able to observe
      * this version to decide update internally.
@@ -41,6 +45,7 @@ class ShapeManager {
     fun replaceRoot(newRoot: RootGroup) {
         val currentVersion = root.versionCode
         root = newRoot
+        rootMutableLiveData.value = newRoot
 
         allShapeMap = createAllShapeMap(newRoot)
 

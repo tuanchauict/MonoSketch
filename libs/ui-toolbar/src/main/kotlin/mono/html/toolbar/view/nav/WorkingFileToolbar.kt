@@ -12,16 +12,24 @@ import mono.html.Span
 import mono.html.SvgIcon
 import mono.html.modal.DropDownMenu
 import mono.html.setOnClickListener
+import mono.lifecycle.LifecycleOwner
+import mono.livedata.LiveData
 import org.w3c.dom.Element
 
 internal fun Element.WorkingFileToolbar(
+    lifecycleOwner: LifecycleOwner,
+    filenameLiveData: LiveData<String>,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     Div("working-file-container") {
         Div("divider")
 
         val fileInfo = Div("file-info") {
-            Span("title", "File name")
+            Span("title") {
+                filenameLiveData.observe(lifecycleOwner) {
+                    innerText = it
+                }
+            }
             Div("menu-down-icon") {
                 SvgIcon(
                     width = 12,

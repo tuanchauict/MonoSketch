@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.htmlDsl)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
+    implementation(projects.storeDao)
     implementation(projects.uiAppStateManager)
     implementation(projects.uiModal)
     implementation(projects.uiTheme)

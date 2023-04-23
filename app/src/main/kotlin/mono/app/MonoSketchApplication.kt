@@ -87,6 +87,8 @@ class MonoSketchApplication : LifecycleOwner() {
 
         NavBarViewController(
             this,
+            model.applicationActiveStateLiveData,
+            shapeManager.rootLiveData.map { it.id },
             appUiStateManager,
             actionManager
         )
