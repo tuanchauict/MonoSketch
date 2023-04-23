@@ -4,7 +4,6 @@
 
 package mono.state
 
-import mono.common.currentTimeMillis
 import mono.common.setTimeout
 import mono.environment.Build
 import mono.html.canvas.CanvasViewController
@@ -14,6 +13,7 @@ import mono.shape.serialization.SerializableGroup
 import mono.shape.shape.RootGroup
 import mono.state.command.CommandEnvironment
 import mono.store.dao.workspace.WorkspaceDao
+import mono.store.dao.workspace.WorkspaceObjectDao
 import mono.uuid.UUID
 
 /**
@@ -27,16 +27,20 @@ internal class StateHistoryManager(
 ) {
     private val historyStack = HistoryStack()
 
+    /**
+     * Restores and starts observing the state change of the object with [rootId].
+     * If [rootId] is empty, the last opened object is used. In case of there is no objects in the
+     * database, a new ID is generated with [UUID.generate].
+     *
+     * If [rootId] is not in the database, a new object will be created and use [rootId] as the id
+     * of the root shape.
+     */
     fun restoreAndStartObserveStateChange(rootId: String) {
-        val adjustedRootId = rootId.ifEmpty {
-            workspaceDao.lastOpenedObjectId ?: UUID.generate()
-        }
+        val objectDao = getObjectDaoById(rootId)
 
-        restoreShapes(adjustedRootId)
-        canvasViewController.setOffset(workspaceDao.getObject(adjustedRootId).offset)
-
-        workspaceDao.lastOpenedObjectId = adjustedRootId
-        workspaceDao.getObject(adjustedRootId).lastOpened = currentTimeMillis()
+        restoreShapes(objectDao)
+        canvasViewController.setOffset(objectDao.offset)
+        objectDao.updateLastOpened()
 
         combineLiveData(
             environment.shapeManager.versionLiveData,
@@ -51,6 +55,20 @@ internal class StateHistoryManager(
             workspaceDao.getObject(environment.shapeManager.root.id).offset = it
         }
     }
+
+    /**
+     * Gets the [WorkspaceObjectDao] with [rootId].
+     * If [rootId] is not empty, the object with [rootId] is returned even if it is not in the
+     * database.
+     * If [rootId] is empty, the last opened object is used. In case of there is no objects in the
+     * database, a new ID is generated with [UUID.generate].
+     */
+    private fun getObjectDaoById(rootId: String): WorkspaceObjectDao =
+        if (rootId.isNotEmpty()) {
+            workspaceDao.getObject(rootId)
+        } else {
+            workspaceDao.getObjects().firstOrNull() ?: workspaceDao.getObject(UUID.generate())
+        }
 
     fun clear() = historyStack.clear()
 
@@ -84,12 +102,12 @@ internal class StateHistoryManager(
         workspaceDao.getObject(root.id).rootGroup = serializableGroup
     }
 
-    private fun restoreShapes(rootId: String = "") {
-        val serializableGroup = workspaceDao.getObject(rootId).rootGroup
+    private fun restoreShapes(objectDao: WorkspaceObjectDao) {
+        val serializableGroup = objectDao.rootGroup
         val rootGroup = if (serializableGroup != null) {
             RootGroup(serializableGroup)
         } else {
-            RootGroup(rootId)
+            RootGroup(objectDao.objectId)
         }
         environment.replaceRoot(rootGroup)
     }

@@ -19,7 +19,7 @@ import mono.store.manager.StoreKeys.OBJECT_OFFSET
  * A dao for an object (aka project or file) in the workspace.
  */
 class WorkspaceObjectDao internal constructor(
-    objectId: String,
+    val objectId: String,
     workspaceDocument: StorageDocument
 ) {
 
@@ -68,8 +68,11 @@ class WorkspaceObjectDao internal constructor(
             val lastOpenedString = objectDocument.get(OBJECT_LAST_OPENED)
             return lastOpenedString?.toDoubleOrNull() ?: currentTimeMillis()
         }
-        set(value) = objectDocument.set(OBJECT_LAST_OPENED, value.toString())
+        private set(value) = objectDocument.set(OBJECT_LAST_OPENED, value.toString())
 
+    fun updateLastOpened() {
+        lastOpened = currentTimeMillis()
+    }
 
     fun removeSelf() {
         with(objectDocument) {
