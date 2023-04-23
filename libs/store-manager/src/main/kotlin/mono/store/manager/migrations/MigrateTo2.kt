@@ -25,10 +25,8 @@ internal object MigrateTo2 : Migration(2) {
     }
 
     private fun migrateWorkspace(storageManager: StoreManager) {
-        storageManager.migrateAndRemove(
-            oldKey = "last-open",
-            newKey = getPath(StoreKeys.WORKSPACE, StoreKeys.LAST_OPEN)
-        )
+        val lastOpenId = storageManager.get("last-open")
+        storageManager.remove("last-open")
 
         val backupShapeKeyPrefix = "backup-shapes:"
         val shapeIds = storageManager
@@ -52,6 +50,18 @@ internal object MigrateTo2 : Migration(2) {
                 oldKey = "name:$id",
                 newKey = getPath(objectKey, StoreKeys.OBJECT_NAME),
                 defaultValue = "Undefined"
+            )
+
+            storageManager.migrateAndRemove(
+                oldKey = "last-modified:$id",
+                newKey = getPath(objectKey, StoreKeys.OBJECT_LAST_MODIFIED),
+                defaultValue = "0"
+            )
+
+            storageManager.migrateAndRemove(
+                oldKey = "last-opened:$id",
+                newKey = getPath(objectKey, StoreKeys.OBJECT_LAST_OPENED),
+                defaultValue = if (id == lastOpenId) "1" else "0"
             )
         }
     }
