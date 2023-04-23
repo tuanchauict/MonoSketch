@@ -32,7 +32,7 @@ class WorkspaceDao private constructor(
 
     fun removeObject(objectId: String) {
         getObject(objectId).removeSelf()
-        // TODO: 
+        // TODO:
         //  If the object is currently open, choose a latest opened object and make it active.
         //  If no object left, create a blank workspace.
         objectDaos.remove(objectId)
