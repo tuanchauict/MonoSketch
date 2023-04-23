@@ -22,6 +22,19 @@ class WorkspaceDao private constructor(
             }
         }
 
+    private val objectDaos: MutableMap<String, WorkspaceObjectDao> = mutableMapOf()
+
+    fun getObject(objectId: String): WorkspaceObjectDao = objectDaos.getOrPut(objectId) {
+        WorkspaceObjectDao(objectId, workspaceDocument)
+    }
+
+    fun removeObject(objectId: String) {
+        // TODO: remove object in the local storage
+        //  If the object is currently open, choose a latest opened object and make it active.
+        //  If no object left, create a blank workspace.
+        objectDaos.remove(objectId)
+    }
+
     companion object {
         val instance: WorkspaceDao by lazy { WorkspaceDao(StorageDocument.get(WORKSPACE)) }
     }

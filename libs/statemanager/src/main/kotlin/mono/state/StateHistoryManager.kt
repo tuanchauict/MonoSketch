@@ -6,7 +6,6 @@ package mono.state
 
 import mono.common.setTimeout
 import mono.environment.Build
-import mono.graphics.geo.Point
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.combineLiveData
@@ -17,7 +16,6 @@ import mono.state.command.CommandEnvironment
 import mono.store.dao.workspace.WorkspaceDao
 import mono.store.manager.StorageDocument
 import mono.store.manager.StoreKeys.OBJECT_CONTENT
-import mono.store.manager.StoreKeys.OBJECT_OFFSET
 import mono.store.manager.StoreKeys.WORKSPACE
 import mono.uuid.UUID
 
@@ -39,7 +37,7 @@ internal class StateHistoryManager(
         }
 
         restoreShapes(adjustedRootId)
-        restoreOffset(adjustedRootId)
+        canvasViewController.setOffset(workspaceDao.getObject(adjustedRootId).offset)
 
         workspaceDao.lastOpenedObjectId = adjustedRootId
 
@@ -53,8 +51,7 @@ internal class StateHistoryManager(
         }
 
         canvasViewController.drawingOffsetPointPxLiveData.observe(lifecycleOwner) {
-            workspaceDocument.childDocument(environment.shapeManager.root.id)
-                .set(OBJECT_OFFSET, "${it.left}|${it.top}")
+            workspaceDao.getObject(environment.shapeManager.root.id).offset = it
         }
     }
 
@@ -101,18 +98,6 @@ internal class StateHistoryManager(
             RootGroup(rootId)
         }
         environment.replaceRoot(rootGroup)
-    }
-
-    private fun restoreOffset(rootId: String = "") {
-        workspaceDocument.childDocument(rootId).get(OBJECT_OFFSET)
-        val storedOffsetString =
-            workspaceDocument.childDocument(rootId).get(OBJECT_OFFSET) ?: return
-        val (leftString, topString) = storedOffsetString.split('|').takeIf { it.size == 2 }
-            ?: return
-        val left = leftString.toIntOrNull() ?: return
-        val top = topString.toIntOrNull() ?: return
-        val offset = Point(left, top)
-        canvasViewController.setOffset(offset)
     }
 
     private class HistoryStack {
