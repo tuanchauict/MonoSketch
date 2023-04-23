@@ -4,6 +4,7 @@
 
 package mono.state
 
+import mono.common.currentTimeMillis
 import mono.common.setTimeout
 import mono.environment.Build
 import mono.html.canvas.CanvasViewController
@@ -35,6 +36,7 @@ internal class StateHistoryManager(
         canvasViewController.setOffset(workspaceDao.getObject(adjustedRootId).offset)
 
         workspaceDao.lastOpenedObjectId = adjustedRootId
+        workspaceDao.getObject(adjustedRootId).lastOpened = currentTimeMillis()
 
         combineLiveData(
             environment.shapeManager.versionLiveData,

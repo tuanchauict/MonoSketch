@@ -11,12 +11,13 @@ repositories {
 }
 
 dependencies {
-    implementation(projects.storeManager)
+    implementation(projects.commons)
     implementation(projects.graphicsgeo)
+    implementation(projects.shape)
+    implementation(projects.shapeSerialization)
+    implementation(projects.storeManager)
 
     implementation(libs.kotlin.stdlib.js)
-    implementation(project(mapOf("path" to ":shape")))
-    implementation(project(mapOf("path" to ":shape-serialization")))
     testImplementation(libs.kotlin.test.js)
 }
 

@@ -4,11 +4,15 @@
 
 package mono.store.dao.workspace
 
+import mono.common.currentTimeMillis
 import mono.graphics.geo.Point
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.store.manager.StorageDocument
 import mono.store.manager.StoreKeys.OBJECT_CONTENT
+import mono.store.manager.StoreKeys.OBJECT_LAST_MODIFIED
+import mono.store.manager.StoreKeys.OBJECT_LAST_OPENED
+import mono.store.manager.StoreKeys.OBJECT_NAME
 import mono.store.manager.StoreKeys.OBJECT_OFFSET
 
 /**
@@ -42,5 +46,37 @@ class WorkspaceObjectDao internal constructor(
                 val json = ShapeSerializationUtil.toJson(value)
                 objectDocument.set(OBJECT_CONTENT, json)
             }
+            lastModifiedTimestampMillis = currentTimeMillis()
         }
+
+    var name: String
+        get() = objectDocument.get(OBJECT_NAME) ?: "Undefined"
+        set(value) {
+            objectDocument.set(OBJECT_NAME, value)
+            lastModifiedTimestampMillis = currentTimeMillis()
+        }
+
+    var lastModifiedTimestampMillis: Double
+        get() {
+            val lastModifiedString = objectDocument.get(OBJECT_LAST_MODIFIED)
+            return lastModifiedString?.toDoubleOrNull() ?: currentTimeMillis()
+        }
+        private set(value) = objectDocument.set(OBJECT_LAST_MODIFIED, value.toString())
+
+    var lastOpened: Double
+        get() {
+            val lastOpenedString = objectDocument.get(OBJECT_LAST_OPENED)
+            return lastOpenedString?.toDoubleOrNull() ?: currentTimeMillis()
+        }
+        set(value) = objectDocument.set(OBJECT_LAST_OPENED, value.toString())
+
+
+    fun removeSelf() {
+        with(objectDocument) {
+            remove(OBJECT_OFFSET)
+            remove(OBJECT_CONTENT)
+            remove(OBJECT_NAME)
+            remove(OBJECT_LAST_MODIFIED)
+        }
+    }
 }
