@@ -35,6 +35,12 @@ internal class FileRelatedActionsHelper(
         replaceWorkspace(RootGroup(null)) // passing null to let the ID generated automatically
     }
 
+    fun renameProject() {
+        val currentRootId = environment.shapeManager.root.id
+        println("Renaming project: $currentRootId")
+        // TODO: Show the rename dialog
+    }
+
     fun saveCurrentShapesToFile() {
         val serializableRoot = environment.shapeManager.root.toSerializableShape(true)
         fileMediator.saveFile(ShapeSerializationUtil.toJson(serializableRoot))
