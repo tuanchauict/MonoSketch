@@ -31,6 +31,7 @@ dependencies {
     implementation(projects.shapeSelection)
     implementation(projects.shapeSerialization)
     implementation(projects.shapesearcher)
+    implementation(projects.storeDao)
     implementation(projects.storeManager)
     implementation(projects.uiAppStateManager)
     implementation(projects.uiCanvas)

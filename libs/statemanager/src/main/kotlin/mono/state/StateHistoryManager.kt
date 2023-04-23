@@ -14,8 +14,8 @@ import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.RootGroup
 import mono.state.command.CommandEnvironment
+import mono.store.dao.workspace.WorkspaceDao
 import mono.store.manager.StorageDocument
-import mono.store.manager.StoreKeys.LAST_OPEN
 import mono.store.manager.StoreKeys.OBJECT_CONTENT
 import mono.store.manager.StoreKeys.OBJECT_OFFSET
 import mono.store.manager.StoreKeys.WORKSPACE
@@ -28,19 +28,20 @@ internal class StateHistoryManager(
     private val lifecycleOwner: LifecycleOwner,
     private val environment: CommandEnvironment,
     private val canvasViewController: CanvasViewController,
-    private val workspaceDocument: StorageDocument = StorageDocument.get(WORKSPACE)
+    private val workspaceDocument: StorageDocument = StorageDocument.get(WORKSPACE),
+    private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
 ) {
     private val historyStack = HistoryStack()
 
     fun restoreAndStartObserveStateChange(rootId: String) {
         val adjustedRootId = rootId.ifEmpty {
-            workspaceDocument.get(LAST_OPEN) ?: UUID.generate()
+            workspaceDao.lastOpenedObjectId ?: UUID.generate()
         }
 
         restoreShapes(adjustedRootId)
         restoreOffset(adjustedRootId)
 
-        workspaceDocument.set(LAST_OPEN, adjustedRootId)
+        workspaceDao.lastOpenedObjectId = adjustedRootId
 
         combineLiveData(
             environment.shapeManager.versionLiveData,
