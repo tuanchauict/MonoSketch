@@ -40,7 +40,6 @@ internal class StateHistoryManager(
 
         restoreShapes(objectDao)
         canvasViewController.setOffset(objectDao.offset)
-        objectDao.updateLastOpened()
 
         combineLiveData(
             environment.shapeManager.versionLiveData,
