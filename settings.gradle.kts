@@ -25,13 +25,14 @@ val moduleMap = mapOf(
     "shape-serialization" to "libs/shape-serialization",
     "shapesearcher" to "libs/shapesearcher",
     "statemanager" to "libs/statemanager",
+    "store-dao" to "libs/store-dao",
     "store-manager" to "libs/store-manager",
     "ui-app-state-manager" to "libs/ui-app-state-manager",
     "ui-canvas" to "libs/ui-canvas",
     "ui-modal" to "libs/ui-modal",
     "ui-theme" to "libs/ui-theme",
     "ui-toolbar" to "libs/ui-toolbar",
-    "uuid" to "libs/uuid",
+    "uuid" to "libs/uuid"
 )
 
 moduleMap.entries.forEach { (name, path) ->

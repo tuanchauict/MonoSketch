@@ -43,6 +43,7 @@ import mono.state.command.CommandEnvironment
 import mono.state.command.CommandEnvironment.EditingMode
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
+import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.appstate.AppUiStateManager
 
 /**
@@ -59,7 +60,8 @@ class MainStateManager(
     mousePointerLiveData: LiveData<MousePointer>,
     private val actionManager: ActionManager,
     appUiStateManager: AppUiStateManager,
-    initialRootId: String = ""
+    initialRootId: String = "",
+    private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
@@ -284,6 +286,7 @@ class MainStateManager(
             shapeManager.replaceRoot(newRoot)
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
+            stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
         }
 
         override fun enterEditingMode() {
