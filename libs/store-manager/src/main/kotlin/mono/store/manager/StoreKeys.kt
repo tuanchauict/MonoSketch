@@ -21,7 +21,10 @@ object StoreKeys {
     const val OBJECT_CONTENT = "content"
     const val OBJECT_OFFSET = "offset"
     const val OBJECT_LAST_MODIFIED = "last-modified"
+    const val OBJECT_LAST_OPENED = "last-opened"
+
+    const val PATH_SEPARATOR = "/"
 
     fun getPath(parent: String, key: String): String =
-        if (parent.isNotEmpty()) "$parent/$key" else key
+        if (parent.isNotEmpty()) "$parent$PATH_SEPARATOR$key" else key
 }

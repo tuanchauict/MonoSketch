@@ -6,6 +6,8 @@ package mono.store.dao.workspace
 
 import mono.store.manager.StorageDocument
 import mono.store.manager.StoreKeys.LAST_OPEN
+import mono.store.manager.StoreKeys.OBJECT_CONTENT
+import mono.store.manager.StoreKeys.PATH_SEPARATOR
 import mono.store.manager.StoreKeys.WORKSPACE
 
 /**
@@ -35,6 +37,17 @@ class WorkspaceDao private constructor(
         //  If no object left, create a blank workspace.
         objectDaos.remove(objectId)
     }
+
+    /**
+     * Gets list of all objects in the storage, ordered by last opened time desc.
+     */
+    fun getObjects(): Sequence<WorkspaceObjectDao> =
+        workspaceDocument.getKeys {
+            it.startsWith(WORKSPACE + PATH_SEPARATOR) &&
+                it.endsWith(PATH_SEPARATOR + OBJECT_CONTENT)
+        }
+            .map { getObject(objectId = it.split(PATH_SEPARATOR)[1]) }
+            .sortedByDescending { it.lastOpened }
 
     companion object {
         val instance: WorkspaceDao by lazy { WorkspaceDao(StorageDocument.get(WORKSPACE)) }
