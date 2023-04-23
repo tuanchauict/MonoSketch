@@ -5,7 +5,10 @@
 package mono.store.dao.workspace
 
 import mono.graphics.geo.Point
+import mono.shape.serialization.SerializableGroup
+import mono.shape.serialization.ShapeSerializationUtil
 import mono.store.manager.StorageDocument
+import mono.store.manager.StoreKeys.OBJECT_CONTENT
 import mono.store.manager.StoreKeys.OBJECT_OFFSET
 
 /**
@@ -28,4 +31,16 @@ class WorkspaceObjectDao internal constructor(
             return Point(left, top)
         }
         set(value) = objectDocument.set(OBJECT_OFFSET, "${value.left}|${value.top}")
+
+    var rootGroup: SerializableGroup?
+        get() {
+            val json = objectDocument.get(OBJECT_CONTENT) ?: return null
+            return ShapeSerializationUtil.fromJson(json) as? SerializableGroup
+        }
+        set(value) {
+            if (value != null) {
+                val json = ShapeSerializationUtil.toJson(value)
+                objectDocument.set(OBJECT_CONTENT, json)
+            }
+        }
 }

@@ -15,6 +15,8 @@ dependencies {
     implementation(projects.graphicsgeo)
 
     implementation(libs.kotlin.stdlib.js)
+    implementation(project(mapOf("path" to ":shape")))
+    implementation(project(mapOf("path" to ":shape-serialization")))
     testImplementation(libs.kotlin.test.js)
 }
 

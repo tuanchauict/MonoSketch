@@ -10,13 +10,9 @@ import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.combineLiveData
 import mono.shape.serialization.SerializableGroup
-import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.RootGroup
 import mono.state.command.CommandEnvironment
 import mono.store.dao.workspace.WorkspaceDao
-import mono.store.manager.StorageDocument
-import mono.store.manager.StoreKeys.OBJECT_CONTENT
-import mono.store.manager.StoreKeys.WORKSPACE
 import mono.uuid.UUID
 
 /**
@@ -26,7 +22,6 @@ internal class StateHistoryManager(
     private val lifecycleOwner: LifecycleOwner,
     private val environment: CommandEnvironment,
     private val canvasViewController: CanvasViewController,
-    private val workspaceDocument: StorageDocument = StorageDocument.get(WORKSPACE),
     private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
 ) {
     private val historyStack = HistoryStack()
@@ -84,14 +79,11 @@ internal class StateHistoryManager(
 
         historyStack.pushState(root.versionCode, serializableGroup)
 
-        val jsonRoot = ShapeSerializationUtil.toJson(serializableGroup)
-        workspaceDocument.childDocument(root.id).set(OBJECT_CONTENT, jsonRoot)
+        workspaceDao.getObject(root.id).rootGroup = serializableGroup
     }
 
     private fun restoreShapes(rootId: String = "") {
-        val rootJson = workspaceDocument.childDocument(rootId).get(OBJECT_CONTENT)
-        val serializableGroup =
-            rootJson?.let(ShapeSerializationUtil::fromJson) as? SerializableGroup
+        val serializableGroup = workspaceDao.getObject(rootId).rootGroup
         val rootGroup = if (serializableGroup != null) {
             RootGroup(serializableGroup)
         } else {
