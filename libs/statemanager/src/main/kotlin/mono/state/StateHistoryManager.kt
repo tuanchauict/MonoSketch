@@ -50,7 +50,7 @@ internal class StateHistoryManager(
             }
         }
 
-        // This is tricky because the `rootId` is not used but root shape in the shape manager is 
+        // This is tricky because the `rootId` is not used but root shape in the shape manager is
         // used.
         // TODO: Move this into the caller or somewhere else.
         canvasViewController.drawingOffsetPointPxLiveData.observe(lifecycleOwner) {

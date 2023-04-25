@@ -76,4 +76,3 @@ private sealed interface DropDownItem {
     class Forwarding(val actionType: OneTimeActionType) : DropDownItem
     object Rename : DropDownItem
 }
-

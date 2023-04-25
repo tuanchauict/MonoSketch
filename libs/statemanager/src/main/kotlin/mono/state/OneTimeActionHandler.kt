@@ -62,7 +62,8 @@ internal class OneTimeActionHandler(
                 // File drop down menu
                 OneTimeActionType.NewProject -> fileRelatedActions.newProject()
 
-                is OneTimeActionType.RenameCurrentProject -> fileRelatedActions.renameProject(it.newName)
+                is OneTimeActionType.RenameCurrentProject ->
+                    fileRelatedActions.renameProject(it.newName)
 
                 OneTimeActionType.SaveShapesAs -> fileRelatedActions.saveCurrentShapesToFile()
 
