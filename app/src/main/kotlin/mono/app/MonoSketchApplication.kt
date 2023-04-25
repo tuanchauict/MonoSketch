@@ -123,6 +123,12 @@ class MonoSketchApplication : LifecycleOwner() {
             }
         }
         document.addEventListener("visibilitychange", callback)
+        window.onfocus = {
+            model.setApplicationActiveState(true)
+        }
+        window.onblur = {
+            model.setApplicationActiveState(false)
+        }
     }
 
     private fun getInitialRootIdFromUrl(): String {
