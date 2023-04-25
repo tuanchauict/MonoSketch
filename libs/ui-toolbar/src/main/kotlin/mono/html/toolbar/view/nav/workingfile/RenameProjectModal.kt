@@ -55,7 +55,7 @@ internal class RenameProjectModal(
 
     private fun confirmInputAndDismiss(newName: String) {
         if (newName.isNotBlank()) {
-            onActionSelected(OneTimeActionType.RenameProject(newName))
+            onActionSelected(OneTimeActionType.RenameCurrentProject(newName))
             targetElement.innerText = newName
         }
 

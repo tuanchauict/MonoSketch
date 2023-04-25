@@ -15,8 +15,8 @@ sealed interface OneTimeActionType {
     object Idle : OneTimeActionType
 
     // File dropdown menu
+    data class RenameCurrentProject(val newName: String) : OneTimeActionType
     object NewProject : OneTimeActionType
-    data class RenameProject(val newName: String) : OneTimeActionType
     object SaveShapesAs : OneTimeActionType
     object OpenShapes : OneTimeActionType
     object ExportSelectedShapes : OneTimeActionType
