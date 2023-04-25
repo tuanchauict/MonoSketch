@@ -13,6 +13,7 @@ import mono.shape.shape.RootGroup
 import mono.state.FileMediator
 import mono.state.StateHistoryManager
 import mono.state.command.CommandEnvironment
+import mono.store.dao.workspace.WorkspaceDao
 
 /**
  * A helper class to handle file-related one-time actions in the application.
@@ -23,7 +24,8 @@ internal class FileRelatedActionsHelper(
     private val environment: CommandEnvironment,
     private val stateHistoryManager: StateHistoryManager,
     bitmapManager: MonoBitmapManager,
-    shapeClipboardManager: ShapeClipboardManager
+    shapeClipboardManager: ShapeClipboardManager,
+    private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
 ) {
     private val fileMediator: FileMediator = FileMediator()
     private val exportShapesHelper = ExportShapesHelper(
@@ -33,6 +35,11 @@ internal class FileRelatedActionsHelper(
 
     fun newProject() {
         replaceWorkspace(RootGroup(null)) // passing null to let the ID generated automatically
+    }
+
+    fun renameProject(newName: String) {
+        val currentRootId = environment.shapeManager.root.id
+        workspaceDao.getObject(currentRootId).name = newName
     }
 
     fun saveCurrentShapesToFile() {

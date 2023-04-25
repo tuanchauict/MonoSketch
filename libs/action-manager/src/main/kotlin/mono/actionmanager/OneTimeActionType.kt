@@ -14,11 +14,14 @@ import mono.shape.shape.AbstractShape
 sealed interface OneTimeActionType {
     object Idle : OneTimeActionType
 
-    // Main dropdown menu
+    // File dropdown menu
+    data class RenameCurrentProject(val newName: String) : OneTimeActionType
     object NewProject : OneTimeActionType
     object SaveShapesAs : OneTimeActionType
     object OpenShapes : OneTimeActionType
     object ExportSelectedShapes : OneTimeActionType
+
+    // Main dropdown menu
     object ShowFormatPanel : OneTimeActionType
     object HideFormatPanel : OneTimeActionType
     object ShowKeyboardShortcuts : OneTimeActionType

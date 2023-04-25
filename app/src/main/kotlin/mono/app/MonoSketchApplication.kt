@@ -24,6 +24,9 @@ import mono.state.MainStateManager
 import mono.ui.appstate.AppUiStateManager
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.EventListener
+import org.w3c.dom.get
 import org.w3c.dom.url.URLSearchParams
 
 /**
@@ -84,6 +87,8 @@ class MonoSketchApplication : LifecycleOwner() {
 
         NavBarViewController(
             this,
+            model.applicationActiveStateLiveData,
+            shapeManager.rootLiveData.map { it.id },
             appUiStateManager,
             actionManager
         )
@@ -96,6 +101,7 @@ class MonoSketchApplication : LifecycleOwner() {
             appUiStateManager.shapeToolVisibilityLiveData
         )
         onResize()
+        observeAppActivateState()
 
         appUiStateManager.observeTheme(
             document.documentElement!!,
@@ -107,6 +113,16 @@ class MonoSketchApplication : LifecycleOwner() {
         val body = document.body ?: return
         val newSize = Size(body.clientWidth, body.clientHeight)
         model.setWindowSize(newSize)
+    }
+
+    private fun observeAppActivateState() {
+        val callback = object : EventListener {
+            override fun handleEvent(event: Event) {
+                val isAppActive = document["visibilityState"] == "visible"
+                model.setApplicationActiveState(isAppActive)
+            }
+        }
+        document.addEventListener("visibilitychange", callback)
     }
 
     private fun getInitialRootIdFromUrl(): String {
