@@ -10,15 +10,6 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(projects.commons)
-    implementation(projects.graphicsgeo)
-
-    implementation(libs.kotlin.stdlib.js)
-
-    testImplementation(libs.kotlin.test.js)
-}
-
 val compilerType: org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType by ext
 kotlin {
     js(compilerType) {
@@ -27,6 +18,27 @@ kotlin {
                 useKarma {
                     useChromeHeadless()
                 }
+            }
+        }
+    }
+
+    sourceSets {
+        val jsMain by getting {
+            kotlin.srcDir("src/main/kotlin")
+            resources.srcDir("src/main/resources")
+
+            dependencies {
+                implementation(projects.commons)
+                implementation(projects.graphicsgeo)
+                implementation(libs.kotlin.stdlib.js)
+            }
+        }
+
+        val jsTest by getting {
+            kotlin.srcDir("src/test/kotlin")
+
+            dependencies {
+                implementation(libs.kotlin.test.js)
             }
         }
     }
