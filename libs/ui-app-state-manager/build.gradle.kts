@@ -3,7 +3,7 @@
  */
 
 plugins {
-    kotlin("js")
+    kotlin("multiplatform")
 }
 
 repositories {

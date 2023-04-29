@@ -5,7 +5,7 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 
 plugins {
-    kotlin("js") version "1.8.20"
+    kotlin("multiplatform") version "1.8.20"
     kotlin("plugin.serialization") version "1.8.20"
     id("org.jetbrains.compose") version "1.4.0"
     id("io.miret.etienne.sass") version "1.4.0"

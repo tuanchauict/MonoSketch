@@ -3,7 +3,7 @@
  */
 
 plugins {
-    kotlin("js")
+    kotlin("multiplatform")
     id("org.jetbrains.compose")
 }
 
