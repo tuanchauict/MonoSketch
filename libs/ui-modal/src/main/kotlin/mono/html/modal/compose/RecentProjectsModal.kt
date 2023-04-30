@@ -6,11 +6,11 @@
 
 package mono.html.modal.compose
 
-import mono.html.Div as MonoDiv
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.browser.document
+import mono.html.Div as MonoDiv
 import mono.html.modal.compose.css.CommonModalStyleSheet
 import mono.html.modal.compose.css.RecentProjectsStyleSheet
 import org.jetbrains.compose.web.attributes.InputType
@@ -125,4 +125,3 @@ private fun ProjectContent(item: ProjectItem, onSelect: (ProjectItem) -> Unit) {
         Text(item.name)
     }
 }
-
