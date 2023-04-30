@@ -1,0 +1,20 @@
+@import '../variables';
+
+.rename-project-modal {
+    position: fixed;
+    z-index: $rename-project-modal-zindex;
+    background-color: var(--modal-container-bg);
+    border-radius: 4px;
+
+    .rename-project-input {
+        border-radius: 3px;
+        font-family: $monospaceFont;
+        padding: 4px 8px;
+        border: 2px solid var(--text-input-border-color);
+
+        &:focus {
+            outline: none;
+            border-color: var(--text-input-border-focus-color);
+        }
+    }
+}

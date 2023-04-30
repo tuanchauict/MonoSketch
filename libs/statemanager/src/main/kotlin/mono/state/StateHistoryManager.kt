@@ -6,19 +6,14 @@ package mono.state
 
 import mono.common.setTimeout
 import mono.environment.Build
-import mono.graphics.geo.Point
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.combineLiveData
 import mono.shape.serialization.SerializableGroup
-import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.RootGroup
 import mono.state.command.CommandEnvironment
-import mono.store.manager.StorageDocument
-import mono.store.manager.StoreKeys.LAST_OPEN
-import mono.store.manager.StoreKeys.OBJECT_CONTENT
-import mono.store.manager.StoreKeys.OBJECT_OFFSET
-import mono.store.manager.StoreKeys.WORKSPACE
+import mono.store.dao.workspace.WorkspaceDao
+import mono.store.dao.workspace.WorkspaceObjectDao
 import mono.uuid.UUID
 
 /**
@@ -28,19 +23,23 @@ internal class StateHistoryManager(
     private val lifecycleOwner: LifecycleOwner,
     private val environment: CommandEnvironment,
     private val canvasViewController: CanvasViewController,
-    private val workspaceDocument: StorageDocument = StorageDocument.get(WORKSPACE)
+    private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
 ) {
     private val historyStack = HistoryStack()
 
+    /**
+     * Restores and starts observing the state change of the object with [rootId].
+     * If [rootId] is empty, the last opened object is used. In case of there is no objects in the
+     * database, a new ID is generated with [UUID.generate].
+     *
+     * If [rootId] is not in the database, a new object will be created and use [rootId] as the id
+     * of the root shape.
+     */
     fun restoreAndStartObserveStateChange(rootId: String) {
-        val adjustedRootId = rootId.ifEmpty {
-            workspaceDocument.get(LAST_OPEN) ?: UUID.generate()
-        }
+        val objectDao = getObjectDaoById(rootId)
 
-        restoreShapes(adjustedRootId)
-        restoreOffset(adjustedRootId)
-
-        workspaceDocument.set(LAST_OPEN, adjustedRootId)
+        restoreShapes(objectDao)
+        canvasViewController.setOffset(objectDao.offset)
 
         combineLiveData(
             environment.shapeManager.versionLiveData,
@@ -51,11 +50,27 @@ internal class StateHistoryManager(
             }
         }
 
+        // This is tricky because the `rootId` is not used but root shape in the shape manager is
+        // used.
+        // TODO: Move this into the caller or somewhere else.
         canvasViewController.drawingOffsetPointPxLiveData.observe(lifecycleOwner) {
-            workspaceDocument.childDocument(environment.shapeManager.root.id)
-                .set(OBJECT_OFFSET, "${it.left}|${it.top}")
+            workspaceDao.getObject(environment.shapeManager.root.id).offset = it
         }
     }
+
+    /**
+     * Gets the [WorkspaceObjectDao] with [rootId].
+     * If [rootId] is not empty, the object with [rootId] is returned even if it is not in the
+     * database.
+     * If [rootId] is empty, the last opened object is used. In case of there is no objects in the
+     * database, a new ID is generated with [UUID.generate].
+     */
+    private fun getObjectDaoById(rootId: String): WorkspaceObjectDao =
+        if (rootId.isNotEmpty()) {
+            workspaceDao.getObject(rootId)
+        } else {
+            workspaceDao.getObjects().firstOrNull() ?: workspaceDao.getObject(UUID.generate())
+        }
 
     fun clear() = historyStack.clear()
 
@@ -86,32 +101,17 @@ internal class StateHistoryManager(
 
         historyStack.pushState(root.versionCode, serializableGroup)
 
-        val jsonRoot = ShapeSerializationUtil.toJson(serializableGroup)
-        workspaceDocument.childDocument(root.id).set(OBJECT_CONTENT, jsonRoot)
+        workspaceDao.getObject(root.id).rootGroup = serializableGroup
     }
 
-    private fun restoreShapes(rootId: String = "") {
-        val rootJson = workspaceDocument.childDocument(rootId).get(OBJECT_CONTENT)
-        val serializableGroup =
-            rootJson?.let(ShapeSerializationUtil::fromJson) as? SerializableGroup
+    private fun restoreShapes(objectDao: WorkspaceObjectDao) {
+        val serializableGroup = objectDao.rootGroup
         val rootGroup = if (serializableGroup != null) {
             RootGroup(serializableGroup)
         } else {
-            RootGroup(rootId)
+            RootGroup(objectDao.objectId)
         }
         environment.replaceRoot(rootGroup)
-    }
-
-    private fun restoreOffset(rootId: String = "") {
-        workspaceDocument.childDocument(rootId).get(OBJECT_OFFSET)
-        val storedOffsetString =
-            workspaceDocument.childDocument(rootId).get(OBJECT_OFFSET) ?: return
-        val (leftString, topString) = storedOffsetString.split('|').takeIf { it.size == 2 }
-            ?: return
-        val left = leftString.toIntOrNull() ?: return
-        val top = topString.toIntOrNull() ?: return
-        val offset = Point(left, top)
-        canvasViewController.setOffset(offset)
     }
 
     private class HistoryStack {

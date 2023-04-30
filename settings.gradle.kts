@@ -2,6 +2,13 @@
  * Copyright (c) 2023, tuanchauict
  */
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    }
+}
+
 rootProject.name = "MonoSketch"
 
 val moduleMap = mapOf(
@@ -25,6 +32,7 @@ val moduleMap = mapOf(
     "shape-serialization" to "libs/shape-serialization",
     "shapesearcher" to "libs/shapesearcher",
     "statemanager" to "libs/statemanager",
+    "store-dao" to "libs/store-dao",
     "store-manager" to "libs/store-manager",
     "ui-app-state-manager" to "libs/ui-app-state-manager",
     "ui-canvas" to "libs/ui-canvas",

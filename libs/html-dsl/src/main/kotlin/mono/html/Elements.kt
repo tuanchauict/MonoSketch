@@ -161,6 +161,7 @@ fun Input(
 }
 
 enum class InputType(val value: String) {
+    TEXT("text"),
     NUMBER("number"),
     FILE("file"),
     RADIO("radio"),

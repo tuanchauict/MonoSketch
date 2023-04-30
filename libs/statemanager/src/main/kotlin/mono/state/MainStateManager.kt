@@ -43,6 +43,7 @@ import mono.state.command.CommandEnvironment
 import mono.state.command.CommandEnvironment.EditingMode
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
+import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.appstate.AppUiStateManager
 
 /**
@@ -59,7 +60,8 @@ class MainStateManager(
     mousePointerLiveData: LiveData<MousePointer>,
     private val actionManager: ActionManager,
     appUiStateManager: AppUiStateManager,
-    initialRootId: String = ""
+    initialRootId: String = "",
+    private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
@@ -133,7 +135,8 @@ class MainStateManager(
     private fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.DoubleClick) {
             val targetedShape =
-                environment.getSelectedShapes().firstOrNull { it.contains(mousePointer.point) }
+                environment.getSelectedShapes()
+                    .firstOrNull { it.contains(mousePointer.boardCoordinate) }
             actionManager.setOneTimeAction(OneTimeActionType.EditSelectedShape(targetedShape))
             return
         }
@@ -283,6 +286,9 @@ class MainStateManager(
             shapeManager.replaceRoot(newRoot)
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
+            stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
+            stateManager.canvasManager
+                .setOffset(stateManager.workspaceDao.getObject(newRoot.id).offset)
         }
 
         override fun enterEditingMode() {

@@ -25,12 +25,12 @@ internal class AddLineMouseCommand : MouseCommand {
     ): MouseCommand.CommandResultType =
         when (mousePointer) {
             is MousePointer.Down -> {
-                val edgeDirection = environment.getEdgeDirection(mousePointer.point)
+                val edgeDirection = environment.getEdgeDirection(mousePointer.boardCoordinate)
                 val direction =
                     edgeDirection?.normalizedDirection ?: DirectedPoint.Direction.HORIZONTAL
                 val shape = Line(
-                    DirectedPoint(direction, mousePointer.point),
-                    DirectedPoint(DirectedPoint.Direction.VERTICAL, mousePointer.point),
+                    DirectedPoint(direction, mousePointer.boardCoordinate),
+                    DirectedPoint(DirectedPoint.Direction.VERTICAL, mousePointer.boardCoordinate),
                     parentId = environment.workingParentGroup.id
                 )
                 workingShape = shape
@@ -38,19 +38,21 @@ internal class AddLineMouseCommand : MouseCommand {
                 environment.clearSelectedShapes()
                 MouseCommand.CommandResultType.WORKING
             }
+
             is MousePointer.Drag -> {
                 environment.changeEndAnchor(
                     environment,
-                    mousePointer.point,
+                    mousePointer.boardCoordinate,
                     mousePointer.isWithShiftKey,
                     isReducedRequired = false
                 )
                 MouseCommand.CommandResultType.WORKING
             }
+
             is MousePointer.Up -> {
                 environment.changeEndAnchor(
                     environment,
-                    mousePointer.point,
+                    mousePointer.boardCoordinate,
                     mousePointer.isWithShiftKey,
                     isReducedRequired = true
                 )

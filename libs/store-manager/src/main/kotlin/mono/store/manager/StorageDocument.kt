@@ -29,6 +29,8 @@ class StorageDocument private constructor(
 
     fun removeObserver(key: String) = storeManager.removeObserver(getFullPath(key))
 
+    fun getKeys(predicate: (String) -> Boolean): Sequence<String> = storeManager.getKeys(predicate)
+
     companion object {
         private val documents = mutableMapOf<String, StorageDocument>()
         fun get(path: String): StorageDocument =
