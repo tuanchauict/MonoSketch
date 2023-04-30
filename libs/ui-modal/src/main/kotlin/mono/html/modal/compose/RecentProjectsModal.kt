@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.browser.document
-import mono.html.Div as MonoDiv
 import mono.html.modal.compose.css.CommonModalStyleSheet
 import mono.html.modal.compose.css.RecentProjectsStyleSheet
 import org.jetbrains.compose.web.attributes.InputType
@@ -22,6 +21,7 @@ import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
+import mono.html.Div as MonoDiv
 
 class ProjectItem(val id: String, val name: String)
 

@@ -39,7 +39,7 @@ val moduleMap = mapOf(
     "ui-modal" to "libs/ui-modal",
     "ui-theme" to "libs/ui-theme",
     "ui-toolbar" to "libs/ui-toolbar",
-    "uuid" to "libs/uuid"
+    "uuid" to "libs/uuid",
 )
 
 moduleMap.entries.forEach { (name, path) ->
