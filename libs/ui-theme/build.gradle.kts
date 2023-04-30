@@ -4,6 +4,7 @@
 
 plugins {
     kotlin("multiplatform")
+    id("org.jetbrains.compose")
 }
 
 repositories {
@@ -29,6 +30,7 @@ kotlin {
 
             dependencies {
                 implementation(projects.livedata)
+                implementation(compose.html.core)
                 implementation(libs.kotlin.stdlib.js)
             }
         }
