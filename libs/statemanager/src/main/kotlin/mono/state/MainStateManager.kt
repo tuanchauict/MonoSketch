@@ -287,6 +287,8 @@ class MainStateManager(
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
             stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
+            stateManager.canvasManager
+                .setOffset(stateManager.workspaceDao.getObject(newRoot.id).offset)
         }
 
         override fun enterEditingMode() {
