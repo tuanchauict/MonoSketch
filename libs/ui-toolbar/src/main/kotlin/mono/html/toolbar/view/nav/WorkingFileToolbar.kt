@@ -53,7 +53,7 @@ internal fun Element.WorkingFileToolbar(
                 when (it) {
                     is Forwarding -> onActionSelected(it.actionType)
                     Rename -> RenameProjectModal(fileName, onActionSelected).show(fileInfo)
-                    ManageProject -> onManageProjectClick(workspaceDao = workspaceDao)
+                    ManageProject -> onManageProjectClick(workspaceDao, onActionSelected)
                 }
             }
         }
@@ -76,13 +76,16 @@ private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) 
     }.show(anchor)
 }
 
-private fun onManageProjectClick(workspaceDao: WorkspaceDao) {
+private fun onManageProjectClick(
+    workspaceDao: WorkspaceDao,
+    onActionSelected: (OneTimeActionType) -> Unit
+) {
     val projects = workspaceDao.getObjects().map { ProjectItem(it.objectId, it.name) }.toList()
     showRecentProjectsModal(projects) { projectItem, isRemoved ->
         if (isRemoved) {
             // TODO: Remove action
         } else {
-            // TODO: Switch project
+            onActionSelected(OneTimeActionType.SwitchProject(projectItem.id))
         }
     }
 }
