@@ -6,7 +6,6 @@
 
 package mono.html.modal.compose
 
-import mono.html.Div as MonoDiv
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +19,7 @@ import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
+import mono.html.Div as MonoDiv
 
 private typealias SelectAction = (ProjectItem, isRemoved: Boolean) -> Unit
 
