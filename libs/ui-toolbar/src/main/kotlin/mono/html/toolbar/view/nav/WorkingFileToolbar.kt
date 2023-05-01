@@ -11,16 +11,21 @@ import mono.html.Div
 import mono.html.Span
 import mono.html.SvgIcon
 import mono.html.modal.DropDownMenu
+import mono.html.modal.compose.ProjectItem
+import mono.html.modal.compose.showRecentProjectsModal
 import mono.html.setOnClickListener
 import mono.html.toolbar.view.nav.DropDownItem.Forwarding
+import mono.html.toolbar.view.nav.DropDownItem.ManageProject
 import mono.html.toolbar.view.nav.DropDownItem.Rename
 import mono.html.toolbar.view.nav.workingfile.RenameProjectModal
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.store.dao.workspace.WorkspaceDao
 import org.w3c.dom.Element
 
 internal fun Element.WorkingFileToolbar(
     lifecycleOwner: LifecycleOwner,
+    workspaceDao: WorkspaceDao,
     filenameLiveData: LiveData<String>,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
@@ -48,6 +53,7 @@ internal fun Element.WorkingFileToolbar(
                 when (it) {
                     is Forwarding -> onActionSelected(it.actionType)
                     Rename -> RenameProjectModal(fileName, onActionSelected).show(fileInfo)
+                    ManageProject -> onManageProjectClick(workspaceDao = workspaceDao)
                 }
             }
         }
@@ -57,6 +63,7 @@ internal fun Element.WorkingFileToolbar(
 private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) -> Unit) {
     val items = listOf(
         DropDownMenu.Item.Text("New project", Forwarding(OneTimeActionType.NewProject)),
+        DropDownMenu.Item.Text("Manage projects", ManageProject),
         DropDownMenu.Item.Divider(),
         DropDownMenu.Item.Text("Rename", Rename),
         DropDownMenu.Item.Text("Save As...", Forwarding(OneTimeActionType.SaveShapesAs)),
@@ -69,10 +76,22 @@ private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) 
     }.show(anchor)
 }
 
+private fun onManageProjectClick(workspaceDao: WorkspaceDao) {
+    val projects = workspaceDao.getObjects().map { ProjectItem(it.objectId, it.name) }.toList()
+    showRecentProjectsModal(projects) { projectItem, isRemoved ->
+        if (isRemoved) {
+            // TODO: Remove action
+        } else {
+            // TODO: Switch project
+        }
+    }
+}
+
 /**
  * A sealed interface for dropdown menu items of working file.
  */
 private sealed interface DropDownItem {
     class Forwarding(val actionType: OneTimeActionType) : DropDownItem
     object Rename : DropDownItem
+    object ManageProject : DropDownItem
 }
