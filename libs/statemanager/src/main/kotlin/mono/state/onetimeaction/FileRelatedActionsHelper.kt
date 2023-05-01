@@ -37,17 +37,6 @@ internal class FileRelatedActionsHelper(
         replaceWorkspace(RootGroup(null)) // passing null to let the ID generated automatically
     }
 
-    fun switchProject(objectId: String) {
-        if (objectId == environment.shapeManager.root.id) {
-            return
-        }
-        val serializableRoot = workspaceDao.getObject(objectId).rootGroup
-        console.log(serializableRoot)
-        if (serializableRoot != null) {
-            replaceWorkspace(RootGroup(serializableRoot))
-        }
-    }
-
     fun renameProject(newName: String) {
         val currentRootId = environment.shapeManager.root.id
         workspaceDao.getObject(currentRootId).name = newName

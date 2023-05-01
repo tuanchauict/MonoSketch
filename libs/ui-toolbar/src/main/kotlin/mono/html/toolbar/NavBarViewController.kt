@@ -38,7 +38,6 @@ class NavBarViewController(
                 WorkingFileToolbar(
                     lifecycleOwner,
                     fileNameLiveData,
-                    workspaceDao,
                     actionManager::setOneTimeAction
                 )
             }

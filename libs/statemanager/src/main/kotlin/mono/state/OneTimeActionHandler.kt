@@ -62,8 +62,6 @@ internal class OneTimeActionHandler(
                 // File drop down menu
                 OneTimeActionType.NewProject -> fileRelatedActions.newProject()
 
-                is OneTimeActionType.SwitchProject -> fileRelatedActions.switchProject(it.objectId)
-
                 is OneTimeActionType.RenameCurrentProject ->
                     fileRelatedActions.renameProject(it.newName)
 
