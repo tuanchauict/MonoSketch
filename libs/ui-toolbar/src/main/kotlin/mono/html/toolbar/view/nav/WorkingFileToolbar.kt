@@ -83,7 +83,7 @@ private fun onManageProjectClick(
     val projects = workspaceDao.getObjects().map { ProjectItem(it.objectId, it.name) }.toList()
     showRecentProjectsModal(projects) { projectItem, isRemoved ->
         if (isRemoved) {
-            // TODO: Remove action
+            onActionSelected(OneTimeActionType.RemoveProject(projectItem.id))
         } else {
             onActionSelected(OneTimeActionType.SwitchProject(projectItem.id))
         }

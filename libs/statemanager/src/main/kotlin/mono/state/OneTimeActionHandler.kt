@@ -64,6 +64,8 @@ internal class OneTimeActionHandler(
 
                 is OneTimeActionType.SwitchProject -> fileRelatedActions.switchProject(it.projectId)
 
+                is OneTimeActionType.RemoveProject -> fileRelatedActions.removeProject(it.projectId)
+
                 is OneTimeActionType.RenameCurrentProject ->
                     fileRelatedActions.renameProject(it.newName)
 
