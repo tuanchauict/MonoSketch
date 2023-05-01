@@ -33,7 +33,6 @@ kotlin {
                 implementation(projects.htmlDsl)
                 implementation(projects.lifecycle)
                 implementation(projects.livedata)
-                implementation(projects.uiTheme)
 
                 implementation(compose.html.core)
                 implementation(compose.runtime)
