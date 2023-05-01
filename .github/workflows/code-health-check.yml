@@ -23,7 +23,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - run: ./gradlew jsTest --continue
+      - run: ./gradlew test --continue
       - name: Clean up test result
         if: failure()
         run: sh tools/devops/remove_success_test_report
@@ -74,5 +74,5 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
+            
       - run: ./gradlew assemble

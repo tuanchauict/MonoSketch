@@ -9,4 +9,4 @@ compileSass {
     style = compressed
 }
 
-jsProcessResources.dependsOn(compileSass)
+processResources.dependsOn(compileSass)
