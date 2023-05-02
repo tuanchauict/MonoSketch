@@ -37,6 +37,7 @@ class NavBarViewController(
             Div("left-toolbar-container") {
                 WorkingFileToolbar(
                     lifecycleOwner,
+                    workspaceDao,
                     fileNameLiveData,
                     actionManager::setOneTimeAction
                 )

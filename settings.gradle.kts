@@ -29,6 +29,7 @@ val moduleMap = mapOf(
     "store-manager" to "libs/store-manager",
     "ui-app-state-manager" to "libs/ui-app-state-manager",
     "ui-canvas" to "libs/ui-canvas",
+    "ui-compose-ext" to "libs/ui-compose-ext",
     "ui-modal" to "libs/ui-modal",
     "ui-theme" to "libs/ui-theme",
     "ui-toolbar" to "libs/ui-toolbar",

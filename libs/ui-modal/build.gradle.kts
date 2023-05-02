@@ -16,6 +16,7 @@ dependencies {
     implementation(projects.htmlDsl)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
+    implementation(projects.uiComposeExt)
 
     implementation(compose.html.core)
     implementation(compose.runtime)
