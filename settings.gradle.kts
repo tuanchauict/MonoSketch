@@ -2,13 +2,6 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
-
 rootProject.name = "MonoSketch"
 
 val moduleMap = mapOf(
@@ -36,10 +29,11 @@ val moduleMap = mapOf(
     "store-manager" to "libs/store-manager",
     "ui-app-state-manager" to "libs/ui-app-state-manager",
     "ui-canvas" to "libs/ui-canvas",
+    "ui-compose-ext" to "libs/ui-compose-ext",
     "ui-modal" to "libs/ui-modal",
     "ui-theme" to "libs/ui-theme",
     "ui-toolbar" to "libs/ui-toolbar",
-    "uuid" to "libs/uuid",
+    "uuid" to "libs/uuid"
 )
 
 moduleMap.entries.forEach { (name, path) ->

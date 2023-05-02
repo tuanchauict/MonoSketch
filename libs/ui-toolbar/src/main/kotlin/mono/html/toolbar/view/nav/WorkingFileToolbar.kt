@@ -12,9 +12,10 @@ import mono.html.Span
 import mono.html.SvgIcon
 import mono.html.modal.DropDownMenu
 import mono.html.modal.compose.ProjectItem
-import mono.html.modal.compose.showRecentProjectModal
+import mono.html.modal.compose.showRecentProjectsModal
 import mono.html.setOnClickListener
 import mono.html.toolbar.view.nav.DropDownItem.Forwarding
+import mono.html.toolbar.view.nav.DropDownItem.ManageProject
 import mono.html.toolbar.view.nav.DropDownItem.Rename
 import mono.html.toolbar.view.nav.workingfile.RenameProjectModal
 import mono.lifecycle.LifecycleOwner
@@ -24,8 +25,8 @@ import org.w3c.dom.Element
 
 internal fun Element.WorkingFileToolbar(
     lifecycleOwner: LifecycleOwner,
-    filenameLiveData: LiveData<String>,
     workspaceDao: WorkspaceDao,
+    filenameLiveData: LiveData<String>,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     Div("working-file-container") {
@@ -52,7 +53,7 @@ internal fun Element.WorkingFileToolbar(
                 when (it) {
                     is Forwarding -> onActionSelected(it.actionType)
                     Rename -> RenameProjectModal(fileName, onActionSelected).show(fileInfo)
-                    DropDownItem.ManageProjects -> onManageProjects(workspaceDao, onActionSelected)
+                    ManageProject -> onManageProjectClick(workspaceDao, onActionSelected)
                 }
             }
         }
@@ -62,7 +63,7 @@ internal fun Element.WorkingFileToolbar(
 private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) -> Unit) {
     val items = listOf(
         DropDownMenu.Item.Text("New project", Forwarding(OneTimeActionType.NewProject)),
-        DropDownMenu.Item.Text("Manage projects", DropDownItem.ManageProjects),
+        DropDownMenu.Item.Text("Manage projects", ManageProject),
         DropDownMenu.Item.Divider(),
         DropDownMenu.Item.Text("Rename", Rename),
         DropDownMenu.Item.Text("Save As...", Forwarding(OneTimeActionType.SaveShapesAs)),
@@ -75,13 +76,17 @@ private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) 
     }.show(anchor)
 }
 
-private fun onManageProjects(
+private fun onManageProjectClick(
     workspaceDao: WorkspaceDao,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     val projects = workspaceDao.getObjects().map { ProjectItem(it.objectId, it.name) }.toList()
-    showRecentProjectModal(projects) {
-        onActionSelected(OneTimeActionType.SwitchProject(it.id))
+    showRecentProjectsModal(projects) { projectItem, isRemoved ->
+        if (isRemoved) {
+            onActionSelected(OneTimeActionType.RemoveProject(projectItem.id))
+        } else {
+            onActionSelected(OneTimeActionType.SwitchProject(projectItem.id))
+        }
     }
 }
 
@@ -91,5 +96,5 @@ private fun onManageProjects(
 private sealed interface DropDownItem {
     class Forwarding(val actionType: OneTimeActionType) : DropDownItem
     object Rename : DropDownItem
-    object ManageProjects : DropDownItem
+    object ManageProject : DropDownItem
 }

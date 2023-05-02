@@ -1,0 +1,102 @@
+@import '../variables';
+@import './theme-colors';
+
+.recent-project-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: $all-projects-modal-zindex;
+
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    backdrop-filter: blur(2px);
+    background-color: $modal-bg;
+
+    .container {
+        margin-top: 24px;
+        background: $modal-container-bg;
+        border-radius: 6px;
+        border: 1px solid $modal-container-border-color;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+        padding: 8px 6px;
+        width: 500px;
+        flex-grow: 0;
+
+        color: $modal-content-text-color;
+    }
+
+    .filter-container {
+        width: 100%;
+        margin-bottom: 8px;
+
+        input[type="text"] {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 3px;
+            outline: none;
+            border: 1px solid $modal-text-field-border;
+            background: none;
+            color: $modal-text-field-color;
+
+            &:hover,
+            &:focus {
+                border-color: $modal-text-field-focus-border;
+            }
+        }
+    }
+
+    .list {
+        width: 100%;
+        min-height: 50px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .item {
+        height: 26px;
+        padding: 0 6px;
+        border-radius: 3px;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+
+        &:hover {
+            background: $modal-item-hover-bg;
+        }
+
+        &:active {
+            opacity: 0.6;
+        }
+
+        &:hover .remove {
+            display: flex;
+        }
+
+        .remove {
+            border-radius: 3px;
+            padding: 3px;
+            display: none;
+
+            &:hover {
+                background-color: $modal-item-action-hover-bg;
+            }
+
+            &:active {
+                opacity: 0.6;
+            }
+        }
+    }
+
+    .no-item {
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $modal-indicator-color;
+    }
+}

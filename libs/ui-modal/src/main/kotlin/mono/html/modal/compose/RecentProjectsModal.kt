@@ -10,12 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.browser.document
-import mono.html.modal.compose.css.CommonModalStyleSheet
-import mono.html.modal.compose.css.RecentProjectsStyleSheet
+import mono.ui.compose.components.IconClose
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.attributes.autoFocus
 import org.jetbrains.compose.web.attributes.placeholder
-import org.jetbrains.compose.web.css.Style
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Span
@@ -23,9 +21,14 @@ import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
 import mono.html.Div as MonoDiv
 
+private typealias SelectAction = (ProjectItem, isRemoved: Boolean) -> Unit
+
 class ProjectItem(val id: String, val name: String)
 
-fun showRecentProjectModal(projectItems: List<ProjectItem>, onSelect: (ProjectItem) -> Unit) {
+fun showRecentProjectsModal(
+    projectItems: List<ProjectItem>,
+    onSelect: SelectAction
+) {
     val body = document.body ?: return
     val container = body.MonoDiv()
     renderComposable(container) {
@@ -38,14 +41,12 @@ fun showRecentProjectModal(projectItems: List<ProjectItem>, onSelect: (ProjectIt
 @Composable
 private fun RecentProjectsModal(
     projects: List<ProjectItem>,
-    onSelect: (ProjectItem) -> Unit,
+    onSelect: SelectAction,
     onDismiss: () -> Unit
 ) {
-    Style(RecentProjectsStyleSheet)
-    Style(CommonModalStyleSheet)
     Div(
         attrs = {
-            classes(CommonModalStyleSheet.fullscreenModal, CommonModalStyleSheet.blurBackdrop)
+            classes("recent-project-modal")
 
             onClick {
                 onDismiss()
@@ -53,7 +54,7 @@ private fun RecentProjectsModal(
         }
     ) {
         Div(attrs = {
-            classes(CommonModalStyleSheet.container, RecentProjectsStyleSheet.container)
+            classes("container")
 
             onClick {
                 it.preventDefault()
@@ -63,8 +64,8 @@ private fun RecentProjectsModal(
             val filter = remember { mutableStateOf("") }
 
             FilterInput { filter.value = it }
-            ProjectList(filter.value, projects) {
-                onSelect(it)
+            ProjectList(filter.value, projects) { item, isRemoved ->
+                onSelect(item, isRemoved)
                 onDismiss()
             }
         }
@@ -75,7 +76,7 @@ private fun RecentProjectsModal(
 private fun FilterInput(onChange: (String) -> Unit) {
     Div(
         attrs = {
-            classes(RecentProjectsStyleSheet.filterInputContainer)
+            classes("filter-container")
         }
     ) {
         Input(type = InputType.Text) {
@@ -88,15 +89,11 @@ private fun FilterInput(onChange: (String) -> Unit) {
 }
 
 @Composable
-private fun ProjectList(
-    filter: String,
-    projects: List<ProjectItem>,
-    onSelect: (ProjectItem) -> Unit
-) {
+private fun ProjectList(filter: String, projects: List<ProjectItem>, onSelect: SelectAction) {
     val filteredProjects = projects.filter { it.name.contains(filter, ignoreCase = true) }
     if (filteredProjects.isNotEmpty()) {
         Div(
-            attrs = { classes(RecentProjectsStyleSheet.projectList) }
+            attrs = { classes("list") }
         ) {
             for (project in filteredProjects) {
                 ProjectContent(project, onSelect)
@@ -104,7 +101,7 @@ private fun ProjectList(
         }
     } else {
         Div(
-            attrs = { classes(RecentProjectsStyleSheet.noItems) }
+            attrs = { classes("no-item") }
         ) {
             Span {
                 Text("Not found")
@@ -114,14 +111,26 @@ private fun ProjectList(
 }
 
 @Composable
-private fun ProjectContent(item: ProjectItem, onSelect: (ProjectItem) -> Unit) {
+private fun ProjectContent(item: ProjectItem, onSelect: SelectAction) {
     Div(
         attrs = {
-            classes(RecentProjectsStyleSheet.projectItem)
-
-            onClick { onSelect(item) }
+            classes("item")
+            onClick { onSelect(item, false) }
         }
     ) {
-        Text(item.name)
+        Div {
+            Text(item.name)
+        }
+        Div(
+            attrs = {
+                classes("remove")
+                onClick {
+                    // TODO: Show confirm dialog
+                    onSelect(item, true)
+                }
+            }
+        ) {
+            IconClose(12)
+        }
     }
 }
