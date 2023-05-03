@@ -7,6 +7,7 @@ package mono.html.toolbar
 import androidx.compose.runtime.State
 import kotlinx.browser.document
 import mono.actionmanager.ActionManager
+import mono.actionmanager.RetainableActionType
 import mono.html.Div
 import mono.html.select
 import mono.html.toolbar.view.nav.MouseActionGroup
@@ -41,6 +42,9 @@ class NavBarViewController(
     ) { (_, _, rootId) -> workspaceDao.getObject(rootId as String).name }
         .toState(lifecycleOwner)
 
+    private val selectedMouseActionState: State<RetainableActionType> =
+        actionManager.retainableActionLiveData.toState(lifecycleOwner)
+
     init {
         document.select("#nav-toolbar").run {
             Div("left-toolbar-container") {
@@ -54,11 +58,9 @@ class NavBarViewController(
                 }
             }
             Div("middle-toolbar-container") {
-                MouseActionGroup(
-                    lifecycleOwner,
-                    actionManager.retainableActionLiveData,
-                    actionManager::setRetainableAction
-                )
+                renderComposable(this) {
+                    MouseActionGroup(selectedMouseActionState, actionManager::setRetainableAction)
+                }
             }
             Div("right-toolbar-container") {
                 RightToolbar(
