@@ -4,10 +4,10 @@
 
 package mono.graphics.bitmap.drawable
 
-import mono.common.Characters.TRANSPARENT_CHAR
-import mono.graphics.bitmap.MonoBitmap
 import kotlin.math.max
 import kotlin.math.min
+import mono.common.Characters.TRANSPARENT_CHAR
+import mono.graphics.bitmap.MonoBitmap
 
 /**
  * A simple 9-patch image which scales image based on repeating points in

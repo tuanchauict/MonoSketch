@@ -4,6 +4,8 @@
 
 package mono.html.canvas.canvas
 
+import kotlin.math.PI
+import kotlin.math.abs
 import mono.common.exhaustive
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
@@ -17,8 +19,6 @@ import mono.shapebound.ScalableInteractionBound
 import mono.ui.theme.ThemeColor
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Path2D
-import kotlin.math.PI
-import kotlin.math.abs
 
 /**
  * A canvas view controller to render the interaction indicators.

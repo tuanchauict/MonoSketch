@@ -4,6 +4,9 @@
 
 package mono.graphics.geo
 
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -11,9 +14,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 @Serializable(with = Rect.RectSerializer::class)
 data class Rect(

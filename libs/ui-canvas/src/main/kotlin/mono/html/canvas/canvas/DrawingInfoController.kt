@@ -4,6 +4,9 @@
 
 package mono.html.canvas.canvas
 
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.round
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -19,9 +22,6 @@ import org.w3c.dom.CanvasTextBaseline
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.LEFT
 import org.w3c.dom.MIDDLE
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.round
 
 /**
  * A controller class to manage drawing info for the other canvas.
