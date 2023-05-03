@@ -4,6 +4,7 @@
 
 package mono.html.canvas.canvas
 
+import kotlin.math.max
 import kotlinx.browser.window
 import mono.graphics.geo.Size
 import mono.html.Canvas
@@ -24,7 +25,6 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.LEFT
 import org.w3c.dom.Path2D
 import org.w3c.dom.RIGHT
-import kotlin.math.max
 
 internal class AxisCanvasViewController(
     lifecycleOwner: LifecycleOwner,

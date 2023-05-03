@@ -4,6 +4,9 @@
 
 package mono.shape
 
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import mono.graphics.geo.Rect
 import mono.shape.command.AddShape
 import mono.shape.command.GroupShapes
@@ -12,9 +15,6 @@ import mono.shape.command.Ungroup
 import mono.shape.shape.Group
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 /**
  * A test of [ShapeManager]

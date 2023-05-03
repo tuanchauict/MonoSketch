@@ -4,14 +4,14 @@
 
 package mono.shape.shape
 
-import mono.graphics.geo.DirectedPoint
-import mono.graphics.geo.Point
-import mono.shape.serialization.SerializableLine
-import mono.shape.shape.line.LineHelper
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import mono.graphics.geo.DirectedPoint
+import mono.graphics.geo.Point
+import mono.shape.serialization.SerializableLine
+import mono.shape.shape.line.LineHelper
 
 /**
  * A test for [Line]

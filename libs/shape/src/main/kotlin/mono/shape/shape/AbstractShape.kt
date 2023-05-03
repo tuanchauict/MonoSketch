@@ -4,6 +4,7 @@
 
 package mono.shape.shape
 
+import kotlin.random.Random
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.shape.extra.NoExtra
@@ -11,7 +12,6 @@ import mono.shape.extra.ShapeExtra
 import mono.shape.list.QuickList
 import mono.shape.serialization.AbstractSerializableShape
 import mono.uuid.UUID
-import kotlin.random.Random
 
 /**
  * An abstract class which is used for defining all kinds of shape which are supported by the app.

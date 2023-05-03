@@ -4,11 +4,11 @@
 
 package mono.shapebound
 
+import kotlin.math.floor
 import mono.common.MouseCursor
 import mono.graphics.geo.PointF
 import mono.graphics.geo.Rect
 import mono.shape.shape.Line
-import kotlin.math.floor
 
 /**
  * A sealed class for defining all possible interaction point types for a shape and common apis.
