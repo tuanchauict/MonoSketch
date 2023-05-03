@@ -17,8 +17,11 @@ import mono.html.px
 import mono.html.setOnMouseOutListener
 import mono.html.setOnMouseOverListener
 import mono.html.style
+import org.jetbrains.compose.web.attributes.AttrsScope
 import org.w3c.dom.DOMRect
 import org.w3c.dom.Element
+
+private val tooltip = Tooltip()
 
 /**
  * Registers a tooltip for the targeting element.
@@ -26,11 +29,19 @@ import org.w3c.dom.Element
  * after 600ms hovering.
  */
 fun Element.tooltip(text: String, position: TooltipPosition = TooltipPosition.BOTTOM) {
-    val tooltip = Tooltip(this, text, position)
     setOnMouseOverListener {
-        tooltip.show()
+        tooltip.show(it.currentTarget as Element, text, position)
     }
     setOnMouseOutListener {
+        tooltip.hide()
+    }
+}
+
+fun AttrsScope<Element>.tooltip(text: String, position: TooltipPosition = TooltipPosition.BOTTOM) {
+    onMouseOver {
+        tooltip.show(it.currentTarget.unsafeCast<Element>(), text, position)
+    }
+    onMouseOut {
         tooltip.hide()
     }
 }
@@ -42,20 +53,18 @@ enum class TooltipPosition {
     BOTTOM
 }
 
-private class Tooltip(
-    private val anchor: Element,
-    private val text: String,
-    private val position: TooltipPosition
-) {
+private class Tooltip {
     private var arrowView: Element? = null
     private var bodyView: Element? = null
     private var showTask: Cancelable? = null
 
-    fun show() {
+    fun show(anchorView: Element, text: String, position: TooltipPosition) {
         if (showTask != null) {
             return
         }
-        showTask = setTimeout(600, ::showInternal)
+        showTask = setTimeout(600) {
+            showInternal(anchorView, text, position)
+        }
     }
 
     fun hide() {
@@ -67,19 +76,24 @@ private class Tooltip(
         bodyView = null
     }
 
-    private fun showInternal() {
+    private fun showInternal(anchorView: Element, text: String, position: TooltipPosition) {
         if (arrowView != null) {
             return
         }
         val body = document.body ?: return
-        createTooltip(body)
+        createTooltip(body, anchorView, text, position)
     }
 
-    private fun createTooltip(body: Element) {
-        val anchorPositionRect = anchor.getBoundingClientRect()
+    private fun createTooltip(
+        body: Element,
+        anchorView: Element,
+        text: String,
+        position: TooltipPosition
+    ) {
+        val anchorPositionRect = anchorView.getBoundingClientRect()
 
         val arrow = body.Div("mono-tooltip tooltip-arrow") {
-            ArrowIcon()
+            ArrowIcon(position)
         }
 
         arrowView = arrow
@@ -87,16 +101,20 @@ private class Tooltip(
             style("visibility" to "hidden")
         }
         post {
-            arrow.adjustArrowPosition(anchorPositionRect)
+            arrow.adjustArrowPosition(anchorPositionRect, position)
             bodyView?.adjustTooltipBodyPosition(
                 body,
                 anchorPositionRect,
-                arrow.getBoundingClientRect()
+                arrow.getBoundingClientRect(),
+                position
             )
         }
     }
 
-    private fun Element.adjustArrowPosition(anchorPositionRect: DOMRect) {
+    private fun Element.adjustArrowPosition(
+        anchorPositionRect: DOMRect,
+        position: TooltipPosition
+    ) {
         when (position) {
             TooltipPosition.LEFT -> style(
                 "left" to (anchorPositionRect.left - clientWidth).px,
@@ -123,7 +141,8 @@ private class Tooltip(
     private fun Element.adjustTooltipBodyPosition(
         body: Element,
         anchorPositionRect: DOMRect,
-        arrowPositionRect: DOMRect
+        arrowPositionRect: DOMRect,
+        position: TooltipPosition
     ) {
         val leftMost = body.clientWidth - clientWidth - 4
         when (position) {
@@ -159,19 +178,19 @@ private class Tooltip(
         }
     }
 
-    private fun Element.ArrowIcon() {
+    private fun Element.ArrowIcon(position: TooltipPosition) {
         when (position) {
             TooltipPosition.LEFT ->
-                SvgIcon(5, 10, "M10 10L0 20V0L10 10Z")
+                SvgIcon(5, 10, 10, 20, "M10 10L0 20V0L10 10Z")
 
             TooltipPosition.RIGHT ->
-                SvgIcon(5, 10, "M0 10L10 0V20L0 10Z")
+                SvgIcon(5, 10, 10, 20, "M0 10L10 0V20L0 10Z")
 
             TooltipPosition.TOP ->
-                SvgIcon(10, 5, "M10 10L0 0H20L10 10Z")
+                SvgIcon(10, 5, 20, 10, "M10 10L0 0H20L10 10Z")
 
             TooltipPosition.BOTTOM ->
-                SvgIcon(10, 5, "M10 0L20 10H0L10 0Z")
+                SvgIcon(10, 5, 20, 10, "M10 0L20 10H0L10 0Z")
         }
     }
 
