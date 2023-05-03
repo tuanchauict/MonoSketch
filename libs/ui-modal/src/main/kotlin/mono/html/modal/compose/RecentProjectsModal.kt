@@ -11,8 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.browser.document
 import mono.ui.compose.components.IconClose
+import mono.ui.compose.ext.sideEffectFocus
 import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.attributes.autoFocus
 import org.jetbrains.compose.web.attributes.placeholder
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Input
@@ -80,11 +80,13 @@ private fun FilterInput(onChange: (String) -> Unit) {
         }
     ) {
         Input(type = InputType.Text) {
+            id("recent-project-filter-input")
             placeholder("Filter by name")
-            autoFocus()
 
             onInput { onChange(it.value) }
         }
+
+        sideEffectFocus("#recent-project-filter-input")
     }
 }
 
