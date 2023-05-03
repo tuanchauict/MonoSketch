@@ -5,11 +5,8 @@
 package mono.html.toolbar
 
 import androidx.compose.runtime.State
-import kotlinx.browser.document
 import mono.actionmanager.ActionManager
 import mono.actionmanager.RetainableActionType
-import mono.html.Div
-import mono.html.select
 import mono.html.toolbar.view.nav.AppMenuIcon
 import mono.html.toolbar.view.nav.MouseActionGroup
 import mono.html.toolbar.view.nav.ScrollModeButton
@@ -23,6 +20,7 @@ import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.appstate.AppUiStateManager
 import mono.ui.appstate.state.ScrollMode
 import mono.ui.compose.ext.toState
+import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.renderComposable
 
 /**
@@ -52,28 +50,30 @@ class NavBarViewController(
         appUiStateManager.scrollModeLiveData.toState(lifecycleOwner)
 
     init {
-        document.select("#nav-toolbar").run {
-            Div("left-toolbar-container") {
-                renderComposable(this) {
-                    WorkingFileToolbar(projectNameState, workspaceDao) {
-                        actionManager.setOneTimeAction(it)
-                        // Notify the change in storage
-                        // Note: This won't work if updating the name is done concurrently
-                        environmentUpdateLiveData.value = Unit
-                    }
+        renderComposable("nav-toolbar") {
+            Div(
+                attrs = { classes("left-toolbar-container") }
+            ) {
+                WorkingFileToolbar(projectNameState, workspaceDao) {
+                    actionManager.setOneTimeAction(it)
+                    // Notify the change in storage
+                    // Note: This won't work if updating the name is done concurrently
+                    environmentUpdateLiveData.value = Unit
                 }
             }
-            Div("middle-toolbar-container") {
-                renderComposable(this) {
-                    MouseActionGroup(selectedMouseActionState, actionManager::setRetainableAction)
-                }
+
+            Div(
+                attrs = { classes("middle-toolbar-container") }
+            ) {
+                MouseActionGroup(selectedMouseActionState, actionManager::setRetainableAction)
             }
-            Div("right-toolbar-container") {
-                renderComposable(this) {
-                    ScrollModeButton(scrollModeState.value, appUiStateManager::updateUiState)
-                    ThemeIcons()
-                    AppMenuIcon(appUiStateManager, actionManager::setOneTimeAction)
-                }
+
+            Div(
+                attrs = { classes("right-toolbar-container") }
+            ) {
+                ScrollModeButton(scrollModeState.value, appUiStateManager::updateUiState)
+                ThemeIcons()
+                AppMenuIcon(appUiStateManager, actionManager::setOneTimeAction)
             }
         }
     }
