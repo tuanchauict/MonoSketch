@@ -6,55 +6,72 @@
 
 package mono.html.toolbar.view.nav
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import mono.actionmanager.OneTimeActionType
-import mono.html.Div
-import mono.html.Span
-import mono.html.SvgIcon
 import mono.html.modal.DropDownMenu
 import mono.html.modal.compose.ProjectItem
 import mono.html.modal.compose.showRecentProjectsModal
-import mono.html.setOnClickListener
 import mono.html.toolbar.view.nav.DropDownItem.Forwarding
 import mono.html.toolbar.view.nav.DropDownItem.ManageProject
 import mono.html.toolbar.view.nav.DropDownItem.Rename
 import mono.html.toolbar.view.nav.workingfile.RenameProjectModal
-import mono.lifecycle.LifecycleOwner
-import mono.livedata.LiveData
 import mono.store.dao.workspace.WorkspaceDao
+import mono.ui.compose.components.IconChevronDown
+import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.Span
+import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.Element
 
-internal fun Element.WorkingFileToolbar(
-    lifecycleOwner: LifecycleOwner,
+@Composable
+internal fun WorkingFileToolbar(
+    projectNameState: State<String>,
     workspaceDao: WorkspaceDao,
-    filenameLiveData: LiveData<String>,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
-    Div("working-file-container") {
-        Div("divider")
+    CurrentProject(projectNameState.value) { element ->
+        showWorkingFileMenu(element) {
+            when (it) {
+                is Forwarding -> onActionSelected(it.actionType)
 
-        val fileInfo = Div("file-info")
-        val fileName = fileInfo.Span("title") {
-            filenameLiveData.observe(lifecycleOwner) {
-                innerText = it
+                Rename ->
+                    RenameProjectModal { newName ->
+                        if (newName.isNotEmpty()) {
+                            onActionSelected(OneTimeActionType.RenameCurrentProject(newName))
+                        }
+                    }.show(projectNameState.value, element)
+
+                ManageProject -> onManageProjectClick(workspaceDao, onActionSelected)
             }
         }
-        fileInfo.Div("menu-down-icon") {
-            SvgIcon(
-                width = 12,
-                height = 12,
-                viewPortWidth = 16,
-                viewPortHeight = 16,
-                "M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" // ktlint-disable max-line-length
-            )
-        }
+    }
+}
 
-        fileInfo.setOnClickListener {
-            showWorkingFileMenu(fileInfo) {
-                when (it) {
-                    is Forwarding -> onActionSelected(it.actionType)
-                    Rename -> RenameProjectModal(fileName, onActionSelected).show(fileInfo)
-                    ManageProject -> onManageProjectClick(workspaceDao, onActionSelected)
+@Composable
+private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
+    Div(
+        attrs = {
+            classes("working-file-container")
+        }
+    ) {
+        Div(attrs = { classes("divider") })
+
+        Div(attrs = {
+            classes("file-info")
+
+            onClick {
+                val anchor = it.currentTarget?.unsafeCast<Element>()
+                if (anchor != null) {
+                    showProjectMenu(anchor)
                 }
+            }
+        }) {
+            Span(attrs = { classes("title") }) {
+                Text(title)
+            }
+
+            Div(attrs = { classes("menu-down-icon") }) {
+                IconChevronDown(12)
             }
         }
     }
