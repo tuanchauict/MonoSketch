@@ -17,6 +17,7 @@ import mono.html.px
 import mono.html.setOnMouseOutListener
 import mono.html.setOnMouseOverListener
 import mono.html.style
+import org.jetbrains.compose.web.attributes.AttrsScope
 import org.w3c.dom.DOMRect
 import org.w3c.dom.Element
 
@@ -26,11 +27,21 @@ import org.w3c.dom.Element
  * after 600ms hovering.
  */
 fun Element.tooltip(text: String, position: TooltipPosition = TooltipPosition.BOTTOM) {
-    val tooltip = Tooltip(this, text, position)
+    val tooltip = Tooltip(text, position)
     setOnMouseOverListener {
-        tooltip.show()
+        tooltip.show(it.currentTarget as Element)
     }
     setOnMouseOutListener {
+        tooltip.hide()
+    }
+}
+
+fun AttrsScope<Element>.tooltip(text: String, position: TooltipPosition = TooltipPosition.BOTTOM) {
+    val tooltip = Tooltip(text, position)
+    onMouseOver {
+        tooltip.show(it.currentTarget.unsafeCast<Element>())
+    }
+    onMouseOut {
         tooltip.hide()
     }
 }
@@ -43,7 +54,6 @@ enum class TooltipPosition {
 }
 
 private class Tooltip(
-    private val anchor: Element,
     private val text: String,
     private val position: TooltipPosition
 ) {
@@ -51,11 +61,13 @@ private class Tooltip(
     private var bodyView: Element? = null
     private var showTask: Cancelable? = null
 
-    fun show() {
+    fun show(anchorView: Element) {
         if (showTask != null) {
             return
         }
-        showTask = setTimeout(600, ::showInternal)
+        showTask = setTimeout(600) {
+            showInternal(anchorView)
+        }
     }
 
     fun hide() {
@@ -67,16 +79,16 @@ private class Tooltip(
         bodyView = null
     }
 
-    private fun showInternal() {
+    private fun showInternal(anchorView: Element) {
         if (arrowView != null) {
             return
         }
         val body = document.body ?: return
-        createTooltip(body)
+        createTooltip(body, anchorView)
     }
 
-    private fun createTooltip(body: Element) {
-        val anchorPositionRect = anchor.getBoundingClientRect()
+    private fun createTooltip(body: Element, anchorView: Element) {
+        val anchorPositionRect = anchorView.getBoundingClientRect()
 
         val arrow = body.Div("mono-tooltip tooltip-arrow") {
             ArrowIcon()
@@ -162,16 +174,16 @@ private class Tooltip(
     private fun Element.ArrowIcon() {
         when (position) {
             TooltipPosition.LEFT ->
-                SvgIcon(5, 10, "M10 10L0 20V0L10 10Z")
+                SvgIcon(5, 10, 10, 20, "M10 10L0 20V0L10 10Z")
 
             TooltipPosition.RIGHT ->
-                SvgIcon(5, 10, "M0 10L10 0V20L0 10Z")
+                SvgIcon(5, 10, 10, 20, "M0 10L10 0V20L0 10Z")
 
             TooltipPosition.TOP ->
-                SvgIcon(10, 5, "M10 10L0 0H20L10 10Z")
+                SvgIcon(10, 5, 20, 10, "M10 10L0 0H20L10 10Z")
 
             TooltipPosition.BOTTOM ->
-                SvgIcon(10, 5, "M10 0L20 10H0L10 0Z")
+                SvgIcon(10, 5, 20, 10, "M10 0L20 10H0L10 0Z")
         }
     }
 
