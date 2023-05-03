@@ -21,15 +21,16 @@ import org.jetbrains.compose.web.attributes.AttrsScope
 import org.w3c.dom.DOMRect
 import org.w3c.dom.Element
 
+private val tooltip = Tooltip()
+
 /**
  * Registers a tooltip for the targeting element.
  * The tooltip will be displayed along with of the anchor element based on the relative [position]
  * after 600ms hovering.
  */
 fun Element.tooltip(text: String, position: TooltipPosition = TooltipPosition.BOTTOM) {
-    val tooltip = Tooltip(text, position)
     setOnMouseOverListener {
-        tooltip.show(it.currentTarget as Element)
+        tooltip.show(it.currentTarget as Element, text, position)
     }
     setOnMouseOutListener {
         tooltip.hide()
@@ -37,9 +38,8 @@ fun Element.tooltip(text: String, position: TooltipPosition = TooltipPosition.BO
 }
 
 fun AttrsScope<Element>.tooltip(text: String, position: TooltipPosition = TooltipPosition.BOTTOM) {
-    val tooltip = Tooltip(text, position)
     onMouseOver {
-        tooltip.show(it.currentTarget.unsafeCast<Element>())
+        tooltip.show(it.currentTarget.unsafeCast<Element>(), text, position)
     }
     onMouseOut {
         tooltip.hide()
@@ -53,20 +53,17 @@ enum class TooltipPosition {
     BOTTOM
 }
 
-private class Tooltip(
-    private val text: String,
-    private val position: TooltipPosition
-) {
+private class Tooltip {
     private var arrowView: Element? = null
     private var bodyView: Element? = null
     private var showTask: Cancelable? = null
 
-    fun show(anchorView: Element) {
+    fun show(anchorView: Element, text: String, position: TooltipPosition) {
         if (showTask != null) {
             return
         }
         showTask = setTimeout(600) {
-            showInternal(anchorView)
+            showInternal(anchorView, text, position)
         }
     }
 
@@ -79,19 +76,24 @@ private class Tooltip(
         bodyView = null
     }
 
-    private fun showInternal(anchorView: Element) {
+    private fun showInternal(anchorView: Element, text: String, position: TooltipPosition) {
         if (arrowView != null) {
             return
         }
         val body = document.body ?: return
-        createTooltip(body, anchorView)
+        createTooltip(body, anchorView, text, position)
     }
 
-    private fun createTooltip(body: Element, anchorView: Element) {
+    private fun createTooltip(
+        body: Element,
+        anchorView: Element,
+        text: String,
+        position: TooltipPosition
+    ) {
         val anchorPositionRect = anchorView.getBoundingClientRect()
 
         val arrow = body.Div("mono-tooltip tooltip-arrow") {
-            ArrowIcon()
+            ArrowIcon(position)
         }
 
         arrowView = arrow
@@ -99,16 +101,20 @@ private class Tooltip(
             style("visibility" to "hidden")
         }
         post {
-            arrow.adjustArrowPosition(anchorPositionRect)
+            arrow.adjustArrowPosition(anchorPositionRect, position)
             bodyView?.adjustTooltipBodyPosition(
                 body,
                 anchorPositionRect,
-                arrow.getBoundingClientRect()
+                arrow.getBoundingClientRect(),
+                position
             )
         }
     }
 
-    private fun Element.adjustArrowPosition(anchorPositionRect: DOMRect) {
+    private fun Element.adjustArrowPosition(
+        anchorPositionRect: DOMRect,
+        position: TooltipPosition
+    ) {
         when (position) {
             TooltipPosition.LEFT -> style(
                 "left" to (anchorPositionRect.left - clientWidth).px,
@@ -135,7 +141,8 @@ private class Tooltip(
     private fun Element.adjustTooltipBodyPosition(
         body: Element,
         anchorPositionRect: DOMRect,
-        arrowPositionRect: DOMRect
+        arrowPositionRect: DOMRect,
+        position: TooltipPosition
     ) {
         val leftMost = body.clientWidth - clientWidth - 4
         when (position) {
@@ -171,7 +178,7 @@ private class Tooltip(
         }
     }
 
-    private fun Element.ArrowIcon() {
+    private fun Element.ArrowIcon(position: TooltipPosition) {
         when (position) {
             TooltipPosition.LEFT ->
                 SvgIcon(5, 10, 10, 20, "M10 10L0 20V0L10 10Z")
