@@ -10,8 +10,10 @@ import mono.actionmanager.ActionManager
 import mono.actionmanager.RetainableActionType
 import mono.html.Div
 import mono.html.select
+import mono.html.toolbar.view.nav.AppMenuIcon
 import mono.html.toolbar.view.nav.MouseActionGroup
-import mono.html.toolbar.view.nav.RightToolbar
+import mono.html.toolbar.view.nav.ScrollModeButton
+import mono.html.toolbar.view.nav.ThemeIcons
 import mono.html.toolbar.view.nav.WorkingFileToolbar
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -19,6 +21,7 @@ import mono.livedata.MutableLiveData
 import mono.livedata.combineLiveData
 import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.appstate.AppUiStateManager
+import mono.ui.appstate.state.ScrollMode
 import mono.ui.compose.ext.toState
 import org.jetbrains.compose.web.renderComposable
 
@@ -45,6 +48,9 @@ class NavBarViewController(
     private val selectedMouseActionState: State<RetainableActionType> =
         actionManager.retainableActionLiveData.toState(lifecycleOwner)
 
+    private val scrollModeState: State<ScrollMode> =
+        appUiStateManager.scrollModeLiveData.toState(lifecycleOwner)
+
     init {
         document.select("#nav-toolbar").run {
             Div("left-toolbar-container") {
@@ -63,11 +69,11 @@ class NavBarViewController(
                 }
             }
             Div("right-toolbar-container") {
-                RightToolbar(
-                    lifecycleOwner,
-                    appUiStateManager,
-                    actionManager::setOneTimeAction
-                )
+                renderComposable(this) {
+                    ScrollModeButton(scrollModeState.value, appUiStateManager::updateUiState)
+                    ThemeIcons()
+                    AppMenuIcon(appUiStateManager, actionManager::setOneTimeAction)
+                }
             }
         }
     }
