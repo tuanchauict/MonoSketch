@@ -2,7 +2,7 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.html.toolbar.view.components
+package mono.html.toolbar.view.shapetool2.components
 
 import androidx.compose.runtime.Composable
 import mono.ui.compose.ext.classes

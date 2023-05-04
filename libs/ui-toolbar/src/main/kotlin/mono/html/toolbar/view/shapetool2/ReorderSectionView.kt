@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
 import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
-import mono.html.toolbar.view.components.Section
+import mono.html.toolbar.view.shapetool2.components.Section
 import mono.shape.command.ChangeOrder
 import mono.ui.compose.ext.Svg
 import mono.ui.compose.ext.SvgPath
