@@ -17,7 +17,7 @@ import mono.html.toolbar.view.nav.DropDownItem.ManageProject
 import mono.html.toolbar.view.nav.DropDownItem.Rename
 import mono.html.toolbar.view.nav.workingfile.RenameProjectModal
 import mono.store.dao.workspace.WorkspaceDao
-import mono.ui.compose.components.IconChevronDown
+import mono.ui.compose.components.Icons
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -71,7 +71,7 @@ private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
             }
 
             Div(attrs = { classes("menu-down-icon") }) {
-                IconChevronDown(12)
+                Icons.ChevronDown(12)
             }
         }
     }
