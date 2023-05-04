@@ -142,16 +142,26 @@ private fun ProjectContent(
 ) {
     Div(
         attrs = {
-            classes("item" to true, "removing" to isRemoveConfirming)
+            classes(
+                "item" to true,
+                "removing" to isRemoveConfirming,
+                "normal" to !isRemoveConfirming
+            )
             if (!isRemoveConfirming) {
                 onConsumeClick { onAction(Action.Open(item)) }
             }
         }
     ) {
         Div {
-            Text(item.name)
+            if (isRemoveConfirming) {
+                Text("""Delete "${item.name}"?""")
+            } else {
+                Text(item.name)
+            }
         }
-        Div {
+        Div(
+            attrs = { classes("actions") }
+        ) {
             if (isRemoveConfirming) {
                 RemoveProjectConfirm(item, onAction)
             } else {
@@ -165,7 +175,7 @@ private fun ProjectContent(
 private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) {
     Div(
         attrs = {
-            classes("remove")
+            classes("action")
             onConsumeClick {
                 onAction(Action.RequestRemove(item))
             }
@@ -175,7 +185,7 @@ private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) 
     }
     Div(
         attrs = {
-            classes("remove")
+            classes("action")
             onConsumeClick {
                 onAction(Action.SuspendRemove)
             }
@@ -189,7 +199,7 @@ private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) 
 private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Unit) {
     Div(
         attrs = {
-            classes("remove")
+            classes("action")
             onConsumeClick { onAction(Action.RequestRemove(project)) }
         }
     ) {

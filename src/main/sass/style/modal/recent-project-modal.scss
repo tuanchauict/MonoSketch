@@ -58,6 +58,7 @@
     .item {
         height: 26px;
         padding: 0 6px;
+        margin-top: 2px;
         border-radius: 3px;
         font-size: 14px;
         display: flex;
@@ -65,29 +66,47 @@
         align-items: center;
         cursor: pointer;
 
-        &:hover {
-            background: $modal-item-hover-bg;
+        &.normal {
+            &:hover {
+                background: $modal-item-hover-bg;
+
+                .actions {
+                    display: flex;
+                }
+            }
+
+            &:active {
+                opacity: 0.8;
+            }
+
+            .actions {
+                display: none;
+            }
         }
 
-        &:active {
-            opacity: 0.6;
+        &.removing {
+            background: rgba(255, 0, 0, 0.1);
         }
 
         &:hover .remove {
             display: flex;
         }
 
-        .remove {
-            border-radius: 3px;
+        .actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .action {
+            opacity: 0.5;
             padding: 3px;
-            display: none;
+            margin-left: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             &:hover {
-                background-color: $modal-item-action-hover-bg;
-            }
-
-            &:active {
-                opacity: 0.6;
+                opacity: 1;
             }
         }
     }
