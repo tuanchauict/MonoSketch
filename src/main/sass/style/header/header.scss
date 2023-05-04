@@ -48,3 +48,7 @@ $bg-color: var(--header-bg);
     display: flex;
     height: 100%;
 }
+
+.middle-toolbar-container {
+    margin-left: -100px; // Adjust with the project name
+}

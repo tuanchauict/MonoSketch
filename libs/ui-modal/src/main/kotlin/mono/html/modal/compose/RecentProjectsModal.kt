@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.browser.document
-import mono.ui.compose.components.IconClose
+import mono.ui.compose.components.Icons
+import mono.ui.compose.ext.classes
+import mono.ui.compose.ext.onConsumeClick
 import mono.ui.compose.ext.sideEffectFocus
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.attributes.placeholder
@@ -56,17 +58,30 @@ private fun RecentProjectsModal(
         Div(attrs = {
             classes("container")
 
-            onClick {
-                it.preventDefault()
-                it.stopPropagation()
-            }
+            onConsumeClick {}
         }) {
             val filter = remember { mutableStateOf("") }
+            val requestingRemoveProjectId = remember { mutableStateOf("") }
 
-            FilterInput { filter.value = it }
-            ProjectList(filter.value, projects) { item, isRemoved ->
-                onSelect(item, isRemoved)
-                onDismiss()
+            FilterInput {
+                filter.value = it
+                requestingRemoveProjectId.value = ""
+            }
+            ProjectList(filter.value, projects, requestingRemoveProjectId.value) {
+                when (it) {
+                    is Action.Open -> {
+                        onSelect(it.project, false)
+                        onDismiss()
+                    }
+
+                    is Action.RemoveConfirm -> {
+                        onSelect(it.project, true)
+                        onDismiss()
+                    }
+
+                    is Action.RequestRemove -> requestingRemoveProjectId.value = it.project.id
+                    Action.SuspendRemove -> requestingRemoveProjectId.value = ""
+                }
             }
         }
     }
@@ -91,14 +106,21 @@ private fun FilterInput(onChange: (String) -> Unit) {
 }
 
 @Composable
-private fun ProjectList(filter: String, projects: List<ProjectItem>, onSelect: SelectAction) {
+private fun ProjectList(
+    filter: String,
+    projects: List<ProjectItem>,
+    requestingRemoveProjectId: String,
+    onAction: (Action) -> Unit
+) {
     val filteredProjects = projects.filter { it.name.contains(filter, ignoreCase = true) }
+
     if (filteredProjects.isNotEmpty()) {
         Div(
             attrs = { classes("list") }
         ) {
             for (project in filteredProjects) {
-                ProjectContent(project, onSelect)
+                val isRemoveConfirming = project.id == requestingRemoveProjectId
+                ProjectContent(project, isRemoveConfirming, onAction)
             }
         }
     } else {
@@ -113,26 +135,81 @@ private fun ProjectList(filter: String, projects: List<ProjectItem>, onSelect: S
 }
 
 @Composable
-private fun ProjectContent(item: ProjectItem, onSelect: SelectAction) {
+private fun ProjectContent(
+    item: ProjectItem,
+    isRemoveConfirming: Boolean,
+    onAction: (Action) -> Unit
+) {
     Div(
         attrs = {
-            classes("item")
-            onClick { onSelect(item, false) }
+            classes(
+                "item" to true,
+                "removing" to isRemoveConfirming,
+                "normal" to !isRemoveConfirming
+            )
+            if (!isRemoveConfirming) {
+                onConsumeClick { onAction(Action.Open(item)) }
+            }
         }
     ) {
         Div {
-            Text(item.name)
+            if (isRemoveConfirming) {
+                Text("""Delete "${item.name}"?""")
+            } else {
+                Text(item.name)
+            }
         }
         Div(
-            attrs = {
-                classes("remove")
-                onClick {
-                    // TODO: Show confirm dialog
-                    onSelect(item, true)
-                }
-            }
+            attrs = { classes("actions") }
         ) {
-            IconClose(12)
+            if (isRemoveConfirming) {
+                RemoveProjectConfirm(item, onAction)
+            } else {
+                RemoveProjectRequest(item, onAction)
+            }
         }
     }
+}
+
+@Composable
+private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) {
+    Div(
+        attrs = {
+            classes("action")
+            onConsumeClick {
+                onAction(Action.RequestRemove(item))
+            }
+        }
+    ) {
+        Icons.Remove(12)
+    }
+    Div(
+        attrs = {
+            classes("action")
+            onConsumeClick {
+                onAction(Action.SuspendRemove)
+            }
+        }
+    ) {
+        Icons.Cross(12)
+    }
+}
+
+@Composable
+private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Unit) {
+    Div(
+        attrs = {
+            classes("action")
+            onConsumeClick { onAction(Action.RequestRemove(project)) }
+        }
+    ) {
+        Icons.Remove(12)
+    }
+}
+
+private sealed class Action {
+    data class Open(val project: ProjectItem) : Action()
+    data class RequestRemove(val project: ProjectItem) : Action()
+    data class RemoveConfirm(val project: ProjectItem) : Action()
+    object SuspendRemove : Action()
 }
