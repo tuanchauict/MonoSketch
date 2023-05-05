@@ -34,7 +34,6 @@ internal fun AppearanceToolView(
             title = "Fill",
             isAvailable = viewModel.shapeFillTypeState.value is GridVisible
         ) {
-
             OptionsCloud(
                 viewModel.fillOptions,
                 '×',
@@ -219,4 +218,4 @@ private fun DashInput(name: String, value: Int, minValue: Int?, onValueChange: (
     Div(attrs = { classes("pattern") }) {
         NumberTextField(name, value, minValue, isChildBound = true, onValueChange = onValueChange)
     }
-} 
+}

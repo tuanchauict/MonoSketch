@@ -73,7 +73,6 @@ internal fun FooterView() {
             ) {
                 Text("GitHub")
             }
-
         }
     }
 }

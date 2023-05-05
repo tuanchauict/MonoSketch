@@ -91,7 +91,6 @@ internal class ShapeToolViewModel(
     ) { states -> states.any { it == true } }
         .toState(lifecycleOwner)
 
-
     val fillOptions: List<AppearanceOptionItem> = appearanceDataController.fillOptions
 
     val strokeOptions: List<AppearanceOptionItem> = appearanceDataController.strokeOptions
