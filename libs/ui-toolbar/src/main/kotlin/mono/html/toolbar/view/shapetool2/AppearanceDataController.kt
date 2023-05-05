@@ -34,20 +34,20 @@ internal class AppearanceDataController(
             shapeManagerVersionLiveData
         ) { selected, _ -> selected }
 
-    val fillToolStateLiveData: LiveData<AppearanceVisibility> =
+    val fillToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createFillAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
-    val borderToolStateLiveData: LiveData<AppearanceVisibility> =
+    val borderToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
-    val borderDashPatternLiveData: LiveData<AppearanceVisibility> =
+    val borderDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createBorderDashPatternLiveData(shapesLiveData)
 
-    val lineStrokeToolStateLiveData: LiveData<AppearanceVisibility> =
+    val lineStrokeToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
-    val lineStrokeDashPatternLiveData: LiveData<AppearanceVisibility> =
+    val lineStrokeDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createLineStrokeDashPatternLiveData(shapesLiveData)
-    val lineStartHeadToolStateLiveData: LiveData<AppearanceVisibility> =
+    val lineStartHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
-    val lineEndHeadToolStateLiveData: LiveData<AppearanceVisibility> =
+    val lineEndHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createEndHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
 
     val hasAnyVisibleToolLiveData: LiveData<Boolean> = combineLiveData(
@@ -56,7 +56,7 @@ internal class AppearanceDataController(
         lineStrokeToolStateLiveData,
         lineStartHeadToolStateLiveData,
         lineEndHeadToolStateLiveData
-    ) { list -> list.any { it != AppearanceVisibility.Hide } }
+    ) { list -> list.any { it != null } }
 
     val fillOptions: List<AppearanceOptionItem> =
         ShapeExtraManager.getAllPredefinedRectangleFillStyles()
@@ -70,43 +70,37 @@ internal class AppearanceDataController(
         ShapeExtraManager.getAllPredefinedAnchorChars()
             .map { AppearanceOptionItem(it.id, it.displayName) }
 
+    private val defaultRectangleExtra: RectangleExtra
+        get() = ShapeExtraManager.defaultRectangleExtra
+
+    private val defaultLineExtra: LineExtra
+        get() = ShapeExtraManager.defaultLineExtra
+
     private fun createFillAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
         retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<AppearanceVisibility> {
+    ): LiveData<CloudItemSelectionState?> {
         val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when {
-                it.isEmpty() -> null
-                it.size > 1 -> AppearanceVisibility.Hide
-                else -> {
-                    when (val shape = it.single()) {
-                        is Rectangle -> shape.extra.toFillAppearanceVisibilityState()
-                        is Text -> shape.extra.boundExtra.toFillAppearanceVisibilityState()
-                        is Group,
-                        is Line,
-                        is MockShape -> AppearanceVisibility.Hide
-                    }
-                }
+            when (val shape = it.singleOrNull()) {
+                is Rectangle -> shape.extra.toFillAppearanceVisibilityState()
+                is Text -> shape.extra.boundExtra.toFillAppearanceVisibilityState()
+                null,
+                is Group,
+                is Line,
+                is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT ->
-                    ShapeExtraManager.defaultRectangleExtra.userSelectedFillStyle
+                    defaultRectangleExtra.userSelectedFillStyle
 
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedRectangleFillStyles().indexOf(defaultState)
-                AppearanceVisibility.GridVisible(
-                    ShapeExtraManager.defaultRectangleExtra.isFillEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                AppearanceVisibility.Hide
+            defaultState?.let {
+                CloudItemSelectionState(defaultRectangleExtra.isFillEnabled, it.id)
             }
         }
 
@@ -119,40 +113,28 @@ internal class AppearanceDataController(
     private fun createBorderAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
         retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<AppearanceVisibility> {
+    ): LiveData<CloudItemSelectionState?> {
         val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when {
-                it.isEmpty() -> null
-                it.size > 1 -> AppearanceVisibility.Hide
-                else -> {
-                    when (val shape = it.single()) {
-                        is Rectangle -> shape.extra.toBorderAppearanceVisibilityState()
-                        is Text -> shape.extra.boundExtra.toBorderAppearanceVisibilityState()
-                        is Group,
-                        is Line,
-                        is MockShape -> AppearanceVisibility.Hide
-                    }
-                }
+            when (val shape = it.singleOrNull()) {
+                is Rectangle -> shape.extra.toBorderAppearanceVisibilityState()
+                is Text -> shape.extra.boundExtra.toBorderAppearanceVisibilityState()
+                null,
+                is Group,
+                is Line,
+                is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT ->
-                    ShapeExtraManager.defaultRectangleExtra.userSelectedBorderStyle
+                    defaultRectangleExtra.userSelectedBorderStyle
 
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
-                AppearanceVisibility.GridVisible(
-                    ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                AppearanceVisibility.Hide
+            defaultState?.let {
+                CloudItemSelectionState(defaultRectangleExtra.isBorderEnabled, it.id)
             }
         }
 
@@ -164,7 +146,7 @@ internal class AppearanceDataController(
 
     private fun createBorderDashPatternLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<AppearanceVisibility> = selectedShapesLiveData.map {
+    ): LiveData<StraightStrokeDashPattern?> = selectedShapesLiveData.map {
         val boundExtra = when (val shape = it.singleOrNull()) {
             is Text -> shape.extra.boundExtra
             is Rectangle -> shape.extra
@@ -173,46 +155,32 @@ internal class AppearanceDataController(
             is MockShape,
             null -> null
         }
-        val dashPattern =
-            boundExtra?.dashPattern.takeIf { boundExtra?.isBorderEnabled.nullToFalse() }
-        dashPattern?.let(AppearanceVisibility::DashVisible) ?: AppearanceVisibility.Hide
+        boundExtra?.dashPattern.takeIf { boundExtra?.isBorderEnabled.nullToFalse() }
     }
 
     private fun createLineStrokeAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
         retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<AppearanceVisibility> {
+    ): LiveData<CloudItemSelectionState?> {
         val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when {
-                it.isEmpty() -> null
-                it.size > 1 -> AppearanceVisibility.Hide
-                else -> {
-                    when (val shape = it.single()) {
-                        is Line -> shape.extra.toStrokeVisibilityState()
-                        is Rectangle,
-                        is Text,
-                        is Group,
-                        is MockShape -> AppearanceVisibility.Hide
-                    }
-                }
+            when (val shape = it.singleOrNull()) {
+                is Line -> shape.extra.toStrokeVisibilityState()
+                null,
+                is Rectangle,
+                is Text,
+                is Group,
+                is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
-                RetainableActionType.ADD_LINE -> ShapeExtraManager.defaultLineExtra.strokeStyle
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
+                RetainableActionType.ADD_LINE -> defaultLineExtra.strokeStyle
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
-                AppearanceVisibility.GridVisible(
-                    ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                AppearanceVisibility.Hide
+            defaultState?.let {
+                CloudItemSelectionState(defaultRectangleExtra.isBorderEnabled, it.id)
             }
         }
 
@@ -224,7 +192,7 @@ internal class AppearanceDataController(
 
     private fun createLineStrokeDashPatternLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<AppearanceVisibility> = selectedShapesLiveData.map {
+    ): LiveData<StraightStrokeDashPattern?> = selectedShapesLiveData.map {
         val extra = when (val shape = it.singleOrNull()) {
             is Line -> shape.extra
             is Group,
@@ -233,47 +201,34 @@ internal class AppearanceDataController(
             is MockShape,
             null -> null
         }
-        val dashPattern = extra?.dashPattern.takeIf { extra?.isStrokeEnabled.nullToFalse() }
-        dashPattern?.let(AppearanceVisibility::DashVisible) ?: AppearanceVisibility.Hide
+        extra?.dashPattern.takeIf { extra?.isStrokeEnabled.nullToFalse() }
     }
 
     private fun createStartHeadAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
         retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<AppearanceVisibility> {
+    ): LiveData<CloudItemSelectionState?> {
         val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when {
-                it.isEmpty() -> null
-                it.size > 1 -> AppearanceVisibility.Hide
-                else -> {
-                    when (val shape = it.single()) {
-                        is Line -> shape.toStartHeadAppearanceVisibilityState()
-                        is Rectangle,
-                        is Text,
-                        is Group,
-                        is MockShape -> AppearanceVisibility.Hide
-                    }
-                }
+            when (val shape = it.singleOrNull()) {
+                is Line -> shape.toStartHeadAppearanceVisibilityState()
+                null,
+                is Rectangle,
+                is Text,
+                is Group,
+                is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultLineExtra.userSelectedStartAnchor
+                    defaultLineExtra.userSelectedStartAnchor
 
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedStartHeaderPosition =
-                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                AppearanceVisibility.GridVisible(
-                    ShapeExtraManager.defaultLineExtra.isStartAnchorEnabled,
-                    selectedStartHeaderPosition
-                )
-            } else {
-                AppearanceVisibility.Hide
+            defaultState?.let {
+                CloudItemSelectionState(defaultLineExtra.isStartAnchorEnabled, it.id)
             }
         }
 
@@ -286,40 +241,28 @@ internal class AppearanceDataController(
     private fun createEndHeadAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
         retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<AppearanceVisibility> {
+    ): LiveData<CloudItemSelectionState?> {
         val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when {
-                it.isEmpty() -> null
-                it.size > 1 -> AppearanceVisibility.Hide
-                else -> {
-                    when (val shape = it.single()) {
-                        is Line -> shape.toEndHeadAppearanceVisibilityState()
-                        is Rectangle,
-                        is Text,
-                        is Group,
-                        is MockShape -> AppearanceVisibility.Hide
-                    }
-                }
+            when (val shape = it.singleOrNull()) {
+                is Line -> shape.toEndHeadAppearanceVisibilityState()
+                null,
+                is Rectangle,
+                is Text,
+                is Group,
+                is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultLineExtra.userSelectedEndAnchor
+                    defaultLineExtra.userSelectedEndAnchor
 
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                AppearanceVisibility.GridVisible(
-                    ShapeExtraManager.defaultLineExtra.isEndAnchorEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                AppearanceVisibility.Hide
+            defaultState?.let {
+                CloudItemSelectionState(defaultLineExtra.isEndAnchorEnabled, it.id)
             }
         }
 
@@ -330,59 +273,29 @@ internal class AppearanceDataController(
     }
 
     private fun createAppearanceVisibilityLiveData(
-        selectedShapeVisibilityLiveData: LiveData<AppearanceVisibility?>,
-        defaultVisibilityLiveData: LiveData<AppearanceVisibility>
-    ): LiveData<AppearanceVisibility> = combineLiveData(
+        selectedShapeVisibilityLiveData: LiveData<CloudItemSelectionState?>,
+        defaultVisibilityLiveData: LiveData<CloudItemSelectionState?>
+    ): LiveData<CloudItemSelectionState?> = combineLiveData(
         selectedShapeVisibilityLiveData,
         defaultVisibilityLiveData
     ) { selected, default -> selected ?: default }
 
-    private fun RectangleExtra.toFillAppearanceVisibilityState(): AppearanceVisibility {
-        val selectedFillPosition =
-            ShapeExtraManager.getAllPredefinedRectangleFillStyles()
-                .indexOf(userSelectedFillStyle)
-        return AppearanceVisibility.GridVisible(isFillEnabled, selectedFillPosition)
-    }
+    private fun RectangleExtra.toFillAppearanceVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(isFillEnabled, userSelectedFillStyle.id)
 
-    private fun RectangleExtra.toBorderAppearanceVisibilityState(): AppearanceVisibility {
-        val selectedBorderPosition =
-            ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedBorderStyle)
-        return AppearanceVisibility.GridVisible(isBorderEnabled, selectedBorderPosition)
-    }
+    private fun RectangleExtra.toBorderAppearanceVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(isBorderEnabled, userSelectedBorderStyle.id)
 
-    private fun LineExtra.toStrokeVisibilityState(): AppearanceVisibility {
-        val selectedStrokePosition =
-            ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedStrokeStyle)
-        return AppearanceVisibility.GridVisible(isStrokeEnabled, selectedStrokePosition)
-    }
+    private fun LineExtra.toStrokeVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(isStrokeEnabled, userSelectedStrokeStyle.id)
 
-    private fun Line.toStartHeadAppearanceVisibilityState(): AppearanceVisibility {
-        val selectedStartHeadPosition =
-            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedStartAnchor)
-        return AppearanceVisibility.GridVisible(
-            extra.isStartAnchorEnabled,
-            selectedStartHeadPosition
-        )
-    }
+    private fun Line.toStartHeadAppearanceVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(extra.isStartAnchorEnabled, extra.userSelectedStartAnchor.id)
 
-    private fun Line.toEndHeadAppearanceVisibilityState(): AppearanceVisibility {
-        val selectedEndHeadPosition =
-            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
-        return AppearanceVisibility.GridVisible(extra.isEndAnchorEnabled, selectedEndHeadPosition)
-    }
+    private fun Line.toEndHeadAppearanceVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(extra.isEndAnchorEnabled, extra.userSelectedEndAnchor.id)
 }
 
 internal data class AppearanceOptionItem(val id: String, val name: String)
 
-internal sealed class AppearanceVisibility {
-    object Hide : AppearanceVisibility()
-
-    data class GridVisible(
-        val isChecked: Boolean,
-        val selectedPosition: Int
-    ) : AppearanceVisibility()
-
-    data class DashVisible(
-        val dashPattern: StraightStrokeDashPattern
-    ) : AppearanceVisibility()
-}
+internal data class CloudItemSelectionState(val isChecked: Boolean, val selectedId: String?)
