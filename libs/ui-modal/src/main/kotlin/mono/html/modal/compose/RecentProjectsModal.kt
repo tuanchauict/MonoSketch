@@ -177,7 +177,7 @@ private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) 
         attrs = {
             classes("action")
             onConsumeClick {
-                onAction(Action.RequestRemove(item))
+                onAction(Action.RemoveConfirm(item))
             }
         }
     ) {
