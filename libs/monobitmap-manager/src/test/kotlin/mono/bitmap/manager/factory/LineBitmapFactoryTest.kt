@@ -4,13 +4,13 @@
 
 package mono.bitmap.manager.factory
 
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import mono.graphics.geo.Point
 import mono.shape.extra.LineExtra
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.AnchorChar
 import mono.shape.extra.style.StraightStrokeDashPattern
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 /**
  * A test for [LineBitmapFactory].

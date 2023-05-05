@@ -4,12 +4,12 @@
 
 package mono.shape.serialization
 
+import kotlin.test.Test
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mono.graphics.geo.Rect
 import mono.shape.ShapeExtraManager
-import kotlin.test.Test
 
 class GroupSerializationTest {
     @Test

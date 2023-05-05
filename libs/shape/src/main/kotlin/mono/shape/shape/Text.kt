@@ -4,6 +4,7 @@
 
 package mono.shape.shape
 
+import kotlin.math.max
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -11,7 +12,6 @@ import mono.shape.extra.ShapeExtra
 import mono.shape.extra.TextExtra
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableText
-import kotlin.math.max
 
 /**
  * A text shape which contains a bound and a text.

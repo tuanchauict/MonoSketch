@@ -4,10 +4,10 @@
 
 package mono.bitmap.manager.factory
 
-import mono.graphics.geo.Rect
-import mono.shape.shape.Text
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import mono.graphics.geo.Rect
+import mono.shape.shape.Text
 
 /**
  * A test for [TextBitmapFactory]

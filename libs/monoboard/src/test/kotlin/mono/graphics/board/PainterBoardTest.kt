@@ -4,12 +4,12 @@
 
 package mono.graphics.board
 
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 /**
  * A test for [PainterBoard]

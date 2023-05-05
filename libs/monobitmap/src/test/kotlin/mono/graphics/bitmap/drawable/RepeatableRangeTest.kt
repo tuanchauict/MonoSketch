@@ -4,9 +4,9 @@
 
 package mono.graphics.bitmap.drawable
 
-import mono.graphics.bitmap.drawable.NinePatchDrawable.RepeatableRange
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import mono.graphics.bitmap.drawable.NinePatchDrawable.RepeatableRange
 
 /**
  * A test for [RepeatableRange]

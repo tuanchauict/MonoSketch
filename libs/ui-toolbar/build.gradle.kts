@@ -4,6 +4,7 @@
 
 plugins {
     kotlin("js")
+    id("org.jetbrains.compose")
 }
 
 repositories {
@@ -19,6 +20,9 @@ dependencies {
     implementation(projects.uiAppStateManager)
     implementation(projects.uiModal)
     implementation(projects.uiTheme)
+
+    implementation(compose.html.core)
+    implementation(compose.runtime)
 
     testImplementation(libs.kotlin.test.js)
 }

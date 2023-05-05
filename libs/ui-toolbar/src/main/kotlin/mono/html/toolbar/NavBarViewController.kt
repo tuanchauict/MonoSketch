@@ -4,18 +4,24 @@
 
 package mono.html.toolbar
 
-import kotlinx.browser.document
+import androidx.compose.runtime.State
 import mono.actionmanager.ActionManager
-import mono.html.Div
-import mono.html.select
+import mono.actionmanager.RetainableActionType
+import mono.html.toolbar.view.nav.AppMenuIcon
 import mono.html.toolbar.view.nav.MouseActionGroup
-import mono.html.toolbar.view.nav.RightToolbar
+import mono.html.toolbar.view.nav.ScrollModeButton
+import mono.html.toolbar.view.nav.ThemeIcons
 import mono.html.toolbar.view.nav.WorkingFileToolbar
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
+import mono.livedata.MutableLiveData
 import mono.livedata.combineLiveData
 import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.appstate.AppUiStateManager
+import mono.ui.appstate.state.ScrollMode
+import mono.ui.compose.ext.toState
+import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.renderComposable
 
 /**
  * A view controller to manage toolbar.
@@ -28,33 +34,46 @@ class NavBarViewController(
     private val actionManager: ActionManager,
     workspaceDao: WorkspaceDao = WorkspaceDao.instance
 ) {
+    // A live data for updating the UI due to the change in the nav bar's actions
+    private val environmentUpdateLiveData = MutableLiveData(Unit)
+    private val projectNameState: State<String> = combineLiveData(
+        applicationActiveStateLiveData,
+        environmentUpdateLiveData,
+        currentRootIdLiveData
+    ) { (_, _, rootId) -> workspaceDao.getObject(rootId as String).name }
+        .toState(lifecycleOwner)
+
+    private val selectedMouseActionState: State<RetainableActionType> =
+        actionManager.retainableActionLiveData.toState(lifecycleOwner)
+
+    private val scrollModeState: State<ScrollMode> =
+        appUiStateManager.scrollModeLiveData.toState(lifecycleOwner)
+
     init {
-        val fileNameLiveData =
-            combineLiveData(applicationActiveStateLiveData, currentRootIdLiveData) { _, rootId ->
-                workspaceDao.getObject(rootId).name
+        renderComposable("nav-toolbar") {
+            Div(
+                attrs = { classes("left-toolbar-container") }
+            ) {
+                WorkingFileToolbar(projectNameState, workspaceDao) {
+                    actionManager.setOneTimeAction(it)
+                    // Notify the change in storage
+                    // Note: This won't work if updating the name is done concurrently
+                    environmentUpdateLiveData.value = Unit
+                }
             }
-        document.select("#nav-toolbar").run {
-            Div("left-toolbar-container") {
-                WorkingFileToolbar(
-                    lifecycleOwner,
-                    workspaceDao,
-                    fileNameLiveData,
-                    actionManager::setOneTimeAction
-                )
+
+            Div(
+                attrs = { classes("middle-toolbar-container") }
+            ) {
+                MouseActionGroup(selectedMouseActionState, actionManager::setRetainableAction)
             }
-            Div("middle-toolbar-container") {
-                MouseActionGroup(
-                    lifecycleOwner,
-                    actionManager.retainableActionLiveData,
-                    actionManager::setRetainableAction
-                )
-            }
-            Div("right-toolbar-container") {
-                RightToolbar(
-                    lifecycleOwner,
-                    appUiStateManager,
-                    actionManager::setOneTimeAction
-                )
+
+            Div(
+                attrs = { classes("right-toolbar-container") }
+            ) {
+                ScrollModeButton(scrollModeState.value, appUiStateManager::updateUiState)
+                ThemeIcons()
+                AppMenuIcon(appUiStateManager, actionManager::setOneTimeAction)
             }
         }
     }

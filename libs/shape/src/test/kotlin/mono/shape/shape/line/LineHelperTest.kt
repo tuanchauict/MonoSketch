@@ -4,12 +4,12 @@
 
 package mono.shape.shape.line
 
-import mono.graphics.geo.DirectedPoint
-import mono.graphics.geo.Point
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import mono.graphics.geo.DirectedPoint
+import mono.graphics.geo.Point
 
 /**
  * A test for [LineHelper].

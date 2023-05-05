@@ -31,6 +31,14 @@ body {
     right: 0;
 }
 
+#shape-tools2 {
+    position: fixed;
+    width: $sharp-tool-width;
+    top: $nav-height;
+    bottom: 0;
+    right: $sharp-tool-width;
+}
+
 #workspace {
     position: fixed;
     top: $nav-height;
