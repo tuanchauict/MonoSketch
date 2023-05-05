@@ -80,12 +80,17 @@ internal class ShapeToolViewModel(
     val appearanceVisibilityState: State<Boolean> =
         appearanceDataController.hasAnyVisibleToolLiveData.toState(lifecycleOwner)
 
-    val textAlignState: State<TextAlign?> =
+    private val textAlignLiveData: LiveData<TextAlign?> =
         createTextAlignLiveData(singleShapeLiveData, retainableActionLiveData)
-            .toState(lifecycleOwner)
+    val textAlignState: State<TextAlign?> = textAlignLiveData.toState(lifecycleOwner)
 
-    val hasAnyToolState: State<Boolean> =
-        singleShapeLiveData.map { it != null }.toState(lifecycleOwner)
+    val hasAnyToolState: State<Boolean> = combineLiveData(
+        singleShapeLiveData.map { it != null },
+        appearanceDataController.hasAnyVisibleToolLiveData,
+        textAlignLiveData.map { it != null }
+    ) { states -> states.any { it == true } }
+        .toState(lifecycleOwner)
+
 
     val fillOptions: List<AppearanceOptionItem> = appearanceDataController.fillOptions
 
