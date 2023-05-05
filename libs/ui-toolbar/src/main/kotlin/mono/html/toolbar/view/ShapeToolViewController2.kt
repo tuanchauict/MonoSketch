@@ -5,6 +5,7 @@
 package mono.html.toolbar.view
 
 import mono.actionmanager.ActionManager
+import mono.html.toolbar.view.shapetool2.AppearanceToolView
 import mono.html.toolbar.view.shapetool2.FooterView
 import mono.html.toolbar.view.shapetool2.IndicatorView
 import mono.html.toolbar.view.shapetool2.ReorderSectionView
@@ -31,7 +32,7 @@ class ShapeToolViewController2(
         lifecycleOwner,
         selectedShapesLiveData,
         shapeManagerVersionLiveData,
-        shapeToolVisibilityLiveData
+        actionManager
     )
 
     init {
@@ -49,6 +50,10 @@ class ShapeToolViewController2(
                 TransformationToolView(
                     viewModel.singleShapeBoundState.value,
                     viewModel.singleShapeResizeableState.value,
+                    actionManager::setOneTimeAction
+                )
+                AppearanceToolView(
+                    viewModel,
                     actionManager::setOneTimeAction
                 )
                 IndicatorView(isVisible = !viewModel.hasAnyToolState.value)

@@ -104,6 +104,7 @@ internal class AppearanceDataController(
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT ->
                     ShapeExtraManager.defaultRectangleExtra.userSelectedFillStyle
+
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -149,6 +150,7 @@ internal class AppearanceDataController(
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT ->
                     ShapeExtraManager.defaultRectangleExtra.userSelectedBorderStyle
+
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -268,6 +270,7 @@ internal class AppearanceDataController(
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
                     ShapeExtraManager.defaultLineExtra.userSelectedStartAnchor
+
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
@@ -313,6 +316,7 @@ internal class AppearanceDataController(
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
                     ShapeExtraManager.defaultLineExtra.userSelectedEndAnchor
+
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null

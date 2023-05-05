@@ -9,14 +9,9 @@ package mono.html.toolbar.view.shapetool2
 import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
 import mono.graphics.geo.Rect
+import mono.html.toolbar.view.shapetool2.components.NumberTextField
 import mono.html.toolbar.view.shapetool2.components.Section
-import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.attributes.disabled
-import org.jetbrains.compose.web.attributes.min
 import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Input
-import org.jetbrains.compose.web.dom.Span
-import org.jetbrains.compose.web.dom.Text
 
 @Composable
 internal fun TransformationToolView(
@@ -55,35 +50,16 @@ private fun NumberCell(
     title: String,
     value: Int,
     minValue: Int? = null,
-    isEnable: Boolean = true,
+    isEnabled: Boolean = true,
     onValueChange: (Int?) -> Unit
 ) {
-    Div(
-        attrs = { classes("cell") }
-    ) {
-        Div(
-            attrs = { classes("text-input-layout") }
-        ) {
-            Span(
-                attrs = {
-                    classes("text-input-label")
-                }
-            ) {
-                Text(title)
-            }
-
-            Input(InputType.Number) {
-                classes("text-input")
-                if (!isEnable) {
-                    disabled()
-                }
-                defaultValue(value)
-                if (minValue != null) {
-                    min(minValue.toString())
-                }
-                onChange { onValueChange(it.value?.toInt()) }
-            }
-        }
-
+    Div(attrs = { classes("cell") }) {
+        NumberTextField(
+            title,
+            value,
+            minValue,
+            isEnabled = isEnabled,
+            onValueChange = onValueChange
+        )
     }
 }
