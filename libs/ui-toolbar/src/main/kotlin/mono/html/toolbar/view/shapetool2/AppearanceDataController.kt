@@ -70,6 +70,12 @@ internal class AppearanceDataController(
         ShapeExtraManager.getAllPredefinedAnchorChars()
             .map { AppearanceOptionItem(it.id, it.displayName) }
 
+    private val defaultRectangleExtra: RectangleExtra
+        get() = ShapeExtraManager.defaultRectangleExtra
+
+    private val defaultLineExtra: LineExtra
+        get() = ShapeExtraManager.defaultLineExtra
+
     private fun createFillAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
         retainableActionTypeLiveData: LiveData<RetainableActionType>
@@ -84,24 +90,17 @@ internal class AppearanceDataController(
                 is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT ->
-                    ShapeExtraManager.defaultRectangleExtra.userSelectedFillStyle
+                    defaultRectangleExtra.userSelectedFillStyle
 
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedRectangleFillStyles().indexOf(defaultState)
-                CloudItemSelectionState(
-                    ShapeExtraManager.defaultRectangleExtra.isFillEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                null
+            defaultState?.let {
+                CloudItemSelectionState(defaultRectangleExtra.isFillEnabled, it.id)
             }
         }
 
@@ -125,24 +124,17 @@ internal class AppearanceDataController(
                 is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT ->
-                    ShapeExtraManager.defaultRectangleExtra.userSelectedBorderStyle
+                    defaultRectangleExtra.userSelectedBorderStyle
 
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
-                CloudItemSelectionState(
-                    ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                null
+            defaultState?.let {
+                CloudItemSelectionState(defaultRectangleExtra.isBorderEnabled, it.id)
             }
         }
 
@@ -180,22 +172,15 @@ internal class AppearanceDataController(
                 is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
-                RetainableActionType.ADD_LINE -> ShapeExtraManager.defaultLineExtra.strokeStyle
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
+                RetainableActionType.ADD_LINE -> defaultLineExtra.strokeStyle
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(defaultState)
-                CloudItemSelectionState(
-                    ShapeExtraManager.defaultRectangleExtra.isBorderEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                null
+            defaultState?.let {
+                CloudItemSelectionState(defaultRectangleExtra.isBorderEnabled, it.id)
             }
         }
 
@@ -233,24 +218,17 @@ internal class AppearanceDataController(
                 is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultLineExtra.userSelectedStartAnchor
+                    defaultLineExtra.userSelectedStartAnchor
 
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedStartHeaderPosition =
-                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                CloudItemSelectionState(
-                    ShapeExtraManager.defaultLineExtra.isStartAnchorEnabled,
-                    selectedStartHeaderPosition
-                )
-            } else {
-                null
+            defaultState?.let {
+                CloudItemSelectionState(defaultLineExtra.isStartAnchorEnabled, it.id)
             }
         }
 
@@ -274,24 +252,17 @@ internal class AppearanceDataController(
                 is MockShape -> null
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map {
-            val defaultState = when (it) {
+        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
+            val defaultState = when (type) {
                 RetainableActionType.ADD_LINE ->
-                    ShapeExtraManager.defaultLineExtra.userSelectedEndAnchor
+                    defaultLineExtra.userSelectedEndAnchor
 
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
             }
-            if (defaultState != null) {
-                val selectedFillPosition =
-                    ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(defaultState)
-                CloudItemSelectionState(
-                    ShapeExtraManager.defaultLineExtra.isEndAnchorEnabled,
-                    selectedFillPosition
-                )
-            } else {
-                null
+            defaultState?.let {
+                CloudItemSelectionState(defaultLineExtra.isEndAnchorEnabled, it.id)
             }
         }
 
@@ -309,38 +280,22 @@ internal class AppearanceDataController(
         defaultVisibilityLiveData
     ) { selected, default -> selected ?: default }
 
-    private fun RectangleExtra.toFillAppearanceVisibilityState(): CloudItemSelectionState {
-        val selectedFillPosition =
-            ShapeExtraManager.getAllPredefinedRectangleFillStyles()
-                .indexOf(userSelectedFillStyle)
-        return CloudItemSelectionState(isFillEnabled, selectedFillPosition)
-    }
+    private fun RectangleExtra.toFillAppearanceVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(isFillEnabled, userSelectedFillStyle.id)
 
-    private fun RectangleExtra.toBorderAppearanceVisibilityState(): CloudItemSelectionState {
-        val selectedBorderPosition =
-            ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedBorderStyle)
-        return CloudItemSelectionState(isBorderEnabled, selectedBorderPosition)
-    }
+    private fun RectangleExtra.toBorderAppearanceVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(isBorderEnabled, userSelectedBorderStyle.id)
 
-    private fun LineExtra.toStrokeVisibilityState(): CloudItemSelectionState {
-        val selectedStrokePosition =
-            ShapeExtraManager.getAllPredefinedStrokeStyles().indexOf(userSelectedStrokeStyle)
-        return CloudItemSelectionState(isStrokeEnabled, selectedStrokePosition)
-    }
+    private fun LineExtra.toStrokeVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(isStrokeEnabled, userSelectedStrokeStyle.id)
 
-    private fun Line.toStartHeadAppearanceVisibilityState(): CloudItemSelectionState {
-        val selectedStartHeadPosition =
-            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedStartAnchor)
-        return CloudItemSelectionState(extra.isStartAnchorEnabled, selectedStartHeadPosition)
-    }
+    private fun Line.toStartHeadAppearanceVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(extra.isStartAnchorEnabled, extra.userSelectedStartAnchor.id)
 
-    private fun Line.toEndHeadAppearanceVisibilityState(): CloudItemSelectionState {
-        val selectedEndHeadPosition =
-            ShapeExtraManager.getAllPredefinedAnchorChars().indexOf(extra.userSelectedEndAnchor)
-        return CloudItemSelectionState(extra.isEndAnchorEnabled, selectedEndHeadPosition)
-    }
+    private fun Line.toEndHeadAppearanceVisibilityState(): CloudItemSelectionState =
+        CloudItemSelectionState(extra.isEndAnchorEnabled, extra.userSelectedEndAnchor.id)
 }
 
 internal data class AppearanceOptionItem(val id: String, val name: String)
 
-internal data class CloudItemSelectionState(val isChecked: Boolean, val selectedPosition: Int)
+internal data class CloudItemSelectionState(val isChecked: Boolean, val selectedId: String?)

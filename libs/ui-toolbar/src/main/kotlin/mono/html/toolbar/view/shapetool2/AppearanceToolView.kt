@@ -145,10 +145,10 @@ private fun OptionsCloud(
         ) {
             setOneTimeAction(oneTimeActionFactory(false, null))
         }
-        options.forEachIndexed { index, option ->
+        for (option in options) {
             Option(
                 option.name,
-                selectionState.isChecked && selectionState.selectedPosition == index
+                selectionState.isChecked && selectionState.selectedId == option.id
             ) {
                 setOneTimeAction(oneTimeActionFactory(true, option.id))
             }
