@@ -2,10 +2,8 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.html.toolbar.view.shapetool
+package mono.html.toolbar.view.shapetool2
 
-import mono.actionmanager.ActionManager
-import mono.actionmanager.OneTimeActionType
 import mono.actionmanager.RetainableActionType
 import mono.common.nullToFalse
 import mono.livedata.LiveData
@@ -28,19 +26,13 @@ import mono.shape.shape.Text
 internal class AppearanceDataController(
     selectedShapesLiveData: LiveData<Set<AbstractShape>>,
     shapeManagerVersionLiveData: LiveData<Int>,
-    private val actionManager: ActionManager
+    retainableActionLiveData: LiveData<RetainableActionType>
 ) {
     private val shapesLiveData: LiveData<Set<AbstractShape>> =
         combineLiveData(
             selectedShapesLiveData,
             shapeManagerVersionLiveData
         ) { selected, _ -> selected }
-
-    private val retainableActionLiveData: LiveData<RetainableActionType> =
-        combineLiveData(
-            actionManager.retainableActionLiveData,
-            ShapeExtraManager.defaultExtraStateUpdateLiveData
-        ) { action, _ -> action }
 
     val fillToolStateLiveData: LiveData<AppearanceVisibility> =
         createFillAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
@@ -78,8 +70,6 @@ internal class AppearanceDataController(
         ShapeExtraManager.getAllPredefinedAnchorChars()
             .map { AppearanceOptionItem(it.id, it.displayName) }
 
-    fun setOneTimeAction(actionType: OneTimeActionType) = actionManager.setOneTimeAction(actionType)
-
     private fun createFillAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
         retainableActionTypeLiveData: LiveData<RetainableActionType>
@@ -104,6 +94,7 @@ internal class AppearanceDataController(
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT ->
                     ShapeExtraManager.defaultRectangleExtra.userSelectedFillStyle
+
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -149,6 +140,7 @@ internal class AppearanceDataController(
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT ->
                     ShapeExtraManager.defaultRectangleExtra.userSelectedBorderStyle
+
                 RetainableActionType.ADD_LINE,
                 RetainableActionType.IDLE -> null
             }
@@ -268,6 +260,7 @@ internal class AppearanceDataController(
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
                     ShapeExtraManager.defaultLineExtra.userSelectedStartAnchor
+
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
@@ -313,6 +306,7 @@ internal class AppearanceDataController(
             val defaultState = when (it) {
                 RetainableActionType.ADD_LINE ->
                     ShapeExtraManager.defaultLineExtra.userSelectedEndAnchor
+
                 RetainableActionType.ADD_RECTANGLE,
                 RetainableActionType.ADD_TEXT,
                 RetainableActionType.IDLE -> null
