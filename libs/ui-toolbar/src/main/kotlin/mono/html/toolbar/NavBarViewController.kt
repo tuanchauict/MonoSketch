@@ -69,7 +69,7 @@ class NavBarViewController(
             }
 
             Div(
-                attrs = { classes("right-toolbar-container") }
+                attrs = { classes("toolbar-container") }
             ) {
                 ScrollModeButton(scrollModeState.value, appUiStateManager::updateUiState)
                 ThemeIcons()

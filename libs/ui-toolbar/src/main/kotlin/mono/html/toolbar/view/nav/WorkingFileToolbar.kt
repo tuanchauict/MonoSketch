@@ -12,8 +12,8 @@ import mono.actionmanager.OneTimeActionType
 import mono.html.modal.DropDownMenu
 import mono.html.modal.compose.ProjectItem
 import mono.html.modal.compose.showRecentProjectsModal
+import mono.html.modal.tooltip
 import mono.html.toolbar.view.nav.DropDownItem.Forwarding
-import mono.html.toolbar.view.nav.DropDownItem.ManageProject
 import mono.html.toolbar.view.nav.DropDownItem.NewProject
 import mono.html.toolbar.view.nav.DropDownItem.Rename
 import mono.html.toolbar.view.nav.workingfile.showRenameProjectModal
@@ -32,7 +32,7 @@ internal fun WorkingFileToolbar(
     workspaceDao: WorkspaceDao,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
-    CurrentProject(projectNameState.value) { element ->
+    CurrentProject(projectNameState.value, workspaceDao, onActionSelected) { element ->
         showWorkingFileMenu(element) {
             when (it) {
                 is Forwarding -> onActionSelected(it.actionType)
@@ -43,15 +43,18 @@ internal fun WorkingFileToolbar(
                 }
 
                 Rename -> renameProject(projectNameState, onActionSelected)
-
-                ManageProject -> onManageProjectClick(workspaceDao, onActionSelected)
             }
         }
     }
 }
 
 @Composable
-private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
+private fun CurrentProject(
+    title: String,
+    workspaceDao: WorkspaceDao,
+    onActionSelected: (OneTimeActionType) -> Unit,
+    showProjectMenu: (Element) -> Unit
+) {
     Div(
         attrs = {
             classes("working-file-container")
@@ -78,14 +81,43 @@ private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
                 Icons.ChevronDown(12)
             }
         }
+
+        Toolbar(workspaceDao, onActionSelected)
+    }
+}
+
+@Composable
+private fun Toolbar(
+    workspaceDao: WorkspaceDao,
+    onActionSelected: (OneTimeActionType) -> Unit
+) {
+    Div(
+        attrs = {
+            classes("toolbar-container")
+        }
+    ) {
+        Div(
+            attrs = {
+                classes("app-icon-container")
+            }
+        ) {
+            Div(
+                attrs = {
+                    classes("app-icon")
+                    tooltip("Manage projects")
+
+                    onClick { onManageProjectClick(workspaceDao, onActionSelected) }
+                }
+            ) {
+                Icons.Inbox()
+            }
+        }
     }
 }
 
 private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) -> Unit) {
     val items = listOf(
         DropDownMenu.Item.Text("New project", NewProject),
-        DropDownMenu.Item.Text("Manage projects", ManageProject),
-        DropDownMenu.Item.Divider(),
         DropDownMenu.Item.Text("Rename", Rename),
         DropDownMenu.Item.Text("Save As...", Forwarding(OneTimeActionType.SaveShapesAs)),
         DropDownMenu.Item.Text("Open File...", Forwarding(OneTimeActionType.OpenShapes)),
@@ -132,5 +164,4 @@ private sealed interface DropDownItem {
     class Forwarding(val actionType: OneTimeActionType) : DropDownItem
     object NewProject : DropDownItem
     object Rename : DropDownItem
-    object ManageProject : DropDownItem
 }
