@@ -10,6 +10,7 @@ import mono.html.toolbar.view.shapetool2.FooterView
 import mono.html.toolbar.view.shapetool2.IndicatorView
 import mono.html.toolbar.view.shapetool2.ReorderSectionView
 import mono.html.toolbar.view.shapetool2.ShapeToolViewModel
+import mono.html.toolbar.view.shapetool2.TextToolView
 import mono.html.toolbar.view.shapetool2.TransformationToolView
 import mono.html.toolbar.view.utils.CssClass
 import mono.html.toolbar.view.utils.bindClass
@@ -54,6 +55,10 @@ class ShapeToolViewController2(
                 )
                 AppearanceToolView(
                     viewModel,
+                    actionManager::setOneTimeAction
+                )
+                TextToolView(
+                    viewModel.textAlignState.value,
                     actionManager::setOneTimeAction
                 )
                 IndicatorView(isVisible = !viewModel.hasAnyToolState.value)
