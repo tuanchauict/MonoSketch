@@ -38,12 +38,12 @@ internal class AppearanceDataController(
         createFillAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val borderToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
-    val borderDashPatternLiveData: LiveData<AppearanceVisibility> =
+    val borderDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createBorderDashPatternLiveData(shapesLiveData)
 
     val lineStrokeToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
-    val lineStrokeDashPatternLiveData: LiveData<AppearanceVisibility> =
+    val lineStrokeDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createLineStrokeDashPatternLiveData(shapesLiveData)
     val lineStartHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
@@ -154,7 +154,7 @@ internal class AppearanceDataController(
 
     private fun createBorderDashPatternLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<AppearanceVisibility> = selectedShapesLiveData.map {
+    ): LiveData<StraightStrokeDashPattern?> = selectedShapesLiveData.map {
         val boundExtra = when (val shape = it.singleOrNull()) {
             is Text -> shape.extra.boundExtra
             is Rectangle -> shape.extra
@@ -163,9 +163,7 @@ internal class AppearanceDataController(
             is MockShape,
             null -> null
         }
-        val dashPattern =
-            boundExtra?.dashPattern.takeIf { boundExtra?.isBorderEnabled.nullToFalse() }
-        dashPattern?.let(AppearanceVisibility::DashVisible) ?: AppearanceVisibility.Hide
+        boundExtra?.dashPattern.takeIf { boundExtra?.isBorderEnabled.nullToFalse() }
     }
 
     private fun createLineStrokeAppearanceVisibilityLiveData(
@@ -209,7 +207,7 @@ internal class AppearanceDataController(
 
     private fun createLineStrokeDashPatternLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<AppearanceVisibility> = selectedShapesLiveData.map {
+    ): LiveData<StraightStrokeDashPattern?> = selectedShapesLiveData.map {
         val extra = when (val shape = it.singleOrNull()) {
             is Line -> shape.extra
             is Group,
@@ -218,8 +216,7 @@ internal class AppearanceDataController(
             is MockShape,
             null -> null
         }
-        val dashPattern = extra?.dashPattern.takeIf { extra?.isStrokeEnabled.nullToFalse() }
-        dashPattern?.let(AppearanceVisibility::DashVisible) ?: AppearanceVisibility.Hide
+        extra?.dashPattern.takeIf { extra?.isStrokeEnabled.nullToFalse() }
     }
 
     private fun createStartHeadAppearanceVisibilityLiveData(
@@ -345,13 +342,5 @@ internal class AppearanceDataController(
 }
 
 internal data class AppearanceOptionItem(val id: String, val name: String)
-
-internal sealed class AppearanceVisibility {
-    object Hide : AppearanceVisibility()
-
-    data class DashVisible(
-        val dashPattern: StraightStrokeDashPattern
-    ) : AppearanceVisibility()
-}
 
 internal data class CloudItemSelectionState(val isChecked: Boolean, val selectedPosition: Int)

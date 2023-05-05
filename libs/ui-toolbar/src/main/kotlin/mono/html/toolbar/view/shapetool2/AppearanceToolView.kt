@@ -9,7 +9,6 @@ package mono.html.toolbar.view.shapetool2
 import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
 import mono.common.Characters
-import mono.html.toolbar.view.shapetool2.AppearanceVisibility.DashVisible
 import mono.html.toolbar.view.shapetool2.components.NumberTextField
 import mono.html.toolbar.view.shapetool2.components.Section
 import mono.shape.extra.style.StraightStrokeDashPattern
@@ -54,7 +53,7 @@ internal fun AppearanceToolView(
                 setOneTimeAction
             )
             DashPattern(
-                (viewModel.shapeBorderDashTypeState.value as? DashVisible)?.dashPattern,
+                viewModel.shapeBorderDashTypeState.value,
                 OneTimeActionType::ChangeShapeBorderDashPatternExtra,
                 setOneTimeAction
             )
@@ -72,7 +71,7 @@ internal fun AppearanceToolView(
                 setOneTimeAction
             )
             DashPattern(
-                (viewModel.lineStrokeDashTypeState.value as? DashVisible)?.dashPattern,
+                viewModel.lineStrokeDashTypeState.value,
                 OneTimeActionType::ChangeLineStrokeDashPatternExtra,
                 setOneTimeAction
             )
@@ -137,9 +136,7 @@ private fun OptionsCloud(
         return
     }
     Div(
-        attrs = {
-            classes("comp-option-cloud-layout")
-        }
+        attrs = { classes("comp-option-cloud-layout") }
     ) {
         Option(
             disabledStateText.toString(),
@@ -196,9 +193,7 @@ private fun DashPattern(
     }
 
     Div(
-        attrs = {
-            classes("comp-dash-layout")
-        }
+        attrs = { classes("comp-dash-layout") }
     ) {
         DashInput("Dash", dashPattern.dash, 1) {
             setOneTimeAction(oneTimeActionFactory(it, null, null))
