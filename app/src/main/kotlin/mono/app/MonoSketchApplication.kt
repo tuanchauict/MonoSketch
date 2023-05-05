@@ -12,7 +12,6 @@ import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
 import mono.html.toolbar.NavBarViewController
-import mono.html.toolbar.ShapeToolViewController
 import mono.html.toolbar.view.ShapeToolViewController2
 import mono.keycommand.KeyCommand
 import mono.keycommand.KeyCommandController
@@ -93,17 +92,9 @@ class MonoSketchApplication : LifecycleOwner() {
             appUiStateManager,
             actionManager
         )
-        ShapeToolViewController(
-            this,
-            document.getElementById("shape-tools") as HTMLElement,
-            actionManager,
-            selectedShapeManager.selectedShapesLiveData,
-            shapeManager.versionLiveData,
-            appUiStateManager.shapeToolVisibilityLiveData
-        )
         ShapeToolViewController2(
             this,
-            document.getElementById("shape-tools2") as HTMLElement,
+            document.getElementById("shape-tools") as HTMLElement,
             actionManager,
             selectedShapeManager.selectedShapesLiveData,
             shapeManager.versionLiveData,

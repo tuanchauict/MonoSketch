@@ -9,9 +9,8 @@ package mono.html.toolbar.view.shapetool2
 import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
 import mono.common.Characters
-import mono.html.toolbar.view.shapetool.AppearanceOptionItem
-import mono.html.toolbar.view.shapetool.AppearanceVisibility.DashVisible
-import mono.html.toolbar.view.shapetool.AppearanceVisibility.GridVisible
+import mono.html.toolbar.view.shapetool2.AppearanceVisibility.DashVisible
+import mono.html.toolbar.view.shapetool2.AppearanceVisibility.GridVisible
 import mono.html.toolbar.view.shapetool2.components.NumberTextField
 import mono.html.toolbar.view.shapetool2.components.Section
 import mono.shape.extra.style.StraightStrokeDashPattern
