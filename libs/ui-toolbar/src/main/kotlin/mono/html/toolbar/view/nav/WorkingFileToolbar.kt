@@ -15,13 +15,15 @@ import mono.html.modal.compose.showRecentProjectsModal
 import mono.html.toolbar.view.nav.DropDownItem.Forwarding
 import mono.html.toolbar.view.nav.DropDownItem.ManageProject
 import mono.html.toolbar.view.nav.DropDownItem.Rename
-import mono.html.toolbar.view.nav.workingfile.RenameProjectModal
+import mono.html.toolbar.view.nav.workingfile.showRenameProjectModal
 import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.compose.components.Icons
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.Element
+
+private const val WORKING_PROJECT_ID = "working-project"
 
 @Composable
 internal fun WorkingFileToolbar(
@@ -34,12 +36,14 @@ internal fun WorkingFileToolbar(
             when (it) {
                 is Forwarding -> onActionSelected(it.actionType)
 
-                Rename ->
-                    RenameProjectModal { newName ->
-                        if (newName.isNotEmpty()) {
-                            onActionSelected(OneTimeActionType.RenameCurrentProject(newName))
-                        }
-                    }.show(projectNameState.value, element)
+                Rename -> showRenameProjectModal(
+                    projectNameState.value,
+                    "#$WORKING_PROJECT_ID"
+                ) { newName ->
+                    if (newName.isNotEmpty()) {
+                        onActionSelected(OneTimeActionType.RenameCurrentProject(newName))
+                    }
+                }
 
                 ManageProject -> onManageProjectClick(workspaceDao, onActionSelected)
             }
@@ -57,6 +61,7 @@ private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
         Div(attrs = { classes("divider") })
 
         Div(attrs = {
+            id(WORKING_PROJECT_ID)
             classes("file-info")
 
             onClick {

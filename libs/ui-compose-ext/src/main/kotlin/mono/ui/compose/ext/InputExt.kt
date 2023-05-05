@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLInputElement
 
 @Composable
 fun sideEffectFocus(inputSelector: String) {
@@ -20,6 +21,9 @@ fun sideEffectFocus(inputSelector: String) {
         SideEffect {
             val target = document.querySelector(inputSelector) as? HTMLElement
             target?.focus()
+            if (target is HTMLInputElement) {
+                target.setSelectionRange(Int.MAX_VALUE, Int.MAX_VALUE)
+            }
         }
         isFocused = true
     }
