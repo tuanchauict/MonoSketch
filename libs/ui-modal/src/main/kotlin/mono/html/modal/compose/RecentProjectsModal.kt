@@ -112,7 +112,13 @@ private fun ProjectList(
     requestingRemoveProjectId: String,
     onAction: (Action) -> Unit
 ) {
-    val filteredProjects = projects.filter { it.name.contains(filter, ignoreCase = true) }
+    val filteredProjects = if (filter.isNotEmpty()) {
+        projects
+            .filter { it.name.contains(filter, ignoreCase = true) }
+            .sortedBy { it.name }
+    } else {
+        projects
+    }
 
     if (filteredProjects.isNotEmpty()) {
         Div(
