@@ -13,6 +13,7 @@ import mono.livedata.LiveData
 import mono.livedata.combineLiveData
 import mono.livedata.map
 import mono.shape.ShapeExtraManager
+import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.extra.style.TextAlign
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Rectangle
@@ -56,25 +57,25 @@ internal class ShapeToolViewModel(
     val singleShapeResizeableState: State<Boolean> =
         singleShapeLiveData.map { it is Rectangle }.toState(lifecycleOwner)
 
-    val shapeFillTypeState: State<AppearanceVisibility> =
+    val shapeFillTypeState: State<CloudItemSelectionState?> =
         appearanceDataController.fillToolStateLiveData.toState(lifecycleOwner)
 
-    val shapeBorderTypeState: State<AppearanceVisibility> =
+    val shapeBorderTypeState: State<CloudItemSelectionState?> =
         appearanceDataController.borderToolStateLiveData.toState(lifecycleOwner)
 
-    val shapeBorderDashTypeState: State<AppearanceVisibility> =
+    val shapeBorderDashTypeState: State<StraightStrokeDashPattern?> =
         appearanceDataController.borderDashPatternLiveData.toState(lifecycleOwner)
 
-    val lineStrokeTypeState: State<AppearanceVisibility> =
+    val lineStrokeTypeState: State<CloudItemSelectionState?> =
         appearanceDataController.lineStrokeToolStateLiveData.toState(lifecycleOwner)
 
-    val lineStrokeDashTypeState: State<AppearanceVisibility> =
+    val lineStrokeDashTypeState: State<StraightStrokeDashPattern?> =
         appearanceDataController.lineStrokeDashPatternLiveData.toState(lifecycleOwner)
 
-    val lineStartHeadState: State<AppearanceVisibility> =
+    val lineStartHeadState: State<CloudItemSelectionState?> =
         appearanceDataController.lineStartHeadToolStateLiveData.toState(lifecycleOwner)
 
-    val lineEndHeadState: State<AppearanceVisibility> =
+    val lineEndHeadState: State<CloudItemSelectionState?> =
         appearanceDataController.lineEndHeadToolStateLiveData.toState(lifecycleOwner)
 
     val appearanceVisibilityState: State<Boolean> =

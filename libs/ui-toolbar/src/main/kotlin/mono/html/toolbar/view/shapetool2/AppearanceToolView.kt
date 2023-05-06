@@ -9,8 +9,6 @@ package mono.html.toolbar.view.shapetool2
 import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
 import mono.common.Characters
-import mono.html.toolbar.view.shapetool2.AppearanceVisibility.DashVisible
-import mono.html.toolbar.view.shapetool2.AppearanceVisibility.GridVisible
 import mono.html.toolbar.view.shapetool2.components.NumberTextField
 import mono.html.toolbar.view.shapetool2.components.Section
 import mono.shape.extra.style.StraightStrokeDashPattern
@@ -32,12 +30,12 @@ internal fun AppearanceToolView(
     Section("APPEARANCE") {
         Tool(
             title = "Fill",
-            isAvailable = viewModel.shapeFillTypeState.value is GridVisible
+            isAvailable = viewModel.shapeFillTypeState.value != null
         ) {
             OptionsCloud(
                 viewModel.fillOptions,
                 '×',
-                viewModel.shapeFillTypeState.value as? GridVisible,
+                viewModel.shapeFillTypeState.value,
                 OneTimeActionType::ChangeShapeFillExtra,
                 setOneTimeAction
             )
@@ -45,17 +43,17 @@ internal fun AppearanceToolView(
 
         Tool(
             "Border",
-            isAvailable = viewModel.shapeBorderTypeState.value is GridVisible
+            isAvailable = viewModel.shapeBorderTypeState.value != null
         ) {
             OptionsCloud(
                 viewModel.strokeOptions,
                 Characters.NBSP,
-                viewModel.shapeBorderTypeState.value as? GridVisible,
+                viewModel.shapeBorderTypeState.value,
                 OneTimeActionType::ChangeShapeBorderExtra,
                 setOneTimeAction
             )
             DashPattern(
-                (viewModel.shapeBorderDashTypeState.value as? DashVisible)?.dashPattern,
+                viewModel.shapeBorderDashTypeState.value,
                 OneTimeActionType::ChangeShapeBorderDashPatternExtra,
                 setOneTimeAction
             )
@@ -63,17 +61,17 @@ internal fun AppearanceToolView(
 
         Tool(
             "Stroke",
-            isAvailable = viewModel.lineStrokeTypeState.value is GridVisible
+            isAvailable = viewModel.lineStrokeTypeState.value != null
         ) {
             OptionsCloud(
                 viewModel.strokeOptions,
                 Characters.NBSP,
-                viewModel.lineStrokeTypeState.value as? GridVisible,
+                viewModel.lineStrokeTypeState.value,
                 OneTimeActionType::ChangeLineStrokeExtra,
                 setOneTimeAction
             )
             DashPattern(
-                (viewModel.lineStrokeDashTypeState.value as? DashVisible)?.dashPattern,
+                viewModel.lineStrokeDashTypeState.value,
                 OneTimeActionType::ChangeLineStrokeDashPatternExtra,
                 setOneTimeAction
             )
@@ -81,12 +79,12 @@ internal fun AppearanceToolView(
 
         Tool(
             "Start head",
-            isAvailable = viewModel.lineStartHeadState.value is GridVisible
+            isAvailable = viewModel.lineStartHeadState.value != null
         ) {
             OptionsCloud(
                 viewModel.headOptions,
                 Characters.NBSP,
-                viewModel.lineStartHeadState.value as? GridVisible,
+                viewModel.lineStartHeadState.value,
                 OneTimeActionType::ChangeLineStartAnchorExtra,
                 setOneTimeAction
             )
@@ -94,12 +92,12 @@ internal fun AppearanceToolView(
 
         Tool(
             "End head",
-            isAvailable = viewModel.lineEndHeadState.value is GridVisible
+            isAvailable = viewModel.lineEndHeadState.value != null
         ) {
             OptionsCloud(
                 viewModel.headOptions,
                 Characters.NBSP,
-                viewModel.lineEndHeadState.value as? GridVisible,
+                viewModel.lineEndHeadState.value,
                 OneTimeActionType::ChangeLineEndAnchorExtra,
                 setOneTimeAction
             )
@@ -130,7 +128,7 @@ private fun Tool(
 private fun OptionsCloud(
     options: List<AppearanceOptionItem>,
     disabledStateText: Char,
-    selectionState: GridVisible?,
+    selectionState: CloudItemSelectionState?,
     oneTimeActionFactory: (Boolean, String?) -> OneTimeActionType,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ) {
@@ -138,9 +136,7 @@ private fun OptionsCloud(
         return
     }
     Div(
-        attrs = {
-            classes("comp-option-cloud-layout")
-        }
+        attrs = { classes("comp-option-cloud-layout") }
     ) {
         Option(
             disabledStateText.toString(),
@@ -149,10 +145,10 @@ private fun OptionsCloud(
         ) {
             setOneTimeAction(oneTimeActionFactory(false, null))
         }
-        options.forEachIndexed { index, option ->
+        for (option in options) {
             Option(
                 option.name,
-                selectionState.isChecked && selectionState.selectedPosition == index
+                selectionState.isChecked && selectionState.selectedId == option.id
             ) {
                 setOneTimeAction(oneTimeActionFactory(true, option.id))
             }
@@ -197,9 +193,7 @@ private fun DashPattern(
     }
 
     Div(
-        attrs = {
-            classes("comp-dash-layout")
-        }
+        attrs = { classes("comp-dash-layout") }
     ) {
         DashInput("Dash", dashPattern.dash, 1) {
             setOneTimeAction(oneTimeActionFactory(it, null, null))
