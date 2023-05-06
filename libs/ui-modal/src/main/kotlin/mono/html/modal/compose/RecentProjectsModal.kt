@@ -15,7 +15,6 @@ import mono.html.modal.tooltip
 import mono.ui.compose.components.Icons
 import mono.ui.compose.ext.classes
 import mono.ui.compose.ext.onConsumeClick
-import mono.ui.compose.ext.sideEffectFocus
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.attributes.placeholder
 import org.jetbrains.compose.web.dom.Div
@@ -99,13 +98,15 @@ private fun FilterInput(onChange: (String) -> Unit) {
         }
     ) {
         Input(type = InputType.Text) {
-            id("recent-project-filter-input")
             placeholder("Filter by name")
 
             onInput { onChange(it.value) }
-        }
 
-        sideEffectFocus("#recent-project-filter-input")
+            ref {
+                it.focus()
+                onDispose { }
+            }
+        }
     }
 }
 
