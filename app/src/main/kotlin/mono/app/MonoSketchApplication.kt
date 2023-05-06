@@ -11,7 +11,7 @@ import mono.bitmap.manager.MonoBitmapManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
-import mono.html.toolbar.NavBarViewController
+import mono.html.toolbar.view.NavBarViewController
 import mono.html.toolbar.view.ShapeToolViewController2
 import mono.keycommand.KeyCommand
 import mono.keycommand.KeyCommandController

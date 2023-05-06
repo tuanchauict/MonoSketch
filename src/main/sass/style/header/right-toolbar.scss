@@ -15,13 +15,17 @@
         justify-content: center;
         align-items: center;
         border-radius: 50%;
-        margin-right: 8px;
+        margin-left: 8px;
         width: 28px;
         height: 28px;
         cursor: pointer;
 
         &:hover {
             background: var(--header-main-menu-hover-bg);
+        }
+
+        &:first-child {
+            margin-left: 0;
         }
     }
 
