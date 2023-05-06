@@ -62,5 +62,23 @@ object Icons {
             )
         }
     }
+
+    @Composable
+    fun Inbox(iconSize: Int = 16) {
+        Svg(
+            attrs = {
+                size(iconSize, iconSize)
+                viewBox(512, 512)
+                fill("currentColor")
+            }
+        ) {
+            SvgPath(
+                "M121 32c-29 0-55 20-62 49L2 308l-2 16v92c0 35 29 64 64 64h384c35 0 64-29 64-64v-92l-2-16-57-227c-7-29-33-49-62-49H121Zm0 64h270l48 192h-51c-12 0-23 7-29 18l-14 28c-5 11-17 18-29 18H196c-12 0-23-7-29-18l-14-28c-5-11-17-18-29-18H73l48-192Z"
+            )
+            SvgPath(
+                "M142 146c0-10 8-18 18-18h196a17 17 0 1 1 0 35H160c-10 0-18-8-18-17ZM123 229c0-10 8-18 18-18h232a17 17 0 1 1 0 35H141c-10 0-18-8-18-17Z"
+            )
+        }
+    }
 }
 /* ktlint-enable max-line-length */

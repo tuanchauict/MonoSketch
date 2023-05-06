@@ -55,7 +55,7 @@ internal class ShapeToolViewModel(
         singleShapeLiveData.map { it?.bound }.toState(lifecycleOwner)
 
     val singleShapeResizeableState: State<Boolean> =
-        singleShapeLiveData.map { it is Rectangle }.toState(lifecycleOwner)
+        singleShapeLiveData.map { it is Rectangle || it is Text }.toState(lifecycleOwner)
 
     val shapeFillTypeState: State<CloudItemSelectionState?> =
         appearanceDataController.fillToolStateLiveData.toState(lifecycleOwner)
