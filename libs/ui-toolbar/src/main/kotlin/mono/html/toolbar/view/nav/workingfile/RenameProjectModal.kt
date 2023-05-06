@@ -28,11 +28,13 @@ internal fun showRenameProjectModal(
         )
     } ?: return
     val name = mutableStateOf(initName)
+    val composition = renderComposable(modal) {}
+
     val dismiss = { newName: String ->
+        composition.dispose()
         onDismiss(newName)
         post { modal.remove() }
     }
-    val composition = renderComposable(modal) {}
 
     composition.setContent {
         Input(Text) {
@@ -52,7 +54,7 @@ internal fun showRenameProjectModal(
                 it.focus()
                 // Move the cursor to the end of the text box
                 it.setSelectionRange(Int.MAX_VALUE, Int.MAX_VALUE)
-                onDispose { }
+                onDispose {}
             }
         }
     }
