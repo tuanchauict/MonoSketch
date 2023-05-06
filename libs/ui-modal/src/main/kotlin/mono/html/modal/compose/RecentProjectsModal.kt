@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.browser.document
+import mono.html.modal.TooltipPosition
+import mono.html.modal.tooltip
 import mono.ui.compose.components.Icons
 import mono.ui.compose.ext.classes
 import mono.ui.compose.ext.onConsumeClick
@@ -33,8 +35,10 @@ fun showRecentProjectsModal(
 ) {
     val body = document.body ?: return
     val container = body.MonoDiv()
-    renderComposable(container) {
+    val composition = renderComposable(container) {}
+    composition.setContent {
         RecentProjectsModal(projectItems, onSelect) {
+            composition.dispose()
             container.remove()
         }
     }
@@ -182,6 +186,7 @@ private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) 
     Div(
         attrs = {
             classes("action")
+            tooltip("Confirm", TooltipPosition.TOP)
             onConsumeClick {
                 onAction(Action.RemoveConfirm(item))
             }
@@ -192,6 +197,7 @@ private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) 
     Div(
         attrs = {
             classes("action")
+            tooltip("Cancel", TooltipPosition.TOP)
             onConsumeClick {
                 onAction(Action.SuspendRemove)
             }
@@ -206,6 +212,7 @@ private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Uni
     Div(
         attrs = {
             classes("action")
+            tooltip("Remove", TooltipPosition.TOP)
             onConsumeClick { onAction(Action.RequestRemove(project)) }
         }
     ) {
