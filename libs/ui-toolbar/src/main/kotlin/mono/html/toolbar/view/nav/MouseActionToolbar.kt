@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import mono.actionmanager.RetainableActionType
 import mono.html.modal.tooltip
-import mono.html.toolbar.view.utils.CssClass
 import mono.ui.compose.ext.Svg
 import mono.ui.compose.ext.SvgPath
 import mono.ui.compose.ext.classes
@@ -47,25 +46,34 @@ private fun MouseActionButton(
 ) {
     Div(
         attrs = {
-            classes(
-                "action-button" to true,
-                CssClass.SELECTED.value to isSelected
-            )
+            classes("action-button-container")
 
             tooltip(actionType.title)
 
             onClick { onActionSelected(actionType.retainableActionType) }
         }
     ) {
-        Svg(
+        Div(
             attrs = {
-                size(21, 21)
-                viewBox(24, 24)
-                fill("currentColor")
+                classes(
+                    "action-button" to true,
+                    "selected" to isSelected
+                )
             }
         ) {
-            SvgPath(actionType.iconPath)
+
+            Svg(
+                attrs = {
+                    size(21, 21)
+                    viewBox(24, 24)
+                    fill("currentColor")
+                }
+            ) {
+                SvgPath(actionType.iconPath)
+            }
         }
+
+
     }
 }
 
