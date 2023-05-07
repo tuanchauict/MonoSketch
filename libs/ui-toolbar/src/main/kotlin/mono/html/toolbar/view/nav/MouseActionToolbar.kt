@@ -61,7 +61,6 @@ private fun MouseActionButton(
                 )
             }
         ) {
-
             Svg(
                 attrs = {
                     size(21, 21)
@@ -72,8 +71,6 @@ private fun MouseActionButton(
                 SvgPath(actionType.iconPath)
             }
         }
-
-
     }
 }
 

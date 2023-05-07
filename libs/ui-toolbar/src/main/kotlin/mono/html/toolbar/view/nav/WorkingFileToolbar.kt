@@ -93,7 +93,6 @@ private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) 
     }.show(anchor)
 }
 
-
 private fun renameProject(
     projectNameState: State<String>,
     onActionSelected: (OneTimeActionType) -> Unit
