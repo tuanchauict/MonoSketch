@@ -19,6 +19,8 @@ import mono.html.toolbar.view.nav.DropDownItem.Rename
 import mono.html.toolbar.view.nav.workingfile.showRenameProjectModal
 import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.compose.components.Icons
+import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.color
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -60,7 +62,8 @@ private fun CurrentProject(
             classes("working-file-container")
         }
     ) {
-        Div(attrs = { classes("divider") })
+//        Div(attrs = { classes("divider") })
+        Toolbar(workspaceDao, onActionSelected)
 
         Div(attrs = {
             id(WORKING_PROJECT_ID)
@@ -81,8 +84,6 @@ private fun CurrentProject(
                 Icons.ChevronDown(12)
             }
         }
-
-        Toolbar(workspaceDao, onActionSelected)
     }
 }
 
@@ -91,11 +92,7 @@ private fun Toolbar(
     workspaceDao: WorkspaceDao,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
-    Div(
-        attrs = {
-            classes("toolbar-container")
-        }
-    ) {
+    ToolbarContainer {
         Div(
             attrs = {
                 classes("app-icon-container")
@@ -104,6 +101,9 @@ private fun Toolbar(
             Div(
                 attrs = {
                     classes("app-icon")
+                    style {
+                        color(Color("#f0f0f0"))
+                    }
                     tooltip("Manage projects")
 
                     onClick { onManageProjectClick(workspaceDao, onActionSelected) }

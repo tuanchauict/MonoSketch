@@ -2,7 +2,7 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.html.toolbar
+package mono.html.toolbar.view
 
 import androidx.compose.runtime.State
 import mono.actionmanager.ActionManager
@@ -11,6 +11,7 @@ import mono.html.toolbar.view.nav.AppMenuIcon
 import mono.html.toolbar.view.nav.MouseActionGroup
 import mono.html.toolbar.view.nav.ScrollModeButton
 import mono.html.toolbar.view.nav.ThemeIcons
+import mono.html.toolbar.view.nav.ToolbarContainer
 import mono.html.toolbar.view.nav.WorkingFileToolbar
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
@@ -68,9 +69,7 @@ class NavBarViewController(
                 MouseActionGroup(selectedMouseActionState, actionManager::setRetainableAction)
             }
 
-            Div(
-                attrs = { classes("toolbar-container") }
-            ) {
+            ToolbarContainer {
                 ScrollModeButton(scrollModeState.value, appUiStateManager::updateUiState)
                 ThemeIcons()
                 AppMenuIcon(appUiStateManager, actionManager::setOneTimeAction)

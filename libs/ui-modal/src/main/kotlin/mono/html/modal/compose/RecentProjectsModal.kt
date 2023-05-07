@@ -10,10 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.browser.document
+import mono.html.modal.TooltipPosition
+import mono.html.modal.tooltip
 import mono.ui.compose.components.Icons
 import mono.ui.compose.ext.classes
 import mono.ui.compose.ext.onConsumeClick
-import mono.ui.compose.ext.sideEffectFocus
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.attributes.placeholder
 import org.jetbrains.compose.web.dom.Div
@@ -33,8 +34,10 @@ fun showRecentProjectsModal(
 ) {
     val body = document.body ?: return
     val container = body.MonoDiv()
-    renderComposable(container) {
+    val composition = renderComposable(container) {}
+    composition.setContent {
         RecentProjectsModal(projectItems, onSelect) {
+            composition.dispose()
             container.remove()
         }
     }
@@ -95,13 +98,15 @@ private fun FilterInput(onChange: (String) -> Unit) {
         }
     ) {
         Input(type = InputType.Text) {
-            id("recent-project-filter-input")
             placeholder("Filter by name")
 
             onInput { onChange(it.value) }
-        }
 
-        sideEffectFocus("#recent-project-filter-input")
+            ref {
+                it.focus()
+                onDispose { }
+            }
+        }
     }
 }
 
@@ -182,6 +187,7 @@ private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) 
     Div(
         attrs = {
             classes("action")
+            tooltip("Confirm", TooltipPosition.TOP)
             onConsumeClick {
                 onAction(Action.RemoveConfirm(item))
             }
@@ -192,6 +198,7 @@ private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) 
     Div(
         attrs = {
             classes("action")
+            tooltip("Cancel", TooltipPosition.TOP)
             onConsumeClick {
                 onAction(Action.SuspendRemove)
             }
@@ -206,6 +213,7 @@ private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Uni
     Div(
         attrs = {
             classes("action")
+            tooltip("Remove", TooltipPosition.TOP)
             onConsumeClick { onAction(Action.RequestRemove(project)) }
         }
     ) {

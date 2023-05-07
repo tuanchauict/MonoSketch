@@ -44,6 +44,12 @@ fun AttrsScope<Element>.tooltip(text: String, position: TooltipPosition = Toolti
     onMouseOut {
         tooltip.hide()
     }
+
+    ref {
+        onDispose {
+            tooltip.hide()
+        }
+    }
 }
 
 enum class TooltipPosition {
