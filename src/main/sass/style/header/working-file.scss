@@ -1,10 +1,12 @@
 @import '../variables';
 
+$max-text-width: 210px;
+
 .working-file-container {
     display: flex;
     align-items: center;
     height: 100%;
-    width: 200px;
+    width: $max-text-width + 31px;
 
     .divider  {
         width: 1px;
@@ -26,7 +28,7 @@
 
         .title {
             font-size: 14px;
-            max-width: 169px;
+            max-width: $max-text-width;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;

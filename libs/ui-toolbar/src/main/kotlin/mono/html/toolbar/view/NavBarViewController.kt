@@ -9,6 +9,7 @@ import mono.actionmanager.ActionManager
 import mono.actionmanager.RetainableActionType
 import mono.html.toolbar.view.nav.AppMenuIcon
 import mono.html.toolbar.view.nav.MouseActionGroup
+import mono.html.toolbar.view.nav.ProjectManagerIcon
 import mono.html.toolbar.view.nav.ScrollModeButton
 import mono.html.toolbar.view.nav.ThemeIcons
 import mono.html.toolbar.view.nav.ToolbarContainer
@@ -52,21 +53,20 @@ class NavBarViewController(
 
     init {
         renderComposable("nav-toolbar") {
-            Div(
-                attrs = { classes("left-toolbar-container") }
-            ) {
-                WorkingFileToolbar(projectNameState, workspaceDao) {
+            Div {
+                MouseActionGroup(selectedMouseActionState, actionManager::setRetainableAction)
+            }
+
+            Div {
+                ToolbarContainer(addSpaceRight = true) {
+                    ProjectManagerIcon(workspaceDao, actionManager::setOneTimeAction)
+                }
+                WorkingFileToolbar(projectNameState) {
                     actionManager.setOneTimeAction(it)
                     // Notify the change in storage
                     // Note: This won't work if updating the name is done concurrently
                     environmentUpdateLiveData.value = Unit
                 }
-            }
-
-            Div(
-                attrs = { classes("middle-toolbar-container") }
-            ) {
-                MouseActionGroup(selectedMouseActionState, actionManager::setRetainableAction)
             }
 
             ToolbarContainer {
