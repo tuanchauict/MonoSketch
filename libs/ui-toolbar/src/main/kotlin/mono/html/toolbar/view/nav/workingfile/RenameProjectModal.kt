@@ -31,8 +31,8 @@ internal fun showRenameProjectModal(
     val composition = renderComposable(modal) {}
 
     val dismiss = { newName: String ->
-        composition.dispose()
         onDismiss(newName)
+        composition.dispose()
         post { modal.remove() }
     }
 
