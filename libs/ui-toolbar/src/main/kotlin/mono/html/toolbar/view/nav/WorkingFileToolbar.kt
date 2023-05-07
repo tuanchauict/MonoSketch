@@ -8,6 +8,7 @@ package mono.html.toolbar.view.nav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import kotlinx.browser.document
 import mono.actionmanager.OneTimeActionType
 import mono.html.modal.DropDownMenu
 import mono.html.toolbar.view.nav.DropDownItem.Forwarding
@@ -52,21 +53,27 @@ private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
     ) {
         Div(attrs = {
             id(WORKING_PROJECT_ID)
-            classes("file-info")
-
-            onClick {
-                val anchor = it.currentTarget?.unsafeCast<Element>()
-                if (anchor != null) {
-                    showProjectMenu(anchor)
-                }
-            }
+            classes("file-info-container")
         }) {
-            Span(attrs = { classes("title") }) {
-                Text(title)
-            }
+            Div(
+                attrs = {
+                    classes("file-info")
 
-            Div(attrs = { classes("menu-down-icon") }) {
-                Icons.ChevronDown(12)
+                    onClick {
+                        val anchor = document.querySelector("#$WORKING_PROJECT_ID")
+                        if (anchor != null) {
+                            showProjectMenu(anchor)
+                        }
+                    }
+                }
+            ) {
+                Span(attrs = { classes("title") }) {
+                    Text(title)
+                }
+
+                Div(attrs = { classes("menu-down-icon") }) {
+                    Icons.ChevronDown(12)
+                }
             }
         }
     }

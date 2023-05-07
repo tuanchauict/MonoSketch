@@ -58,7 +58,7 @@ class NavBarViewController(
             }
 
             Div {
-                ToolbarContainer(addSpaceRight = true) {
+                ToolbarContainer {
                     ProjectManagerIcon(workspaceDao, actionManager::setOneTimeAction)
                 }
                 WorkingFileToolbar(projectNameState) {

@@ -14,11 +14,18 @@ $max-text-width: 210px;
         background: rgba(255, 255, 255, 0.6);
     }
 
-    .file-info {
+    .file-info-container {
         display: flex;
         align-items: center;
         height: 100%;
-        padding: 6px 4px 6px 8px;
+    }
+
+    .file-info {
+        display: flex;
+        align-items: center;
+
+        border-radius: 6px;
+        padding: 8px 4px 8px 8px;
         font-family: $monospaceFont;
         cursor: pointer;
 

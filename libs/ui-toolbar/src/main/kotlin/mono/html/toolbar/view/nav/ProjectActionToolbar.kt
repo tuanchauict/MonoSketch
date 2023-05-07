@@ -38,7 +38,7 @@ internal fun ProjectManagerIcon(
                 onClick { onManageProjectClick(workspaceDao, onActionSelected) }
             }
         ) {
-            Icons.Inbox()
+            Icons.Inbox(iconSize = 18)
         }
     }
 }
