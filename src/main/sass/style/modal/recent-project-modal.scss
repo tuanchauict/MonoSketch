@@ -1,19 +1,17 @@
 @import '../variables';
 @import './theme-colors';
 
+$modal-width: 500px;
+
 .recent-project-modal {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    left: calc(50% - $modal-width / 2);
+    width: $modal-width;
     z-index: $all-projects-modal-zindex;
+    outline: none;
 
     display: flex;
-    justify-content: center;
-    align-items: start;
-    backdrop-filter: blur(2px);
-    background-color: $modal-bg;
 
     .container {
         margin-top: 24px;
@@ -22,7 +20,7 @@
         border: 1px solid $modal-container-border-color;
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
         padding: 8px 6px;
-        width: 500px;
+        width: 100%;
         flex-grow: 0;
 
         color: $modal-content-text-color;
@@ -59,7 +57,7 @@
         height: 26px;
         padding: 0 6px;
         margin-top: 2px;
-        border-radius: 3px;
+        border-radius: 4px;
         font-size: 14px;
         display: flex;
         justify-content: space-between;
@@ -85,7 +83,7 @@
         }
 
         &.removing {
-            background: rgba(255, 0, 0, 0.1);
+            background: $modal-item-danger-bg;
         }
 
         &:hover .remove {

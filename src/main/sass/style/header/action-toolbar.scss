@@ -4,6 +4,14 @@
     height: 100%;
     align-items: center;
 
+    &.add-space-left {
+        margin-left: 4px;
+    }
+
+    &.add-space-right {
+        margin-right: 4px;
+    }
+
     .app-icon-container {
         display: flex;
         align-items: center;
@@ -15,17 +23,12 @@
         justify-content: center;
         align-items: center;
         border-radius: 50%;
-        margin-left: 8px;
-        width: 28px;
-        height: 28px;
+        width: 34px;
+        height: 34px;
         cursor: pointer;
 
         &:hover {
-            background: var(--header-main-menu-hover-bg);
-        }
-
-        &:first-child {
-            margin-left: 0;
+            background: var(--nav-action-hover-bg);
         }
     }
 

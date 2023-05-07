@@ -7,9 +7,13 @@
 package mono.html.modal.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import kotlinx.browser.document
+import mono.common.Cancelable
+import mono.common.setTimeout
 import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.ui.compose.components.Icons
@@ -49,20 +53,41 @@ private fun RecentProjectsModal(
     onSelect: SelectAction,
     onDismiss: () -> Unit
 ) {
+    var cancelable: Cancelable? by remember { mutableStateOf(null) }
     Div(
         attrs = {
             classes("recent-project-modal")
+            tabIndex(-1)
 
-            onClick {
-                onDismiss()
+            onClick { onDismiss() }
+
+            onFocusIn { cancelable?.cancel() }
+
+            onFocusOut {
+                // Only trigger dismiss when the window is active.
+                if (document.hasFocus()) {
+                    cancelable = setTimeout(20) {
+                        onDismiss()
+                    }
+                }
+            }
+
+            onKeyDown {
+                when (it.key) {
+                    "Escape" -> onDismiss()
+                    // TODO: Use ArrowDown and ArrowUp for changing the active project
+                    // TODO: Use Enter for opening the project by keyboard
+                }
             }
         }
     ) {
-        Div(attrs = {
-            classes("container")
+        Div(
+            attrs = {
+                classes("container")
 
-            onConsumeClick {}
-        }) {
+                onConsumeClick {}
+            }
+        ) {
             val filter = remember { mutableStateOf("") }
             val requestingRemoveProjectId = remember { mutableStateOf("") }
 
@@ -213,7 +238,7 @@ private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Uni
     Div(
         attrs = {
             classes("action")
-            tooltip("Remove", TooltipPosition.TOP)
+            tooltip("Delete", TooltipPosition.TOP)
             onConsumeClick { onAction(Action.RequestRemove(project)) }
         }
     ) {

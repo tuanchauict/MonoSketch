@@ -2,11 +2,9 @@ $themeMap: (
     // Header overall
     --header-bg: (#2c2c2c, #2c2c2c),
     --header-color: (#FFF, #FFF),
-    // Header - Mouse action
-    --header-mouse-action-hover-bg: (#111, #111),
-    --header-mouse-action-selected-bg: (#027fe6, #d99c00),
     // Header - App action icon
-    --header-main-menu-hover-bg: (#424242, #424242),
+    --nav-action-hover-bg: (#1c1c1c, #1c1c1c),
+    --nav-action-selected-border: (#fff, #fff),
 
     // Tooltip
     --tooltip-bg: (#000000DD, #000000DD),
@@ -49,6 +47,7 @@ $themeMap: (
     --modal-close-button-color: (#666, #FFFFFF),
     --modal-title-color: (rgba(0, 0, 0, 0.68), #FFF),
     --modal-content-color: (#000, #FFFFFF),
+    --modal-item-danger-bg: (rgba(255, 161, 161, 1), rgba(255, 0, 0, 0.2)),
 
     // Keyboard shortcuts
     --keyboard-content-key-bg: (#fff, #262626),
@@ -71,13 +70,17 @@ $themeMap: (
 
     &,
     &.light {
-        @each $property, $values in $themeMap {
+
+        @each $property,
+        $values in $themeMap {
             #{$property}: nth($values, 1);
         }
     }
 
     &.dark {
-        @each $property, $values in $themeMap {
+
+        @each $property,
+        $values in $themeMap {
             #{$property}: nth($values, 2);
         }
     }
