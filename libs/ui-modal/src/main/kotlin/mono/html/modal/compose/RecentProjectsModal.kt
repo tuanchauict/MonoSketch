@@ -213,7 +213,7 @@ private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Uni
     Div(
         attrs = {
             classes("action")
-            tooltip("Remove", TooltipPosition.TOP)
+            tooltip("Delete", TooltipPosition.TOP)
             onConsumeClick { onAction(Action.RequestRemove(project)) }
         }
     ) {

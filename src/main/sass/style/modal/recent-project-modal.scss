@@ -12,7 +12,7 @@
     display: flex;
     justify-content: center;
     align-items: start;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(0.5px);
     background-color: $modal-bg;
 
     .container {
@@ -59,7 +59,7 @@
         height: 26px;
         padding: 0 6px;
         margin-top: 2px;
-        border-radius: 3px;
+        border-radius: 4px;
         font-size: 14px;
         display: flex;
         justify-content: space-between;
@@ -85,7 +85,7 @@
         }
 
         &.removing {
-            background: rgba(255, 0, 0, 0.1);
+            background: $modal-item-danger-bg;
         }
 
         &:hover .remove {
