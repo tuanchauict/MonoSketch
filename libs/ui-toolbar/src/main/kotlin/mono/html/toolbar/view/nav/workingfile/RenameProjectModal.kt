@@ -10,7 +10,6 @@ import mono.common.post
 import mono.html.Div
 import mono.html.px
 import mono.html.style
-import mono.ui.compose.ext.sideEffectFocus
 import org.jetbrains.compose.web.attributes.InputType.Text
 import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.renderComposable
@@ -29,14 +28,16 @@ internal fun showRenameProjectModal(
         )
     } ?: return
     val name = mutableStateOf(initName)
+    val composition = renderComposable(modal) {}
+
     val dismiss = { newName: String ->
+        composition.dispose()
         onDismiss(newName)
         post { modal.remove() }
     }
-    val inputId = "rename-project-input"
-    renderComposable(modal) {
+
+    composition.setContent {
         Input(Text) {
-            id(inputId)
             classes("rename-project-input")
             defaultValue(initName)
 
@@ -48,7 +49,13 @@ internal fun showRenameProjectModal(
             }
             onFocusOut { dismiss(name.value) }
             onChange { name.value = it.value }
+
+            ref {
+                it.focus()
+                // Move the cursor to the end of the text box
+                it.setSelectionRange(Int.MAX_VALUE, Int.MAX_VALUE)
+                onDispose {}
+            }
         }
-        sideEffectFocus("#$inputId")
     }
 }
