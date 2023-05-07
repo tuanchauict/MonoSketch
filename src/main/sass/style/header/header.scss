@@ -41,14 +41,9 @@ $bg-color: var(--header-bg);
     justify-content: space-between;
 
     padding: 0 8px;
-}
 
-.middle-toolbar-container,
-.left-toolbar-container {
-    display: flex;
-    height: 100%;
-}
-
-.middle-toolbar-container {
-    margin-left: -100px; // Adjust with the project name
+    & > div {
+        display: flex;
+        height: 100%;
+    }
 }

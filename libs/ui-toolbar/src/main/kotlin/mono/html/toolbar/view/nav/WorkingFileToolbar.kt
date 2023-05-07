@@ -8,19 +8,14 @@ package mono.html.toolbar.view.nav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import kotlinx.browser.document
 import mono.actionmanager.OneTimeActionType
 import mono.html.modal.DropDownMenu
-import mono.html.modal.compose.ProjectItem
-import mono.html.modal.compose.showRecentProjectsModal
-import mono.html.modal.tooltip
 import mono.html.toolbar.view.nav.DropDownItem.Forwarding
 import mono.html.toolbar.view.nav.DropDownItem.NewProject
 import mono.html.toolbar.view.nav.DropDownItem.Rename
 import mono.html.toolbar.view.nav.workingfile.showRenameProjectModal
-import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.compose.components.Icons
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.color
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -31,10 +26,9 @@ private const val WORKING_PROJECT_ID = "working-project"
 @Composable
 internal fun WorkingFileToolbar(
     projectNameState: State<String>,
-    workspaceDao: WorkspaceDao,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
-    CurrentProject(projectNameState.value, workspaceDao, onActionSelected) { element ->
+    CurrentProject(projectNameState.value) { element ->
         showWorkingFileMenu(element) {
             when (it) {
                 is Forwarding -> onActionSelected(it.actionType)
@@ -51,65 +45,35 @@ internal fun WorkingFileToolbar(
 }
 
 @Composable
-private fun CurrentProject(
-    title: String,
-    workspaceDao: WorkspaceDao,
-    onActionSelected: (OneTimeActionType) -> Unit,
-    showProjectMenu: (Element) -> Unit
-) {
+private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
     Div(
         attrs = {
             classes("working-file-container")
         }
     ) {
-//        Div(attrs = { classes("divider") })
-        Toolbar(workspaceDao, onActionSelected)
-
         Div(attrs = {
             id(WORKING_PROJECT_ID)
-            classes("file-info")
-
-            onClick {
-                val anchor = it.currentTarget?.unsafeCast<Element>()
-                if (anchor != null) {
-                    showProjectMenu(anchor)
-                }
-            }
+            classes("file-info-container")
         }) {
-            Span(attrs = { classes("title") }) {
-                Text(title)
-            }
-
-            Div(attrs = { classes("menu-down-icon") }) {
-                Icons.ChevronDown(12)
-            }
-        }
-    }
-}
-
-@Composable
-private fun Toolbar(
-    workspaceDao: WorkspaceDao,
-    onActionSelected: (OneTimeActionType) -> Unit
-) {
-    ToolbarContainer {
-        Div(
-            attrs = {
-                classes("app-icon-container")
-            }
-        ) {
             Div(
                 attrs = {
-                    classes("app-icon")
-                    style {
-                        color(Color("#f0f0f0"))
-                    }
-                    tooltip("Manage projects")
+                    classes("file-info")
 
-                    onClick { onManageProjectClick(workspaceDao, onActionSelected) }
+                    onClick {
+                        val anchor = document.querySelector("#$WORKING_PROJECT_ID")
+                        if (anchor != null) {
+                            showProjectMenu(anchor)
+                        }
+                    }
                 }
             ) {
-                Icons.Inbox()
+                Span(attrs = { classes("title") }) {
+                    Text(title)
+                }
+
+                Div(attrs = { classes("menu-down-icon") }) {
+                    Icons.ChevronDown(12)
+                }
             }
         }
     }
@@ -127,20 +91,6 @@ private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) 
         val textItem = it as DropDownMenu.Item.Text
         onItemSelected(textItem.key as DropDownItem)
     }.show(anchor)
-}
-
-private fun onManageProjectClick(
-    workspaceDao: WorkspaceDao,
-    onActionSelected: (OneTimeActionType) -> Unit
-) {
-    val projects = workspaceDao.getObjects().map { ProjectItem(it.objectId, it.name) }.toList()
-    showRecentProjectsModal(projects) { projectItem, isRemoved ->
-        if (isRemoved) {
-            onActionSelected(OneTimeActionType.RemoveProject(projectItem.id))
-        } else {
-            onActionSelected(OneTimeActionType.SwitchProject(projectItem.id))
-        }
-    }
 }
 
 private fun renameProject(
