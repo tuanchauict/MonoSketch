@@ -12,6 +12,7 @@ repositories {
 }
 
 dependencies {
+    implementation(projects.browserManager)
     implementation(projects.commons)
     implementation(projects.htmlDsl)
     implementation(projects.lifecycle)

@@ -12,7 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import kotlinx.browser.document
-import kotlinx.browser.window
+import mono.browser.manager.BrowserManager
 import mono.common.Cancelable
 import mono.common.setTimeout
 import mono.html.modal.TooltipPosition
@@ -100,8 +100,7 @@ private fun RecentProjectsModal(
                 when (it) {
                     is Action.Open -> {
                         if (it.withNewTab) {
-                            // TODO: Move this to browser-manager
-                            window.open("?id=${it.project.id}")
+                            BrowserManager.openInNewTab(it.project.id)
                         } else {
                             onSelect(it.project, false)
                         }
@@ -278,7 +277,6 @@ private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) 
         Icons.Cross(12)
     }
 }
-
 
 private sealed class Action {
     data class Open(val project: ProjectItem, val withNewTab: Boolean) : Action()
