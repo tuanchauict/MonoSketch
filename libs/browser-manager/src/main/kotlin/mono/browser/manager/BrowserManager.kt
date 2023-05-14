@@ -57,5 +57,9 @@ class BrowserManager(
 
     companion object {
         private const val URL_PARAM_ID = "id"
+
+        fun openInNewTab(projectId: String) {
+            window.open("?$URL_PARAM_ID=$projectId")
+        }
     }
 }
