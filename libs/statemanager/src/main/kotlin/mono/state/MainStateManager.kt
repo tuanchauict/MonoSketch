@@ -23,7 +23,6 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
-import mono.livedata.map
 import mono.shape.ShapeManager
 import mono.shape.add
 import mono.shape.clipboard.ShapeClipboardManager
@@ -78,9 +77,6 @@ class MainStateManager(
     private val redrawRequestMutableLiveData = MutableLiveData(Unit)
 
     private val editingModeLiveData = MutableLiveData(EditingMode.idle(null))
-
-    val workingProjectNameLiveData: LiveData<String> =
-        shapeManager.rootLiveData.map { workspaceDao.getObject(it.id).name }
 
     init {
         mousePointerLiveData

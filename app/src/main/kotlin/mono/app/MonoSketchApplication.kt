@@ -8,6 +8,7 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import mono.actionmanager.ActionManager
 import mono.bitmap.manager.MonoBitmapManager
+import mono.browser.manager.BrowserManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
@@ -71,7 +72,9 @@ class MonoSketchApplication : LifecycleOwner() {
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
         actionManager.installDebugCommand()
 
-        mainStateManager = MainStateManager(
+        val browserManager = BrowserManager(shapeManager.rootLiveData.map { it.id }, this)
+
+        val mainStateManager = MainStateManager(
             this,
             mainBoard,
             shapeManager,
@@ -84,6 +87,7 @@ class MonoSketchApplication : LifecycleOwner() {
             appUiStateManager,
             initialRootId = getInitialRootIdFromUrl()
         )
+        this.mainStateManager = mainStateManager
 
         NavBarViewController(
             this,
@@ -105,12 +109,8 @@ class MonoSketchApplication : LifecycleOwner() {
 
         appUiStateManager.observeTheme(
             document.documentElement!!,
-            mainStateManager!!::forceFullyRedrawWorkspace
+            mainStateManager::forceFullyRedrawWorkspace
         )
-
-        mainStateManager?.workingProjectNameLiveData?.observe(this) {
-            document.title = "$it - MonoSketch"
-        }
     }
 
     fun onResize() {
