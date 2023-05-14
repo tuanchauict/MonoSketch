@@ -50,8 +50,18 @@ enum class KeyCommand(
         isKeyEventPropagationAllowed = false
     ),
 
-    UNDO(Key.KEY_Z, commandKeyState = MetaKeyState.ON, shiftKeyState = MetaKeyState.OFF),
-    REDO(Key.KEY_Z, commandKeyState = MetaKeyState.ON, shiftKeyState = MetaKeyState.ON),
+    UNDO(
+        Key.KEY_Z,
+        commandKeyState = MetaKeyState.ON,
+        shiftKeyState = MetaKeyState.OFF,
+        isRepeatable = true
+    ),
+    REDO(
+        Key.KEY_Z,
+        commandKeyState = MetaKeyState.ON,
+        shiftKeyState = MetaKeyState.ON,
+        isRepeatable = true
+    ),
 
     SHIFT_KEY(Key.KEY_SHIFT)
     ;
