@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import kotlinx.browser.document
+import mono.browser.manager.BrowserManager
 import mono.common.Cancelable
 import mono.common.setTimeout
 import mono.html.modal.TooltipPosition
@@ -98,7 +99,12 @@ private fun RecentProjectsModal(
             ProjectList(filter.value, projects, requestingRemoveProjectId.value) {
                 when (it) {
                     is Action.Open -> {
-                        onSelect(it.project, false)
+                        if (it.withNewTab) {
+                            BrowserManager.openInNewTab(it.project.id)
+                        } else {
+                            onSelect(it.project, false)
+                        }
+
                         onDismiss()
                     }
 
@@ -184,7 +190,7 @@ private fun ProjectContent(
                 "normal" to !isRemoveConfirming
             )
             if (!isRemoveConfirming) {
-                onConsumeClick { onAction(Action.Open(item)) }
+                onConsumeClick { onAction(Action.Open(item, withNewTab = false)) }
             }
         }
     ) {
@@ -195,15 +201,54 @@ private fun ProjectContent(
                 Text(item.name)
             }
         }
-        Div(
-            attrs = { classes("actions") }
-        ) {
-            if (isRemoveConfirming) {
-                RemoveProjectConfirm(item, onAction)
-            } else {
-                RemoveProjectRequest(item, onAction)
+        Actions(isRemoveConfirming, item, onAction)
+    }
+}
+
+@Composable
+private fun Actions(
+    isRemoveConfirming: Boolean,
+    item: ProjectItem,
+    onAction: (Action) -> Unit
+) {
+    Div(
+        attrs = { classes("actions") }
+    ) {
+        if (!isRemoveConfirming) {
+            OpenInNewTab(item, onAction)
+            RemoveProjectRequest(item, onAction)
+        } else {
+            RemoveProjectConfirm(item, onAction)
+        }
+    }
+}
+
+@Composable
+private fun OpenInNewTab(project: ProjectItem, onAction: (Action) -> Unit) {
+    Div(
+        attrs = {
+            classes("action")
+            tooltip("Open in new tab", TooltipPosition.TOP)
+
+            onConsumeClick {
+                onAction(Action.Open(project, withNewTab = true))
             }
         }
+    ) {
+        Icons.OpenInNewTab(12)
+    }
+}
+
+@Composable
+private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Unit) {
+    Div(
+        attrs = {
+            classes("action")
+            tooltip("Delete", TooltipPosition.TOP)
+            onConsumeClick { onAction(Action.RequestRemove(project)) }
+        }
+    ) {
+        Icons.Remove(12)
     }
 }
 
@@ -233,21 +278,8 @@ private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) 
     }
 }
 
-@Composable
-private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Unit) {
-    Div(
-        attrs = {
-            classes("action")
-            tooltip("Delete", TooltipPosition.TOP)
-            onConsumeClick { onAction(Action.RequestRemove(project)) }
-        }
-    ) {
-        Icons.Remove(12)
-    }
-}
-
 private sealed class Action {
-    data class Open(val project: ProjectItem) : Action()
+    data class Open(val project: ProjectItem, val withNewTab: Boolean) : Action()
     data class RequestRemove(val project: ProjectItem) : Action()
     data class RemoveConfirm(val project: ProjectItem) : Action()
     object SuspendRemove : Action()
