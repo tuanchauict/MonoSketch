@@ -8,6 +8,7 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import mono.actionmanager.ActionManager
 import mono.bitmap.manager.MonoBitmapManager
+import mono.browser.manager.BrowserManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
@@ -27,7 +28,6 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
 import org.w3c.dom.get
-import org.w3c.dom.url.URLSearchParams
 
 /**
  * Main class of the app to handle all kinds of events, UI, actions, etc.
@@ -71,7 +71,11 @@ class MonoSketchApplication : LifecycleOwner() {
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
         actionManager.installDebugCommand()
 
-        mainStateManager = MainStateManager(
+        val browserManager = BrowserManager {
+            this.mainStateManager?.changeWorkingProject(it, false)
+        }
+
+        val mainStateManager = MainStateManager(
             this,
             mainBoard,
             shapeManager,
@@ -82,8 +86,11 @@ class MonoSketchApplication : LifecycleOwner() {
             canvasViewController.mousePointerLiveData,
             actionManager,
             appUiStateManager,
-            initialRootId = getInitialRootIdFromUrl()
+            // TODO: Remove this to resolve ring dependency between mainStateManager and
+            //  browserManager.
+            initialRootId = browserManager.rootIdFromUrl
         )
+        this.mainStateManager = mainStateManager
 
         NavBarViewController(
             this,
@@ -105,12 +112,10 @@ class MonoSketchApplication : LifecycleOwner() {
 
         appUiStateManager.observeTheme(
             document.documentElement!!,
-            mainStateManager!!::forceFullyRedrawWorkspace
+            mainStateManager::forceFullyRedrawWorkspace
         )
 
-        mainStateManager?.workingProjectNameLiveData?.observe(this) {
-            document.title = "$it - MonoSketch"
-        }
+        browserManager.startObserveStateChange(shapeManager.rootLiveData.map { it.id }, this)
     }
 
     fun onResize() {
@@ -135,15 +140,8 @@ class MonoSketchApplication : LifecycleOwner() {
         }
     }
 
-    private fun getInitialRootIdFromUrl(): String {
-        val urlParams = URLSearchParams(window.location.search)
-        return urlParams.get(URL_PARAM_ID).orEmpty()
-    }
-
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
         private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
-
-        private const val URL_PARAM_ID = "id"
     }
 }
