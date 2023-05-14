@@ -140,7 +140,6 @@ class MonoSketchApplication : LifecycleOwner() {
         }
     }
 
-
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
         private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
