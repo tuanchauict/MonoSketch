@@ -7,7 +7,6 @@ package mono.state.onetimeaction
 import mono.bitmap.manager.MonoBitmapManager
 import mono.export.ExportShapesHelper
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.RootGroup
 import mono.state.FileMediator
@@ -64,14 +63,25 @@ internal class FileRelatedActionsHelper(
     }
 
     fun saveCurrentShapesToFile() {
-        val serializableRoot = environment.shapeManager.root.toSerializableShape(true)
-        fileMediator.saveFile(ShapeSerializationUtil.toJson(serializableRoot))
+        val currentRoot = environment.shapeManager.root
+        val serializableRoot = currentRoot.toSerializableShape(true)
+        val name = workspaceDao.getObject(currentRoot.id).name
+        val jsonString = ShapeSerializationUtil.toMonoFileJson(name, serializableRoot)
+        fileMediator.saveFile(name, jsonString)
     }
 
     fun loadShapesFromFile() {
         fileMediator.openFile { jsonString ->
-            val serializableRoot = ShapeSerializationUtil.fromJson(jsonString) as? SerializableGroup
-            val rootGroup = serializableRoot?.let { RootGroup(it) }
+            val monoFile = ShapeSerializationUtil.fromMonoFileJson(jsonString)
+            if (monoFile == null) {
+                console.warn("Failed to load shapes from file.")
+                // TODO: Show error dialog
+                return@openFile
+            }
+            // TODO: Check if the same root id is already in the workspace dao
+            console.log(monoFile)
+            val rootGroup = RootGroup(monoFile.root)
+            workspaceDao.getObject(rootGroup.id).name = monoFile.extra.name
             replaceWorkspace(rootGroup)
         }
     }
@@ -92,10 +102,8 @@ internal class FileRelatedActionsHelper(
         exportShapesHelper.exportText(extractableShapes, isModalRequired)
     }
 
-    private fun replaceWorkspace(rootGroup: RootGroup?) {
-        if (rootGroup != null) {
-            stateHistoryManager.clear()
-            environment.replaceRoot(rootGroup)
-        }
+    private fun replaceWorkspace(rootGroup: RootGroup) {
+        stateHistoryManager.clear()
+        environment.replaceRoot(rootGroup)
     }
 }
