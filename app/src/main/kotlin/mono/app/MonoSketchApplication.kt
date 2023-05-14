@@ -107,6 +107,10 @@ class MonoSketchApplication : LifecycleOwner() {
             document.documentElement!!,
             mainStateManager!!::forceFullyRedrawWorkspace
         )
+
+        mainStateManager?.workingProjectNameLiveData?.observe(this) {
+            document.title = "$it - MonoSketch"
+        }
     }
 
     fun onResize() {
