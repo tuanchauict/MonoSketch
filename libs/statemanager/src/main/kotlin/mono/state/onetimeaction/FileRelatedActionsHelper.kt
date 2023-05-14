@@ -13,6 +13,7 @@ import mono.state.FileMediator
 import mono.state.StateHistoryManager
 import mono.state.command.CommandEnvironment
 import mono.store.dao.workspace.WorkspaceDao
+import mono.store.dao.workspace.WorkspaceObjectDao
 
 /**
  * A helper class to handle file-related one-time actions in the application.
@@ -60,6 +61,7 @@ internal class FileRelatedActionsHelper(
     fun renameProject(newName: String) {
         val currentRootId = environment.shapeManager.root.id
         workspaceDao.getObject(currentRootId).name = newName
+        environment.shapeManager.notifyProjectUpdate()
     }
 
     fun saveCurrentShapesToFile() {
@@ -88,7 +90,8 @@ internal class FileRelatedActionsHelper(
             // - Set name to the storage
             // - Set offset to the storage
             workspaceDao.getObject(rootGroup.id).run {
-                name = monoFile.extra.name
+                name = monoFile.extra.name.takeIf { it.isNotEmpty() }
+                    ?: WorkspaceObjectDao.DEFAULT_NAME
                 offset = monoFile.extra.offset
             }
 
