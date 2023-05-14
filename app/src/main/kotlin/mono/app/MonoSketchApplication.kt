@@ -28,7 +28,6 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
 import org.w3c.dom.get
-import org.w3c.dom.url.URLSearchParams
 
 /**
  * Main class of the app to handle all kinds of events, UI, actions, etc.
@@ -85,7 +84,7 @@ class MonoSketchApplication : LifecycleOwner() {
             canvasViewController.mousePointerLiveData,
             actionManager,
             appUiStateManager,
-            initialRootId = getInitialRootIdFromUrl()
+            initialRootId = browserManager.getInitialRootIdFromUrl()
         )
         this.mainStateManager = mainStateManager
 
@@ -135,15 +134,9 @@ class MonoSketchApplication : LifecycleOwner() {
         }
     }
 
-    private fun getInitialRootIdFromUrl(): String {
-        val urlParams = URLSearchParams(window.location.search)
-        return urlParams.get(URL_PARAM_ID).orEmpty()
-    }
 
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
         private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
-
-        private const val URL_PARAM_ID = "id"
     }
 }
