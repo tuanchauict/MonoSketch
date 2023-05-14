@@ -50,7 +50,7 @@ class WorkspaceObjectDao internal constructor(
         }
 
     var name: String
-        get() = objectDocument.get(OBJECT_NAME) ?: "Undefined"
+        get() = objectDocument.get(OBJECT_NAME) ?: DEFAULT_NAME
         set(value) {
             objectDocument.set(OBJECT_NAME, value)
             lastModifiedTimestampMillis = currentTimeMillis()
@@ -81,5 +81,9 @@ class WorkspaceObjectDao internal constructor(
             remove(OBJECT_NAME)
             remove(OBJECT_LAST_MODIFIED)
         }
+    }
+
+    companion object {
+        const val DEFAULT_NAME = "Undefined"
     }
 }
