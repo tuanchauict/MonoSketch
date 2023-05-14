@@ -107,6 +107,15 @@ class ShapeManager {
         }
         return result
     }
+
+    /**
+     * Notifies that the information of the working project having update.
+     * The update is not only the shape list, but also the other information like name, etc.
+     * This helps the subsequence actions to keep the information up-to-date.
+     */
+    fun notifyProjectUpdate() {
+        rootMutableLiveData.value = root
+    }
 }
 
 fun ShapeManager.add(shape: AbstractShape) = execute(AddShape(shape))
