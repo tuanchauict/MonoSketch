@@ -71,7 +71,7 @@ class MonoSketchApplication : LifecycleOwner() {
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
         actionManager.installDebugCommand()
 
-        val browserManager = BrowserManager(shapeManager.rootLiveData.map { it.id }, this)
+        val browserManager = BrowserManager()
 
         val mainStateManager = MainStateManager(
             this,
@@ -84,7 +84,7 @@ class MonoSketchApplication : LifecycleOwner() {
             canvasViewController.mousePointerLiveData,
             actionManager,
             appUiStateManager,
-            initialRootId = browserManager.getInitialRootIdFromUrl()
+            initialRootId = browserManager.rootIdFromUrl
         )
         this.mainStateManager = mainStateManager
 
@@ -110,6 +110,8 @@ class MonoSketchApplication : LifecycleOwner() {
             document.documentElement!!,
             mainStateManager::forceFullyRedrawWorkspace
         )
+
+        browserManager.startObserveStateChange(shapeManager.rootLiveData.map { it.id }, this)
     }
 
     fun onResize() {
