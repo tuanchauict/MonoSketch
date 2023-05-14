@@ -49,7 +49,6 @@ internal class OneTimeActionHandler(
 
     private val fileRelatedActions = FileRelatedActionsHelper(
         environment,
-        stateHistoryManager,
         bitmapManager,
         shapeClipboardManager
     )

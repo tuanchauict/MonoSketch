@@ -77,6 +77,8 @@ class MainStateManager(
     private val redrawRequestMutableLiveData = MutableLiveData(Unit)
 
     private val editingModeLiveData = MutableLiveData(EditingMode.idle(null))
+    private val stateHistoryManager =
+        StateHistoryManager(lifecycleOwner, environment, canvasManager)
 
     init {
         mousePointerLiveData
@@ -118,7 +120,6 @@ class MainStateManager(
             currentRetainableActionType = it
         }
 
-        val stateHistoryManager = StateHistoryManager(lifecycleOwner, environment, canvasManager)
         stateHistoryManager.restoreAndStartObserveStateChange(initialRootId)
 
         OneTimeActionHandler(
@@ -305,13 +306,18 @@ class MainStateManager(
             }
 
         override fun replaceRoot(newRoot: RootGroup) {
+            val currentRoot = shapeManager.root
+            if (currentRoot.id != newRoot.id) {
+                stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
+                stateManager.canvasManager.setOffset(
+                    stateManager.workspaceDao.getObject(newRoot.id).offset
+                )
+                stateManager.stateHistoryManager.clear()
+            }
+
             shapeManager.replaceRoot(newRoot)
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
-            stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
-            stateManager.canvasManager.setOffset(
-                stateManager.workspaceDao.getObject(newRoot.id).offset
-            )
         }
 
         override fun enterEditingMode() {
