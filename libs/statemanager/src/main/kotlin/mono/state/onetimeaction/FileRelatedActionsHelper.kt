@@ -7,13 +7,13 @@ package mono.state.onetimeaction
 import mono.bitmap.manager.MonoBitmapManager
 import mono.export.ExportShapesHelper
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.RootGroup
 import mono.state.FileMediator
 import mono.state.StateHistoryManager
 import mono.state.command.CommandEnvironment
 import mono.store.dao.workspace.WorkspaceDao
+import mono.store.dao.workspace.WorkspaceObjectDao
 
 /**
  * A helper class to handle file-related one-time actions in the application.
@@ -61,17 +61,40 @@ internal class FileRelatedActionsHelper(
     fun renameProject(newName: String) {
         val currentRootId = environment.shapeManager.root.id
         workspaceDao.getObject(currentRootId).name = newName
+        environment.shapeManager.notifyProjectUpdate()
     }
 
     fun saveCurrentShapesToFile() {
-        val serializableRoot = environment.shapeManager.root.toSerializableShape(true)
-        fileMediator.saveFile(ShapeSerializationUtil.toJson(serializableRoot))
+        val currentRoot = environment.shapeManager.root
+        val serializableRoot = currentRoot.toSerializableShape(true)
+        val objectDao = workspaceDao.getObject(currentRoot.id)
+        val name = objectDao.name
+        val offset = objectDao.offset
+        val jsonString = ShapeSerializationUtil.toMonoFileJson(name, serializableRoot, offset)
+        fileMediator.saveFile(name, jsonString)
     }
 
     fun loadShapesFromFile() {
         fileMediator.openFile { jsonString ->
-            val serializableRoot = ShapeSerializationUtil.fromJson(jsonString) as? SerializableGroup
-            val rootGroup = serializableRoot?.let { RootGroup(it) }
+            val monoFile = ShapeSerializationUtil.fromMonoFileJson(jsonString)
+            if (monoFile == null) {
+                console.warn("Failed to load shapes from file.")
+                // TODO: Show error dialog
+                return@openFile
+            }
+            // TODO: Check if the same root id is already in the workspace dao
+            console.log(monoFile)
+            val rootGroup = RootGroup(monoFile.root)
+            // Prepare the object to be replaced since the data on the UI rely on the current root
+            // id to know an update.
+            // - Set name to the storage
+            // - Set offset to the storage
+            workspaceDao.getObject(rootGroup.id).run {
+                name = monoFile.extra.name.takeIf { it.isNotEmpty() }
+                    ?: WorkspaceObjectDao.DEFAULT_NAME
+                offset = monoFile.extra.offset
+            }
+
             replaceWorkspace(rootGroup)
         }
     }
@@ -92,10 +115,8 @@ internal class FileRelatedActionsHelper(
         exportShapesHelper.exportText(extractableShapes, isModalRequired)
     }
 
-    private fun replaceWorkspace(rootGroup: RootGroup?) {
-        if (rootGroup != null) {
-            stateHistoryManager.clear()
-            environment.replaceRoot(rootGroup)
-        }
+    private fun replaceWorkspace(rootGroup: RootGroup) {
+        stateHistoryManager.clear()
+        environment.replaceRoot(rootGroup)
     }
 }

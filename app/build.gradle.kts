@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation(projects.actionManager)
+    implementation(projects.browserManager)
     implementation(projects.commons)
     implementation(projects.graphicsgeo)
     implementation(projects.keycommand)

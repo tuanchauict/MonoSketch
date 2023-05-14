@@ -7,6 +7,7 @@ rootProject.name = "MonoSketch"
 val moduleMap = mapOf(
     "app" to "app",
     "action-manager" to "libs/action-manager",
+    "browser-manager" to "libs/browser-manager",
     "build-environment" to "libs/build-environment",
     "commons" to "libs/commons",
     "export-shapes-modal" to "libs/export-shapes-modal",

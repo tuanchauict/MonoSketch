@@ -19,12 +19,12 @@ import org.w3c.files.get
  * A mediator class for file interactions.
  */
 internal class FileMediator {
-    fun saveFile(jsonString: String) {
+    fun saveFile(filename: String, jsonString: String) {
         document.body?.run {
             val fileBlob = Blob(arrayOf(jsonString))
             val node = A(classes = "hidden") {
                 href = URL.Companion.createObjectURL(fileBlob)
-                setAttributes("download" to "$DEFAULT_FILENAME.$EXTENSION")
+                setAttributes("download" to "$filename.$EXTENSION")
             }
             node.click()
             node.remove()
@@ -55,7 +55,6 @@ internal class FileMediator {
     }
 
     companion object {
-        private const val DEFAULT_FILENAME = "monosketch"
         private const val EXTENSION = "mono"
     }
 }

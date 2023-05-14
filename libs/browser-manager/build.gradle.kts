@@ -4,7 +4,6 @@
 
 plugins {
     kotlin("js")
-    kotlin("plugin.serialization")
 }
 
 repositories {
@@ -12,9 +11,10 @@ repositories {
 }
 
 dependencies {
-    implementation(projects.shape)
+    implementation(projects.storeDao)
+    implementation(projects.lifecycle)
+    implementation(projects.livedata)
 
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlin.stdlib.js)
     testImplementation(libs.kotlin.test.js)
 }

@@ -97,7 +97,7 @@ internal class StateHistoryManager(
 
     private fun backupShapes() {
         val root = environment.shapeManager.root
-        val serializableGroup = root.toSerializableShape(true) as SerializableGroup
+        val serializableGroup = root.toSerializableShape(true)
 
         historyStack.pushState(root.versionCode, serializableGroup)
 
