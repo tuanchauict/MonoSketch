@@ -4,7 +4,6 @@
 
 package mono.shape.serialization
 
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -33,13 +32,13 @@ object ShapeSerializationUtil {
 
     fun fromMonoFileJson(jsonString: String): MonoFile? = try {
         Json.decodeFromString<MonoFile>(jsonString)
-    } catch (e: SerializationException) {
-        // Fallback to version 0
-        val shape = Json.decodeFromString<SerializableGroup>(jsonString)
-        MonoFile(shape, Extra("", Point.ZERO))
     } catch (e: Exception) {
-        console.error("Error while restoring shapes")
-        console.error(e)
-        null
+        // Fallback to version 0
+        val shape = fromJson(jsonString) as? SerializableGroup
+        if (shape != null) {
+            MonoFile(shape, Extra("", Point.ZERO))
+        } else {
+            null
+        }
     }
 }
