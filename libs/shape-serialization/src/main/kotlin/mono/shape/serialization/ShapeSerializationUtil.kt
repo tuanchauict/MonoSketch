@@ -8,6 +8,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import mono.graphics.geo.Point
 
 /**
  * A util object for serializing shape to Json and load shape from Json
@@ -24,8 +25,9 @@ object ShapeSerializationUtil {
         null
     }
 
-    fun toMonoFileJson(name: String, serializableShape: SerializableGroup): String {
-        val monoFile = MonoFile(serializableShape, Extra(name))
+    fun toMonoFileJson(name: String, serializableShape: SerializableGroup, offset: Point): String {
+        val extra = Extra(name, offset)
+        val monoFile = MonoFile(serializableShape, extra)
         return Json.encodeToString(monoFile)
     }
 
@@ -34,7 +36,7 @@ object ShapeSerializationUtil {
     } catch (e: SerializationException) {
         // Fallback to version 0
         val shape = Json.decodeFromString<SerializableGroup>(jsonString)
-        MonoFile(shape, Extra(""))
+        MonoFile(shape, Extra("", Point.ZERO))
     } catch (e: Exception) {
         console.error("Error while restoring shapes")
         console.error(e)

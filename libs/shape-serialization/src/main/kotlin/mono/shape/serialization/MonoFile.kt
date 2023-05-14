@@ -7,6 +7,7 @@ package mono.shape.serialization
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import mono.common.currentTimeMillis
+import mono.graphics.geo.Point
 
 const val MONO_FILE_VERSION = 1
 
@@ -36,5 +37,7 @@ data class MonoFile internal constructor(
 @Serializable
 data class Extra(
     @SerialName("name")
-    val name: String
+    val name: String,
+    @SerialName("offset")
+    val offset: Point = Point.ZERO
 )

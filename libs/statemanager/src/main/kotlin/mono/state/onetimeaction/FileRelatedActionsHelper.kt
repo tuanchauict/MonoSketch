@@ -65,8 +65,10 @@ internal class FileRelatedActionsHelper(
     fun saveCurrentShapesToFile() {
         val currentRoot = environment.shapeManager.root
         val serializableRoot = currentRoot.toSerializableShape(true)
-        val name = workspaceDao.getObject(currentRoot.id).name
-        val jsonString = ShapeSerializationUtil.toMonoFileJson(name, serializableRoot)
+        val objectDao = workspaceDao.getObject(currentRoot.id)
+        val name = objectDao.name
+        val offset = objectDao.offset
+        val jsonString = ShapeSerializationUtil.toMonoFileJson(name, serializableRoot, offset)
         fileMediator.saveFile(name, jsonString)
     }
 
@@ -81,7 +83,15 @@ internal class FileRelatedActionsHelper(
             // TODO: Check if the same root id is already in the workspace dao
             console.log(monoFile)
             val rootGroup = RootGroup(monoFile.root)
-            workspaceDao.getObject(rootGroup.id).name = monoFile.extra.name
+            // Prepare the object to be replaced since the data on the UI rely on the current root
+            // id to know an update.
+            // - Set name to the storage
+            // - Set offset to the storage
+            workspaceDao.getObject(rootGroup.id).run {
+                name = monoFile.extra.name
+                offset = monoFile.extra.offset
+            }
+
             replaceWorkspace(rootGroup)
         }
     }
