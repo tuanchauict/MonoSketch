@@ -15,12 +15,24 @@ import org.w3c.dom.url.URLSearchParams
 /**
  * A class for managing the states related to the browser such as the title, address bar, etc.
  */
-class BrowserManager {
+class BrowserManager(
+    private val onUrlUpdate: (String) -> Unit
+) {
     private val urlSearchParams: URLSearchParams
         get() = URLSearchParams(window.location.search)
 
     val rootIdFromUrl
         get() = urlSearchParams.get(URL_PARAM_ID).orEmpty()
+
+    private var willChangedByUrlPopStateEvent = false
+
+    init {
+        onUrlUpdate(rootIdFromUrl)
+        window.onpopstate = {
+            willChangedByUrlPopStateEvent = true
+            onUrlUpdate(rootIdFromUrl)
+        }
+    }
 
     fun startObserveStateChange(
         workingProjectIdLiveData: LiveData<String>,
@@ -32,6 +44,10 @@ class BrowserManager {
         }
 
         workingProjectIdLiveData.distinctUntilChange().observe(lifecycleOwner) {
+            if (it == rootIdFromUrl || willChangedByUrlPopStateEvent) {
+                willChangedByUrlPopStateEvent = false
+                return@observe
+            }
             val searchParams = urlSearchParams
             searchParams.set(URL_PARAM_ID, it)
             val newUrl = "${window.location.origin}${window.location.pathname}?$searchParams"

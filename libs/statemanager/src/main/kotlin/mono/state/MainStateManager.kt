@@ -264,6 +264,28 @@ class MainStateManager(
         requestRedraw()
     }
 
+    /**
+     * Changes the current working project to project with id [rootId].
+     * If the project does not exist, it will be created when [shouldCreateIfNotExist] is true.
+     */
+    fun changeWorkingProject(rootId: String, shouldCreateIfNotExist: Boolean) {
+        if (rootId.isEmpty()) {
+            return
+        }
+        val serializableGroup = workspaceDao.getObject(rootId).rootGroup
+
+        if (serializableGroup == null && !shouldCreateIfNotExist) {
+            return
+        }
+
+        val rootGroup = if (serializableGroup == null) {
+            RootGroup(rootId)
+        } else {
+            RootGroup(serializableGroup)
+        }
+        environment.replaceRoot(rootGroup)
+    }
+
     private class CommandEnvironmentImpl(
         private val stateManager: MainStateManager
     ) : CommandEnvironment {

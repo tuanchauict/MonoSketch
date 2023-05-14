@@ -71,7 +71,9 @@ class MonoSketchApplication : LifecycleOwner() {
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
         actionManager.installDebugCommand()
 
-        val browserManager = BrowserManager()
+        val browserManager = BrowserManager {
+            this.mainStateManager?.changeWorkingProject(it, false)
+        }
 
         val mainStateManager = MainStateManager(
             this,
@@ -84,6 +86,8 @@ class MonoSketchApplication : LifecycleOwner() {
             canvasViewController.mousePointerLiveData,
             actionManager,
             appUiStateManager,
+            // TODO: Remove this to resolve ring dependency between mainStateManager and
+            //  browserManager.
             initialRootId = browserManager.rootIdFromUrl
         )
         this.mainStateManager = mainStateManager
