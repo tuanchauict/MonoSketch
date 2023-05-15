@@ -19,6 +19,7 @@ import org.jetbrains.compose.web.dom.Div
 
 @Composable
 internal fun ProjectManagerIcon(
+    openingProjectId: String,
     workspaceDao: WorkspaceDao,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
@@ -35,7 +36,7 @@ internal fun ProjectManagerIcon(
                 }
                 tooltip("Manage projects")
 
-                onClick { onManageProjectClick(workspaceDao, onActionSelected) }
+                onClick { onManageProjectClick(openingProjectId, workspaceDao, onActionSelected) }
             }
         ) {
             Icons.Inbox(iconSize = 18)
@@ -44,10 +45,13 @@ internal fun ProjectManagerIcon(
 }
 
 private fun onManageProjectClick(
+    openingProjectId: String,
     workspaceDao: WorkspaceDao,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
-    val projects = workspaceDao.getObjects().map { ProjectItem(it.objectId, it.name) }.toList()
+    val projects = workspaceDao.getObjects()
+        .map { ProjectItem(it.objectId, it.name, it.objectId == openingProjectId) }
+        .toList()
     showRecentProjectsModal(projects) { projectItem, isRemoved ->
         if (isRemoved) {
             onActionSelected(OneTimeActionType.RemoveProject(projectItem.id))

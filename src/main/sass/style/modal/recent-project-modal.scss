@@ -14,7 +14,7 @@ $modal-width: 500px;
     display: flex;
 
     .container {
-        margin-top: 24px;
+        margin-top: 6px;
         background: $modal-container-bg;
         border-radius: 6px;
         border: 1px solid $modal-container-border-color;
@@ -88,6 +88,23 @@ $modal-width: 500px;
 
         &:hover .remove {
             display: flex;
+        }
+
+        .name-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            display: flex;
+            align-items: center;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .name {
+            display: flex;
+            align-items: center;
         }
 
         .actions {
