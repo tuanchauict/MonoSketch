@@ -59,7 +59,11 @@ class NavBarViewController(
 
             Div {
                 ToolbarContainer {
-                    ProjectManagerIcon(workspaceDao, actionManager::setOneTimeAction)
+                    ProjectManagerIcon(
+                        currentRootIdLiveData.value,
+                        workspaceDao,
+                        actionManager::setOneTimeAction
+                    )
                 }
                 WorkingFileToolbar(projectNameState) {
                     actionManager.setOneTimeAction(it)

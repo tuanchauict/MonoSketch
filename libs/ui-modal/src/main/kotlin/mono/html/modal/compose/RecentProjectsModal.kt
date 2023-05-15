@@ -31,7 +31,7 @@ import mono.html.Div as MonoDiv
 
 private typealias SelectAction = (ProjectItem, isRemoved: Boolean) -> Unit
 
-class ProjectItem(val id: String, val name: String)
+class ProjectItem(val id: String, val name: String, val isOpening: Boolean)
 
 fun showRecentProjectsModal(
     projectItems: List<ProjectItem>,
@@ -194,15 +194,40 @@ private fun ProjectContent(
             }
         }
     ) {
-        Div {
-            if (isRemoveConfirming) {
-                Text("""Delete "${item.name}"?""")
-            } else {
-                Text(item.name)
-            }
+        if (isRemoveConfirming) {
+            DeleteConfirmName(item.name)
+        } else {
+            Name(item.name, item.isOpening)
         }
         Actions(isRemoveConfirming, item, onAction)
     }
+}
+
+@Composable
+private fun DeleteConfirmName(name: String) {
+    Div(attrs = { classes("name-container", "delete-confirm") }) {
+        Icon { Icons.Warning() }
+        Span(attrs = { classes("name") }) {
+            Text("""Delete "$name"?""")
+        }
+    }
+}
+
+@Composable
+private fun Name(name: String, isOpening: Boolean) {
+    Div(attrs = { classes("name-container") }) {
+        Icon {
+            if (isOpening) Icons.FolderOpen() else Icons.Folder()
+        }
+        Span(attrs = { classes("name") }) {
+            Text(name)
+        }
+    }
+}
+
+@Composable
+private fun Icon(icon: @Composable () -> Unit) {
+    Span(attrs = { classes("icon") }) { icon() }
 }
 
 @Composable
@@ -211,9 +236,7 @@ private fun Actions(
     item: ProjectItem,
     onAction: (Action) -> Unit
 ) {
-    Div(
-        attrs = { classes("actions") }
-    ) {
+    Div(attrs = { classes("actions") }) {
         if (!isRemoveConfirming) {
             OpenInNewTab(item, onAction)
             RemoveProjectRequest(item, onAction)
