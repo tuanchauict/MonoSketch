@@ -10,7 +10,6 @@ import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.RootGroup
 import mono.state.FileMediator
-import mono.state.StateHistoryManager
 import mono.state.command.CommandEnvironment
 import mono.store.dao.workspace.WorkspaceDao
 import mono.store.dao.workspace.WorkspaceObjectDao
@@ -22,7 +21,6 @@ import mono.store.dao.workspace.WorkspaceObjectDao
  */
 internal class FileRelatedActionsHelper(
     private val environment: CommandEnvironment,
-    private val stateHistoryManager: StateHistoryManager,
     bitmapManager: MonoBitmapManager,
     shapeClipboardManager: ShapeClipboardManager,
     private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
@@ -115,8 +113,5 @@ internal class FileRelatedActionsHelper(
         exportShapesHelper.exportText(extractableShapes, isModalRequired)
     }
 
-    private fun replaceWorkspace(rootGroup: RootGroup) {
-        stateHistoryManager.clear()
-        environment.replaceRoot(rootGroup)
-    }
+    private fun replaceWorkspace(rootGroup: RootGroup) = environment.replaceRoot(rootGroup)
 }

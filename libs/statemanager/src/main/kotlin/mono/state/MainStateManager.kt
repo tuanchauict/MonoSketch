@@ -77,6 +77,8 @@ class MainStateManager(
     private val redrawRequestMutableLiveData = MutableLiveData(Unit)
 
     private val editingModeLiveData = MutableLiveData(EditingMode.idle(null))
+    private val stateHistoryManager =
+        StateHistoryManager(lifecycleOwner, environment, canvasManager)
 
     init {
         mousePointerLiveData
@@ -118,7 +120,6 @@ class MainStateManager(
             currentRetainableActionType = it
         }
 
-        val stateHistoryManager = StateHistoryManager(lifecycleOwner, environment, canvasManager)
         stateHistoryManager.restoreAndStartObserveStateChange(initialRootId)
 
         OneTimeActionHandler(
@@ -264,28 +265,6 @@ class MainStateManager(
         requestRedraw()
     }
 
-    /**
-     * Changes the current working project to project with id [rootId].
-     * If the project does not exist, it will be created when [shouldCreateIfNotExist] is true.
-     */
-    fun changeWorkingProject(rootId: String, shouldCreateIfNotExist: Boolean) {
-        if (rootId.isEmpty()) {
-            return
-        }
-        val serializableGroup = workspaceDao.getObject(rootId).rootGroup
-
-        if (serializableGroup == null && !shouldCreateIfNotExist) {
-            return
-        }
-
-        val rootGroup = if (serializableGroup == null) {
-            RootGroup(rootId)
-        } else {
-            RootGroup(serializableGroup)
-        }
-        environment.replaceRoot(rootGroup)
-    }
-
     private class CommandEnvironmentImpl(
         private val stateManager: MainStateManager
     ) : CommandEnvironment {
@@ -305,13 +284,18 @@ class MainStateManager(
             }
 
         override fun replaceRoot(newRoot: RootGroup) {
+            val currentRoot = shapeManager.root
+            if (currentRoot.id != newRoot.id) {
+                stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
+                stateManager.canvasManager.setOffset(
+                    stateManager.workspaceDao.getObject(newRoot.id).offset
+                )
+                stateManager.stateHistoryManager.clear()
+            }
+
             shapeManager.replaceRoot(newRoot)
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
-            stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
-            stateManager.canvasManager.setOffset(
-                stateManager.workspaceDao.getObject(newRoot.id).offset
-            )
         }
 
         override fun enterEditingMode() {

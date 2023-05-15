@@ -7,6 +7,7 @@ package mono.app
 import kotlinx.browser.document
 import kotlinx.browser.window
 import mono.actionmanager.ActionManager
+import mono.actionmanager.OneTimeActionType
 import mono.bitmap.manager.MonoBitmapManager
 import mono.browser.manager.BrowserManager
 import mono.graphics.board.MonoBoard
@@ -72,7 +73,7 @@ class MonoSketchApplication : LifecycleOwner() {
         actionManager.installDebugCommand()
 
         val browserManager = BrowserManager {
-            this.mainStateManager?.changeWorkingProject(it, false)
+            actionManager.setOneTimeAction(OneTimeActionType.SwitchProject(it))
         }
 
         val mainStateManager = MainStateManager(
@@ -86,8 +87,6 @@ class MonoSketchApplication : LifecycleOwner() {
             canvasViewController.mousePointerLiveData,
             actionManager,
             appUiStateManager,
-            // TODO: Remove this to resolve ring dependency between mainStateManager and
-            //  browserManager.
             initialRootId = browserManager.rootIdFromUrl
         )
         this.mainStateManager = mainStateManager
