@@ -102,7 +102,8 @@ internal class FileRelatedActionsHelper(
                 },
                 onReplaceClick = {
                     prepareAndApplyNewRoot(rootGroup, monoFile.extra)
-                })
+                }
+            )
             return
         }
 

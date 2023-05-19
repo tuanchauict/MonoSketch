@@ -19,7 +19,6 @@ fun showExitingProjectDialog(
     onKeepBothClick: () -> Unit,
     onReplaceClick: () -> Unit
 ) {
-
     Dialog(
         title = "Existing project",
         content = {
@@ -50,4 +49,3 @@ fun showExitingProjectDialog(
         secondaryAction = DialogAction("Keep both", action = onKeepBothClick)
     )
 }
-

@@ -71,7 +71,6 @@ fun Dialog(
 
     val container = body.MonoDiv {}
     val composition = renderComposable(container) {
-
     }
 
     val dismiss = {
