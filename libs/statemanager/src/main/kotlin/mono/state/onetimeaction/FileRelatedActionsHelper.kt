@@ -6,8 +6,7 @@ package mono.state.onetimeaction
 
 import mono.bitmap.manager.MonoBitmapManager
 import mono.export.ExportShapesHelper
-import mono.html.modal.compose.Dialog
-import mono.html.modal.compose.DialogAction
+import mono.html.modal.compose.showExitingProjectDialog
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.serialization.Extra
 import mono.shape.serialization.MonoFile
@@ -90,22 +89,20 @@ internal class FileRelatedActionsHelper(
 
     private fun applyMonoFileToWorkspace(monoFile: MonoFile) {
         val rootGroup = RootGroup(monoFile.root)
-        val existFile = workspaceDao.getObject(rootGroup.id).rootGroup
-        if (existFile != null) {
-            Dialog(
-                title = "Existing project",
-                // TODO: Make the message more informative
-                message = "Same project is existing in the data store",
-                primaryAction = DialogAction("Replace", isDanger = true) {
-                    prepareAndApplyNewRoot(rootGroup, monoFile.extra)
-                },
-                secondaryAction = DialogAction("Keep both") {
+        val existingProject = workspaceDao.getObject(rootGroup.id)
+        if (existingProject.rootGroup != null) {
+            showExitingProjectDialog(
+                existingProject.name,
+                existingProject.lastModifiedTimestampMillis,
+                onKeepBothClick = {
                     prepareAndApplyNewRoot(
                         RootGroup(monoFile.root.copy(id = null)),
                         monoFile.extra
                     )
-                }
-            )
+                },
+                onReplaceClick = {
+                    prepareAndApplyNewRoot(rootGroup, monoFile.extra)
+                })
             return
         }
 
