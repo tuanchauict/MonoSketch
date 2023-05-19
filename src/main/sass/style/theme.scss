@@ -1,3 +1,5 @@
+@import './theme-utils';
+
 $themeMap: (
     // Header overall
     --header-bg: (#2c2c2c, #2c2c2c),
@@ -48,6 +50,9 @@ $themeMap: (
     --modal-title-color: (rgba(0, 0, 0, 0.68), #FFF),
     --modal-content-color: (#000, #FFFFFF),
     --modal-item-danger-bg: (rgba(255, 161, 161, 1), rgba(255, 0, 0, 0.2)),
+    --modal-action-color: (#037de1, #c08b03),
+    --modal-action-hover-color: (#2598f7, #dfa104),
+    --modal-action-pressed-color: (#0360ac, #8e6601),
 
     // Keyboard shortcuts
     --keyboard-content-key-bg: (#fff, #262626),
@@ -65,28 +70,7 @@ $themeMap: (
     --exporttext-content-color: (#000, #fff),
 );
 
-// Define the theme mixin
-@mixin theme() {
-
-    &,
-    &.light {
-
-        @each $property,
-        $values in $themeMap {
-            #{$property}: nth($values, 1);
-        }
-    }
-
-    &.dark {
-
-        @each $property,
-        $values in $themeMap {
-            #{$property}: nth($values, 2);
-        }
-    }
-}
-
 // Apply the theme values
 :root {
-    @include theme();
+    @include theme($themeMap);
 }
