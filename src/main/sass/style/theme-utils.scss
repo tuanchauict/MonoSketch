@@ -1,0 +1,24 @@
+// Define the theme mixin
+@mixin theme($themeColors, $selector: "body") {
+
+    &,
+    &.light {
+        #{$selector} {
+
+            @each $property,
+            $values in $themeColors {
+                #{$property}: nth($values, 1);
+            }
+        }
+    }
+
+    &.dark {
+        #{$selector} {
+
+            @each $property,
+            $values in $themeColors {
+                #{$property}: nth($values, 2);
+            }
+        }
+    }
+}

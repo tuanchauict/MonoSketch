@@ -6,7 +6,10 @@ package mono.state.onetimeaction
 
 import mono.bitmap.manager.MonoBitmapManager
 import mono.export.ExportShapesHelper
+import mono.html.modal.compose.showExitingProjectDialog
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.serialization.Extra
+import mono.shape.serialization.MonoFile
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.RootGroup
 import mono.state.FileMediator
@@ -80,21 +83,44 @@ internal class FileRelatedActionsHelper(
                 // TODO: Show error dialog
                 return@openFile
             }
-            // TODO: Check if the same root id is already in the workspace dao
-            console.log(monoFile)
-            val rootGroup = RootGroup(monoFile.root)
-            // Prepare the object to be replaced since the data on the UI rely on the current root
-            // id to know an update.
-            // - Set name to the storage
-            // - Set offset to the storage
-            workspaceDao.getObject(rootGroup.id).run {
-                name = monoFile.extra.name.takeIf { it.isNotEmpty() }
-                    ?: WorkspaceObjectDao.DEFAULT_NAME
-                offset = monoFile.extra.offset
-            }
-
-            replaceWorkspace(rootGroup)
+            applyMonoFileToWorkspace(monoFile)
         }
+    }
+
+    private fun applyMonoFileToWorkspace(monoFile: MonoFile) {
+        val rootGroup = RootGroup(monoFile.root)
+        val existingProject = workspaceDao.getObject(rootGroup.id)
+        if (existingProject.rootGroup != null) {
+            showExitingProjectDialog(
+                existingProject.name,
+                existingProject.lastModifiedTimestampMillis,
+                onKeepBothClick = {
+                    prepareAndApplyNewRoot(
+                        RootGroup(monoFile.root.copy(id = null)),
+                        monoFile.extra
+                    )
+                },
+                onReplaceClick = {
+                    prepareAndApplyNewRoot(rootGroup, monoFile.extra)
+                }
+            )
+            return
+        }
+
+        prepareAndApplyNewRoot(rootGroup, monoFile.extra)
+    }
+
+    private fun prepareAndApplyNewRoot(rootGroup: RootGroup, extra: Extra) {
+        // Prepare the object to be replaced since the data on the UI rely on the current root
+        // id to know an update.
+        // - Set name to the storage
+        // - Set offset to the storage
+        workspaceDao.getObject(rootGroup.id).run {
+            name = extra.name.takeIf { it.isNotEmpty() } ?: WorkspaceObjectDao.DEFAULT_NAME
+            offset = extra.offset
+        }
+
+        replaceWorkspace(rootGroup)
     }
 
     fun exportSelectedShapes(isModalRequired: Boolean) {
