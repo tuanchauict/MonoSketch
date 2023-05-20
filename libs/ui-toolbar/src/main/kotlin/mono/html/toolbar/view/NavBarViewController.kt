@@ -52,6 +52,7 @@ class NavBarViewController(
         appUiStateManager.scrollModeLiveData.toState(lifecycleOwner)
 
     init {
+        val currentProjectState = currentRootIdLiveData.toState(lifecycleOwner)
         renderComposable("nav-toolbar") {
             Div {
                 MouseActionGroup(selectedMouseActionState, actionManager::setRetainableAction)
@@ -60,7 +61,7 @@ class NavBarViewController(
             Div {
                 ToolbarContainer {
                     ProjectManagerIcon(
-                        currentRootIdLiveData.value,
+                        currentProjectState.value,
                         workspaceDao,
                         actionManager::setOneTimeAction
                     )
