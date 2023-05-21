@@ -9,6 +9,7 @@ package mono.html.toolbar.view.nav
 import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
 import mono.html.modal.compose.ProjectItem
+import mono.html.modal.compose.ProjectManagementActionItem
 import mono.html.modal.compose.showRecentProjectsModal
 import mono.html.modal.tooltip
 import mono.store.dao.workspace.WorkspaceDao
@@ -52,11 +53,35 @@ private fun onManageProjectClick(
     val projects = workspaceDao.getObjects()
         .map { ProjectItem(it.objectId, it.name, it.objectId == openingProjectId) }
         .toList()
-    showRecentProjectsModal(projects) { projectItem, isRemoved ->
-        if (isRemoved) {
-            onActionSelected(OneTimeActionType.RemoveProject(projectItem.id))
-        } else {
-            onActionSelected(OneTimeActionType.SwitchProject(projectItem.id))
+    showRecentProjectsModal(
+        projects,
+        onManagementAction = { onProjectManagementActionClick(it, onActionSelected) },
+        onProjectSelect = { projectItem, isRemoved ->
+            onProjectSelectionActionClick(projectItem, isRemoved, onActionSelected)
         }
+    )
+}
+
+private fun onProjectManagementActionClick(
+    actionItem: ProjectManagementActionItem,
+    onActionSelected: (OneTimeActionType) -> Unit
+) {
+    when (actionItem) {
+        ProjectManagementActionItem.ImportFile -> onActionSelected(OneTimeActionType.OpenShapes)
+        ProjectManagementActionItem.NewProject -> {
+            onActionSelected(OneTimeActionType.NewProject)
+        }
+    }
+}
+
+private fun onProjectSelectionActionClick(
+    projectItem: ProjectItem,
+    isRemoved: Boolean,
+    onActionSelected: (OneTimeActionType) -> Unit
+) {
+    if (isRemoved) {
+        onActionSelected(OneTimeActionType.RemoveProject(projectItem.id))
+    } else {
+        onActionSelected(OneTimeActionType.SwitchProject(projectItem.id))
     }
 }
