@@ -7,6 +7,7 @@
 package mono.html.toolbar.view.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import mono.actionmanager.OneTimeActionType
 import mono.html.modal.compose.ProjectItem
 import mono.html.modal.compose.ProjectManagementActionItem
@@ -21,6 +22,7 @@ import org.jetbrains.compose.web.dom.Div
 @Composable
 internal fun ProjectManagerIcon(
     openingProjectId: String,
+    projectNameState: State<String>,
     workspaceDao: WorkspaceDao,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
@@ -37,7 +39,14 @@ internal fun ProjectManagerIcon(
                 }
                 tooltip("Manage projects")
 
-                onClick { onManageProjectClick(openingProjectId, workspaceDao, onActionSelected) }
+                onClick {
+                    onManageProjectClick(
+                        openingProjectId,
+                        workspaceDao,
+                        projectNameState,
+                        onActionSelected
+                    )
+                }
             }
         ) {
             Icons.Inbox(iconSize = 18)
@@ -48,6 +57,7 @@ internal fun ProjectManagerIcon(
 private fun onManageProjectClick(
     openingProjectId: String,
     workspaceDao: WorkspaceDao,
+    projectNameState: State<String>,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     val projects = workspaceDao.getObjects()
@@ -55,7 +65,13 @@ private fun onManageProjectClick(
         .toList()
     showRecentProjectsModal(
         projects,
-        onManagementAction = { onProjectManagementActionClick(it, onActionSelected) },
+        onManagementAction = {
+            onProjectManagementActionClick(
+                it,
+                projectNameState,
+                onActionSelected
+            )
+        },
         onProjectSelect = { projectItem, isRemoved ->
             onProjectSelectionActionClick(projectItem, isRemoved, onActionSelected)
         }
@@ -64,12 +80,14 @@ private fun onManageProjectClick(
 
 private fun onProjectManagementActionClick(
     actionItem: ProjectManagementActionItem,
+    projectNameState: State<String>,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     when (actionItem) {
         ProjectManagementActionItem.ImportFile -> onActionSelected(OneTimeActionType.OpenShapes)
         ProjectManagementActionItem.NewProject -> {
             onActionSelected(OneTimeActionType.NewProject)
+            renameProject(projectNameState, onActionSelected)
         }
     }
 }
