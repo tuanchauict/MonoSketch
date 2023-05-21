@@ -58,6 +58,7 @@ class MainStateManager(
     private val canvasManager: CanvasViewController,
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
+    applicationActiveStateLiveData: LiveData<Boolean>,
     private val actionManager: ActionManager,
     appUiStateManager: AppUiStateManager,
     initialRootId: String = "",
@@ -131,6 +132,12 @@ class MainStateManager(
             stateHistoryManager,
             appUiStateManager
         )
+
+        applicationActiveStateLiveData.observe(lifecycleOwner) { isActive ->
+            if (isActive) {
+                reflectChangedFromLocal()
+            }
+        }
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
@@ -263,6 +270,20 @@ class MainStateManager(
         }
         canvasManager.drawInteractionBounds(bounds)
         requestRedraw()
+    }
+
+    private fun reflectChangedFromLocal() {
+        val rootId = shapeManager.root.id
+        val rootVersion = shapeManager.root.versionCode
+        val currentRoot = workspaceDao.getObject(rootId).rootGroup
+        when {
+            currentRoot == null -> {
+                // TODO: Notify to user this project is removed
+            }
+
+            rootVersion != currentRoot.versionCode ->
+                environment.replaceRoot(RootGroup(currentRoot))
+        }
     }
 
     private class CommandEnvironmentImpl(
