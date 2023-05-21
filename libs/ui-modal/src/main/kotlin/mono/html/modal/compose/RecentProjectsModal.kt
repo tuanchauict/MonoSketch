@@ -99,7 +99,7 @@ private fun RecentProjectsModal(
                 filter.value = it
                 requestingRemoveProjectId.value = ""
             }
-            ProjectManagementSection(filter.value.isNotBlank()) {
+            ProjectManagementSection(filter.value.isNotEmpty()) {
                 onManagementAction(it)
                 onDismiss()
             }
