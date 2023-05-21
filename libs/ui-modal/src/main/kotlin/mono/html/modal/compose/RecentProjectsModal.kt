@@ -22,11 +22,13 @@ import mono.ui.compose.ext.classes
 import mono.ui.compose.ext.onConsumeClick
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.attributes.placeholder
+import org.jetbrains.compose.web.dom.ContentBuilder
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
+import org.w3c.dom.Element
 import mono.html.Div as MonoDiv
 
 private typealias ProjectManagementAction = (ProjectManagementActionItem) -> Unit
@@ -99,7 +101,7 @@ private fun RecentProjectsModal(
                 filter.value = it
                 requestingRemoveProjectId.value = ""
             }
-            ProjectManagementSection(filter.value.isNotBlank()) {
+            ProjectManagementSection(filter.value.isNotEmpty()) {
                 onManagementAction(it)
                 onDismiss()
             }
@@ -233,7 +235,7 @@ private fun ProjectName(name: String, isOpening: Boolean) {
 }
 
 @Composable
-private fun Icon(icon: @Composable () -> Unit) {
+private fun Icon(icon: ContentBuilder<Element>) {
     Span(attrs = { classes("icon") }) { icon() }
 }
 

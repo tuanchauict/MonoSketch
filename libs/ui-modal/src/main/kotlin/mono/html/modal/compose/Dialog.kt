@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import kotlinx.browser.document
 import mono.ui.compose.ext.classes
 import mono.ui.compose.ext.onConsumeClick
+import org.jetbrains.compose.web.dom.ContentBuilder
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H2
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
+import org.w3c.dom.Element
 import mono.html.Div as MonoDiv
 
 class DialogAction(val name: String, val isDanger: Boolean = false, val action: () -> Unit)
@@ -63,7 +65,7 @@ fun Dialog(
  */
 fun Dialog(
     title: String,
-    content: @Composable () -> Unit,
+    content: ContentBuilder<Element>,
     primaryAction: DialogAction? = null,
     secondaryAction: DialogAction? = null
 ) {
@@ -93,7 +95,7 @@ fun Dialog(
 @Composable
 private fun DialogContainer(
     title: String,
-    content: @Composable () -> Unit,
+    content: ContentBuilder<Element>,
     primaryAction: DialogAction? = null,
     secondaryAction: DialogAction? = null,
     dismiss: () -> Unit
