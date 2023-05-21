@@ -29,19 +29,21 @@ import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
 import mono.html.Div as MonoDiv
 
-private typealias SelectAction = (ProjectItem, isRemoved: Boolean) -> Unit
+private typealias ProjectManagementAction = (ProjectManagementActionItem) -> Unit
+private typealias ProjectSelectAction = (ProjectItem, isRemoved: Boolean) -> Unit
 
 class ProjectItem(val id: String, val name: String, val isOpening: Boolean)
 
 fun showRecentProjectsModal(
     projectItems: List<ProjectItem>,
-    onSelect: SelectAction
+    onManagementAction: ProjectManagementAction,
+    onProjectSelect: ProjectSelectAction
 ) {
     val body = document.body ?: return
     val container = body.MonoDiv()
     val composition = renderComposable(container) {}
     composition.setContent {
-        RecentProjectsModal(projectItems, onSelect) {
+        RecentProjectsModal(projectItems, onManagementAction, onProjectSelect) {
             composition.dispose()
             container.remove()
         }
@@ -51,7 +53,8 @@ fun showRecentProjectsModal(
 @Composable
 private fun RecentProjectsModal(
     projects: List<ProjectItem>,
-    onSelect: SelectAction,
+    onManagementAction: ProjectManagementAction,
+    onProjectSelect: ProjectSelectAction,
     onDismiss: () -> Unit
 ) {
     var cancelable: Cancelable? by remember { mutableStateOf(null) }
@@ -96,20 +99,24 @@ private fun RecentProjectsModal(
                 filter.value = it
                 requestingRemoveProjectId.value = ""
             }
+            ProjectManagementSection(filter.value.isNotBlank()) {
+                onManagementAction(it)
+                onDismiss()
+            }
             ProjectList(filter.value, projects, requestingRemoveProjectId.value) {
                 when (it) {
                     is Action.Open -> {
                         if (it.withNewTab) {
                             BrowserManager.openInNewTab(it.project.id)
                         } else {
-                            onSelect(it.project, false)
+                            onProjectSelect(it.project, false)
                         }
 
                         onDismiss()
                     }
 
                     is Action.RemoveConfirm -> {
-                        onSelect(it.project, true)
+                        onProjectSelect(it.project, true)
                         onDismiss()
                     }
 
@@ -197,7 +204,7 @@ private fun ProjectContent(
         if (isRemoveConfirming) {
             DeleteConfirmName(item.name)
         } else {
-            Name(item.name, item.isOpening)
+            ProjectName(item.name, item.isOpening)
         }
         Actions(isRemoveConfirming, item, onAction)
     }
@@ -214,7 +221,7 @@ private fun DeleteConfirmName(name: String) {
 }
 
 @Composable
-private fun Name(name: String, isOpening: Boolean) {
+private fun ProjectName(name: String, isOpening: Boolean) {
     Div(attrs = { classes("name-container") }) {
         Icon {
             if (isOpening) Icons.FolderOpen() else Icons.Folder()
@@ -238,16 +245,16 @@ private fun Actions(
 ) {
     Div(attrs = { classes("actions") }) {
         if (!isRemoveConfirming) {
-            OpenInNewTab(item, onAction)
-            RemoveProjectRequest(item, onAction)
+            ActionOpenInNewTab(item, onAction)
+            ActionRemoveProjectRequest(item, onAction)
         } else {
-            RemoveProjectConfirm(item, onAction)
+            ActionRemoveProjectConfirm(item, onAction)
         }
     }
 }
 
 @Composable
-private fun OpenInNewTab(project: ProjectItem, onAction: (Action) -> Unit) {
+private fun ActionOpenInNewTab(project: ProjectItem, onAction: (Action) -> Unit) {
     Div(
         attrs = {
             classes("action")
@@ -263,7 +270,7 @@ private fun OpenInNewTab(project: ProjectItem, onAction: (Action) -> Unit) {
 }
 
 @Composable
-private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Unit) {
+private fun ActionRemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Unit) {
     Div(
         attrs = {
             classes("action")
@@ -276,7 +283,7 @@ private fun RemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Uni
 }
 
 @Composable
-private fun RemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) {
+private fun ActionRemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) {
     Div(
         attrs = {
             classes("action")

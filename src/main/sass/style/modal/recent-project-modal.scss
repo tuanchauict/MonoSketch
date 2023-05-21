@@ -13,6 +13,14 @@ $modal-width: 500px;
 
     display: flex;
 
+    .divider {
+        height: 1px;
+        width: 100%;
+        padding: 0 16px;
+        background: var(--mainmenu-divider-color);
+        margin: 8px 0 6px;
+    }
+
     .container {
         margin-top: 6px;
         background: $modal-container-bg;

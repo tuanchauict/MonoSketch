@@ -7,8 +7,10 @@
 package mono.html.toolbar.view.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import mono.actionmanager.OneTimeActionType
 import mono.html.modal.compose.ProjectItem
+import mono.html.modal.compose.ProjectManagementActionItem
 import mono.html.modal.compose.showRecentProjectsModal
 import mono.html.modal.tooltip
 import mono.store.dao.workspace.WorkspaceDao
@@ -20,6 +22,7 @@ import org.jetbrains.compose.web.dom.Div
 @Composable
 internal fun ProjectManagerIcon(
     openingProjectId: String,
+    projectNameState: State<String>,
     workspaceDao: WorkspaceDao,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
@@ -36,7 +39,14 @@ internal fun ProjectManagerIcon(
                 }
                 tooltip("Manage projects")
 
-                onClick { onManageProjectClick(openingProjectId, workspaceDao, onActionSelected) }
+                onClick {
+                    onManageProjectClick(
+                        openingProjectId,
+                        workspaceDao,
+                        projectNameState,
+                        onActionSelected
+                    )
+                }
             }
         ) {
             Icons.Inbox(iconSize = 18)
@@ -47,16 +57,49 @@ internal fun ProjectManagerIcon(
 private fun onManageProjectClick(
     openingProjectId: String,
     workspaceDao: WorkspaceDao,
+    projectNameState: State<String>,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     val projects = workspaceDao.getObjects()
         .map { ProjectItem(it.objectId, it.name, it.objectId == openingProjectId) }
         .toList()
-    showRecentProjectsModal(projects) { projectItem, isRemoved ->
-        if (isRemoved) {
-            onActionSelected(OneTimeActionType.RemoveProject(projectItem.id))
-        } else {
-            onActionSelected(OneTimeActionType.SwitchProject(projectItem.id))
+    showRecentProjectsModal(
+        projects,
+        onManagementAction = {
+            onProjectManagementActionClick(
+                it,
+                projectNameState,
+                onActionSelected
+            )
+        },
+        onProjectSelect = { projectItem, isRemoved ->
+            onProjectSelectionActionClick(projectItem, isRemoved, onActionSelected)
         }
+    )
+}
+
+private fun onProjectManagementActionClick(
+    actionItem: ProjectManagementActionItem,
+    projectNameState: State<String>,
+    onActionSelected: (OneTimeActionType) -> Unit
+) {
+    when (actionItem) {
+        ProjectManagementActionItem.ImportFile -> onActionSelected(OneTimeActionType.OpenShapes)
+        ProjectManagementActionItem.NewProject -> {
+            onActionSelected(OneTimeActionType.NewProject)
+            renameProject(projectNameState, onActionSelected)
+        }
+    }
+}
+
+private fun onProjectSelectionActionClick(
+    projectItem: ProjectItem,
+    isRemoved: Boolean,
+    onActionSelected: (OneTimeActionType) -> Unit
+) {
+    if (isRemoved) {
+        onActionSelected(OneTimeActionType.RemoveProject(projectItem.id))
+    } else {
+        onActionSelected(OneTimeActionType.SwitchProject(projectItem.id))
     }
 }

@@ -62,6 +62,7 @@ class NavBarViewController(
                 ToolbarContainer {
                     ProjectManagerIcon(
                         currentProjectState.value,
+                        projectNameState,
                         workspaceDao,
                         actionManager::setOneTimeAction
                     )

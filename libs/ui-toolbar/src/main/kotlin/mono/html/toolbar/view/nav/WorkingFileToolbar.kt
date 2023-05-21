@@ -81,10 +81,8 @@ private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
 
 private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) -> Unit) {
     val items = listOf(
-        DropDownMenu.Item.Text("New project", NewProject),
         DropDownMenu.Item.Text("Rename", Rename),
         DropDownMenu.Item.Text("Save As...", Forwarding(OneTimeActionType.SaveShapesAs)),
-        DropDownMenu.Item.Text("Open File...", Forwarding(OneTimeActionType.OpenShapes)),
         DropDownMenu.Item.Text("Export Text", Forwarding(OneTimeActionType.ExportSelectedShapes))
     )
     DropDownMenu(items) {
@@ -93,7 +91,7 @@ private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) 
     }.show(anchor)
 }
 
-private fun renameProject(
+internal fun renameProject(
     projectNameState: State<String>,
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
