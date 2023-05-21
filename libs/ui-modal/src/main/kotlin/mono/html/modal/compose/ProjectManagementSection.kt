@@ -21,10 +21,10 @@ internal fun ProjectManagementSection(
         return
     }
     Div(attrs = { classes("list") }) {
-        ManagementItem("New project", { Icons.Warning() }) {
+        ManagementItem("New project", { Icons.NewFile() }) {
             onActionClick(ProjectManagementActionItem.NewProject)
         }
-        ManagementItem("Import from file...", { Icons.Warning() }) {
+        ManagementItem("Import from file...", { Icons.FileImport() }) {
             onActionClick(ProjectManagementActionItem.ImportFile)
         }
     }
