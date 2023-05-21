@@ -11,7 +11,7 @@ $background-color: var(--modal-container-bg);
     border: 1px solid $divider-color;
     padding: 6px 0;
     position: fixed;
-    font-family: $uiTextFont;
+    font-family: $monospaceFont;
 
     .hidden-input {
         position: absolute;
