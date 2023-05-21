@@ -1,17 +1,35 @@
 @import '../theme-utils';
 @import './theme-colors';
-$modal-action-color: var(--modal-action-color);
-$modal-action-hover-color: var(--modal-action-hover-color);
-$modal-action-pressed-color: var(--modal-action-pressed-color);
 
-$modalActionDangerThemeColors: (
-    --modal-action-color: (#E53935, #E53935),
-    --modal-action-hover-color: (#FF5252, #FF5252),
-    --modal-action-pressed-color: (#C62828, #C62828),
+$mainModalColors: (
+    --titleText: (rgb(28, 26, 26), #FFF),
+    --contentText: (#5e5d62, #f2f2f2),
+);
+
+$primaryActionThemeColors: (
+    --primary-action-color: (#007bff, #cc8108),
+    --primary-action-hover-color: (#328ced, #daa113),
+    --primary-action-pressed-color: (#0062cc, #ab7a08),
+);
+
+$primaryActionDangerThemeColors: (
+    --primary-action-color: (#E53935, #E53935),
+    --primary-action-hover-color: (#FF5252, #FF5252),
+    --primary-action-pressed-color: (#C62828, #C62828),
+);
+
+$secondaryActionThemeColors: (
+    --secondary-action-border-color: (#D9D8DC, #74727a),
+    --secondary-action-text-color: (#323136, #e0dce9),
+    --secondary-action-hover-color: (#6c757d, #3e3d43),
+    --secondary-action-pressed-color: (#424950, #262628),
 );
 
 :root {
-    @include theme($modalActionDangerThemeColors, ".danger");
+    @include theme($mainModalColors, ".dialog-container");
+    @include theme($primaryActionThemeColors, ".primary");
+    @include theme($primaryActionDangerThemeColors, ".primary.danger");
+    @include theme($secondaryActionThemeColors, ".secondary");
 }
 
 .dialog-bg {
@@ -27,14 +45,13 @@ $modalActionDangerThemeColors: (
 }
 
 .dialog-container {
-    background: $modal-container-bg;
+    background: var(--modal-container-bg);
     border: 1px solid $modal-container-border-color;
-    min-width: 300px;
+    min-width: 350px;
     max-width: 450px;
-    border-radius: 4px;
+    border-radius: 5px;
     padding: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-    color: $modal-content-text-color;
 
     display: flex;
     flex-direction: column;
@@ -42,13 +59,15 @@ $modalActionDangerThemeColors: (
     .dialog-title {
         font-size: 19px;
         margin-top: 0;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
+        color: var(--modal-title-color);
     }
 
     .dialog-content {
         font-size: 14px;
         line-height: 1.4;
         margin: 0;
+        color: var(--contentText);
 
         &.no-title {
             font-size: 16px;
@@ -59,46 +78,48 @@ $modalActionDangerThemeColors: (
         display: flex;
         justify-content: flex-end;
         margin-top: 16px;
+    }
 
-        .dialog-action {
-            margin-left: 16px;
-            font-size: 14px;
-            cursor: pointer;
-            user-select: none;
-            border-radius: 3px;
-            border: 1px solid $modal-action-color;
-            padding: 4px 8px;
+    .dialog-action {
+        margin-left: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        user-select: none;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        padding: 4px 8px;
 
+        &.primary {
+            background: var(--primary-action-color);
+            color: white;
+        }
+
+        &.secondary {
+            border-color: var(--secondary-action-border-color);
+            color: var(--secondary-action-text-color);
+        }
+
+        &:hover {
             &.primary {
-                background: $modal-action-color;
-                color: white;
+                background: var(--primary-action-hover-color);
             }
+
             &.secondary {
-                color: $modal-action-color;
+                background-color: var(--secondary-action-hover-color);
+                color: white;
+                border-color: transparent;
+            }
+        }
+
+        &:active {
+            &.primary {
+                background: var(--primary-action-pressed-color);
             }
 
-            &:hover {
-                border-color: $modal-action-hover-color;
-
-                &.primary {
-                    background: $modal-action-hover-color;
-                }
-
-                &.secondary {
-                    color: $modal-action-hover-color;
-                }
-            }
-
-            &:active {
-                border-color: $modal-action-pressed-color;
-
-                &.primary {
-                    background: $modal-action-pressed-color;
-                }
-
-                &.secondary {
-                    color: $modal-action-pressed-color;
-                }
+            &.secondary {
+                background-color: var(--secondary-action-pressed-color);
+                color: white;
+                border-color: transparent;
             }
         }
     }
