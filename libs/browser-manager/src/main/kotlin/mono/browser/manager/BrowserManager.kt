@@ -21,8 +21,13 @@ class BrowserManager(
     private val urlSearchParams: URLSearchParams
         get() = URLSearchParams(window.location.search)
 
-    val rootIdFromUrl
-        get() = urlSearchParams.get(URL_PARAM_ID).orEmpty()
+    val rootIdFromUrl: String
+        get() {
+            // Replace space char with + since '+' will be converted to ' ' when reading value from
+            // URLSearchParams.
+            // The space character is not allowed in the URL.
+            return urlSearchParams.get(URL_PARAM_ID).orEmpty().replace(' ', '+')
+        }
 
     private var willChangedByUrlPopStateEvent = false
 
