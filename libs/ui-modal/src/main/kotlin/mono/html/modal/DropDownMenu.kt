@@ -65,17 +65,13 @@ class DropDownMenu(
         val menuWidthPx = clientWidth
         val anchorRect = anchor.getBoundingClientRect()
 
-        if (anchorRect.left + menuWidthPx < maxWidth) {
-            style(
-                "left" to (anchorRect.left - 6).px,
-                "top" to anchorRect.bottom.px
-            )
-        } else {
-            style(
-                "left" to (anchorRect.right - menuWidthPx).px,
-                "top" to anchorRect.bottom.px
-            )
-        }
+        val leftPx =
+            (anchorRect.left + anchorRect.width / 2 - menuWidthPx / 2).toInt()
+                .coerceIn(4, maxWidth - menuWidthPx - 4)
+        style(
+            "left" to leftPx.px,
+            "top" to anchorRect.bottom.px
+        )
     }
 
     private fun Element.Menu(items: List<Item>): HTMLDivElement = Div(classes = "drop-down-menu") {
