@@ -9,11 +9,11 @@ import mono.actionmanager.ActionManager
 import mono.actionmanager.RetainableActionType
 import mono.html.toolbar.view.nav.AppMenuIcon
 import mono.html.toolbar.view.nav.MouseActionGroup
-import mono.html.toolbar.view.nav.ProjectManagerIcon
 import mono.html.toolbar.view.nav.ScrollModeButton
 import mono.html.toolbar.view.nav.ThemeIcons
 import mono.html.toolbar.view.nav.ToolbarContainer
-import mono.html.toolbar.view.nav.WorkingFileToolbar
+import mono.html.toolbar.view.nav.projectmanagement.ProjectManagerIcon
+import mono.html.toolbar.view.nav.projectmanagement.WorkingFileToolbar
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData

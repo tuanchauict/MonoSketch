@@ -4,7 +4,7 @@
 
 @file:Suppress("FunctionName")
 
-package mono.html.toolbar.view.nav
+package mono.html.toolbar.view.nav.projectmanagement
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
