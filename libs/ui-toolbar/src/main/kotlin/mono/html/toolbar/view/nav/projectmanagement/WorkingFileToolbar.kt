@@ -33,7 +33,7 @@ internal fun WorkingFileToolbar(
                 is Forwarding -> onActionSelected(it.actionType)
 
                 NewProject -> {
-                    onActionSelected(OneTimeActionType.NewProject)
+                    onActionSelected(OneTimeActionType.ProjectAction.NewProject)
                     renameProject(projectNameState, onActionSelected)
                 }
 
@@ -81,8 +81,14 @@ private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
 private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) -> Unit) {
     val items = listOf(
         DropDownMenu.Item.Text("Rename", Rename),
-        DropDownMenu.Item.Text("Save As...", Forwarding(OneTimeActionType.SaveShapesAs)),
-        DropDownMenu.Item.Text("Export Text", Forwarding(OneTimeActionType.ExportSelectedShapes))
+        DropDownMenu.Item.Text(
+            "Save As...",
+            Forwarding(OneTimeActionType.ProjectAction.SaveShapesAs)
+        ),
+        DropDownMenu.Item.Text(
+            "Export Text",
+            Forwarding(OneTimeActionType.ProjectAction.ExportSelectedShapes)
+        )
     )
     DropDownMenu(items) {
         val textItem = it as DropDownMenu.Item.Text
@@ -99,7 +105,7 @@ internal fun renameProject(
         "#$WORKING_PROJECT_ID"
     ) { newName ->
         if (newName.isNotEmpty()) {
-            onActionSelected(OneTimeActionType.RenameCurrentProject(newName))
+            onActionSelected(OneTimeActionType.ProjectAction.RenameCurrentProject(newName))
         }
     }
 }

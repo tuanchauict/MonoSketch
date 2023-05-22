@@ -21,9 +21,9 @@ internal class DebugCommandController(private val setOneTimeAction: (OneTimeActi
 
     companion object {
         private val NO_PARAMS_ACTIONS = listOf(
-            OneTimeActionType.SaveShapesAs,
-            OneTimeActionType.OpenShapes,
-            OneTimeActionType.ExportSelectedShapes,
+            OneTimeActionType.ProjectAction.SaveShapesAs,
+            OneTimeActionType.ProjectAction.OpenShapes,
+            OneTimeActionType.ProjectAction.ExportSelectedShapes,
             OneTimeActionType.ShowKeyboardShortcuts,
             OneTimeActionType.SelectAllShapes,
             OneTimeActionType.DeselectShapes,

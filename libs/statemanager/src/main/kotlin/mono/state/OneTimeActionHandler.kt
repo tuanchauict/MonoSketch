@@ -47,7 +47,7 @@ internal class OneTimeActionHandler(
     private val clipboardManager: ClipboardManager =
         ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
 
-    private val fileRelatedActions = FileRelatedActionsHelper(
+    private val fileRelatedActionsHelper = FileRelatedActionsHelper(
         environment,
         bitmapManager,
         shapeClipboardManager
@@ -58,22 +58,8 @@ internal class OneTimeActionHandler(
             when (it) {
                 OneTimeActionType.Idle -> Unit
 
-                // File drop down menu
-                OneTimeActionType.NewProject -> fileRelatedActions.newProject()
-
-                is OneTimeActionType.SwitchProject -> fileRelatedActions.switchProject(it.projectId)
-
-                is OneTimeActionType.RemoveProject -> fileRelatedActions.removeProject(it.projectId)
-
-                is OneTimeActionType.RenameCurrentProject ->
-                    fileRelatedActions.renameProject(it.newName)
-
-                OneTimeActionType.SaveShapesAs -> fileRelatedActions.saveCurrentShapesToFile()
-
-                OneTimeActionType.OpenShapes -> fileRelatedActions.loadShapesFromFile()
-
-                OneTimeActionType.ExportSelectedShapes ->
-                    fileRelatedActions.exportSelectedShapes(true)
+                is OneTimeActionType.ProjectAction ->
+                    fileRelatedActionsHelper.handleProjectAction(it)
 
                 // Main drop down menu
                 OneTimeActionType.ShowFormatPanel ->
@@ -87,7 +73,7 @@ internal class OneTimeActionHandler(
 
                 // ---------
                 OneTimeActionType.CopyText ->
-                    fileRelatedActions.exportSelectedShapes(false)
+                    fileRelatedActionsHelper.exportSelectedShapes(false)
                 // ---------
                 OneTimeActionType.SelectAllShapes ->
                     environment.selectAllShapes()
