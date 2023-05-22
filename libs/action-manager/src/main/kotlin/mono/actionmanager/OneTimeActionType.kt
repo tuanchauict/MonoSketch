@@ -15,7 +15,7 @@ sealed interface OneTimeActionType {
     object Idle : OneTimeActionType
 
     /**
-     * A sealed class for actions related to project management
+     * A sealed interface for actions related to project management
      */
     sealed interface ProjectAction : OneTimeActionType {
         data class RenameCurrentProject(val newName: String) : ProjectAction
@@ -27,10 +27,14 @@ sealed interface OneTimeActionType {
         object OpenShapes : ProjectAction
     }
 
-    // Main dropdown menu
-    object ShowFormatPanel : OneTimeActionType
-    object HideFormatPanel : OneTimeActionType
-    object ShowKeyboardShortcuts : OneTimeActionType
+    /**
+     * A sealed interface for actions related to app-wise controller
+     */
+    sealed interface AppSettingAction : OneTimeActionType {
+        object ShowFormatPanel : AppSettingAction
+        object HideFormatPanel : AppSettingAction
+        object ShowKeyboardShortcuts : AppSettingAction
+    }
 
     object SelectAllShapes : OneTimeActionType
     object DeselectShapes : OneTimeActionType

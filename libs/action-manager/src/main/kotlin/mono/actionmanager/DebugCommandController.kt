@@ -24,7 +24,7 @@ internal class DebugCommandController(private val setOneTimeAction: (OneTimeActi
             OneTimeActionType.ProjectAction.SaveShapesAs,
             OneTimeActionType.ProjectAction.OpenShapes,
             OneTimeActionType.ProjectAction.ExportSelectedShapes,
-            OneTimeActionType.ShowKeyboardShortcuts,
+            OneTimeActionType.AppSettingAction.ShowKeyboardShortcuts,
             OneTimeActionType.SelectAllShapes,
             OneTimeActionType.DeselectShapes,
             OneTimeActionType.DeleteSelectedShapes,

@@ -9,7 +9,6 @@ import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.html.toolbar.view.keyboardshortcut.KeyboardShortcuts
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.shape.ShapeExtraManager
@@ -28,9 +27,9 @@ import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
+import mono.state.onetimeaction.AppSettingActionHelper
 import mono.state.onetimeaction.FileRelatedActionsHelper
 import mono.ui.appstate.AppUiStateManager
-import mono.ui.appstate.AppUiStateManager.UiStatePayload
 
 /**
  * A class to handle one time actions.
@@ -53,6 +52,8 @@ internal class OneTimeActionHandler(
         shapeClipboardManager
     )
 
+    private val appSettingActionHelper = AppSettingActionHelper(uiStateManager)
+
     init {
         oneTimeActionLiveData.observe(lifecycleOwner) {
             when (it) {
@@ -61,15 +62,8 @@ internal class OneTimeActionHandler(
                 is OneTimeActionType.ProjectAction ->
                     fileRelatedActionsHelper.handleProjectAction(it)
 
-                // Main drop down menu
-                OneTimeActionType.ShowFormatPanel ->
-                    uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(true))
-
-                OneTimeActionType.HideFormatPanel ->
-                    uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(false))
-
-                OneTimeActionType.ShowKeyboardShortcuts ->
-                    KeyboardShortcuts.showHint()
+                is OneTimeActionType.AppSettingAction ->
+                    appSettingActionHelper.handleAppSettingAction(it)
 
                 // ---------
                 OneTimeActionType.CopyText ->

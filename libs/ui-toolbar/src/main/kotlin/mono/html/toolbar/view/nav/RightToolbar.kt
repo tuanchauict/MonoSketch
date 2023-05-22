@@ -155,13 +155,13 @@ private fun showDropDownMenu(
     val items = listOf(
         Text(
             "Show Format panel",
-            OneTimeActionType.ShowFormatPanel
+            OneTimeActionType.AppSettingAction.ShowFormatPanel
         ) { !appUiStateManager.shapeToolVisibilityLiveData.value },
         Text(
             "Hide Format panel",
-            OneTimeActionType.HideFormatPanel
+            OneTimeActionType.AppSettingAction.HideFormatPanel
         ) { appUiStateManager.shapeToolVisibilityLiveData.value },
-        Text("Keyboard shortcuts", OneTimeActionType.ShowKeyboardShortcuts)
+        Text("Keyboard shortcuts", OneTimeActionType.AppSettingAction.ShowKeyboardShortcuts)
     )
     DropDownMenu(items) {
         val textItem = it as Text
