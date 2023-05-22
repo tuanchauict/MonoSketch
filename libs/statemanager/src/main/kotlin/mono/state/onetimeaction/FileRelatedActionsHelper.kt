@@ -37,18 +37,23 @@ internal class FileRelatedActionsHelper(
 
     fun handleProjectAction(projectAction: OneTimeActionType.ProjectAction) {
         when (projectAction) {
-            OneTimeActionType.ProjectAction.NewProject -> newProject()
+            OneTimeActionType.ProjectAction.NewProject ->
+                newProject()
 
-            is OneTimeActionType.ProjectAction.SwitchProject -> switchProject(projectAction.projectId)
+            is OneTimeActionType.ProjectAction.SwitchProject ->
+                switchProject(projectAction.projectId)
 
-            is OneTimeActionType.ProjectAction.RemoveProject -> removeProject(projectAction.projectId)
+            is OneTimeActionType.ProjectAction.RemoveProject ->
+                removeProject(projectAction.projectId)
 
             is OneTimeActionType.ProjectAction.RenameCurrentProject ->
                 renameProject(projectAction.newName)
 
-            OneTimeActionType.ProjectAction.SaveShapesAs -> saveCurrentShapesToFile()
+            OneTimeActionType.ProjectAction.SaveShapesAs ->
+                saveCurrentShapesToFile()
 
-            OneTimeActionType.ProjectAction.OpenShapes -> loadShapesFromFile()
+            OneTimeActionType.ProjectAction.OpenShapes ->
+                loadShapesFromFile()
 
             OneTimeActionType.ProjectAction.ExportSelectedShapes ->
                 exportSelectedShapes(true)

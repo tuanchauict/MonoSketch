@@ -84,7 +84,9 @@ private fun onProjectManagementActionClick(
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     when (actionItem) {
-        ProjectManagementActionItem.ImportFile -> onActionSelected(OneTimeActionType.ProjectAction.OpenShapes)
+        ProjectManagementActionItem.ImportFile ->
+            onActionSelected(OneTimeActionType.ProjectAction.OpenShapes)
+
         ProjectManagementActionItem.NewProject -> {
             onActionSelected(OneTimeActionType.ProjectAction.NewProject)
             renameProject(projectNameState, onActionSelected)
