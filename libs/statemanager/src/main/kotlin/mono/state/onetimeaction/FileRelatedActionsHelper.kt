@@ -4,6 +4,7 @@
 
 package mono.state.onetimeaction
 
+import mono.actionmanager.OneTimeActionType
 import mono.bitmap.manager.MonoBitmapManager
 import mono.export.ExportShapesHelper
 import mono.html.modal.compose.showExitingProjectDialog
@@ -34,16 +35,41 @@ internal class FileRelatedActionsHelper(
         shapeClipboardManager::setClipboardText
     )
 
-    fun newProject() {
+    fun handleProjectAction(projectAction: OneTimeActionType.ProjectAction) {
+        when (projectAction) {
+            OneTimeActionType.ProjectAction.NewProject ->
+                newProject()
+
+            is OneTimeActionType.ProjectAction.SwitchProject ->
+                switchProject(projectAction.projectId)
+
+            is OneTimeActionType.ProjectAction.RemoveProject ->
+                removeProject(projectAction.projectId)
+
+            is OneTimeActionType.ProjectAction.RenameCurrentProject ->
+                renameProject(projectAction.newName)
+
+            OneTimeActionType.ProjectAction.SaveShapesAs ->
+                saveCurrentShapesToFile()
+
+            OneTimeActionType.ProjectAction.OpenShapes ->
+                loadShapesFromFile()
+
+            OneTimeActionType.ProjectAction.ExportSelectedShapes ->
+                exportSelectedShapes(true)
+        }
+    }
+
+    private fun newProject() {
         replaceWorkspace(RootGroup(null)) // passing null to let the ID generated automatically
     }
 
-    fun switchProject(projectId: String) {
+    private fun switchProject(projectId: String) {
         val serializableRoot = workspaceDao.getObject(projectId).rootGroup ?: return
         replaceWorkspace(RootGroup(serializableRoot))
     }
 
-    fun removeProject(projectId: String) {
+    private fun removeProject(projectId: String) {
         val currentProjectId = environment.shapeManager.root.id
         workspaceDao.getObject(projectId).removeSelf()
         if (projectId != currentProjectId) {
@@ -59,13 +85,13 @@ internal class FileRelatedActionsHelper(
         }
     }
 
-    fun renameProject(newName: String) {
+    private fun renameProject(newName: String) {
         val currentRootId = environment.shapeManager.root.id
         workspaceDao.getObject(currentRootId).name = newName
         environment.shapeManager.notifyProjectUpdate()
     }
 
-    fun saveCurrentShapesToFile() {
+    private fun saveCurrentShapesToFile() {
         val currentRoot = environment.shapeManager.root
         val serializableRoot = currentRoot.toSerializableShape(true)
         val objectDao = workspaceDao.getObject(currentRoot.id)
@@ -75,7 +101,7 @@ internal class FileRelatedActionsHelper(
         fileMediator.saveFile(name, jsonString)
     }
 
-    fun loadShapesFromFile() {
+    private fun loadShapesFromFile() {
         fileMediator.openFile { jsonString ->
             val monoFile = ShapeSerializationUtil.fromMonoFileJson(jsonString)
             if (monoFile == null) {

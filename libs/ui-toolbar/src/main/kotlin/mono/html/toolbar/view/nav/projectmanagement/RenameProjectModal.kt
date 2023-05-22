@@ -2,7 +2,7 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.html.toolbar.view.nav.workingfile
+package mono.html.toolbar.view.nav.projectmanagement
 
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.browser.document

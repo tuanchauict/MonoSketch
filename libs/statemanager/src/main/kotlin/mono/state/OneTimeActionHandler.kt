@@ -9,7 +9,6 @@ import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.html.toolbar.view.keyboardshortcut.KeyboardShortcuts
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.shape.ShapeExtraManager
@@ -28,9 +27,9 @@ import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
+import mono.state.onetimeaction.AppSettingActionHelper
 import mono.state.onetimeaction.FileRelatedActionsHelper
 import mono.ui.appstate.AppUiStateManager
-import mono.ui.appstate.AppUiStateManager.UiStatePayload
 
 /**
  * A class to handle one time actions.
@@ -47,47 +46,28 @@ internal class OneTimeActionHandler(
     private val clipboardManager: ClipboardManager =
         ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
 
-    private val fileRelatedActions = FileRelatedActionsHelper(
+    private val fileRelatedActionsHelper = FileRelatedActionsHelper(
         environment,
         bitmapManager,
         shapeClipboardManager
     )
+
+    private val appSettingActionHelper = AppSettingActionHelper(uiStateManager)
 
     init {
         oneTimeActionLiveData.observe(lifecycleOwner) {
             when (it) {
                 OneTimeActionType.Idle -> Unit
 
-                // File drop down menu
-                OneTimeActionType.NewProject -> fileRelatedActions.newProject()
+                is OneTimeActionType.ProjectAction ->
+                    fileRelatedActionsHelper.handleProjectAction(it)
 
-                is OneTimeActionType.SwitchProject -> fileRelatedActions.switchProject(it.projectId)
-
-                is OneTimeActionType.RemoveProject -> fileRelatedActions.removeProject(it.projectId)
-
-                is OneTimeActionType.RenameCurrentProject ->
-                    fileRelatedActions.renameProject(it.newName)
-
-                OneTimeActionType.SaveShapesAs -> fileRelatedActions.saveCurrentShapesToFile()
-
-                OneTimeActionType.OpenShapes -> fileRelatedActions.loadShapesFromFile()
-
-                OneTimeActionType.ExportSelectedShapes ->
-                    fileRelatedActions.exportSelectedShapes(true)
-
-                // Main drop down menu
-                OneTimeActionType.ShowFormatPanel ->
-                    uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(true))
-
-                OneTimeActionType.HideFormatPanel ->
-                    uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(false))
-
-                OneTimeActionType.ShowKeyboardShortcuts ->
-                    KeyboardShortcuts.showHint()
+                is OneTimeActionType.AppSettingAction ->
+                    appSettingActionHelper.handleAppSettingAction(it)
 
                 // ---------
                 OneTimeActionType.CopyText ->
-                    fileRelatedActions.exportSelectedShapes(false)
+                    fileRelatedActionsHelper.exportSelectedShapes(false)
                 // ---------
                 OneTimeActionType.SelectAllShapes ->
                     environment.selectAllShapes()

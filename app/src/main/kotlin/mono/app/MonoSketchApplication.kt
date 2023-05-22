@@ -73,7 +73,7 @@ class MonoSketchApplication : LifecycleOwner() {
         actionManager.installDebugCommand()
 
         val browserManager = BrowserManager {
-            actionManager.setOneTimeAction(OneTimeActionType.SwitchProject(it))
+            actionManager.setOneTimeAction(OneTimeActionType.ProjectAction.SwitchProject(it))
         }
 
         val mainStateManager = MainStateManager(

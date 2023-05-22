@@ -4,7 +4,7 @@
 
 @file:Suppress("FunctionName")
 
-package mono.html.toolbar.view.nav
+package mono.html.toolbar.view.nav.projectmanagement
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -84,9 +84,11 @@ private fun onProjectManagementActionClick(
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     when (actionItem) {
-        ProjectManagementActionItem.ImportFile -> onActionSelected(OneTimeActionType.OpenShapes)
+        ProjectManagementActionItem.ImportFile ->
+            onActionSelected(OneTimeActionType.ProjectAction.OpenShapes)
+
         ProjectManagementActionItem.NewProject -> {
-            onActionSelected(OneTimeActionType.NewProject)
+            onActionSelected(OneTimeActionType.ProjectAction.NewProject)
             renameProject(projectNameState, onActionSelected)
         }
     }
@@ -98,8 +100,8 @@ private fun onProjectSelectionActionClick(
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     if (isRemoved) {
-        onActionSelected(OneTimeActionType.RemoveProject(projectItem.id))
+        onActionSelected(OneTimeActionType.ProjectAction.RemoveProject(projectItem.id))
     } else {
-        onActionSelected(OneTimeActionType.SwitchProject(projectItem.id))
+        onActionSelected(OneTimeActionType.ProjectAction.SwitchProject(projectItem.id))
     }
 }
