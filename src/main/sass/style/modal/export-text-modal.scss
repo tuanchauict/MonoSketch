@@ -9,10 +9,12 @@
     right: 0;
     top: 0;
     bottom: 0;
+    backdrop-filter: blur(2px);
     z-index: $export-text-zindex;
 
     .background {
         background: var(--modal-background-bg);
+        
         width: 100%;
         height: 100%;
     }

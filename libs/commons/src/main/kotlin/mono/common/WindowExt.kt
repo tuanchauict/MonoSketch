@@ -4,9 +4,9 @@
 
 package mono.common
 
+import kotlin.js.Date
 import kotlinx.browser.window
 import org.w3c.dom.Window
-import kotlin.js.Date
 
 fun post(action: () -> Unit): Cancelable = setTimeout(0, action)
 

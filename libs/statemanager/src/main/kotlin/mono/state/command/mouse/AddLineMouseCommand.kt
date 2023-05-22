@@ -4,6 +4,7 @@
 
 package mono.state.command.mouse
 
+import kotlin.math.abs
 import mono.common.MouseCursor
 import mono.common.exhaustive
 import mono.graphics.geo.DirectedPoint
@@ -12,7 +13,6 @@ import mono.graphics.geo.Point
 import mono.shape.command.MoveLineAnchor
 import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
-import kotlin.math.abs
 
 internal class AddLineMouseCommand : MouseCommand {
     override val mouseCursor: MouseCursor = MouseCursor.CROSSHAIR

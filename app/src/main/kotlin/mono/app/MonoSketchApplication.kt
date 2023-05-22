@@ -7,12 +7,14 @@ package mono.app
 import kotlinx.browser.document
 import kotlinx.browser.window
 import mono.actionmanager.ActionManager
+import mono.actionmanager.OneTimeActionType
 import mono.bitmap.manager.MonoBitmapManager
+import mono.browser.manager.BrowserManager
 import mono.graphics.board.MonoBoard
 import mono.graphics.geo.Size
 import mono.html.canvas.CanvasViewController
-import mono.html.toolbar.NavBarViewController
-import mono.html.toolbar.ShapeToolViewController
+import mono.html.toolbar.view.NavBarViewController
+import mono.html.toolbar.view.ShapeToolViewController2
 import mono.keycommand.KeyCommand
 import mono.keycommand.KeyCommandController
 import mono.lifecycle.LifecycleOwner
@@ -24,7 +26,9 @@ import mono.state.MainStateManager
 import mono.ui.appstate.AppUiStateManager
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.url.URLSearchParams
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.EventListener
+import org.w3c.dom.get
 
 /**
  * Main class of the app to handle all kinds of events, UI, actions, etc.
@@ -68,7 +72,11 @@ class MonoSketchApplication : LifecycleOwner() {
         val actionManager = ActionManager(this, keyCommandController.keyCommandLiveData)
         actionManager.installDebugCommand()
 
-        mainStateManager = MainStateManager(
+        val browserManager = BrowserManager {
+            actionManager.setOneTimeAction(OneTimeActionType.ProjectAction.SwitchProject(it))
+        }
+
+        val mainStateManager = MainStateManager(
             this,
             mainBoard,
             shapeManager,
@@ -77,17 +85,21 @@ class MonoSketchApplication : LifecycleOwner() {
             canvasViewController,
             ShapeClipboardManager(body),
             canvasViewController.mousePointerLiveData,
+            model.applicationActiveStateLiveData,
             actionManager,
             appUiStateManager,
-            initialRootId = getInitialRootIdFromUrl()
+            initialRootId = browserManager.rootIdFromUrl
         )
+        this.mainStateManager = mainStateManager
 
         NavBarViewController(
             this,
+            model.applicationActiveStateLiveData,
+            shapeManager.rootLiveData.map { it.id },
             appUiStateManager,
             actionManager
         )
-        ShapeToolViewController(
+        ShapeToolViewController2(
             this,
             document.getElementById("shape-tools") as HTMLElement,
             actionManager,
@@ -96,11 +108,14 @@ class MonoSketchApplication : LifecycleOwner() {
             appUiStateManager.shapeToolVisibilityLiveData
         )
         onResize()
+        observeAppActivateState()
 
         appUiStateManager.observeTheme(
             document.documentElement!!,
-            mainStateManager!!::forceFullyRedrawWorkspace
+            mainStateManager::forceFullyRedrawWorkspace
         )
+
+        browserManager.startObserveStateChange(shapeManager.rootLiveData.map { it.id }, this)
     }
 
     fun onResize() {
@@ -109,15 +124,24 @@ class MonoSketchApplication : LifecycleOwner() {
         model.setWindowSize(newSize)
     }
 
-    private fun getInitialRootIdFromUrl(): String {
-        val urlParams = URLSearchParams(window.location.search)
-        return urlParams.get(URL_PARAM_ID).orEmpty()
+    private fun observeAppActivateState() {
+        val callback = object : EventListener {
+            override fun handleEvent(event: Event) {
+                val isAppActive = document["visibilityState"] == "visible"
+                model.setApplicationActiveState(isAppActive)
+            }
+        }
+        document.addEventListener("visibilitychange", callback)
+        window.onfocus = {
+            model.setApplicationActiveState(true)
+        }
+        window.onblur = {
+            model.setApplicationActiveState(false)
+        }
     }
 
     companion object {
         private const val CONTAINER_ID = "monoboard-canvas-container"
         private const val AXIS_CONTAINER_ID = "monoboard-axis-container"
-
-        private const val URL_PARAM_ID = "id"
     }
 }

@@ -4,10 +4,10 @@
 
 package mono.shape.shape
 
-import mono.graphics.geo.Rect
-import mono.shape.serialization.SerializableRectangle
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import mono.graphics.geo.Rect
+import mono.shape.serialization.SerializableRectangle
 
 /**
  * A test for [Rectangle].

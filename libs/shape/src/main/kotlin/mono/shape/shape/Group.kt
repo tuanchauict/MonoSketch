@@ -48,7 +48,7 @@ open class Group(
         versionCode = serializableGroup.versionCode
     }
 
-    override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
+    override fun toSerializableShape(isIdIncluded: Boolean): SerializableGroup =
         SerializableGroup(
             id.takeIf { isIdIncluded },
             versionCode,

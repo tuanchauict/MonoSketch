@@ -1,0 +1,159 @@
+@import '../theme-utils';
+@import '../variables';
+@import './theme-colors';
+
+$modal-width: 500px;
+$containerHorizontalPadding: 6px;
+
+$themeMap: (
+    --danger-item-bg: (#E53935, #E53935),
+);
+
+:root {
+    @include theme($themeMap);
+}
+
+.recent-project-modal {
+    position: fixed;
+    top: 0;
+    left: calc(50% - $modal-width / 2);
+    width: $modal-width;
+    z-index: $all-projects-modal-zindex;
+    outline: none;
+
+    display: flex;
+
+    .divider {
+        height: 1px;
+        width: 100%;
+        padding: 0 16px;
+        background: var(--mainmenu-divider-color);
+        margin: 8px 0 6px;
+    }
+
+    .container {
+        margin-top: 6px;
+        background: $modal-container-bg;
+        border-radius: 6px;
+        border: 1px solid $modal-container-border-color;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+        padding: 8px 0;
+        width: 100%;
+        flex-grow: 0;
+
+        color: $modal-content-text-color;
+        font-family: $monospaceFont;
+    }
+
+    .filter-container {
+        width: 100%;
+        margin-bottom: 8px;
+        padding: 0px $containerHorizontalPadding;
+
+        input[type="text"] {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 3px;
+            outline: none;
+            border: 1px solid $modal-text-field-border;
+            background: none;
+            color: $modal-text-field-color;
+            font-family: $monospaceFont;
+
+            &:hover,
+            &:focus {
+                border-color: $modal-text-field-focus-border;
+            }
+        }
+    }
+
+    .list {
+        width: 100%;
+        min-height: 50px;
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 0px $containerHorizontalPadding;
+    }
+
+    .item {
+        height: 26px;
+        padding: 0 6px;
+        margin-top: 2px;
+        border-radius: 4px;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+
+        &.normal {
+            &:hover {
+                background: $modal-item-hover-bg;
+
+                .actions {
+                    display: flex;
+                }
+            }
+
+            &:active {
+                opacity: 0.8;
+            }
+
+            .actions {
+                display: none;
+            }
+        }
+
+        &.removing {
+            background: var(--danger-item-bg);
+            color: white;
+        }
+
+        &:hover .remove {
+            display: flex;
+        }
+
+        .name-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            display: flex;
+            align-items: center;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .name {
+            display: flex;
+            align-items: center;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .action {
+            opacity: 0.7;
+            padding: 3px;
+            margin-left: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+
+    .no-item {
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $modal-indicator-color;
+    }
+}

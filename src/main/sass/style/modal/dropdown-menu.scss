@@ -4,13 +4,14 @@ $divider-color: var(--mainmenu-divider-color);
 $background-color: var(--modal-container-bg);
 
 .drop-down-menu {
+    min-width: 180px;
     z-index: $dropdown-menu-zindex;
     background: $background-color;
     border-radius: 6px;
     border: 1px solid $divider-color;
     padding: 6px 0;
-    position: absolute;
-    font-family: $uiTextFont;
+    position: fixed;
+    font-family: $monospaceFont;
 
     .hidden-input {
         position: absolute;

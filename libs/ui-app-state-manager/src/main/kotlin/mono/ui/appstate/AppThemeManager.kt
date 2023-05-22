@@ -5,8 +5,8 @@
 package mono.ui.appstate
 
 import mono.lifecycle.LifecycleOwner
+import mono.store.manager.StorageDocument
 import mono.store.manager.StoreKeys
-import mono.store.manager.StoreManager
 import mono.ui.theme.ThemeManager
 import mono.ui.theme.ThemeMode
 import org.w3c.dom.Element
@@ -16,10 +16,11 @@ import org.w3c.dom.Element
  */
 internal class AppThemeManager(
     private val themeManager: ThemeManager,
-    private val storeManager: StoreManager
+    private val settingsDocument: StorageDocument = StorageDocument.get(StoreKeys.SETTINGS)
 ) {
+
     init {
-        val themeMode = storeManager.get(StoreKeys.THEME_MODE)
+        val themeMode = settingsDocument.get(StoreKeys.THEME_MODE)
             ?.let(ThemeMode::valueOf)
             ?: ThemeMode.DARK
         val themeManager = ThemeManager.getInstance()
@@ -37,10 +38,10 @@ internal class AppThemeManager(
                 ThemeMode.DARK -> THEME_DARK
             }
             forceUiUpdate()
-            storeManager.set(StoreKeys.THEME_MODE, it.name)
+            settingsDocument.set(StoreKeys.THEME_MODE, it.name)
         }
 
-        storeManager.setObserver(StoreKeys.THEME_MODE) { _, _, newValue ->
+        settingsDocument.setObserver(StoreKeys.THEME_MODE) { _, _, newValue ->
             val themeMode = newValue?.let(ThemeMode::valueOf) ?: ThemeMode.DARK
             themeManager.setTheme(themeMode)
         }

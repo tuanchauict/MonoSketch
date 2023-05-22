@@ -4,6 +4,7 @@
 
 plugins {
     kotlin("js")
+    kotlin("plugin.serialization")
 }
 
 repositories {
@@ -25,7 +26,6 @@ kotlin {
             testTask {
                 useKarma {
                     useChromeHeadless()
-
                 }
             }
         }

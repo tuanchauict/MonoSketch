@@ -4,6 +4,7 @@
 
 package mono.html.canvas.canvas
 
+import kotlin.math.max
 import kotlinx.browser.window
 import mono.graphics.geo.Size
 import mono.html.px
@@ -14,7 +15,6 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.LEFT
 import org.w3c.dom.Path2D
 import org.w3c.dom.TOP
-import kotlin.math.max
 
 // TODO: Pass drawing info livedata into this class and let it observes the change.
 internal abstract class BaseCanvasViewController(private val canvas: HTMLCanvasElement) {

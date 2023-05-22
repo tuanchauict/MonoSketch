@@ -3,19 +3,35 @@
 Mono Sketch is a client-side only web based sketch tool for drawing *ASCII diagrams*. You can use
 the app at [app.monosketch.io](https://app.monosketch.io/).
 
-```bash
-Upgrade app:                        Event                     Event
-Schedule resource                   start                     stop
-downloading worker                  time                      time
-      │                               │                        │
-      │              before event     │                        │
-   ●──┴─────────░░░░░░░░░░░░░░░░░░░░░░████████████████○████████┴───┬─────▶
-                     ■────────────────────■           │            │
-                  Download           Resources is     │            │
-                  resource           downloaded       │            │
-                  Retry if           succeeded        │            │
-                  failed                          1st open      Delete
-                                                               resources
+```
+             ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+              Edge Region 1                                           │
+             │
+                   ┌──────────────┐   send msg to ┌──────────────┐    │
+ /\_/\       │     │┌─────────────┴┐   websocket  │┌─────────────┴┐
+( o.o ) ◀══════════▶┤┌─────────────┴┐◀═══════════▶└┤┌─────────────┴┐  │
+ > ^ <       │      └┤    Envoy     │ sub to this  └┤Gateway server│
+                     └──────────────┘   channel     └───────▲──────┘  │
+             │              ▲                               │
+              ─ ─ ─ ─ ─ ─ ─ ║ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │ ─ ─ ─ ─ ┘
+ /\_/\                      ║                               │
+( o.o ) ◀═══════════════════╝                               │ send msg to all GS subs
+ > ^ <                                                      └───────────────────────┐
+   │     ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+   │      Main region                                                               │     │
+   │     │                                                                          │
+   │         ┌──────────────┐               ┌──────────────┐            ┌───────────┼──┐  │
+   │     │   │┌─────────────┴┐     send     │┌─────────────┴┐           │┌──────────┼──┴┐
+   └───── ──▶└┤┌─────────────┴┐ channel msg └┤┌─────────────┴┐          └┤┌─────────┴───┴┐│
+         │    └┤    Webapp    ├───────────────▶ Admin Server ├───────────▶┤Channel Server│
+               └───────┬──────┘               └──────────────┘  route to  └──────────────┘│
+         │             │ store                                  channel
+                       ▼ message                                server                    │
+         │         ░░░░░░░░
+                   ░Vitess░                                                               │
+         │         ░░░░░░░░
+                                                                                          │
+         └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
 ```
 
 # Features
@@ -90,3 +106,13 @@ Or with production configuration
 ```
 
 * `-Dorg.gradle.parallel=false` is a workaround for a bug on KotlinJS build with `--continuous`.
+
+**Run with NodeJS**
+
+This is an alternative to `browserDevelopmentRun` for running the app for development (sometimes,
+the gradle does not reload when the code is updated).
+
+```bash
+npm install
+npm run dev
+```

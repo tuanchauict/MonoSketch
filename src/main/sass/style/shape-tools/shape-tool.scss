@@ -1,6 +1,6 @@
 @import '../variables';
 
-#shape-tools {
+.shape-tools {
     display: flex;
     flex-direction: column;
 
@@ -45,6 +45,8 @@
         height: 100%;
         justify-content: center;
         margin-bottom: 200px;
+        margin-top: 28px;
+        padding: 10px;
     }
 
     .indicator-text {

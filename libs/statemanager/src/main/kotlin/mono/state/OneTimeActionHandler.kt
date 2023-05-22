@@ -7,10 +7,8 @@ package mono.state
 import mono.actionmanager.OneTimeActionType
 import mono.bitmap.manager.MonoBitmapManager
 import mono.common.exhaustive
-import mono.export.ExportShapesHelper
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.html.toolbar.view.keyboardshortcut.KeyboardShortcuts
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.shape.ShapeExtraManager
@@ -21,19 +19,17 @@ import mono.shape.command.ChangeOrder
 import mono.shape.command.MakeTextEditable
 import mono.shape.command.UpdateTextEditingMode
 import mono.shape.extra.style.TextAlign
-import mono.shape.serialization.SerializableGroup
-import mono.shape.serialization.ShapeSerializationUtil
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
 import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
-import mono.shape.shape.RootGroup
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
+import mono.state.onetimeaction.AppSettingActionHelper
+import mono.state.onetimeaction.FileRelatedActionsHelper
 import mono.ui.appstate.AppUiStateManager
-import mono.ui.appstate.AppUiStateManager.UiStatePayload
 
 /**
  * A class to handle one time actions.
@@ -47,42 +43,31 @@ internal class OneTimeActionHandler(
     private val stateHistoryManager: StateHistoryManager,
     uiStateManager: AppUiStateManager
 ) {
-    private val fileMediator: FileMediator = FileMediator()
-    private val exportShapesHelper = ExportShapesHelper(
-        bitmapManager::getBitmap,
-        shapeClipboardManager::setClipboardText
-    )
-
     private val clipboardManager: ClipboardManager =
         ClipboardManager(lifecycleOwner, environment, shapeClipboardManager)
+
+    private val fileRelatedActionsHelper = FileRelatedActionsHelper(
+        environment,
+        bitmapManager,
+        shapeClipboardManager
+    )
+
+    private val appSettingActionHelper = AppSettingActionHelper(uiStateManager)
 
     init {
         oneTimeActionLiveData.observe(lifecycleOwner) {
             when (it) {
                 OneTimeActionType.Idle -> Unit
 
-                // Main drop down menu
-                OneTimeActionType.SaveShapesAs ->
-                    saveCurrentShapesToFile()
+                is OneTimeActionType.ProjectAction ->
+                    fileRelatedActionsHelper.handleProjectAction(it)
 
-                OneTimeActionType.OpenShapes ->
-                    loadShapesFromFile()
-
-                OneTimeActionType.ExportSelectedShapes ->
-                    exportSelectedShapes(true)
-
-                OneTimeActionType.ShowFormatPanel ->
-                    uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(true))
-
-                OneTimeActionType.HideFormatPanel ->
-                    uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(false))
-
-                OneTimeActionType.ShowKeyboardShortcuts ->
-                    KeyboardShortcuts.showHint()
+                is OneTimeActionType.AppSettingAction ->
+                    appSettingActionHelper.handleAppSettingAction(it)
 
                 // ---------
                 OneTimeActionType.CopyText ->
-                    exportSelectedShapes(false)
+                    fileRelatedActionsHelper.exportSelectedShapes(false)
                 // ---------
                 OneTimeActionType.SelectAllShapes ->
                     environment.selectAllShapes()
@@ -145,37 +130,6 @@ internal class OneTimeActionHandler(
                     stateHistoryManager.redo()
             }.exhaustive
         }
-    }
-
-    private fun saveCurrentShapesToFile() {
-        val serializableRoot = environment.shapeManager.root.toSerializableShape(true)
-        fileMediator.saveFile(ShapeSerializationUtil.toJson(serializableRoot))
-    }
-
-    private fun loadShapesFromFile() {
-        fileMediator.openFile { jsonString ->
-            val serializableRoot = ShapeSerializationUtil.fromJson(jsonString) as? SerializableGroup
-            if (serializableRoot != null) {
-                stateHistoryManager.clear()
-                environment.replaceRoot(RootGroup(serializableRoot))
-            }
-        }
-    }
-
-    private fun exportSelectedShapes(isModalRequired: Boolean) {
-        val selectedShapes = environment.getSelectedShapes()
-        val extractableShapes = when {
-            selectedShapes.isNotEmpty() ->
-                environment.workingParentGroup.items.filter { it in selectedShapes }
-
-            isModalRequired ->
-                listOf(environment.workingParentGroup)
-
-            else ->
-                emptyList()
-        }
-
-        exportShapesHelper.exportText(extractableShapes, isModalRequired)
     }
 
     private fun deleteSelectedShapes() {

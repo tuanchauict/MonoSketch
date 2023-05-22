@@ -4,10 +4,10 @@
 
 package mono.graphics.board
 
-import mono.graphics.geo.Point
-import mono.graphics.geo.Rect
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import mono.graphics.geo.Point
+import mono.graphics.geo.Rect
 
 /**
  * A test for [MonoBoard]

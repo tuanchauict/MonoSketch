@@ -4,6 +4,7 @@
 
 package mono.html.canvas.mouse
 
+import kotlin.js.Date
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.graphics.geo.PointF
@@ -16,7 +17,6 @@ import mono.ui.appstate.state.ScrollMode
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.events.WheelEvent
-import kotlin.js.Date
 
 /**
  * A class to attach and observe mouse events happening on the canvas.

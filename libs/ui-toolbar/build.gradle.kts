@@ -4,6 +4,7 @@
 
 plugins {
     kotlin("js")
+    id("org.jetbrains.compose")
 }
 
 repositories {
@@ -15,9 +16,13 @@ dependencies {
     implementation(projects.htmlDsl)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
+    implementation(projects.storeDao)
     implementation(projects.uiAppStateManager)
     implementation(projects.uiModal)
     implementation(projects.uiTheme)
+
+    implementation(compose.html.core)
+    implementation(compose.runtime)
 
     testImplementation(libs.kotlin.test.js)
 }
@@ -29,7 +34,6 @@ kotlin {
             testTask {
                 useKarma {
                     useChromeHeadless()
-
                 }
             }
         }

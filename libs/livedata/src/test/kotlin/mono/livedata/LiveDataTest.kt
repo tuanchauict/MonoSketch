@@ -4,10 +4,10 @@
 
 package mono.livedata
 
-import mono.common.setTimeout
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import mono.common.setTimeout
 
 /**
  * A test for [LiveData]

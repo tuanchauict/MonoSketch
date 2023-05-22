@@ -1,26 +1,36 @@
 @import '../variables';
-@import '../commons';
 
 $border-radius: 4px;
 
 .main-mouse-actions {
     display: flex;
     height: 100%;
+    margin-left: 8px;
 
-    &>.action-button {
-        @extend %common-button;
-
+    .action-button-container {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 58px;
+    }
+
+    .action-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 32px;
+        border-radius: 6px;
+        margin-left: 6px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        user-select: none;
 
         &:hover {
-            background: var(--header-mouse-action-hover-bg);
+            background: var(--nav-action-hover-bg);
         }
 
         &.selected {
-            background: var(--header-mouse-action-selected-bg);
+            border-color: var(--nav-action-selected-border);
         }
     }
 }

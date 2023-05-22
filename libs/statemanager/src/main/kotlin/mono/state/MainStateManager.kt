@@ -43,7 +43,7 @@ import mono.state.command.CommandEnvironment
 import mono.state.command.CommandEnvironment.EditingMode
 import mono.state.command.MouseCommandFactory
 import mono.state.command.mouse.MouseCommand
-import mono.store.manager.StoreManager
+import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.appstate.AppUiStateManager
 
 /**
@@ -58,10 +58,11 @@ class MainStateManager(
     private val canvasManager: CanvasViewController,
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
+    applicationActiveStateLiveData: LiveData<Boolean>,
     private val actionManager: ActionManager,
     appUiStateManager: AppUiStateManager,
-    storeManager: StoreManager = StoreManager.getInstance(),
-    initialRootId: String = ""
+    initialRootId: String = "",
+    private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
@@ -77,6 +78,8 @@ class MainStateManager(
     private val redrawRequestMutableLiveData = MutableLiveData(Unit)
 
     private val editingModeLiveData = MutableLiveData(EditingMode.idle(null))
+    private val stateHistoryManager =
+        StateHistoryManager(lifecycleOwner, environment, canvasManager)
 
     init {
         mousePointerLiveData
@@ -118,12 +121,6 @@ class MainStateManager(
             currentRetainableActionType = it
         }
 
-        val stateHistoryManager = StateHistoryManager(
-            lifecycleOwner,
-            environment,
-            storeManager,
-            canvasManager
-        )
         stateHistoryManager.restoreAndStartObserveStateChange(initialRootId)
 
         OneTimeActionHandler(
@@ -135,6 +132,12 @@ class MainStateManager(
             stateHistoryManager,
             appUiStateManager
         )
+
+        applicationActiveStateLiveData.observe(lifecycleOwner) { isActive ->
+            if (isActive) {
+                reflectChangedFromLocal()
+            }
+        }
     }
 
     private fun onMouseEvent(mousePointer: MousePointer) {
@@ -269,6 +272,20 @@ class MainStateManager(
         requestRedraw()
     }
 
+    private fun reflectChangedFromLocal() {
+        val rootId = shapeManager.root.id
+        val rootVersion = shapeManager.root.versionCode
+        val currentRoot = workspaceDao.getObject(rootId).rootGroup
+        when {
+            currentRoot == null -> {
+                // TODO: Notify to user this project is removed
+            }
+
+            rootVersion != currentRoot.versionCode ->
+                environment.replaceRoot(RootGroup(currentRoot))
+        }
+    }
+
     private class CommandEnvironmentImpl(
         private val stateManager: MainStateManager
     ) : CommandEnvironment {
@@ -288,6 +305,15 @@ class MainStateManager(
             }
 
         override fun replaceRoot(newRoot: RootGroup) {
+            val currentRoot = shapeManager.root
+            if (currentRoot.id != newRoot.id) {
+                stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
+                stateManager.canvasManager.setOffset(
+                    stateManager.workspaceDao.getObject(newRoot.id).offset
+                )
+                stateManager.stateHistoryManager.clear()
+            }
+
             shapeManager.replaceRoot(newRoot)
             workingParentGroup = shapeManager.root
             clearSelectedShapes()

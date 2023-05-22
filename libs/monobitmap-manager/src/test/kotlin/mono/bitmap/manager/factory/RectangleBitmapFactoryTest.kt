@@ -4,10 +4,10 @@
 
 package mono.bitmap.manager.factory
 
-import mono.graphics.geo.Rect
-import mono.shape.shape.Rectangle
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import mono.graphics.geo.Rect
+import mono.shape.shape.Rectangle
 
 /**
  * A test for [RectangleBitmapFactory]
