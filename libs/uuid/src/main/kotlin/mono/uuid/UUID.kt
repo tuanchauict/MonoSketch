@@ -9,7 +9,18 @@ import kotlin.random.Random
 
 /**
  * An object class that generate unique ID.
+ * ### Current version
+ * Version 2:
+ * ```
+ * Structure: version datetime random random
+ * Length   :   3        8      10     10
+ * ```
+ * Version: 02-
+ * Datetime: Base64-like encoded current time (8 chars)
+ * Random: Base64-like encoded random number (10 chars)
+ * Characters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
  *
+ * ### Older versions:
  * Version 1:
  * ```
  * Structure: version datetime random random
@@ -18,18 +29,19 @@ import kotlin.random.Random
  * Version: 01-
  * Datetime: Base64-like encoded current time (8 chars)
  * Random: Base64-like encoded random number (10 chars)
+ * Characters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+="
  */
 object UUID {
-    const val VERSION = 1
+    const val VERSION = "02"
 
     private val BASE64_CHARS =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+=".toCharArray()
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".toCharArray()
 
     fun generate(): String {
         val part1 = Date().getTime().toBits().toBase64().dropLast(3)
         val part2 = Random.nextLong().toBase64()
         val part3 = Random.nextLong().toBase64()
-        return "0$VERSION-$part1$part2$part3"
+        return "$VERSION-$part1$part2$part3"
     }
 
     private fun Long.toBase64(): String {
