@@ -8,8 +8,8 @@ package mono.html.toolbar.view.nav
 
 import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
-import mono.html.modal.DropDownMenu
-import mono.html.modal.DropDownMenu.Item.Text
+import mono.html.modal.compose.DropDownItem
+import mono.html.modal.compose.DropDownMenu
 import mono.html.modal.tooltip
 import mono.ui.appstate.AppUiStateManager
 import mono.ui.appstate.AppUiStateManager.UiStatePayload.ChangeScrollMode
@@ -153,19 +153,21 @@ private fun showDropDownMenu(
     anchor: Element
 ) {
     val items = listOf(
-        Text(
+        DropDownItem.Text(
             "Show Format panel",
             OneTimeActionType.AppSettingAction.ShowFormatPanel
         ) { !appUiStateManager.shapeToolVisibilityLiveData.value },
-        Text(
+        DropDownItem.Text(
             "Hide Format panel",
             OneTimeActionType.AppSettingAction.HideFormatPanel
         ) { appUiStateManager.shapeToolVisibilityLiveData.value },
-        Text("Keyboard shortcuts", OneTimeActionType.AppSettingAction.ShowKeyboardShortcuts)
+        DropDownItem.Text(
+            "Keyboard shortcuts",
+            OneTimeActionType.AppSettingAction.ShowKeyboardShortcuts
+        )
     )
-    DropDownMenu(items) {
-        val textItem = it as Text
+    DropDownMenu(anchor, items) {
+        val textItem = it as DropDownItem.Text
         onActionSelected(textItem.key as OneTimeActionType)
     }
-        .show(anchor)
 }
