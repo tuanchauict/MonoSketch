@@ -10,10 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import kotlinx.browser.document
 import mono.actionmanager.OneTimeActionType
-import mono.html.modal.DropDownMenu
-import mono.html.toolbar.view.nav.projectmanagement.DropDownItem.Forwarding
-import mono.html.toolbar.view.nav.projectmanagement.DropDownItem.NewProject
-import mono.html.toolbar.view.nav.projectmanagement.DropDownItem.Rename
+import mono.html.modal.compose.DropDownItem
+import mono.html.modal.compose.DropDownMenu
+import mono.html.toolbar.view.nav.projectmanagement.DropDownItemAction.Forwarding
+import mono.html.toolbar.view.nav.projectmanagement.DropDownItemAction.NewProject
+import mono.html.toolbar.view.nav.projectmanagement.DropDownItemAction.Rename
 import mono.ui.compose.components.Icons
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
@@ -78,22 +79,22 @@ private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
     }
 }
 
-private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItem) -> Unit) {
+private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItemAction) -> Unit) {
     val items = listOf(
-        DropDownMenu.Item.Text("Rename", Rename),
-        DropDownMenu.Item.Text(
+        DropDownItem.Text("Rename", Rename),
+        DropDownItem.Text(
             "Save As...",
             Forwarding(OneTimeActionType.ProjectAction.SaveShapesAs)
         ),
-        DropDownMenu.Item.Text(
+        DropDownItem.Text(
             "Export Text",
             Forwarding(OneTimeActionType.ProjectAction.ExportSelectedShapes)
         )
     )
-    DropDownMenu(items) {
-        val textItem = it as DropDownMenu.Item.Text
-        onItemSelected(textItem.key as DropDownItem)
-    }.show(anchor)
+    DropDownMenu(anchor, items) {
+        val textItem = it as DropDownItem.Text
+        onItemSelected(textItem.key as DropDownItemAction)
+    }
 }
 
 internal fun renameProject(
@@ -113,8 +114,8 @@ internal fun renameProject(
 /**
  * A sealed interface for dropdown menu items of working file.
  */
-private sealed interface DropDownItem {
-    class Forwarding(val actionType: OneTimeActionType) : DropDownItem
-    object NewProject : DropDownItem
-    object Rename : DropDownItem
+private sealed interface DropDownItemAction {
+    class Forwarding(val actionType: OneTimeActionType) : DropDownItemAction
+    object NewProject : DropDownItemAction
+    object Rename : DropDownItemAction
 }
