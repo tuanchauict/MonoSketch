@@ -15,7 +15,14 @@ import kotlinx.browser.document
 import mono.common.Cancelable
 import mono.common.setTimeout
 import mono.html.Div
+import org.jetbrains.compose.web.css.Position
+import org.jetbrains.compose.web.css.height
+import org.jetbrains.compose.web.css.left
+import org.jetbrains.compose.web.css.position
+import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.AttrBuilderContext
+import org.jetbrains.compose.web.dom.CheckboxInput
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.renderComposable
 import org.w3c.dom.HTMLDivElement
@@ -77,6 +84,21 @@ private fun ModalContainer(
             attrs.invoke(this)
         }
     ) {
+        // Hidden input for making the modal focused by default.
+        // Making the modal focused by default can make the input of the modal not being focused
+        // by default.
+        CheckboxInput {
+            style {
+                position(Position.Fixed)
+                left((-1000).px)
+                width(0.px)
+                height(0.px)
+            }
+            ref {
+                it.focus()
+                onDispose { }
+            }
+        }
         val scope = ModalElementScope(this, dismiss)
         content.invoke(scope)
     }
