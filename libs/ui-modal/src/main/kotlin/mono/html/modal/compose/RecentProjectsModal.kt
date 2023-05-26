@@ -7,14 +7,9 @@
 package mono.html.modal.compose
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import kotlinx.browser.document
 import mono.browser.manager.BrowserManager
-import mono.common.Cancelable
-import mono.common.setTimeout
 import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.ui.compose.components.Icons
@@ -27,9 +22,7 @@ import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
-import org.jetbrains.compose.web.renderComposable
 import org.w3c.dom.Element
-import mono.html.Div as MonoDiv
 
 private typealias ProjectManagementAction = (ProjectManagementActionItem) -> Unit
 private typealias ProjectSelectAction = (ProjectItem, isRemoved: Boolean) -> Unit
@@ -41,90 +34,57 @@ fun showRecentProjectsModal(
     onManagementAction: ProjectManagementAction,
     onProjectSelect: ProjectSelectAction
 ) {
-    val body = document.body ?: return
-    val container = body.MonoDiv()
-    val composition = renderComposable(container) {}
-    composition.setContent {
-        RecentProjectsModal(projectItems, onManagementAction, onProjectSelect) {
-            composition.dispose()
-            container.remove()
+    NoBackgroundModal(
+        attrs = {
+            classes("recent-project-modal")
         }
+    ) {
+        ModalContent(onManagementAction, projectItems, onProjectSelect, dismiss)
     }
 }
 
 @Composable
-private fun RecentProjectsModal(
-    projects: List<ProjectItem>,
+private fun ModalContent(
     onManagementAction: ProjectManagementAction,
+    projects: List<ProjectItem>,
     onProjectSelect: ProjectSelectAction,
     onDismiss: () -> Unit
 ) {
-    var cancelable: Cancelable? by remember { mutableStateOf(null) }
     Div(
         attrs = {
-            classes("recent-project-modal")
-            tabIndex(-1)
-
-            onClick { onDismiss() }
-
-            onFocusIn { cancelable?.cancel() }
-
-            onFocusOut {
-                // Only trigger dismiss when the window is active.
-                if (document.hasFocus()) {
-                    cancelable = setTimeout(20) {
-                        onDismiss()
-                    }
-                }
-            }
-
-            onKeyDown {
-                when (it.key) {
-                    "Escape" -> onDismiss()
-                    // TODO: Use ArrowDown and ArrowUp for changing the active project
-                    // TODO: Use Enter for opening the project by keyboard
-                }
-            }
+            classes("container")
         }
     ) {
-        Div(
-            attrs = {
-                classes("container")
+        val filter = remember { mutableStateOf("") }
+        val requestingRemoveProjectId = remember { mutableStateOf("") }
 
-                onConsumeClick {}
-            }
-        ) {
-            val filter = remember { mutableStateOf("") }
-            val requestingRemoveProjectId = remember { mutableStateOf("") }
-
-            FilterInput {
-                filter.value = it
-                requestingRemoveProjectId.value = ""
-            }
-            ProjectManagementSection(filter.value.isNotEmpty()) {
-                onManagementAction(it)
-                onDismiss()
-            }
-            ProjectList(filter.value, projects, requestingRemoveProjectId.value) {
-                when (it) {
-                    is Action.Open -> {
-                        if (it.withNewTab) {
-                            BrowserManager.openInNewTab(it.project.id)
-                        } else {
-                            onProjectSelect(it.project, false)
-                        }
-
-                        onDismiss()
+        FilterInput {
+            filter.value = it
+            requestingRemoveProjectId.value = ""
+        }
+        ProjectManagementSection(filter.value.isNotEmpty()) {
+            onManagementAction(it)
+            onDismiss()
+        }
+        ProjectList(filter.value, projects, requestingRemoveProjectId.value) {
+            when (it) {
+                is Action.Open -> {
+                    if (it.withNewTab) {
+                        BrowserManager.openInNewTab(it.project.id)
+                    } else {
+                        onProjectSelect(it.project, false)
                     }
 
-                    is Action.RemoveConfirm -> {
-                        onProjectSelect(it.project, true)
-                        onDismiss()
-                    }
-
-                    is Action.RequestRemove -> requestingRemoveProjectId.value = it.project.id
-                    Action.SuspendRemove -> requestingRemoveProjectId.value = ""
+                    onDismiss()
                 }
+
+                is Action.RemoveConfirm -> {
+                    onProjectSelect(it.project, true)
+                    onDismiss()
+                }
+
+                is Action.RequestRemove -> requestingRemoveProjectId.value = it.project.id
+                Action.SuspendRemove -> requestingRemoveProjectId.value = ""
             }
         }
     }
