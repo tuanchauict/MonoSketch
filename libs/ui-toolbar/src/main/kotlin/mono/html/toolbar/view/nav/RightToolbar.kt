@@ -179,7 +179,7 @@ private fun showDropDownMenu(
 
 @Composable
 private fun ChangeFontItemContent(
-    onActionSelected: (OneTimeActionType) -> Unit,
+    onActionSelected: (OneTimeActionType) -> Unit
 ) {
     Div(
         attrs = {
