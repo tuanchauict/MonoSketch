@@ -44,6 +44,10 @@ fun DropDownMenu(
                         onClick(it)
                         dismiss()
                     }
+
+                    is DropDownItem.Custom -> {
+                        item.content.invoke(this@NoBackgroundModal)
+                    }
                 }
             }
         }
@@ -85,4 +89,9 @@ sealed class DropDownItem(internal val isVisible: () -> Boolean) {
     class Divider(isVisible: () -> Boolean = { true }) : DropDownItem(isVisible)
     class Text(val title: String, val key: Any, isVisible: () -> Boolean = { true }) :
         DropDownItem(isVisible)
+
+    class Custom(
+        isVisible: () -> Boolean,
+        internal val content: @Composable ModalElementScope.() -> Unit
+    ) : DropDownItem(isVisible)
 }

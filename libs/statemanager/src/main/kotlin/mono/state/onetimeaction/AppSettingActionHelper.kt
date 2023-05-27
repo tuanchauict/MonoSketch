@@ -12,8 +12,8 @@ import mono.ui.appstate.AppUiStateManager.UiStatePayload
 internal class AppSettingActionHelper(
     private val uiStateManager: AppUiStateManager
 ) {
-    fun handleAppSettingAction(appSettingAction: OneTimeActionType.AppSettingAction) {
-        when (appSettingAction) {
+    fun handleAppSettingAction(action: OneTimeActionType.AppSettingAction) {
+        when (action) {
             OneTimeActionType.AppSettingAction.ShowFormatPanel ->
                 uiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(true))
 
@@ -22,6 +22,9 @@ internal class AppSettingActionHelper(
 
             OneTimeActionType.AppSettingAction.ShowKeyboardShortcuts ->
                 KeyboardShortcuts.showHint()
+
+            is OneTimeActionType.AppSettingAction.ChangeFontSize ->
+                uiStateManager.updateUiState(UiStatePayload.ChangeFontSize(action.isIncreased))
         }
     }
 }
