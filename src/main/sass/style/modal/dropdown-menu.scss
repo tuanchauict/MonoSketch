@@ -49,4 +49,40 @@ $background-color: var(--modal-container-bg);
             border-bottom: none;
         }
     }
+
+    .action-font-size-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .action-font-size {
+            width: 50%;
+            height: 28px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            padding-bottom: 2px;
+            margin-bottom: 2px;
+            color: var(--mainmenu-item-color);
+            user-select: none;
+
+            display: flex;
+            align-items: last baseline;
+            justify-content: center;
+
+            cursor: pointer;
+            &:hover {
+                background: var(--mainmenu-item-hover-bg);   
+            }
+
+            &.increase {
+                font-size: 18px;
+            }
+
+            &.decrease {
+                font-size: 14px;
+            }
+
+            
+        }
+    }
 }

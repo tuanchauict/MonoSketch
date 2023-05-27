@@ -22,6 +22,7 @@ import mono.ui.compose.ext.viewBox
 import mono.ui.theme.ThemeManager
 import mono.ui.theme.ThemeMode
 import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 
@@ -153,6 +154,9 @@ private fun showDropDownMenu(
     anchor: Element
 ) {
     val items = listOf(
+        DropDownItem.Custom({ true }) {
+            ChangeFontItemContent()
+        },
         DropDownItem.Text(
             "Show Format panel",
             OneTimeActionType.AppSettingAction.ShowFormatPanel
@@ -169,5 +173,30 @@ private fun showDropDownMenu(
     DropDownMenu(anchor, items) {
         val textItem = it as DropDownItem.Text
         onActionSelected(textItem.key as OneTimeActionType)
+    }
+}
+
+@Composable
+private fun ChangeFontItemContent() {
+    Div(
+        attrs = {
+            classes("action-font-size-container")
+        }
+    ) {
+        Div(
+            attrs = {
+                classes("action-font-size", "decrease")
+            }
+        ) {
+            Text("A")
+        }
+
+        Div(
+            attrs = {
+                classes("action-font-size", "increase")
+            }
+        ) {
+            Text("A")
+        }
     }
 }
