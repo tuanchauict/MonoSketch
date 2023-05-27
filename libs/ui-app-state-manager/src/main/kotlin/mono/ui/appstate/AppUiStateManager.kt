@@ -8,6 +8,8 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.distinctUntilChange
+import mono.store.manager.StorageDocument
+import mono.store.manager.StoreKeys
 import mono.ui.appstate.state.ScrollMode
 import mono.ui.theme.ThemeManager
 import org.w3c.dom.Element
@@ -18,6 +20,7 @@ import org.w3c.dom.Element
  */
 class AppUiStateManager(
     private val appLifecycleOwner: LifecycleOwner,
+    private val settingDocument: StorageDocument = StorageDocument.get(StoreKeys.SETTINGS),
     themeManager: ThemeManager = ThemeManager.getInstance()
 ) {
     private val appThemeManager = AppThemeManager(themeManager)
@@ -28,7 +31,8 @@ class AppUiStateManager(
     private val scrollModeMutableLiveData = MutableLiveData(ScrollMode.BOTH)
     val scrollModeLiveData: LiveData<ScrollMode> = scrollModeMutableLiveData.distinctUntilChange()
 
-    private val fontSizeMutableLiveData = MutableLiveData(13)
+    private val fontSizeMutableLiveData =
+        MutableLiveData(settingDocument.get(StoreKeys.FONT_SIZE, "13")!!.toInt())
     val fontSizeLiveData: LiveData<Int> = fontSizeMutableLiveData
 
     fun observeTheme(
@@ -49,7 +53,8 @@ class AppUiStateManager(
             is UiStatePayload.ChangeFontSize -> {
                 val offset = if (payload.isIncreased) 2 else -2
                 fontSizeMutableLiveData.value = (fontSizeLiveData.value + offset).coerceIn(13, 25)
-                // TODO: Store to the storage
+
+                settingDocument.set(StoreKeys.FONT_SIZE, fontSizeLiveData.value.toString())
             }
         }
     }
