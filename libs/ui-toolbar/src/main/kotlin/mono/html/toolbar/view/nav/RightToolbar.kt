@@ -8,6 +8,7 @@ package mono.html.toolbar.view.nav
 
 import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
+import mono.actionmanager.OneTimeActionType.AppSettingAction
 import mono.html.modal.compose.DropDownItem
 import mono.html.modal.compose.DropDownMenu
 import mono.html.modal.tooltip
@@ -155,19 +156,19 @@ private fun showDropDownMenu(
 ) {
     val items = listOf(
         DropDownItem.Custom({ true }) {
-            ChangeFontItemContent()
+            ChangeFontItemContent(onActionSelected)
         },
         DropDownItem.Text(
             "Show Format panel",
-            OneTimeActionType.AppSettingAction.ShowFormatPanel
+            AppSettingAction.ShowFormatPanel
         ) { !appUiStateManager.shapeToolVisibilityLiveData.value },
         DropDownItem.Text(
             "Hide Format panel",
-            OneTimeActionType.AppSettingAction.HideFormatPanel
+            AppSettingAction.HideFormatPanel
         ) { appUiStateManager.shapeToolVisibilityLiveData.value },
         DropDownItem.Text(
             "Keyboard shortcuts",
-            OneTimeActionType.AppSettingAction.ShowKeyboardShortcuts
+            AppSettingAction.ShowKeyboardShortcuts
         )
     )
     DropDownMenu(anchor, items) {
@@ -177,7 +178,9 @@ private fun showDropDownMenu(
 }
 
 @Composable
-private fun ChangeFontItemContent() {
+private fun ChangeFontItemContent(
+    onActionSelected: (OneTimeActionType) -> Unit,
+) {
     Div(
         attrs = {
             classes("action-font-size-container")
@@ -186,6 +189,7 @@ private fun ChangeFontItemContent() {
         Div(
             attrs = {
                 classes("action-font-size", "decrease")
+                onClick { onActionSelected(AppSettingAction.ChangeFontSize(false)) }
             }
         ) {
             Text("A")
@@ -194,6 +198,7 @@ private fun ChangeFontItemContent() {
         Div(
             attrs = {
                 classes("action-font-size", "increase")
+                onClick { onActionSelected(AppSettingAction.ChangeFontSize(true)) }
             }
         ) {
             Text("A")

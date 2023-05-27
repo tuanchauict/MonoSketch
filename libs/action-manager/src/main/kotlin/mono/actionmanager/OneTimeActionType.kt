@@ -31,6 +31,7 @@ sealed interface OneTimeActionType {
      * A sealed interface for actions related to app-wise controller
      */
     sealed interface AppSettingAction : OneTimeActionType {
+        data class ChangeFontSize(val isIncreased: Boolean) : AppSettingAction
         object ShowFormatPanel : AppSettingAction
         object HideFormatPanel : AppSettingAction
         object ShowKeyboardShortcuts : AppSettingAction

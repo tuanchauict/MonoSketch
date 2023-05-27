@@ -28,6 +28,9 @@ class AppUiStateManager(
     private val scrollModeMutableLiveData = MutableLiveData(ScrollMode.BOTH)
     val scrollModeLiveData: LiveData<ScrollMode> = scrollModeMutableLiveData.distinctUntilChange()
 
+    private val fontSizeMutableLiveData = MutableLiveData(13)
+    val fontSizeLiveData: LiveData<Int> = fontSizeMutableLiveData
+
     fun observeTheme(
         documentElement: Element,
         forceUiUpdate: () -> Unit
@@ -42,6 +45,12 @@ class AppUiStateManager(
 
             is UiStatePayload.ChangeScrollMode ->
                 scrollModeMutableLiveData.value = payload.scrollMode
+
+            is UiStatePayload.ChangeFontSize -> {
+                val offset = if (payload.isIncreased) 2 else -2
+                fontSizeMutableLiveData.value = (fontSizeLiveData.value + offset).coerceIn(13, 25)
+                // TODO: Store to the storage
+            }
         }
     }
 
@@ -52,5 +61,7 @@ class AppUiStateManager(
         class ShapeToolVisibility(val isVisible: Boolean) : UiStatePayload
 
         class ChangeScrollMode(val scrollMode: ScrollMode) : UiStatePayload
+
+        class ChangeFontSize(val isIncreased: Boolean) : UiStatePayload
     }
 }
