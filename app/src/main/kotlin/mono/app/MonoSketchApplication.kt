@@ -116,6 +116,7 @@ class MonoSketchApplication : LifecycleOwner() {
         )
 
         browserManager.startObserveStateChange(shapeManager.rootLiveData.map { it.id }, this)
+        appUiStateManager.fontSizeLiveData.observe(this, listener = canvasViewController::setFont)
     }
 
     fun onResize() {

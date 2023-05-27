@@ -39,7 +39,6 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         context = canvas.getContext("2d") as CanvasRenderingContext2D
 
         setSize(canvas.width, canvas.height)
-        setFont(13)
     }
 
     fun setFont(fontSize: Int) {

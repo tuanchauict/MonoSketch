@@ -12,6 +12,7 @@ object StoreKeys {
 
     const val SETTINGS = "settings"
     const val THEME_MODE = "theme-mode"
+    const val FONT_SIZE = "font-size"
 
     const val WORKSPACE = "workspace"
     const val LAST_OPEN = "last-open"
