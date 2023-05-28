@@ -8,6 +8,7 @@ package mono.html.toolbar.view.nav
 
 import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
+import mono.actionmanager.OneTimeActionType.AppSettingAction
 import mono.html.modal.compose.DropDownItem
 import mono.html.modal.compose.DropDownMenu
 import mono.html.modal.tooltip
@@ -22,6 +23,7 @@ import mono.ui.compose.ext.viewBox
 import mono.ui.theme.ThemeManager
 import mono.ui.theme.ThemeMode
 import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 
@@ -153,21 +155,53 @@ private fun showDropDownMenu(
     anchor: Element
 ) {
     val items = listOf(
+        DropDownItem.Custom({ true }) {
+            ChangeFontItemContent(onActionSelected)
+        },
         DropDownItem.Text(
             "Show Format panel",
-            OneTimeActionType.AppSettingAction.ShowFormatPanel
+            AppSettingAction.ShowFormatPanel
         ) { !appUiStateManager.shapeToolVisibilityLiveData.value },
         DropDownItem.Text(
             "Hide Format panel",
-            OneTimeActionType.AppSettingAction.HideFormatPanel
+            AppSettingAction.HideFormatPanel
         ) { appUiStateManager.shapeToolVisibilityLiveData.value },
         DropDownItem.Text(
             "Keyboard shortcuts",
-            OneTimeActionType.AppSettingAction.ShowKeyboardShortcuts
+            AppSettingAction.ShowKeyboardShortcuts
         )
     )
     DropDownMenu(anchor, items) {
         val textItem = it as DropDownItem.Text
         onActionSelected(textItem.key as OneTimeActionType)
+    }
+}
+
+@Composable
+private fun ChangeFontItemContent(
+    onActionSelected: (OneTimeActionType) -> Unit
+) {
+    Div(
+        attrs = {
+            classes("action-font-size-container")
+        }
+    ) {
+        Div(
+            attrs = {
+                classes("action-font-size", "decrease")
+                onClick { onActionSelected(AppSettingAction.ChangeFontSize(false)) }
+            }
+        ) {
+            Text("A")
+        }
+
+        Div(
+            attrs = {
+                classes("action-font-size", "increase")
+                onClick { onActionSelected(AppSettingAction.ChangeFontSize(true)) }
+            }
+        ) {
+            Text("A")
+        }
     }
 }
