@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import kotlinx.browser.document
+import kotlinx.browser.window
 import mono.common.Cancelable
 import mono.common.setTimeout
 import mono.html.Div
@@ -26,6 +27,8 @@ import org.jetbrains.compose.web.dom.CheckboxInput
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.renderComposable
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.EventListener
 
 /**
  * Show a modal without background
@@ -37,18 +40,34 @@ internal fun NoBackgroundModal(
 ) {
     val body = document.body ?: return
     val container = body.Div()
+
     val composition = renderComposable(container) {}
+
+    var resizeListener: EventListener? = null
+    val dismiss = {
+        composition.dispose()
+        container.remove()
+        onDismiss()
+        if (resizeListener != null) {
+            window.removeEventListener("resize", resizeListener)
+            resizeListener = null
+        }
+    }
+    resizeListener = object : EventListener {
+        override fun handleEvent(event: Event) = dismiss()
+    }
+
     composition.setContent {
         var isDismissed by remember { mutableStateOf(false) }
         ModalContainer(attrs, content) {
             if (!isDismissed) {
-                composition.dispose()
-                container.remove()
-                onDismiss()
+                dismiss()
                 isDismissed = true
             }
         }
     }
+
+    window.addEventListener("resize", resizeListener)
 }
 
 @Composable
