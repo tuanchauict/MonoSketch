@@ -60,18 +60,21 @@ $background-color: var(--modal-container-bg);
             height: 28px;
             flex-grow: 0;
             flex-shrink: 0;
-            padding-bottom: 2px;
             margin-bottom: 2px;
             color: var(--mainmenu-item-color);
             user-select: none;
+            cursor: pointer;
 
             display: flex;
-            align-items: last baseline;
+            align-items: flex-end;
             justify-content: center;
 
-            cursor: pointer;
             &:hover {
-                background: var(--mainmenu-item-hover-bg);   
+                background: var(--mainmenu-item-hover-bg);
+            }
+            
+            &:active {
+                background: var(--mainmenu-item-action-hover-bg);
             }
 
             &.increase {
@@ -80,6 +83,7 @@ $background-color: var(--modal-container-bg);
 
             &.decrease {
                 font-size: 14px;
+                padding-bottom: 2px;
             }
 
             
