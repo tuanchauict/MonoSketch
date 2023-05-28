@@ -7,6 +7,7 @@ package mono.html.canvas.canvas
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
+import kotlin.math.roundToInt
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
@@ -42,10 +43,15 @@ internal class DrawingInfoController(container: HTMLDivElement) {
     }
 
     fun setFont(fontSize: Int) {
+        val currentInfo = drawingInfoLiveData.value
         val cellSizePx = context.getCellSizePx(fontSize)
         val cellCharOffsetPx = SizeF(0.0, cellSizePx.height * 0.2)
         drawingInfoMutableLiveData.value =
             drawingInfoMutableLiveData.value.copy(
+                offsetPx = currentInfo.offsetPx.adjustWithNewCellSize(
+                    currentInfo.cellSizePx,
+                    cellSizePx
+                ),
                 cellSizePx = cellSizePx,
                 cellCharOffsetPx = cellCharOffsetPx,
                 font = "normal normal normal ${fontSize.px} $DEFAULT_FONT",
@@ -70,6 +76,11 @@ internal class DrawingInfoController(container: HTMLDivElement) {
         val cHeight = fontSize.toDouble() * 1.312
         return SizeF(cWidth, cHeight)
     }
+
+    private fun Point.adjustWithNewCellSize(oldSize: SizeF, newSize: SizeF): Point = copy(
+        (left * newSize.width / oldSize.width).roundToInt(),
+        (top * newSize.height / oldSize.height).roundToInt()
+    )
 
     /**
      * A data class to hold drawing info and provide conversion functions for converting between
