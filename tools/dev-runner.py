@@ -2,23 +2,12 @@ import hashlib
 import os
 import shutil
 import subprocess
-from tornado import ioloop
 import livereload
 
 ROOT = "."
 
 COMPILE_DIR = f"{ROOT}/build/developmentExecutable"
 SERVE_DIR = f"{ROOT}/build/dev"
-
-timer = None
-
-
-def register_task(*args, delay=2.5):
-    global timer
-    loop = ioloop.IOLoop.current()
-    if timer:
-        loop.remove_timeout(timer)
-    timer = loop.call_later(delay, compile_code)
 
 
 def compile_code():
@@ -60,8 +49,8 @@ def prepare_for_serve():
 prepare_for_serve()
 
 server = livereload.Server()
-server.watch(f"{ROOT}/**/src/main/**/*.kt", register_task, delay='forever')
-server.watch(f"{ROOT}/**/src/main/**/*.scss", register_task, delay='forever')
+server.watch(f"{ROOT}/**/src/main/**/*.kt", compile_code, delay='forever', delay_exe=2.5)
+server.watch(f"{ROOT}/**/src/main/**/*.scss", compile_code, delay='forever', delay_exe=2.5)
 server.watch(f"{SERVE_DIR}/**/*", lambda x: None)
 server.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")
 server.serve(root=SERVE_DIR, port=8000, open_url_delay=None)

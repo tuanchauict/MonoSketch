@@ -18,10 +18,10 @@
     "default": {
         "livereloadx": {
             "hashes": [
-                "sha256:04731fcac980dfd26c193722035bb5beb4f501c22a6cdf7a0063d49aae8e9270"
+                "sha256:77d29f1fae448f882067a6f3670cdabbb99b44f328a95f8ad8ba838f3074c163"
             ],
             "index": "pypi",
-            "version": "==2.6.8"
+            "version": "==2.6.10"
         },
         "tornado": {
             "hashes": [
