@@ -47,8 +47,8 @@ class PainterBoardTest {
     @Test
     fun testFillMonoBitmap() {
         val builder = MonoBitmap.Builder(2, 2)
-        builder.put(0, 0, 'a')
-        builder.put(0, 1, 'b')
+        builder.put(0, 0, 'a', 'a')
+        builder.put(0, 1, 'b', 'b')
 
         val board = PainterBoard(Rect.byLTWH(0, 0, 3, 3))
         board.set(Point(2, 2), 'x', Highlight.NO)

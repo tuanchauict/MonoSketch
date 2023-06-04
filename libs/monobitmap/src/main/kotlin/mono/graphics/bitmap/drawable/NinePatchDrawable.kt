@@ -26,7 +26,13 @@ class NinePatchDrawable(
         val colIndexes = horizontalRepeatableRange.toIndexes(width, pattern.width)
         for (row in 0 until height) {
             for (col in 0 until width) {
-                builder.put(row, col, pattern.getChar(rowIndexes[row], colIndexes[col]))
+                builder.put(
+                    row = row,
+                    column = col,
+                    visualChar = pattern.getChar(rowIndexes[row], colIndexes[col]),
+                    // TODO: Think about a way to support direction chars to 9-patch drawable
+                    directionChar = pattern.getChar(rowIndexes[row], colIndexes[col])
+                )
             }
         }
         return builder.toBitmap()

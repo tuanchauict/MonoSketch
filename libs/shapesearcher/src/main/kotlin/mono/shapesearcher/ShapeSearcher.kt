@@ -48,7 +48,7 @@ class ShapeSearcher(
             val bitmap = getBitmap(it) ?: return@filter false
             val bitmapRow = point.row - position.row
             val bitmapCol = point.column - position.column
-            !bitmap.get(bitmapRow, bitmapCol).isTransparent
+            !bitmap.getVisual(bitmapRow, bitmapCol).isTransparent
         }
         .toList()
 
@@ -81,6 +81,7 @@ class ShapeSearcher(
             shape == null -> null
             shape.bound.left == point.left ||
                 shape.bound.right == point.left -> DirectedPoint.Direction.VERTICAL
+
             else -> DirectedPoint.Direction.HORIZONTAL
         }
     }

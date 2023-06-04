@@ -4,6 +4,7 @@
 
 package mono.bitmap.manager.factory
 
+import mono.common.Characters
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.geo.Point
 import mono.shape.extra.LineExtra
@@ -26,8 +27,8 @@ object LineBitmapFactory {
         val strokeStyle = lineExtra.strokeStyle ?: PredefinedStraightStrokeStyle.NO_STROKE
         createCharPoints(jointPoints, strokeStyle)
             .forEachIndexed { index, pointChar ->
-                val char = if (dashPattern.isGap(index)) ' ' else pointChar.char
-                bitmapBuilder.put(pointChar.top, pointChar.left, char)
+                val visualChar = if (dashPattern.isGap(index)) ' ' else pointChar.char
+                bitmapBuilder.put(pointChar.top, pointChar.left, visualChar, pointChar.char)
             }
 
         val startAnchor = lineExtra.startAnchor
@@ -124,7 +125,13 @@ object LineBitmapFactory {
         } else {
             if (anchor.top < previousPoint.top) anchorChar.top else anchorChar.bottom
         }
-        put(anchor.row, anchor.column, char)
+        // Anchor point won't override the direction char.
+        put(
+            row = anchor.row,
+            column = anchor.column,
+            visualChar = char,
+            directionChar = Characters.TRANSPARENT_CHAR
+        )
     }
 
     private fun isHorizontal(point1: Point, point2: Point): Boolean = point1.top == point2.top
@@ -137,8 +144,8 @@ object LineBitmapFactory {
     ) {
         private val builder = MonoBitmap.Builder(width, height)
 
-        fun put(row: Int, column: Int, char: Char) =
-            builder.put(row - row0, column - column0, char)
+        fun put(row: Int, column: Int, visualChar: Char, directionChar: Char) =
+            builder.put(row - row0, column - column0, visualChar, directionChar)
 
         fun toBitmap(): MonoBitmap = builder.toBitmap()
 

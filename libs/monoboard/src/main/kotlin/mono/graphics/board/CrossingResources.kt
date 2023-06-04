@@ -8,14 +8,36 @@ package mono.graphics.board
  * An objects that defines resources for crossing.
  */
 internal object CrossingResources {
-    val CONNECTABLE_CHARS = "-─|│┌└┐┘┬┴├┤┼".toSet()
+    private val SINGLE_PAIRS = sequenceOf(
+        "─━═",
+        "│┃║",
+        "┐┓╗",
+        "┌┏╔",
+        "┘┛╝",
+        "└┗╚",
+        "┬┳╦",
+        "┴┻╩",
+        "├┣╠",
+        "┤┫╣",
+        "┼╋╬"
+    )
+        .map { it.first() to it }
+        .toMap()
 
-    val LEFT_IN_CHARS = "-─┌└┬┴├┼".toSet()
-    val RIGHT_IN_CHARS = "-─┐┘┬┴┤┼".toSet()
-    val TOP_IN_CHARS = "|│┌┐┬├┤┼".toSet()
-    val BOTTOM_IN_CHARS = "|│└┘┴├┤┼".toSet()
+    private val STANDARDIZED_CHARS = mapOf(
+        '-' to '─',
+        '|' to '│',
+        '+' to '┼'
+    )
 
-    val CONNECTOR_CHAR_MAP = mapOf(
+    private val CONNECTABLE_CHARS = "─│┌└┐┘┬┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
+
+    private val LEFT_IN_CHARS: Set<Char> = "─┌└┬┴├┼".extendChars().flatMap { it.toList() }.toSet()
+    private val RIGHT_IN_CHARS: Set<Char> = "─┐┘┬┴┤┼".extendChars().flatMap { it.toList() }.toSet()
+    private val TOP_IN_CHARS: Set<Char> = "│┌┐┬├┤┼".extendChars().flatMap { it.toList() }.toSet()
+    private val BOTTOM_IN_CHARS: Set<Char> = "│└┘┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
+
+    private val SINGLE_CONNECTOR_CHAR_MAP = sequenceOf(
         "─│" to mapOf(
             inDirectionMark(hasRight = true, hasVertical = true) to '├',
             inDirectionMark(hasLeft = true, hasVertical = true) to '┤',
@@ -249,9 +271,38 @@ internal object CrossingResources {
             inDirectionMark(hasHorizontal = true, hasVertical = true) to '┼'
         )
     )
+        .flatMap { (key, mark) ->
+            key.extendChars().mapIndexed { index: Int, xKey: String ->
+                xKey to mark.mapValues { (_, char) -> SINGLE_PAIRS[char]!![index] }
+            }
+        }
+        .toMap()
+
+    val Char.isConnectable: Boolean
+        get() = standardize(this) in CONNECTABLE_CHARS
+
+    val Char.hasLeft: Boolean
+        get() = standardize(this) in LEFT_IN_CHARS
+
+    val Char.hasRight: Boolean
+        get() = standardize(this) in RIGHT_IN_CHARS
+
+    val Char.hasTop: Boolean
+        get() = standardize(this) in TOP_IN_CHARS
+
+    val Char.hasBottom: Boolean
+        get() = standardize(this) in BOTTOM_IN_CHARS
+
+    private fun String.extendChars(): Sequence<String> =
+        (0..2).asSequence()
+            .map { getSingleKey(this, it) }
+
+    private fun getSingleKey(key: String, index: Int): String =
+        key.map { SINGLE_PAIRS[it]!![index] }
+            .joinToString(separator = "")
 
     /**
-     * An utility method for creating a mark vector for in-directions.
+     * A utility method for creating a mark vector for in-directions.
      */
     fun inDirectionMark(
         hasLeft: Boolean = false,
@@ -267,4 +318,14 @@ internal object CrossingResources {
         val bottomMark = if (hasBottom || hasVertical) 0b1000 else 0
         return leftMark or topMark or rightMark or bottomMark
     }
+
+    fun getDirectionMap(char1: Char, char2: Char): Map<Int, Char>? {
+        val standardizedChar1 = standardize(char1)
+        val standardizedChar2 = standardize(char2)
+
+        return SINGLE_CONNECTOR_CHAR_MAP["$standardizedChar1$standardizedChar2"]
+            ?: SINGLE_CONNECTOR_CHAR_MAP["$standardizedChar2$standardizedChar1"]
+    }
+
+    private fun standardize(char: Char): Char = STANDARDIZED_CHARS[char] ?: char
 }
