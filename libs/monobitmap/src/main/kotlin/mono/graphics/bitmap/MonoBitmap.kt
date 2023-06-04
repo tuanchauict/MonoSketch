@@ -7,6 +7,7 @@ package mono.graphics.bitmap
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.common.Characters.isHalfTransparent
 import mono.common.Characters.isTransparent
+import mono.graphics.bitmap.MonoBitmap.Builder
 import mono.graphics.geo.Rect
 import mono.graphics.geo.Size
 
@@ -27,6 +28,9 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
     override fun toString(): String =
         matrix.joinToString("\n")
 
+    /**
+     * A builder of the [MonoBitmap].
+     */
     class Builder(private val width: Int, private val height: Int) {
         private val bound: Rect = Rect.byLTWH(0, 0, width, height)
         private val matrix: List<MutableList<Char>> = List(height) {
@@ -76,11 +80,29 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
             }
         }
 
-        fun toBitmap(): MonoBitmap = MonoBitmap(matrix.map { Row(it) })
+        fun toBitmap(): MonoBitmap {
+            val rows = matrix.map { chars ->
+                Row(chars)
+            }
+            return MonoBitmap(rows)
+        }
     }
 
-    class Row(chars: List<Char>) {
+    /**
+     * A lightweight data structure to represent a row of the matrix.
+     * Only cells that having visible characters will be kept to save the memory. For example, with
+     * inputs:
+     * ```
+     * ab      c
+     * ```
+     * only `[a, b, c]` is kept.
+     */
+    class Row internal constructor(chars: List<Char>) {
         internal val size: Int = chars.size
+
+        /**
+         * A list of cells sorted by its [Cell.index].
+         */
         private val sortedCells: List<Cell> = chars.mapIndexedNotNull { index, char ->
             if (!char.isTransparent) Cell(index, char) else null
         }
@@ -115,5 +137,11 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
         }
     }
 
+    /**
+     * A data class for a cell on the [Row].
+     * Each cell contains:
+     * - [index]: The index of the cell on the row. This is used for searching.
+     * - [char]: The visual character of the cell which will be painted on the canvas.
+     */
     private data class Cell(val index: Int, val char: Char)
 }

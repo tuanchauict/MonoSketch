@@ -20,6 +20,8 @@ object RectangleBitmapFactory {
         val strokeStyle = extra.strokeStyle
 
         if (fillDrawable == null && strokeStyle == null) {
+            // Draw a half transparent character for selection.
+            // Half transparent is not displayed on the canvas but makes the shape selectable.
             bitmapBuilder.drawBorder(
                 size,
                 PredefinedStraightStrokeStyle.NO_STROKE,
@@ -60,10 +62,12 @@ object RectangleBitmapFactory {
                 sequenceOf(
                     PointChar.verticalLine(left, top - 1, bottom, strokeStyle.vertical)
                 )
+
             size.height == 1 ->
                 sequenceOf(
                     PointChar.horizontalLine(left - 1, right, top, strokeStyle.horizontal)
                 )
+
             else -> sequenceOf(
                 PointChar.point(left, top, strokeStyle.upRight),
                 PointChar.horizontalLine(left, right, top, strokeStyle.horizontal),
