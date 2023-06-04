@@ -96,7 +96,10 @@ internal class PainterBoard(internal val bound: Rect) {
             val src = inMatrix[bitmapRow]
             val dest = matrix[painterRow]
 
-            src.forEachIndex(inStartCol, inStartCol + overlap.width) { index, char ->
+            src.forEachIndex(
+                fromIndex = inStartCol,
+                toExclusiveIndex = inStartCol + overlap.width
+            ) { index, char, directionChar ->
                 val bitmapColumn = inStartCol + index
                 val painterColumn = startCol + index
                 val pixel = dest[painterColumn]
@@ -116,10 +119,10 @@ internal class PainterBoard(internal val bound: Rect) {
                             boardRow = painterRow + bound.position.row,
                             boardColumn = painterColumn + bound.position.column,
                             char,
-                            leftChar = bitmap.getVisual(bitmapRow, bitmapColumn - 1),
-                            rightChar = bitmap.getVisual(bitmapRow, bitmapColumn + 1),
-                            topChar = bitmap.getVisual(bitmapRow - 1, bitmapColumn),
-                            bottomChar = bitmap.getVisual(bitmapRow + 1, bitmapColumn)
+                            leftChar = bitmap.getDirection(bitmapRow, bitmapColumn - 1),
+                            rightChar = bitmap.getDirection(bitmapRow, bitmapColumn + 1),
+                            topChar = bitmap.getDirection(bitmapRow - 1, bitmapColumn),
+                            bottomChar = bitmap.getDirection(bitmapRow + 1, bitmapColumn)
                         )
                     )
                 }

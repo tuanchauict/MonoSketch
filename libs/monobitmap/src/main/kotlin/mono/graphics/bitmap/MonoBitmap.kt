@@ -94,7 +94,10 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
                 val destVisual = visualMatrix[startRow + r]
                 val destDirection = directionMatrix[startRow + r]
 
-                src.forEachIndex(inStartCol, inStartCol + overlap.width) { index, char ->
+                src.forEachIndex(
+                    fromIndex = inStartCol,
+                    toExclusiveIndex = inStartCol + overlap.width
+                ) { index, char, directionChar ->
                     val destIndex = startCol + index
                     // char from source is always not transparent (0) due to the optimisation of Row
                     val isVisualApplicable =
@@ -106,10 +109,10 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
 
                     // TODO: Double check this condition
                     val isDirectionApplicable =
-                        destDirection[destIndex].isTransparent && char.isHalfTransparent ||
-                            !char.isHalfTransparent
+                        destDirection[destIndex].isTransparent && directionChar.isHalfTransparent ||
+                            !directionChar.isHalfTransparent
                     if (isDirectionApplicable) {
-                        destDirection[startCol + index] = char
+                        destDirection[startCol + index] = directionChar
                     }
                 }
             }
@@ -147,7 +150,7 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
         fun forEachIndex(
             fromIndex: Int = 0,
             toExclusiveIndex: Int = size,
-            action: (Int, Char) -> Unit
+            action: ForEachIndexCallback
         ) {
             val foundLow = sortedCells.binarySearch { it.index.compareTo(fromIndex) }
             val low = if (foundLow < 0) -foundLow - 1 else foundLow
@@ -156,7 +159,7 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
                 if (cell.index >= toExclusiveIndex) {
                     break
                 }
-                action(cell.index - fromIndex, cell.visualChar)
+                action.invoke(cell.index - fromIndex, cell.visualChar, cell.directionChar)
             }
         }
 
@@ -187,4 +190,11 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
      * - [directionChar]: The character for identifying direction.
      */
     private data class Cell(val index: Int, val visualChar: Char, val directionChar: Char)
+
+    /**
+     * A single function interface for callback of [Row.forEachIndex]
+     */
+    fun interface ForEachIndexCallback {
+        fun invoke(index: Int, visualChar: Char, directionChar: Char)
+    }
 }
