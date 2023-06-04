@@ -15,7 +15,7 @@ internal object CrossingResources {
     val TOP_IN_CHARS = "|│┌┐┬├┤┼".toSet()
     val BOTTOM_IN_CHARS = "|│└┘┴├┤┼".toSet()
 
-    val CONNECTOR_CHAR_MAP = mapOf(
+    private val CONNECTOR_CHAR_MAP = mapOf(
         "─│" to mapOf(
             inDirectionMark(hasRight = true, hasVertical = true) to '├',
             inDirectionMark(hasLeft = true, hasVertical = true) to '┤',
@@ -251,7 +251,7 @@ internal object CrossingResources {
     )
 
     /**
-     * An utility method for creating a mark vector for in-directions.
+     * A utility method for creating a mark vector for in-directions.
      */
     fun inDirectionMark(
         hasLeft: Boolean = false,
@@ -267,4 +267,7 @@ internal object CrossingResources {
         val bottomMark = if (hasBottom || hasVertical) 0b1000 else 0
         return leftMark or topMark or rightMark or bottomMark
     }
+
+    fun getDirectionMap(char1: Char, char2: Char): Map<Int, Char>? =
+        CONNECTOR_CHAR_MAP["$char1$char2"] ?: CONNECTOR_CHAR_MAP["$char2$char1"]
 }

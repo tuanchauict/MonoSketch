@@ -56,7 +56,11 @@ internal class PainterBoard(internal val bound: Rect) {
 
             src.subList(inStartCol, inStartCol + overlap.width).forEachIndexed { index, pixel ->
                 if (!pixel.isTransparent) {
-                    dest[startCol + index].set(pixel.char, pixel.highlight)
+                    dest[startCol + index].set(
+                        visualChar = pixel.visualChar,
+                        directionChar = pixel.directionChar,
+                        highlight = pixel.highlight
+                    )
                 }
             }
         }
@@ -96,30 +100,37 @@ internal class PainterBoard(internal val bound: Rect) {
             val src = inMatrix[bitmapRow]
             val dest = matrix[painterRow]
 
-            src.forEachIndex(inStartCol, inStartCol + overlap.width) { index, char ->
+            src.forEachIndex(
+                fromIndex = inStartCol,
+                toExclusiveIndex = inStartCol + overlap.width
+            ) { index, char, directionChar ->
                 val bitmapColumn = inStartCol + index
                 val painterColumn = startCol + index
                 val pixel = dest[painterColumn]
 
                 if (pixel.isTransparent ||
-                    pixel.char == char ||
+                    pixel.visualChar == char ||
                     char !in CrossingResources.CONNECTABLE_CHARS
                 ) {
                     // Not drawing half transparent character
                     // (full transparent character is removed by bitmap)
                     if (!char.isHalfTransparent) {
-                        pixel.set(char, highlight)
+                        pixel.set(char, directionChar, highlight)
                     }
                 } else {
+                    // Crossing points will be drawn after finishing drawing all pixels of the
+                    // bitmap on the Mono Board. Each unit painter board does not have enough
+                    // information to decide the value of the crossing point.
                     crossingPoints.add(
                         CrossPoint(
                             boardRow = painterRow + bound.position.row,
                             boardColumn = painterColumn + bound.position.column,
-                            char,
-                            leftChar = bitmap.get(bitmapRow, bitmapColumn - 1),
-                            rightChar = bitmap.get(bitmapRow, bitmapColumn + 1),
-                            topChar = bitmap.get(bitmapRow - 1, bitmapColumn),
-                            bottomChar = bitmap.get(bitmapRow + 1, bitmapColumn)
+                            visualChar = char,
+                            directionChar = directionChar,
+                            leftChar = bitmap.getDirection(bitmapRow, bitmapColumn - 1),
+                            rightChar = bitmap.getDirection(bitmapRow, bitmapColumn + 1),
+                            topChar = bitmap.getDirection(bitmapRow - 1, bitmapColumn),
+                            bottomChar = bitmap.getDirection(bitmapRow + 1, bitmapColumn)
                         )
                     )
                 }
@@ -141,7 +152,11 @@ internal class PainterBoard(internal val bound: Rect) {
         for (r in 0 until overlap.height) {
             val row = matrix[r + startRow]
             for (c in 0 until overlap.width) {
-                row[c + startCol].set(char, highlight)
+                row[c + startCol].set(
+                    visualChar = char,
+                    directionChar = char,
+                    highlight = highlight
+                )
             }
         }
     }
@@ -161,7 +176,11 @@ internal class PainterBoard(internal val bound: Rect) {
         if (columnIndex !in validColumnRange || rowIndex !in validRowRange) {
             return
         }
-        matrix[rowIndex][columnIndex].set(char, highlight)
+        matrix[rowIndex][columnIndex].set(
+            visualChar = char,
+            directionChar = char,
+            highlight = highlight
+        )
     }
 
     operator fun get(position: Point): Pixel? = get(position.left, position.top)

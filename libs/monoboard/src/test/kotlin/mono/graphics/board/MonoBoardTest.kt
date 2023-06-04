@@ -27,7 +27,7 @@ class MonoBoardTest {
         val chars = "012345678"
         chars.forEachIndexed { index, c -> target.set(points[index], c, Highlight.NO) }
         chars.forEachIndexed { index, c ->
-            assertEquals(c, target[points[index]].char)
+            assertEquals(c, target[points[index]].visualChar)
         }
 
         assertEquals(7, target.boardCount)

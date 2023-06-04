@@ -48,6 +48,7 @@ object TextBitmapFactory {
                 } else {
                     (maxTextHeight - renderableText.size) / 2 + rowOffset
                 }
+
             TextAlign.VerticalAlign.BOTTOM ->
                 if (maxTextHeight < renderableText.size) {
                     rowOffset
@@ -67,7 +68,12 @@ object TextBitmapFactory {
             for (colIndex in row.indices) {
                 val char = row[colIndex]
                 if (char != ' ') {
-                    put(row0 + rowIndex, col0 + colIndex, char)
+                    put(
+                        row = row0 + rowIndex,
+                        column = col0 + colIndex,
+                        visualChar = char,
+                        directionChar = char
+                    )
                 }
             }
         }
