@@ -51,8 +51,8 @@ object RectangleBitmapFactory {
             put(
                 row = 0,
                 column = 0,
-                visualChar = '▫',
-                directionChar = '▫',
+                visualChar = '□',
+                directionChar = '□',
             )
             return
         }
