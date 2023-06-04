@@ -7,7 +7,6 @@ package mono.graphics.board
 import mono.environment.Build
 import mono.graphics.bitmap.MonoBitmap
 import mono.graphics.board.CrossingResources.BOTTOM_IN_CHARS
-import mono.graphics.board.CrossingResources.CONNECTOR_CHAR_MAP
 import mono.graphics.board.CrossingResources.LEFT_IN_CHARS
 import mono.graphics.board.CrossingResources.RIGHT_IN_CHARS
 import mono.graphics.board.CrossingResources.TOP_IN_CHARS
@@ -53,9 +52,9 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         for (charPoint in crossingPoints) {
             val currentPixel = get(charPoint.left, charPoint.top)
             val directionMap =
-                CONNECTOR_CHAR_MAP["${currentPixel.visualChar}${charPoint.char}"]
-                    ?: CONNECTOR_CHAR_MAP["${charPoint.char}${currentPixel.visualChar}"]
+                CrossingResources.getDirectionMap(currentPixel.visualChar, charPoint.char)
             if (directionMap == null) {
+                // Unsupported pair
                 currentPixel.set(charPoint.char, highlight)
                 continue
             }
