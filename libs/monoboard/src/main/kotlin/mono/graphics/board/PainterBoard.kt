@@ -7,6 +7,7 @@ package mono.graphics.board
 import mono.common.Characters.TRANSPARENT_CHAR
 import mono.common.Characters.isHalfTransparent
 import mono.graphics.bitmap.MonoBitmap
+import mono.graphics.board.CrossingResources.isConnectable
 import mono.graphics.board.MonoBoard.CrossPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -68,8 +69,8 @@ internal class PainterBoard(internal val bound: Rect) {
 
     /**
      * Fills with a bitmap and the highlight state of that bitmap from [position] excepts crossing
-     * points. Connection point are the point whose the char is one of connection characters defined
-     * in [CrossingResources.CONNECTABLE_CHARS] and there is a character drawn at the position.
+     * points. Connection point are the point having the char which is connectable
+     * ([CrossingResources.isConnectable]) and there is a character drawn at the position.
      * A list of [CrossPoint] will be returned to let [MonoBoard] able to adjust and draw the
      * adjusted character of the connection points.
      *
@@ -110,7 +111,7 @@ internal class PainterBoard(internal val bound: Rect) {
 
                 if (pixel.isTransparent ||
                     pixel.visualChar == char ||
-                    char !in CrossingResources.CONNECTABLE_CHARS
+                    !char.isConnectable
                 ) {
                     // Not drawing half transparent character
                     // (full transparent character is removed by bitmap)

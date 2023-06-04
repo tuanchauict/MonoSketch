@@ -8,7 +8,7 @@ import mono.common.Characters
 import mono.shape.extra.style.StraightStrokeStyle
 
 /**
- * An object for listing all predefined [mono.shape.extra.manager.model.StraightStrokeStyle]
+ * An object for listing all predefined [mono.shape.extra.style.StraightStrokeStyle]
  */
 object PredefinedStraightStrokeStyle {
     val NO_STROKE = StraightStrokeStyle(
