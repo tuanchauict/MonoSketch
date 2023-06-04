@@ -28,10 +28,9 @@ class Pixel(
     val isTransparent: Boolean
         get() = visualChar.isTransparent || visualChar.isHalfTransparent
 
-    fun set(visualChar: Char, highlight: Highlight) {
+    fun set(visualChar: Char, directionChar: Char, highlight: Highlight) {
         this.visualChar = visualChar
-        // TODO: Correct this with a direction char
-        this.directionChar = visualChar
+        this.directionChar = directionChar
         this.highlight = highlight
     }
 

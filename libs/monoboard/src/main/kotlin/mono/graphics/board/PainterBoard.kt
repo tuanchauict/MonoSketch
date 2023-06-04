@@ -56,7 +56,11 @@ internal class PainterBoard(internal val bound: Rect) {
 
             src.subList(inStartCol, inStartCol + overlap.width).forEachIndexed { index, pixel ->
                 if (!pixel.isTransparent) {
-                    dest[startCol + index].set(pixel.visualChar, pixel.highlight)
+                    dest[startCol + index].set(
+                        visualChar = pixel.visualChar,
+                        directionChar = pixel.directionChar,
+                        highlight = pixel.highlight
+                    )
                 }
             }
         }
@@ -111,14 +115,18 @@ internal class PainterBoard(internal val bound: Rect) {
                     // Not drawing half transparent character
                     // (full transparent character is removed by bitmap)
                     if (!char.isHalfTransparent) {
-                        pixel.set(char, highlight)
+                        pixel.set(char, directionChar, highlight)
                     }
                 } else {
+                    // Crossing points will be drawn after finishing drawing all pixels of the 
+                    // bitmap on the Mono Board. Each unit painter board does not have enough
+                    // information to decide the value of the crossing point.
                     crossingPoints.add(
                         CrossPoint(
                             boardRow = painterRow + bound.position.row,
                             boardColumn = painterColumn + bound.position.column,
-                            char,
+                            visualChar = char,
+                            directionChar = directionChar,
                             leftChar = bitmap.getDirection(bitmapRow, bitmapColumn - 1),
                             rightChar = bitmap.getDirection(bitmapRow, bitmapColumn + 1),
                             topChar = bitmap.getDirection(bitmapRow - 1, bitmapColumn),
@@ -144,7 +152,11 @@ internal class PainterBoard(internal val bound: Rect) {
         for (r in 0 until overlap.height) {
             val row = matrix[r + startRow]
             for (c in 0 until overlap.width) {
-                row[c + startCol].set(char, highlight)
+                row[c + startCol].set(
+                    visualChar = char,
+                    directionChar = char,
+                    highlight = highlight
+                )
             }
         }
     }
@@ -164,7 +176,11 @@ internal class PainterBoard(internal val bound: Rect) {
         if (columnIndex !in validColumnRange || rowIndex !in validRowRange) {
             return
         }
-        matrix[rowIndex][columnIndex].set(char, highlight)
+        matrix[rowIndex][columnIndex].set(
+            visualChar = char,
+            directionChar = char,
+            highlight = highlight
+        )
     }
 
     operator fun get(position: Point): Pixel? = get(position.left, position.top)

@@ -251,7 +251,7 @@ internal object CrossingResources {
     )
 
     /**
-     * An utility method for creating a mark vector for in-directions.
+     * A utility method for creating a mark vector for in-directions.
      */
     fun inDirectionMark(
         hasLeft: Boolean = false,

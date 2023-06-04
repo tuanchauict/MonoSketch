@@ -52,22 +52,22 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         for (charPoint in crossingPoints) {
             val currentPixel = get(charPoint.left, charPoint.top)
             val directionMap =
-                CrossingResources.getDirectionMap(currentPixel.visualChar, charPoint.char)
+                CrossingResources.getDirectionMap(currentPixel.visualChar, charPoint.visualChar)
             if (directionMap == null) {
                 // Unsupported pair
-                currentPixel.set(charPoint.char, highlight)
+                currentPixel.set(charPoint.visualChar, charPoint.directionChar, highlight)
                 continue
             }
             val directionMark =
                 inDirectionMark(
                     hasLeft = charPoint.leftChar in LEFT_IN_CHARS ||
-                        get(charPoint.left - 1, charPoint.top).visualChar in LEFT_IN_CHARS,
+                        get(charPoint.left - 1, charPoint.top).directionChar in LEFT_IN_CHARS,
                     hasRight = charPoint.rightChar in RIGHT_IN_CHARS ||
-                        get(charPoint.left + 1, charPoint.top).visualChar in RIGHT_IN_CHARS,
+                        get(charPoint.left + 1, charPoint.top).directionChar in RIGHT_IN_CHARS,
                     hasTop = charPoint.topChar in TOP_IN_CHARS ||
-                        get(charPoint.left, charPoint.top - 1).visualChar in TOP_IN_CHARS,
+                        get(charPoint.left, charPoint.top - 1).directionChar in TOP_IN_CHARS,
                     hasBottom = charPoint.bottomChar in BOTTOM_IN_CHARS ||
-                        get(charPoint.left, charPoint.top + 1).visualChar in BOTTOM_IN_CHARS
+                        get(charPoint.left, charPoint.top + 1).directionChar in BOTTOM_IN_CHARS
                 )
 
             if (Build.DEBUG && DEBUG) {
@@ -78,18 +78,22 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
                     charPoint.bottomChar
                 ).joinToString("•")
                 val boardSurroundingChars = listOf(
-                    get(charPoint.left - 1, charPoint.top).visualChar,
-                    get(charPoint.left + 1, charPoint.top).visualChar,
-                    get(charPoint.left, charPoint.top - 1).visualChar,
-                    get(charPoint.left, charPoint.top + 1).visualChar
+                    get(charPoint.left - 1, charPoint.top).directionChar,
+                    get(charPoint.left + 1, charPoint.top).directionChar,
+                    get(charPoint.left, charPoint.top - 1).directionChar,
+                    get(charPoint.left, charPoint.top + 1).directionChar
                 ).joinToString("•")
                 println(
-                    "${charPoint.char}${currentPixel.visualChar} " +
+                    "${charPoint.visualChar}${currentPixel.directionChar} " +
                         "($bitmapSurroundingChars) - ($boardSurroundingChars) -> " +
                         "${directionMap[directionMark]}"
                 )
             }
-            currentPixel.set(directionMap[directionMark] ?: charPoint.char, highlight)
+            currentPixel.set(
+                visualChar = directionMap[directionMark] ?: charPoint.visualChar,
+                directionChar = charPoint.directionChar,
+                highlight = highlight
+            )
         }
     }
 
@@ -222,14 +226,15 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
      * CrossPoint will then be drawn to the board after non-crossing pixels are drawn.
      *
      * @param [boardRow] and [boardColumn] are the location of point on the board.
-     * @param [char] is the character at the crossing point
+     * @param [visualChar] is the character at the crossing point
      * @param [leftChar], [rightChar], [topChar], and [bottomChar] are 4 characters around the
      * crossing point
      */
     internal data class CrossPoint(
         val boardRow: Int,
         val boardColumn: Int,
-        val char: Char,
+        val visualChar: Char,
+        val directionChar: Char,
         val leftChar: Char,
         val rightChar: Char,
         val topChar: Char,
