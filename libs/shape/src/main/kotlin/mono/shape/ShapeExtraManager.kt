@@ -26,7 +26,8 @@ object ShapeExtraManager {
         userSelectedFillStyle = PredefinedRectangleFillStyle.PREDEFINED_STYLES[0],
         isBorderEnabled = true,
         userSelectedBorderStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLES[0],
-        dashPattern = StraightStrokeDashPattern.SOLID
+        dashPattern = StraightStrokeDashPattern.SOLID,
+        isRoundedCorner = false
     )
         private set
 
@@ -40,7 +41,9 @@ object ShapeExtraManager {
         isEndAnchorEnabled = false,
         userSelectedEndAnchor = PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
 
-        dashPattern = StraightStrokeDashPattern.SOLID
+        dashPattern = StraightStrokeDashPattern.SOLID,
+
+        isRoundedCorner = false
     )
         private set
 
@@ -57,9 +60,11 @@ object ShapeExtraManager {
 
         isBorderEnabled: Boolean? = null,
         borderStyleId: String? = null,
+        isBorderRoundedCorner: Boolean? = null,
 
         isLineStrokeEnabled: Boolean? = null,
         lineStrokeStyleId: String? = null,
+        isLineStrokeRoundedCorner: Boolean? = null,
 
         dashPattern: StraightStrokeDashPattern? = null,
 
@@ -70,14 +75,15 @@ object ShapeExtraManager {
         endHeadAnchorCharId: String? = null,
 
         textHorizontalAlign: TextAlign.HorizontalAlign? = null,
-        textVerticalAlign: TextAlign.VerticalAlign? = null
+        textVerticalAlign: TextAlign.VerticalAlign? = null,
     ) {
         defaultRectangleExtra = RectangleExtra(
             isFillEnabled ?: defaultRectangleExtra.isFillEnabled,
             getRectangleFillStyle(fillStyleId),
             isBorderEnabled ?: defaultRectangleExtra.isBorderEnabled,
             getRectangleBorderStyle(borderStyleId),
-            dashPattern ?: defaultRectangleExtra.dashPattern
+            dashPattern ?: defaultRectangleExtra.dashPattern,
+            isRoundedCorner = isBorderRoundedCorner ?: defaultRectangleExtra.isRoundedCorner
         )
 
         defaultLineExtra = LineExtra(
@@ -91,7 +97,8 @@ object ShapeExtraManager {
             isEndAnchorEnabled = isEndHeadAnchorCharEnabled ?: defaultLineExtra.isEndAnchorEnabled,
             userSelectedEndAnchor = getEndHeadAnchorChar(endHeadAnchorCharId),
 
-            dashPattern = StraightStrokeDashPattern.SOLID
+            dashPattern = StraightStrokeDashPattern.SOLID,
+            isRoundedCorner = isLineStrokeRoundedCorner ?: defaultLineExtra.isRoundedCorner
         )
 
         defaultTextAlign = TextAlign(
