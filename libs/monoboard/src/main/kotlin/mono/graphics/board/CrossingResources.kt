@@ -30,12 +30,12 @@ internal object CrossingResources {
         '+' to '┼'
     )
 
-    private val CONNECTABLE_CHARS = "─│┌└┐┘┬┴├┤┼".toSet()
+    private val CONNECTABLE_CHARS = "─│┌└┐┘┬┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
 
-    private val LEFT_IN_CHARS: Set<Char> = "─┌└┬┴├┼".toSet()
-    private val RIGHT_IN_CHARS: Set<Char> = "─┐┘┬┴┤┼".toSet()
-    private val TOP_IN_CHARS: Set<Char> = "│┌┐┬├┤┼".toSet()
-    private val BOTTOM_IN_CHARS: Set<Char> = "│└┘┴├┤┼".toSet()
+    private val LEFT_IN_CHARS: Set<Char> = "─┌└┬┴├┼".extendChars().flatMap { it.toList() }.toSet()
+    private val RIGHT_IN_CHARS: Set<Char> = "─┐┘┬┴┤┼".extendChars().flatMap { it.toList() }.toSet()
+    private val TOP_IN_CHARS: Set<Char> = "│┌┐┬├┤┼".extendChars().flatMap { it.toList() }.toSet()
+    private val BOTTOM_IN_CHARS: Set<Char> = "│└┘┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
 
     private val SINGLE_CONNECTOR_CHAR_MAP = sequenceOf(
         "─│" to mapOf(
@@ -270,11 +270,13 @@ internal object CrossingResources {
         "┬┼" to mapOf(
             inDirectionMark(hasHorizontal = true, hasVertical = true) to '┼'
         )
-    ).flatMap { (key, mark) ->
-        (0..2).map {
-            getSingleKey(key, it) to mark.mapValues { (_, char) -> SINGLE_PAIRS[char]!![it] }
+    )
+        .flatMap { (key, mark) ->
+            key.extendChars().mapIndexed { index: Int, xKey: String ->
+                xKey to mark.mapValues { (_, char) -> SINGLE_PAIRS[char]!![index] }
+            }
         }
-    }.toMap()
+        .toMap()
 
     val Char.isConnectable: Boolean
         get() = standardize(this) in CONNECTABLE_CHARS
@@ -291,6 +293,9 @@ internal object CrossingResources {
     val Char.hasBottom: Boolean
         get() = standardize(this) in BOTTOM_IN_CHARS
 
+    private fun String.extendChars(): Sequence<String> =
+        (0..2).asSequence()
+            .map { getSingleKey(this, it) }
 
     private fun getSingleKey(key: String, index: Int): String =
         key.map { SINGLE_PAIRS[it]!![index] }
