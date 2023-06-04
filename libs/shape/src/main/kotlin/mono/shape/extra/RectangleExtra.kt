@@ -5,6 +5,7 @@
 package mono.shape.extra
 
 import mono.shape.ShapeExtraManager
+import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.RectangleFillStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.extra.style.StraightStrokeStyle
@@ -25,7 +26,11 @@ data class RectangleExtra(
         get() = if (isFillEnabled) userSelectedFillStyle else null
 
     val strokeStyle: StraightStrokeStyle?
-        get() = if (isBorderEnabled) userSelectedBorderStyle else null
+        get() = if (isBorderEnabled) {
+            PredefinedStraightStrokeStyle.getStyle(userSelectedBorderStyle.id, isRoundedCorner)
+        } else {
+            null
+        }
 
     constructor(serializableExtra: SerializableRectangle.SerializableExtra) : this(
         isFillEnabled = serializableExtra.isFillEnabled,

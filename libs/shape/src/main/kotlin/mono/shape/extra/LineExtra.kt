@@ -5,6 +5,7 @@
 package mono.shape.extra
 
 import mono.shape.ShapeExtraManager
+import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.AnchorChar
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.extra.style.StraightStrokeStyle
@@ -30,7 +31,11 @@ data class LineExtra(
         get() = userSelectedEndAnchor.takeIf { isEndAnchorEnabled }
 
     val strokeStyle: StraightStrokeStyle?
-        get() = userSelectedStrokeStyle.takeIf { isStrokeEnabled }
+        get() = if (isStrokeEnabled) {
+            PredefinedStraightStrokeStyle.getStyle(userSelectedStrokeStyle.id, isRoundedCorner)
+        } else {
+            null
+        }
 
     constructor(serializableExtra: SerializableLine.SerializableExtra) : this(
         isStrokeEnabled = serializableExtra.isStrokeEnabled,
