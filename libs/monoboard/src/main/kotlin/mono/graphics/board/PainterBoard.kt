@@ -118,7 +118,7 @@ internal class PainterBoard(internal val bound: Rect) {
                         pixel.set(char, directionChar, highlight)
                     }
                 } else {
-                    // Crossing points will be drawn after finishing drawing all pixels of the 
+                    // Crossing points will be drawn after finishing drawing all pixels of the
                     // bitmap on the Mono Board. Each unit painter board does not have enough
                     // information to decide the value of the crossing point.
                     crossingPoints.add(

@@ -52,7 +52,7 @@ object RectangleBitmapFactory {
                 row = 0,
                 column = 0,
                 visualChar = '□',
-                directionChar = '□',
+                directionChar = '□'
             )
             return
         }

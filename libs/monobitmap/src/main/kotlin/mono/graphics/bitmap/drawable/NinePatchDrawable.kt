@@ -31,7 +31,7 @@ class NinePatchDrawable(
                     column = col,
                     visualChar = pattern.getChar(rowIndexes[row], colIndexes[col]),
                     // TODO: Think about a way to support direction chars to 9-patch drawable
-                    directionChar = pattern.getChar(rowIndexes[row], colIndexes[col]),
+                    directionChar = pattern.getChar(rowIndexes[row], colIndexes[col])
                 )
             }
         }
