@@ -75,7 +75,7 @@ object ShapeExtraManager {
         endHeadAnchorCharId: String? = null,
 
         textHorizontalAlign: TextAlign.HorizontalAlign? = null,
-        textVerticalAlign: TextAlign.VerticalAlign? = null,
+        textVerticalAlign: TextAlign.VerticalAlign? = null
     ) {
         defaultRectangleExtra = RectangleExtra(
             isFillEnabled ?: defaultRectangleExtra.isFillEnabled,
