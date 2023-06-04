@@ -8,12 +8,21 @@ package mono.graphics.board
  * An objects that defines resources for crossing.
  */
 internal object CrossingResources {
-    private val CONNECTABLE_CHARS = "─│┌└┐┘┬┴├┤┼".toSet()
-
-    private val LEFT_IN_CHARS = "─┌└┬┴├┼".toSet()
-    private val RIGHT_IN_CHARS = "─┐┘┬┴┤┼".toSet()
-    private val TOP_IN_CHARS = "│┌┐┬├┤┼".toSet()
-    private val BOTTOM_IN_CHARS = "│└┘┴├┤┼".toSet()
+    private val SINGLE_PAIRS = sequenceOf(
+        "─━═",
+        "│┃║",
+        "┐┓╗",
+        "┌┏╔",
+        "┘┛╝",
+        "└┗╚",
+        "┬┳╦",
+        "┴┻╩",
+        "├┣╠",
+        "┤┫╣",
+        "┼╋╬"
+    )
+        .map { it.first() to it }
+        .toMap()
 
     private val STANDARDIZED_CHARS = mapOf(
         '-' to '─',
@@ -21,7 +30,14 @@ internal object CrossingResources {
         '+' to '┼'
     )
 
-    private val CONNECTOR_CHAR_MAP = mapOf(
+    private val CONNECTABLE_CHARS = "─│┌└┐┘┬┴├┤┼".toSet()
+
+    private val LEFT_IN_CHARS: Set<Char> = "─┌└┬┴├┼".toSet()
+    private val RIGHT_IN_CHARS: Set<Char> = "─┐┘┬┴┤┼".toSet()
+    private val TOP_IN_CHARS: Set<Char> = "│┌┐┬├┤┼".toSet()
+    private val BOTTOM_IN_CHARS: Set<Char> = "│└┘┴├┤┼".toSet()
+
+    private val SINGLE_CONNECTOR_CHAR_MAP = sequenceOf(
         "─│" to mapOf(
             inDirectionMark(hasRight = true, hasVertical = true) to '├',
             inDirectionMark(hasLeft = true, hasVertical = true) to '┤',
@@ -254,7 +270,11 @@ internal object CrossingResources {
         "┬┼" to mapOf(
             inDirectionMark(hasHorizontal = true, hasVertical = true) to '┼'
         )
-    )
+    ).flatMap { (key, mark) ->
+        (0..2).map {
+            getSingleKey(key, it) to mark.mapValues { (_, char) -> SINGLE_PAIRS[char]!![it] }
+        }
+    }.toMap()
 
     val Char.isConnectable: Boolean
         get() = standardize(this) in CONNECTABLE_CHARS
@@ -270,6 +290,11 @@ internal object CrossingResources {
 
     val Char.hasBottom: Boolean
         get() = standardize(this) in BOTTOM_IN_CHARS
+
+
+    private fun getSingleKey(key: String, index: Int): String =
+        key.map { SINGLE_PAIRS[it]!![index] }
+            .joinToString(separator = "")
 
     /**
      * A utility method for creating a mark vector for in-directions.
@@ -293,8 +318,8 @@ internal object CrossingResources {
         val standardizedChar1 = standardize(char1)
         val standardizedChar2 = standardize(char2)
 
-        return CONNECTOR_CHAR_MAP["$standardizedChar1$standardizedChar2"]
-            ?: CONNECTOR_CHAR_MAP["$standardizedChar2$standardizedChar1"]
+        return SINGLE_CONNECTOR_CHAR_MAP["$standardizedChar1$standardizedChar2"]
+            ?: SINGLE_CONNECTOR_CHAR_MAP["$standardizedChar2$standardizedChar1"]
     }
 
     private fun standardize(char: Char): Char = STANDARDIZED_CHARS[char] ?: char
