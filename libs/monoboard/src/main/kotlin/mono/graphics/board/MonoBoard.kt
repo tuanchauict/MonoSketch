@@ -6,10 +6,10 @@ package mono.graphics.board
 
 import mono.environment.Build
 import mono.graphics.bitmap.MonoBitmap
-import mono.graphics.board.CrossingResources.BOTTOM_IN_CHARS
-import mono.graphics.board.CrossingResources.LEFT_IN_CHARS
-import mono.graphics.board.CrossingResources.RIGHT_IN_CHARS
-import mono.graphics.board.CrossingResources.TOP_IN_CHARS
+import mono.graphics.board.CrossingResources.hasBottom
+import mono.graphics.board.CrossingResources.hasLeft
+import mono.graphics.board.CrossingResources.hasRight
+import mono.graphics.board.CrossingResources.hasTop
 import mono.graphics.board.CrossingResources.inDirectionMark
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -60,14 +60,14 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
             }
             val directionMark =
                 inDirectionMark(
-                    hasLeft = charPoint.leftChar in LEFT_IN_CHARS ||
-                        get(charPoint.left - 1, charPoint.top).directionChar in LEFT_IN_CHARS,
-                    hasRight = charPoint.rightChar in RIGHT_IN_CHARS ||
-                        get(charPoint.left + 1, charPoint.top).directionChar in RIGHT_IN_CHARS,
-                    hasTop = charPoint.topChar in TOP_IN_CHARS ||
-                        get(charPoint.left, charPoint.top - 1).directionChar in TOP_IN_CHARS,
-                    hasBottom = charPoint.bottomChar in BOTTOM_IN_CHARS ||
-                        get(charPoint.left, charPoint.top + 1).directionChar in BOTTOM_IN_CHARS
+                    hasLeft = charPoint.leftChar.hasLeft ||
+                        get(charPoint.left - 1, charPoint.top).directionChar.hasLeft,
+                    hasRight = charPoint.rightChar.hasRight ||
+                        get(charPoint.left + 1, charPoint.top).directionChar.hasRight,
+                    hasTop = charPoint.topChar.hasTop ||
+                        get(charPoint.left, charPoint.top - 1).directionChar.hasTop,
+                    hasBottom = charPoint.bottomChar.hasBottom ||
+                        get(charPoint.left, charPoint.top + 1).directionChar.hasBottom
                 )
 
             if (Build.DEBUG && DEBUG) {
