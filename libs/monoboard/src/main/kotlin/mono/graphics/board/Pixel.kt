@@ -12,35 +12,43 @@ import mono.common.Characters.isTransparent
  * A class represents each item on the board matrix.
  */
 class Pixel(
-    char: Char = TRANSPARENT_CHAR,
+    visualChar: Char = TRANSPARENT_CHAR,
+    directionChar: Char = TRANSPARENT_CHAR,
     highlight: Highlight = Highlight.NO
 ) {
-    var char: Char = char
+    var visualChar: Char = visualChar
         private set
+
+    var directionChar: Char = directionChar
+        private set
+
     var highlight: Highlight = highlight
         private set
 
     val isTransparent: Boolean
-        get() = char.isTransparent || char.isHalfTransparent
+        get() = visualChar.isTransparent || visualChar.isHalfTransparent
 
-    fun set(char: Char, highlight: Highlight) {
-        this.char = char
+    fun set(visualChar: Char, highlight: Highlight) {
+        this.visualChar = visualChar
+        // TODO: Correct this with a direction char
+        this.directionChar = visualChar
         this.highlight = highlight
     }
 
     fun reset() {
-        char = TRANSPARENT_CHAR
+        visualChar = TRANSPARENT_CHAR
+        directionChar = TRANSPARENT_CHAR
         highlight = Highlight.NO
     }
 
-    override fun toString(): String = if (isTransparent) " " else char.toString()
+    override fun toString(): String = if (isTransparent) " " else visualChar.toString()
 
     override fun equals(other: Any?): Boolean {
-        return other is Pixel && char == other.char && highlight == other.highlight
+        return other is Pixel && visualChar == other.visualChar && highlight == other.highlight
     }
 
     override fun hashCode(): Int {
-        var result = char.hashCode()
+        var result = visualChar.hashCode()
         result = 31 * result + highlight.hashCode()
         return result
     }

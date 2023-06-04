@@ -53,8 +53,8 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         for (charPoint in crossingPoints) {
             val currentPixel = get(charPoint.left, charPoint.top)
             val directionMap =
-                CONNECTOR_CHAR_MAP["${currentPixel.char}${charPoint.char}"]
-                    ?: CONNECTOR_CHAR_MAP["${charPoint.char}${currentPixel.char}"]
+                CONNECTOR_CHAR_MAP["${currentPixel.visualChar}${charPoint.char}"]
+                    ?: CONNECTOR_CHAR_MAP["${charPoint.char}${currentPixel.visualChar}"]
             if (directionMap == null) {
                 currentPixel.set(charPoint.char, highlight)
                 continue
@@ -62,13 +62,13 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
             val directionMark =
                 inDirectionMark(
                     hasLeft = charPoint.leftChar in LEFT_IN_CHARS ||
-                        get(charPoint.left - 1, charPoint.top).char in LEFT_IN_CHARS,
+                        get(charPoint.left - 1, charPoint.top).visualChar in LEFT_IN_CHARS,
                     hasRight = charPoint.rightChar in RIGHT_IN_CHARS ||
-                        get(charPoint.left + 1, charPoint.top).char in RIGHT_IN_CHARS,
+                        get(charPoint.left + 1, charPoint.top).visualChar in RIGHT_IN_CHARS,
                     hasTop = charPoint.topChar in TOP_IN_CHARS ||
-                        get(charPoint.left, charPoint.top - 1).char in TOP_IN_CHARS,
+                        get(charPoint.left, charPoint.top - 1).visualChar in TOP_IN_CHARS,
                     hasBottom = charPoint.bottomChar in BOTTOM_IN_CHARS ||
-                        get(charPoint.left, charPoint.top + 1).char in BOTTOM_IN_CHARS
+                        get(charPoint.left, charPoint.top + 1).visualChar in BOTTOM_IN_CHARS
                 )
 
             if (Build.DEBUG && DEBUG) {
@@ -79,13 +79,13 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
                     charPoint.bottomChar
                 ).joinToString("•")
                 val boardSurroundingChars = listOf(
-                    get(charPoint.left - 1, charPoint.top).char,
-                    get(charPoint.left + 1, charPoint.top).char,
-                    get(charPoint.left, charPoint.top - 1).char,
-                    get(charPoint.left, charPoint.top + 1).char
+                    get(charPoint.left - 1, charPoint.top).visualChar,
+                    get(charPoint.left + 1, charPoint.top).visualChar,
+                    get(charPoint.left, charPoint.top - 1).visualChar,
+                    get(charPoint.left, charPoint.top + 1).visualChar
                 ).joinToString("•")
                 println(
-                    "${charPoint.char}${currentPixel.char} " +
+                    "${charPoint.char}${currentPixel.visualChar} " +
                         "($bitmapSurroundingChars) - ($boardSurroundingChars) -> " +
                         "${directionMap[directionMark]}"
                 )

@@ -56,7 +56,7 @@ internal class PainterBoard(internal val bound: Rect) {
 
             src.subList(inStartCol, inStartCol + overlap.width).forEachIndexed { index, pixel ->
                 if (!pixel.isTransparent) {
-                    dest[startCol + index].set(pixel.char, pixel.highlight)
+                    dest[startCol + index].set(pixel.visualChar, pixel.highlight)
                 }
             }
         }
@@ -105,7 +105,7 @@ internal class PainterBoard(internal val bound: Rect) {
                 val pixel = dest[painterColumn]
 
                 if (pixel.isTransparent ||
-                    pixel.char == char ||
+                    pixel.visualChar == char ||
                     char !in CrossingResources.CONNECTABLE_CHARS
                 ) {
                     // Not drawing half transparent character
