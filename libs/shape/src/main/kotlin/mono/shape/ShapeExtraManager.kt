@@ -113,12 +113,12 @@ object ShapeExtraManager {
     fun getRectangleBorderStyle(
         id: String?,
         default: StraightStrokeStyle = defaultRectangleExtra.userSelectedBorderStyle
-    ): StraightStrokeStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLE_MAP[id] ?: default
+    ): StraightStrokeStyle = PredefinedStraightStrokeStyle.getStyle(id) ?: default
 
     fun getLineStrokeStyle(
         id: String?,
         default: StraightStrokeStyle = defaultLineExtra.userSelectedStrokeStyle
-    ): StraightStrokeStyle = PredefinedStraightStrokeStyle.PREDEFINED_STYLE_MAP[id] ?: default
+    ): StraightStrokeStyle = PredefinedStraightStrokeStyle.getStyle(id) ?: default
 
     fun getAllPredefinedStrokeStyles(): List<StraightStrokeStyle> =
         PredefinedStraightStrokeStyle.PREDEFINED_STYLES

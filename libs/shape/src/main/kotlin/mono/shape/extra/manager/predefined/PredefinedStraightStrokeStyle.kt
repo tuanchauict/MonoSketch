@@ -22,7 +22,8 @@ object PredefinedStraightStrokeStyle {
         downRight = Characters.HALF_TRANSPARENT_CHAR
     )
 
-    val PREDEFINED_STYLES = listOf(
+    private val ALL_STYLES = listOf(
+        NO_STROKE,
         StraightStrokeStyle(
             id = "S1",
             displayName = "─",
@@ -52,9 +53,32 @@ object PredefinedStraightStrokeStyle {
             upRight = '╔',
             upLeft = '╝',
             downRight = '╚'
+        ),
+        StraightStrokeStyle(
+            id = "S4",
+            displayName = "▢",
+            horizontal = '─',
+            vertical = '│',
+            downLeft = '╮',
+            upRight = '╭',
+            upLeft = '╯',
+            downRight = '╰'
         )
     )
 
-    val PREDEFINED_STYLE_MAP: Map<String, StraightStrokeStyle> =
-        PREDEFINED_STYLES.associateBy { it.id }
+    private val ID_TO_STYLE_MAP: Map<String, StraightStrokeStyle> = ALL_STYLES.associateBy { it.id }
+
+    private val STYLE_TO_ROUNDED_CORNER_STYLE_MAP = mapOf("S1" to "S4")
+
+    val PREDEFINED_STYLES = listOf("S1", "S2", "S3").map { ID_TO_STYLE_MAP[it]!! }
+
+    fun getStyle(id: String?, isRounded: Boolean = false): StraightStrokeStyle? {
+        val adjustedId =
+            if (isRounded) {
+                STYLE_TO_ROUNDED_CORNER_STYLE_MAP[id] ?: id
+            } else {
+                id
+            }
+        return ID_TO_STYLE_MAP[adjustedId]
+    }
 }
