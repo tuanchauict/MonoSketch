@@ -33,20 +33,39 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
      */
     class Builder(private val width: Int, private val height: Int) {
         private val bound: Rect = Rect.byLTWH(0, 0, width, height)
-        private val matrix: List<MutableList<Char>> = List(height) {
+
+        /**
+         * A matrix for storing visual characters.
+         * Except for crossing points, which is identified after combining some information from
+         * the mono board, most of the visual characters will be displayed on the canvas.
+         */
+        private val visualMatrix: List<MutableList<Char>> = List(height) {
+            MutableList(width) { TRANSPARENT_CHAR }
+        }
+
+        /**
+         * A matrix for storing direction characters.
+         * The direction characters are used for identifying the crossing points when painting on
+         * the mono board.
+         */
+        private val directionMatrix: List<MutableList<Char>> = List(height) {
             MutableList(width) { TRANSPARENT_CHAR }
         }
 
         fun put(row: Int, column: Int, char: Char) {
             if (row in 0 until height && column in 0 until width) {
-                matrix[row][column] = char
+                visualMatrix[row][column] = char
+                // TODO: Delegate direction char
+                directionMatrix[row][column] = char
             }
         }
 
         fun fill(char: Char) {
             for (row in 0 until height) {
                 for (col in 0 until width) {
-                    matrix[row][col] = char
+                    visualMatrix[row][col] = char
+                    // TODO: Delegate direction char
+                    directionMatrix[row][col] = char
                 }
             }
         }
@@ -65,24 +84,33 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
 
             for (r in 0 until overlap.height) {
                 val src = inMatrix[inStartRow + r]
-                val dest = matrix[startRow + r]
+                val destVisual = visualMatrix[startRow + r]
+                val destDirection = directionMatrix[startRow + r]
 
                 src.forEachIndex(inStartCol, inStartCol + overlap.width) { index, char ->
                     val destIndex = startCol + index
                     // char from source is always not transparent (0) due to the optimisation of Row
-                    val isApplicable =
-                        dest[destIndex].isTransparent && char.isHalfTransparent ||
+                    val isVisualApplicable =
+                        destVisual[destIndex].isTransparent && char.isHalfTransparent ||
                             !char.isHalfTransparent
-                    if (isApplicable) {
-                        dest[startCol + index] = char
+                    if (isVisualApplicable) {
+                        destVisual[startCol + index] = char
+                    }
+
+                    // TODO: Double check this condition
+                    val isDirectionApplicable =
+                        destDirection[destIndex].isTransparent && char.isHalfTransparent ||
+                            !char.isHalfTransparent
+                    if (isDirectionApplicable) {
+                        destDirection[startCol + index] = char
                     }
                 }
             }
         }
 
         fun toBitmap(): MonoBitmap {
-            val rows = matrix.map { chars ->
-                Row(chars)
+            val rows = visualMatrix.mapIndexed { index: Int, chars ->
+                Row(chars, directionMatrix[index])
             }
             return MonoBitmap(rows)
         }
@@ -97,14 +125,14 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
      * ```
      * only `[a, b, c]` is kept.
      */
-    class Row internal constructor(chars: List<Char>) {
+    class Row internal constructor(chars: List<Char>, directionChars: List<Char>) {
         internal val size: Int = chars.size
 
         /**
          * A list of cells sorted by its [Cell.index].
          */
         private val sortedCells: List<Cell> = chars.mapIndexedNotNull { index, char ->
-            if (!char.isTransparent) Cell(index, char) else null
+            if (!char.isTransparent) Cell(index, char, directionChars[index]) else null
         }
 
         fun forEachIndex(
@@ -143,5 +171,5 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
      * - [index]: The index of the cell on the row. This is used for searching.
      * - [char]: The visual character of the cell which will be painted on the canvas.
      */
-    private data class Cell(val index: Int, val char: Char)
+    private data class Cell(val index: Int, val char: Char, val directionChar: Char)
 }
