@@ -116,10 +116,10 @@ internal class PainterBoard(internal val bound: Rect) {
                             boardRow = painterRow + bound.position.row,
                             boardColumn = painterColumn + bound.position.column,
                             char,
-                            leftChar = bitmap.get(bitmapRow, bitmapColumn - 1),
-                            rightChar = bitmap.get(bitmapRow, bitmapColumn + 1),
-                            topChar = bitmap.get(bitmapRow - 1, bitmapColumn),
-                            bottomChar = bitmap.get(bitmapRow + 1, bitmapColumn)
+                            leftChar = bitmap.getVisual(bitmapRow, bitmapColumn - 1),
+                            rightChar = bitmap.getVisual(bitmapRow, bitmapColumn + 1),
+                            topChar = bitmap.getVisual(bitmapRow - 1, bitmapColumn),
+                            bottomChar = bitmap.getVisual(bitmapRow + 1, bitmapColumn)
                         )
                     )
                 }

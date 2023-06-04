@@ -23,7 +23,11 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
 
     fun isEmpty(): Boolean = size == Size.ZERO
 
-    fun get(row: Int, column: Int): Char = matrix.getOrNull(row)?.get(column) ?: TRANSPARENT_CHAR
+    fun getVisual(row: Int, column: Int): Char =
+        matrix.getOrNull(row)?.get(column) ?: TRANSPARENT_CHAR
+
+    fun getDirection(row: Int, column: Int): Char =
+        matrix.getOrNull(row)?.getDirection(column) ?: TRANSPARENT_CHAR
 
     override fun toString(): String =
         matrix.joinToString("\n")
@@ -128,15 +132,17 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
      * ```
      * only `[a, b, c]` is kept.
      */
-    class Row internal constructor(chars: List<Char>, directionChars: List<Char>) {
-        internal val size: Int = chars.size
+    class Row internal constructor(visualChars: List<Char>, directionChars: List<Char>) {
+        internal val size: Int = visualChars.size
 
         /**
          * A list of cells sorted by its [Cell.index].
          */
-        private val sortedCells: List<Cell> = chars.mapIndexedNotNull { index, char ->
-            if (!char.isTransparent) Cell(index, char, directionChars[index]) else null
-        }
+        private val sortedCells: List<Cell> = visualChars.zip(directionChars)
+            .mapIndexedNotNull { index, (visualChar, directionChar) ->
+                val isApplicable = !visualChar.isTransparent || !directionChar.isTransparent
+                if (isApplicable) Cell(index, visualChar, directionChar) else null
+            }
 
         fun forEachIndex(
             fromIndex: Int = 0,
@@ -150,19 +156,24 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
                 if (cell.index >= toExclusiveIndex) {
                     break
                 }
-                action(cell.index - fromIndex, cell.char)
+                action(cell.index - fromIndex, cell.visualChar)
             }
         }
 
-        internal fun get(column: Int): Char {
+        internal fun get(column: Int): Char = getCell(column)?.visualChar ?: TRANSPARENT_CHAR
+
+        internal fun getDirection(column: Int): Char =
+            getCell(column)?.directionChar ?: TRANSPARENT_CHAR
+
+        private fun getCell(column: Int): Cell? {
             val index = sortedCells.binarySearch { it.index.compareTo(column) }
-            return if (index >= 0) sortedCells[index].char else TRANSPARENT_CHAR
+            return sortedCells.getOrNull(index)
         }
 
         override fun toString(): String {
             val list = MutableList(size) { ' ' }
             for (cell in sortedCells) {
-                list[cell.index] = cell.char
+                list[cell.index] = cell.visualChar
             }
             return list.joinToString("")
         }
@@ -172,7 +183,8 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
      * A data class for a cell on the [Row].
      * Each cell contains:
      * - [index]: The index of the cell on the row. This is used for searching.
-     * - [char]: The visual character of the cell which will be painted on the canvas.
+     * - [visualChar]: The visual character of the cell which will be painted on the canvas.
+     * - [directionChar]: The character for identifying direction.
      */
-    private data class Cell(val index: Int, val char: Char, val directionChar: Char)
+    private data class Cell(val index: Int, val visualChar: Char, val directionChar: Char)
 }
