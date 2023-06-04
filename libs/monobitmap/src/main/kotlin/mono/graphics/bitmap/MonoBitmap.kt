@@ -52,11 +52,14 @@ class MonoBitmap private constructor(val matrix: List<Row>) {
             MutableList(width) { TRANSPARENT_CHAR }
         }
 
-        fun put(row: Int, column: Int, char: Char) {
+        fun put(row: Int, column: Int, visualChar: Char, directionChar: Char) {
             if (row in 0 until height && column in 0 until width) {
-                visualMatrix[row][column] = char
-                // TODO: Delegate direction char
-                directionMatrix[row][column] = char
+                visualMatrix[row][column] = visualChar
+
+                // The direction char is only override with non-transparent chars.
+                if (directionChar != TRANSPARENT_CHAR) {
+                    directionMatrix[row][column] = directionChar
+                }
             }
         }
 

@@ -48,7 +48,12 @@ object RectangleBitmapFactory {
         dashPattern: StraightStrokeDashPattern
     ) {
         if (size.width == 1 && size.height == 1) {
-            put(0, 0, '▫')
+            put(
+                row = 0,
+                column = 0,
+                visualChar = '▫',
+                directionChar = '▫',
+            )
             return
         }
 
@@ -83,8 +88,13 @@ object RectangleBitmapFactory {
         pointChars
             .flatMap { it }
             .forEachIndexed { index, pointChar ->
-                val char = if (dashPattern.isGap(index)) ' ' else pointChar.char
-                put(pointChar.top, pointChar.left, char)
+                val visualChar = if (dashPattern.isGap(index)) ' ' else pointChar.char
+                put(
+                    row = pointChar.top,
+                    column = pointChar.left,
+                    visualChar = visualChar,
+                    directionChar = pointChar.char
+                )
             }
     }
 }
