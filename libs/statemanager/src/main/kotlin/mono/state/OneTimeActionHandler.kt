@@ -333,7 +333,14 @@ internal class OneTimeActionHandler(
             ShapeExtraManager.setDefaultValues(isBorderRoundedCorner = isRoundedCorner)
             return
         }
-        val newExtra = rectangleExtra.copy(isRoundedCorner = isRoundedCorner)
+        val newRectangleExtra = rectangleExtra.copy(isRoundedCorner = isRoundedCorner)
+        val newExtra = when (singleShape) {
+            is Rectangle -> newRectangleExtra
+            is Text -> singleShape.extra.copy(boundExtra = newRectangleExtra)
+            is Group,
+            is Line,
+            is MockShape -> null
+        } ?: return
         environment.shapeManager.execute(ChangeExtra(singleShape, newExtra))
     }
 
