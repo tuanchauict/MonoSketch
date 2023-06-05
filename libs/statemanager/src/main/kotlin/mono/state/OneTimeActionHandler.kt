@@ -284,7 +284,18 @@ internal class OneTimeActionHandler(
     }
 
     private fun setSelectedShapeBorderDashPatternExtra(dash: Int?, gap: Int?, offset: Int?) {
-        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        val singleShape = environment.getSelectedShapes().singleOrNull()
+        if (singleShape == null) {
+            val currentDefaultDashPattern = ShapeExtraManager.defaultRectangleExtra.dashPattern
+            val newDefaultDashPattern = currentDefaultDashPattern.copy(
+                dash = dash ?: currentDefaultDashPattern.dash,
+                gap = gap ?: currentDefaultDashPattern.gap,
+                offset = offset ?: currentDefaultDashPattern.offset
+            )
+            ShapeExtraManager.setDefaultValues(borderDashPattern = newDefaultDashPattern)
+            return
+        }
+
         val rectangleExtra = when (singleShape) {
             is Rectangle -> singleShape.extra
             is Text -> singleShape.extra.boundExtra
@@ -350,7 +361,17 @@ internal class OneTimeActionHandler(
     }
 
     private fun setSelectedLineStrokeDashPattern(dash: Int?, gap: Int?, offset: Int?) {
-        val line = environment.getSelectedShapes().singleOrNull() as? Line ?: return
+        val line = environment.getSelectedShapes().singleOrNull() as? Line
+        if (line == null) {
+            val currentDefaultDashPattern = ShapeExtraManager.defaultLineExtra.dashPattern
+            val newDefaultDashPattern = currentDefaultDashPattern.copy(
+                dash = dash ?: currentDefaultDashPattern.dash,
+                gap = gap ?: currentDefaultDashPattern.gap,
+                offset = offset ?: currentDefaultDashPattern.offset
+            )
+            ShapeExtraManager.setDefaultValues(lineDashPattern = newDefaultDashPattern)
+            return
+        }
         val currentExtra = line.extra
         val currentPattern = currentExtra.dashPattern
         val newPattern = currentPattern.copy(

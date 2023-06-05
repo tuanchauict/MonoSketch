@@ -62,11 +62,13 @@ object ShapeExtraManager {
         borderStyleId: String? = null,
         isBorderRoundedCorner: Boolean? = null,
 
+        borderDashPattern: StraightStrokeDashPattern? = null,
+
         isLineStrokeEnabled: Boolean? = null,
         lineStrokeStyleId: String? = null,
         isLineStrokeRoundedCorner: Boolean? = null,
 
-        dashPattern: StraightStrokeDashPattern? = null,
+        lineDashPattern: StraightStrokeDashPattern? = null,
 
         isStartHeadAnchorCharEnabled: Boolean? = null,
         startHeadAnchorCharId: String? = null,
@@ -82,7 +84,7 @@ object ShapeExtraManager {
             getRectangleFillStyle(fillStyleId),
             isBorderEnabled ?: defaultRectangleExtra.isBorderEnabled,
             getRectangleBorderStyle(borderStyleId),
-            dashPattern ?: defaultRectangleExtra.dashPattern,
+            borderDashPattern ?: defaultRectangleExtra.dashPattern,
             isRoundedCorner = isBorderRoundedCorner ?: defaultRectangleExtra.isRoundedCorner
         )
 
@@ -97,7 +99,7 @@ object ShapeExtraManager {
             isEndAnchorEnabled = isEndHeadAnchorCharEnabled ?: defaultLineExtra.isEndAnchorEnabled,
             userSelectedEndAnchor = getEndHeadAnchorChar(endHeadAnchorCharId),
 
-            dashPattern = StraightStrokeDashPattern.SOLID,
+            dashPattern = lineDashPattern ?: StraightStrokeDashPattern.SOLID,
             isRoundedCorner = isLineStrokeRoundedCorner ?: defaultLineExtra.isRoundedCorner
         )
 
