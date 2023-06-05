@@ -40,11 +40,15 @@ internal class AppearanceDataController(
         createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val borderDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createBorderDashPatternLiveData(shapesLiveData)
+    val borderRoundedCornerLiveData: LiveData<Boolean> =
+        createBorderRoundedCornerLiveData(shapesLiveData)
 
     val lineStrokeToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val lineStrokeDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createLineStrokeDashPatternLiveData(shapesLiveData)
+    val lineStrokeRoundedCornerLiveData: LiveData<Boolean> =
+        createLineStrokeRoundedCornerLiveData(shapesLiveData)
     val lineStartHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val lineEndHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
@@ -158,6 +162,19 @@ internal class AppearanceDataController(
         boundExtra?.dashPattern.takeIf { boundExtra?.isBorderEnabled.nullToFalse() }
     }
 
+    private fun createBorderRoundedCornerLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>
+    ): LiveData<Boolean> = selectedShapesLiveData.map {
+        when (val shape = it.singleOrNull()) {
+            is Rectangle -> shape.extra.isRoundedCorner
+            is Text -> shape.extra.boundExtra.isRoundedCorner
+            is Group,
+            is Line,
+            is MockShape,
+            null -> false
+        }
+    }
+
     private fun createLineStrokeAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
         retainableActionTypeLiveData: LiveData<RetainableActionType>
@@ -202,6 +219,19 @@ internal class AppearanceDataController(
             null -> null
         }
         extra?.dashPattern.takeIf { extra?.isStrokeEnabled.nullToFalse() }
+    }
+
+    private fun createLineStrokeRoundedCornerLiveData(
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>
+    ): LiveData<Boolean> = selectedShapesLiveData.map {
+        when (val shape = it.singleOrNull()) {
+            is Line -> shape.extra.isRoundedCorner
+            is Rectangle,
+            is Text,
+            is Group,
+            is MockShape,
+            null -> false
+        }
     }
 
     private fun createStartHeadAppearanceVisibilityLiveData(
