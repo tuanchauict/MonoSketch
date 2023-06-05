@@ -81,4 +81,6 @@ object PredefinedStraightStrokeStyle {
             }
         return ID_TO_STYLE_MAP[adjustedId]
     }
+
+    fun isCornerRoundable(id: String?): Boolean = id in STYLE_TO_ROUNDED_CORNER_STYLE_MAP
 }
