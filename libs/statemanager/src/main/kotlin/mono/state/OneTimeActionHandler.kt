@@ -102,11 +102,17 @@ internal class OneTimeActionHandler(
                 is OneTimeActionType.ChangeShapeBorderDashPatternExtra ->
                     setSelectedShapeBorderDashPatternExtra(it.dash, it.gap, it.offset)
 
+                is OneTimeActionType.ChangeShapeBorderCornerExtra ->
+                    setSelectedShapeBorderCornerExtra(it.isRoundedCorner)
+
                 is OneTimeActionType.ChangeLineStrokeExtra ->
                     setSelectedLineStrokeExtra(it.isEnabled, it.newStrokeStyleId)
 
                 is OneTimeActionType.ChangeLineStrokeDashPatternExtra ->
                     setSelectedLineStrokeDashPattern(it.dash, it.gap, it.offset)
+
+                is OneTimeActionType.ChangeLineStrokeCornerExtra ->
+                    setSelectedLineStrokeCornerExtra(it.isRoundedCorner)
 
                 is OneTimeActionType.ChangeLineStartAnchorExtra ->
                     setSelectedShapeStartAnchorExtra(it.isEnabled, it.newHeadId)
@@ -303,6 +309,23 @@ internal class OneTimeActionHandler(
         environment.shapeManager.execute(ChangeExtra(singleShape, newExtra))
     }
 
+    private fun setSelectedShapeBorderCornerExtra(isRoundedCorner: Boolean) {
+        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        val rectangleExtra = when (singleShape) {
+            is Rectangle -> singleShape.extra
+            is Text -> singleShape.extra.boundExtra
+            is Group,
+            is Line,
+            is MockShape -> null
+        }
+        if (rectangleExtra == null) {
+            ShapeExtraManager.setDefaultValues(isBorderRoundedCorner = isRoundedCorner)
+            return
+        }
+        val newExtra = rectangleExtra.copy(isRoundedCorner = isRoundedCorner)
+        environment.shapeManager.execute(ChangeExtra(singleShape, newExtra))
+    }
+
     private fun setSelectedLineStrokeExtra(isEnabled: Boolean?, newStrokeStyleId: String?) {
         val line = environment.getSelectedShapes().singleOrNull() as? Line
         if (line == null) {
@@ -336,6 +359,17 @@ internal class OneTimeActionHandler(
             offset = offset ?: currentPattern.offset
         )
         val newExtra = currentExtra.copy(dashPattern = newPattern)
+        environment.shapeManager.execute(ChangeExtra(line, newExtra))
+    }
+
+    private fun setSelectedLineStrokeCornerExtra(isRoundedCorner: Boolean) {
+        val line = environment.getSelectedShapes().singleOrNull() as? Line
+        if (line == null) {
+            ShapeExtraManager.setDefaultValues(isLineStrokeRoundedCorner = isRoundedCorner)
+            return
+        }
+        val currentExtra = line.extra
+        val newExtra = currentExtra.copy(isRoundedCorner = isRoundedCorner)
         environment.shapeManager.execute(ChangeExtra(line, newExtra))
     }
 
