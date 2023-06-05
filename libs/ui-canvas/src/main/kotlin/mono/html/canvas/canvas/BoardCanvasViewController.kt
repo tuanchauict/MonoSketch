@@ -40,7 +40,7 @@ internal class BoardCanvasViewController(
                 Highlight.TEXT_EDITING -> ThemeColor.ShapeTextEditing
             }
             context.fillStyle = color.colorCode
-            drawText(pixel.char.toString(), row, column)
+            drawText(pixel.visualChar.toString(), row, column)
         }
     }
 }

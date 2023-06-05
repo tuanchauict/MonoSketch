@@ -6,11 +6,10 @@ package mono.graphics.board
 
 import mono.environment.Build
 import mono.graphics.bitmap.MonoBitmap
-import mono.graphics.board.CrossingResources.BOTTOM_IN_CHARS
-import mono.graphics.board.CrossingResources.CONNECTOR_CHAR_MAP
-import mono.graphics.board.CrossingResources.LEFT_IN_CHARS
-import mono.graphics.board.CrossingResources.RIGHT_IN_CHARS
-import mono.graphics.board.CrossingResources.TOP_IN_CHARS
+import mono.graphics.board.CrossingResources.hasBottom
+import mono.graphics.board.CrossingResources.hasLeft
+import mono.graphics.board.CrossingResources.hasRight
+import mono.graphics.board.CrossingResources.hasTop
 import mono.graphics.board.CrossingResources.inDirectionMark
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
@@ -53,22 +52,22 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
         for (charPoint in crossingPoints) {
             val currentPixel = get(charPoint.left, charPoint.top)
             val directionMap =
-                CONNECTOR_CHAR_MAP["${currentPixel.char}${charPoint.char}"]
-                    ?: CONNECTOR_CHAR_MAP["${charPoint.char}${currentPixel.char}"]
+                CrossingResources.getDirectionMap(currentPixel.visualChar, charPoint.visualChar)
             if (directionMap == null) {
-                currentPixel.set(charPoint.char, highlight)
+                // Unsupported pair
+                currentPixel.set(charPoint.visualChar, charPoint.directionChar, highlight)
                 continue
             }
             val directionMark =
                 inDirectionMark(
-                    hasLeft = charPoint.leftChar in LEFT_IN_CHARS ||
-                        get(charPoint.left - 1, charPoint.top).char in LEFT_IN_CHARS,
-                    hasRight = charPoint.rightChar in RIGHT_IN_CHARS ||
-                        get(charPoint.left + 1, charPoint.top).char in RIGHT_IN_CHARS,
-                    hasTop = charPoint.topChar in TOP_IN_CHARS ||
-                        get(charPoint.left, charPoint.top - 1).char in TOP_IN_CHARS,
-                    hasBottom = charPoint.bottomChar in BOTTOM_IN_CHARS ||
-                        get(charPoint.left, charPoint.top + 1).char in BOTTOM_IN_CHARS
+                    hasLeft = charPoint.leftChar.hasLeft ||
+                        get(charPoint.left - 1, charPoint.top).directionChar.hasLeft,
+                    hasRight = charPoint.rightChar.hasRight ||
+                        get(charPoint.left + 1, charPoint.top).directionChar.hasRight,
+                    hasTop = charPoint.topChar.hasTop ||
+                        get(charPoint.left, charPoint.top - 1).directionChar.hasTop,
+                    hasBottom = charPoint.bottomChar.hasBottom ||
+                        get(charPoint.left, charPoint.top + 1).directionChar.hasBottom
                 )
 
             if (Build.DEBUG && DEBUG) {
@@ -79,18 +78,22 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
                     charPoint.bottomChar
                 ).joinToString("•")
                 val boardSurroundingChars = listOf(
-                    get(charPoint.left - 1, charPoint.top).char,
-                    get(charPoint.left + 1, charPoint.top).char,
-                    get(charPoint.left, charPoint.top - 1).char,
-                    get(charPoint.left, charPoint.top + 1).char
+                    get(charPoint.left - 1, charPoint.top).directionChar,
+                    get(charPoint.left + 1, charPoint.top).directionChar,
+                    get(charPoint.left, charPoint.top - 1).directionChar,
+                    get(charPoint.left, charPoint.top + 1).directionChar
                 ).joinToString("•")
                 println(
-                    "${charPoint.char}${currentPixel.char} " +
+                    "${charPoint.visualChar}${currentPixel.directionChar} " +
                         "($bitmapSurroundingChars) - ($boardSurroundingChars) -> " +
                         "${directionMap[directionMark]}"
                 )
             }
-            currentPixel.set(directionMap[directionMark] ?: charPoint.char, highlight)
+            currentPixel.set(
+                visualChar = directionMap[directionMark] ?: charPoint.visualChar,
+                directionChar = charPoint.directionChar,
+                highlight = highlight
+            )
         }
     }
 
@@ -223,14 +226,15 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
      * CrossPoint will then be drawn to the board after non-crossing pixels are drawn.
      *
      * @param [boardRow] and [boardColumn] are the location of point on the board.
-     * @param [char] is the character at the crossing point
+     * @param [visualChar] is the character at the crossing point
      * @param [leftChar], [rightChar], [topChar], and [bottomChar] are 4 characters around the
      * crossing point
      */
     internal data class CrossPoint(
         val boardRow: Int,
         val boardColumn: Int,
-        val char: Char,
+        val visualChar: Char,
+        val directionChar: Char,
         val leftChar: Char,
         val rightChar: Char,
         val topChar: Char,
