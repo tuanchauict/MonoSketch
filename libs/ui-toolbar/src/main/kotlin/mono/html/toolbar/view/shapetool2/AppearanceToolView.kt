@@ -89,7 +89,6 @@ internal fun AppearanceToolView(
             ) { setOneTimeAction(OneTimeActionType.ChangeLineStrokeCornerExtra(it)) }
         }
 
-
         Tool(
             "Start head",
             isAvailable = viewModel.lineStartHeadState.value != null
