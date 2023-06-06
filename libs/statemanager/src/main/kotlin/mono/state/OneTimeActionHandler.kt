@@ -322,15 +322,16 @@ internal class OneTimeActionHandler(
     }
 
     private fun setSelectedShapeBorderCornerExtra(isRoundedCorner: Boolean) {
-        val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
+        val singleShape = environment.getSelectedShapes().singleOrNull()
         val rectangleExtra = when (singleShape) {
             is Rectangle -> singleShape.extra
             is Text -> singleShape.extra.boundExtra
             is Group,
             is Line,
-            is MockShape -> null
+            is MockShape,
+            null -> null
         }
-        if (rectangleExtra == null) {
+        if (singleShape == null || rectangleExtra == null) {
             ShapeExtraManager.setDefaultValues(isBorderRoundedCorner = isRoundedCorner)
             return
         }
