@@ -75,7 +75,7 @@ internal class ShapeToolViewModel(
     val lineStrokeDashTypeState: State<StraightStrokeDashPattern?> =
         appearanceDataController.lineStrokeDashPatternLiveData.toState(lifecycleOwner)
 
-    val lineStrokeRoundedCornerState: State<Boolean> =
+    val lineStrokeRoundedCornerState: State<Boolean?> =
         appearanceDataController.lineStrokeRoundedCornerLiveData.toState(lifecycleOwner)
 
     val lineStartHeadState: State<CloudItemSelectionState?> =
