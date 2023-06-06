@@ -72,6 +72,10 @@ sealed interface OneTimeActionType {
         val offset: Int?
     ) : OneTimeActionType
 
+    data class ChangeShapeBorderCornerExtra(
+        val isRoundedCorner: Boolean
+    ) : OneTimeActionType
+
     data class ChangeLineStrokeExtra(
         val isEnabled: Boolean? = null,
         val newStrokeStyleId: String? = null
@@ -81,6 +85,10 @@ sealed interface OneTimeActionType {
         val dash: Int?,
         val gap: Int?,
         val offset: Int?
+    ) : OneTimeActionType
+
+    data class ChangeLineStrokeCornerExtra(
+        val isRoundedCorner: Boolean
     ) : OneTimeActionType
 
     data class ChangeLineStartAnchorExtra(

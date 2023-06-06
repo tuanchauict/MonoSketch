@@ -43,7 +43,9 @@ sealed class AbstractShape(
 
     open fun setBound(newBound: Rect) = Unit
 
-    open fun setExtra(newExtra: ShapeExtra) = Unit
+    open fun setExtra(newExtra: ShapeExtra) {
+        throw UnsupportedOperationException("${this::class} does not support extra")
+    }
 
     /**
      * Updates properties of the shape by [action]. The [action] returns true if the shape's

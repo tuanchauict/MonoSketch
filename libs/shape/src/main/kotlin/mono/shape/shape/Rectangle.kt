@@ -71,7 +71,10 @@ class Rectangle(
     }
 
     override fun setExtra(newExtra: ShapeExtra) {
-        if (newExtra !is RectangleExtra || newExtra == extra) {
+        check(newExtra is RectangleExtra) {
+            "New extra is not a RectangleExtra (${newExtra::class})"
+        }
+        if (newExtra == extra) {
             return
         }
         update {

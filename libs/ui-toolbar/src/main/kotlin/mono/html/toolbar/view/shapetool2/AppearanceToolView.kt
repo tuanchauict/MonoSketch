@@ -11,8 +11,10 @@ import mono.actionmanager.OneTimeActionType
 import mono.common.Characters
 import mono.html.toolbar.view.shapetool2.components.NumberTextField
 import mono.html.toolbar.view.shapetool2.components.Section
+import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.ui.compose.ext.classes
+import org.jetbrains.compose.web.dom.CheckboxInput
 import org.jetbrains.compose.web.dom.ContentBuilder
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
@@ -57,6 +59,10 @@ internal fun AppearanceToolView(
                 OneTimeActionType::ChangeShapeBorderDashPatternExtra,
                 setOneTimeAction
             )
+            RoundedCorner(
+                viewModel.shapeBorderTypeState.value?.selectedId,
+                viewModel.shapeBorderRoundedCornerState.value
+            ) { setOneTimeAction(OneTimeActionType.ChangeShapeBorderCornerExtra(it)) }
         }
 
         Tool(
@@ -70,11 +76,17 @@ internal fun AppearanceToolView(
                 OneTimeActionType::ChangeLineStrokeExtra,
                 setOneTimeAction
             )
+
             DashPattern(
                 viewModel.lineStrokeDashTypeState.value,
                 OneTimeActionType::ChangeLineStrokeDashPatternExtra,
                 setOneTimeAction
             )
+
+            RoundedCorner(
+                viewModel.lineStrokeTypeState.value?.selectedId,
+                viewModel.lineStrokeRoundedCornerState.value
+            ) { setOneTimeAction(OneTimeActionType.ChangeLineStrokeCornerExtra(it)) }
         }
 
         Tool(
@@ -211,5 +223,28 @@ private fun DashPattern(
 private fun DashInput(name: String, value: Int, minValue: Int?, onValueChange: (Int?) -> Unit) {
     Div(attrs = { classes("pattern") }) {
         NumberTextField(name, value, minValue, isChildBound = true, onValueChange = onValueChange)
+    }
+}
+
+// TODO: This is temporary UI.
+@Composable
+private fun RoundedCorner(
+    selectedStrokeId: String?,
+    isRounded: Boolean,
+    onValueChange: (Boolean) -> Unit
+) {
+    println("Rounded corner: $selectedStrokeId $isRounded")
+    if (!PredefinedStraightStrokeStyle.isCornerRoundable(selectedStrokeId)) {
+        return
+    }
+    Div(
+        attrs = {
+            onClick {
+                onValueChange(!isRounded)
+            }
+        }
+    ) {
+        CheckboxInput(isRounded)
+        Text("Rounded corner")
     }
 }
