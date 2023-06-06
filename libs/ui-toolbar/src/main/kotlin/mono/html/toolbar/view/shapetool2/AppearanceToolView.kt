@@ -233,7 +233,6 @@ private fun RoundedCorner(
     isRounded: Boolean,
     onValueChange: (Boolean) -> Unit
 ) {
-    println("Rounded corner: $selectedStrokeId $isRounded")
     if (!PredefinedStraightStrokeStyle.isCornerRoundable(selectedStrokeId)) {
         return
     }

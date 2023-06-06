@@ -18,6 +18,7 @@ import mono.shape.command.ChangeExtra
 import mono.shape.command.ChangeOrder
 import mono.shape.command.MakeTextEditable
 import mono.shape.command.UpdateTextEditingMode
+import mono.shape.extra.style.RectangleBorderCornerPattern
 import mono.shape.extra.style.TextAlign
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -333,7 +334,13 @@ internal class OneTimeActionHandler(
             ShapeExtraManager.setDefaultValues(isBorderRoundedCorner = isRoundedCorner)
             return
         }
-        val newRectangleExtra = rectangleExtra.copy(isRoundedCorner = isRoundedCorner)
+        val newCorner =
+            if (isRoundedCorner) {
+                RectangleBorderCornerPattern.ENABLED
+            } else {
+                RectangleBorderCornerPattern.DISABLED
+            }
+        val newRectangleExtra = rectangleExtra.copy(corner = newCorner)
         val newExtra = when (singleShape) {
             is Rectangle -> newRectangleExtra
             is Text -> singleShape.extra.copy(boundExtra = newRectangleExtra)
