@@ -230,10 +230,10 @@ private fun DashInput(name: String, value: Int, minValue: Int?, onValueChange: (
 @Composable
 private fun RoundedCorner(
     selectedStrokeId: String?,
-    isRounded: Boolean,
+    isRounded: Boolean?,
     onValueChange: (Boolean) -> Unit
 ) {
-    if (!PredefinedStraightStrokeStyle.isCornerRoundable(selectedStrokeId)) {
+    if (isRounded == null || !PredefinedStraightStrokeStyle.isCornerRoundable(selectedStrokeId)) {
         return
     }
     Div(

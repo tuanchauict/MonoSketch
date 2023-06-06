@@ -40,8 +40,8 @@ internal class AppearanceDataController(
         createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val borderDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createBorderDashPatternLiveData(shapesLiveData)
-    val borderRoundedCornerLiveData: LiveData<Boolean> =
-        createBorderRoundedCornerLiveData(shapesLiveData)
+    val borderRoundedCornerLiveData: LiveData<Boolean?> =
+        createBorderRoundedCornerLiveData(shapesLiveData, retainableActionLiveData)
 
     val lineStrokeToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
@@ -163,16 +163,33 @@ internal class AppearanceDataController(
     }
 
     private fun createBorderRoundedCornerLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<Boolean> = selectedShapesLiveData.map {
-        when (val shape = it.singleOrNull()) {
-            is Rectangle -> shape.extra.isRoundedCorner
-            is Text -> shape.extra.boundExtra.isRoundedCorner
-            is Group,
-            is Line,
-            is MockShape,
-            null -> false
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
+        retainableActionTypeLiveData: LiveData<RetainableActionType>
+    ): LiveData<Boolean?> {
+        val selectedShapeCornerLiveData = selectedShapesLiveData.map {
+            when (val shape = it.singleOrNull()) {
+                is Rectangle -> shape.extra.isRoundedCorner
+                is Text -> shape.extra.boundExtra.isRoundedCorner
+                is Group,
+                is Line,
+                is MockShape,
+                null -> null
+            }
         }
+
+        val defaultCornerPattern = retainableActionTypeLiveData.map { type ->
+            when (type) {
+                RetainableActionType.ADD_RECTANGLE,
+                RetainableActionType.ADD_TEXT -> defaultRectangleExtra.isRoundedCorner
+
+                RetainableActionType.IDLE,
+                RetainableActionType.ADD_LINE -> null
+            }
+        }
+        return combineLiveData(
+            selectedShapeCornerLiveData,
+            defaultCornerPattern
+        ) { selected, default -> selected ?: default }
     }
 
     private fun createLineStrokeAppearanceVisibilityLiveData(
