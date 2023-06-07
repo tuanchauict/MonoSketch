@@ -17,7 +17,9 @@ import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionBound
 import mono.shapebound.ScalableInteractionBound
 import mono.ui.theme.ThemeColor
+import org.w3c.dom.HIGH
 import org.w3c.dom.HTMLCanvasElement
+import org.w3c.dom.ImageSmoothingQuality
 import org.w3c.dom.Path2D
 
 /**
@@ -70,7 +72,10 @@ internal class InteractionCanvasViewController(
             return
         }
 
+
         val dotPath = Path2D()
+        context.imageSmoothingEnabled = true
+        context.imageSmoothingQuality = ImageSmoothingQuality.HIGH
         context.beginPath()
         for (point in bound.interactionPoints) {
             dotPath.addDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
@@ -80,6 +85,7 @@ internal class InteractionCanvasViewController(
         context.fillStyle = ThemeColor.SelectionDotFill.colorCode
         context.stroke(dotPath)
         context.fill(dotPath)
+        context.imageSmoothingEnabled = false
     }
 
     private fun drawLineInteractionBound(bound: LineInteractionBound) {

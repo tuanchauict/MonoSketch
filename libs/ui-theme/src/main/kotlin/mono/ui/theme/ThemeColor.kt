@@ -28,7 +28,7 @@ enum class ThemeColor(internal val lightColorCode: String, internal val darkColo
     SelectionAreaStroke("#858585", "#858585"),
     SelectionBoundStroke("#64b5f6", "#FDF7C3"),
     SelectionDotStroke("#64b5f6", "#f2ae00"),
-    SelectionDotFill("#FFFFFF", "#FFD51F")
+    SelectionDotFill("#FFFFFF", "#1E1E1E")
     ;
 
     val colorCode: String
