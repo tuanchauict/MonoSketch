@@ -73,7 +73,6 @@ internal fun AppearanceToolView(
                 OneTimeActionType::ChangeShapeBorderDashPatternExtra,
                 setOneTimeAction
             )
-
         }
 
         Tool(
@@ -93,7 +92,6 @@ internal fun AppearanceToolView(
                     viewModel.lineStrokeRoundedCornerState.value
                 ) { setOneTimeAction(OneTimeActionType.ChangeLineStrokeCornerExtra(it)) }
             }
-
 
             DashPattern(
                 viewModel.lineStrokeDashTypeState.value,

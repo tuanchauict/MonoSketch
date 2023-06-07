@@ -72,7 +72,6 @@ internal class InteractionCanvasViewController(
             return
         }
 
-
         val dotPath = Path2D()
         context.imageSmoothingEnabled = true
         context.imageSmoothingQuality = ImageSmoothingQuality.HIGH
