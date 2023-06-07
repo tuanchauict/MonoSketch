@@ -2,7 +2,7 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.html.toolbar.view.shapetool2
+package mono.html.toolbar.view.shapetool2.viewdata
 
 import mono.actionmanager.RetainableActionType
 import mono.common.nullToFalse

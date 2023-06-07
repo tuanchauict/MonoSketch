@@ -8,6 +8,9 @@ import androidx.compose.runtime.State
 import mono.actionmanager.ActionManager
 import mono.actionmanager.RetainableActionType
 import mono.graphics.geo.Rect
+import mono.html.toolbar.view.shapetool2.viewdata.AppearanceDataController
+import mono.html.toolbar.view.shapetool2.viewdata.AppearanceOptionItem
+import mono.html.toolbar.view.shapetool2.viewdata.CloudItemSelectionState
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
