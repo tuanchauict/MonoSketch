@@ -186,7 +186,7 @@ private fun Option(
     Div(
         attrs = {
             classes(
-                "cloud-item" to true,
+                "cloud-item",
                 "dash-border" to isDashBorder,
                 "selected" to isSelected
             )

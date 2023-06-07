@@ -154,7 +154,7 @@ private fun ProjectContent(
     Div(
         attrs = {
             classes(
-                "item" to true,
+                "item",
                 "removing" to isRemoveConfirming,
                 "normal" to !isRemoveConfirming
             )

@@ -21,7 +21,7 @@ internal fun ToolbarContainer(
     Div(
         attrs = {
             classes(
-                "toolbar-container" to true,
+                "toolbar-container",
                 "add-space-left" to addSpaceLeft,
                 "add-space-right" to addSpaceRight
             )
