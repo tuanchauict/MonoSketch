@@ -17,6 +17,11 @@ import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.ui.compose.components.Icons
 import mono.ui.compose.ext.classes
+import org.jetbrains.compose.web.css.background
+import org.jetbrains.compose.web.css.height
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.ContentBuilder
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
@@ -243,6 +248,14 @@ private fun RoundedCorner(
     if (isRounded == null || !PredefinedStraightStrokeStyle.isCornerRoundable(selectedStrokeId)) {
         return
     }
+    Div(attrs = {
+        style {
+            width(1.px)
+            height(80.percent)
+            background("var(--shapetool-section-divider-color)")
+        }
+    })
+
     Div(attrs = { classes("comp-option-cloud-layout") }) {
         Div(
             attrs = {
