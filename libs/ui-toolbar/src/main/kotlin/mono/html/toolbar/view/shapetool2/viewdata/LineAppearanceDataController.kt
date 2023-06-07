@@ -51,7 +51,7 @@ internal class LineAppearanceDataController(
     val strokeDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createLineStrokeDashPatternLiveData()
     val strokeRoundedCornerLiveData: LiveData<Boolean?> =
-        createLineStrokeRoundedCornerLiveData(shapesLiveData)
+        createLineStrokeRoundedCornerLiveData()
     val startHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val endHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
@@ -75,47 +75,26 @@ internal class LineAppearanceDataController(
         val defaultVisibilityLiveData =
             defaultLineExtraLiveData.map { it?.toStrokeVisibilityState() }
 
-        return selectedOrDefault(
-            selectedVisibilityLiveData,
-            defaultVisibilityLiveData
-        )
+        return selectedOrDefault(selectedVisibilityLiveData, defaultVisibilityLiveData)
     }
 
     private fun createLineStrokeDashPatternLiveData(): LiveData<StraightStrokeDashPattern?> {
         val selectedDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
-            singleLineExtraLiveData
-                .map { it?.takeIf { it.isStrokeEnabled } }
-                .map { it?.dashPattern }
+            singleLineExtraLiveData.map { it?.dashPattern }
         val defaultDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
-            defaultLineExtraLiveData
-                .map { it?.takeIf { it.isStrokeEnabled } }
-                .map { it?.dashPattern }
-        return selectedOrDefault(
-            selectedDashPatternLiveData,
-            defaultDashPatternLiveData
-        )
+            defaultLineExtraLiveData.map { it?.dashPattern }
+        return selectedOrDefault(selectedDashPatternLiveData, defaultDashPatternLiveData)
     }
 
-    private fun createLineStrokeRoundedCornerLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<Boolean?> {
-        val selectedCornerPatternLiveData = selectedShapesLiveData.map {
-            when (val shape = it.singleOrNull()) {
-                is Line -> shape.extra.isRoundedCorner
-                is Rectangle,
-                is Text,
-                is Group,
-                is MockShape,
-                null -> null
-            }
-        }
-        val defaultCornerPatternLiveData = defaultLineExtraLiveData.map { it?.isRoundedCorner }
-        return combineLiveData(
-            selectedCornerPatternLiveData,
-            defaultCornerPatternLiveData
-        ) { selected, default -> selected ?: default }
+    private fun createLineStrokeRoundedCornerLiveData(): LiveData<Boolean?> {
+        val selectedCornerPatternLiveData = singleLineExtraLiveData
+            .map { it?.takeIf { it.isStrokeEnabled } }
+            .map { it?.isRoundedCorner }
+        val defaultCornerPatternLiveData = defaultLineExtraLiveData
+            .map { it?.takeIf { it.isStrokeEnabled } }
+            .map { it?.isRoundedCorner }
+        return selectedOrDefault(selectedCornerPatternLiveData, defaultCornerPatternLiveData)
     }
-
 
     private fun createStartHeadAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
