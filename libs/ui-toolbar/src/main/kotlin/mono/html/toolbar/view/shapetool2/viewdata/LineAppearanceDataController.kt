@@ -5,7 +5,6 @@
 package mono.html.toolbar.view.shapetool2.viewdata
 
 import mono.actionmanager.RetainableActionType
-import mono.common.nullToFalse
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
 import mono.livedata.map
@@ -50,7 +49,7 @@ internal class LineAppearanceDataController(
     val strokeToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createLineStrokeAppearanceVisibilityLiveData()
     val strokeDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
-        createLineStrokeDashPatternLiveData(shapesLiveData)
+        createLineStrokeDashPatternLiveData()
     val strokeRoundedCornerLiveData: LiveData<Boolean?> =
         createLineStrokeRoundedCornerLiveData(shapesLiveData)
     val startHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
@@ -76,24 +75,25 @@ internal class LineAppearanceDataController(
         val defaultVisibilityLiveData =
             defaultLineExtraLiveData.map { it?.toStrokeVisibilityState() }
 
-        return combineLiveData(
+        return selectedOrDefault(
             selectedVisibilityLiveData,
             defaultVisibilityLiveData
-        ) { selected, default -> selected ?: default }
+        )
     }
 
-    private fun createLineStrokeDashPatternLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<StraightStrokeDashPattern?> = selectedShapesLiveData.map {
-        val extra = when (val shape = it.singleOrNull()) {
-            is Line -> shape.extra
-            is Group,
-            is Text,
-            is Rectangle,
-            is MockShape,
-            null -> null
-        }
-        extra?.dashPattern.takeIf { extra?.isStrokeEnabled.nullToFalse() }
+    private fun createLineStrokeDashPatternLiveData(): LiveData<StraightStrokeDashPattern?> {
+        val selectedDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
+            singleLineExtraLiveData
+                .map { it?.takeIf { it.isStrokeEnabled } }
+                .map { it?.dashPattern }
+        val defaultDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
+            defaultLineExtraLiveData
+                .map { it?.takeIf { it.isStrokeEnabled } }
+                .map { it?.dashPattern }
+        return selectedOrDefault(
+            selectedDashPatternLiveData,
+            defaultDashPatternLiveData
+        )
     }
 
     private fun createLineStrokeRoundedCornerLiveData(
@@ -201,4 +201,9 @@ internal class LineAppearanceDataController(
         selectedShapeVisibilityLiveData,
         defaultVisibilityLiveData
     ) { selected, default -> selected ?: default }
+
+    private fun <T> selectedOrDefault(
+        selectedLiveData: LiveData<T?>,
+        defaultLiveData: LiveData<T?>
+    ): LiveData<T?> = combineLiveData(selectedLiveData, defaultLiveData) { s, d -> s ?: d }
 }
