@@ -406,6 +406,7 @@ internal class OneTimeActionHandler(
         }
         val currentExtra = line.extra
         val newExtra = currentExtra.copy(isRoundedCorner = isRoundedCorner)
+
         environment.shapeManager.execute(ChangeExtra(line, newExtra))
     }
 
