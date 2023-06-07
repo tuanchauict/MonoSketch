@@ -9,12 +9,19 @@ package mono.html.toolbar.view.shapetool2
 import androidx.compose.runtime.Composable
 import mono.actionmanager.OneTimeActionType
 import mono.common.Characters
+import mono.html.modal.TooltipPosition
+import mono.html.modal.tooltip
 import mono.html.toolbar.view.shapetool2.components.NumberTextField
 import mono.html.toolbar.view.shapetool2.components.Section
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
+import mono.ui.compose.components.Icons
 import mono.ui.compose.ext.classes
-import org.jetbrains.compose.web.dom.CheckboxInput
+import org.jetbrains.compose.web.css.background
+import org.jetbrains.compose.web.css.height
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.ContentBuilder
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
@@ -47,46 +54,50 @@ internal fun AppearanceToolView(
             "Border",
             isAvailable = viewModel.shapeBorderTypeState.value != null
         ) {
-            OptionsCloud(
-                viewModel.strokeOptions,
-                Characters.NBSP,
-                viewModel.shapeBorderTypeState.value,
-                OneTimeActionType::ChangeShapeBorderExtra,
-                setOneTimeAction
-            )
+            Div(attrs = { classes("border-row") }) {
+                OptionsCloud(
+                    viewModel.strokeOptions,
+                    Characters.NBSP,
+                    viewModel.shapeBorderTypeState.value,
+                    OneTimeActionType::ChangeShapeBorderExtra,
+                    setOneTimeAction
+                )
+
+                RoundedCorner(
+                    viewModel.shapeBorderTypeState.value?.selectedId,
+                    viewModel.shapeBorderRoundedCornerState.value
+                ) { setOneTimeAction(OneTimeActionType.ChangeShapeBorderCornerExtra(it)) }
+            }
             DashPattern(
                 viewModel.shapeBorderDashTypeState.value,
                 OneTimeActionType::ChangeShapeBorderDashPatternExtra,
                 setOneTimeAction
             )
-            RoundedCorner(
-                viewModel.shapeBorderTypeState.value?.selectedId,
-                viewModel.shapeBorderRoundedCornerState.value
-            ) { setOneTimeAction(OneTimeActionType.ChangeShapeBorderCornerExtra(it)) }
         }
 
         Tool(
             "Stroke",
             isAvailable = viewModel.lineStrokeTypeState.value != null
         ) {
-            OptionsCloud(
-                viewModel.strokeOptions,
-                Characters.NBSP,
-                viewModel.lineStrokeTypeState.value,
-                OneTimeActionType::ChangeLineStrokeExtra,
-                setOneTimeAction
-            )
+            Div(attrs = { classes("border-row") }) {
+                OptionsCloud(
+                    viewModel.strokeOptions,
+                    Characters.NBSP,
+                    viewModel.lineStrokeTypeState.value,
+                    OneTimeActionType::ChangeLineStrokeExtra,
+                    setOneTimeAction
+                )
+                RoundedCorner(
+                    viewModel.lineStrokeTypeState.value?.selectedId,
+                    viewModel.lineStrokeRoundedCornerState.value
+                ) { setOneTimeAction(OneTimeActionType.ChangeLineStrokeCornerExtra(it)) }
+            }
 
             DashPattern(
                 viewModel.lineStrokeDashTypeState.value,
                 OneTimeActionType::ChangeLineStrokeDashPatternExtra,
                 setOneTimeAction
             )
-
-            RoundedCorner(
-                viewModel.lineStrokeTypeState.value?.selectedId,
-                viewModel.lineStrokeRoundedCornerState.value
-            ) { setOneTimeAction(OneTimeActionType.ChangeLineStrokeCornerExtra(it)) }
         }
 
         Tool(
@@ -178,7 +189,7 @@ private fun Option(
     Div(
         attrs = {
             classes(
-                "cloud-item" to true,
+                "cloud-item",
                 "dash-border" to isDashBorder,
                 "selected" to isSelected
             )
@@ -226,25 +237,35 @@ private fun DashInput(name: String, value: Int, minValue: Int?, onValueChange: (
     }
 }
 
-// TODO: This is temporary UI.
 @Composable
 private fun RoundedCorner(
     selectedStrokeId: String?,
-    isRounded: Boolean,
+    isRounded: Boolean?,
     onValueChange: (Boolean) -> Unit
 ) {
-    println("Rounded corner: $selectedStrokeId $isRounded")
-    if (!PredefinedStraightStrokeStyle.isCornerRoundable(selectedStrokeId)) {
+    if (isRounded == null || !PredefinedStraightStrokeStyle.isCornerRoundable(selectedStrokeId)) {
         return
     }
-    Div(
-        attrs = {
-            onClick {
-                onValueChange(!isRounded)
-            }
+    Div(attrs = {
+        style {
+            width(1.px)
+            height(80.percent)
+            background("var(--shapetool-section-divider-color)")
         }
-    ) {
-        CheckboxInput(isRounded)
-        Text("Rounded corner")
+    })
+
+    Div(attrs = { classes("comp-option-cloud-layout") }) {
+        Div(
+            attrs = {
+                classes("cloud-item", "corner", "selected" to isRounded)
+                tooltip("Rounded corner", position = TooltipPosition.TOP)
+
+                onClick {
+                    onValueChange(!isRounded)
+                }
+            }
+        ) {
+            Icons.RoundedCorner(iconSize = 26)
+        }
     }
 }

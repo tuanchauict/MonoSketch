@@ -29,6 +29,31 @@
                 margin-top: 8px;
                 margin-left: 8px;
             }
+
+            .border-row {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: start;
+                column-gap: 16px;
+            }
+
+            .corner {
+                border: none;
+                opacity: 0.75;
+                padding: 2px;
+
+                &:hover,
+                &.selected:hover {
+                    opacity: 1;
+                    outline: 1px solid var(--text-input-border-color);
+                }
+
+                &.selected {
+                    opacity: 1;
+                    outline: none;
+                }
+            }
         }
     }
 }

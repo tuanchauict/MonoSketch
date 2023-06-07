@@ -26,7 +26,7 @@ internal fun NumberTextField(
     onValueChange: (Int?) -> Unit
 ) {
     Div(
-        attrs = { classes("text-input-layout" to true, "child-bounds" to isChildBound) }
+        attrs = { classes("text-input-layout", "child-bounds" to isChildBound) }
     ) {
         Span(
             attrs = {

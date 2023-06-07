@@ -20,7 +20,7 @@ internal fun Section(
     Div(
         attrs = {
             classes(
-                "section" to true,
+                "section",
                 "notitle" to title.isEmpty(),
                 "border-top" to hasBorderTop
             )

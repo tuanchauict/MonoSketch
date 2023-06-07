@@ -11,6 +11,8 @@ import mono.ui.compose.ext.Svg
 import mono.ui.compose.ext.SvgPath
 import mono.ui.compose.ext.fill
 import mono.ui.compose.ext.size
+import mono.ui.compose.ext.strokeColor
+import mono.ui.compose.ext.svgPathStrokeWidth
 import mono.ui.compose.ext.viewBox
 
 /* ktlint-disable max-line-length */
@@ -170,6 +172,24 @@ object Icons {
             SvgPath(
                 "M288 109v243a32 32 0 1 1-64 0V109l-73 74a32 32 0 0 1-46-46L233 9c13-12 33-12 46 0l128 128a32 32 0 0 1-46 46l-73-74zM64 352h128a64 64 0 0 0 128 0h128c35 0 64 29 64 64v32c0 35-29 64-64 64H64c-35 0-64-29-64-64v-32c0-35 29-64 64-64zm368 104a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"
             )
+        }
+    }
+
+    @Composable
+    fun RoundedCorner(iconSize: Int = 16) {
+        Svg(
+            attrs = {
+                size(374 * iconSize / 512, iconSize)
+                viewBox(374, 512)
+                strokeColor("currentColor")
+                fill("none")
+            }
+        ) {
+            SvgPath(
+                "M16 146V55c0-22 17-39 39-39h91M228 16h91c22 0 39 17 39 39v91M146 496H55c-22 0-39-17-39-39v-91M358 366v91c0 22-17 39-39 39h-91"
+            ) {
+                svgPathStrokeWidth(30f)
+            }
         }
     }
 }
