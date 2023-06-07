@@ -26,6 +26,17 @@ internal class LineAppearanceDataController(
     shapesLiveData: LiveData<Set<AbstractShape>>,
     retainableActionLiveData: LiveData<RetainableActionType>
 ) {
+    private val singleLineExtraLiveData: LiveData<LineExtra?> = shapesLiveData.map {
+        when (val line = it.singleOrNull()) {
+            is Line -> line.extra
+            is Group,
+            is MockShape,
+            is Rectangle,
+            is Text,
+            null -> null
+        }
+    }
+
     private val defaultLineExtraLiveData: LiveData<LineExtra?> =
         retainableActionLiveData.map {
             when (it) {
@@ -36,58 +47,39 @@ internal class LineAppearanceDataController(
             }
         }
 
-    val lineStrokeToolStateLiveData: LiveData<CloudItemSelectionState?> =
-        createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
-    val lineStrokeDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
+    val strokeToolStateLiveData: LiveData<CloudItemSelectionState?> =
+        createLineStrokeAppearanceVisibilityLiveData()
+    val strokeDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createLineStrokeDashPatternLiveData(shapesLiveData)
-    val lineStrokeRoundedCornerLiveData: LiveData<Boolean?> =
+    val strokeRoundedCornerLiveData: LiveData<Boolean?> =
         createLineStrokeRoundedCornerLiveData(shapesLiveData)
-    val lineStartHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
+    val startHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
-    val lineEndHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
+    val endHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createEndHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
 
     val hasAnyVisibleTollLiveData: LiveData<Boolean> = combineLiveData(
-        lineStrokeToolStateLiveData,
-        lineStrokeDashPatternLiveData,
-        lineStrokeRoundedCornerLiveData,
-        lineStartHeadToolStateLiveData,
-        lineEndHeadToolStateLiveData
+        strokeToolStateLiveData,
+        strokeDashPatternLiveData,
+        strokeRoundedCornerLiveData,
+        startHeadToolStateLiveData,
+        endHeadToolStateLiveData
     ) { list -> list.any { it != null } }
 
     private val defaultLineExtra: LineExtra
         get() = ShapeExtraManager.defaultLineExtra
 
-    private fun createLineStrokeAppearanceVisibilityLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<CloudItemSelectionState?> {
-        val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when (val shape = it.singleOrNull()) {
-                is Line -> shape.extra.toStrokeVisibilityState()
-                null,
-                is Rectangle,
-                is Text,
-                is Group,
-                is MockShape -> null
-            }
-        }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
-            val defaultState = when (type) {
-                RetainableActionType.ADD_LINE -> defaultLineExtra.strokeStyle
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT,
-                RetainableActionType.IDLE -> null
-            }
-            defaultState?.let {
-                CloudItemSelectionState(defaultLineExtra.isStrokeEnabled, it.id)
-            }
-        }
+    private fun createLineStrokeAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
+        val selectedVisibilityLiveData =
+            singleLineExtraLiveData.map { it?.toStrokeVisibilityState() }
 
-        return createAppearanceVisibilityLiveData(
+        val defaultVisibilityLiveData =
+            defaultLineExtraLiveData.map { it?.toStrokeVisibilityState() }
+
+        return combineLiveData(
             selectedVisibilityLiveData,
             defaultVisibilityLiveData
-        )
+        ) { selected, default -> selected ?: default }
     }
 
     private fun createLineStrokeDashPatternLiveData(

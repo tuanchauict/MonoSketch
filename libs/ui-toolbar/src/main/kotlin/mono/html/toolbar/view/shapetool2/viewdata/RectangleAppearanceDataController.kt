@@ -10,7 +10,6 @@ import mono.livedata.LiveData
 import mono.livedata.combineLiveData
 import mono.livedata.map
 import mono.shape.ShapeExtraManager
-import mono.shape.extra.LineExtra
 import mono.shape.extra.RectangleExtra
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.shape.AbstractShape
@@ -183,7 +182,6 @@ internal class RectangleAppearanceDataController(
         ) { selected, default -> selected ?: default }
     }
 
-
     private fun createAppearanceVisibilityLiveData(
         selectedShapeVisibilityLiveData: LiveData<CloudItemSelectionState?>,
         defaultVisibilityLiveData: LiveData<CloudItemSelectionState?>
@@ -197,8 +195,6 @@ internal class RectangleAppearanceDataController(
 
     private fun RectangleExtra.toBorderAppearanceVisibilityState(): CloudItemSelectionState =
         CloudItemSelectionState(isBorderEnabled, userSelectedBorderStyle.id)
-
-
 }
 
 internal data class AppearanceOptionItem(val id: String, val name: String)
@@ -216,14 +212,3 @@ private fun LiveData<Set<AbstractShape>>.singleRectangleExtraLiveData(): LiveDat
             null -> null
         }
     }
-
-private fun LiveData<Set<AbstractShape>>.singleLineExtraLiveData(): LiveData<LineExtra?> = map {
-    when (val line = it.singleOrNull()) {
-        is Line -> line.extra
-        is Group,
-        is MockShape,
-        is Rectangle,
-        is Text,
-        null -> null
-    }
-}

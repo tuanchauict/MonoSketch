@@ -87,22 +87,25 @@ internal class ShapeToolViewModel(
         rectangleAppearanceDataController.borderRoundedCornerLiveData.toState(lifecycleOwner)
 
     val lineStrokeTypeState: State<CloudItemSelectionState?> =
-        lineAppearanceDataController.lineStrokeToolStateLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.strokeToolStateLiveData.toState(lifecycleOwner)
 
     val lineStrokeDashTypeState: State<StraightStrokeDashPattern?> =
-        lineAppearanceDataController.lineStrokeDashPatternLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.strokeDashPatternLiveData.toState(lifecycleOwner)
 
     val lineStrokeRoundedCornerState: State<Boolean?> =
-        lineAppearanceDataController.lineStrokeRoundedCornerLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.strokeRoundedCornerLiveData.toState(lifecycleOwner)
 
     val lineStartHeadState: State<CloudItemSelectionState?> =
-        lineAppearanceDataController.lineStartHeadToolStateLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.startHeadToolStateLiveData.toState(lifecycleOwner)
 
     val lineEndHeadState: State<CloudItemSelectionState?> =
-        lineAppearanceDataController.lineEndHeadToolStateLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.endHeadToolStateLiveData.toState(lifecycleOwner)
 
-    val appearanceVisibilityState: State<Boolean> =
-        rectangleAppearanceDataController.hasAnyVisibleToolLiveData.toState(lifecycleOwner)
+    val appearanceVisibilityState: State<Boolean> = combineLiveData(
+        rectangleAppearanceDataController.hasAnyVisibleToolLiveData,
+        lineAppearanceDataController.hasAnyVisibleTollLiveData
+    ) { isRectAvailable, isLineAvailable -> isRectAvailable || isLineAvailable }
+        .toState(lifecycleOwner)
 
     private val textAlignLiveData: LiveData<TextAlign?> =
         createTextAlignLiveData(singleShapeLiveData, retainableActionLiveData)
