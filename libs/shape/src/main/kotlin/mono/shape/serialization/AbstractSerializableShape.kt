@@ -44,7 +44,7 @@ data class SerializableRectangle(
         @SerialName("du")
         val dashPattern: String,
         @SerialName("rc")
-        val isRoundedCorner: Boolean = false
+        val corner: String = ""
     )
 }
 

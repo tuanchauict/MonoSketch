@@ -95,10 +95,7 @@ private fun Icon(
 ) {
     Div(
         attrs = {
-            classes(
-                "cloud-item" to true,
-                "selected" to isSelected
-            )
+            classes("cloud-item", "selected" to isSelected)
 
             onClick { onSelect() }
         }

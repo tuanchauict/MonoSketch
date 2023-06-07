@@ -34,20 +34,41 @@ internal class AppearanceDataController(
             shapeManagerVersionLiveData
         ) { selected, _ -> selected }
 
+    private val defaultRectangleExtraLiveData: LiveData<RectangleExtra?> =
+        retainableActionLiveData.map {
+            when (it) {
+                RetainableActionType.ADD_RECTANGLE,
+                RetainableActionType.ADD_TEXT -> ShapeExtraManager.defaultRectangleExtra
+
+                RetainableActionType.IDLE,
+                RetainableActionType.ADD_LINE -> null
+            }
+        }
+
+    private val defaultLineExtraLiveData: LiveData<LineExtra?> =
+        retainableActionLiveData.map {
+            when (it) {
+                RetainableActionType.ADD_LINE -> ShapeExtraManager.defaultLineExtra
+                RetainableActionType.IDLE,
+                RetainableActionType.ADD_RECTANGLE,
+                RetainableActionType.ADD_TEXT -> null
+            }
+        }
+
     val fillToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createFillAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val borderToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val borderDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createBorderDashPatternLiveData(shapesLiveData)
-    val borderRoundedCornerLiveData: LiveData<Boolean> =
-        createBorderRoundedCornerLiveData(shapesLiveData)
+    val borderRoundedCornerLiveData: LiveData<Boolean?> =
+        createBorderRoundedCornerLiveData(shapesLiveData, retainableActionLiveData)
 
     val lineStrokeToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createLineStrokeAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
     val lineStrokeDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
         createLineStrokeDashPatternLiveData(shapesLiveData)
-    val lineStrokeRoundedCornerLiveData: LiveData<Boolean> =
+    val lineStrokeRoundedCornerLiveData: LiveData<Boolean?> =
         createLineStrokeRoundedCornerLiveData(shapesLiveData)
     val lineStartHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
@@ -163,16 +184,33 @@ internal class AppearanceDataController(
     }
 
     private fun createBorderRoundedCornerLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<Boolean> = selectedShapesLiveData.map {
-        when (val shape = it.singleOrNull()) {
-            is Rectangle -> shape.extra.isRoundedCorner
-            is Text -> shape.extra.boundExtra.isRoundedCorner
-            is Group,
-            is Line,
-            is MockShape,
-            null -> false
+        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
+        retainableActionTypeLiveData: LiveData<RetainableActionType>
+    ): LiveData<Boolean?> {
+        val selectedShapeCornerLiveData = selectedShapesLiveData.map {
+            when (val shape = it.singleOrNull()) {
+                is Rectangle -> shape.extra.isRoundedCorner
+                is Text -> shape.extra.boundExtra.isRoundedCorner
+                is Group,
+                is Line,
+                is MockShape,
+                null -> null
+            }
         }
+
+        val defaultCornerPatternLiveData = retainableActionTypeLiveData.map { type ->
+            when (type) {
+                RetainableActionType.ADD_RECTANGLE,
+                RetainableActionType.ADD_TEXT -> defaultRectangleExtra.isRoundedCorner
+
+                RetainableActionType.IDLE,
+                RetainableActionType.ADD_LINE -> null
+            }
+        }
+        return combineLiveData(
+            selectedShapeCornerLiveData,
+            defaultCornerPatternLiveData
+        ) { selected, default -> selected ?: default }
     }
 
     private fun createLineStrokeAppearanceVisibilityLiveData(
@@ -223,15 +261,22 @@ internal class AppearanceDataController(
 
     private fun createLineStrokeRoundedCornerLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<Boolean> = selectedShapesLiveData.map {
-        when (val shape = it.singleOrNull()) {
-            is Line -> shape.extra.isRoundedCorner
-            is Rectangle,
-            is Text,
-            is Group,
-            is MockShape,
-            null -> false
+    ): LiveData<Boolean?> {
+        val selectedCornerPatternLiveData = selectedShapesLiveData.map {
+            when (val shape = it.singleOrNull()) {
+                is Line -> shape.extra.isRoundedCorner
+                is Rectangle,
+                is Text,
+                is Group,
+                is MockShape,
+                null -> null
+            }
         }
+        val defaultCornerPatternLiveData = defaultLineExtraLiveData.map { it?.isRoundedCorner }
+        return combineLiveData(
+            selectedCornerPatternLiveData,
+            defaultCornerPatternLiveData
+        ) { selected, default -> selected ?: default }
     }
 
     private fun createStartHeadAppearanceVisibilityLiveData(
@@ -329,3 +374,26 @@ internal class AppearanceDataController(
 internal data class AppearanceOptionItem(val id: String, val name: String)
 
 internal data class CloudItemSelectionState(val isChecked: Boolean, val selectedId: String?)
+
+private fun LiveData<Set<AbstractShape>>.singleRectangleExtraLiveData(): LiveData<RectangleExtra?> =
+    map {
+        when (val shape = it.singleOrNull()) {
+            is Rectangle -> shape.extra
+            is Text -> shape.extra.boundExtra
+            is Group,
+            is Line,
+            is MockShape,
+            null -> null
+        }
+    }
+
+private fun LiveData<Set<AbstractShape>>.singleLineExtraLiveData(): LiveData<LineExtra?> = map {
+    when (val line = it.singleOrNull()) {
+        is Line -> line.extra
+        is Group,
+        is MockShape,
+        is Rectangle,
+        is Text,
+        null -> null
+    }
+}

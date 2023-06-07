@@ -6,6 +6,7 @@ package mono.shape.extra
 
 import mono.shape.ShapeExtraManager
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
+import mono.shape.extra.style.RectangleBorderCornerPattern
 import mono.shape.extra.style.RectangleFillStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.extra.style.StraightStrokeStyle
@@ -20,8 +21,30 @@ data class RectangleExtra(
     val isBorderEnabled: Boolean,
     val userSelectedBorderStyle: StraightStrokeStyle,
     val dashPattern: StraightStrokeDashPattern,
-    val isRoundedCorner: Boolean
+    val corner: RectangleBorderCornerPattern
 ) : ShapeExtra() {
+    constructor(
+        isFillEnabled: Boolean,
+        userSelectedFillStyle: RectangleFillStyle,
+        isBorderEnabled: Boolean,
+        userSelectedBorderStyle: StraightStrokeStyle,
+        dashPattern: StraightStrokeDashPattern,
+        isRoundedCorner: Boolean
+    ) : this(
+        isFillEnabled,
+        userSelectedFillStyle,
+        isBorderEnabled,
+        userSelectedBorderStyle,
+        dashPattern,
+        if (isRoundedCorner) {
+            RectangleBorderCornerPattern.ENABLED
+        } else {
+            RectangleBorderCornerPattern.DISABLED
+        }
+    )
+
+    val isRoundedCorner: Boolean = corner == RectangleBorderCornerPattern.ENABLED
+
     val fillStyle: RectangleFillStyle?
         get() = if (isFillEnabled) userSelectedFillStyle else null
 
@@ -38,7 +61,7 @@ data class RectangleExtra(
         isBorderEnabled = serializableExtra.isBorderEnabled,
         ShapeExtraManager.getRectangleBorderStyle(serializableExtra.userSelectedBorderStyleId),
         StraightStrokeDashPattern.fromSerializableValue(serializableExtra.dashPattern),
-        isRoundedCorner = serializableExtra.isRoundedCorner
+        RectangleBorderCornerPattern.fromSerializableValue(serializableExtra.corner)
     )
 
     fun toSerializableExtra(): SerializableRectangle.SerializableExtra =
@@ -48,6 +71,6 @@ data class RectangleExtra(
             isBorderEnabled = isBorderEnabled,
             userSelectedBorderStyleId = userSelectedBorderStyle.id,
             dashPattern = dashPattern.toSerializableValue(),
-            isRoundedCorner = isRoundedCorner
+            corner = corner.toSerializableValue()
         )
 }

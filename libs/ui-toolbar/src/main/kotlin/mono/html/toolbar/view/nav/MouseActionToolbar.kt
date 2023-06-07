@@ -55,10 +55,7 @@ private fun MouseActionButton(
     ) {
         Div(
             attrs = {
-                classes(
-                    "action-button" to true,
-                    "selected" to isSelected
-                )
+                classes("action-button", "selected" to isSelected)
             }
         ) {
             Svg(
