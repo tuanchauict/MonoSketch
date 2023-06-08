@@ -5,7 +5,7 @@
 package mono.html.toolbar.view.shapetool2.viewdata
 
 import mono.actionmanager.RetainableActionType
-import mono.common.nullToFalse
+import mono.html.toolbar.view.shapetool2.CloudItemSelectionState
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
 import mono.livedata.map
@@ -49,13 +49,13 @@ internal class RectangleAppearanceDataController(
         }
 
     val fillToolStateLiveData: LiveData<CloudItemSelectionState?> =
-        createFillAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
+        createFillAppearanceVisibilityLiveData()
     val borderToolStateLiveData: LiveData<CloudItemSelectionState?> =
-        createBorderAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
+        createBorderAppearanceVisibilityLiveData()
     val borderDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
-        createBorderDashPatternLiveData(shapesLiveData)
+        createBorderDashPatternLiveData()
     val borderRoundedCornerLiveData: LiveData<Boolean?> =
-        createBorderRoundedCornerLiveData(shapesLiveData, retainableActionLiveData)
+        createBorderRoundedCornerLiveData()
 
     val hasAnyVisibleToolLiveData: LiveData<Boolean> = combineLiveData(
         fillToolStateLiveData,
@@ -64,148 +64,44 @@ internal class RectangleAppearanceDataController(
         borderRoundedCornerLiveData
     ) { list -> list.any { it != null } }
 
-    val fillOptions: List<AppearanceOptionItem> =
-        ShapeExtraManager.getAllPredefinedRectangleFillStyles()
-            .map { AppearanceOptionItem(it.id, it.displayName) }
+    private fun createFillAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
+        val selectedLiveData =
+            singleRectExtraLiveData.map { it?.toFillAppearanceVisibilityState() }
+        val defaultLiveData =
+            defaultRectangleExtraLiveData.map { it?.toFillAppearanceVisibilityState() }
+        return selectedOrDefault(selectedLiveData, defaultLiveData)
+    }
 
-    val strokeOptions: List<AppearanceOptionItem> =
-        ShapeExtraManager.getAllPredefinedStrokeStyles()
-            .map { AppearanceOptionItem(it.id, it.displayName) }
-
-    val headOptions: List<AppearanceOptionItem> =
-        ShapeExtraManager.getAllPredefinedAnchorChars()
-            .map { AppearanceOptionItem(it.id, it.displayName) }
-
-    private val defaultRectangleExtra: RectangleExtra
-        get() = ShapeExtraManager.defaultRectangleExtra
-
-    private fun createFillAppearanceVisibilityLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<CloudItemSelectionState?> {
-        val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when (val shape = it.singleOrNull()) {
-                is Rectangle -> shape.extra.toFillAppearanceVisibilityState()
-                is Text -> shape.extra.boundExtra.toFillAppearanceVisibilityState()
-                null,
-                is Group,
-                is Line,
-                is MockShape -> null
-            }
-        }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
-            val defaultState = when (type) {
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT ->
-                    defaultRectangleExtra.userSelectedFillStyle
-
-                RetainableActionType.ADD_LINE,
-                RetainableActionType.IDLE -> null
-            }
-            defaultState?.let {
-                CloudItemSelectionState(defaultRectangleExtra.isFillEnabled, it.id)
-            }
-        }
-
-        return createAppearanceVisibilityLiveData(
-            selectedVisibilityLiveData,
-            defaultVisibilityLiveData
+    private fun createBorderAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> =
+        selectedOrDefault(
+            selectedLiveData = singleRectExtraLiveData.map { it?.toBorderState() },
+            defaultLiveData = defaultRectangleExtraLiveData.map { it?.toBorderState() }
         )
-    }
 
-    private fun createBorderAppearanceVisibilityLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<CloudItemSelectionState?> {
-        val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when (val shape = it.singleOrNull()) {
-                is Rectangle -> shape.extra.toBorderAppearanceVisibilityState()
-                is Text -> shape.extra.boundExtra.toBorderAppearanceVisibilityState()
-                null,
-                is Group,
-                is Line,
-                is MockShape -> null
-            }
-        }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
-            val defaultState = when (type) {
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT ->
-                    defaultRectangleExtra.userSelectedBorderStyle
-
-                RetainableActionType.ADD_LINE,
-                RetainableActionType.IDLE -> null
-            }
-            defaultState?.let {
-                CloudItemSelectionState(defaultRectangleExtra.isBorderEnabled, it.id)
-            }
-        }
-
-        return createAppearanceVisibilityLiveData(
-            selectedVisibilityLiveData,
-            defaultVisibilityLiveData
+    private fun createBorderDashPatternLiveData(): LiveData<StraightStrokeDashPattern?> =
+        selectedOrDefault(
+            selectedLiveData = singleRectExtraLiveData.map { it?.dashPattern },
+            defaultLiveData = defaultRectangleExtraLiveData.map { it?.dashPattern }
         )
+
+    private fun createBorderRoundedCornerLiveData(): LiveData<Boolean?> {
+        val selectedLiveData = singleRectExtraLiveData
+            .map { it?.takeIf { it.isBorderEnabled } }
+            .map { it?.isRoundedCorner }
+        val defaultLiveData = defaultRectangleExtraLiveData
+            .map { it?.takeIf { it.isBorderEnabled } }
+            .map { it?.isRoundedCorner }
+        return selectedOrDefault(selectedLiveData, defaultLiveData)
     }
-
-    private fun createBorderDashPatternLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>
-    ): LiveData<StraightStrokeDashPattern?> = selectedShapesLiveData.map {
-        val boundExtra = when (val shape = it.singleOrNull()) {
-            is Text -> shape.extra.boundExtra
-            is Rectangle -> shape.extra
-            is Line,
-            is Group,
-            is MockShape,
-            null -> null
-        }
-        boundExtra?.dashPattern.takeIf { boundExtra?.isBorderEnabled.nullToFalse() }
-    }
-
-    private fun createBorderRoundedCornerLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<Boolean?> {
-        val selectedShapeCornerLiveData = selectedShapesLiveData.map {
-            when (val shape = it.singleOrNull()) {
-                is Rectangle -> shape.extra.isRoundedCorner
-                is Text -> shape.extra.boundExtra.isRoundedCorner
-                is Group,
-                is Line,
-                is MockShape,
-                null -> null
-            }
-        }
-
-        val defaultCornerPatternLiveData = retainableActionTypeLiveData.map { type ->
-            when (type) {
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> defaultRectangleExtra.isRoundedCorner
-
-                RetainableActionType.IDLE,
-                RetainableActionType.ADD_LINE -> null
-            }
-        }
-        return combineLiveData(
-            selectedShapeCornerLiveData,
-            defaultCornerPatternLiveData
-        ) { selected, default -> selected ?: default }
-    }
-
-    private fun createAppearanceVisibilityLiveData(
-        selectedShapeVisibilityLiveData: LiveData<CloudItemSelectionState?>,
-        defaultVisibilityLiveData: LiveData<CloudItemSelectionState?>
-    ): LiveData<CloudItemSelectionState?> = combineLiveData(
-        selectedShapeVisibilityLiveData,
-        defaultVisibilityLiveData
-    ) { selected, default -> selected ?: default }
 
     private fun RectangleExtra.toFillAppearanceVisibilityState(): CloudItemSelectionState =
         CloudItemSelectionState(isFillEnabled, userSelectedFillStyle.id)
 
-    private fun RectangleExtra.toBorderAppearanceVisibilityState(): CloudItemSelectionState =
+    private fun RectangleExtra.toBorderState(): CloudItemSelectionState =
         CloudItemSelectionState(isBorderEnabled, userSelectedBorderStyle.id)
+
+    private fun <T> selectedOrDefault(
+        selectedLiveData: LiveData<T?>,
+        defaultLiveData: LiveData<T?>
+    ): LiveData<T?> = combineLiveData(selectedLiveData, defaultLiveData) { s, d -> s ?: d }
 }
-
-internal data class AppearanceOptionItem(val id: String, val name: String)
-
-internal data class CloudItemSelectionState(val isChecked: Boolean, val selectedId: String?)
