@@ -159,7 +159,10 @@ class Line(
     }
 
     override fun setExtra(newExtra: ShapeExtra) {
-        if (newExtra !is LineExtra || newExtra == extra) {
+        check(newExtra is LineExtra) {
+            "New extra is not a LineExtra (${newExtra::class})"
+        }
+        if (newExtra == extra) {
             return
         }
         update {
@@ -340,15 +343,18 @@ class Line(
                 newJointPoints.add(1, newEdge.startPoint)
                 newJointPoints.add(2, newEdge.endPoint)
             }
+
             edgeIndex == 0 -> {
                 newJointPoints.add(1, newEdge.startPoint)
                 newJointPoints[2] = newEdge.endPoint
             }
+
             edgeIndex == edges.lastIndex -> {
                 val startPointIndex = newJointPoints.lastIndex - 1
                 newJointPoints[startPointIndex] = newEdge.startPoint
                 newJointPoints.add(startPointIndex + 1, newEdge.endPoint)
             }
+
             else -> {
                 // Just move affected points
                 val startPointIndex = newJointPoints.indexOfFirst { it === edge.startPoint }

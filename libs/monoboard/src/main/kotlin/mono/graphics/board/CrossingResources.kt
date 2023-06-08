@@ -27,7 +27,11 @@ internal object CrossingResources {
     private val STANDARDIZED_CHARS = mapOf(
         '-' to '─',
         '|' to '│',
-        '+' to '┼'
+        '+' to '┼',
+        '╮' to '┐',
+        '╭' to '┌',
+        '╯' to '┘',
+        '╰' to '└'
     )
 
     private val CONNECTABLE_CHARS = "─│┌└┐┘┬┴├┤┼".extendChars().flatMap { it.toList() }.toSet()

@@ -42,7 +42,9 @@ data class SerializableRectangle(
         @SerialName("bu")
         val userSelectedBorderStyleId: String,
         @SerialName("du")
-        val dashPattern: String
+        val dashPattern: String,
+        @SerialName("rc")
+        val corner: String = ""
     )
 }
 
@@ -108,7 +110,9 @@ data class SerializableLine(
         @SerialName("aeu")
         val userSelectedEndAnchorId: String,
         @SerialName("du")
-        val dashPattern: String
+        val dashPattern: String,
+        @SerialName("rc")
+        val isRoundedCorner: Boolean = false
     )
 }
 

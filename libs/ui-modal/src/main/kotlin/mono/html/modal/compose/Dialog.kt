@@ -102,7 +102,7 @@ private fun DialogContainer(
 ) {
     Div(
         attrs = {
-            classes("dialog-container" to true)
+            classes("dialog-container")
             onConsumeClick {
                 // Do nothing, just block the dismiss event
             }
@@ -111,10 +111,7 @@ private fun DialogContainer(
         Title(title)
         Div(
             attrs = {
-                classes(
-                    "dialog-content" to true,
-                    "no-title" to title.isBlank()
-                )
+                classes("dialog-content", "no-title" to title.isBlank())
             }
         ) { content() }
 
@@ -134,11 +131,7 @@ private fun Title(title: String) {
     if (title.isBlank()) {
         return
     }
-    H2(
-        attrs = {
-            classes("dialog-title")
-        }
-    ) {
+    H2(attrs = { classes("dialog-title") }) {
         Text(title)
     }
 }
@@ -150,7 +143,7 @@ private fun ActionButton(action: DialogAction?, className: String, dismiss: () -
     }
     Div(
         attrs = {
-            classes("dialog-action" to true, className to true, "danger" to action.isDanger)
+            classes("dialog-action", className, "danger" to action.isDanger)
             onClick {
                 action.action()
                 dismiss()

@@ -116,7 +116,10 @@ class Text(
     }
 
     override fun setExtra(newExtra: ShapeExtra) {
-        if (newExtra !is TextExtra || newExtra == extra) {
+        check(newExtra is TextExtra) {
+            "New extra is not a TextExtra (${newExtra::class})"
+        }
+        if (newExtra == extra) {
             return
         }
         update {

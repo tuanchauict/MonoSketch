@@ -59,3 +59,11 @@ fun AttrsScope<Element>.viewBox(left: Int, top: Int, width: Int, height: Int) {
 fun AttrsScope<Element>.fill(color: String) {
     attr("fill", color)
 }
+
+fun AttrsScope<Element>.strokeColor(color: String) {
+    attr("stroke", color)
+}
+
+fun AttrsScope<Element>.svgPathStrokeWidth(strokeWidth: Float) {
+    attr("stroke-width", strokeWidth.toString())
+}

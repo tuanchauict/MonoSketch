@@ -23,9 +23,9 @@ data class TextExtra(
 
     fun toSerializableExtra(): SerializableText.SerializableExtra =
         SerializableText.SerializableExtra(
-            boundExtra.toSerializableExtra(),
-            textAlign.horizontalAlign.ordinal,
-            textAlign.verticalAlign.ordinal
+            boundExtra = boundExtra.toSerializableExtra(),
+            textHorizontalAlign = textAlign.horizontalAlign.ordinal,
+            textVerticalAlign = textAlign.verticalAlign.ordinal
         )
 
     fun hasBorder(): Boolean = boundExtra.isBorderEnabled
