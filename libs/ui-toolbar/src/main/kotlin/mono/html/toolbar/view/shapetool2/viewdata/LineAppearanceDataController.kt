@@ -36,15 +36,14 @@ internal class LineAppearanceDataController(
         }
     }
 
-    private val defaultLineExtraLiveData: LiveData<LineExtra?> =
-        retainableActionLiveData.map {
-            when (it) {
-                RetainableActionType.ADD_LINE -> ShapeExtraManager.defaultLineExtra
-                RetainableActionType.IDLE,
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT -> null
-            }
+    private val defaultLineExtraLiveData: LiveData<LineExtra?> = retainableActionLiveData.map {
+        when (it) {
+            RetainableActionType.ADD_LINE -> ShapeExtraManager.defaultLineExtra
+            RetainableActionType.IDLE,
+            RetainableActionType.ADD_RECTANGLE,
+            RetainableActionType.ADD_TEXT -> null
         }
+    }
 
     val strokeToolStateLiveData: LiveData<CloudItemSelectionState?> =
         createLineStrokeAppearanceVisibilityLiveData()
@@ -64,9 +63,6 @@ internal class LineAppearanceDataController(
         startHeadToolStateLiveData,
         endHeadToolStateLiveData
     ) { list -> list.any { it != null } }
-
-    private val defaultLineExtra: LineExtra
-        get() = ShapeExtraManager.defaultLineExtra
 
     private fun createLineStrokeAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
         val selectedVisibilityLiveData =
