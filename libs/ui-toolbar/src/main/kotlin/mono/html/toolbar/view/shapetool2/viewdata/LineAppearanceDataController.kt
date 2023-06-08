@@ -65,21 +65,15 @@ internal class LineAppearanceDataController(
     ) { list -> list.any { it != null } }
 
     private fun createLineStrokeAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
-        val selectedVisibilityLiveData =
-            singleLineExtraLiveData.map { it?.toStrokeVisibilityState() }
-
-        val defaultVisibilityLiveData =
-            defaultLineExtraLiveData.map { it?.toStrokeVisibilityState() }
-
-        return selectedOrDefault(selectedVisibilityLiveData, defaultVisibilityLiveData)
+        val selectedLiveData = singleLineExtraLiveData.map { it?.toStrokeVisibilityState() }
+        val defaultLiveData = defaultLineExtraLiveData.map { it?.toStrokeVisibilityState() }
+        return selectedOrDefault(selectedLiveData, defaultLiveData)
     }
 
     private fun createLineStrokeDashPatternLiveData(): LiveData<StraightStrokeDashPattern?> {
-        val selectedDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
-            singleLineExtraLiveData.map { it?.dashPattern }
-        val defaultDashPatternLiveData: LiveData<StraightStrokeDashPattern?> =
-            defaultLineExtraLiveData.map { it?.dashPattern }
-        return selectedOrDefault(selectedDashPatternLiveData, defaultDashPatternLiveData)
+        val selectedLiveData = singleLineExtraLiveData.map { it?.dashPattern }
+        val defaultLiveData = defaultLineExtraLiveData.map { it?.dashPattern }
+        return selectedOrDefault(selectedLiveData, defaultLiveData)
     }
 
     private fun createLineStrokeRoundedCornerLiveData(): LiveData<Boolean?> {
