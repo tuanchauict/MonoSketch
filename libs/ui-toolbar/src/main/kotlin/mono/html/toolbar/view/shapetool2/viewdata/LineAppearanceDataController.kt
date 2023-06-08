@@ -53,9 +53,9 @@ internal class LineAppearanceDataController(
     val strokeRoundedCornerLiveData: LiveData<Boolean?> =
         createLineStrokeRoundedCornerLiveData()
     val startHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
-        createStartHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
+        createStartHeadAppearanceVisibilityLiveData()
     val endHeadToolStateLiveData: LiveData<CloudItemSelectionState?> =
-        createEndHeadAppearanceVisibilityLiveData(shapesLiveData, retainableActionLiveData)
+        createEndHeadAppearanceVisibilityLiveData()
 
     val hasAnyVisibleTollLiveData: LiveData<Boolean> = combineLiveData(
         strokeToolStateLiveData,
@@ -96,90 +96,50 @@ internal class LineAppearanceDataController(
         return selectedOrDefault(selectedCornerPatternLiveData, defaultCornerPatternLiveData)
     }
 
-    private fun createStartHeadAppearanceVisibilityLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<CloudItemSelectionState?> {
-        val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when (val shape = it.singleOrNull()) {
-                is Line -> shape.toStartHeadAppearanceVisibilityState()
-                null,
-                is Rectangle,
-                is Text,
-                is Group,
-                is MockShape -> null
+    private fun createStartHeadAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
+        val selectedLiveData = singleLineExtraLiveData.map {
+            it?.let { extra ->
+                CloudItemSelectionState(
+                    extra.isStartAnchorEnabled,
+                    extra.userSelectedStartAnchor.id
+                )
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
-            val defaultState = when (type) {
-                RetainableActionType.ADD_LINE ->
-                    defaultLineExtra.userSelectedStartAnchor
-
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT,
-                RetainableActionType.IDLE -> null
-            }
-            defaultState?.let {
-                CloudItemSelectionState(defaultLineExtra.isStartAnchorEnabled, it.id)
+        val defaultLiveData = defaultLineExtraLiveData.map {
+            it?.let { extra ->
+                CloudItemSelectionState(
+                    extra.isStartAnchorEnabled,
+                    extra.userSelectedStartAnchor.id
+                )
             }
         }
 
-        return createAppearanceVisibilityLiveData(
-            selectedVisibilityLiveData,
-            defaultVisibilityLiveData
-        )
+        return selectedOrDefault(selectedLiveData, defaultLiveData)
     }
 
-    private fun createEndHeadAppearanceVisibilityLiveData(
-        selectedShapesLiveData: LiveData<Set<AbstractShape>>,
-        retainableActionTypeLiveData: LiveData<RetainableActionType>
-    ): LiveData<CloudItemSelectionState?> {
-        val selectedVisibilityLiveData = selectedShapesLiveData.map {
-            when (val shape = it.singleOrNull()) {
-                is Line -> shape.toEndHeadAppearanceVisibilityState()
-                null,
-                is Rectangle,
-                is Text,
-                is Group,
-                is MockShape -> null
+    private fun createEndHeadAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
+        val selectedLiveData = singleLineExtraLiveData.map {
+            it?.let { extra ->
+                CloudItemSelectionState(
+                    extra.isEndAnchorEnabled,
+                    extra.userSelectedEndAnchor.id
+                )
             }
         }
-        val defaultVisibilityLiveData = retainableActionTypeLiveData.map { type ->
-            val defaultState = when (type) {
-                RetainableActionType.ADD_LINE ->
-                    defaultLineExtra.userSelectedEndAnchor
-
-                RetainableActionType.ADD_RECTANGLE,
-                RetainableActionType.ADD_TEXT,
-                RetainableActionType.IDLE -> null
-            }
-            defaultState?.let {
-                CloudItemSelectionState(defaultLineExtra.isEndAnchorEnabled, it.id)
+        val defaultLiveData = defaultLineExtraLiveData.map {
+            it?.let { extra ->
+                CloudItemSelectionState(
+                    extra.isEndAnchorEnabled,
+                    extra.userSelectedEndAnchor.id
+                )
             }
         }
 
-        return createAppearanceVisibilityLiveData(
-            selectedVisibilityLiveData,
-            defaultVisibilityLiveData
-        )
+        return selectedOrDefault(selectedLiveData, defaultLiveData)
     }
 
     private fun LineExtra.toStrokeVisibilityState(): CloudItemSelectionState =
         CloudItemSelectionState(isStrokeEnabled, userSelectedStrokeStyle.id)
-
-    private fun Line.toStartHeadAppearanceVisibilityState(): CloudItemSelectionState =
-        CloudItemSelectionState(extra.isStartAnchorEnabled, extra.userSelectedStartAnchor.id)
-
-    private fun Line.toEndHeadAppearanceVisibilityState(): CloudItemSelectionState =
-        CloudItemSelectionState(extra.isEndAnchorEnabled, extra.userSelectedEndAnchor.id)
-
-    private fun createAppearanceVisibilityLiveData(
-        selectedShapeVisibilityLiveData: LiveData<CloudItemSelectionState?>,
-        defaultVisibilityLiveData: LiveData<CloudItemSelectionState?>
-    ): LiveData<CloudItemSelectionState?> = combineLiveData(
-        selectedShapeVisibilityLiveData,
-        defaultVisibilityLiveData
-    ) { selected, default -> selected ?: default }
 
     private fun <T> selectedOrDefault(
         selectedLiveData: LiveData<T?>,
