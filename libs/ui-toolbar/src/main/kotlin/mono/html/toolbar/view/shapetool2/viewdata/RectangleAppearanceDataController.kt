@@ -5,6 +5,7 @@
 package mono.html.toolbar.view.shapetool2.viewdata
 
 import mono.actionmanager.RetainableActionType
+import mono.html.toolbar.view.shapetool2.CloudItemSelectionState
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
 import mono.livedata.map
@@ -63,18 +64,6 @@ internal class RectangleAppearanceDataController(
         borderRoundedCornerLiveData
     ) { list -> list.any { it != null } }
 
-    val fillOptions: List<AppearanceOptionItem> =
-        ShapeExtraManager.getAllPredefinedRectangleFillStyles()
-            .map { AppearanceOptionItem(it.id, it.displayName) }
-
-    val strokeOptions: List<AppearanceOptionItem> =
-        ShapeExtraManager.getAllPredefinedStrokeStyles()
-            .map { AppearanceOptionItem(it.id, it.displayName) }
-
-    val headOptions: List<AppearanceOptionItem> =
-        ShapeExtraManager.getAllPredefinedAnchorChars()
-            .map { AppearanceOptionItem(it.id, it.displayName) }
-
     private fun createFillAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
         val selectedLiveData =
             singleRectExtraLiveData.map { it?.toFillAppearanceVisibilityState() }
@@ -116,7 +105,3 @@ internal class RectangleAppearanceDataController(
         defaultLiveData: LiveData<T?>
     ): LiveData<T?> = combineLiveData(selectedLiveData, defaultLiveData) { s, d -> s ?: d }
 }
-
-internal data class AppearanceOptionItem(val id: String, val name: String)
-
-internal data class CloudItemSelectionState(val isChecked: Boolean, val selectedId: String?)

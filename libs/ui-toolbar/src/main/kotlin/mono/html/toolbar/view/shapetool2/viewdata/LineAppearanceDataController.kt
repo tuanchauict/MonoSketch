@@ -5,6 +5,7 @@
 package mono.html.toolbar.view.shapetool2.viewdata
 
 import mono.actionmanager.RetainableActionType
+import mono.html.toolbar.view.shapetool2.CloudItemSelectionState
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
 import mono.livedata.map
@@ -19,7 +20,7 @@ import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 
 /**
- * Data controller class of Rectangle appearance
+ * Data controller class of Line appearance
  */
 internal class LineAppearanceDataController(
     shapesLiveData: LiveData<Set<AbstractShape>>,

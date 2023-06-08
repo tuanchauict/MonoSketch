@@ -13,8 +13,6 @@ import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
 import mono.html.toolbar.view.shapetool2.components.NumberTextField
 import mono.html.toolbar.view.shapetool2.components.Section
-import mono.html.toolbar.view.shapetool2.viewdata.AppearanceOptionItem
-import mono.html.toolbar.view.shapetool2.viewdata.CloudItemSelectionState
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.ui.compose.components.Icons

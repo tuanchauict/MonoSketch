@@ -8,8 +8,6 @@ import androidx.compose.runtime.State
 import mono.actionmanager.ActionManager
 import mono.actionmanager.RetainableActionType
 import mono.graphics.geo.Rect
-import mono.html.toolbar.view.shapetool2.viewdata.AppearanceOptionItem
-import mono.html.toolbar.view.shapetool2.viewdata.CloudItemSelectionState
 import mono.html.toolbar.view.shapetool2.viewdata.LineAppearanceDataController
 import mono.html.toolbar.view.shapetool2.viewdata.RectangleAppearanceDataController
 import mono.lifecycle.LifecycleOwner
@@ -119,11 +117,17 @@ internal class ShapeToolViewModel(
     ) { states -> states.any { it == true } }
         .toState(lifecycleOwner)
 
-    val fillOptions: List<AppearanceOptionItem> = rectangleAppearanceDataController.fillOptions
+    val fillOptions: List<AppearanceOptionItem> =
+        ShapeExtraManager.getAllPredefinedRectangleFillStyles()
+            .map { AppearanceOptionItem(it.id, it.displayName) }
 
-    val strokeOptions: List<AppearanceOptionItem> = rectangleAppearanceDataController.strokeOptions
+    val strokeOptions: List<AppearanceOptionItem> =
+        ShapeExtraManager.getAllPredefinedStrokeStyles()
+            .map { AppearanceOptionItem(it.id, it.displayName) }
 
-    val headOptions: List<AppearanceOptionItem> = rectangleAppearanceDataController.headOptions
+    val headOptions: List<AppearanceOptionItem> =
+        ShapeExtraManager.getAllPredefinedAnchorChars()
+            .map { AppearanceOptionItem(it.id, it.displayName) }
 
     private fun createTextAlignLiveData(
         selectedShapeLiveData: LiveData<AbstractShape?>,
@@ -147,3 +151,7 @@ internal class ShapeToolViewModel(
         ) { selected, default -> selected ?: default }
     }
 }
+
+internal data class AppearanceOptionItem(val id: String, val name: String)
+
+internal data class CloudItemSelectionState(val isChecked: Boolean, val selectedId: String?)
