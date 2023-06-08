@@ -26,6 +26,16 @@ internal class RectangleAppearanceDataController(
     shapesLiveData: LiveData<Set<AbstractShape>>,
     retainableActionLiveData: LiveData<RetainableActionType>
 ) {
+    private val singleRectExtraLiveData: LiveData<RectangleExtra?> = shapesLiveData.map {
+        when (val line = it.singleOrNull()) {
+            is Rectangle -> line.extra
+            is Text -> line.extra.boundExtra
+            is Line,
+            is MockShape,
+            is Group,
+            null -> null
+        }
+    }
 
     private val defaultRectangleExtraLiveData: LiveData<RectangleExtra?> =
         retainableActionLiveData.map {
@@ -68,7 +78,6 @@ internal class RectangleAppearanceDataController(
 
     private val defaultRectangleExtra: RectangleExtra
         get() = ShapeExtraManager.defaultRectangleExtra
-
 
     private fun createFillAppearanceVisibilityLiveData(
         selectedShapesLiveData: LiveData<Set<AbstractShape>>,
@@ -200,15 +209,3 @@ internal class RectangleAppearanceDataController(
 internal data class AppearanceOptionItem(val id: String, val name: String)
 
 internal data class CloudItemSelectionState(val isChecked: Boolean, val selectedId: String?)
-
-private fun LiveData<Set<AbstractShape>>.singleRectangleExtraLiveData(): LiveData<RectangleExtra?> =
-    map {
-        when (val shape = it.singleOrNull()) {
-            is Rectangle -> shape.extra
-            is Text -> shape.extra.boundExtra
-            is Group,
-            is Line,
-            is MockShape,
-            null -> null
-        }
-    }
