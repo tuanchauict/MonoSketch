@@ -8,6 +8,10 @@ import androidx.compose.runtime.State
 import mono.actionmanager.ActionManager
 import mono.actionmanager.RetainableActionType
 import mono.graphics.geo.Rect
+import mono.html.toolbar.view.shapetool2.viewdata.AppearanceOptionItem
+import mono.html.toolbar.view.shapetool2.viewdata.CloudItemSelectionState
+import mono.html.toolbar.view.shapetool2.viewdata.LineAppearanceDataController
+import mono.html.toolbar.view.shapetool2.viewdata.RectangleAppearanceDataController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.combineLiveData
@@ -26,13 +30,26 @@ internal class ShapeToolViewModel(
     shapeManagerVersionLiveData: LiveData<Int>,
     actionManager: ActionManager
 ) {
-    private val appearanceDataController = AppearanceDataController(
-        selectedShapesLiveData,
-        shapeManagerVersionLiveData,
+    private val shapesLiveData: LiveData<Set<AbstractShape>> =
+        combineLiveData(
+            selectedShapesLiveData,
+            shapeManagerVersionLiveData
+        ) { selected, _ -> selected }
+
+    private val retainableActionTypeLiveData: LiveData<RetainableActionType> =
         combineLiveData(
             actionManager.retainableActionLiveData,
             ShapeExtraManager.defaultExtraStateUpdateLiveData
         ) { action, _ -> action }
+
+    private val rectangleAppearanceDataController = RectangleAppearanceDataController(
+        shapesLiveData,
+        retainableActionTypeLiveData
+    )
+
+    private val lineAppearanceDataController = LineAppearanceDataController(
+        shapesLiveData,
+        retainableActionTypeLiveData
     )
 
     private val singleShapeLiveData: LiveData<AbstractShape?> = combineLiveData(
@@ -58,34 +75,37 @@ internal class ShapeToolViewModel(
         singleShapeLiveData.map { it is Rectangle || it is Text }.toState(lifecycleOwner)
 
     val shapeFillTypeState: State<CloudItemSelectionState?> =
-        appearanceDataController.fillToolStateLiveData.toState(lifecycleOwner)
+        rectangleAppearanceDataController.fillToolStateLiveData.toState(lifecycleOwner)
 
     val shapeBorderTypeState: State<CloudItemSelectionState?> =
-        appearanceDataController.borderToolStateLiveData.toState(lifecycleOwner)
+        rectangleAppearanceDataController.borderToolStateLiveData.toState(lifecycleOwner)
 
     val shapeBorderDashTypeState: State<StraightStrokeDashPattern?> =
-        appearanceDataController.borderDashPatternLiveData.toState(lifecycleOwner)
+        rectangleAppearanceDataController.borderDashPatternLiveData.toState(lifecycleOwner)
 
     val shapeBorderRoundedCornerState: State<Boolean?> =
-        appearanceDataController.borderRoundedCornerLiveData.toState(lifecycleOwner)
+        rectangleAppearanceDataController.borderRoundedCornerLiveData.toState(lifecycleOwner)
 
     val lineStrokeTypeState: State<CloudItemSelectionState?> =
-        appearanceDataController.lineStrokeToolStateLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.strokeToolStateLiveData.toState(lifecycleOwner)
 
     val lineStrokeDashTypeState: State<StraightStrokeDashPattern?> =
-        appearanceDataController.lineStrokeDashPatternLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.strokeDashPatternLiveData.toState(lifecycleOwner)
 
     val lineStrokeRoundedCornerState: State<Boolean?> =
-        appearanceDataController.lineStrokeRoundedCornerLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.strokeRoundedCornerLiveData.toState(lifecycleOwner)
 
     val lineStartHeadState: State<CloudItemSelectionState?> =
-        appearanceDataController.lineStartHeadToolStateLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.startHeadToolStateLiveData.toState(lifecycleOwner)
 
     val lineEndHeadState: State<CloudItemSelectionState?> =
-        appearanceDataController.lineEndHeadToolStateLiveData.toState(lifecycleOwner)
+        lineAppearanceDataController.endHeadToolStateLiveData.toState(lifecycleOwner)
 
-    val appearanceVisibilityState: State<Boolean> =
-        appearanceDataController.hasAnyVisibleToolLiveData.toState(lifecycleOwner)
+    val appearanceVisibilityState: State<Boolean> = combineLiveData(
+        rectangleAppearanceDataController.hasAnyVisibleToolLiveData,
+        lineAppearanceDataController.hasAnyVisibleTollLiveData
+    ) { isRectAvailable, isLineAvailable -> isRectAvailable || isLineAvailable }
+        .toState(lifecycleOwner)
 
     private val textAlignLiveData: LiveData<TextAlign?> =
         createTextAlignLiveData(singleShapeLiveData, retainableActionLiveData)
@@ -93,16 +113,17 @@ internal class ShapeToolViewModel(
 
     val hasAnyToolState: State<Boolean> = combineLiveData(
         singleShapeLiveData.map { it != null },
-        appearanceDataController.hasAnyVisibleToolLiveData,
+        rectangleAppearanceDataController.hasAnyVisibleToolLiveData,
+        lineAppearanceDataController.hasAnyVisibleTollLiveData,
         textAlignLiveData.map { it != null }
     ) { states -> states.any { it == true } }
         .toState(lifecycleOwner)
 
-    val fillOptions: List<AppearanceOptionItem> = appearanceDataController.fillOptions
+    val fillOptions: List<AppearanceOptionItem> = rectangleAppearanceDataController.fillOptions
 
-    val strokeOptions: List<AppearanceOptionItem> = appearanceDataController.strokeOptions
+    val strokeOptions: List<AppearanceOptionItem> = rectangleAppearanceDataController.strokeOptions
 
-    val headOptions: List<AppearanceOptionItem> = appearanceDataController.headOptions
+    val headOptions: List<AppearanceOptionItem> = rectangleAppearanceDataController.headOptions
 
     private fun createTextAlignLiveData(
         selectedShapeLiveData: LiveData<AbstractShape?>,
