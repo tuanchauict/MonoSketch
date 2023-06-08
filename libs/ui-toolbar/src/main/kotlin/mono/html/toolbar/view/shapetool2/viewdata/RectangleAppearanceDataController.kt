@@ -83,19 +83,17 @@ internal class RectangleAppearanceDataController(
         return selectedOrDefault(selectedLiveData, defaultLiveData)
     }
 
-    private fun createBorderAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
-        val selectedLiveData =
-            singleRectExtraLiveData.map { it?.toBorderAppearanceVisibilityState() }
-        val defaultLiveData =
-            defaultRectangleExtraLiveData.map { it?.toBorderAppearanceVisibilityState() }
-        return selectedOrDefault(selectedLiveData, defaultLiveData)
-    }
+    private fun createBorderAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> =
+        selectedOrDefault(
+            selectedLiveData = singleRectExtraLiveData.map { it?.toBorderState() },
+            defaultLiveData = defaultRectangleExtraLiveData.map { it?.toBorderState() }
+        )
 
-    private fun createBorderDashPatternLiveData(): LiveData<StraightStrokeDashPattern?> {
-        val selectedLiveData = singleRectExtraLiveData.map { it?.dashPattern }
-        val defaultLiveData = defaultRectangleExtraLiveData.map { it?.dashPattern }
-        return selectedOrDefault(selectedLiveData, defaultLiveData)
-    }
+    private fun createBorderDashPatternLiveData(): LiveData<StraightStrokeDashPattern?> =
+        selectedOrDefault(
+            selectedLiveData = singleRectExtraLiveData.map { it?.dashPattern },
+            defaultLiveData = defaultRectangleExtraLiveData.map { it?.dashPattern }
+        )
 
     private fun createBorderRoundedCornerLiveData(): LiveData<Boolean?> {
         val selectedLiveData = singleRectExtraLiveData
@@ -110,7 +108,7 @@ internal class RectangleAppearanceDataController(
     private fun RectangleExtra.toFillAppearanceVisibilityState(): CloudItemSelectionState =
         CloudItemSelectionState(isFillEnabled, userSelectedFillStyle.id)
 
-    private fun RectangleExtra.toBorderAppearanceVisibilityState(): CloudItemSelectionState =
+    private fun RectangleExtra.toBorderState(): CloudItemSelectionState =
         CloudItemSelectionState(isBorderEnabled, userSelectedBorderStyle.id)
 
     private fun <T> selectedOrDefault(

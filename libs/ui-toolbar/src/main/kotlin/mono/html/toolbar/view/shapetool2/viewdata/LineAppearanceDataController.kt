@@ -64,17 +64,17 @@ internal class LineAppearanceDataController(
         endHeadToolStateLiveData
     ) { list -> list.any { it != null } }
 
-    private fun createLineStrokeAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
-        val selectedLiveData = singleLineExtraLiveData.map { it?.toStrokeVisibilityState() }
-        val defaultLiveData = defaultLineExtraLiveData.map { it?.toStrokeVisibilityState() }
-        return selectedOrDefault(selectedLiveData, defaultLiveData)
-    }
+    private fun createLineStrokeAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> =
+        selectedOrDefault(
+            selectedLiveData = singleLineExtraLiveData.map { it?.toStrokeVisibilityState() },
+            defaultLiveData = defaultLineExtraLiveData.map { it?.toStrokeVisibilityState() }
+        )
 
-    private fun createLineStrokeDashPatternLiveData(): LiveData<StraightStrokeDashPattern?> {
-        val selectedLiveData = singleLineExtraLiveData.map { it?.dashPattern }
-        val defaultLiveData = defaultLineExtraLiveData.map { it?.dashPattern }
-        return selectedOrDefault(selectedLiveData, defaultLiveData)
-    }
+    private fun createLineStrokeDashPatternLiveData(): LiveData<StraightStrokeDashPattern?> =
+        selectedOrDefault(
+            selectedLiveData = singleLineExtraLiveData.map { it?.dashPattern },
+            defaultLiveData = defaultLineExtraLiveData.map { it?.dashPattern }
+        )
 
     private fun createLineStrokeRoundedCornerLiveData(): LiveData<Boolean?> {
         val selectedCornerPatternLiveData = singleLineExtraLiveData
@@ -86,50 +86,26 @@ internal class LineAppearanceDataController(
         return selectedOrDefault(selectedCornerPatternLiveData, defaultCornerPatternLiveData)
     }
 
-    private fun createStartHeadAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
-        val selectedLiveData = singleLineExtraLiveData.map {
-            it?.let { extra ->
-                CloudItemSelectionState(
-                    extra.isStartAnchorEnabled,
-                    extra.userSelectedStartAnchor.id
-                )
-            }
-        }
-        val defaultLiveData = defaultLineExtraLiveData.map {
-            it?.let { extra ->
-                CloudItemSelectionState(
-                    extra.isStartAnchorEnabled,
-                    extra.userSelectedStartAnchor.id
-                )
-            }
-        }
+    private fun createStartHeadAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> =
+        selectedOrDefault(
+            selectedLiveData = singleLineExtraLiveData.map { it?.toStartHeadState() },
+            defaultLiveData = defaultLineExtraLiveData.map { it?.toStartHeadState() }
+        )
 
-        return selectedOrDefault(selectedLiveData, defaultLiveData)
-    }
-
-    private fun createEndHeadAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
-        val selectedLiveData = singleLineExtraLiveData.map {
-            it?.let { extra ->
-                CloudItemSelectionState(
-                    extra.isEndAnchorEnabled,
-                    extra.userSelectedEndAnchor.id
-                )
-            }
-        }
-        val defaultLiveData = defaultLineExtraLiveData.map {
-            it?.let { extra ->
-                CloudItemSelectionState(
-                    extra.isEndAnchorEnabled,
-                    extra.userSelectedEndAnchor.id
-                )
-            }
-        }
-
-        return selectedOrDefault(selectedLiveData, defaultLiveData)
-    }
+    private fun createEndHeadAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> =
+        selectedOrDefault(
+            selectedLiveData = singleLineExtraLiveData.map { it?.toEndHeadState() },
+            defaultLiveData = defaultLineExtraLiveData.map { it?.toEndHeadState() }
+        )
 
     private fun LineExtra.toStrokeVisibilityState(): CloudItemSelectionState =
         CloudItemSelectionState(isStrokeEnabled, userSelectedStrokeStyle.id)
+
+    private fun LineExtra.toStartHeadState(): CloudItemSelectionState =
+        CloudItemSelectionState(isEndAnchorEnabled, userSelectedEndAnchor.id)
+
+    private fun LineExtra.toEndHeadState(): CloudItemSelectionState =
+        CloudItemSelectionState(isEndAnchorEnabled, userSelectedEndAnchor.id)
 
     private fun <T> selectedOrDefault(
         selectedLiveData: LiveData<T?>,
