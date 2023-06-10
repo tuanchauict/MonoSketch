@@ -91,7 +91,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
             }
             currentPixel.set(
                 visualChar = directionMap[directionMark] ?: charPoint.visualChar,
-                directionChar = charPoint.directionChar,
+                directionChar = directionMap[directionMark] ?: charPoint.directionChar,
                 highlight = highlight
             )
         }
