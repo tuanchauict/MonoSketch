@@ -22,7 +22,7 @@ internal object PredefinedAnchorChar {
         AnchorChar(id = "A5", displayName = "●", '●'),
         AnchorChar(id = "A6", displayName = "├", '├', '┤', '┬', '┴'),
         AnchorChar(id = "A61", displayName = "┣", '┣', '┫', '┳', '┻'),
-        AnchorChar(id = "A62", displayName = "╠", '╠', '╣', '╦', '╩'),
+        AnchorChar(id = "A62", displayName = "╠", '╠', '╣', '╦', '╩')
     )
 
     val PREDEFINED_ANCHOR_CHAR_MAP = PREDEFINED_ANCHOR_CHARS.associateBy { it.id }
