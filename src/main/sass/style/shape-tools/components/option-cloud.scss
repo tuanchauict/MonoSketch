@@ -4,6 +4,7 @@ $border-selected-color: var(--comp-option-cloud-border-selected-color);
 .comp-option-cloud-layout {
     display: flex;
     flex-wrap: wrap;
+    gap: 7px;
 
     .cloud-item {
         display: flex;
@@ -13,7 +14,6 @@ $border-selected-color: var(--comp-option-cloud-border-selected-color);
         border-radius: 3px;
         cursor: pointer;
         padding: 3px;
-        margin: 4px;
 
         &:hover {
             border-color: transparent;
