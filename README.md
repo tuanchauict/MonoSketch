@@ -1,3 +1,6 @@
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)][apache2.0] [![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat&logo=kotlin&logoColor=white)][KotlinJS] [![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=flat&logo=SASS&logoColor=white)][sass]
+
+
 # What is it?
 
 Mono Sketch is a client-side only web based sketch tool for drawing *ASCII diagrams*. You can use
@@ -34,6 +37,8 @@ the app at [app.monosketch.io][app].
          └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
 ```
 
+<a href="https://www.buymeacoffee.com/monosketchapp" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg" alt="Buy Me A Coffee" style="height: 48px !important;" ></a>
+
 # Features
 
 ## Supporting features
@@ -49,6 +54,7 @@ Shape formats:
 - Fill
 - Border
 - Line start/end heads
+- Rounded corner
 
 Editing:
 
@@ -84,6 +90,7 @@ Exporting:
 > Make Line's heads able to snap to a shape and position is updated along with the shape
 
 ### Sharing
+
 > Allow opening file from a url, share to gist, etc.
 
 # Contributing
@@ -107,13 +114,18 @@ Or with production configuration
 
 **Run with Python**
 
-This is an alternative to `browserDevelopmentRun` for running the app for development (sometimes, the gradle does not reload when the code is updated).
+This is an alternative to `browserDevelopmentRun` for running the app for development (sometimes,
+the gradle does not reload when the code is updated).
 
 Requirements: [Pipenv].
+
 ```bash
 pipenv install
 pipenv run dev
 ```
+
+[apache2.0]: https://opensource.org/licenses/Apache-2.0
 [app]: https://app.monosketch.io/
 [KotlinJS]: https://kotlinlang.org/docs/js-overview.html
 [Pipenv]: https://pipenv.pypa.io/en/latest/
+[sass]: https://sass-lang.com/
