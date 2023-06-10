@@ -103,7 +103,7 @@ internal class LineAppearanceDataController(
         CloudItemSelectionState(isStrokeEnabled, userSelectedStrokeStyle.id)
 
     private fun LineExtra.toStartHeadState(): CloudItemSelectionState =
-        CloudItemSelectionState(isEndAnchorEnabled, userSelectedEndAnchor.id)
+        CloudItemSelectionState(isStartAnchorEnabled, userSelectedStartAnchor.id)
 
     private fun LineExtra.toEndHeadState(): CloudItemSelectionState =
         CloudItemSelectionState(isEndAnchorEnabled, userSelectedEndAnchor.id)
