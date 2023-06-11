@@ -41,6 +41,7 @@ internal class InteractionCanvasViewController(
         mousePointerLiveData.map { it is MousePointer.Drag }.observe(lifecycleOwner) {
             isMouseMoving = it
         }
+        context.imageSmoothingQuality = ImageSmoothingQuality.HIGH
     }
 
     override fun drawInternal() {
@@ -72,19 +73,7 @@ internal class InteractionCanvasViewController(
             return
         }
 
-        val dotPath = Path2D()
-        context.imageSmoothingEnabled = true
-        context.imageSmoothingQuality = ImageSmoothingQuality.HIGH
-        context.beginPath()
-        for (point in bound.interactionPoints) {
-            dotPath.addDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
-        }
-        context.strokeStyle = ThemeColor.SelectionDotStroke.colorCode
-        context.lineWidth = 2.0
-        context.fillStyle = ThemeColor.SelectionDotFill.colorCode
-        context.stroke(dotPath)
-        context.fill(dotPath)
-        context.imageSmoothingEnabled = false
+        bound.interactionPoints.draw(ThemeColor.SelectionDotStroke, ThemeColor.SelectionDotFill)
     }
 
     private fun drawLineInteractionBound(bound: LineInteractionBound) {
@@ -92,21 +81,38 @@ internal class InteractionCanvasViewController(
             return
         }
 
-        val dotPath = Path2D()
-        context.beginPath()
-        for (point in bound.interactionPoints) {
-            dotPath.addDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top))
-        }
-        context.strokeStyle = ThemeColor.SelectionDotStroke.colorCode
-        context.lineWidth = 2.0
-        context.fillStyle = ThemeColor.SelectionDotFill.colorCode
-        context.stroke(dotPath)
-        context.fill(dotPath)
+        bound.interactionPoints.draw(
+            ThemeColor.SelectionDotStroke,
+            ThemeColor.SelectionDotFill
+        )
+        // Draw a small dot inside the start dot to make it simpler to distinguish start and end
+        // dots.
+        bound.interactionPoints.take(1)
+            .draw(ThemeColor.SelectionDotStroke, ThemeColor.SelectionDotStroke, 1.0)
     }
 
-    private fun Path2D.addDot(xPx: Double, yPx: Double) {
+    private fun List<InteractionPoint>.draw(
+        strokeColor: ThemeColor,
+        fillColor: ThemeColor,
+        dotRadius: Double = DOT_RADIUS
+    ) {
+        val dotPath = Path2D()
+        context.beginPath()
+        for (point in this) {
+            dotPath.addDot(drawingInfo.toXPx(point.left), drawingInfo.toYPx(point.top), dotRadius)
+        }
+        context.strokeStyle = strokeColor.colorCode
+        context.lineWidth = 2.0
+        context.fillStyle = fillColor.colorCode
+        context.imageSmoothingEnabled = true
+        context.stroke(dotPath)
+        context.fill(dotPath)
+        context.imageSmoothingEnabled = false
+    }
+
+    private fun Path2D.addDot(xPx: Double, yPx: Double, dotRadius: Double) {
         moveTo(xPx, yPx)
-        arc(xPx, yPx, DOT_RADIUS, 0.0, FULL_CIRCLE_ARG)
+        arc(xPx, yPx, dotRadius, 0.0, FULL_CIRCLE_ARG)
     }
 
     fun getInteractionPoint(pointPx: Point): InteractionPoint? {
