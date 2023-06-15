@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import mono.graphics.geo.Rect
-import mono.shape.list.QuickList
+import mono.shape.collection.QuickList
 
 /**
  * A test for [Group].

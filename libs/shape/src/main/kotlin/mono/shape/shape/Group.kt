@@ -5,9 +5,9 @@
 package mono.shape.shape
 
 import mono.graphics.geo.Rect
-import mono.shape.list.QuickList
-import mono.shape.list.QuickList.AddPosition
-import mono.shape.list.QuickList.MoveActionType
+import mono.shape.collection.QuickList
+import mono.shape.collection.QuickList.AddPosition
+import mono.shape.collection.QuickList.MoveActionType
 import mono.shape.serialization.AbstractSerializableShape
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.SerializableLine

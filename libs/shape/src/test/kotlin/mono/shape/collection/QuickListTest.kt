@@ -2,7 +2,7 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.shape.list
+package mono.shape.collection
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -143,7 +143,7 @@ internal class QuickListTest {
         )
     }
 
-    private data class Item(override val id: String) : QuickList.Identifier
+    private data class Item(override val id: String) : Identifier
 
     private object TestData {
         val ITEM_0 = Item("0")
