@@ -12,7 +12,6 @@ plugins {
 }
 
 group = "com.monosketch"
-version = "1.1.0-alpha"
 
 allprojects {
     ext {
