@@ -8,7 +8,7 @@ package mono.shape.collection
  * A collection which works similar to [LinkedHashMap] by making accessing item fast while keeping
  * the order of items based on add-sequence.
  * This also supports move up/down/top/bottom of the list for an item as well as adding item into
- * the head or the tail or after an specific item.
+ * the head or the tail or after a specific item.
  */
 internal class QuickList<T : Identifier> : Collection<T> {
     private val linkedList: DoubleLinkedList<T> = DoubleLinkedList()

@@ -2,15 +2,13 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.shape.list
+package mono.shape.collection
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import mono.shape.collection.Identifier
-import mono.shape.collection.QuickList
 
 /**
  * A test for [QuickList]
