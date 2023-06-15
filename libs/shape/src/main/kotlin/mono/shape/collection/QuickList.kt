@@ -2,7 +2,7 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.shape.list
+package mono.shape.collection
 
 /**
  * A collection which works similar to [LinkedHashMap] by making accessing item fast while keeping

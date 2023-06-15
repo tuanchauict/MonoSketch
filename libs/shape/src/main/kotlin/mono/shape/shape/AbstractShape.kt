@@ -7,9 +7,9 @@ package mono.shape.shape
 import kotlin.random.Random
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.collection.QuickList
 import mono.shape.extra.NoExtra
 import mono.shape.extra.ShapeExtra
-import mono.shape.list.QuickList
 import mono.shape.serialization.AbstractSerializableShape
 import mono.uuid.UUID
 
