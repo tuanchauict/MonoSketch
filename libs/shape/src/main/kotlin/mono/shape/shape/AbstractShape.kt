@@ -7,7 +7,7 @@ package mono.shape.shape
 import kotlin.random.Random
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
-import mono.shape.collection.QuickList
+import mono.shape.collection.Identifier
 import mono.shape.extra.NoExtra
 import mono.shape.extra.ShapeExtra
 import mono.shape.serialization.AbstractSerializableShape
@@ -27,7 +27,7 @@ import mono.uuid.UUID
 sealed class AbstractShape(
     id: String?,
     internal var parentId: String? = null
-) : QuickList.Identifier {
+) : Identifier {
     override val id: String = id ?: UUID.generate()
 
     var versionCode: Int = nextVersionCode()

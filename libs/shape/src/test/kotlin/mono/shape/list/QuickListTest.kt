@@ -9,6 +9,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import mono.shape.collection.Identifier
 import mono.shape.collection.QuickList
 
 /**
@@ -144,7 +145,7 @@ internal class QuickListTest {
         )
     }
 
-    private data class Item(override val id: String) : QuickList.Identifier
+    private data class Item(override val id: String) : Identifier
 
     private object TestData {
         val ITEM_0 = Item("0")

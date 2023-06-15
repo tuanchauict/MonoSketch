@@ -10,7 +10,7 @@ package mono.shape.collection
  * This also supports move up/down/top/bottom of the list for an item as well as adding item into
  * the head or the tail or after an specific item.
  */
-internal class QuickList<T : QuickList.Identifier> : Collection<T> {
+internal class QuickList<T : Identifier> : Collection<T> {
     private val linkedList: DoubleLinkedList<T> = DoubleLinkedList()
     private val map: MutableMap<String, Node<T>> = mutableMapOf()
 
@@ -76,10 +76,6 @@ internal class QuickList<T : QuickList.Identifier> : Collection<T> {
 
         val node = map[identifier.id] ?: return false
         return linkedList.move(node, moveActionType)
-    }
-
-    interface Identifier {
-        val id: String
     }
 
     sealed class AddPosition {
