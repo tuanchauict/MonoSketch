@@ -10,6 +10,7 @@ import mono.graphics.geo.PointF
 import mono.graphics.geo.Rect
 import mono.shape.collection.TwoWayQuickMap
 import mono.shape.connector.LineConnector
+import mono.shape.connector.ShapeConnectorUseCase
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Line
 
@@ -24,12 +25,11 @@ class ShapeConnectorManager {
             Line.Anchor.START -> line.startPoint
             Line.Anchor.END -> line.endPoint
         }
-        val connector = LineConnector(
-            line,
-            anchor,
-            calculateConnectorRatio(anchorPoint, shape.bound),
-            calculateConnectorOffset(anchorPoint, shape.bound)
-        )
+        val boxBound = shape.bound
+        val (ratio, offset) = calculateConnectorRatioAndOffset(anchorPoint, boxBound) ?: return
+
+        val connector =
+            LineConnector(line, anchor, ratio, offset)
 
         // TODO: Based on the position of anchor point and shape's bound, the direction of the 
         //  anchor must be updated to optimise the initial directions of the line
@@ -42,19 +42,17 @@ class ShapeConnectorManager {
 
     fun removeShape(shape: AbstractShape) = lineConnectors.removeValue(shape)
 
-    private fun calculateConnectorRatio(
+    /**
+     * Calculates the connector ratio. Returns null if the two cannot connect.
+     */
+    internal fun calculateConnectorRatioAndOffset(
         anchorPoint: DirectedPoint,
         boxBound: Rect
-    ): PointF {
-        // TODO: Calculate the ratio based on anchor point and box bound
-        return PointF(0.0, 0.0)
-    }
+    ): Pair<PointF, Point>? {
+        val around = ShapeConnectorUseCase.getAround(anchorPoint, boxBound) ?: return null
 
-    private fun calculateConnectorOffset(
-        anchorPoint: DirectedPoint,
-        boxBound: Rect
-    ): Point {
-        // TODO calculate the offset based on anchor point and box bound
-        return Point.ZERO
+        val ratio = ShapeConnectorUseCase.calculateRatio(around, anchorPoint, boxBound)
+        val offset = ShapeConnectorUseCase.calculateOffset(around, anchorPoint, boxBound)
+        return ratio to offset
     }
 }
