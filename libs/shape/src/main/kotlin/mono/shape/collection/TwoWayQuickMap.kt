@@ -21,7 +21,7 @@ internal class TwoWayQuickMap<K : Identifier, V : Identifier> {
         valueToKeysMap.getOrPut(value.id) { mutableMapOf() }[key.id] = key
     }
 
-    fun removeKey(key: K) {
+    fun removeKey(key: Identifier) {
         val value = keyToValueMap[key.id] ?: return
         keyToValueMap.remove(key.id)
         val keyMap = valueToKeysMap[value.id]!!
@@ -35,7 +35,7 @@ internal class TwoWayQuickMap<K : Identifier, V : Identifier> {
      * Removes the [value].
      * All keys associated to [value] will be also removed.
      */
-    fun removeValue(value: V) {
+    fun removeValue(value: Identifier) {
         val keyMap = valueToKeysMap[value.id] ?: return
         valueToKeysMap.remove(value.id)
 
