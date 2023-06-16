@@ -5,7 +5,7 @@
 package mono.shape.command
 
 import mono.shape.ShapeManager
-import mono.shape.list.QuickList
+import mono.shape.collection.QuickList
 import mono.shape.remove
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
