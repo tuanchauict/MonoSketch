@@ -31,7 +31,7 @@ class ShapeConnectorManager {
         val connector =
             LineConnector(line, anchor, ratio, offset)
 
-        // TODO: Based on the position of anchor point and shape's bound, the direction of the 
+        // TODO: Based on the position of anchor point and shape's bound, the direction of the
         //  anchor must be updated to optimise the initial directions of the line
 
         lineConnectors[connector] = shape

@@ -98,7 +98,7 @@ class ShapeConnectorUseCaseTest {
             // Vertical, bottom edge -> bottom
             DirectedPoint(VERTICAL, 3, 30) to Around.BOTTOM,
             DirectedPoint(VERTICAL, 4, 30) to Around.BOTTOM,
-            DirectedPoint(VERTICAL, 5, 30) to Around.BOTTOM,
+            DirectedPoint(VERTICAL, 5, 30) to Around.BOTTOM
         )
 
         for ((point, expected) in leftPointsToExpectedAround) {
@@ -134,7 +134,7 @@ class ShapeConnectorUseCaseTest {
             // Vertical, bottom edge -> bottom
             DirectedPoint(VERTICAL, 9, 30) to Around.BOTTOM,
             DirectedPoint(VERTICAL, 10, 30) to Around.BOTTOM,
-            DirectedPoint(VERTICAL, 11, 30) to Around.BOTTOM,
+            DirectedPoint(VERTICAL, 11, 30) to Around.BOTTOM
         )
 
         for ((point, expected) in leftPointsToExpectedAround) {
@@ -170,7 +170,7 @@ class ShapeConnectorUseCaseTest {
             // Horizontal, right edge -> right
             DirectedPoint(HORIZONTAL, 10, 19) to Around.RIGHT,
             DirectedPoint(HORIZONTAL, 10, 20) to Around.RIGHT,
-            DirectedPoint(HORIZONTAL, 10, 21) to Around.RIGHT,
+            DirectedPoint(HORIZONTAL, 10, 21) to Around.RIGHT
         )
 
         for ((point, expected) in leftPointsToExpectedAround) {
@@ -206,7 +206,7 @@ class ShapeConnectorUseCaseTest {
             // Horizontal, right edge -> right
             DirectedPoint(HORIZONTAL, 10, 29) to Around.RIGHT,
             DirectedPoint(HORIZONTAL, 10, 30) to Around.RIGHT,
-            DirectedPoint(HORIZONTAL, 10, 31) to Around.RIGHT,
+            DirectedPoint(HORIZONTAL, 10, 31) to Around.RIGHT
         )
 
         for ((point, expected) in leftPointsToExpectedAround) {
