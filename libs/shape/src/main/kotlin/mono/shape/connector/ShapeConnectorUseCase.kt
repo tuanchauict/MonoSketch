@@ -65,8 +65,10 @@ internal object ShapeConnectorUseCase {
     ): Boolean = this in (lower - distance)..(upper + distance)
 
     fun calculateRatio(around: Around, anchorPoint: DirectedPoint, boxBound: Rect): PointF {
-        val leftRatio = (anchorPoint.left - boxBound.left).toDouble() / boxBound.width
-        val topRatio = (anchorPoint.top - boxBound.top).toDouble() / boxBound.height
+        val leftRatio =
+            (anchorPoint.left - boxBound.left).toDouble() / boxBound.width.adjustSizeValue()
+        val topRatio =
+            (anchorPoint.top - boxBound.top).toDouble() / boxBound.height.adjustSizeValue()
         return when (around) {
             Around.LEFT -> PointF(left = 0.0, top = topRatio.coerceIn(0.0, 1.0))
             Around.TOP -> PointF(left = leftRatio.coerceIn(0.0, 1.0), top = 0.0)
@@ -103,6 +105,8 @@ internal object ShapeConnectorUseCase {
         this > upper -> this - upper
         else -> 0
     }
+
+    private fun Int.adjustSizeValue(): Int = (this - 1).coerceAtLeast(1)
 
     enum class Around {
         LEFT, TOP, RIGHT, BOTTOM
