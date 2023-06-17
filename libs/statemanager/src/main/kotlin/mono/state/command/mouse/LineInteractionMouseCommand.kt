@@ -72,7 +72,8 @@ internal class LineInteractionMouseCommand(
             MoveLineAnchor(
                 lineShape,
                 anchorPointUpdate,
-                isReducedRequired
+                isReducedRequired,
+                connectableCandidateShapes = environment.shapeSearcher.getShapes(point)
             )
         )
         environment.updateInteractionBounds()
