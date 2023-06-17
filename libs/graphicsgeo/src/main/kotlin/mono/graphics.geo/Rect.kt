@@ -57,6 +57,16 @@ data class Rect(
         return isHorizontalOverlap && isVerticalOverlap
     }
 
+    /**
+     * Returns true if the point is one of its vertices.
+     */
+    fun isVertex(point: Point): Boolean {
+        val isOnVerticalEdge = point.left == left || point.left == right
+        val isOnHorizontalEdge = point.top == top || point.top == bottom
+
+        return isOnHorizontalEdge && isOnVerticalEdge
+    }
+
     override fun toString(): String = "[$left, $top] - [$width x $height]"
 
     internal object RectSerializer : KSerializer<Rect> {

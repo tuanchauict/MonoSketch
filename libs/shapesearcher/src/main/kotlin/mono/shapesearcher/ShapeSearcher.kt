@@ -69,7 +69,12 @@ class ShapeSearcher(
             .asSequence()
             .mapNotNull { shapeManager.getShape(it) }
             .filter { it is Text || it is Rectangle }
-            .filter { it.contains(point) }
+            .filter {
+                // Ensure the point is in the shape and not any vertices.
+                // Excludes the vertices to make the anchor direction remains similar to previous
+                // setup.
+                it.contains(point) && !it.isVertex(point)
+            }
             .filter {
                 it.bound.left == point.left ||
                     it.bound.right == point.left ||
