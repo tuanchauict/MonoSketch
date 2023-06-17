@@ -100,6 +100,19 @@ internal object ShapeConnectorUseCase {
             )
         }
 
+    fun LineConnector.getPointInNewBound(boxBound: Rect): DirectedPoint =
+        DirectedPoint(
+            line.getDirection(anchor),
+            getLeftInNewBound(boxBound),
+            getTopInNewBound(boxBound)
+        )
+
+    private fun LineConnector.getLeftInNewBound(boxBound: Rect): Int =
+        (boxBound.left + (boxBound.width - 1) * ratio.left + offset.left).toInt()
+
+    private fun LineConnector.getTopInNewBound(boxBound: Rect): Int =
+        (boxBound.top + (boxBound.height - 1) * ratio.top + offset.top).toInt()
+
     private fun Int.offsetToRange(lower: Int, upper: Int): Int = when {
         this < lower -> this - lower
         this > upper -> this - upper
