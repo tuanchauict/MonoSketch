@@ -73,7 +73,7 @@ internal class LineInteractionMouseCommand(
                 lineShape,
                 anchorPointUpdate,
                 isUpdateConfirmed,
-                // TODO: If the performance is bad when moving the shape, it's okay to only search 
+                // TODO: If the performance is bad when moving the shape, it's okay to only search
                 //  for the candidates when the action is end (mouse up)
                 connectableCandidateShapes = environment.shapeSearcher.getShapes(point)
             )
