@@ -16,13 +16,13 @@ import mono.shape.shape.Text
 /**
  * A [Command] for changing Line shape's Anchors.
  *
- * @param isReducedRequired The flag for running Line's points reduction. If this is true, merging
+ * @param isUpdateConfirmed The flag for running Line's points reduction. If this is true, merging
  * same line points process will be conducted.
  */
 class MoveLineAnchor(
     private val target: Line,
     private val anchorPointUpdate: Line.AnchorPointUpdate,
-    private val isReducedRequired: Boolean,
+    private val isUpdateConfirmed: Boolean,
     private val connectableCandidateShapes: List<AbstractShape>
 ) : Command() {
     override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
@@ -30,7 +30,7 @@ class MoveLineAnchor(
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
         val currentVersion = target.versionCode
-        target.moveAnchorPoint(anchorPointUpdate, isReducedRequired)
+        target.moveAnchorPoint(anchorPointUpdate, isUpdateConfirmed)
         if (currentVersion == target.versionCode) {
             return
         }
@@ -55,19 +55,22 @@ class MoveLineAnchor(
 
 /**
  * A [Command] for updating Line shape's edges.
+ *
+ * @param isUpdateConfirmed The flag for running Line's points reduction. If this is true, merging
+ *  * same line points process will be conducted.
  */
 class MoveLineEdge(
     private val target: Line,
     private val edgeId: Int,
     private val point: Point,
-    private val isReducedRequired: Boolean
+    private val isUpdateConfirmed: Boolean
 ) : Command() {
     override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
         shapeManager.getGroup(target.parentId)
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
         val currentVersion = target.versionCode
-        target.moveEdge(edgeId, point, isReducedRequired)
+        target.moveEdge(edgeId, point, isUpdateConfirmed)
         parent.update { currentVersion != target.versionCode }
     }
 }

@@ -45,13 +45,13 @@ internal class LineInteractionMouseCommand(
         }
     }
 
-    private fun move(environment: CommandEnvironment, point: Point, isReducedRequired: Boolean) {
+    private fun move(environment: CommandEnvironment, point: Point, isUpdateConfirmed: Boolean) {
         when (interactionPoint) {
             is LineInteractionPoint.Anchor ->
-                moveAnchor(environment, interactionPoint, point, isReducedRequired)
+                moveAnchor(environment, interactionPoint, point, isUpdateConfirmed)
 
             is LineInteractionPoint.Edge ->
-                moveEdge(environment, interactionPoint, point, isReducedRequired)
+                moveEdge(environment, interactionPoint, point, isUpdateConfirmed)
         }
     }
 
@@ -59,7 +59,7 @@ internal class LineInteractionMouseCommand(
         environment: CommandEnvironment,
         interactionPoint: LineInteractionPoint.Anchor,
         point: Point,
-        isReducedRequired: Boolean
+        isUpdateConfirmed: Boolean
     ) {
         val edgeDirection = environment.getEdgeDirection(point)
         val direction =
@@ -72,7 +72,7 @@ internal class LineInteractionMouseCommand(
             MoveLineAnchor(
                 lineShape,
                 anchorPointUpdate,
-                isReducedRequired,
+                isUpdateConfirmed,
                 // TODO: If the performance is bad when moving the shape, it's okay to only search 
                 //  for the candidates when the action is end (mouse up)
                 connectableCandidateShapes = environment.shapeSearcher.getShapes(point)
@@ -85,14 +85,14 @@ internal class LineInteractionMouseCommand(
         environment: CommandEnvironment,
         interactionPoint: LineInteractionPoint.Edge,
         point: Point,
-        isReducedRequired: Boolean
+        isUpdateConfirmed: Boolean
     ) {
         environment.shapeManager.execute(
             MoveLineEdge(
                 lineShape,
                 interactionPoint.edgeId,
                 point,
-                isReducedRequired
+                isUpdateConfirmed
             )
         )
         environment.updateInteractionBounds()
