@@ -37,6 +37,9 @@ class ShapeConnectorManager {
         lineConnectors[connector] = shape
     }
 
+    fun getConnectors(shape: AbstractShape): Collection<LineConnector> =
+        lineConnectors.getKeys(shape)
+
     fun removeConnector(line: Line, anchor: Line.Anchor) =
         lineConnectors.removeKey(LineConnector.ConnectorIdentifier(line, anchor))
 

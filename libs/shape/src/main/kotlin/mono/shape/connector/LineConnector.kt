@@ -6,7 +6,6 @@ package mono.shape.connector
 
 import mono.graphics.geo.Point
 import mono.graphics.geo.PointF
-import mono.graphics.geo.Rect
 import mono.shape.collection.Identifier
 import mono.shape.shape.Line
 
@@ -24,12 +23,6 @@ class LineConnector(
     val ratio: PointF,
     val offset: Point
 ) : Identifier by ConnectorIdentifier(line, anchor) {
-
-    fun getRow(boxBound: Rect): Int =
-        (boxBound.top + boxBound.height * ratio.top + offset.top).toInt()
-
-    fun getColumn(boxBound: Rect): Int =
-        (boxBound.left + boxBound.width * ratio.left + offset.left).toInt()
 
     /**
      * A [Identifier] of Line's connector.

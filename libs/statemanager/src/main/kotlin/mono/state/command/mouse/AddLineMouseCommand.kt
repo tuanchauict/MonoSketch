@@ -80,7 +80,14 @@ internal class AddLineMouseCommand : MouseCommand {
             Line.Anchor.END,
             DirectedPoint(direction, endPoint)
         )
-        shapeManager.execute(MoveLineAnchor(line, anchorPointUpdate, isReducedRequired))
+        shapeManager.execute(
+            MoveLineAnchor(
+                line,
+                anchorPointUpdate,
+                isReducedRequired,
+                connectableCandidateShapes = environment.shapeSearcher.getShapes(point)
+            )
+        )
     }
 
     private fun adjustEndPoint(

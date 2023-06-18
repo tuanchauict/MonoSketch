@@ -60,6 +60,8 @@ sealed class AbstractShape(
 
     open fun contains(point: Point): Boolean = bound.contains(point)
 
+    open fun isVertex(point: Point): Boolean = bound.isVertex(point)
+
     open fun isOverlapped(rect: Rect): Boolean = bound.isOverlapped(rect)
 
     companion object {

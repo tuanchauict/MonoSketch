@@ -387,6 +387,11 @@ class Line(
 
     override fun contains(point: Point): Boolean = edges.any { it.contains(point) }
 
+    override fun isVertex(point: Point): Boolean {
+        // TODO: Correct this to any of its joint points
+        return false
+    }
+
     override fun isOverlapped(rect: Rect): Boolean =
         edges.any {
             val edgeBound = Rect.byLTRB(
