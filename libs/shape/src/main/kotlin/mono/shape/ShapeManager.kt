@@ -27,6 +27,9 @@ class ShapeManager {
     private val rootMutableLiveData = MutableLiveData(root)
     val rootLiveData: LiveData<RootGroup> = rootMutableLiveData
 
+    var connectorManager: ShapeConnectorManager = ShapeConnectorManager()
+        private set
+
     /**
      * Reflect the version of the root through live data. The other components are able to observe
      * this version to decide update internally.
@@ -46,6 +49,8 @@ class ShapeManager {
         val currentVersion = root.versionCode
         root = newRoot
         rootMutableLiveData.value = newRoot
+
+        connectorManager = ShapeConnectorManager()
 
         allShapeMap = createAllShapeMap(newRoot)
 
