@@ -8,7 +8,9 @@ import mono.common.MouseCursor
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.ChangeBound
+import mono.shape.connector.ShapeConnectorUseCase.getPointInNewBound
 import mono.shape.shape.AbstractShape
+import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
 import mono.state.command.mouse.MouseCommand.CommandResultType
 
@@ -34,11 +36,21 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
             MousePointer.Idle -> Point.ZERO
         }
 
+        val isUpdateConfirmed = mousePointer is MousePointer.Up
         for (shape in shapes) {
             val initialPosition = initialPositions[shape.id] ?: continue
             val newPosition = initialPosition + offset
             val newBound = shape.bound.copy(position = newPosition)
-            environment.shapeManager.execute(ChangeBound(shape, newBound))
+            environment.shapeManager.execute(
+                ChangeBound(shape, newBound)
+            )
+
+            val connectors = environment.shapeManager.connectorManager.getConnectors(shape)
+            for (connector in connectors) {
+                val anchorPointUpdate =
+                    Line.AnchorPointUpdate(connector.anchor, connector.getPointInNewBound(newBound))
+                connector.line.moveAnchorPoint(anchorPointUpdate, isUpdateConfirmed)
+            }
         }
 
         environment.updateInteractionBounds()

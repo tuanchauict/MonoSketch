@@ -12,7 +12,7 @@ import mono.graphics.geo.Rect
 /**
  * A Use case object for shape connector
  */
-internal object ShapeConnectorUseCase {
+object ShapeConnectorUseCase {
     private const val MAX_DISTANCE = 1
 
     fun getAround(
