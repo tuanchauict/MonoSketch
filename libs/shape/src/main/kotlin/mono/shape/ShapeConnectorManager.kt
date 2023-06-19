@@ -11,6 +11,7 @@ import mono.graphics.geo.Rect
 import mono.shape.collection.TwoWayQuickMap
 import mono.shape.connector.LineConnector
 import mono.shape.connector.ShapeConnectorUseCase
+import mono.shape.serialization.SerializableLineConnector
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Line
 
@@ -56,5 +57,31 @@ class ShapeConnectorManager {
         val ratio = ShapeConnectorUseCase.calculateRatio(around, anchorPoint, boxBound)
         val offset = ShapeConnectorUseCase.calculateOffset(around, anchorPoint, boxBound)
         return ratio to offset
+    }
+
+    fun toSerializable(): List<SerializableLineConnector> =
+        lineConnectors.asSequence()
+            .map { (lineConnector, target) ->
+                SerializableLineConnector(
+                    lineId = lineConnector.lineId,
+                    anchor = lineConnector.anchor,
+                    targetId = target.id,
+                    lineConnector.ratio,
+                    lineConnector.offset
+                )
+            }
+            .toList()
+
+    companion object {
+        fun fromSerializable(
+            serializedConnectors: List<SerializableLineConnector>
+        ): ShapeConnectorManager {
+            val manager = ShapeConnectorManager()
+            for (conn in serializedConnectors) {
+                val lineConnector = LineConnector(conn.lineId, conn.anchor, conn.ratio, conn.offset)
+                manager.lineConnectors[lineConnector] = AbstractShape.ShapeIdentifier(conn.targetId)
+            }
+            return manager
+        }
     }
 }
