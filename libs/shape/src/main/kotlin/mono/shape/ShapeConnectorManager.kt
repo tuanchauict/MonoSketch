@@ -8,6 +8,7 @@ import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.PointF
 import mono.graphics.geo.Rect
+import mono.shape.collection.Identifier
 import mono.shape.collection.TwoWayQuickMap
 import mono.shape.connector.LineConnector
 import mono.shape.connector.ShapeConnectorUseCase
@@ -18,7 +19,7 @@ import mono.shape.shape.Line
  * A manager of shape connectors.
  */
 class ShapeConnectorManager {
-    private val lineConnectors = TwoWayQuickMap<LineConnector, AbstractShape>()
+    private val lineConnectors = TwoWayQuickMap<LineConnector, Identifier>()
 
     fun addConnector(line: Line, anchor: Line.Anchor, shape: AbstractShape) {
         val anchorPoint = when (anchor) {
@@ -28,8 +29,7 @@ class ShapeConnectorManager {
         val boxBound = shape.bound
         val (ratio, offset) = calculateConnectorRatioAndOffset(anchorPoint, boxBound) ?: return
 
-        val connector =
-            LineConnector(line, anchor, ratio, offset)
+        val connector = LineConnector(line.id, anchor, ratio, offset)
 
         // TODO: Based on the position of anchor point and shape's bound, the direction of the
         //  anchor must be updated to optimise the initial directions of the line
@@ -41,14 +41,14 @@ class ShapeConnectorManager {
         lineConnectors.getKeys(shape)
 
     fun removeConnector(line: Line, anchor: Line.Anchor) =
-        lineConnectors.removeKey(LineConnector.ConnectorIdentifier(line, anchor))
+        lineConnectors.removeKey(LineConnector.ConnectorIdentifier(line.id, anchor))
 
     fun removeShape(shape: AbstractShape) = lineConnectors.removeValue(shape)
 
     /**
      * Calculates the connector ratio. Returns null if the two cannot connect.
      */
-    internal fun calculateConnectorRatioAndOffset(
+    private fun calculateConnectorRatioAndOffset(
         anchorPoint: DirectedPoint,
         boxBound: Rect
     ): Pair<PointF, Point>? {
