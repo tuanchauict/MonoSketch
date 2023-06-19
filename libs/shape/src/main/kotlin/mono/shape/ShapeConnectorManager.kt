@@ -8,7 +8,6 @@ import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.PointF
 import mono.graphics.geo.Rect
-import mono.shape.collection.Identifier
 import mono.shape.collection.TwoWayQuickMap
 import mono.shape.connector.LineConnector
 import mono.shape.connector.ShapeConnectorUseCase
@@ -19,7 +18,7 @@ import mono.shape.shape.Line
  * A manager of shape connectors.
  */
 class ShapeConnectorManager {
-    private val lineConnectors = TwoWayQuickMap<LineConnector, Identifier>()
+    private val lineConnectors = TwoWayQuickMap<LineConnector, AbstractShape.ShapeIdentifier>()
 
     fun addConnector(line: Line, anchor: Line.Anchor, shape: AbstractShape) {
         val anchorPoint = when (anchor) {
@@ -34,7 +33,7 @@ class ShapeConnectorManager {
         // TODO: Based on the position of anchor point and shape's bound, the direction of the
         //  anchor must be updated to optimise the initial directions of the line
 
-        lineConnectors[connector] = shape
+        lineConnectors[connector] = shape.identifier
     }
 
     fun getConnectors(shape: AbstractShape): Collection<LineConnector> =
