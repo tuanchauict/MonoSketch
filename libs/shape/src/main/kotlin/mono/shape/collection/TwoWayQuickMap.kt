@@ -52,4 +52,11 @@ internal class TwoWayQuickMap<K : Identifier, V : Identifier> {
         val value = keyToValueMap[keyId.id] ?: return null
         return valueToKeysMap[value.id]?.get(keyId.id)
     }
+
+    fun asSequence(): Sequence<Pair<K, V>> =
+        keyToValueMap.keys.asSequence().map {
+            val value = keyToValueMap[it]!!
+            val key = valueToKeysMap[value.id]!![it]!!
+            key to value
+        }
 }

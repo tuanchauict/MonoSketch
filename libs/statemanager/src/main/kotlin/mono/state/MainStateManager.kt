@@ -26,6 +26,7 @@ import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.add
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.connector.ShapeConnector
 import mono.shape.remove
 import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
@@ -276,13 +277,16 @@ class MainStateManager(
         val rootId = shapeManager.root.id
         val rootVersion = shapeManager.root.versionCode
         val currentRoot = workspaceDao.getObject(rootId).rootGroup
+        // TODO: load from storage
+        val shapeConnector = ShapeConnector()
         when {
             currentRoot == null -> {
                 // TODO: Notify to user this project is removed
             }
 
-            rootVersion != currentRoot.versionCode ->
-                environment.replaceRoot(RootGroup(currentRoot))
+            rootVersion != currentRoot.versionCode -> {
+                environment.replaceRoot(RootGroup(currentRoot), shapeConnector)
+            }
         }
     }
 
@@ -304,7 +308,7 @@ class MainStateManager(
                 stateManager.workingParentGroup = value
             }
 
-        override fun replaceRoot(newRoot: RootGroup) {
+        override fun replaceRoot(newRoot: RootGroup, newShapeConnector: ShapeConnector) {
             val currentRoot = shapeManager.root
             if (currentRoot.id != newRoot.id) {
                 stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
@@ -314,7 +318,7 @@ class MainStateManager(
                 stateManager.stateHistoryManager.clear()
             }
 
-            shapeManager.replaceRoot(newRoot)
+            shapeManager.replaceRoot(newRoot, newShapeConnector)
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
         }

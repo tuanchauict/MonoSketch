@@ -9,7 +9,9 @@ import mono.environment.Build
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.combineLiveData
+import mono.shape.connector.ShapeConnector
 import mono.shape.serialization.SerializableGroup
+import mono.shape.serialization.SerializableLineConnector
 import mono.shape.shape.RootGroup
 import mono.state.command.CommandEnvironment
 import mono.store.dao.workspace.WorkspaceDao
@@ -75,15 +77,17 @@ internal class StateHistoryManager(
     fun clear() = historyStack.clear()
 
     fun undo() {
-        val history = historyStack.undo() ?: return
-        val root = RootGroup(history.serializableGroup)
-        environment.replaceRoot(root)
+        historyStack.undo()?.apply()
     }
 
     fun redo() {
-        val history = historyStack.redo() ?: return
-        val root = RootGroup(history.serializableGroup)
-        environment.replaceRoot(root)
+        historyStack.redo()?.apply()
+    }
+
+    private fun History.apply() {
+        val root = RootGroup(serializableGroup)
+        val shapeConnector = ShapeConnector.fromSerializable(connectors)
+        environment.replaceRoot(root, shapeConnector)
     }
 
     private fun registerBackupShapes(version: Int) {
@@ -98,10 +102,12 @@ internal class StateHistoryManager(
     private fun backupShapes() {
         val root = environment.shapeManager.root
         val serializableGroup = root.toSerializableShape(true)
+        val shapeConnector = environment.shapeManager.shapeConnector
 
-        historyStack.pushState(root.versionCode, serializableGroup)
+        historyStack.pushState(root.versionCode, serializableGroup, shapeConnector.toSerializable())
 
         workspaceDao.getObject(root.id).rootGroup = serializableGroup
+        // TODO: Also update connector
     }
 
     private fun restoreShapes(objectDao: WorkspaceObjectDao) {
@@ -111,18 +117,24 @@ internal class StateHistoryManager(
         } else {
             RootGroup(objectDao.objectId)
         }
-        environment.replaceRoot(rootGroup)
+        // TODO: load from storage
+        val shapeConnector = ShapeConnector()
+        environment.replaceRoot(rootGroup, shapeConnector)
     }
 
     private class HistoryStack {
         private val undoStack = mutableListOf<History>()
         private val redoStack = mutableListOf<History>()
 
-        fun pushState(version: Int, state: SerializableGroup) {
+        fun pushState(
+            version: Int,
+            state: SerializableGroup,
+            connectors: List<SerializableLineConnector>
+        ) {
             if (version == undoStack.lastOrNull()?.versionCode) {
                 return
             }
-            undoStack.add(History(version, state))
+            undoStack.add(History(version, state, connectors))
             redoStack.clear()
             if (Build.DEBUG) {
                 println("Push history stack ${undoStack.map { it.versionCode }}")
@@ -154,5 +166,9 @@ internal class StateHistoryManager(
         }
     }
 
-    private class History(val versionCode: Int, val serializableGroup: SerializableGroup)
+    private class History(
+        val versionCode: Int,
+        val serializableGroup: SerializableGroup,
+        val connectors: List<SerializableLineConnector>
+    )
 }

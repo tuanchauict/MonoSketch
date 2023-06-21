@@ -45,9 +45,9 @@ class MoveLineAnchor(
             }
         }
         if (boxShape != null) {
-            shapeManager.connectorManager.addConnector(target, anchorPointUpdate.anchor, boxShape)
+            shapeManager.shapeConnector.addConnector(target, anchorPointUpdate.anchor, boxShape)
         } else {
-            shapeManager.connectorManager.removeConnector(target, anchorPointUpdate.anchor)
+            shapeManager.shapeConnector.removeConnector(target, anchorPointUpdate.anchor)
         }
         parent.update { true }
     }
