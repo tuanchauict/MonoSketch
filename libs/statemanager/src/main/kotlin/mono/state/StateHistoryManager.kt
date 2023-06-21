@@ -9,6 +9,7 @@ import mono.environment.Build
 import mono.html.canvas.CanvasViewController
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.combineLiveData
+import mono.shape.connector.ShapeConnector
 import mono.shape.serialization.SerializableGroup
 import mono.shape.serialization.SerializableLineConnector
 import mono.shape.shape.RootGroup
@@ -76,15 +77,17 @@ internal class StateHistoryManager(
     fun clear() = historyStack.clear()
 
     fun undo() {
-        val history = historyStack.undo() ?: return
-        val root = RootGroup(history.serializableGroup)
-        environment.replaceRoot(root)
+        historyStack.undo()?.apply()
     }
 
     fun redo() {
-        val history = historyStack.redo() ?: return
-        val root = RootGroup(history.serializableGroup)
-        environment.replaceRoot(root)
+        historyStack.redo()?.apply()
+    }
+
+    private fun History.apply() {
+        val root = RootGroup(serializableGroup)
+        val shapeConnector = ShapeConnector.fromSerializable(connectors)
+        environment.replaceRoot(root, shapeConnector)
     }
 
     private fun registerBackupShapes(version: Int) {
@@ -99,7 +102,7 @@ internal class StateHistoryManager(
     private fun backupShapes() {
         val root = environment.shapeManager.root
         val serializableGroup = root.toSerializableShape(true)
-        val shapeConnector = environment.shapeManager.connectorManager
+        val shapeConnector = environment.shapeManager.shapeConnector
 
         historyStack.pushState(root.versionCode, serializableGroup, shapeConnector.toSerializable())
 
@@ -114,7 +117,9 @@ internal class StateHistoryManager(
         } else {
             RootGroup(objectDao.objectId)
         }
-        environment.replaceRoot(rootGroup)
+        // TODO: load from storage
+        val shapeConnector = ShapeConnector()
+        environment.replaceRoot(rootGroup, shapeConnector)
     }
 
     private class HistoryStack {

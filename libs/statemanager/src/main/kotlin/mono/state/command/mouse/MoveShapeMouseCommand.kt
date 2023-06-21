@@ -45,7 +45,7 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
                 ChangeBound(shape, newBound)
             )
 
-            val connectors = environment.shapeManager.connectorManager.getConnectors(shape)
+            val connectors = environment.shapeManager.shapeConnector.getConnectors(shape)
             for (connector in connectors) {
                 val line = environment.shapeManager.getShape(connector.lineId) as? Line ?: continue
                 val anchorPointUpdate = Line.AnchorPointUpdate(

@@ -28,7 +28,7 @@ class ShapeManager {
     private val rootMutableLiveData = MutableLiveData(root)
     val rootLiveData: LiveData<RootGroup> = rootMutableLiveData
 
-    var connectorManager: ShapeConnector = ShapeConnector()
+    var shapeConnector: ShapeConnector = ShapeConnector()
         private set
 
     /**
@@ -39,19 +39,19 @@ class ShapeManager {
     val versionLiveData: LiveData<Int> = versionMutableLiveData
 
     init {
-        replaceRoot(root)
+        replaceRoot(root, shapeConnector)
     }
 
     /**
      * Replace [root] with [newRoot].
      * This also wipe current stored shapes with shapes in new root.
      */
-    fun replaceRoot(newRoot: RootGroup) {
+    fun replaceRoot(newRoot: RootGroup, newConnector: ShapeConnector) {
         val currentVersion = root.versionCode
         root = newRoot
         rootMutableLiveData.value = newRoot
 
-        connectorManager = ShapeConnector()
+        shapeConnector = newConnector
 
         allShapeMap = createAllShapeMap(newRoot)
 
