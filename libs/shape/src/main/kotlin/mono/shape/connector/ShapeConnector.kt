@@ -2,15 +2,13 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.shape
+package mono.shape.connector
 
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.PointF
 import mono.graphics.geo.Rect
 import mono.shape.collection.TwoWayQuickMap
-import mono.shape.connector.LineConnector
-import mono.shape.connector.ShapeConnectorUseCase
 import mono.shape.serialization.SerializableLineConnector
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Line
@@ -18,7 +16,7 @@ import mono.shape.shape.Line
 /**
  * A manager of shape connectors.
  */
-class ShapeConnectorManager {
+class ShapeConnector {
     private val lineConnectors = TwoWayQuickMap<LineConnector, AbstractShape.ShapeIdentifier>()
 
     fun addConnector(line: Line, anchor: Line.Anchor, shape: AbstractShape) {
@@ -75,8 +73,8 @@ class ShapeConnectorManager {
     companion object {
         fun fromSerializable(
             serializedConnectors: List<SerializableLineConnector>
-        ): ShapeConnectorManager {
-            val manager = ShapeConnectorManager()
+        ): ShapeConnector {
+            val manager = ShapeConnector()
             for (conn in serializedConnectors) {
                 val lineConnector = LineConnector(conn.lineId, conn.anchor, conn.ratio, conn.offset)
                 manager.lineConnectors[lineConnector] = AbstractShape.ShapeIdentifier(conn.targetId)

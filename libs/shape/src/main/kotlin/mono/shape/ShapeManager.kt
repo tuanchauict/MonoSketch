@@ -11,6 +11,7 @@ import mono.shape.command.Command
 import mono.shape.command.GroupShapes
 import mono.shape.command.RemoveShape
 import mono.shape.command.Ungroup
+import mono.shape.connector.ShapeConnector
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.RootGroup
@@ -27,7 +28,7 @@ class ShapeManager {
     private val rootMutableLiveData = MutableLiveData(root)
     val rootLiveData: LiveData<RootGroup> = rootMutableLiveData
 
-    var connectorManager: ShapeConnectorManager = ShapeConnectorManager()
+    var connectorManager: ShapeConnector = ShapeConnector()
         private set
 
     /**
@@ -50,7 +51,7 @@ class ShapeManager {
         root = newRoot
         rootMutableLiveData.value = newRoot
 
-        connectorManager = ShapeConnectorManager()
+        connectorManager = ShapeConnector()
 
         allShapeMap = createAllShapeMap(newRoot)
 
