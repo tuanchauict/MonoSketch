@@ -34,6 +34,6 @@ class LineConnector(
     }
 
     companion object {
-        fun toId(lineId: String, anchor: Line.Anchor): String = "${lineId}@@${anchor.ordinal}"
+        fun toId(lineId: String, anchor: Line.Anchor): String = "$lineId@@${anchor.ordinal}"
     }
 }
