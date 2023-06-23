@@ -75,6 +75,8 @@ import mono.shape.shape.line.LineHelper
  *      |
  *      x
  * ```
+ *
+ * TODO: Extract move anchor point and move edge code to use case class
  */
 class Line(
     startPoint: DirectedPoint,
@@ -182,45 +184,86 @@ class Line(
      *
      * Examples for moved:
      * Case 1. Line's edges are never moved: see examples in the class doc
-     * Case 2. Line's edges have been moved
+     *
+     * Case 2. Line's edges have been moved and [justMoveAnchor] is true and number of joint points
+     * is larger than 2: update the position of the anchor and the adjacent point:
+     * Input
+     * ```
+     * +-----+
+     *       |
+     *       o
+     * ```
+     * Output
+     * ```
+     * +------------+
+     *              |
+     *              |
+     *              o
+     * ```
+     *
+     * Case 3. Line's edges have been moved and [justMoveAnchor] is false:
      * Input
      * ```
      * +-------o
      * ```
      * Result:
-     * Same line
+     * 3.1. Same line: only update the anchor's position
      * ```
      * +---------------x
      * ```
      *
-     * 2.2. Different lines
+     * 3.2. Different lines: create new joint point
      * ```
      * +----------+
      *            |
      *            x
      * ```
-     *
      */
-    fun moveAnchorPoint(anchorPointUpdate: AnchorPointUpdate, isReduceRequired: Boolean) = update {
+    fun moveAnchorPoint(
+        anchorPointUpdate: AnchorPointUpdate,
+        isReduceRequired: Boolean,
+        justMoveAnchor: Boolean
+    ) = update {
         when (anchorPointUpdate.anchor) {
             Anchor.START -> startPoint = anchorPointUpdate.point
             Anchor.END -> endPoint = anchorPointUpdate.point
         }
 
         val isEdgeUpdated = confirmedJointPoints.isNotEmpty()
-        val newJointPoints = if (!isEdgeUpdated) {
-            val seedPoints = listOf(startPoint, endPoint)
-            LineHelper.createJointPoints(seedPoints)
-        } else {
-            val newJointPoint = confirmedJointPoints.createNewJointPoint(anchorPointUpdate)
-            confirmedJointPoints.toMutableList().apply {
-                val (anchorIndex, newJointPointIndex) = when (anchorPointUpdate.anchor) {
-                    Anchor.START -> 0 to 1
-                    Anchor.END -> lastIndex to lastIndex
+        val newJointPoints = when {
+            !isEdgeUpdated -> {
+                val seedPoints = listOf(startPoint, endPoint)
+                LineHelper.createJointPoints(seedPoints)
+            }
+
+            justMoveAnchor && confirmedJointPoints.size > 2 -> {
+                confirmedJointPoints.toMutableList().apply {
+                    val (anchorIndex, affectedIndex) = when (anchorPointUpdate.anchor) {
+                        Anchor.START -> 0 to 1
+                        Anchor.END -> lastIndex to lastIndex - 1
+                    }
+
+                    val newPoint = anchorPointUpdate.point.point
+                    this[affectedIndex] = if (this[anchorIndex].left == this[affectedIndex].left) {
+                        this[affectedIndex].copy(left = newPoint.left)
+                    } else {
+                        this[affectedIndex].copy(top = newPoint.top)
+                    }
+                    this[anchorIndex] = newPoint
                 }
-                this[anchorIndex] = anchorPointUpdate.point.point
-                if (newJointPoint != null) {
-                    add(newJointPointIndex, newJointPoint)
+            }
+
+            else -> {
+                val newJointPoint = confirmedJointPoints.createNewJointPoint(anchorPointUpdate)
+                confirmedJointPoints.toMutableList().apply {
+                    val (anchorIndex, newJointPointIndex) = when (anchorPointUpdate.anchor) {
+                        Anchor.START -> 0 to 1
+                        Anchor.END -> lastIndex to lastIndex
+                    }
+                    this[anchorIndex] = anchorPointUpdate.point.point
+                    if (newJointPoint != null) {
+                        add(newJointPointIndex, newJointPoint)
+                    }
                 }
             }
         }

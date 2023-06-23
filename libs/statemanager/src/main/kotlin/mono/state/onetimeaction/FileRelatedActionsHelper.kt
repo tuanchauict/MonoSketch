@@ -9,6 +9,7 @@ import mono.bitmap.manager.MonoBitmapManager
 import mono.export.ExportShapesHelper
 import mono.html.modal.compose.showExitingProjectDialog
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.connector.ShapeConnector
 import mono.shape.serialization.Extra
 import mono.shape.serialization.MonoFile
 import mono.shape.serialization.ShapeSerializationUtil
@@ -165,5 +166,9 @@ internal class FileRelatedActionsHelper(
         exportShapesHelper.exportText(extractableShapes, isModalRequired)
     }
 
-    private fun replaceWorkspace(rootGroup: RootGroup) = environment.replaceRoot(rootGroup)
+    private fun replaceWorkspace(rootGroup: RootGroup) {
+        // TODO: load from storage
+        val shapeConnector = ShapeConnector()
+        environment.replaceRoot(rootGroup, shapeConnector)
+    }
 }

@@ -5,6 +5,7 @@
 package mono.shape.serialization
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -29,5 +30,6 @@ class GroupSerializationTest {
         println(string)
         val g = Json.decodeFromString<SerializableGroup>(string)
         println(g)
+        assertEquals(group, g)
     }
 }
