@@ -29,8 +29,20 @@ internal class LineInteractionMouseCommand(
         mousePointer: MousePointer
     ): MouseCommand.CommandResultType {
         when (mousePointer) {
-            is MousePointer.Drag -> move(environment, mousePointer.boardCoordinate, false)
-            is MousePointer.Up -> move(environment, mousePointer.boardCoordinate, true)
+            is MousePointer.Drag -> move(
+                environment,
+                mousePointer.boardCoordinate,
+                isUpdateConfirmed = false,
+                justMoveAnchor = !mousePointer.isWithShiftKey
+            )
+
+            is MousePointer.Up -> move(
+                environment,
+                mousePointer.boardCoordinate,
+                isUpdateConfirmed = true,
+                justMoveAnchor = !mousePointer.isWithShiftKey
+            )
+
             is MousePointer.Down,
             is MousePointer.Click,
             is MousePointer.DoubleClick,
@@ -45,10 +57,15 @@ internal class LineInteractionMouseCommand(
         }
     }
 
-    private fun move(environment: CommandEnvironment, point: Point, isUpdateConfirmed: Boolean) {
+    private fun move(
+        environment: CommandEnvironment,
+        point: Point,
+        isUpdateConfirmed: Boolean,
+        justMoveAnchor: Boolean
+    ) {
         when (interactionPoint) {
             is LineInteractionPoint.Anchor ->
-                moveAnchor(environment, interactionPoint, point, isUpdateConfirmed)
+                moveAnchor(environment, interactionPoint, point, isUpdateConfirmed, justMoveAnchor)
 
             is LineInteractionPoint.Edge ->
                 moveEdge(environment, interactionPoint, point, isUpdateConfirmed)
@@ -59,7 +76,8 @@ internal class LineInteractionMouseCommand(
         environment: CommandEnvironment,
         interactionPoint: LineInteractionPoint.Anchor,
         point: Point,
-        isUpdateConfirmed: Boolean
+        isUpdateConfirmed: Boolean,
+        justMoveAnchor: Boolean
     ) {
         val edgeDirection = environment.getEdgeDirection(point)
         val direction =
@@ -73,8 +91,7 @@ internal class LineInteractionMouseCommand(
                 lineShape,
                 anchorPointUpdate,
                 isUpdateConfirmed,
-                // TODO: Allow setting this option with keyboard
-                justMoveAnchor = false,
+                justMoveAnchor = justMoveAnchor,
                 // TODO: If the performance is bad when moving the shape, it's okay to only search
                 //  for the candidates when the action is end (mouse up)
                 connectableCandidateShapes = environment.shapeSearcher.getShapes(point)
