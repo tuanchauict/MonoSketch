@@ -23,6 +23,7 @@ class MoveLineAnchor(
     private val target: Line,
     private val anchorPointUpdate: Line.AnchorPointUpdate,
     private val isUpdateConfirmed: Boolean,
+    private val justMoveAnchor: Boolean,
     private val connectableCandidateShapes: List<AbstractShape>
 ) : Command() {
     override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
@@ -30,7 +31,11 @@ class MoveLineAnchor(
 
     override fun execute(shapeManager: ShapeManager, parent: Group) {
         val currentVersion = target.versionCode
-        target.moveAnchorPoint(anchorPointUpdate, isUpdateConfirmed)
+        target.moveAnchorPoint(
+            anchorPointUpdate,
+            isReduceRequired = isUpdateConfirmed,
+            justMoveAnchor = justMoveAnchor
+        )
         if (currentVersion == target.versionCode) {
             return
         }

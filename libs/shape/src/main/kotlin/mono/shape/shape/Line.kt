@@ -220,7 +220,7 @@ class Line(
     fun moveAnchorPoint(
         anchorPointUpdate: AnchorPointUpdate,
         isReduceRequired: Boolean,
-        justMoveAnchor: Boolean = true
+        justMoveAnchor: Boolean
     ) = update {
         when (anchorPointUpdate.anchor) {
             Anchor.START -> startPoint = anchorPointUpdate.point
