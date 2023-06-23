@@ -53,7 +53,11 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
                     connector.getPointInNewBound(line.getDirection(connector.anchor), newBound)
                 )
 
-                line.moveAnchorPoint(anchorPointUpdate, isUpdateConfirmed)
+                line.moveAnchorPoint(
+                    anchorPointUpdate,
+                    isReduceRequired = isUpdateConfirmed,
+                    justMoveAnchor = true
+                )
             }
         }
 
