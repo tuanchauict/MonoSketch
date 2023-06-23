@@ -75,6 +75,8 @@ import mono.shape.shape.line.LineHelper
  *      |
  *      x
  * ```
+ *
+ * TODO: Extract move anchor point and move edge code to use case class
  */
 class Line(
     startPoint: DirectedPoint,

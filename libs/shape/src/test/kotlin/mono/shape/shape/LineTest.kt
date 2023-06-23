@@ -14,7 +14,7 @@ import mono.shape.serialization.SerializableLine
 import mono.shape.shape.line.LineHelper
 
 /**
- * A test for [Line]
+ * A test for [Line].
  */
 class LineTest {
     @Test
@@ -41,11 +41,13 @@ class LineTest {
         val newEndPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 7, 8)
         line.moveAnchorPoint(
             Line.AnchorPointUpdate(Line.Anchor.START, newStartPoint),
-            isReduceRequired = true
+            isReduceRequired = true,
+            justMoveAnchor = false
         )
         line.moveAnchorPoint(
             Line.AnchorPointUpdate(Line.Anchor.END, newEndPoint),
-            isReduceRequired = true
+            isReduceRequired = true,
+            justMoveAnchor = false
         )
 
         val serializableLine = line.toSerializableShape(true) as SerializableLine
@@ -96,11 +98,13 @@ class LineTest {
         val newEndPoint = DirectedPoint(DirectedPoint.Direction.VERTICAL, 7, 8)
         line.moveAnchorPoint(
             Line.AnchorPointUpdate(Line.Anchor.START, newStartPoint),
-            isReduceRequired = true
+            isReduceRequired = true,
+            justMoveAnchor = false
         )
         line.moveAnchorPoint(
             Line.AnchorPointUpdate(Line.Anchor.END, newEndPoint),
-            isReduceRequired = true
+            isReduceRequired = true,
+            justMoveAnchor = false
         )
 
         val serializableLine = line.toSerializableShape(true) as SerializableLine
