@@ -27,6 +27,7 @@ import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
+import mono.state.command.mouse.UpdateConnectorHelper
 import mono.state.command.text.EditTextShapeHelper
 import mono.state.onetimeaction.AppSettingActionHelper
 import mono.state.onetimeaction.FileRelatedActionsHelper
@@ -194,6 +195,7 @@ internal class OneTimeActionHandler(
             val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
             val newBound = shape.bound.copy(position = newPosition)
             environment.shapeManager.execute(ChangeBound(shape, newBound))
+            UpdateConnectorHelper.updateConnectors(environment, shape, newBound, true)
         }
         environment.updateInteractionBounds()
     }
