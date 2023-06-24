@@ -94,11 +94,15 @@ internal class FileRelatedActionsHelper(
 
     private fun saveCurrentShapesToFile() {
         val currentRoot = environment.shapeManager.root
-        val serializableRoot = currentRoot.toSerializableShape(true)
         val objectDao = workspaceDao.getObject(currentRoot.id)
         val name = objectDao.name
         val offset = objectDao.offset
-        val jsonString = ShapeSerializationUtil.toMonoFileJson(name, serializableRoot, offset)
+        val jsonString = ShapeSerializationUtil.toMonoFileJson(
+            name = name,
+            serializableShape = currentRoot.toSerializableShape(true),
+            connectors = environment.shapeManager.shapeConnector.toSerializable(),
+            offset = offset
+        )
         fileMediator.saveFile(name, jsonString)
     }
 

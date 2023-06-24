@@ -35,9 +35,14 @@ object ShapeSerializationUtil {
         emptyList()
     }
 
-    fun toMonoFileJson(name: String, serializableShape: SerializableGroup, offset: Point): String {
+    fun toMonoFileJson(
+        name: String,
+        serializableShape: SerializableGroup,
+        connectors: List<SerializableLineConnector>,
+        offset: Point
+    ): String {
         val extra = Extra(name, offset)
-        val monoFile = MonoFile(serializableShape, extra)
+        val monoFile = MonoFile(serializableShape, connectors, extra)
         return Json.encodeToString(monoFile)
     }
 
@@ -47,7 +52,11 @@ object ShapeSerializationUtil {
         // Fallback to version 0
         val shape = fromShapeJson(jsonString) as? SerializableGroup
         if (shape != null) {
-            MonoFile(shape, Extra("", Point.ZERO))
+            MonoFile(
+                root = shape,
+                connectors = emptyList(),
+                extra = Extra("", Point.ZERO)
+            )
         } else {
             null
         }
