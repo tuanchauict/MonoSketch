@@ -7,8 +7,10 @@ package mono.store.dao.workspace
 import mono.common.currentTimeMillis
 import mono.graphics.geo.Point
 import mono.shape.serialization.SerializableGroup
+import mono.shape.serialization.SerializableLineConnector
 import mono.shape.serialization.ShapeSerializationUtil
 import mono.store.manager.StorageDocument
+import mono.store.manager.StoreKeys.OBJECT_CONNECTORS
 import mono.store.manager.StoreKeys.OBJECT_CONTENT
 import mono.store.manager.StoreKeys.OBJECT_LAST_MODIFIED
 import mono.store.manager.StoreKeys.OBJECT_LAST_OPENED
@@ -39,14 +41,24 @@ class WorkspaceObjectDao internal constructor(
     var rootGroup: SerializableGroup?
         get() {
             val json = objectDocument.get(OBJECT_CONTENT) ?: return null
-            return ShapeSerializationUtil.fromJson(json) as? SerializableGroup
+            return ShapeSerializationUtil.fromShapeJson(json) as? SerializableGroup
         }
         set(value) {
             if (value != null) {
-                val json = ShapeSerializationUtil.toJson(value)
+                val json = ShapeSerializationUtil.toShapeJson(value)
                 objectDocument.set(OBJECT_CONTENT, json)
             }
             lastModifiedTimestampMillis = currentTimeMillis()
+        }
+
+    var connectors: List<SerializableLineConnector>
+        get() {
+            val json = objectDocument.get(OBJECT_CONNECTORS) ?: return emptyList()
+            return ShapeSerializationUtil.fromConnectorsJson(json)
+        }
+        set(value) {
+            val json = ShapeSerializationUtil.toConnectorsJson(value)
+            objectDocument.set(OBJECT_CONNECTORS, json)
         }
 
     var name: String
@@ -78,6 +90,7 @@ class WorkspaceObjectDao internal constructor(
         with(objectDocument) {
             remove(OBJECT_OFFSET)
             remove(OBJECT_CONTENT)
+            remove(OBJECT_CONNECTORS)
             remove(OBJECT_NAME)
             remove(OBJECT_LAST_MODIFIED)
         }

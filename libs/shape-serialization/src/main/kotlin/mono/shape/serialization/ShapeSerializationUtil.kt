@@ -13,10 +13,10 @@ import mono.graphics.geo.Point
  * A util object for serializing shape to Json and load shape from Json
  */
 object ShapeSerializationUtil {
-    fun toJson(serializableShape: AbstractSerializableShape): String =
+    fun toShapeJson(serializableShape: AbstractSerializableShape): String =
         Json.encodeToString(serializableShape)
 
-    fun fromJson(jsonString: String): AbstractSerializableShape? = try {
+    fun fromShapeJson(jsonString: String): AbstractSerializableShape? = try {
         Json.decodeFromString(jsonString)
     } catch (e: Exception) {
         console.error("Error while restoring shapes")
@@ -24,9 +24,25 @@ object ShapeSerializationUtil {
         null
     }
 
-    fun toMonoFileJson(name: String, serializableShape: SerializableGroup, offset: Point): String {
+    fun toConnectorsJson(connectors: List<SerializableLineConnector>): String =
+        Json.encodeToString(connectors)
+
+    fun fromConnectorsJson(jsonString: String): List<SerializableLineConnector> = try {
+        Json.decodeFromString(jsonString)
+    } catch (e: Exception) {
+        console.error("Error while restoring connectors")
+        console.error(e)
+        emptyList()
+    }
+
+    fun toMonoFileJson(
+        name: String,
+        serializableShape: SerializableGroup,
+        connectors: List<SerializableLineConnector>,
+        offset: Point
+    ): String {
         val extra = Extra(name, offset)
-        val monoFile = MonoFile(serializableShape, extra)
+        val monoFile = MonoFile(serializableShape, connectors, extra)
         return Json.encodeToString(monoFile)
     }
 
@@ -34,9 +50,13 @@ object ShapeSerializationUtil {
         Json.decodeFromString<MonoFile>(jsonString)
     } catch (e: Exception) {
         // Fallback to version 0
-        val shape = fromJson(jsonString) as? SerializableGroup
+        val shape = fromShapeJson(jsonString) as? SerializableGroup
         if (shape != null) {
-            MonoFile(shape, Extra("", Point.ZERO))
+            MonoFile(
+                root = shape,
+                connectors = emptyList(),
+                extra = Extra("", Point.ZERO)
+            )
         } else {
             null
         }
