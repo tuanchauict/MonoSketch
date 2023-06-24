@@ -203,12 +203,15 @@ internal class OneTimeActionHandler(
     private fun setSelectedShapeBound(left: Int?, top: Int?, width: Int?, height: Int?) {
         val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
         val currentBound = singleShape.bound
-        val newLeft = left ?: currentBound.left
-        val newTop = top ?: currentBound.top
-        val newWidth = width ?: currentBound.width
-        val newHeight = height ?: currentBound.height
+        val newBound = Rect.byLTWH(
+            left = left ?: currentBound.left,
+            top = top ?: currentBound.top,
+            width = width ?: currentBound.width,
+            height = height ?: currentBound.height
+        )
+        UpdateConnectorHelper.updateConnectors(environment, singleShape, newBound, true)
         environment.shapeManager.execute(
-            ChangeBound(singleShape, Rect.byLTWH(newLeft, newTop, newWidth, newHeight))
+            ChangeBound(singleShape, newBound)
         )
         environment.updateInteractionBounds()
     }
