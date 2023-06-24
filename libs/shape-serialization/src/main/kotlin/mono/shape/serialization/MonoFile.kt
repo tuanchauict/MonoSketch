@@ -13,7 +13,7 @@ const val MONO_FILE_VERSION = 1
 
 /**
  * A data class for serializing shape to Json and load shape from Json.
- *
+ * TODO: Update mono file with connectors
  */
 @Serializable
 data class MonoFile internal constructor(

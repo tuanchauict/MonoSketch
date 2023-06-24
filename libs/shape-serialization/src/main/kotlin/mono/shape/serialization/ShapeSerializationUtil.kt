@@ -13,15 +13,26 @@ import mono.graphics.geo.Point
  * A util object for serializing shape to Json and load shape from Json
  */
 object ShapeSerializationUtil {
-    fun toJson(serializableShape: AbstractSerializableShape): String =
+    fun toShapeJson(serializableShape: AbstractSerializableShape): String =
         Json.encodeToString(serializableShape)
 
-    fun fromJson(jsonString: String): AbstractSerializableShape? = try {
+    fun fromShapeJson(jsonString: String): AbstractSerializableShape? = try {
         Json.decodeFromString(jsonString)
     } catch (e: Exception) {
         console.error("Error while restoring shapes")
         console.error(e)
         null
+    }
+
+    fun toConnectorsJson(connectors: List<SerializableLineConnector>): String =
+        Json.encodeToString(connectors)
+
+    fun fromConnectorsJson(jsonString: String): List<SerializableLineConnector> = try {
+        Json.decodeFromString(jsonString)
+    } catch (e: Exception) {
+        console.error("Error while restoring connectors")
+        console.error(e)
+        emptyList()
     }
 
     fun toMonoFileJson(name: String, serializableShape: SerializableGroup, offset: Point): String {
@@ -34,7 +45,7 @@ object ShapeSerializationUtil {
         Json.decodeFromString<MonoFile>(jsonString)
     } catch (e: Exception) {
         // Fallback to version 0
-        val shape = fromJson(jsonString) as? SerializableGroup
+        val shape = fromShapeJson(jsonString) as? SerializableGroup
         if (shape != null) {
             MonoFile(shape, Extra("", Point.ZERO))
         } else {
