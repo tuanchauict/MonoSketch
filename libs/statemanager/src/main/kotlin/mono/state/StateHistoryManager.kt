@@ -103,11 +103,18 @@ internal class StateHistoryManager(
         val root = environment.shapeManager.root
         val serializableGroup = root.toSerializableShape(true)
         val shapeConnector = environment.shapeManager.shapeConnector
+        val serializableLineConnectors = shapeConnector.toSerializable()
 
-        historyStack.pushState(root.versionCode, serializableGroup, shapeConnector.toSerializable())
+        historyStack.pushState(
+            version = root.versionCode,
+            state = serializableGroup,
+            connectors = serializableLineConnectors
+        )
 
-        workspaceDao.getObject(root.id).rootGroup = serializableGroup
-        // TODO: Also update connector
+        workspaceDao.getObject(root.id).run {
+            rootGroup = serializableGroup
+            connectors = serializableLineConnectors
+        }
     }
 
     private fun restoreShapes(objectDao: WorkspaceObjectDao) {
@@ -117,8 +124,7 @@ internal class StateHistoryManager(
         } else {
             RootGroup(objectDao.objectId)
         }
-        // TODO: load from storage
-        val shapeConnector = ShapeConnector()
+        val shapeConnector = ShapeConnector.fromSerializable(objectDao.connectors)
         environment.replaceRoot(rootGroup, shapeConnector)
     }
 
