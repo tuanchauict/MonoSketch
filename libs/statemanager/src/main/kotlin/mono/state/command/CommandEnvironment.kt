@@ -14,14 +14,12 @@ import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.RootGroup
 import mono.shapebound.InteractionPoint
-import mono.shapesearcher.ShapeSearcher
 
 /**
  * An interface defines apis for command to interact with the environment.
  */
 internal interface CommandEnvironment {
     val shapeManager: ShapeManager
-    val shapeSearcher: ShapeSearcher
 
     val editingModeLiveData: LiveData<EditingMode>
 
@@ -36,6 +34,10 @@ internal interface CommandEnvironment {
     fun addShape(shape: AbstractShape?)
 
     fun removeShape(shape: AbstractShape?)
+
+    fun getShapes(point: Point): Sequence<AbstractShape>
+
+    fun getAllShapesInZone(bound: Rect): Sequence<AbstractShape>
 
     fun getWindowBound(): Rect
 
