@@ -15,10 +15,14 @@ import mono.state.utils.UpdateShapeBoundHelper
 /**
  * A [MouseCommand] for moving selected shapes.
  */
-internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : MouseCommand {
+internal class MoveShapeMouseCommand(
+    private val shapes: Set<AbstractShape>,
+    relatedShapes: Sequence<AbstractShape>
+) : MouseCommand {
     override val mouseCursor: MouseCursor = MouseCursor.MOVE
 
-    private val initialPositions = shapes.associate { it.id to it.bound.position }
+    private val initialPositions = shapes.associate { it.id to it.bound.position } +
+        relatedShapes.associate { it.id to it.bound.position }
 
     override fun execute(
         environment: CommandEnvironment,

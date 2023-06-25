@@ -62,26 +62,30 @@ internal object MouseCommandFactory {
     }
 
     private fun detectInteractionCommand(
-        commandEnvironment: CommandEnvironment,
+        environment: CommandEnvironment,
         mousePointer: MousePointer.Down
     ): MouseCommand? {
-        val selectedShapes = commandEnvironment.getSelectedShapes()
+        val selectedShapes = environment.getSelectedShapes()
         if (selectedShapes.isEmpty()) {
             return null
         }
 
         val sharpBoundInteractionCommand = createShapeBoundInteractionMouseCommandIfValid(
-            commandEnvironment,
-            commandEnvironment.getInteractionPoint(mousePointer.pointPx)
+            environment,
+            environment.getInteractionPoint(mousePointer.pointPx)
         )
         if (sharpBoundInteractionCommand != null) {
             return sharpBoundInteractionCommand
         }
 
         if (!mousePointer.isWithShiftKey &&
-            commandEnvironment.isPointInInteractionBounds(mousePointer.boardCoordinate)
+            environment.isPointInInteractionBounds(mousePointer.boardCoordinate)
         ) {
-            return MoveShapeMouseCommand(selectedShapes)
+            val relatedShapes = selectedShapes
+                .asSequence()
+                .flatMap { environment.shapeManager.shapeConnector.getConnectors(it) }
+                .mapNotNull { environment.shapeManager.getShape(it.lineId) }
+            return MoveShapeMouseCommand(selectedShapes, relatedShapes)
         }
         return null
     }
