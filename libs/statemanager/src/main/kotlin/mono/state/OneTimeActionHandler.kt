@@ -30,7 +30,7 @@ import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
 import mono.state.onetimeaction.AppSettingActionHelper
 import mono.state.onetimeaction.FileRelatedActionsHelper
-import mono.state.utils.UpdateConnectorHelper
+import mono.state.utils.UpdateShapeBoundHelper
 import mono.ui.appstate.AppUiStateManager
 
 /**
@@ -198,7 +198,7 @@ internal class OneTimeActionHandler(
             val newBound = shape.bound.copy(position = newPosition)
             environment.shapeManager.execute(ChangeBound(shape, newBound))
             affectedLines +=
-                UpdateConnectorHelper.updateConnectors(environment, shape, newBound, true)
+                UpdateShapeBoundHelper.updateConnectors(environment, shape, newBound, true)
         }
 
         for (line in lines) {
@@ -210,7 +210,6 @@ internal class OneTimeActionHandler(
             val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
             val newBound = line.bound.copy(position = newPosition)
             environment.shapeManager.execute(ChangeBound(line, newBound))
-            UpdateConnectorHelper.updateConnectors(environment, line, newBound, true)
         }
         environment.updateInteractionBounds()
     }
@@ -224,7 +223,7 @@ internal class OneTimeActionHandler(
             width = width ?: currentBound.width,
             height = height ?: currentBound.height
         )
-        UpdateConnectorHelper.updateConnectors(environment, singleShape, newBound, true)
+        UpdateShapeBoundHelper.updateConnectors(environment, singleShape, newBound, true)
         environment.shapeManager.execute(
             ChangeBound(singleShape, newBound)
         )

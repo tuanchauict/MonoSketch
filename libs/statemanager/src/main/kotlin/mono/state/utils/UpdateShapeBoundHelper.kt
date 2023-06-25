@@ -13,7 +13,7 @@ import mono.state.command.CommandEnvironment
 /**
  * A utility object for updating connectors attached to a shape.
  */
-internal object UpdateConnectorHelper {
+internal object UpdateShapeBoundHelper {
     /**
      * Updates connects of [target].
      * Returns a list of affected lines

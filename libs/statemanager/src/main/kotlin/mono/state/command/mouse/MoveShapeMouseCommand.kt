@@ -12,7 +12,7 @@ import mono.shape.shape.AbstractShape
 import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
 import mono.state.command.mouse.MouseCommand.CommandResultType
-import mono.state.utils.UpdateConnectorHelper
+import mono.state.utils.UpdateShapeBoundHelper
 
 /**
  * A [MouseCommand] for moving selected shapes.
@@ -47,7 +47,7 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
             val newBound = shape.bound.copy(position = newPosition)
 
             environment.shapeManager.execute(ChangeBound(shape, newBound))
-            affectedLines += UpdateConnectorHelper.updateConnectors(
+            affectedLines += UpdateShapeBoundHelper.updateConnectors(
                 environment,
                 shape,
                 newBound,

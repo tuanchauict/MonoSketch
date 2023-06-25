@@ -11,7 +11,7 @@ import mono.shape.command.ChangeBound
 import mono.shape.shape.AbstractShape
 import mono.shapebound.ScaleInteractionPoint
 import mono.state.command.CommandEnvironment
-import mono.state.utils.UpdateConnectorHelper
+import mono.state.utils.UpdateShapeBoundHelper
 
 /**
  * A [MouseCommand] for scaling shape.
@@ -52,7 +52,7 @@ internal class ScaleShapeMouseCommand(
         val newBound = interactionPoint.createNewShapeBound(initialBound, pointF)
         environment.shapeManager.execute(ChangeBound(shape, newBound))
 
-        UpdateConnectorHelper.updateConnectors(environment, shape, newBound, isUpdateConfirmed)
+        UpdateShapeBoundHelper.updateConnectors(environment, shape, newBound, isUpdateConfirmed)
         environment.updateInteractionBounds()
     }
 }
