@@ -86,7 +86,7 @@ internal class AddLineMouseCommand : MouseCommand {
                 anchorPointUpdate,
                 isReducedRequired,
                 justMoveAnchor = false,
-                connectableCandidateShapes = environment.shapeSearcher.getShapes(point)
+                connectableCandidateShapes = environment.getShapes(point)
             )
         )
     }

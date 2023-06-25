@@ -52,12 +52,11 @@ class ShapeSearcher(
                 !bitmap.getVisual(bitmapRow, bitmapCol).isTransparent
             }
 
-    fun getAllShapesInZone(bound: Rect): List<AbstractShape> =
+    fun getAllShapesInZone(bound: Rect): Sequence<AbstractShape> =
         zoneOwnersManager.getAllPotentialOwnersInZone(bound)
             .asSequence()
             .mapNotNull { shapeManager.getShape(it) }
             .filter { it.isOverlapped(bound) }
-            .toList()
 
     /**
      * Gets the edge direction of a shape having bound's edges at [point].
