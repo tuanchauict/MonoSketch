@@ -11,6 +11,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.MoveLineAnchor
 import mono.shape.command.MoveLineEdge
+import mono.shape.connector.ShapeConnectorUseCase
 import mono.shape.shape.Line
 import mono.shapebound.LineInteractionPoint
 import mono.state.command.CommandEnvironment
@@ -86,15 +87,17 @@ internal class LineInteractionMouseCommand(
             interactionPoint.anchor,
             DirectedPoint(direction, point)
         )
+        val connectShape = ShapeConnectorUseCase.getConnectableShape(
+            anchorPointUpdate.point,
+            environment.getShapes(point)
+        )
         environment.shapeManager.execute(
             MoveLineAnchor(
                 lineShape,
                 anchorPointUpdate,
                 isUpdateConfirmed,
                 justMoveAnchor = justMoveAnchor,
-                // TODO: If the performance is bad when moving the shape, it's okay to only search
-                //  for the candidates when the action is end (mouse up)
-                connectableCandidateShapes = environment.shapeSearcher.getShapes(point)
+                connectShape = connectShape
             )
         )
         environment.updateInteractionBounds()

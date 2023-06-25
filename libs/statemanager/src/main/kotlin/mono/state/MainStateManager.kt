@@ -296,7 +296,7 @@ class MainStateManager(
         override val shapeManager: ShapeManager
             get() = stateManager.shapeManager
 
-        override val shapeSearcher: ShapeSearcher
+        private val shapeSearcher: ShapeSearcher
             get() = stateManager.shapeSearcher
 
         override val editingModeLiveData: LiveData<EditingMode>
@@ -340,6 +340,12 @@ class MainStateManager(
         }
 
         override fun removeShape(shape: AbstractShape?) = shapeManager.remove(shape)
+
+        override fun getShapes(point: Point): Sequence<AbstractShape> =
+            shapeSearcher.getShapes(point)
+
+        override fun getAllShapesInZone(bound: Rect): Sequence<AbstractShape> =
+            shapeSearcher.getAllShapesInZone(bound)
 
         override fun getWindowBound(): Rect = stateManager.windowBoardBound
 
