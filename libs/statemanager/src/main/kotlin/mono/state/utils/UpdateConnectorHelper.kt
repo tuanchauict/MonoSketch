@@ -2,7 +2,7 @@
  * Copyright (c) 2023, tuanchauict
  */
 
-package mono.state.command.mouse
+package mono.state.utils
 
 import mono.graphics.geo.Rect
 import mono.shape.connector.ShapeConnectorUseCase.getPointInNewBound

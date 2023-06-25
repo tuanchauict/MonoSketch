@@ -12,6 +12,7 @@ import mono.shape.shape.AbstractShape
 import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
 import mono.state.command.mouse.MouseCommand.CommandResultType
+import mono.state.utils.UpdateConnectorHelper
 
 /**
  * A [MouseCommand] for moving selected shapes.

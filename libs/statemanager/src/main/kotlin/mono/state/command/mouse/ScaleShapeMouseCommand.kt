@@ -11,6 +11,7 @@ import mono.shape.command.ChangeBound
 import mono.shape.shape.AbstractShape
 import mono.shapebound.ScaleInteractionPoint
 import mono.state.command.CommandEnvironment
+import mono.state.utils.UpdateConnectorHelper
 
 /**
  * A [MouseCommand] for scaling shape.

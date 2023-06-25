@@ -27,10 +27,10 @@ import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
-import mono.state.command.mouse.UpdateConnectorHelper
 import mono.state.command.text.EditTextShapeHelper
 import mono.state.onetimeaction.AppSettingActionHelper
 import mono.state.onetimeaction.FileRelatedActionsHelper
+import mono.state.utils.UpdateConnectorHelper
 import mono.ui.appstate.AppUiStateManager
 
 /**
