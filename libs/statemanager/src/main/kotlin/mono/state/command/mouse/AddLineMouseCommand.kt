@@ -11,6 +11,7 @@ import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.MoveLineAnchor
+import mono.shape.connector.ShapeConnectorUseCase
 import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
 
@@ -80,13 +81,17 @@ internal class AddLineMouseCommand : MouseCommand {
             Line.Anchor.END,
             DirectedPoint(direction, endPoint)
         )
+        val connectShape = ShapeConnectorUseCase.getConnectableShape(
+            anchorPointUpdate.point,
+            environment.getShapes(point)
+        )
         shapeManager.execute(
             MoveLineAnchor(
                 line,
                 anchorPointUpdate,
                 isReducedRequired,
                 justMoveAnchor = false,
-                connectableCandidateShapes = environment.getShapes(point)
+                connectShape = connectShape
             )
         )
     }

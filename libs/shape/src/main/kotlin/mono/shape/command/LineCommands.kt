@@ -9,9 +9,6 @@ import mono.shape.ShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
-import mono.shape.shape.MockShape
-import mono.shape.shape.Rectangle
-import mono.shape.shape.Text
 
 /**
  * A [Command] for changing Line shape's Anchors.
@@ -24,7 +21,7 @@ class MoveLineAnchor(
     private val anchorPointUpdate: Line.AnchorPointUpdate,
     private val isUpdateConfirmed: Boolean,
     private val justMoveAnchor: Boolean,
-    private val connectableCandidateShapes: Sequence<AbstractShape>
+    private val connectShape: AbstractShape?
 ) : Command() {
     override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
         shapeManager.getGroup(target.parentId)
@@ -39,18 +36,9 @@ class MoveLineAnchor(
         if (currentVersion == target.versionCode) {
             return
         }
-        val boxShape = connectableCandidateShapes.lastOrNull {
-            when (it) {
-                is Rectangle,
-                is Text -> true
 
-                is Group,
-                is Line,
-                is MockShape -> false
-            }
-        }
-        if (boxShape != null) {
-            shapeManager.shapeConnector.addConnector(target, anchorPointUpdate.anchor, boxShape)
+        if (connectShape != null) {
+            shapeManager.shapeConnector.addConnector(target, anchorPointUpdate.anchor, connectShape)
         } else {
             shapeManager.shapeConnector.removeConnector(target, anchorPointUpdate.anchor)
         }

@@ -8,12 +8,35 @@ import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.Point
 import mono.graphics.geo.PointF
 import mono.graphics.geo.Rect
+import mono.shape.shape.AbstractShape
+import mono.shape.shape.Group
+import mono.shape.shape.Line
+import mono.shape.shape.MockShape
+import mono.shape.shape.Rectangle
+import mono.shape.shape.Text
 
 /**
  * A Use case object for shape connector
  */
 object ShapeConnectorUseCase {
     private const val MAX_DISTANCE = 1
+
+    fun getConnectableShape(
+        anchorPoint: DirectedPoint,
+        candidates: Sequence<AbstractShape>
+    ): AbstractShape? = candidates.lastOrNull { canConnect(anchorPoint, it) }
+
+    private fun canConnect(anchorPoint: DirectedPoint, shape: AbstractShape): Boolean {
+        val bound = when (shape) {
+            is Rectangle -> shape.bound
+            is Text -> shape.bound
+            is Group,
+            is Line,
+            is MockShape -> null
+        } ?: return false
+        val around = getAround(anchorPoint, bound)
+        return around != null
+    }
 
     fun getAround(
         anchorPoint: DirectedPoint,
