@@ -26,16 +26,7 @@ internal class AddLineMouseCommand : MouseCommand {
     ): MouseCommand.CommandResultType =
         when (mousePointer) {
             is MousePointer.Down -> {
-                val edgeDirection = environment.getEdgeDirection(mousePointer.boardCoordinate)
-                val direction =
-                    edgeDirection?.normalizedDirection ?: DirectedPoint.Direction.HORIZONTAL
-                val shape = Line(
-                    DirectedPoint(direction, mousePointer.boardCoordinate),
-                    DirectedPoint(DirectedPoint.Direction.VERTICAL, mousePointer.boardCoordinate),
-                    parentId = environment.workingParentGroup.id
-                )
-                workingShape = shape
-                environment.addShape(shape)
+                workingShape = environment.createLineAndAdjustStartAnchor(mousePointer)
                 environment.clearSelectedShapes()
                 MouseCommand.CommandResultType.WORKING
             }
@@ -66,6 +57,28 @@ internal class AddLineMouseCommand : MouseCommand {
             is MousePointer.DoubleClick,
             MousePointer.Idle -> MouseCommand.CommandResultType.UNKNOWN
         }.exhaustive
+
+    private fun CommandEnvironment.createLineAndAdjustStartAnchor(
+        mousePointer: MousePointer.Down
+    ): Line {
+        val edgeDirection = getEdgeDirection(mousePointer.boardCoordinate)
+        val direction = edgeDirection?.normalizedDirection ?: DirectedPoint.Direction.HORIZONTAL
+        val line = Line(
+            DirectedPoint(direction, mousePointer.boardCoordinate),
+            DirectedPoint(DirectedPoint.Direction.VERTICAL, mousePointer.boardCoordinate),
+            parentId = workingParentGroup.id
+        )
+        addShape(line)
+
+        val connectShape = ShapeConnectorUseCase.getConnectableShape(
+            line.startPoint,
+            getShapes(mousePointer.boardCoordinate)
+        )
+        if (connectShape != null) {
+            shapeManager.shapeConnector.addConnector(line, Line.Anchor.START, connectShape)
+        }
+        return line
+    }
 
     private fun CommandEnvironment.changeEndAnchor(
         environment: CommandEnvironment,
