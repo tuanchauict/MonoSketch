@@ -27,10 +27,10 @@ import mono.shape.shape.MockShape
 import mono.shape.shape.Rectangle
 import mono.shape.shape.Text
 import mono.state.command.CommandEnvironment
-import mono.state.command.mouse.UpdateConnectorHelper
 import mono.state.command.text.EditTextShapeHelper
 import mono.state.onetimeaction.AppSettingActionHelper
 import mono.state.onetimeaction.FileRelatedActionsHelper
+import mono.state.utils.UpdateShapeBoundHelper
 import mono.ui.appstate.AppUiStateManager
 
 /**
@@ -189,29 +189,13 @@ internal class OneTimeActionHandler(
     }
 
     private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
-        val (lines, notLineShapes) = environment.getSelectedShapes().partition { it is Line }
-        val affectedLines = mutableSetOf<String>()
+        val offset = Point(offsetCol, offsetRow)
+        UpdateShapeBoundHelper.moveShapes(
+            environment,
+            environment.getSelectedShapes(),
+            isUpdateConfirmed = true
+        ) { it.bound.position + offset }
 
-        for (shape in notLineShapes) {
-            val bound = shape.bound
-            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
-            val newBound = shape.bound.copy(position = newPosition)
-            environment.shapeManager.execute(ChangeBound(shape, newBound))
-            affectedLines +=
-                UpdateConnectorHelper.updateConnectors(environment, shape, newBound, true)
-        }
-
-        for (line in lines) {
-            if (line.id in affectedLines) {
-                // If a line is updated by connectors, ignore it from updating as individual shape
-                continue
-            }
-            val bound = line.bound
-            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
-            val newBound = line.bound.copy(position = newPosition)
-            environment.shapeManager.execute(ChangeBound(line, newBound))
-            UpdateConnectorHelper.updateConnectors(environment, line, newBound, true)
-        }
         environment.updateInteractionBounds()
     }
 
@@ -224,7 +208,7 @@ internal class OneTimeActionHandler(
             width = width ?: currentBound.width,
             height = height ?: currentBound.height
         )
-        UpdateConnectorHelper.updateConnectors(environment, singleShape, newBound, true)
+        UpdateShapeBoundHelper.updateConnectors(environment, singleShape, newBound, true)
         environment.shapeManager.execute(
             ChangeBound(singleShape, newBound)
         )
