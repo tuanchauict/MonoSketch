@@ -9,6 +9,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.ChangeBound
 import mono.shape.shape.AbstractShape
+import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
 import mono.state.command.mouse.MouseCommand.CommandResultType
 
@@ -35,15 +36,33 @@ internal class MoveShapeMouseCommand(private val shapes: Set<AbstractShape>) : M
         }
 
         val isUpdateConfirmed = mousePointer is MousePointer.Up
-        for (shape in shapes) {
+
+        val affectedLines = mutableSetOf<String>()
+        val (lines, notLineShapes) = shapes.partition { it is Line }
+
+        for (shape in notLineShapes) {
             val initialPosition = initialPositions[shape.id] ?: continue
             val newPosition = initialPosition + offset
             val newBound = shape.bound.copy(position = newPosition)
-            environment.shapeManager.execute(
-                ChangeBound(shape, newBound)
-            )
 
-            UpdateConnectorHelper.updateConnectors(environment, shape, newBound, isUpdateConfirmed)
+            environment.shapeManager.execute(ChangeBound(shape, newBound))
+            affectedLines += UpdateConnectorHelper.updateConnectors(
+                environment,
+                shape,
+                newBound,
+                isUpdateConfirmed
+            )
+        }
+
+        for (line in lines) {
+            if (line.id in affectedLines) {
+                // If a line is updated by connectors, ignore it from updating as individual shape
+                continue
+            }
+            val initialPosition = initialPositions[line.id] ?: continue
+            val newPosition = initialPosition + offset
+            val newBound = line.bound.copy(position = newPosition)
+            environment.shapeManager.execute(ChangeBound(line, newBound))
         }
 
         environment.updateInteractionBounds()
