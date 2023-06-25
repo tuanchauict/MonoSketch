@@ -183,7 +183,8 @@ class Line(
      * the previous containing edge.
      *
      * Examples for moved:
-     * Case 1. Line's edges are never moved: see examples in the class doc
+     * Case 1. Line's edges are never moved or the number of joint points is 2:
+     * See examples in the class doc
      *
      * Case 2. Line's edges have been moved and [justMoveAnchor] is true and number of joint points
      * is larger than 2: update the position of the anchor and the adjacent point:
@@ -231,7 +232,7 @@ class Line(
 
         val isEdgeUpdated = confirmedJointPoints.isNotEmpty()
         val newJointPoints = when {
-            !isEdgeUpdated -> {
+            !isEdgeUpdated || confirmedJointPoints.size == 2 -> {
                 val seedPoints = listOf(startPoint, endPoint)
                 LineHelper.createJointPoints(seedPoints)
             }
