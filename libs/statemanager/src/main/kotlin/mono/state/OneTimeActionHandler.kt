@@ -189,28 +189,13 @@ internal class OneTimeActionHandler(
     }
 
     private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
-        val (lines, notLineShapes) = environment.getSelectedShapes().partition { it is Line }
-        val affectedLines = mutableSetOf<String>()
+        val offset = Point(offsetCol, offsetRow)
+        UpdateShapeBoundHelper.moveShapes(
+            environment,
+            environment.getSelectedShapes(),
+            isUpdateConfirmed = true
+        ) { it.bound.position + offset }
 
-        for (shape in notLineShapes) {
-            val bound = shape.bound
-            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
-            val newBound = shape.bound.copy(position = newPosition)
-            environment.shapeManager.execute(ChangeBound(shape, newBound))
-            affectedLines +=
-                UpdateShapeBoundHelper.updateConnectors(environment, shape, newBound, true)
-        }
-
-        for (line in lines) {
-            if (line.id in affectedLines) {
-                // If a line is updated by connectors, ignore it from updating as individual shape
-                continue
-            }
-            val bound = line.bound
-            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
-            val newBound = line.bound.copy(position = newPosition)
-            environment.shapeManager.execute(ChangeBound(line, newBound))
-        }
         environment.updateInteractionBounds()
     }
 
