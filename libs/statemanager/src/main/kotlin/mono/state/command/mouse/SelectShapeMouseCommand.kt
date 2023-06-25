@@ -59,7 +59,8 @@ internal object SelectShapeMouseCommand : MouseCommand {
             }
 
             is MousePointer.Click -> {
-                val shapes = environment.shapeSearcher.getShapes(mousePointer.boardCoordinate)
+                val shapes =
+                    environment.shapeSearcher.getShapes(mousePointer.boardCoordinate).toList()
                 if (shapes.isNotEmpty()) {
                     val shape = shapes.last()
                     if (mousePointer.isWithShiftKey) {

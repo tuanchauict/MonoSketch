@@ -24,7 +24,7 @@ class MoveLineAnchor(
     private val anchorPointUpdate: Line.AnchorPointUpdate,
     private val isUpdateConfirmed: Boolean,
     private val justMoveAnchor: Boolean,
-    private val connectableCandidateShapes: List<AbstractShape>
+    private val connectableCandidateShapes: Sequence<AbstractShape>
 ) : Command() {
     override fun getDirectAffectedParent(shapeManager: ShapeManager): Group? =
         shapeManager.getGroup(target.parentId)
