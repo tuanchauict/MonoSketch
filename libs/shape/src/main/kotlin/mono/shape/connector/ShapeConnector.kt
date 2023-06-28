@@ -11,7 +11,11 @@ import mono.graphics.geo.Rect
 import mono.shape.collection.TwoWayQuickMap
 import mono.shape.serialization.SerializableLineConnector
 import mono.shape.shape.AbstractShape
+import mono.shape.shape.Group
 import mono.shape.shape.Line
+import mono.shape.shape.MockShape
+import mono.shape.shape.Rectangle
+import mono.shape.shape.Text
 
 /**
  * A manager of shape connectors.
@@ -41,7 +45,21 @@ class ShapeConnector {
     fun removeConnector(line: Line, anchor: Line.Anchor) =
         lineConnectors.removeKey(LineConnector.ConnectorIdentifier(line.id, anchor))
 
-    fun removeShape(shape: AbstractShape) = lineConnectors.removeValue(shape)
+    fun removeShape(shape: AbstractShape) {
+        lineConnectors.removeValue(shape)
+
+        when (shape) {
+            is Line -> {
+                removeConnector(shape, Line.Anchor.START)
+                removeConnector(shape, Line.Anchor.END)
+            }
+
+            is Group,
+            is MockShape,
+            is Rectangle,
+            is Text -> Unit
+        }
+    }
 
     /**
      * Calculates the connector ratio. Returns null if the two cannot connect.
