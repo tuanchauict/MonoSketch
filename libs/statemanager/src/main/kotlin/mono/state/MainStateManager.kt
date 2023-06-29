@@ -67,6 +67,12 @@ class MainStateManager(
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
+    /**
+     * The current working parent group, which is the group that is focused, shape actions will be
+     * applied to this group.
+     *
+     * This is similar to the concept of "current directory" in file system.
+     */
     private var workingParentGroup: Group = shapeManager.root
 
     private var windowBoardBound: Rect = Rect.ZERO

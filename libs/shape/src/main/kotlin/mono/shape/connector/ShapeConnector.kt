@@ -77,15 +77,7 @@ class ShapeConnector {
 
     fun toSerializable(): List<SerializableLineConnector> =
         lineConnectors.asSequence()
-            .map { (lineConnector, target) ->
-                SerializableLineConnector(
-                    lineId = lineConnector.lineId,
-                    anchor = lineConnector.anchor,
-                    targetId = target.id,
-                    lineConnector.ratio,
-                    lineConnector.offset
-                )
-            }
+            .map { (lineConnector, target) -> toSerializableConnector(lineConnector, target) }
             .toList()
 
     companion object {
@@ -99,5 +91,27 @@ class ShapeConnector {
             }
             return manager
         }
+
+        fun toSerializableConnector(
+            lineConnector: LineConnector,
+            target: AbstractShape.ShapeIdentifier
+        ): SerializableLineConnector = SerializableLineConnector(
+            lineId = lineConnector.lineId,
+            anchor = lineConnector.anchor,
+            targetId = target.id,
+            lineConnector.ratio,
+            lineConnector.offset
+        )
+
+        fun toSerializableConnector(
+            lineConnector: LineConnector,
+            target: AbstractShape
+        ): SerializableLineConnector = SerializableLineConnector(
+            lineId = lineConnector.lineId,
+            anchor = lineConnector.anchor,
+            targetId = target.id,
+            lineConnector.ratio,
+            lineConnector.offset
+        )
     }
 }
