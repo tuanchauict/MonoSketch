@@ -23,6 +23,12 @@ internal interface CommandEnvironment {
 
     val editingModeLiveData: LiveData<EditingMode>
 
+    /**
+     * The current working parent group, which is the group that is focused, shape actions will be
+     * applied to this group.
+     *
+     * This is similar to the concept of "current directory" in file system.
+     */
     val workingParentGroup: Group
 
     fun replaceRoot(newRoot: RootGroup, newShapeConnector: ShapeConnector)
