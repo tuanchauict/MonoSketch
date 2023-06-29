@@ -72,18 +72,26 @@ internal class ClipboardManager(
         clipboardObject: ShapeClipboardManager.ClipboardObject
     ) {
         val currentParentId = environment.workingParentGroup.id
-        val shapes = clipboardObject.shapes.map { Group.toShape(currentParentId, it) }
-        val minLeft = shapes.minOf { it.bound.left }
-        val minTop = shapes.minOf { it.bound.top }
+
+        val srcIdToShapeMap =
+            clipboardObject.shapes.associate { it.id to Group.toShape(currentParentId, it) }
+        val minLeft = srcIdToShapeMap.values.minOf { it.bound.left }
+        val minTop = srcIdToShapeMap.values.minOf { it.bound.top }
 
         val offset = Point(minLeft - left, minTop - top)
-        for (shape in shapes) {
+        for (shape in srcIdToShapeMap.values) {
             val shapeBound = shape.bound
             val newShapeBound = shapeBound.copy(position = shapeBound.position.minus(offset))
             shape.setBound(newShapeBound)
 
             environment.addShape(shape)
             environment.addSelectedShape(shape)
+        }
+
+        for (connector in clipboardObject.connectors) {
+            val line = srcIdToShapeMap[connector.lineId] as? mono.shape.shape.Line ?: continue
+            val target = srcIdToShapeMap[connector.targetId] ?: continue
+            environment.shapeManager.shapeConnector.addConnector(line, connector.anchor, target)
         }
     }
 
