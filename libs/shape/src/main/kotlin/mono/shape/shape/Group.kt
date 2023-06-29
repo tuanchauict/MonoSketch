@@ -41,7 +41,7 @@ open class Group(
     constructor(
         serializableGroup: SerializableGroup,
         parentId: String?
-    ) : this(id = serializableGroup.id, parentId = parentId) {
+    ) : this(id = serializableGroup.actualId, parentId = parentId) {
         for (serializableShape in serializableGroup.shapes) {
             addInternal(toShape(id, serializableShape))
         }
@@ -50,7 +50,8 @@ open class Group(
 
     override fun toSerializableShape(isIdIncluded: Boolean): SerializableGroup =
         SerializableGroup(
-            id.takeIf { isIdIncluded },
+            id,
+            isIdTemporary = !isIdIncluded,
             versionCode,
             items.map { it.toSerializableShape(isIdIncluded) }
         )

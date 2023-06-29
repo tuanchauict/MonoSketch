@@ -51,7 +51,7 @@ class Rectangle(
         parentId: String? = null
     ) : this(
         serializableRectangle.bound,
-        id = serializableRectangle.id,
+        id = serializableRectangle.actualId,
         parentId = parentId
     ) {
         extra = RectangleExtra(serializableRectangle.extra)
@@ -60,7 +60,8 @@ class Rectangle(
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
         SerializableRectangle(
-            id = id.takeIf { isIdIncluded },
+            id,
+            isIdTemporary = !isIdIncluded,
             versionCode,
             bound,
             extra = extra.toSerializableExtra()

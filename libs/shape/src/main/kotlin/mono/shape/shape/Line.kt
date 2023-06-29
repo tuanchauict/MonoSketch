@@ -120,7 +120,7 @@ class Line(
     internal constructor(serializableLine: SerializableLine, parentId: String) : this(
         serializableLine.startPoint,
         serializableLine.endPoint,
-        id = serializableLine.id,
+        id = serializableLine.actualId,
         parentId = parentId
     ) {
         jointPoints = serializableLine.jointPoints
@@ -134,7 +134,8 @@ class Line(
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
         SerializableLine(
-            id.takeIf { isIdIncluded },
+            id,
+            isIdTemporary = !isIdIncluded,
             versionCode,
             startPoint,
             endPoint,

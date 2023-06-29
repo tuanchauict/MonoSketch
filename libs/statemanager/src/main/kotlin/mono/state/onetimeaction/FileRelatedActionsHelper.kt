@@ -127,7 +127,7 @@ internal class FileRelatedActionsHelper(
                 existingProject.lastModifiedTimestampMillis,
                 onKeepBothClick = {
                     prepareAndApplyNewRoot(
-                        RootGroup(monoFile.root.copy(id = null)),
+                        RootGroup(monoFile.root.copy(isIdTemporary = true)),
                         monoFile.extra
                     )
                 },

@@ -68,7 +68,7 @@ class Text(
 
     internal constructor(serializableText: SerializableText, parentId: String?) : this(
         serializableText.bound,
-        id = serializableText.id,
+        id = serializableText.actualId,
         parentId = parentId,
         isTextEditable = serializableText.isTextEditable
     ) {
@@ -84,7 +84,8 @@ class Text(
 
     override fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape =
         SerializableText(
-            id.takeIf { isIdIncluded },
+            id,
+            isIdTemporary = !isIdIncluded,
             versionCode,
             bound,
             text,
