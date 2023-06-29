@@ -50,7 +50,8 @@ internal class ClipboardManager(
         }
     }
 
-    private fun pasteShapes(serializableShapes: List<AbstractSerializableShape>) {
+    private fun pasteShapes(clipboardObject: ShapeClipboardManager.ClipboardObject) {
+        val serializableShapes = clipboardObject.shapes
         if (serializableShapes.isEmpty()) {
             return
         }

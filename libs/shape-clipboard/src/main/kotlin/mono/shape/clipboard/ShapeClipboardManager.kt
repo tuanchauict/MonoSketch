@@ -25,10 +25,8 @@ import org.w3c.dom.HTMLElement
  */
 class ShapeClipboardManager(private val body: HTMLElement) {
 
-    private val clipboardShapeMutableLiveData: MutableLiveData<List<AbstractSerializableShape>> =
-        MutableLiveData(emptyList())
-    val clipboardShapeLiveData: LiveData<List<AbstractSerializableShape>> =
-        clipboardShapeMutableLiveData
+    private val clipboardShapeMutableLiveData = MutableLiveData(ClipboardObject(emptyList()))
+    val clipboardShapeLiveData: LiveData<ClipboardObject> = clipboardShapeMutableLiveData
 
     init {
         document.onpaste = {
@@ -48,8 +46,7 @@ class ShapeClipboardManager(private val body: HTMLElement) {
             null
         }
         if (clipboardObject != null) {
-            clipboardShapeMutableLiveData.value = clipboardObject.shapes
-            // TODO: Handle connectors
+            clipboardShapeMutableLiveData.value = clipboardObject
             return
         }
 
@@ -60,11 +57,11 @@ class ShapeClipboardManager(private val body: HTMLElement) {
             null
         }
         if (clipboardShapes != null) {
-            clipboardShapeMutableLiveData.value = clipboardShapes
+            clipboardShapeMutableLiveData.value = ClipboardObject(clipboardShapes)
             return
         }
 
-        clipboardShapeMutableLiveData.value = listOf(createTextShapeFromText(text))
+        clipboardShapeMutableLiveData.value = ClipboardObject(listOf(createTextShapeFromText(text)))
     }
 
     private fun createTextShapeFromText(text: String): SerializableText {
@@ -104,10 +101,12 @@ class ShapeClipboardManager(private val body: HTMLElement) {
      * A data class to store shapes and connectors in clipboard when serializing to JSON.
      */
     @Serializable
-    class ClipboardObject(
+    data class ClipboardObject(
         val shapes: List<AbstractSerializableShape>,
         val connectors: List<SerializableLineConnector>
-    )
+    ) {
+        constructor(shapes: List<AbstractSerializableShape>) : this(shapes, emptyList())
+    }
 
     companion object {
         private const val DEFAULT_TEXT_BOUND_WIDTH = 400
