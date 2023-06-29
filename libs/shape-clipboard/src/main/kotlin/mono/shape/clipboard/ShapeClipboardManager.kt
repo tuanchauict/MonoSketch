@@ -5,6 +5,7 @@
 package mono.shape.clipboard
 
 import kotlinx.browser.document
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -14,6 +15,7 @@ import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.shape.extra.TextExtra
 import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.serialization.SerializableLineConnector
 import mono.shape.serialization.SerializableText
 import org.w3c.dom.HTMLElement
 
@@ -40,12 +42,29 @@ class ShapeClipboardManager(private val body: HTMLElement) {
         if (text.isBlank()) {
             return
         }
-        clipboardShapeMutableLiveData.value =
-            try {
-                Json.decodeFromString(text)
-            } catch (e: Exception) {
-                listOf(createTextShapeFromText(text))
-            }
+        val clipboardObject = try {
+            Json.decodeFromString<ClipboardObject>(text)
+        } catch (e: Exception) {
+            null
+        }
+        if (clipboardObject != null) {
+            clipboardShapeMutableLiveData.value = clipboardObject.shapes
+            // TODO: Handle connectors
+            return
+        }
+
+        // This is for backward compatibility with old clipboard format
+        val clipboardShapes = try {
+            Json.decodeFromString<List<AbstractSerializableShape>>(text)
+        } catch (e: Exception) {
+            null
+        }
+        if (clipboardShapes != null) {
+            clipboardShapeMutableLiveData.value = clipboardShapes
+            return
+        }
+
+        clipboardShapeMutableLiveData.value = listOf(createTextShapeFromText(text))
     }
 
     private fun createTextShapeFromText(text: String): SerializableText {
@@ -64,8 +83,12 @@ class ShapeClipboardManager(private val body: HTMLElement) {
         )
     }
 
-    fun setClipboard(shapes: List<AbstractSerializableShape>) {
-        val json = Json.encodeToString(shapes)
+    fun setClipboard(
+        shapes: List<AbstractSerializableShape>,
+        connectors: List<SerializableLineConnector>
+    ) {
+        val clipboardObject = ClipboardObject(shapes, connectors)
+        val json = Json.encodeToString(clipboardObject)
         setClipboardText(json)
     }
 
@@ -76,6 +99,15 @@ class ShapeClipboardManager(private val body: HTMLElement) {
             remove()
         }
     }
+
+    /**
+     * A data class to store shapes and connectors in clipboard when serializing to JSON.
+     */
+    @Serializable
+    class ClipboardObject(
+        val shapes: List<AbstractSerializableShape>,
+        val connectors: List<SerializableLineConnector>
+    )
 
     companion object {
         private const val DEFAULT_TEXT_BOUND_WIDTH = 400
