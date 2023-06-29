@@ -80,14 +80,8 @@ class ShapeClipboardManager(private val body: HTMLElement) {
         )
     }
 
-    fun setClipboard(
-        shapes: List<AbstractSerializableShape>,
-        connectors: List<SerializableLineConnector>
-    ) {
-        val clipboardObject = ClipboardObject(shapes, connectors)
-        val json = Json.encodeToString(clipboardObject)
-        setClipboardText(json)
-    }
+    fun setClipboard(clipboardObject: ClipboardObject) =
+        setClipboardText(Json.encodeToString(clipboardObject))
 
     fun setClipboardText(text: String) {
         TextArea(body, classes = "hidden", content = text) {
