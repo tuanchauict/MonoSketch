@@ -143,6 +143,7 @@ internal class OneTimeActionHandler(
     private fun deleteSelectedShapes() {
         for (shape in environment.getSelectedShapes()) {
             environment.removeShape(shape)
+            environment.shapeManager.shapeConnector.removeShape(shape)
         }
         environment.clearSelectedShapes()
     }
