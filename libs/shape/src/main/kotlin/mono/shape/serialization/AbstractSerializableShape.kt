@@ -13,9 +13,24 @@ import mono.shape.shape.AbstractShape
 
 @Serializable
 sealed class AbstractSerializableShape {
-    // null for not having id.
+    /**
+     * The id of this shape.
+     * If this is null, the shape does not have id and will be assigned a new id when created.
+     * This value is only for serialization and reference purpose, do not read this value directly
+     * when creating a shape, instead, use [actualId].
+     */
     abstract val id: String?
+
+    /**
+     * A flag indicates that, if this value is true, even if the [id] is not null, the id is still
+     * unavailable. This is similar to when id is null but the temporary id is used for function
+     * like copy-paste.
+     */
+    abstract val isIdTemporary: Boolean
     abstract val versionCode: Int
+
+    val actualId: String?
+        get() = if (isIdTemporary) null else id
 }
 
 @Serializable
@@ -23,6 +38,8 @@ sealed class AbstractSerializableShape {
 data class SerializableRectangle(
     @SerialName("i")
     override val id: String? = null,
+    @SerialName("idtemp")
+    override val isIdTemporary: Boolean = false,
     @SerialName("v")
     override val versionCode: Int,
     @SerialName("b")
@@ -53,6 +70,8 @@ data class SerializableRectangle(
 data class SerializableText(
     @SerialName("i")
     override val id: String? = null,
+    @SerialName("idtemp")
+    override val isIdTemporary: Boolean = false,
     @SerialName("v")
     override val versionCode: Int = AbstractShape.nextVersionCode(),
     @SerialName("b")
@@ -81,6 +100,8 @@ data class SerializableText(
 data class SerializableLine(
     @SerialName("i")
     override val id: String? = null,
+    @SerialName("idtemp")
+    override val isIdTemporary: Boolean = false,
     @SerialName("v")
     override val versionCode: Int,
     @SerialName("ps")
@@ -121,6 +142,8 @@ data class SerializableLine(
 data class SerializableGroup(
     @SerialName("i")
     override val id: String? = null,
+    @SerialName("idtemp")
+    override val isIdTemporary: Boolean = false,
     @SerialName("v")
     override val versionCode: Int,
     @SerialName("ss")

@@ -7,7 +7,7 @@ package mono.state
 import mono.graphics.geo.Point
 import mono.lifecycle.LifecycleOwner
 import mono.shape.clipboard.ShapeClipboardManager
-import mono.shape.serialization.AbstractSerializableShape
+import mono.shape.connector.ShapeConnector
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.state.command.CommandEnvironment
@@ -17,13 +17,13 @@ import mono.state.command.CommandEnvironment
  */
 internal class ClipboardManager(
     lifecycleOwner: LifecycleOwner,
-    private val commandEnvironment: CommandEnvironment,
+    private val environment: CommandEnvironment,
     private val shapeClipboardManager: ShapeClipboardManager
 ) {
     private var selectedShapes: Collection<AbstractShape> = emptyList()
 
     init {
-        commandEnvironment.selectedShapesLiveData.observe(lifecycleOwner) {
+        environment.selectedShapesLiveData.observe(lifecycleOwner) {
             selectedShapes = it
         }
         shapeClipboardManager.clipboardShapeLiveData.observe(
@@ -33,25 +33,24 @@ internal class ClipboardManager(
     }
 
     fun copySelectedShapes(isRemoveRequired: Boolean) {
-        val serializableShapes = selectedShapes.map { it.toSerializableShape(false) }
-        shapeClipboardManager.setClipboard(serializableShapes)
+        shapeClipboardManager.setClipboard(createClipboardObject())
         if (isRemoveRequired) {
             for (shape in selectedShapes) {
-                commandEnvironment.removeShape(shape)
+                environment.removeShape(shape)
             }
-            commandEnvironment.clearSelectedShapes()
+            environment.clearSelectedShapes()
         }
     }
 
-    private fun pasteShapes(serializableShapes: List<AbstractSerializableShape>) {
-        if (serializableShapes.isEmpty()) {
+    private fun pasteShapes(clipboardObject: ShapeClipboardManager.ClipboardObject) {
+        if (clipboardObject.shapes.isEmpty()) {
             return
         }
-        commandEnvironment.clearSelectedShapes()
-        val bound = commandEnvironment.getWindowBound()
+        environment.clearSelectedShapes()
+        val bound = environment.getWindowBound()
         val left = bound.left + bound.width / 5
         val top = bound.top + bound.height / 5
-        insertShapes(left, top, serializableShapes)
+        insertShapes(left, top, clipboardObject)
     }
 
     fun duplicateSelectedShapes() {
@@ -59,32 +58,50 @@ internal class ClipboardManager(
             return
         }
         val currentSelectedShapes = selectedShapes
-        val serializableShapes = currentSelectedShapes.map { it.toSerializableShape(false) }
+        val clipboardObject = createClipboardObject()
         val minLeft = currentSelectedShapes.minOf { it.bound.left }
         val minTop = currentSelectedShapes.minOf { it.bound.top }
 
-        commandEnvironment.clearSelectedShapes()
-        insertShapes(minLeft + 1, minTop + 1, serializableShapes)
+        environment.clearSelectedShapes()
+        insertShapes(minLeft + 1, minTop + 1, clipboardObject)
     }
 
     private fun insertShapes(
         left: Int,
         top: Int,
-        serializableShapes: List<AbstractSerializableShape>
+        clipboardObject: ShapeClipboardManager.ClipboardObject
     ) {
-        val currentParentId = commandEnvironment.workingParentGroup.id
-        val shapes = serializableShapes.map { Group.toShape(currentParentId, it) }
-        val minLeft = shapes.minOf { it.bound.left }
-        val minTop = shapes.minOf { it.bound.top }
+        val currentParentId = environment.workingParentGroup.id
+
+        val srcIdToShapeMap =
+            clipboardObject.shapes.associate { it.id to Group.toShape(currentParentId, it) }
+        val minLeft = srcIdToShapeMap.values.minOf { it.bound.left }
+        val minTop = srcIdToShapeMap.values.minOf { it.bound.top }
 
         val offset = Point(minLeft - left, minTop - top)
-        for (shape in shapes) {
+        for (shape in srcIdToShapeMap.values) {
             val shapeBound = shape.bound
             val newShapeBound = shapeBound.copy(position = shapeBound.position.minus(offset))
             shape.setBound(newShapeBound)
 
-            commandEnvironment.addShape(shape)
-            commandEnvironment.addSelectedShape(shape)
+            environment.addShape(shape)
+            environment.addSelectedShape(shape)
         }
+
+        for (connector in clipboardObject.connectors) {
+            val line = srcIdToShapeMap[connector.lineId] as? mono.shape.shape.Line ?: continue
+            val target = srcIdToShapeMap[connector.targetId] ?: continue
+            environment.shapeManager.shapeConnector.addConnector(line, connector.anchor, target)
+        }
+    }
+
+    private fun createClipboardObject(): ShapeClipboardManager.ClipboardObject {
+        val serializableShapes = selectedShapes.map { it.toSerializableShape(false) }
+        val serializableConnectors = selectedShapes.flatMap { target ->
+            environment.shapeManager.shapeConnector.getConnectors(target).map {
+                ShapeConnector.toSerializableConnector(it, target)
+            }
+        }
+        return ShapeClipboardManager.ClipboardObject(serializableShapes, serializableConnectors)
     }
 }

@@ -4,6 +4,7 @@
 
 plugins {
     kotlin("js")
+    kotlin("plugin.serialization")
 }
 
 repositories {
