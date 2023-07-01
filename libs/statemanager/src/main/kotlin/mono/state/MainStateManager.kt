@@ -29,6 +29,7 @@ import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.connector.ShapeConnector
 import mono.shape.remove
 import mono.shape.selection.SelectedShapeManager
+import mono.shape.selection.SelectedShapeManager.ShapeFocusType
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
@@ -217,7 +218,12 @@ class MainStateManager(
         val highlight = when {
             shape is Text && shape.isTextEditing -> Highlight.TEXT_EDITING
             shape in environment.getSelectedShapes() -> Highlight.SELECTED
-            else -> Highlight.NO
+            else -> {
+                when (selectedShapeManager.getFocusingType(shape)) {
+                    ShapeFocusType.LINE_CONNECTING -> Highlight.LINE_CONNECT_FOCUSING
+                    null -> Highlight.NO
+                }
+            }
         }
         mainBoard.fill(shape.bound.position, bitmap, highlight)
         shapeSearcher.register(shape)
@@ -381,6 +387,11 @@ class MainStateManager(
 
         override fun toggleShapeSelection(shape: AbstractShape) =
             stateManager.selectedShapeManager.toggleSelection(shape)
+
+        override fun setFocusingShape(
+            shape: AbstractShape?,
+            focusType: ShapeFocusType
+        ) = stateManager.selectedShapeManager.setFocusingShape(shape, focusType)
 
         override fun selectAllShapes() {
             for (shape in stateManager.workingParentGroup.items) {

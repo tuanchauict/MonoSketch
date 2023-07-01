@@ -5,13 +5,13 @@
 package mono.state.command.mouse
 
 import mono.common.MouseCursor
-import mono.common.exhaustive
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.MoveLineAnchor
 import mono.shape.command.MoveLineEdge
 import mono.shape.connector.ShapeConnectorUseCase
+import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Line
 import mono.shapebound.LineInteractionPoint
@@ -52,7 +52,7 @@ internal class LineInteractionMouseCommand(
             is MousePointer.DoubleClick,
             is MousePointer.Move,
             MousePointer.Idle -> Unit
-        }.exhaustive
+        }
 
         return if (mousePointer == MousePointer.Idle) {
             MouseCommand.CommandResultType.DONE
@@ -91,6 +91,10 @@ internal class LineInteractionMouseCommand(
             DirectedPoint(direction, point)
         )
         val connectShape = pointToTargetMap.getOrSearch(environment, anchorPointUpdate.point)
+        environment.setFocusingShape(
+            connectShape.takeIf { !isUpdateConfirmed },
+            SelectedShapeManager.ShapeFocusType.LINE_CONNECTING
+        )
         environment.shapeManager.execute(
             MoveLineAnchor(
                 lineShape,
