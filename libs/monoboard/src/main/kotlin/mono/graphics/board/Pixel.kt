@@ -63,5 +63,6 @@ class Pixel(
 enum class Highlight {
     NO,
     SELECTED,
-    TEXT_EDITING
+    TEXT_EDITING,
+    LINE_CONNECT_FOCUSING
 }
