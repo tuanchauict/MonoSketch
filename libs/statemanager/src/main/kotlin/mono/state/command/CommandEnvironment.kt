@@ -10,6 +10,7 @@ import mono.graphics.geo.Rect
 import mono.livedata.LiveData
 import mono.shape.ShapeManager
 import mono.shape.connector.ShapeConnector
+import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.RootGroup
@@ -62,6 +63,8 @@ internal interface CommandEnvironment {
     fun addSelectedShape(shape: AbstractShape?)
 
     fun toggleShapeSelection(shape: AbstractShape)
+
+    fun setFocusingShape(shape: AbstractShape?, focusType: SelectedShapeManager.ShapeFocusType)
 
     fun selectAllShapes()
 
