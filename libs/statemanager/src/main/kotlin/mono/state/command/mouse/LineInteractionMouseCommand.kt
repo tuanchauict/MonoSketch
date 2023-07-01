@@ -5,13 +5,14 @@
 package mono.state.command.mouse
 
 import mono.common.MouseCursor
-import mono.common.exhaustive
 import mono.graphics.geo.DirectedPoint
 import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.MoveLineAnchor
 import mono.shape.command.MoveLineEdge
 import mono.shape.connector.ShapeConnectorUseCase
+import mono.shape.selection.SelectedShapeManager
+import mono.shape.shape.AbstractShape
 import mono.shape.shape.Line
 import mono.shapebound.LineInteractionPoint
 import mono.state.command.CommandEnvironment
@@ -24,6 +25,8 @@ internal class LineInteractionMouseCommand(
     private val interactionPoint: LineInteractionPoint
 ) : MouseCommand {
     override val mouseCursor: MouseCursor? = null
+
+    private val pointToTargetMap = mutableMapOf<DirectedPoint, AbstractShape?>()
 
     override fun execute(
         environment: CommandEnvironment,
@@ -49,7 +52,7 @@ internal class LineInteractionMouseCommand(
             is MousePointer.DoubleClick,
             is MousePointer.Move,
             MousePointer.Idle -> Unit
-        }.exhaustive
+        }
 
         return if (mousePointer == MousePointer.Idle) {
             MouseCommand.CommandResultType.DONE
@@ -87,9 +90,10 @@ internal class LineInteractionMouseCommand(
             interactionPoint.anchor,
             DirectedPoint(direction, point)
         )
-        val connectShape = ShapeConnectorUseCase.getConnectableShape(
-            anchorPointUpdate.point,
-            environment.getShapes(point)
+        val connectShape = pointToTargetMap.getOrSearch(environment, anchorPointUpdate.point)
+        environment.setFocusingShape(
+            connectShape.takeIf { !isUpdateConfirmed },
+            SelectedShapeManager.ShapeFocusType.LINE_CONNECTING
         )
         environment.shapeManager.execute(
             MoveLineAnchor(
@@ -118,5 +122,20 @@ internal class LineInteractionMouseCommand(
             )
         )
         environment.updateInteractionBounds()
+    }
+
+    private fun MutableMap<DirectedPoint, AbstractShape?>.getOrSearch(
+        environment: CommandEnvironment,
+        point: DirectedPoint
+    ): AbstractShape? = getOrPut(point) {
+        if (point !in this) {
+            ShapeConnectorUseCase.getConnectableShape(
+                point,
+                environment.getShapes(point.point)
+            )
+        } else {
+            // This point is already in the map, so we don't need to search again.
+            null
+        }
     }
 }
