@@ -10,9 +10,7 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.MoveLineAnchor
 import mono.shape.command.MoveLineEdge
-import mono.shape.connector.ShapeConnectorUseCase
 import mono.shape.selection.SelectedShapeManager
-import mono.shape.shape.AbstractShape
 import mono.shape.shape.Line
 import mono.shapebound.LineInteractionPoint
 import mono.state.command.CommandEnvironment
@@ -26,7 +24,7 @@ internal class LineInteractionMouseCommand(
 ) : MouseCommand {
     override val mouseCursor: MouseCursor? = null
 
-    private val pointToTargetMap = mutableMapOf<DirectedPoint, AbstractShape?>()
+    private val hoverShapeManager = HoverShapeManager()
 
     override fun execute(
         environment: CommandEnvironment,
@@ -90,7 +88,7 @@ internal class LineInteractionMouseCommand(
             interactionPoint.anchor,
             DirectedPoint(direction, point)
         )
-        val connectShape = pointToTargetMap.getOrSearch(environment, anchorPointUpdate.point)
+        val connectShape = hoverShapeManager.getHoverShape(environment, anchorPointUpdate.point)
         environment.setFocusingShape(
             connectShape.takeIf { !isUpdateConfirmed },
             SelectedShapeManager.ShapeFocusType.LINE_CONNECTING
@@ -122,20 +120,5 @@ internal class LineInteractionMouseCommand(
             )
         )
         environment.updateInteractionBounds()
-    }
-
-    private fun MutableMap<DirectedPoint, AbstractShape?>.getOrSearch(
-        environment: CommandEnvironment,
-        point: DirectedPoint
-    ): AbstractShape? = getOrPut(point) {
-        if (point !in this) {
-            ShapeConnectorUseCase.getConnectableShape(
-                point,
-                environment.getShapes(point.point)
-            )
-        } else {
-            // This point is already in the map, so we don't need to search again.
-            null
-        }
     }
 }

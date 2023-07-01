@@ -12,13 +12,19 @@ import mono.graphics.geo.MousePointer
 import mono.graphics.geo.Point
 import mono.shape.command.MoveLineAnchor
 import mono.shape.connector.ShapeConnectorUseCase
+import mono.shape.selection.SelectedShapeManager
 import mono.shape.shape.Line
 import mono.state.command.CommandEnvironment
 
+/**
+ * A [MouseCommand] for adding a new Line shape.
+ */
 internal class AddLineMouseCommand : MouseCommand {
     override val mouseCursor: MouseCursor = MouseCursor.CROSSHAIR
 
     private var workingShape: Line? = null
+
+    private val hoverShapeManager = HoverShapeManager()
 
     override fun execute(
         environment: CommandEnvironment,
@@ -36,7 +42,7 @@ internal class AddLineMouseCommand : MouseCommand {
                     environment,
                     mousePointer.boardCoordinate,
                     mousePointer.isWithShiftKey,
-                    isReducedRequired = false
+                    isUpdateConfirmed = false
                 )
                 MouseCommand.CommandResultType.WORKING
             }
@@ -46,7 +52,7 @@ internal class AddLineMouseCommand : MouseCommand {
                     environment,
                     mousePointer.boardCoordinate,
                     mousePointer.isWithShiftKey,
-                    isReducedRequired = true
+                    isUpdateConfirmed = true
                 )
                 environment.addSelectedShape(workingShape)
                 MouseCommand.CommandResultType.DONE
@@ -84,7 +90,7 @@ internal class AddLineMouseCommand : MouseCommand {
         environment: CommandEnvironment,
         point: Point,
         isStraightLineMode: Boolean,
-        isReducedRequired: Boolean
+        isUpdateConfirmed: Boolean
     ) {
         val line = workingShape ?: return
         val endPoint = adjustEndPoint(line.startPoint.point, point, isStraightLineMode)
@@ -94,15 +100,17 @@ internal class AddLineMouseCommand : MouseCommand {
             Line.Anchor.END,
             DirectedPoint(direction, endPoint)
         )
-        val connectShape = ShapeConnectorUseCase.getConnectableShape(
-            anchorPointUpdate.point,
-            environment.getShapes(point)
+
+        val connectShape = hoverShapeManager.getHoverShape(environment, anchorPointUpdate.point)
+        environment.setFocusingShape(
+            connectShape.takeIf { !isUpdateConfirmed },
+            SelectedShapeManager.ShapeFocusType.LINE_CONNECTING
         )
         shapeManager.execute(
             MoveLineAnchor(
                 line,
                 anchorPointUpdate,
-                isReducedRequired,
+                isUpdateConfirmed,
                 justMoveAnchor = false,
                 connectShape = connectShape
             )
