@@ -41,7 +41,8 @@ sealed interface MousePointer {
     ) : MousePointer
 
     data class Click(
-        override val boardCoordinate: Point, val isWithShiftKey: Boolean
+        override val boardCoordinate: Point,
+        val isWithShiftKey: Boolean
     ) : MousePointer
 
     data class DoubleClick(override val boardCoordinate: Point) : MousePointer
