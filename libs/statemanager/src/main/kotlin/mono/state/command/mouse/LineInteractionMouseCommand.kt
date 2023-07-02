@@ -22,7 +22,10 @@ internal class LineInteractionMouseCommand(
     private val lineShape: Line,
     private val interactionPoint: LineInteractionPoint
 ) : MouseCommand {
-    override val mouseCursor: MouseCursor? = null
+    override val mouseCursor: MouseCursor? = when (interactionPoint) {
+        is LineInteractionPoint.Anchor -> MouseCursor.CROSSHAIR
+        is LineInteractionPoint.Edge -> null
+    }
 
     private val hoverShapeManager = HoverShapeManager()
 
