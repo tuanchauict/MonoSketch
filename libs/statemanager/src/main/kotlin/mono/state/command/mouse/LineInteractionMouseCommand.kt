@@ -27,7 +27,7 @@ internal class LineInteractionMouseCommand(
         is LineInteractionPoint.Edge -> null
     }
 
-    private val hoverShapeManager = HoverShapeManager()
+    private val hoverShapeManager = HoverShapeManager.forLineConnectHover()
 
     override fun execute(
         environment: CommandEnvironment,
@@ -91,7 +91,8 @@ internal class LineInteractionMouseCommand(
             interactionPoint.anchor,
             DirectedPoint(direction, point)
         )
-        val connectShape = hoverShapeManager.getHoverShape(environment, anchorPointUpdate.point)
+        val connectShape =
+            hoverShapeManager.getHoverShape(environment, anchorPointUpdate.point.point)
         environment.setFocusingShape(
             connectShape.takeIf { !isUpdateConfirmed },
             SelectedShapeManager.ShapeFocusType.LINE_CONNECTING
