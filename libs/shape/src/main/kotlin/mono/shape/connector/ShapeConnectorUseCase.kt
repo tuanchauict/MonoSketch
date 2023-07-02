@@ -22,11 +22,11 @@ object ShapeConnectorUseCase {
     private const val MAX_DISTANCE = 1
 
     fun getConnectableShape(
-        anchorPoint: DirectedPoint,
+        point: Point,
         candidates: Sequence<AbstractShape>
-    ): AbstractShape? = candidates.lastOrNull { canConnect(anchorPoint, it) }
+    ): AbstractShape? = candidates.lastOrNull { canConnect(point, it) }
 
-    private fun canConnect(anchorPoint: DirectedPoint, shape: AbstractShape): Boolean {
+    private fun canConnect(point: Point, shape: AbstractShape): Boolean {
         val bound = when (shape) {
             is Rectangle -> shape.bound
             is Text -> shape.bound
@@ -34,22 +34,16 @@ object ShapeConnectorUseCase {
             is Line,
             is MockShape -> null
         } ?: return false
-        val around = getAround(anchorPoint, bound)
-        return around != null
+
+        return point.detectAround(bound).any { it }
     }
 
     fun getAround(
         anchorPoint: DirectedPoint,
         boxBound: Rect
     ): Around? {
-        val isAroundLeft = anchorPoint.left.isAround(boxBound.left) &&
-            anchorPoint.top.isAround(boxBound.top, boxBound.bottom)
-        val isAroundRight = anchorPoint.left.isAround(boxBound.right) &&
-            anchorPoint.top.isAround(boxBound.top, boxBound.bottom)
-        val isAroundTop = anchorPoint.top.isAround(boxBound.top) &&
-            anchorPoint.left.isAround(boxBound.left, boxBound.right)
-        val isAroundBottom = anchorPoint.top.isAround(boxBound.bottom) &&
-            anchorPoint.left.isAround(boxBound.left, boxBound.right)
+        val (isAroundLeft, isAroundRight, isAroundTop, isAroundBottom) =
+            anchorPoint.point.detectAround(boxBound)
 
         val isHorizontal = anchorPoint.direction == DirectedPoint.Direction.HORIZONTAL
         return when {
@@ -79,6 +73,22 @@ object ShapeConnectorUseCase {
 
             else -> null
         }
+    }
+
+    /**
+     * Returns a list contains exactly 4 items which are the result of detecting around the
+     * [boxBound] in order [left, right, top, bottom].
+     */
+    private fun Point.detectAround(boxBound: Rect): List<Boolean> {
+        val isAroundLeft = left.isAround(boxBound.left) &&
+            top.isAround(boxBound.top, boxBound.bottom)
+        val isAroundRight = left.isAround(boxBound.right) &&
+            top.isAround(boxBound.top, boxBound.bottom)
+        val isAroundTop = top.isAround(boxBound.top) &&
+            left.isAround(boxBound.left, boxBound.right)
+        val isAroundBottom = top.isAround(boxBound.bottom) &&
+            left.isAround(boxBound.left, boxBound.right)
+        return listOf(isAroundLeft, isAroundRight, isAroundTop, isAroundBottom)
     }
 
     private fun Int.isAround(

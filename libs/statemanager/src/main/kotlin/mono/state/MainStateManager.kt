@@ -5,12 +5,9 @@
 package mono.state
 
 import mono.actionmanager.ActionManager
-import mono.actionmanager.OneTimeActionType
-import mono.actionmanager.RetainableActionType
 import mono.bitmap.manager.MonoBitmapManager
 import mono.common.MouseCursor
 import mono.common.currentTimeMillis
-import mono.common.post
 import mono.environment.Build
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
@@ -43,8 +40,7 @@ import mono.shapebound.ScalableInteractionBound
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.CommandEnvironment.EditingMode
-import mono.state.command.MouseCommandFactory
-import mono.state.command.mouse.MouseCommand
+import mono.state.controller.MouseInteractionController
 import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.appstate.AppUiStateManager
 
@@ -61,7 +57,7 @@ class MainStateManager(
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
     applicationActiveStateLiveData: LiveData<Boolean>,
-    private val actionManager: ActionManager,
+    actionManager: ActionManager,
     appUiStateManager: AppUiStateManager,
     initialRootId: String = "",
     private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
@@ -80,19 +76,19 @@ class MainStateManager(
 
     private val environment = CommandEnvironmentImpl(this)
 
-    private var currentMouseCommand: MouseCommand? = null
-    private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
-
     private val redrawRequestMutableLiveData = MutableLiveData(Unit)
 
     private val editingModeLiveData = MutableLiveData(EditingMode.idle(null))
     private val stateHistoryManager =
         StateHistoryManager(lifecycleOwner, environment, canvasManager)
 
+    private val mouseInteractionController =
+        MouseInteractionController(environment, actionManager, ::requestRedraw)
+
     init {
         mousePointerLiveData
             .distinctUntilChange()
-            .observe(lifecycleOwner, listener = ::onMouseEvent)
+            .observe(lifecycleOwner, listener = mouseInteractionController::onMouseEvent)
 
         mousePointerLiveData
             .distinctUntilChange()
@@ -125,10 +121,6 @@ class MainStateManager(
             throttleDurationMillis = 0
         ) { redraw() }
 
-        actionManager.retainableActionLiveData.observe(lifecycleOwner) {
-            currentRetainableActionType = it
-        }
-
         stateHistoryManager.restoreAndStartObserveStateChange(initialRootId)
 
         OneTimeActionHandler(
@@ -145,38 +137,6 @@ class MainStateManager(
             if (isActive) {
                 reflectChangedFromLocal()
             }
-        }
-    }
-
-    private fun onMouseEvent(mousePointer: MousePointer) {
-        if (mousePointer is MousePointer.DoubleClick) {
-            val targetedShape =
-                environment.getSelectedShapes()
-                    .firstOrNull { it.contains(mousePointer.boardCoordinate) }
-            actionManager.setOneTimeAction(OneTimeActionType.EditSelectedShape(targetedShape))
-            return
-        }
-
-        val mouseCommand =
-            MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
-                ?: currentMouseCommand
-                ?: return
-        currentMouseCommand = mouseCommand
-
-        environment.enterEditingMode()
-        val commandResultType = mouseCommand.execute(environment, mousePointer)
-
-        if (commandResultType == MouseCommand.CommandResultType.DONE) {
-            environment.exitEditingMode(true)
-        }
-
-        if (commandResultType == MouseCommand.CommandResultType.DONE ||
-            commandResultType == MouseCommand.CommandResultType.WORKING_PHASE2
-        ) {
-            currentMouseCommand = null
-            requestRedraw()
-            // Avoid click when adding shape cause shape selection command
-            post { actionManager.setRetainableAction(RetainableActionType.IDLE) }
         }
     }
 
@@ -248,7 +208,7 @@ class MainStateManager(
             is MousePointer.Move -> getMouseMovingCursor(mousePointer)
 
             is MousePointer.Drag -> {
-                val mouseCommand = currentMouseCommand
+                val mouseCommand = mouseInteractionController.currentMouseCommand
                 if (mouseCommand != null) mouseCommand.mouseCursor else MouseCursor.DEFAULT
             }
 
@@ -266,7 +226,8 @@ class MainStateManager(
 
     private fun getMouseMovingCursor(mousePointer: MousePointer.Move): MouseCursor {
         val interactionPoint = canvasManager.getInteractionPoint(mousePointer.pointPx)
-        return interactionPoint?.mouseCursor ?: currentRetainableActionType.mouseCursor
+        return interactionPoint?.mouseCursor
+            ?: mouseInteractionController.currentRetainableActionType.mouseCursor
     }
 
     private fun updateInteractionBounds(selectedShapes: Collection<AbstractShape>) {
