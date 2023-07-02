@@ -77,7 +77,7 @@ internal class AddLineMouseCommand : MouseCommand {
         addShape(line)
 
         val connectShape = ShapeConnectorUseCase.getConnectableShape(
-            line.startPoint,
+            line.startPoint.point,
             getShapes(mousePointer.boardCoordinate)
         )
         if (connectShape != null) {
@@ -101,7 +101,8 @@ internal class AddLineMouseCommand : MouseCommand {
             DirectedPoint(direction, endPoint)
         )
 
-        val connectShape = hoverShapeManager.getHoverShape(environment, anchorPointUpdate.point)
+        val connectShape =
+            hoverShapeManager.getHoverShape(environment, anchorPointUpdate.point.point)
         environment.setFocusingShape(
             connectShape.takeIf { !isUpdateConfirmed },
             SelectedShapeManager.ShapeFocusType.LINE_CONNECTING
