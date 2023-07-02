@@ -24,7 +24,7 @@ internal class AddLineMouseCommand : MouseCommand {
 
     private var workingShape: Line? = null
 
-    private val hoverShapeManager = HoverShapeManager()
+    private val hoverShapeManager = HoverShapeManager.forLineConnectHover()
 
     override fun execute(
         environment: CommandEnvironment,

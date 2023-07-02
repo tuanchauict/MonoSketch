@@ -27,7 +27,7 @@ internal class LineInteractionMouseCommand(
         is LineInteractionPoint.Edge -> null
     }
 
-    private val hoverShapeManager = HoverShapeManager()
+    private val hoverShapeManager = HoverShapeManager.forLineConnectHover()
 
     override fun execute(
         environment: CommandEnvironment,
