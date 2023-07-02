@@ -9,8 +9,10 @@ import mono.actionmanager.OneTimeActionType
 import mono.actionmanager.RetainableActionType
 import mono.common.post
 import mono.graphics.geo.MousePointer
+import mono.shape.selection.SelectedShapeManager
 import mono.state.command.CommandEnvironment
 import mono.state.command.MouseCommandFactory
+import mono.state.command.mouse.HoverShapeManager
 import mono.state.command.mouse.MouseCommand
 
 /**
@@ -27,6 +29,8 @@ internal class MouseInteractionController(
     var currentMouseCommand: MouseCommand? = null
         private set
 
+    private val lineConnectHoverShapeManager = HoverShapeManager.forLineConnectHover()
+
     fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.DoubleClick) {
             val targetedShape =
@@ -36,10 +40,25 @@ internal class MouseInteractionController(
             return
         }
 
+        if (currentMouseCommand == null &&
+            currentRetainableActionType == RetainableActionType.ADD_LINE
+        ) {
+            val hoveringTarget = lineConnectHoverShapeManager.getHoverShape(
+                environment,
+                mousePointer.boardCoordinate
+            )
+            environment.setFocusingShape(
+                hoveringTarget,
+                SelectedShapeManager.ShapeFocusType.LINE_CONNECTING
+            )
+            requestRedraw()
+        }
+
         val mouseCommand =
             MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
                 ?: currentMouseCommand
                 ?: return
+
         currentMouseCommand = mouseCommand
 
         environment.enterEditingMode()
@@ -52,6 +71,7 @@ internal class MouseInteractionController(
         if (commandResultType == MouseCommand.CommandResultType.DONE ||
             commandResultType == MouseCommand.CommandResultType.WORKING_PHASE2
         ) {
+            lineConnectHoverShapeManager.resetCache()
             currentMouseCommand = null
             requestRedraw()
             // Avoid click when adding shape cause shape selection command
