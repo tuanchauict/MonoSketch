@@ -35,6 +35,10 @@ internal class HoverShapeManager private constructor(
         }
     }
 
+    fun resetCache() {
+        pointToTargetMap.clear()
+    }
+
     companion object {
         fun forLineConnectHover(): HoverShapeManager = HoverShapeManager { environment, point ->
             ShapeConnectorUseCase.getConnectableShape(point, environment.getShapes(point))
