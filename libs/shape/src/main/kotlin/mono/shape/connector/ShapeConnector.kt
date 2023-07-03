@@ -9,6 +9,7 @@ import mono.graphics.geo.Point
 import mono.graphics.geo.PointF
 import mono.graphics.geo.Rect
 import mono.shape.collection.TwoWayQuickMap
+import mono.shape.connector.LineConnector.ConnectorIdentifier
 import mono.shape.serialization.SerializableLineConnector
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
@@ -43,7 +44,10 @@ class ShapeConnector {
         lineConnectors.getKeys(shape)
 
     fun removeConnector(line: Line, anchor: Line.Anchor) =
-        lineConnectors.removeKey(LineConnector.ConnectorIdentifier(line.id, anchor))
+        lineConnectors.removeKey(ConnectorIdentifier(line.id, anchor))
+
+    fun hasConnector(line: Line, anchor: Line.Anchor): Boolean =
+        lineConnectors[ConnectorIdentifier(line.id, anchor)] != null
 
     fun removeShape(shape: AbstractShape) {
         lineConnectors.removeValue(shape)

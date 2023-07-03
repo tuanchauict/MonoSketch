@@ -27,20 +27,34 @@ internal object UpdateShapeBoundHelper {
         val allConnectors =
             notLineShapes.flatMap { environment.shapeManager.shapeConnector.getConnectors(it) }
 
+        // lineId -> headCount of selected shapes.
         val lineIdToHeadCountMap = allConnectors
             .fold(mutableMapOf<String, Int>()) { sum, connector ->
                 sum[connector.lineId] = 1 + sum.getOrElse(connector.lineId) { 0 }
                 sum
             }
+        val lineIdToTotalConnectorCount =
+            lines.associate { it.id to environment.countNumberOfConnections(it.id) }
 
+        val affectedLineIds = mutableSetOf<String>()
+        // Move non line shapes.
         for (shape in notLineShapes) {
             val newPosition = newPositionCalculator(shape) ?: continue
             val newBound = shape.bound.copy(position = newPosition)
 
             environment.shapeManager.execute(ChangeBound(shape, newBound))
 
+            // Update line which has 1 head connected and the other head is not connected.
             for (connector in environment.shapeManager.shapeConnector.getConnectors(shape)) {
-                if (lineIdToHeadCountMap[connector.lineId] == 1) {
+                // Only update the line anchor if:
+                // - the of the connector has only 1 head connected in selected shape
+                // - the line is not selected or is selected but has 2 connectors
+                // TODO: This logic is too complicated
+                val totalConnectorCount = lineIdToTotalConnectorCount[connector.lineId] ?: 2
+                val shouldUpdateLineAnchor = lineIdToHeadCountMap[connector.lineId] == 1 &&
+                    totalConnectorCount == 2
+                if (shouldUpdateLineAnchor) {
+                    affectedLineIds += connector.lineId
                     environment.updateConnector(connector, newBound, isUpdateConfirmed)
                 }
             }
@@ -50,7 +64,7 @@ internal object UpdateShapeBoundHelper {
             .mapNotNull { if (it.value == 2) it.key else null }
             .toSet()
         val unaffectedLineIds: List<String> =
-            lines.mapNotNull { if (lineIdToHeadCountMap[it.id] != 1) it.id else null }
+            lines.mapNotNull { if (it.id !in affectedLineIds) it.id else null }
 
         val lineIds = connectorFullLineIds + unaffectedLineIds
 
@@ -96,4 +110,16 @@ internal object UpdateShapeBoundHelper {
             justMoveAnchor = true
         )
     }
+
+    /**
+     * Returns number of connections of a line in the current environment.
+     */
+    private fun CommandEnvironment.countNumberOfConnections(lineId: String): Int {
+        val line = shapeManager.getShape(lineId) as? Line ?: return 0
+        val hasStartConnector = shapeManager.shapeConnector.hasConnector(line, Line.Anchor.START)
+        val hasEndConnector = shapeManager.shapeConnector.hasConnector(line, Line.Anchor.END)
+        return hasStartConnector.toInt() + hasEndConnector.toInt()
+    }
+
+    private fun Boolean.toInt(): Int = if (this) 1 else 0
 }
