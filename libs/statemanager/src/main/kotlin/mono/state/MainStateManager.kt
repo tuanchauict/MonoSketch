@@ -5,12 +5,9 @@
 package mono.state
 
 import mono.actionmanager.ActionManager
-import mono.actionmanager.OneTimeActionType
-import mono.actionmanager.RetainableActionType
 import mono.bitmap.manager.MonoBitmapManager
 import mono.common.MouseCursor
 import mono.common.currentTimeMillis
-import mono.common.post
 import mono.environment.Build
 import mono.graphics.board.Highlight
 import mono.graphics.board.MonoBoard
@@ -26,8 +23,10 @@ import mono.livedata.distinctUntilChange
 import mono.shape.ShapeManager
 import mono.shape.add
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.connector.ShapeConnector
 import mono.shape.remove
 import mono.shape.selection.SelectedShapeManager
+import mono.shape.selection.SelectedShapeManager.ShapeFocusType
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.Line
@@ -41,8 +40,7 @@ import mono.shapebound.ScalableInteractionBound
 import mono.shapesearcher.ShapeSearcher
 import mono.state.command.CommandEnvironment
 import mono.state.command.CommandEnvironment.EditingMode
-import mono.state.command.MouseCommandFactory
-import mono.state.command.mouse.MouseCommand
+import mono.state.controller.MouseInteractionController
 import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.appstate.AppUiStateManager
 
@@ -59,21 +57,24 @@ class MainStateManager(
     shapeClipboardManager: ShapeClipboardManager,
     mousePointerLiveData: LiveData<MousePointer>,
     applicationActiveStateLiveData: LiveData<Boolean>,
-    private val actionManager: ActionManager,
+    actionManager: ActionManager,
     appUiStateManager: AppUiStateManager,
     initialRootId: String = "",
     private val workspaceDao: WorkspaceDao = WorkspaceDao.instance
 ) {
     private val shapeSearcher: ShapeSearcher = ShapeSearcher(shapeManager, bitmapManager::getBitmap)
 
+    /**
+     * The current working parent group, which is the group that is focused, shape actions will be
+     * applied to this group.
+     *
+     * This is similar to the concept of "current directory" in file system.
+     */
     private var workingParentGroup: Group = shapeManager.root
 
     private var windowBoardBound: Rect = Rect.ZERO
 
     private val environment = CommandEnvironmentImpl(this)
-
-    private var currentMouseCommand: MouseCommand? = null
-    private var currentRetainableActionType: RetainableActionType = RetainableActionType.IDLE
 
     private val redrawRequestMutableLiveData = MutableLiveData(Unit)
 
@@ -81,10 +82,13 @@ class MainStateManager(
     private val stateHistoryManager =
         StateHistoryManager(lifecycleOwner, environment, canvasManager)
 
+    private val mouseInteractionController =
+        MouseInteractionController(environment, actionManager, ::requestRedraw)
+
     init {
         mousePointerLiveData
             .distinctUntilChange()
-            .observe(lifecycleOwner, listener = ::onMouseEvent)
+            .observe(lifecycleOwner, listener = mouseInteractionController::onMouseEvent)
 
         mousePointerLiveData
             .distinctUntilChange()
@@ -117,10 +121,6 @@ class MainStateManager(
             throttleDurationMillis = 0
         ) { redraw() }
 
-        actionManager.retainableActionLiveData.observe(lifecycleOwner) {
-            currentRetainableActionType = it
-        }
-
         stateHistoryManager.restoreAndStartObserveStateChange(initialRootId)
 
         OneTimeActionHandler(
@@ -137,38 +137,6 @@ class MainStateManager(
             if (isActive) {
                 reflectChangedFromLocal()
             }
-        }
-    }
-
-    private fun onMouseEvent(mousePointer: MousePointer) {
-        if (mousePointer is MousePointer.DoubleClick) {
-            val targetedShape =
-                environment.getSelectedShapes()
-                    .firstOrNull { it.contains(mousePointer.boardCoordinate) }
-            actionManager.setOneTimeAction(OneTimeActionType.EditSelectedShape(targetedShape))
-            return
-        }
-
-        val mouseCommand =
-            MouseCommandFactory.getCommand(environment, mousePointer, currentRetainableActionType)
-                ?: currentMouseCommand
-                ?: return
-        currentMouseCommand = mouseCommand
-
-        environment.enterEditingMode()
-        val commandResultType = mouseCommand.execute(environment, mousePointer)
-
-        if (commandResultType == MouseCommand.CommandResultType.DONE) {
-            environment.exitEditingMode(true)
-        }
-
-        if (commandResultType == MouseCommand.CommandResultType.DONE ||
-            commandResultType == MouseCommand.CommandResultType.WORKING_PHASE2
-        ) {
-            currentMouseCommand = null
-            requestRedraw()
-            // Avoid click when adding shape cause shape selection command
-            post { actionManager.setRetainableAction(RetainableActionType.IDLE) }
         }
     }
 
@@ -210,7 +178,12 @@ class MainStateManager(
         val highlight = when {
             shape is Text && shape.isTextEditing -> Highlight.TEXT_EDITING
             shape in environment.getSelectedShapes() -> Highlight.SELECTED
-            else -> Highlight.NO
+            else -> {
+                when (selectedShapeManager.getFocusingType(shape)) {
+                    ShapeFocusType.LINE_CONNECTING -> Highlight.LINE_CONNECT_FOCUSING
+                    null -> Highlight.NO
+                }
+            }
         }
         mainBoard.fill(shape.bound.position, bitmap, highlight)
         shapeSearcher.register(shape)
@@ -235,7 +208,7 @@ class MainStateManager(
             is MousePointer.Move -> getMouseMovingCursor(mousePointer)
 
             is MousePointer.Drag -> {
-                val mouseCommand = currentMouseCommand
+                val mouseCommand = mouseInteractionController.currentMouseCommand
                 if (mouseCommand != null) mouseCommand.mouseCursor else MouseCursor.DEFAULT
             }
 
@@ -253,7 +226,8 @@ class MainStateManager(
 
     private fun getMouseMovingCursor(mousePointer: MousePointer.Move): MouseCursor {
         val interactionPoint = canvasManager.getInteractionPoint(mousePointer.pointPx)
-        return interactionPoint?.mouseCursor ?: currentRetainableActionType.mouseCursor
+        return interactionPoint?.mouseCursor
+            ?: mouseInteractionController.currentRetainableActionType.mouseCursor
     }
 
     private fun updateInteractionBounds(selectedShapes: Collection<AbstractShape>) {
@@ -276,13 +250,16 @@ class MainStateManager(
         val rootId = shapeManager.root.id
         val rootVersion = shapeManager.root.versionCode
         val currentRoot = workspaceDao.getObject(rootId).rootGroup
+        // TODO: load from storage
+        val shapeConnector = ShapeConnector()
         when {
             currentRoot == null -> {
                 // TODO: Notify to user this project is removed
             }
 
-            rootVersion != currentRoot.versionCode ->
-                environment.replaceRoot(RootGroup(currentRoot))
+            rootVersion != currentRoot.versionCode -> {
+                environment.replaceRoot(RootGroup(currentRoot), shapeConnector)
+            }
         }
     }
 
@@ -292,7 +269,7 @@ class MainStateManager(
         override val shapeManager: ShapeManager
             get() = stateManager.shapeManager
 
-        override val shapeSearcher: ShapeSearcher
+        private val shapeSearcher: ShapeSearcher
             get() = stateManager.shapeSearcher
 
         override val editingModeLiveData: LiveData<EditingMode>
@@ -304,7 +281,7 @@ class MainStateManager(
                 stateManager.workingParentGroup = value
             }
 
-        override fun replaceRoot(newRoot: RootGroup) {
+        override fun replaceRoot(newRoot: RootGroup, newShapeConnector: ShapeConnector) {
             val currentRoot = shapeManager.root
             if (currentRoot.id != newRoot.id) {
                 stateManager.workspaceDao.getObject(objectId = newRoot.id).updateLastOpened()
@@ -314,7 +291,7 @@ class MainStateManager(
                 stateManager.stateHistoryManager.clear()
             }
 
-            shapeManager.replaceRoot(newRoot)
+            shapeManager.replaceRoot(newRoot, newShapeConnector)
             workingParentGroup = shapeManager.root
             clearSelectedShapes()
         }
@@ -336,6 +313,12 @@ class MainStateManager(
         }
 
         override fun removeShape(shape: AbstractShape?) = shapeManager.remove(shape)
+
+        override fun getShapes(point: Point): Sequence<AbstractShape> =
+            shapeSearcher.getShapes(point)
+
+        override fun getAllShapesInZone(bound: Rect): Sequence<AbstractShape> =
+            shapeSearcher.getAllShapesInZone(bound)
 
         override fun getWindowBound(): Rect = stateManager.windowBoardBound
 
@@ -365,6 +348,11 @@ class MainStateManager(
 
         override fun toggleShapeSelection(shape: AbstractShape) =
             stateManager.selectedShapeManager.toggleSelection(shape)
+
+        override fun setFocusingShape(
+            shape: AbstractShape?,
+            focusType: ShapeFocusType
+        ) = stateManager.selectedShapeManager.setFocusingShape(shape, focusType)
 
         override fun selectAllShapes() {
             for (shape in stateManager.workingParentGroup.items) {

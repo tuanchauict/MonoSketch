@@ -40,24 +40,23 @@ class ShapeSearcher(
      * The other of the list is based on z-index which 1st item is the lowest index.
      * Note: Group shape is not included in the result.
      */
-    fun getShapes(point: Point): List<AbstractShape> = zoneOwnersManager.getPotentialOwners(point)
-        .asSequence()
-        .mapNotNull { shapeManager.getShape(it) }
-        .filter {
-            val position = it.bound.position
-            val bitmap = getBitmap(it) ?: return@filter false
-            val bitmapRow = point.row - position.row
-            val bitmapCol = point.column - position.column
-            !bitmap.getVisual(bitmapRow, bitmapCol).isTransparent
-        }
-        .toList()
+    fun getShapes(point: Point): Sequence<AbstractShape> =
+        zoneOwnersManager.getPotentialOwners(point)
+            .asSequence()
+            .mapNotNull { shapeManager.getShape(it) }
+            .filter {
+                val position = it.bound.position
+                val bitmap = getBitmap(it) ?: return@filter false
+                val bitmapRow = point.row - position.row
+                val bitmapCol = point.column - position.column
+                !bitmap.getVisual(bitmapRow, bitmapCol).isTransparent
+            }
 
-    fun getAllShapesInZone(bound: Rect): List<AbstractShape> =
+    fun getAllShapesInZone(bound: Rect): Sequence<AbstractShape> =
         zoneOwnersManager.getAllPotentialOwnersInZone(bound)
             .asSequence()
             .mapNotNull { shapeManager.getShape(it) }
             .filter { it.isOverlapped(bound) }
-            .toList()
 
     /**
      * Gets the edge direction of a shape having bound's edges at [point].
@@ -69,7 +68,12 @@ class ShapeSearcher(
             .asSequence()
             .mapNotNull { shapeManager.getShape(it) }
             .filter { it is Text || it is Rectangle }
-            .filter { it.contains(point) }
+            .filter {
+                // Ensure the point is in the shape and not any vertices.
+                // Excludes the vertices to make the anchor direction remains similar to previous
+                // setup.
+                it.contains(point) && !it.isVertex(point)
+            }
             .filter {
                 it.bound.left == point.left ||
                     it.bound.right == point.left ||

@@ -9,6 +9,7 @@ import mono.bitmap.manager.MonoBitmapManager
 import mono.export.ExportShapesHelper
 import mono.html.modal.compose.showExitingProjectDialog
 import mono.shape.clipboard.ShapeClipboardManager
+import mono.shape.connector.ShapeConnector
 import mono.shape.serialization.Extra
 import mono.shape.serialization.MonoFile
 import mono.shape.serialization.ShapeSerializationUtil
@@ -93,11 +94,15 @@ internal class FileRelatedActionsHelper(
 
     private fun saveCurrentShapesToFile() {
         val currentRoot = environment.shapeManager.root
-        val serializableRoot = currentRoot.toSerializableShape(true)
         val objectDao = workspaceDao.getObject(currentRoot.id)
         val name = objectDao.name
         val offset = objectDao.offset
-        val jsonString = ShapeSerializationUtil.toMonoFileJson(name, serializableRoot, offset)
+        val jsonString = ShapeSerializationUtil.toMonoFileJson(
+            name = name,
+            serializableShape = currentRoot.toSerializableShape(true),
+            connectors = environment.shapeManager.shapeConnector.toSerializable(),
+            offset = offset
+        )
         fileMediator.saveFile(name, jsonString)
     }
 
@@ -122,7 +127,7 @@ internal class FileRelatedActionsHelper(
                 existingProject.lastModifiedTimestampMillis,
                 onKeepBothClick = {
                     prepareAndApplyNewRoot(
-                        RootGroup(monoFile.root.copy(id = null)),
+                        RootGroup(monoFile.root.copy(isIdTemporary = true)),
                         monoFile.extra
                     )
                 },
@@ -165,5 +170,9 @@ internal class FileRelatedActionsHelper(
         exportShapesHelper.exportText(extractableShapes, isModalRequired)
     }
 
-    private fun replaceWorkspace(rootGroup: RootGroup) = environment.replaceRoot(rootGroup)
+    private fun replaceWorkspace(rootGroup: RootGroup) {
+        // TODO: load from storage
+        val shapeConnector = ShapeConnector()
+        environment.replaceRoot(rootGroup, shapeConnector)
+    }
 }

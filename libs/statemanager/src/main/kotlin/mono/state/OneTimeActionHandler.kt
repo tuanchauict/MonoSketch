@@ -30,6 +30,7 @@ import mono.state.command.CommandEnvironment
 import mono.state.command.text.EditTextShapeHelper
 import mono.state.onetimeaction.AppSettingActionHelper
 import mono.state.onetimeaction.FileRelatedActionsHelper
+import mono.state.utils.UpdateShapeBoundHelper
 import mono.ui.appstate.AppUiStateManager
 
 /**
@@ -142,6 +143,7 @@ internal class OneTimeActionHandler(
     private fun deleteSelectedShapes() {
         for (shape in environment.getSelectedShapes()) {
             environment.removeShape(shape)
+            environment.shapeManager.shapeConnector.removeShape(shape)
         }
         environment.clearSelectedShapes()
     }
@@ -188,25 +190,28 @@ internal class OneTimeActionHandler(
     }
 
     private fun moveSelectedShapes(offsetRow: Int, offsetCol: Int) {
-        val selectedShapes = environment.getSelectedShapes()
-        for (shape in selectedShapes) {
-            val bound = shape.bound
-            val newPosition = Point(bound.left + offsetCol, bound.top + offsetRow)
-            val newBound = shape.bound.copy(position = newPosition)
-            environment.shapeManager.execute(ChangeBound(shape, newBound))
-        }
+        val offset = Point(offsetCol, offsetRow)
+        UpdateShapeBoundHelper.moveShapes(
+            environment,
+            environment.getSelectedShapes(),
+            isUpdateConfirmed = true
+        ) { it.bound.position + offset }
+
         environment.updateInteractionBounds()
     }
 
     private fun setSelectedShapeBound(left: Int?, top: Int?, width: Int?, height: Int?) {
         val singleShape = environment.getSelectedShapes().singleOrNull() ?: return
         val currentBound = singleShape.bound
-        val newLeft = left ?: currentBound.left
-        val newTop = top ?: currentBound.top
-        val newWidth = width ?: currentBound.width
-        val newHeight = height ?: currentBound.height
+        val newBound = Rect.byLTWH(
+            left = left ?: currentBound.left,
+            top = top ?: currentBound.top,
+            width = width ?: currentBound.width,
+            height = height ?: currentBound.height
+        )
+        UpdateShapeBoundHelper.updateConnectors(environment, singleShape, newBound, true)
         environment.shapeManager.execute(
-            ChangeBound(singleShape, Rect.byLTWH(newLeft, newTop, newWidth, newHeight))
+            ChangeBound(singleShape, newBound)
         )
         environment.updateInteractionBounds()
     }

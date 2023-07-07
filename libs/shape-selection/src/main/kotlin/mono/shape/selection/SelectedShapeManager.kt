@@ -20,6 +20,10 @@ class SelectedShapeManager {
     val selectedShapes: Set<AbstractShape>
         get() = selectedShapesLiveData.value
 
+    private val focusingShapeMutableLiveData: MutableLiveData<FocusingShape?> =
+        MutableLiveData(null)
+    val focusingShapeLiveData: LiveData<FocusingShape?> = focusingShapeMutableLiveData
+
     fun addSelectedShape(shape: AbstractShape) {
         selectedShapesMutableLiveData.value += shape
     }
@@ -36,4 +40,28 @@ class SelectedShapeManager {
     fun clearSelectedShapes() {
         selectedShapesMutableLiveData.value = emptySet()
     }
+
+    fun setFocusingShape(shape: AbstractShape?, focusType: ShapeFocusType) {
+        focusingShapeMutableLiveData.value =
+            if (shape == null) null else FocusingShape(shape, focusType)
+    }
+
+    fun getFocusingType(shape: AbstractShape?): ShapeFocusType? =
+        if (shape == focusingShapeLiveData.value?.shape) {
+            focusingShapeLiveData.value?.focusType
+        } else {
+            null
+        }
+
+    /**
+     * An enum class defines the type of focus.
+     */
+    enum class ShapeFocusType {
+        LINE_CONNECTING
+    }
+
+    /**
+     * A model class to store the focusing shape and its focusing type.
+     */
+    data class FocusingShape(val shape: AbstractShape, val focusType: ShapeFocusType)
 }

@@ -7,9 +7,9 @@ package mono.shape.shape
 import kotlin.random.Random
 import mono.graphics.geo.Point
 import mono.graphics.geo.Rect
+import mono.shape.collection.Identifier
 import mono.shape.extra.NoExtra
 import mono.shape.extra.ShapeExtra
-import mono.shape.list.QuickList
 import mono.shape.serialization.AbstractSerializableShape
 import mono.uuid.UUID
 
@@ -17,7 +17,7 @@ import mono.uuid.UUID
  * An abstract class which is used for defining all kinds of shape which are supported by the app.
  * Each shape will be assigned an id which is automatically generated or manually assigned. Two
  * shapes which have the same ID will be considered identical regardless the other attributes of
- * each kinds of shape class.
+ * each kind of shape class.
  *
  * Each shape's attributes might be changed and [versionCode] reflects the update. To ensure the
  * [versionCode]'s value is accurate, all properties modifying must be wrapped inside [update].
@@ -27,8 +27,7 @@ import mono.uuid.UUID
 sealed class AbstractShape(
     id: String?,
     internal var parentId: String? = null
-) : QuickList.Identifier {
-    override val id: String = id ?: UUID.generate()
+) : Identifier by ShapeIdentifier(id ?: UUID.generate()) {
 
     var versionCode: Int = nextVersionCode()
         protected set
@@ -38,6 +37,9 @@ sealed class AbstractShape(
      * Extra information which is specific to each shape.
      */
     open val extra: ShapeExtra = NoExtra
+
+    internal val identifier: ShapeIdentifier
+        get() = ShapeIdentifier(id)
 
     abstract fun toSerializableShape(isIdIncluded: Boolean): AbstractSerializableShape
 
@@ -60,7 +62,16 @@ sealed class AbstractShape(
 
     open fun contains(point: Point): Boolean = bound.contains(point)
 
+    open fun isVertex(point: Point): Boolean = bound.isVertex(point)
+
     open fun isOverlapped(rect: Rect): Boolean = bound.isOverlapped(rect)
+
+    /**
+     * An [Identifier] class for shape.
+     * This is used for storing a reference to a shape without keeping the real reference to the
+     * instance of the shape.
+     */
+    class ShapeIdentifier(override val id: String) : Identifier
 
     companion object {
         /**

@@ -16,8 +16,10 @@ object StoreKeys {
 
     const val WORKSPACE = "workspace"
     const val LAST_OPEN = "last-open"
+
     const val OBJECT_NAME = "name"
     const val OBJECT_CONTENT = "content"
+    const val OBJECT_CONNECTORS = "connectors"
     const val OBJECT_OFFSET = "offset"
     const val OBJECT_LAST_MODIFIED = "last-modified"
     const val OBJECT_LAST_OPENED = "last-opened"

@@ -38,6 +38,7 @@ internal class BoardCanvasViewController(
                 Highlight.NO -> ThemeColor.Shape
                 Highlight.SELECTED -> ThemeColor.ShapeSelected
                 Highlight.TEXT_EDITING -> ThemeColor.ShapeTextEditing
+                Highlight.LINE_CONNECT_FOCUSING -> ThemeColor.ShapeLineConnectTarget
             }
             context.fillStyle = color.colorCode
             drawText(pixel.visualChar.toString(), row, column)

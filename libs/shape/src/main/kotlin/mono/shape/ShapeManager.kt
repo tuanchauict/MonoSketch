@@ -11,6 +11,7 @@ import mono.shape.command.Command
 import mono.shape.command.GroupShapes
 import mono.shape.command.RemoveShape
 import mono.shape.command.Ungroup
+import mono.shape.connector.ShapeConnector
 import mono.shape.shape.AbstractShape
 import mono.shape.shape.Group
 import mono.shape.shape.RootGroup
@@ -27,6 +28,9 @@ class ShapeManager {
     private val rootMutableLiveData = MutableLiveData(root)
     val rootLiveData: LiveData<RootGroup> = rootMutableLiveData
 
+    var shapeConnector: ShapeConnector = ShapeConnector()
+        private set
+
     /**
      * Reflect the version of the root through live data. The other components are able to observe
      * this version to decide update internally.
@@ -35,17 +39,19 @@ class ShapeManager {
     val versionLiveData: LiveData<Int> = versionMutableLiveData
 
     init {
-        replaceRoot(root)
+        replaceRoot(root, shapeConnector)
     }
 
     /**
      * Replace [root] with [newRoot].
      * This also wipe current stored shapes with shapes in new root.
      */
-    fun replaceRoot(newRoot: RootGroup) {
+    fun replaceRoot(newRoot: RootGroup, newConnector: ShapeConnector) {
         val currentVersion = root.versionCode
         root = newRoot
         rootMutableLiveData.value = newRoot
+
+        shapeConnector = newConnector
 
         allShapeMap = createAllShapeMap(newRoot)
 

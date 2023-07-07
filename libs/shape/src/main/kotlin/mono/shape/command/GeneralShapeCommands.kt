@@ -17,9 +17,11 @@ class ChangeBound(private val target: AbstractShape, private val newBound: Rect)
     override fun execute(shapeManager: ShapeManager, parent: Group) {
         val currentVersion = target.versionCode
         target.setBound(newBound)
-        if (currentVersion != target.versionCode) {
-            parent.update { true }
+        if (currentVersion == target.versionCode) {
+            return
         }
+
+        parent.update { true }
     }
 }
 
