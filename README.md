@@ -2,7 +2,7 @@
 
 # What is it?
 
-Mono Sketch is a client-side only web based sketch tool for drawing *ASCII diagrams*. You can use
+Mono Sketch is a client-side only web-based sketch tool for drawing *ASCII diagrams*. You can use
 the app at [app.monosketch.io][app].
 
 ```
@@ -61,6 +61,7 @@ Editing:
 - Copy / Cut / Paste / Duplicate
 - Move and change shapes' order
 - Dark mode
+- Line snapping: connect a line to a shape
 
 Exporting:
 
@@ -78,22 +79,18 @@ Exporting:
 
 ### Paint tool
 
-> Currently, Mono sketch provides only three tools: Rectangle, Text, Line. One tool which is also
+> Currently, Mono Sketch provides only three tools: Rectangle, Text, and Line. One tool which is also
 > used frequently when drawing with ASCII is paint - draw with a specific character. This project
 > also aims for providing richer options of Fill, Border, Line Start/End head
 
-### Line snapping
-
-> Make Line's heads able to snap to a shape and position is updated along with the shape
-
 ### Sharing
 
-> Allow opening file from a url, share to gist, etc.
+> Allow opening files from a url, share to gist, etc.
 
 # Contributing
 
 This project is fully written with [KotlinJS] and SASS
-for CSS. There is no environment setup requires except for Java.
+for CSS. There is no environment setup required except for Java.
 
 To run debug:
 
