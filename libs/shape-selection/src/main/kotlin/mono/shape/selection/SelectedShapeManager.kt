@@ -24,6 +24,9 @@ class SelectedShapeManager {
         MutableLiveData(null)
     val focusingShapeLiveData: LiveData<FocusingShape?> = focusingShapeMutableLiveData
 
+    val focusingShape: FocusingShape?
+        get() = focusingShapeLiveData.value
+
     fun addSelectedShape(shape: AbstractShape) {
         selectedShapesMutableLiveData.value += shape
     }
@@ -57,7 +60,8 @@ class SelectedShapeManager {
      * An enum class defines the type of focus.
      */
     enum class ShapeFocusType {
-        LINE_CONNECTING
+        LINE_CONNECTING,
+        SELECT_MODE_HOVER
     }
 
     /**

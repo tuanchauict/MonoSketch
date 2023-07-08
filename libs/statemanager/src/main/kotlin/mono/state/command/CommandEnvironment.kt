@@ -66,6 +66,8 @@ internal interface CommandEnvironment {
 
     fun setFocusingShape(shape: AbstractShape?, focusType: SelectedShapeManager.ShapeFocusType)
 
+    fun getFocusingShape(): AbstractShape?
+
     fun selectAllShapes()
 
     fun clearSelectedShapes()

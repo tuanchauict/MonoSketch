@@ -181,6 +181,7 @@ class MainStateManager(
             else -> {
                 when (selectedShapeManager.getFocusingType(shape)) {
                     ShapeFocusType.LINE_CONNECTING -> Highlight.LINE_CONNECT_FOCUSING
+                    ShapeFocusType.SELECT_MODE_HOVER -> Highlight.SELECTED
                     null -> Highlight.NO
                 }
             }
@@ -250,7 +251,6 @@ class MainStateManager(
         val rootId = shapeManager.root.id
         val rootVersion = shapeManager.root.versionCode
         val currentRoot = workspaceDao.getObject(rootId).rootGroup
-        // TODO: load from storage
         val shapeConnector = ShapeConnector()
         when {
             currentRoot == null -> {
@@ -259,6 +259,7 @@ class MainStateManager(
 
             rootVersion != currentRoot.versionCode -> {
                 environment.replaceRoot(RootGroup(currentRoot), shapeConnector)
+                mouseInteractionController.reset()
             }
         }
     }
@@ -353,6 +354,9 @@ class MainStateManager(
             shape: AbstractShape?,
             focusType: ShapeFocusType
         ) = stateManager.selectedShapeManager.setFocusingShape(shape, focusType)
+
+        override fun getFocusingShape(): AbstractShape? =
+            stateManager.selectedShapeManager.focusingShape?.shape
 
         override fun selectAllShapes() {
             for (shape in stateManager.workingParentGroup.items) {
