@@ -38,6 +38,9 @@ internal class MouseInteractionController(
     }
 
     fun onMouseEvent(mousePointer: MousePointer) {
+        if (mousePointer is MousePointer.Down || mousePointer is MousePointer.Up) {
+            reset()
+        }
         if (mousePointer is MousePointer.DoubleClick) {
             val targetedShape =
                 environment.getSelectedShapes()
