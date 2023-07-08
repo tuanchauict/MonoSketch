@@ -44,11 +44,11 @@ internal object MouseCommandFactory {
     }
 
     private fun detectMouseCommandWithMouseDown(
-        commandEnvironment: CommandEnvironment,
+        environment: CommandEnvironment,
         mousePointer: MousePointer.Down,
         commandType: RetainableActionType
     ): MouseCommand {
-        val interactionCommand = detectInteractionCommand(commandEnvironment, mousePointer)
+        val interactionCommand = detectInteractionCommand(environment, mousePointer)
         if (interactionCommand != null) {
             return interactionCommand
         }
@@ -65,6 +65,17 @@ internal object MouseCommandFactory {
         environment: CommandEnvironment,
         mousePointer: MousePointer.Down
     ): MouseCommand? {
+        val focusingShape = environment.getFocusingShape()
+
+        if (!mousePointer.isWithShiftKey &&
+            focusingShape != null &&
+            focusingShape !in environment.getSelectedShapes()
+        ) {
+            // If focusing shape is not selected and not in multiple selection mode (Shift key),
+            // clear all selected shapes and select focusing shape.
+            environment.clearSelectedShapes()
+            environment.addSelectedShape(focusingShape)
+        }
         val selectedShapes = environment.getSelectedShapes()
         if (selectedShapes.isEmpty()) {
             return null
