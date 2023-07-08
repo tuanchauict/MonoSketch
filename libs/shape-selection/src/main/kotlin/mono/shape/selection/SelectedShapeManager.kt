@@ -24,6 +24,9 @@ class SelectedShapeManager {
         MutableLiveData(null)
     val focusingShapeLiveData: LiveData<FocusingShape?> = focusingShapeMutableLiveData
 
+    val focusingShape: FocusingShape?
+        get() = focusingShapeLiveData.value
+
     fun addSelectedShape(shape: AbstractShape) {
         selectedShapesMutableLiveData.value += shape
     }
