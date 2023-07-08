@@ -1,8 +1,8 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)][apache2.0]
 [![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat&logo=kotlin&logoColor=white)][KotlinJS] 
 [![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=flat&logo=SASS&logoColor=white)][sass]
-![GitHub release (with filter)](https://img.shields.io/github/v/release/tuanchauict/monosketch)
-![Twitter Follow](https://img.shields.io/twitter/follow/MonoSketchApp)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/tuanchauict/monosketch)](https://github.com/tuanchauict/MonoSketch/releases)
+[![Twitter Follow](https://img.shields.io/twitter/follow/MonoSketchApp)](https://twitter.com/MonoSketchApp)
 
 
 # What is it?
