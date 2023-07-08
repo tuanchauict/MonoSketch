@@ -43,5 +43,9 @@ internal class HoverShapeManager private constructor(
         fun forLineConnectHover(): HoverShapeManager = HoverShapeManager { environment, point ->
             ShapeConnectorUseCase.getConnectableShape(point, environment.getShapes(point))
         }
+
+        fun forHoverShape(): HoverShapeManager = HoverShapeManager { environment, point ->
+            environment.getShapes(point).lastOrNull()
+        }
     }
 }

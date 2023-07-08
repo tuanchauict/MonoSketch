@@ -57,7 +57,8 @@ class SelectedShapeManager {
      * An enum class defines the type of focus.
      */
     enum class ShapeFocusType {
-        LINE_CONNECTING
+        LINE_CONNECTING,
+        SELECT_MODE_HOVER
     }
 
     /**

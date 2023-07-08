@@ -181,6 +181,7 @@ class MainStateManager(
             else -> {
                 when (selectedShapeManager.getFocusingType(shape)) {
                     ShapeFocusType.LINE_CONNECTING -> Highlight.LINE_CONNECT_FOCUSING
+                    ShapeFocusType.SELECT_MODE_HOVER -> Highlight.LINE_CONNECT_FOCUSING
                     null -> Highlight.NO
                 }
             }

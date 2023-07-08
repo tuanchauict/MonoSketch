@@ -30,6 +30,7 @@ internal class MouseInteractionController(
         private set
 
     private val lineConnectHoverShapeManager = HoverShapeManager.forLineConnectHover()
+    private val hoverShapeManager = HoverShapeManager.forHoverShape()
 
     fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.DoubleClick) {
@@ -40,18 +41,8 @@ internal class MouseInteractionController(
             return
         }
 
-        if (currentMouseCommand == null &&
-            currentRetainableActionType == RetainableActionType.ADD_LINE
-        ) {
-            val hoveringTarget = lineConnectHoverShapeManager.getHoverShape(
-                environment,
-                mousePointer.boardCoordinate
-            )
-            environment.setFocusingShape(
-                hoveringTarget,
-                SelectedShapeManager.ShapeFocusType.LINE_CONNECTING
-            )
-            requestRedraw()
+        if (currentMouseCommand == null) {
+            detectHoverShape(mousePointer)
         }
 
         val mouseCommand =
@@ -77,5 +68,32 @@ internal class MouseInteractionController(
             // Avoid click when adding shape cause shape selection command
             post { actionManager.setRetainableAction(RetainableActionType.IDLE) }
         }
+    }
+
+    private fun detectHoverShape(mousePointer: MousePointer) {
+        val (hoverShape, type) = when (currentRetainableActionType) {
+            RetainableActionType.ADD_LINE -> {
+                val hoverShape = lineConnectHoverShapeManager.getHoverShape(
+                    environment,
+                    mousePointer.boardCoordinate
+                )
+                hoverShape to SelectedShapeManager.ShapeFocusType.LINE_CONNECTING
+            }
+
+            RetainableActionType.IDLE -> {
+                val hoverShape = hoverShapeManager.getHoverShape(
+                    environment,
+                    mousePointer.boardCoordinate
+                )
+                hoverShape to SelectedShapeManager.ShapeFocusType.SELECT_MODE_HOVER
+            }
+
+            RetainableActionType.ADD_RECTANGLE,
+            RetainableActionType.ADD_TEXT -> {
+                null
+            }
+        } ?: return
+        environment.setFocusingShape(hoverShape, type)
+        requestRedraw()
     }
 }
