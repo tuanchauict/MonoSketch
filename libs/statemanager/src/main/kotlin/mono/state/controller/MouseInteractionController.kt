@@ -32,6 +32,11 @@ internal class MouseInteractionController(
     private val lineConnectHoverShapeManager = HoverShapeManager.forLineConnectHover()
     private val hoverShapeManager = HoverShapeManager.forHoverShape()
 
+    fun reset() {
+        lineConnectHoverShapeManager.resetCache()
+        hoverShapeManager.resetCache()
+    }
+
     fun onMouseEvent(mousePointer: MousePointer) {
         if (mousePointer is MousePointer.DoubleClick) {
             val targetedShape =

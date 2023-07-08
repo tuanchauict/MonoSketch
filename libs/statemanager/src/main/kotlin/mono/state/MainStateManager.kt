@@ -251,7 +251,6 @@ class MainStateManager(
         val rootId = shapeManager.root.id
         val rootVersion = shapeManager.root.versionCode
         val currentRoot = workspaceDao.getObject(rootId).rootGroup
-        // TODO: load from storage
         val shapeConnector = ShapeConnector()
         when {
             currentRoot == null -> {
@@ -260,6 +259,7 @@ class MainStateManager(
 
             rootVersion != currentRoot.versionCode -> {
                 environment.replaceRoot(RootGroup(currentRoot), shapeConnector)
+                mouseInteractionController.reset()
             }
         }
     }
