@@ -355,8 +355,8 @@ class MainStateManager(
             focusType: ShapeFocusType
         ) = stateManager.selectedShapeManager.setFocusingShape(shape, focusType)
 
-        override fun getFocusingShape(): AbstractShape? =
-            stateManager.selectedShapeManager.focusingShape?.shape
+        override fun getFocusingShape(): SelectedShapeManager.FocusingShape? =
+            stateManager.selectedShapeManager.focusingShape
 
         override fun selectAllShapes() {
             for (shape in stateManager.workingParentGroup.items) {

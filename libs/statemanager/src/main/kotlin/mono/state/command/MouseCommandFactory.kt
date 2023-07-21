@@ -6,6 +6,7 @@ package mono.state.command
 
 import mono.actionmanager.RetainableActionType
 import mono.graphics.geo.MousePointer
+import mono.shape.selection.SelectedShapeManager.ShapeFocusType.SELECT_MODE_HOVER
 import mono.shape.shape.Line
 import mono.shapebound.InteractionPoint
 import mono.shapebound.LineInteractionPoint
@@ -65,16 +66,17 @@ internal object MouseCommandFactory {
         environment: CommandEnvironment,
         mousePointer: MousePointer.Down
     ): MouseCommand? {
-        val focusingShape = environment.getFocusingShape()
+        val focusingShape =
+            environment.getFocusingShape()?.takeIf { it.focusType == SELECT_MODE_HOVER }
 
         if (!mousePointer.isWithShiftKey &&
             focusingShape != null &&
-            focusingShape !in environment.getSelectedShapes()
+            focusingShape.shape !in environment.getSelectedShapes()
         ) {
             // If focusing shape is not selected and not in multiple selection mode (Shift key),
             // clear all selected shapes and select focusing shape.
             environment.clearSelectedShapes()
-            environment.addSelectedShape(focusingShape)
+            environment.addSelectedShape(focusingShape.shape)
         }
         val selectedShapes = environment.getSelectedShapes()
         if (selectedShapes.isEmpty()) {
