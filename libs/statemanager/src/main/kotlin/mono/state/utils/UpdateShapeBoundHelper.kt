@@ -67,7 +67,11 @@ internal object UpdateShapeBoundHelper {
 
         for (lineId in lineIds) {
             val line = environment.shapeManager.getShape(lineId) as? Line ?: continue
-            dataProvider.updatePosition(line)
+            val oldBound = line.bound
+            val newBound = dataProvider.updatePosition(line)
+            if (newBound == null || newBound == oldBound) {
+                continue
+            }
 
             // Remove connectors of line if its connected shapes are not selected.
             if (lineId !in lineIdToHeadCountMap) {
