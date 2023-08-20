@@ -91,7 +91,7 @@ internal class MouseInteractionController(
             RetainableActionType.IDLE -> {
                 val hoverShape =
                     if (!environment.isOnInteractionPoint(mousePointer)) {
-                        // Only hover shape when the mouse is not on interaction points of the 
+                        // Only hover shape when the mouse is not on interaction points of the
                         // current selected shapes
                         hoverShapeManager.getHoverShape(environment, mousePointer.boardCoordinate)
                     } else {
