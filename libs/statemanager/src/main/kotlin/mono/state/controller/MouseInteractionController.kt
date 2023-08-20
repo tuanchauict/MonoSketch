@@ -89,10 +89,15 @@ internal class MouseInteractionController(
             }
 
             RetainableActionType.IDLE -> {
-                val hoverShape = hoverShapeManager.getHoverShape(
-                    environment,
-                    mousePointer.boardCoordinate
-                )
+                val hoverShape =
+                    if (!environment.isOnInteractionPoint(mousePointer)) {
+                        // Only hover shape when the mouse is not on interaction points of the
+                        // current selected shapes
+                        hoverShapeManager.getHoverShape(environment, mousePointer.boardCoordinate)
+                    } else {
+                        null
+                    }
+
                 hoverShape to SelectedShapeManager.ShapeFocusType.SELECT_MODE_HOVER
             }
 
@@ -103,5 +108,18 @@ internal class MouseInteractionController(
         } ?: return
         environment.setFocusingShape(hoverShape, type)
         requestRedraw()
+    }
+
+    private fun CommandEnvironment.isOnInteractionPoint(mousePointer: MousePointer): Boolean {
+        val pointPx = when (mousePointer) {
+            is MousePointer.Down -> mousePointer.pointPx
+            is MousePointer.Move -> mousePointer.pointPx
+            MousePointer.Idle,
+            is MousePointer.Drag,
+            is MousePointer.Up,
+            is MousePointer.Click,
+            is MousePointer.DoubleClick -> null
+        } ?: return false
+        return getInteractionPoint(pointPx) != null
     }
 }
