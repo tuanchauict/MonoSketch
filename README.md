@@ -8,38 +8,46 @@
 
 # What is it?
 
-Mono Sketch is a client-side only web-based sketch tool for drawing *ASCII diagrams*. You can use
+Mono Sketch is a client-side-only web-based sketch tool for drawing *ASCII diagrams*. You can use
 the app at [app.monosketch.io][app].
 
 ```
-             ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
-              Edge Region 1                                           │
-             │
-                   ╭──────────────╮   send msg to ╭──────────────╮    │
- /\_/\       │     │╭─────────────┴╮   websocket  │╭─────────────┴╮
-( o.o ) ◀══════════╰┤╭─────────────┴╮◀═══════════▶╰┤╭─────────────┴╮  │
- > ^ <       │      ╰┤    Envoy     │ sub to this  ╰┤Gateway server│
-                     ╰──────▲───────╯   channel     ╰───────▲──────╯  │
-             │              ║                               │
-              ─ ─ ─ ─ ─ ─ ─ ║ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┼ ─ ─ ─ ─ ┘
- /\_/\                      ║                               │
-( o.o ) ◀═══════════════════╝                               │ send msg to all GS subs
- > ^ <                                                      └───────────────────────┐
-   │      ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┼ ─ ─ ┐
-   │     │Main region                                                               │
-   │                                                                                │     │
-   │     │   ┌──────────────┐               ┌──────────────┐            ┌───────────┴──┐
-   │         │┌─────────────┴┐     send     │┌─────────────┴┐           │┌─────────────┴┐ │
-   └─────┼──▶└┤┌─────────────┴┐ channel msg └┤┌─────────────┴┐          └┤┌─────────────┴┐
-              └┤    Webapp    ├──────────────┴▶ Admin Server ├───────────┴▶Channel Server││
-         │     └───────┬──────┘               └──────────────┘  route to  └──────────────┘
-                       │ store                                  channel                   │
-         │             ▼ message                                server
-                   ░░░░░░░░                                                               │
-         │         ░Vitess░
-                   ░░░░░░░░                                                               │
-         │
-          ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+        +10-15V                0,047R                                        
+       ●─────────○───────○─░░░░░─○─○─────────○────○─────╮                    
+    +  │         │       │       │ │         │    │     │                    
+    ─═════─      │       │       │ │         │    │     │                    
+    ─═════─    ──┼──     │       │╭┴╮        │    │     │                    
+    ─═════─     ─┼─      │       ││ │ 2k2    │    │     │                    
+    -  │      470│ +     │       ││ │        │    │     │                    
+       │       uF│       ╰──╮    │╰┬╯       ╭┴╮   │     │                    
+       └─────────│          │    │ │     1k │ │   │     ▽ LED                
+                 │         6│   7│ │8       │ │   │     ┬                    
+              ───┴───    ╭──┴────┴─┴─╮      ╰┬╯   │     │                    
+               ─═══─     │           │1      │  │ / BC  │                    
+                 ─       │           ├───────○──┤/  547 │                    
+                GND      │           │       │  │ ▶     │                    
+                         │           │      ╭┴╮   │     │                    
+               ╭─────────┤           │  220R│ │   ○───┤├┘  IRF9Z34           
+               │         │           │      │ │   │   │├─▶                   
+               │         │  MC34063  │      ╰┬╯   │   │├─┐ BYV29       -12V6 
+               │         │           │       │    │      ○──┤◀─○────○───X OUT
+             - │ +       │           │2      ╰────╯      │     │    │        
+6000 micro ────┴────     │           ├──○                C│    │   ─── 470   
+Farad, 40V ─ ─ ┬ ─ ─     │           │ GND               C│    │   ███  uF   
+Capacitor      │         │           │3                  C│    │    │\       
+               │         │           ├────────┤├╮        │     │   GND       
+               │         ╰─────┬───┬─╯          │       GND    │             
+               │              5│  4│            │              │             
+               │               │   ╰────────────○──────────────│             
+               │               │                               │             
+               ╰───────────────●─────/\/\/─────────○────░░░░░──╯             
+                                     2k            │         1k0             
+                                                  ╭┴╮                        
+                                                  │ │5k6   3k3               
+                                                  │ │in Serie                
+                                                  ╰┬╯                        
+                                                   │                         
+                                                  GND                        
 ```
 
 # Features
@@ -62,7 +70,7 @@ Shape formats:
 Editing:
 
 - Infinity scroll, no limitation for 4 directions
-- Auto save
+- Autosave
 - Multiple projects
 - Copy / Cut / Paste / Duplicate
 - Move and change shapes' order
@@ -85,9 +93,9 @@ Exporting:
 
 ### Paint tool
 
-> Currently, Mono Sketch provides only three tools: Rectangle, Text, and Line. One tool which is also
+> Currently, Mono Sketch provides only three tools: Rectangle, Text, and Line. One tool that is also
 > used frequently when drawing with ASCII is paint - draw with a specific character. This project
-> also aims for providing richer options of Fill, Border, Line Start/End head
+> also aims to provide richer options of Fill, Border, Line Start/End head
 
 ### Sharing
 
@@ -115,7 +123,7 @@ Or with production configuration
 **Run with Python**
 
 This is an alternative to `browserDevelopmentRun` for running the app for development (sometimes,
-the gradle does not reload when the code is updated).
+the Gradle does not reload when the code is updated).
 
 Requirements: [Pipenv].
 
