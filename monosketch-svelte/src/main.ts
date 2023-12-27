@@ -1,12 +1,11 @@
-import "./assets/fonts/stylesheet.css"
-import "./lib/style/main.scss"
-import './app.css'
+import "@assets/fonts/stylesheet.css"
+import "@style/main.scss"
 import App from './App.svelte'
 
 
-
 const app = new App({
-  target: document.getElementById('app'),
+    // @ts-ignore
+    target: document.getElementById('app'),
 })
 
 export default app

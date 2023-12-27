@@ -8,4 +8,12 @@ export default defineConfig({
         svelte(),
         sassPlugin()
     ],
+    resolve: {
+        alias: {
+            '@mono': '/src/lib/mono',
+            '@style': '/src/lib/style',
+            '@assets': '/src/assets',
+            '@ui': '/src/lib/ui',
+        }
+    }
 })
