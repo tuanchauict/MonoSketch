@@ -1,5 +1,9 @@
+import "./assets/fonts/stylesheet.css"
+import "./lib/style/main.scss"
 import './app.css'
 import App from './App.svelte'
+
+
 
 const app = new App({
   target: document.getElementById('app'),
