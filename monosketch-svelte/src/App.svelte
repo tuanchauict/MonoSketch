@@ -1,5 +1,6 @@
 <script lang="ts">
     import NavBar from './lib/ui/nav/NavBar.svelte';
+    import ModalHolder from "./lib/ui/modal/ModalHolder.svelte";
 </script>
 <nav>
     <NavBar/>
@@ -8,6 +9,8 @@
     <div class="workspace"></div>
     <div class="right-panel"></div>
 </main>
+
+<ModalHolder/>
 
 <style lang="scss">
     $nav-height: 48px;

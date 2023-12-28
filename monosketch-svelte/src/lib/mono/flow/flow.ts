@@ -1,4 +1,4 @@
-import {LifecycleObserver, LifecycleOwner} from "./lifecycleowner";
+import {type LifecycleObserver, LifecycleOwner} from "./lifecycleowner";
 
 interface Observer<T> {
     onChange(value: T): void;
