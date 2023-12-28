@@ -4,9 +4,12 @@
     import {ScrollMode} from "./right/model";
     import AppDropdownMenu from "./right/AppDropdownMenu.svelte";
     import ThemeButton from "./right/ThemeButton.svelte";
+    import Brand from "./brand/Brand.svelte";
 </script>
 
 <div>
+    <Brand/>
+
     <ToolbarContainer>
         <ScrollModeButton scrollMode="{ScrollMode.BOTH}"/>
         <ThemeButton />
@@ -17,6 +20,7 @@
 <style>
     div {
         display: flex;
+        justify-content: space-between;
         width: 100%;
         height: 100%;
 

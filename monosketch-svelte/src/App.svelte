@@ -1,5 +1,4 @@
 <script lang="ts">
-
     import NavBar from './lib/ui/nav/NavBar.svelte';
 </script>
 <nav>
