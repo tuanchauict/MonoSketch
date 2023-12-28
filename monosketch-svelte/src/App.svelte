@@ -1,7 +1,10 @@
 <script lang="ts">
 
+    import NavBar from './lib/ui/nav/NavBar.svelte';
 </script>
-<nav></nav>
+<nav>
+    <NavBar/>
+</nav>
 <main>
     <div class="workspace"></div>
     <div class="right-panel"></div>
