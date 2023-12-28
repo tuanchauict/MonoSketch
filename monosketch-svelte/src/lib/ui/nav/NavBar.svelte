@@ -5,10 +5,14 @@
     import AppDropdownMenu from "./right/AppDropdownMenu.svelte";
     import ThemeButton from "./right/ThemeButton.svelte";
     import Brand from "./brand/Brand.svelte";
+    import MouseActionGroup from "./mouseaction/MouseActionGroup.svelte";
 </script>
 
-<div>
-    <Brand/>
+<div class="container">
+    <div class="left">
+        <Brand/>
+        <MouseActionGroup/>
+    </div>
 
     <ToolbarContainer>
         <ScrollModeButton scrollMode="{ScrollMode.BOTH}"/>
@@ -18,12 +22,18 @@
 </div>
 
 <style>
-    div {
+    .container {
         display: flex;
         justify-content: space-between;
         width: 100%;
         height: 100%;
 
         color: white;
+    }
+
+    .left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
     }
 </style>
