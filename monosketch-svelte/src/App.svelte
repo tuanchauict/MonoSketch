@@ -1,13 +1,16 @@
 <script lang="ts">
     import NavBar from './lib/ui/nav/NavBar.svelte';
     import ModalHolder from "./lib/ui/modal/ModalHolder.svelte";
+    import ShapeTool from "./lib/ui/pannel/shapetool/ShapeTool.svelte";
 </script>
 <nav>
     <NavBar/>
 </nav>
 <main>
     <div class="workspace"></div>
-    <div class="right-panel"></div>
+    <div class="right-panel">
+        <ShapeTool/>
+    </div>
 </main>
 
 <ModalHolder/>
@@ -42,7 +45,5 @@
         right: 0;
         bottom: 0;
         width: $sharp-tool-width;
-
-        background: var(--shapetool-bg-color);
     }
 </style>
