@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
-
-@import 'animation';
-@import 'theme';
 @import 'variables';
 
+* {
+    box-sizing: border-box;
+}
 html,
 body {
     width: 100%;
@@ -16,3 +16,8 @@ body {
 body {
     background: var(--workspace-bg-color);
 }
+
+@import 'animation';
+@import 'theme';
+
+

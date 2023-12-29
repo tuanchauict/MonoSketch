@@ -6,6 +6,8 @@
     import ThemeButton from "./right/ThemeButton.svelte";
     import Brand from "./brand/Brand.svelte";
     import MouseActionGroup from "./mouseaction/MouseActionGroup.svelte";
+    import ProjectManagerButton from "./project/ProjectManagerButton.svelte";
+    import WorkingFile from "./project/WorkingFile.svelte";
 </script>
 
 <div class="container">
@@ -13,6 +15,11 @@
         <Brand/>
         <MouseActionGroup/>
     </div>
+
+    <ToolbarContainer>
+        <ProjectManagerButton/>
+        <WorkingFile filename="Demo"/>
+    </ToolbarContainer>
 
     <ToolbarContainer>
         <ScrollModeButton scrollMode="{ScrollMode.BOTH}"/>
