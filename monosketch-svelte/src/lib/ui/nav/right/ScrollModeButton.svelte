@@ -1,6 +1,8 @@
 <script lang="ts">
     import {ScrollMode} from './model';
     import AppIcon from "../common/AppIcon.svelte";
+    import TooltipTarget from "../../modal/menu/tooltip/TooltipTarget.svelte";
+    import {Direction} from "../../modal/menu/tooltip/model";
 
     export let scrollMode: ScrollMode = ScrollMode.BOTH;
 
@@ -33,6 +35,8 @@
     }
 </script>
 
-<AppIcon size={16} viewBoxSize={40} onClick={changeMode}>
-    <path d="{path}"/>
-</AppIcon>
+<TooltipTarget direction={Direction.BOTTOM} text="Scroll mode" offsetVertical={6.5}>
+    <AppIcon size={16} viewBoxSize={40} onClick={changeMode}>
+        <path d="{path}"/>
+    </AppIcon>
+</TooltipTarget>
