@@ -31,7 +31,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-
+        color: inherit;
 
         &:hover {
             border-color: transparent;

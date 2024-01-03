@@ -1,7 +1,7 @@
 <script lang="ts">
     import Section from "../../common/Section.svelte";
     import FormatIcon from "./FormatIcon.svelte";
-    import {horizontalAlignmentTypes, TextAlignment} from "./model";
+    import {horizontalAlignmentTypes, TextAlignment, verticalAlignmentTypes} from "./model";
 
     let selectedHorizontalAlignment: TextAlignment = TextAlignment.HORIZONTAL_LEFT;
     let selectedVerticalAlignment: TextAlignment = TextAlignment.VERTICAL_TOP;
@@ -29,7 +29,7 @@
     <div class="row">
         <span>Position</span>
         <div class="container">
-            {#each horizontalAlignmentTypes as type}
+            {#each verticalAlignmentTypes as type}
                 <FormatIcon {type} onChange={onVerticalChange}
                             selected={selectedVerticalAlignment === type}/>
             {/each}
