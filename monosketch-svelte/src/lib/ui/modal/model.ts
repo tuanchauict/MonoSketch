@@ -8,4 +8,12 @@ export class TargetBounds {
     }
 
     constructor(public left: number, public top: number, public width: number, public height: number) {}
+
+    get centerHorizontal(): number {
+        return this.left + this.width / 2;
+    }
+
+    get centerVertical(): number {
+        return this.top + this.height / 2;
+    }
 }
