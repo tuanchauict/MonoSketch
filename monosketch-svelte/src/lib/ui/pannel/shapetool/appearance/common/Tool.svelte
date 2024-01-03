@@ -18,5 +18,6 @@
         font-style: normal;
         font-weight: normal;
         margin: 0 0 4px;
+        user-select: none;
     }
 </style>

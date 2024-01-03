@@ -34,6 +34,7 @@
         height: 32px;
         color: var(--shapetool-tool-title-color);
 
+        user-select: none;
         background: none;
 
         &:hover {

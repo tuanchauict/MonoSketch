@@ -29,6 +29,8 @@
         }
 
         &.child-bounds {
+            padding: 1px 0;
+
             &:hover {
                 outline: none;
             }
@@ -41,6 +43,7 @@
                 padding-left: 4px;
                 padding-right: 4px;
                 border-radius: 2px;
+                margin-left: 10px;
 
                 &:hover {
                     outline: 1px solid var(--text-input-border-color);
