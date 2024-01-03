@@ -1,18 +1,19 @@
 <script lang="ts">
-    import Tool from "./common/Tool.svelte";
-    import CloudItem from "./common/CloudItem.svelte";
-    import {fillOptions} from "./model";
+    import Tool from "./Tool.svelte";
+    import CloudItem from "./CloudItem.svelte";
+    import {lineAnchorOptions} from "../model";
 
-    let selectedId = "F0"
+    export let title: string;
+    export let selectedId: string;
 
     function onItemSelect(id: string) {
         selectedId = id;
     }
 </script>
 
-<Tool title="Fill" available={true}>
+<Tool title="{title}" available={true}>
     <div>
-        {#each fillOptions as option}
+        {#each lineAnchorOptions as option}
             <CloudItem id={option.id} selected={option.id === selectedId}
                        useDashBorder={option.useDashBorder}
                        onSelect={onItemSelect}>{option.title}</CloudItem>
