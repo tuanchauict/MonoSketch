@@ -11,7 +11,7 @@
     }
 </script>
 
-<Tool title="{title}" available={true}>
+<Tool {title} available={true}>
     <div>
         {#each lineAnchorOptions as option}
             <CloudItem id={option.id} selected={option.id === selectedId}

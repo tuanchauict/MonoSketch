@@ -2,6 +2,7 @@
     import ReorderTool from "./reorder/ReorderTool.svelte";
     import TransformTool from "./transform/TransformTool.svelte";
     import AppearanceTool from "./appearance/AppearanceTool.svelte";
+    import TextTool from "./text/TextTool.svelte";
 </script>
 
 <div class="container">
@@ -9,6 +10,7 @@
         <ReorderTool/>
         <TransformTool/>
         <AppearanceTool/>
+        <TextTool/>
     </div>
     <div class="footer">
         Hello
