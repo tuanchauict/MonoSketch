@@ -5,7 +5,7 @@
     export let isEnabled = true;
     export let boundIncludesLabel = false;
 </script>
-<div class:child-bounds={boundIncludesLabel}>
+<div class:child-bounds={!boundIncludesLabel}>
     <label for="">{label}</label>
     <input type="number" bind:value={value} disabled="{!isEnabled}"
            min="{minValue !== null? minValue : ''}"/>
@@ -25,7 +25,7 @@
         }
 
         &:focus-within {
-            outline: 2px solid var(--text-input-border-focus-color);
+            outline: 1.5px solid var(--text-input-border-focus-color);
         }
 
         &.child-bounds {

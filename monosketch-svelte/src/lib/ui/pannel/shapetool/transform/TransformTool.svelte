@@ -6,23 +6,21 @@
     let y = 0;
     let height = 0;
     let width = 0;
-
-    $: console.log({x, y, height, width});
 </script>
 
 <Section title="TRANSFORM">
     <div class="grid">
         <div class="cell">
-            <NumberTextField label="X" bind:value={x}/>
+            <NumberTextField label="X" bind:value={x} boundIncludesLabel={true}/>
         </div>
         <div class="cell">
-            <NumberTextField label="W" bind:value={width} minValue={1}/>
+            <NumberTextField label="W" bind:value={width} minValue={1} boundIncludesLabel={true}/>
         </div>
         <div class="cell">
-            <NumberTextField label="Y" bind:value={y}/>
+            <NumberTextField label="Y" bind:value={y} boundIncludesLabel={true}/>
         </div>
         <div class="cell">
-            <NumberTextField label="H" bind:value={height} minValue={1}/>
+            <NumberTextField label="H" bind:value={height} minValue={1} boundIncludesLabel={true}/>
         </div>
     </div>
 </Section>

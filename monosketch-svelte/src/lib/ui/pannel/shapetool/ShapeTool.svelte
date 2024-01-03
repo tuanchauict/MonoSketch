@@ -1,12 +1,14 @@
 <script>
     import ReorderTool from "./reorder/ReorderTool.svelte";
     import TransformTool from "./transform/TransformTool.svelte";
+    import AppearanceTool from "./appearance/AppearanceTool.svelte";
 </script>
 
 <div class="container">
     <div class="body">
         <ReorderTool/>
-        <TransformTool />
+        <TransformTool/>
+        <AppearanceTool/>
     </div>
     <div class="footer">
         Hello
