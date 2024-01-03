@@ -18,7 +18,7 @@
 
     button {
         display: flex;
-        padding: 4px 0;
+        padding: 3px 0;
         margin: 0;
         width: 26px;
         height: 32px;
