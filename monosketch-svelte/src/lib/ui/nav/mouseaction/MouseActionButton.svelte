@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {getIconPath, type MouseActionType} from "./model";
+    import {mouseActionToContentMap, type MouseActionType} from "./model";
 
     export let type: MouseActionType;
     export let onSelect: (type: MouseActionType) => void;
@@ -13,7 +13,7 @@
 <div>
     <button class="action" class:selected={selected} on:click={onClick}>
         <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
-            <path d="{getIconPath(type)}"/>
+            <path d="{mouseActionToContentMap[type].iconPath}"/>
         </svg>
     </button>
 </div>

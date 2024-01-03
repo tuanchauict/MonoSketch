@@ -38,7 +38,5 @@
             opacity: 1;
             color: $border-selected-color;
         }
-
-
     }
 </style>

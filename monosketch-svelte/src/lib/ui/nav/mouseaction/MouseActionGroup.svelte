@@ -1,17 +1,18 @@
 <script lang="ts">
     import MouseActionButton from "./MouseActionButton.svelte";
-    import {MouseActionType} from "./model";
+    import {MouseActionType, mouseActionTypes} from "./model";
+
+    let selectedActionType: MouseActionType = MouseActionType.SELECTION;
 
     function onSelect(actionType: MouseActionType) {
-        console.log(actionType);
+        selectedActionType = actionType;
     }
 </script>
 
 <div>
-    <MouseActionButton type={MouseActionType.SELECTION} {onSelect}/>
-    <MouseActionButton type={MouseActionType.ADD_RECTANGLE} {onSelect}/>
-    <MouseActionButton type={MouseActionType.ADD_TEXT} {onSelect}/>
-    <MouseActionButton type={MouseActionType.ADD_LINE} {onSelect}/>
+    {#each mouseActionTypes as type}
+        <MouseActionButton type={type} {onSelect} selected={type === selectedActionType}/>
+    {/each}
 </div>
 
 <style>
