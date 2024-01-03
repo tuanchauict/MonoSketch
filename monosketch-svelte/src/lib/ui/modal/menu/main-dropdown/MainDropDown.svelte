@@ -3,11 +3,12 @@
     import {modalViewModel} from "../../viewmodel";
     import MenuItem from "./MenuItem.svelte";
     import FontAdjustmentItem from "./FontAdjustmentItem.svelte";
+    import type {TargetBounds} from "../../model";
 
-    export let target: HTMLElement;
+    export let targetBounds: TargetBounds;
 
-    let left = target.offsetLeft;
-    let top = target.offsetTop + target.offsetHeight + 7;
+    let left = targetBounds.left;
+    let top = targetBounds.top + targetBounds.height + 7;
     let width = 180;
 
     function onDismiss() {

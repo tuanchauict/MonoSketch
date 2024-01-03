@@ -1,9 +1,11 @@
 <script lang="ts">
     import AppIcon from "../common/AppIcon.svelte";
     import {modalViewModel} from "../../modal/viewmodel";
+    import {TargetBounds} from "../../modal/model.js";
 
     function showDropdown(e: MouseEvent) {
-        modalViewModel.mainDropDownMenuTargetFlow.value = e.currentTarget as HTMLElement;
+        modalViewModel.mainDropDownMenuTargetFlow.value =
+                TargetBounds.fromElement(e.currentTarget as HTMLElement);
     }
 </script>
 

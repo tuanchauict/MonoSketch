@@ -3,8 +3,9 @@
     import {onDestroy, onMount} from "svelte";
     import {modalViewModel} from "./viewmodel";
     import {LifecycleOwner} from "../../mono/flow";
+    import type {TargetBounds} from "./model";
 
-    let mainDropDownTarget: (HTMLElement | null) = null;
+    let mainDropDownTarget: (TargetBounds | null) = null;
 
     const lifecycleOwner = new LifecycleOwner();
     onMount(() => {
@@ -20,6 +21,6 @@
     });
 </script>
 {#if mainDropDownTarget}
-    <MainDropDown target={mainDropDownTarget}/>
+    <MainDropDown targetBounds={mainDropDownTarget}/>
 {/if}
-```
+

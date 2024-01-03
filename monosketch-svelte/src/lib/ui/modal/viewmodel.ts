@@ -1,7 +1,8 @@
 import {Flow} from '../../mono/flow';
+import type {TargetBounds} from "./model";
 
 class ModalViewModel {
-    mainDropDownMenuTargetFlow: Flow<HTMLElement|null> = new Flow();
+    mainDropDownMenuTargetFlow: Flow<TargetBounds|null> = new Flow();
 }
 
 export const modalViewModel = new ModalViewModel();
