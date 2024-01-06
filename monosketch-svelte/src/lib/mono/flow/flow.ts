@@ -26,21 +26,21 @@ class ThrottleObserver<T> implements Observer<T> {
         }
     }
 
-    onChange(value: T) {
+    onChange = (value: T) => {
         this.currentValue = value;
         if (this.timeoutId !== undefined) {
             return;
         }
         if (this.timeout == 0) {
             // @ts-ignore
-            this.timeoutId = requestAnimationFrame(this.timeoutTick.bind(this));
+            this.timeoutId = requestAnimationFrame(this.timeoutTick);
         } else {
             // @ts-ignore
-            this.timeoutId = setTimeout(this.timeoutTick.bind(this), this.timeout);
+            this.timeoutId = setTimeout(this.timeoutTick, this.timeout);
         }
     }
 
-    private timeoutTick() {
+    private timeoutTick = () => {
         let newValue = this.currentValue;
         if (newValue === undefined) {
             return;
@@ -77,9 +77,9 @@ export class Flow<T> {
     }
 
     static combine2<T0, T1, R>(
-        flow0: Flow<T0>,
-        flow1: Flow<T1>,
-        transform: (value0: T0, value1: T1) => R
+            flow0: Flow<T0>,
+            flow1: Flow<T1>,
+            transform: (value0: T0, value1: T1) => R
     ): Flow<R> {
         return Flow.combineList([flow0, flow1], (array) => {
             return transform(array[0] as T0, array[1] as T1);
@@ -87,10 +87,10 @@ export class Flow<T> {
     }
 
     static combine3<T0, T1, T2, R>(
-        flow0: Flow<T0>,
-        flow1: Flow<T1>,
-        flow2: Flow<T2>,
-        transform: (value0: T0, value1: T1, value2: T2) => R
+            flow0: Flow<T0>,
+            flow1: Flow<T1>,
+            flow2: Flow<T2>,
+            transform: (value0: T0, value1: T1, value2: T2) => R
     ): Flow<R> {
         return Flow.combineList([flow0, flow1, flow2], (array) => {
             return transform(array[0] as T0, array[1] as T1, array[2] as T2);
@@ -98,11 +98,11 @@ export class Flow<T> {
     }
 
     static combine4<T0, T1, T2, T3, R>(
-        flow0: Flow<T0>,
-        flow1: Flow<T1>,
-        flow2: Flow<T2>,
-        flow3: Flow<T3>,
-        transform: (value0: T0, value1: T1, value2: T2, value3: T3) => R
+            flow0: Flow<T0>,
+            flow1: Flow<T1>,
+            flow2: Flow<T2>,
+            flow3: Flow<T3>,
+            transform: (value0: T0, value1: T1, value2: T2, value3: T3) => R
     ): Flow<R> {
         return Flow.combineList([flow0, flow1, flow2, flow3], (array) => {
             return transform(array[0] as T0, array[1] as T1, array[2] as T2, array[3] as T3);
@@ -198,9 +198,9 @@ export class Flow<T> {
     map<R>(transform: (value: T) => R): Flow<R> {
         const flow = Flow.immutable([this], (args: Array<T>) => transform(args[0]));
         this.addInternalObserver(flow,
-            new SimpleObserver((value) => {
-                flow.setValueInternal(transform(value));
-            })
+                new SimpleObserver((value) => {
+                    flow.setValueInternal(transform(value));
+                })
         );
         return flow;
     }
