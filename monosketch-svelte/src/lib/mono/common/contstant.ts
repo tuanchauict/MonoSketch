@@ -1,26 +1,4 @@
-/**
- * An object to contains all handling key-codes.
- */
-export class Key {
-    static readonly KEY_ESC = 27;
-    static readonly KEY_SHIFT = 16;
-    static readonly KEY_ENTER = 13;
-    static readonly KEY_BACKSPACE = 8;
-    static readonly KEY_DELETE = 46;
-    static readonly KEY_ARROW_LEFT = 37;
-    static readonly KEY_ARROW_UP = 38;
-    static readonly KEY_ARROW_RIGHT = 39;
-    static readonly KEY_ARROW_DOWN = 40;
-    static readonly KEY_A = 65;
-    static readonly KEY_C = 67;
-    static readonly KEY_D = 68;
-    static readonly KEY_L = 76;
-    static readonly KEY_R = 82;
-    static readonly KEY_T = 84;
-    static readonly KEY_V = 86;
-    static readonly KEY_X = 88;
-    static readonly KEY_Z = 90;
-}
+
 
 export class Characters {
     static readonly TRANSPARENT_CHAR: string = String.fromCharCode(0);

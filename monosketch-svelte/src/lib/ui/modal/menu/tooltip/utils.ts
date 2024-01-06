@@ -24,7 +24,6 @@ export function calcArrowTop(arrow: HTMLElement, target: Tooltip): number {
         return -1000;
     }
     const arrowBounds = TargetBounds.fromElement(arrow);
-    console.log('arrowBounds', arrowBounds);
     const targetBounds = target.targetBounds;
     switch (target.direction) {
         case Direction.TOP:
