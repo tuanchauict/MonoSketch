@@ -1,6 +1,6 @@
 <script lang="ts">
-import { modalViewModel } from '../../viewmodel';
-import { TargetBounds } from '../../model';
+import { modalViewModel } from '../viewmodel';
+import { TargetBounds } from '../model';
 import { Direction, Tooltip } from './model';
 
 export let text: string;

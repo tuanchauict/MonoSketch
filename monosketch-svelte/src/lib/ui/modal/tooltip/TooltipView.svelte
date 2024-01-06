@@ -33,7 +33,7 @@ $: arrowSize =
 </div>
 
 <style lang="scss">
-@import '../../../../style/variables.scss';
+@import '../../../style/variables';
 
 $tooltip-background-color: var(--tooltip-bg);
 $tooltip-color: var(--tooltip-color);

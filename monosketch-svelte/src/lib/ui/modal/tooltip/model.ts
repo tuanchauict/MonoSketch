@@ -1,4 +1,4 @@
-import type { TargetBounds } from '../../model';
+import type { TargetBounds } from '../model';
 
 export enum Direction {
     TOP,

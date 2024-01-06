@@ -4,8 +4,8 @@ import { onDestroy, onMount } from 'svelte';
 import { modalViewModel } from './viewmodel';
 import { LifecycleOwner } from '../../mono/flow';
 import type { TargetBounds } from './model';
-import type { Tooltip } from './menu/tooltip/model';
-import TooltipView from './menu/tooltip/TooltipView.svelte';
+import type { Tooltip } from './tooltip/model';
+import TooltipView from './tooltip/TooltipView.svelte';
 
 let mainDropDownTarget: TargetBounds | null = null;
 let tooltip: Tooltip | null = null;

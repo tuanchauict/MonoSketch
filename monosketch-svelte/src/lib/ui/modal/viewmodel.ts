@@ -1,6 +1,6 @@
 import { Flow } from '../../mono/flow';
 import type { TargetBounds } from './model';
-import type { Tooltip } from './menu/tooltip/model';
+import type { Tooltip } from './tooltip/model';
 
 class ModalViewModel {
     mainDropDownMenuTargetFlow: Flow<TargetBounds | null> = new Flow(null);

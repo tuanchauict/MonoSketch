@@ -1,4 +1,4 @@
-import { TargetBounds } from '../../model';
+import { TargetBounds } from '../model';
 import { Direction, type Tooltip } from './model';
 
 export function calcArrowLeft(arrow: HTMLElement, target: Tooltip): number {
@@ -9,7 +9,7 @@ export function calcArrowLeft(arrow: HTMLElement, target: Tooltip): number {
     const targetBounds = target.targetBounds;
     switch (target.direction) {
         case Direction.TOP:
-            return targetBounds.top + targetBounds.height;
+            return targetBounds.centerHorizontal - arrowBounds.width / 2;
         case Direction.BOTTOM:
             return targetBounds.centerHorizontal - arrowBounds.width / 2;
         case Direction.LEFT:
@@ -46,9 +46,15 @@ export function calcBodyLeft(body: HTMLElement, arrow: HTMLElement, target: Tool
     const targetBounds = target.targetBounds;
     switch (target.direction) {
         case Direction.TOP:
-            return targetBounds.centerHorizontal - bodyBounds.width / 2;
+            return adjustHorizontalPosition(
+                targetBounds.centerHorizontal - bodyBounds.width / 2,
+                bodyBounds,
+            );
         case Direction.BOTTOM:
-            return targetBounds.centerHorizontal - bodyBounds.width / 2;
+            return adjustHorizontalPosition(
+                targetBounds.centerHorizontal - bodyBounds.width / 2,
+                bodyBounds,
+            );
         case Direction.LEFT:
             return targetBounds.left - bodyBounds.width - arrowBounds.width;
         case Direction.RIGHT:
@@ -73,4 +79,15 @@ export function calcBodyTop(body: HTMLElement, arrow: HTMLElement, target: Toolt
         case Direction.RIGHT:
             return targetBounds.centerVertical - bodyBounds.height / 2;
     }
+}
+
+function adjustHorizontalPosition(leftPx: number, bodyBounds: TargetBounds): number {
+    const bodyRightPx = leftPx + bodyBounds.width;
+    if (bodyRightPx > document.body.clientWidth) {
+        return document.body.clientWidth - bodyBounds.width - 4;
+    }
+    if (leftPx < 0) {
+        return 4;
+    }
+    return leftPx;
 }

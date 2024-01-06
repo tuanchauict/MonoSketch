@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mouseActionToContentMap, type MouseActionType } from './model';
-import TooltipTarget from '../../modal/menu/tooltip/TooltipTarget.svelte';
+import TooltipTarget from '../../modal/tooltip/TooltipTarget.svelte';
 
 export let type: MouseActionType;
 export let onSelect: (type: MouseActionType) => void;

@@ -1,8 +1,8 @@
 <script lang="ts">
 import { ScrollMode } from './model';
 import AppIcon from '../common/AppIcon.svelte';
-import TooltipTarget from '../../modal/menu/tooltip/TooltipTarget.svelte';
-import { Direction } from '../../modal/menu/tooltip/model';
+import TooltipTarget from '../../modal/tooltip/TooltipTarget.svelte';
+import { Direction } from '../../modal/tooltip/model';
 
 export let scrollMode: ScrollMode = ScrollMode.BOTH;
 
