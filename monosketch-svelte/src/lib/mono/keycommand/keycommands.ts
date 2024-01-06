@@ -215,5 +215,8 @@ export function getCommandByKey(
 }
 
 export function getCommandByType(base: KeyCommandType): KeyCommand {
+    if (KeyCodeToKeyCommandMap.size === 0) {
+        initKeyToKeyCommandMap();
+    }
     return KeyCommandMap.get(base)!!;
 }
