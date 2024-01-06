@@ -232,6 +232,13 @@ export class Flow<T> {
         return flow;
     }
 
+    /**
+     * Returns an immutable version of this flow.
+     */
+    immutable(): Flow<T> {
+        return this.map((value: T) => value)
+    }
+
     combine<T1, R>(another: Flow<T1>, transform: (value0: T, value1: T1) => R): Flow<R> {
         return Flow.combine2(this, another, transform);
     }

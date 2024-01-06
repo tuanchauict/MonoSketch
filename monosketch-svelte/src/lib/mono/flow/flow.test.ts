@@ -2,7 +2,7 @@
 
 import {test, expect} from 'vitest';
 import {Flow} from './flow';
-import {LifecycleOwner} from "./lifecycleowner.ts";
+import {LifecycleOwner} from "./lifecycleowner";
 
 test('map value', () => {
     const flow = new Flow(1);
@@ -143,6 +143,26 @@ test('throttle', async () => {
     await sleep(21);
     expect(counter).toBe(2); // Run because the throttle is expired
     expect(observedValue).toBe(2);
+});
+
+test("immutable flow", () => {
+    const flow = new Flow<number>(0);
+    const flow2 = flow.immutable();
+    let counter = 0;
+    let observedValue = undefined;
+    const observer = (value: unknown) => {
+        counter++;
+        observedValue = value;
+    };
+    flow2.observe(LifecycleOwner.start(), observer);
+    expect(counter).toBe(1); // Run when start observe because the value is defined
+    expect(observedValue).toBe(0);
+
+    flow.value = 1;
+    expect(counter).toBe(2); // Run because the value is changed
+    expect(observedValue).toBe(1);
+
+    expect(() => {flow2.value = 3}).toThrowError()
 });
 
 test("combine 2 flows", () => {
