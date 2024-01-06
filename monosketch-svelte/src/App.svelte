@@ -1,49 +1,50 @@
 <script lang="ts">
-    import NavBar from './lib/ui/nav/NavBar.svelte';
-    import ModalHolder from "./lib/ui/modal/ModalHolder.svelte";
-    import ShapeTool from "./lib/ui/pannel/shapetool/ShapeTool.svelte";
+import NavBar from './lib/ui/nav/NavBar.svelte';
+import ModalHolder from './lib/ui/modal/ModalHolder.svelte';
+import ShapeTool from './lib/ui/pannel/shapetool/ShapeTool.svelte';
 </script>
+
 <nav>
-    <NavBar/>
+    <NavBar />
 </nav>
 <main>
     <div class="workspace"></div>
     <div class="right-panel">
-        <ShapeTool/>
+        <ShapeTool />
     </div>
 </main>
 
-<ModalHolder/>
+<ModalHolder />
 
 <style lang="scss">
-    $nav-height: 48px;
-    $sharp-tool-width: 250px;
+$nav-height: 48px;
+$sharp-tool-width: 250px;
 
-    nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: $nav-height;
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: $nav-height;
 
-        background: var(--header-bg);
-    }
+    background: var(--header-bg);
+}
 
-    .workspace {
-        position: fixed;
-        top: $nav-height;
-        left: 0;
-        bottom: 0;
-        width: 100%;
+.workspace {
+    position: fixed;
+    top: $nav-height;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 
-        background: var(--workspace-bg-color);
-    }
+    background: var(--workspace-bg-color);
+}
 
-    .right-panel {
-        position: fixed;
-        top: $nav-height;
-        right: 0;
-        bottom: 0;
-        width: $sharp-tool-width;
-    }
+.right-panel {
+    position: fixed;
+    top: $nav-height;
+    right: 0;
+    bottom: 0;
+    width: $sharp-tool-width;
+}
 </style>

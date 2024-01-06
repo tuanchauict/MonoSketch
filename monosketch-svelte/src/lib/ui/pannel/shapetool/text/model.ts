@@ -38,4 +38,4 @@ export const textAlignmentMap = {
     [TextAlignment.VERTICAL_BOTTOM]: {
         iconPath: 'M3 8h14v2H3zM3 12h14v2H3z',
     },
-}
+};

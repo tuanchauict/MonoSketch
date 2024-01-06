@@ -51,9 +51,7 @@ export class LifecycleOwner {
         this.onStartInternal();
     }
 
-    protected onStartInternal() {
-
-    }
+    protected onStartInternal() {}
 
     /**
      * Called when the LifecycleOwner is ready to stop.
@@ -71,7 +69,5 @@ export class LifecycleOwner {
         }
     }
 
-    protected onStopInternal() {
-
-    }
+    protected onStopInternal() {}
 }

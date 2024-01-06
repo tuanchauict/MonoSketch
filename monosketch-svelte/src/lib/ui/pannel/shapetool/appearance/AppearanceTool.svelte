@@ -1,16 +1,16 @@
 <script lang="ts">
-    import Section from "../../common/Section.svelte";
-    import FillTool from "./FillTool.svelte";
-    import BorderTool from "./BorderTool.svelte";
-    import StrokeTool from "./StrokeTool.svelte";
-    import StartHeadTool from "./StartHeadTool.svelte";
-    import EndHeadTool from "./EndHeadTool.svelte";
+import Section from '../../common/Section.svelte';
+import FillTool from './FillTool.svelte';
+import BorderTool from './BorderTool.svelte';
+import StrokeTool from './StrokeTool.svelte';
+import StartHeadTool from './StartHeadTool.svelte';
+import EndHeadTool from './EndHeadTool.svelte';
 </script>
 
 <Section title="APPEARANCE">
-    <FillTool/>
+    <FillTool />
     <BorderTool />
     <StrokeTool />
-    <StartHeadTool/>
-    <EndHeadTool/>
+    <StartHeadTool />
+    <EndHeadTool />
 </Section>

@@ -1,26 +1,25 @@
 <script lang="ts">
-    import {mouseActionToContentMap, type MouseActionType} from "./model";
-    import TooltipTarget from "../../modal/menu/tooltip/TooltipTarget.svelte";
+import { mouseActionToContentMap, type MouseActionType } from './model';
+import TooltipTarget from '../../modal/menu/tooltip/TooltipTarget.svelte';
 
-    export let type: MouseActionType;
-    export let onSelect: (type: MouseActionType) => void;
-    export let selected: boolean = false;
+export let type: MouseActionType;
+export let onSelect: (type: MouseActionType) => void;
+export let selected: boolean = false;
 
-    function onClick() {
-        onSelect(type);
-    }
+function onClick() {
+    onSelect(type);
+}
 </script>
 
-<TooltipTarget text={mouseActionToContentMap[type].title} offsetVertical={8}>
-    <button class="action" class:selected={selected} on:click={onClick}>
+<TooltipTarget text="{mouseActionToContentMap[type].title}" offsetVertical="{8}">
+    <button class="action" class:selected on:click="{onClick}">
         <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
-            <path d="{mouseActionToContentMap[type].iconPath}"/>
+            <path d="{mouseActionToContentMap[type].iconPath}"></path>
         </svg>
     </button>
 </TooltipTarget>
 
 <style lang="scss">
-
 button {
     background: none;
 
@@ -33,7 +32,7 @@ button {
     border: 1px solid transparent;
     cursor: pointer;
     user-select: none;
-    color:inherit;
+    color: inherit;
 
     &:hover {
         background: var(--nav-action-hover-bg);

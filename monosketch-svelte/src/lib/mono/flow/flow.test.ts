@@ -1,12 +1,12 @@
 // noinspection DuplicatedCode
 
-import {test, expect} from 'vitest';
-import {Flow} from './flow';
-import {LifecycleOwner} from "./lifecycleowner";
+import { test, expect } from 'vitest';
+import { Flow } from './flow';
+import { LifecycleOwner } from './lifecycleowner';
 
 test('map value', () => {
     const flow = new Flow(1);
-    const flow2 = flow.map(value => value + 1);
+    const flow2 = flow.map((value) => value + 1);
     expect(flow2.value).toBe(2);
 
     flow.value = 2;
@@ -19,7 +19,7 @@ test('map value', () => {
 test('delay transform with map until read value', () => {
     const flow = new Flow(1);
     let counter = 0;
-    const flow2 = flow.map(value => {
+    const flow2 = flow.map((value) => {
         counter++;
         return value + 1;
     });
@@ -44,7 +44,7 @@ test('observe primary single flow', () => {
     const flow = new Flow<number>();
     let counter = 0;
     const observer = () => {
-        counter++
+        counter++;
     };
 
     flow.observe(lifecycleOwner, observer);
@@ -73,7 +73,7 @@ test('observe primary single flow', () => {
 
 test('observe secondary single flow', () => {
     const flow = new Flow<number>(0);
-    const flow2 = flow.map(value => value + 1);
+    const flow2 = flow.map((value) => value + 1);
     let counter = 0;
     let observedValue = undefined;
     const observer = (value: unknown) => {
@@ -145,7 +145,7 @@ test('throttle', async () => {
     expect(observedValue).toBe(2);
 });
 
-test("immutable flow", () => {
+test('immutable flow', () => {
     const flow = new Flow<number>(0);
     const flow2 = flow.immutable();
     let counter = 0;
@@ -162,10 +162,12 @@ test("immutable flow", () => {
     expect(counter).toBe(2); // Run because the value is changed
     expect(observedValue).toBe(1);
 
-    expect(() => {flow2.value = 3}).toThrowError()
+    expect(() => {
+        flow2.value = 3;
+    }).toThrowError();
 });
 
-test("combine 2 flows", () => {
+test('combine 2 flows', () => {
     const flow1 = new Flow<number>(1);
     const flow2 = new Flow<number>(100);
     const flow3 = Flow.combine2(flow1, flow2, (value1, value2) => value1 + value2);
@@ -194,7 +196,7 @@ test("combine 2 flows", () => {
     expect(observedValue).toBe(202);
 });
 
-test("combine 2 flows with undefined value", () => {
+test('combine 2 flows with undefined value', () => {
     const flow1 = new Flow<number>();
     const flow2 = new Flow<number>(100);
     const flow3 = Flow.combine2(flow1, flow2, (value1, value2) => value1 + value2);
@@ -211,46 +213,57 @@ test("combine 2 flows with undefined value", () => {
     expect(observedValue).toBeUndefined();
 });
 
-test("combine 3 flows", () => {
-       const flow1 = new Flow<number>(1);
-        const flow2 = new Flow<number>(100);
-        const flow3 = new Flow<number>(1000);
-        const flow4 = Flow.combine3(flow1, flow2, flow3, (value1, value2, value3) => value1 + value2 + value3);
+test('combine 3 flows', () => {
+    const flow1 = new Flow<number>(1);
+    const flow2 = new Flow<number>(100);
+    const flow3 = new Flow<number>(1000);
+    const flow4 = Flow.combine3(
+        flow1,
+        flow2,
+        flow3,
+        (value1, value2, value3) => value1 + value2 + value3,
+    );
 
-        let counter = 0;
-        let observedValue = undefined;
-        const observer = (value: unknown) => {
-            counter++;
-            observedValue = value;
-        };
-        flow4.observe(LifecycleOwner.start(), observer);
+    let counter = 0;
+    let observedValue = undefined;
+    const observer = (value: unknown) => {
+        counter++;
+        observedValue = value;
+    };
+    flow4.observe(LifecycleOwner.start(), observer);
 
-        expect(counter).toBe(1); // Run when start observe because the value is defined
-        expect(observedValue).toBe(1101);
+    expect(counter).toBe(1); // Run when start observe because the value is defined
+    expect(observedValue).toBe(1101);
 
-        flow1.value = 2;
-        expect(counter).toBe(2);
-        expect(observedValue).toBe(1102);
+    flow1.value = 2;
+    expect(counter).toBe(2);
+    expect(observedValue).toBe(1102);
 
-        flow2.value = 200;
-        expect(counter).toBe(3);
-        expect(observedValue).toBe(1202);
+    flow2.value = 200;
+    expect(counter).toBe(3);
+    expect(observedValue).toBe(1202);
 
-        flow3.value = 2000;
-        expect(counter).toBe(4);
-        expect(observedValue).toBe(2202);
+    flow3.value = 2000;
+    expect(counter).toBe(4);
+    expect(observedValue).toBe(2202);
 
-        flow1.value = 2;
-        expect(counter).toBe(5);
-        expect(observedValue).toBe(2202);
+    flow1.value = 2;
+    expect(counter).toBe(5);
+    expect(observedValue).toBe(2202);
 });
 
-test("combine 4 flows", () => {
+test('combine 4 flows', () => {
     const flow1 = new Flow<number>(1);
     const flow2 = new Flow<number>(100);
     const flow3 = new Flow<number>(1000);
     const flow4 = new Flow<number>(10000);
-    const flow5 = Flow.combine4(flow1, flow2, flow3, flow4, (value1, value2, value3, value4) => value1 + value2 + value3 + value4);
+    const flow5 = Flow.combine4(
+        flow1,
+        flow2,
+        flow3,
+        flow4,
+        (value1, value2, value3, value4) => value1 + value2 + value3 + value4,
+    );
 
     let counter = 0;
     let observedValue = undefined;
@@ -284,12 +297,13 @@ test("combine 4 flows", () => {
     expect(observedValue).toBe(22202);
 });
 
-test("combine list of flows", () => {
+test('combine list of flows', () => {
     const flow1 = new Flow<number>(1);
     const flow2 = new Flow<number>(100);
     const flow3 = new Flow<number>(1000);
-    const flow4 = Flow.combineList([flow1, flow2, flow3],
-        (array) => (array as Array<number>).reduce((a, b) => a + b, 0));
+    const flow4 = Flow.combineList([flow1, flow2, flow3], (array) =>
+        (array as Array<number>).reduce((a, b) => a + b, 0),
+    );
 
     let counter = 0;
     let observedValue = undefined;
@@ -319,12 +333,13 @@ test("combine list of flows", () => {
     expect(observedValue).toBe(2202);
 });
 
-test("combine list of flows with undefined value", () => {
+test('combine list of flows with undefined value', () => {
     const flow1 = new Flow<number>();
     const flow2 = new Flow<number>(100);
     const flow3 = new Flow<number>(1000);
-    const flow4 = Flow.combineList([flow1, flow2, flow3],
-        (array) => (array as Array<number>).reduce((a, b) => a + b, 0));
+    const flow4 = Flow.combineList([flow1, flow2, flow3], (array) =>
+        (array as Array<number>).reduce((a, b) => a + b, 0),
+    );
 
     let counter = 0;
     let observedValue = undefined;
@@ -338,21 +353,21 @@ test("combine list of flows with undefined value", () => {
     expect(observedValue).toBeUndefined();
 });
 
-test("get value from flow", () => {
+test('get value from flow', () => {
     const flow = new Flow<number>(1);
     expect(flow.value).toBe(1);
     flow.value = 2;
     expect(flow.value).toBe(2);
 });
 
-test("get value from flow with undefined value", () => {
+test('get value from flow with undefined value', () => {
     const flow = new Flow<number>();
     expect(flow.value).toBeUndefined();
 });
 
-test("get value from secondary flow without subscribe", () => {
+test('get value from secondary flow without subscribe', () => {
     const flow = new Flow<number>(1);
-    const flow2 = flow.map(value => value + 1);
+    const flow2 = flow.map((value) => value + 1);
     expect(flow2.value).toBe(2);
     // @ts-ignore
     expect(flow2.valueInternal).toBeUndefined();
@@ -368,10 +383,10 @@ test("get value from secondary flow without subscribe", () => {
     expect(flow2.valueInternal).toBe(3);
 });
 
-test("get value from secondary flow with subscribe", () => {
+test('get value from secondary flow with subscribe', () => {
     const flow = new Flow<number>(1);
-    const flow2 = flow.map(value => value + 1);
-    flow2.observe(LifecycleOwner.start(), ()=>{});
+    const flow2 = flow.map((value) => value + 1);
+    flow2.observe(LifecycleOwner.start(), () => {});
     flow.value = 2;
     // @ts-ignore
     expect(flow.hasSubscribers()).toBe(true);
@@ -381,5 +396,5 @@ test("get value from secondary flow with subscribe", () => {
 });
 
 function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }

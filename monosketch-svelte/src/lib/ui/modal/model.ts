@@ -7,7 +7,12 @@ export class TargetBounds {
         return new TargetBounds(bounds.left, bounds.top, bounds.width, bounds.height);
     }
 
-    constructor(public left: number, public top: number, public width: number, public height: number) {}
+    constructor(
+        public left: number,
+        public top: number,
+        public width: number,
+        public height: number,
+    ) {}
 
     get centerHorizontal(): number {
         return this.left + this.width / 2;

@@ -1,6 +1,6 @@
 export enum MouseActionType {
     SELECTION,
-    ADD_RECTANGLE ,
+    ADD_RECTANGLE,
     ADD_TEXT,
     ADD_LINE,
 }
@@ -22,11 +22,12 @@ export const mouseActionToContentMap = {
         title: 'Rectangle (R)',
     },
     [MouseActionType.ADD_TEXT]: {
-        iconPath: 'M5.635 21v-2h12.731v2zm3.27-4v-1.12h2.005V4.12H7.425l-.39.44v2.58h-1.4V3h12.731v4.14h-1.4V4.56l-.39-.44h-3.485v11.76h2.005V17z',
+        iconPath:
+            'M5.635 21v-2h12.731v2zm3.27-4v-1.12h2.005V4.12H7.425l-.39.44v2.58h-1.4V3h12.731v4.14h-1.4V4.56l-.39-.44h-3.485v11.76h2.005V17z',
         title: 'Text (T)',
     },
     [MouseActionType.ADD_LINE]: {
         iconPath: 'M18 15v-2H6v2H0V9h6v2h12V9h6v6z',
         title: 'Line (L)',
     },
-}
+};

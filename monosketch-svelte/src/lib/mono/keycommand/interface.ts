@@ -73,7 +73,7 @@ export enum KeyCommandType {
 }
 
 export interface KeyCommand {
-    command: KeyCommandType,
+    command: KeyCommandType;
     keyCodes: Key[];
     commandKeyState: MetaKeyState;
     shiftKeyState: MetaKeyState;

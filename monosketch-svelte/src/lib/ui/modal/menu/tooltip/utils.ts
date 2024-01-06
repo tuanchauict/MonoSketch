@@ -1,5 +1,5 @@
-import {TargetBounds} from "../../model";
-import {Direction, type Tooltip} from "./model";
+import { TargetBounds } from '../../model';
+import { Direction, type Tooltip } from './model';
 
 export function calcArrowLeft(arrow: HTMLElement, target: Tooltip): number {
     if (!arrow) {

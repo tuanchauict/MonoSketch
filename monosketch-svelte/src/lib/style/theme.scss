@@ -3,27 +3,24 @@
 $themeMap: (
     // Header overall
     --header-bg: (#2c2c2c, #2c2c2c),
-    --header-color: (#FFF, #FFF),
+    --header-color: (#fff, #fff),
     // Header - App action icon
     --nav-action-hover-bg: (#1c1c1c, #1c1c1c),
     --nav-action-selected-border: (#fff, #fff),
-
     // Tooltip
-    --tooltip-bg: (#000000DD, #000000DD),
+    --tooltip-bg: (#000000dd, #000000dd),
     --tooltip-color: (#fff, #fff),
-
     // Workspace
-    --workspace-bg-color: (#FFF, #121212),
+    --workspace-bg-color: (#fff, #121212),
     --workspace-edittext-color: (#000, #fff),
-
     // Shape tool - Overall
-    --shapetool-bg-color: (#FAFAFA, #1f1f1f),
-    --shapetool-main-divider-color: (#BBB, #616161),
+    --shapetool-bg-color: (#fafafa, #1f1f1f),
+    --shapetool-main-divider-color: (#bbb, #616161),
     // Shape tool - Text Input component
-    --text-input-border-color: (#E6E6E6, #565656),
+    --text-input-border-color: (#e6e6e6, #565656),
     --text-input-border-focus-color: (#027fe6, #e8b32f),
     --text-input-label-color: (#6b6a6a, #9f9f9f),
-    --text-input-value-color: (#000, #FFF),
+    --text-input-value-color: (#000, #fff),
     // Shape tool - Option cloud
     --comp-option-cloud-border-color: (#bbb, #f0f0f0),
     --comp-option-cloud-border-selected-color: (#027fe6, #ffb800),
@@ -36,37 +33,33 @@ $themeMap: (
     // Shape tool - Section
     --shapetool-section-divider-color: (#bbb, #6d6d6d),
     --shapetool-section-title-color: (#6d6d6d, #eaeaea),
-    --shapetool-section-content-color: (#000, #F0F0F0),
+    --shapetool-section-content-color: (#000, #f0f0f0),
     // Shape tool - Tool
     --shapetool-tool-title-color: (#1f1f1f, #e0e0e0),
     --shapetool-tool-subtitle-color: (#a0a0a0, #979797),
     // Shape tool - Reorder
     --shapetool-reorder-hover-bg: (#efefef, #333333),
-
     // Common modal
     --modal-background-bg: (rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.3)),
     --modal-container-bg: (#f3f3f3, #313131),
-    --modal-close-button-color: (#666, #FFFFFF),
-    --modal-title-color: (rgba(0, 0, 0, 0.68), #FFF),
-    --modal-content-color: (#000, #FFFFFF),
+    --modal-close-button-color: (#666, #ffffff),
+    --modal-title-color: (rgba(0, 0, 0, 0.68), #fff),
+    --modal-content-color: (#000, #ffffff),
     --modal-action-color: (#037de1, #c08b03),
     --modal-action-hover-color: (#2598f7, #dfa104),
     --modal-action-pressed-color: (#0360ac, #8e6601),
-
     // Keyboard shortcuts
     --keyboard-content-key-bg: (#fff, #262626),
     --keyboard-content-key-border-color: (rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15)),
     --keyboard-content-key-color: (rgba(0, 0, 0, 0.54), rgba(255, 255, 255, 0.88)),
-
     // Main dropdown menu
-    --mainmenu-divider-color:(#bdbdbd, #6b6b6b),
-    --mainmenu-item-color:(rgb(36, 41, 47), #fff),
-    --mainmenu-item-hover-bg:(#e7e6e6, #414141),
-    --mainmenu-item-action-hover-bg:(#dcdcdc, #565555),
-
+    --mainmenu-divider-color: (#bdbdbd, #6b6b6b),
+    --mainmenu-item-color: (rgb(36, 41, 47), #fff),
+    --mainmenu-item-hover-bg: (#e7e6e6, #414141),
+    --mainmenu-item-action-hover-bg: (#dcdcdc, #565555),
     // Export text
     --exporttext-container-bg: (#fff, #151515),
-    --exporttext-content-color: (#000, #fff),
+    --exporttext-content-color: (#000, #fff)
 );
 
 // Apply the style values

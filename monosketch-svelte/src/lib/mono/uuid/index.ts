@@ -1,6 +1,7 @@
 export class UUID {
-    private static readonly VERSION = "02";
-    private static readonly BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".split("");
+    private static readonly VERSION = '02';
+    private static readonly BASE64_CHARS =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'.split('');
 
     static generate(): string {
         const part1 = new Date().getTime().toString(2).slice(0, -3);
@@ -16,7 +17,7 @@ export class UUID {
             number = number >>> 6;
             chars[i] = UUID.BASE64_CHARS[v];
         }
-        return chars.join("");
+        return chars.join('');
     }
 
     private static getRandomLong(): number {

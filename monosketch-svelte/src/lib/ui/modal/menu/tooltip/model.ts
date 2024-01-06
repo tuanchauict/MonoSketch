@@ -1,4 +1,4 @@
-import type {TargetBounds} from "../../model";
+import type { TargetBounds } from '../../model';
 
 export enum Direction {
     TOP,
@@ -9,10 +9,10 @@ export enum Direction {
 
 export class Tooltip {
     constructor(
-            public text: string,
-            public direction: Direction,
-            public targetBounds: TargetBounds,) {
-    }
+        public text: string,
+        public direction: Direction,
+        public targetBounds: TargetBounds,
+    ) {}
 }
 
 export const directionToIconPathMap = {
@@ -20,4 +20,4 @@ export const directionToIconPathMap = {
     [Direction.BOTTOM]: 'M10 0L20 10H0L10 0Z',
     [Direction.LEFT]: 'M10 10L0 20V0L10 10Z',
     [Direction.RIGHT]: 'M0 10L10 0V20L0 10Z',
-}
+};

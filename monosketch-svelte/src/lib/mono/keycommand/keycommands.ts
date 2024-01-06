@@ -1,4 +1,4 @@
-import {Key, type KeyCommand, KeyCommandType, MetaKeyState} from "./interface";
+import { Key, type KeyCommand, KeyCommandType, MetaKeyState } from './interface';
 
 const KeyCommandOptionsDefaults: KeyCommand = {
     command: KeyCommandType.IDLE,
@@ -115,7 +115,7 @@ export const KeyCommands: KeyCommand[] = [
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.SELECTION_MODE,
         keyCodes: [Key.V],
-        commandKeyState: MetaKeyState.OFF
+        commandKeyState: MetaKeyState.OFF,
     },
 
     {
@@ -154,7 +154,7 @@ export const KeyCommands: KeyCommand[] = [
         keyCodes: [Key.Z],
         commandKeyState: MetaKeyState.ON,
         shiftKeyState: MetaKeyState.OFF,
-        isRepeatable: true
+        isRepeatable: true,
     },
     {
         ...KeyCommandOptionsDefaults,
@@ -162,13 +162,13 @@ export const KeyCommands: KeyCommand[] = [
         keyCodes: [Key.Z],
         commandKeyState: MetaKeyState.ON,
         shiftKeyState: MetaKeyState.ON,
-        isRepeatable: true
+        isRepeatable: true,
     },
 
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.SHIFT_KEY,
-        keyCodes: [Key.SHIFT]
+        keyCodes: [Key.SHIFT],
     },
 ];
 
@@ -177,7 +177,7 @@ const KeyCodeToKeyCommandMap: Map<Key, KeyCommand[]> = new Map();
 
 function initKeyToKeyCommandMap() {
     for (const keyCommand of KeyCommands) {
-        KeyCommandMap.set(keyCommand.command, keyCommand)
+        KeyCommandMap.set(keyCommand.command, keyCommand);
     }
 
     for (const keyCommand of KeyCommands) {
@@ -193,9 +193,9 @@ function initKeyToKeyCommandMap() {
 }
 
 export function getCommandByKey(
-        key: Key,
-        hasCommandKey: boolean,
-        hasShiftKey: boolean
+    key: Key,
+    hasCommandKey: boolean,
+    hasShiftKey: boolean,
 ): KeyCommand {
     if (KeyCodeToKeyCommandMap.size === 0) {
         initKeyToKeyCommandMap();
@@ -203,8 +203,10 @@ export function getCommandByKey(
     const keyCommands = KeyCodeToKeyCommandMap.get(key);
     if (keyCommands) {
         for (const command of keyCommands) {
-            if (command.commandKeyState.isAccepted(hasCommandKey) &&
-                    command.shiftKeyState.isAccepted(hasShiftKey)) {
+            if (
+                command.commandKeyState.isAccepted(hasCommandKey) &&
+                command.shiftKeyState.isAccepted(hasShiftKey)
+            ) {
                 return command;
             }
         }
@@ -213,5 +215,5 @@ export function getCommandByKey(
 }
 
 export function getCommandByType(base: KeyCommandType): KeyCommand {
-    return KeyCommandMap.get(base)!!
+    return KeyCommandMap.get(base)!!;
 }
