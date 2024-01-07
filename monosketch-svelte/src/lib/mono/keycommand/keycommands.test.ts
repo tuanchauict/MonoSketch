@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import {getCommandByType} from './keycommands';
+import { getCommandByType } from './keycommands';
 import { KeyCommandType } from './interface';
 
 test('same size command types and key commands', () => {
