@@ -25,6 +25,7 @@ function toggleFormatPanelVisibility() {
 }
 
 function showKeyboardShortcuts() {
+    modalViewModel.keyboardShortcutVisibilityStateFlow.value = true;
     onDismiss();
 }
 </script>

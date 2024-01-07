@@ -10,6 +10,7 @@ import KeyboardShortcutModal from './keyboard-shortcut/KeyboardShortcutModal.sve
 
 let mainDropDownTarget: TargetBounds | null = null;
 let tooltip: Tooltip | null = null;
+let shortcutModal: boolean = false;
 
 const lifecycleOwner = new LifecycleOwner();
 onMount(() => {
@@ -21,6 +22,10 @@ onMount(() => {
 
     modalViewModel.tooltipFlow.observe(lifecycleOwner, (value) => {
         tooltip = value;
+    });
+
+    modalViewModel.keyboardShortcutVisibilityStateFlow.observe(lifecycleOwner, (value) => {
+        shortcutModal = value;
     });
 });
 
@@ -37,4 +42,6 @@ onDestroy(() => {
     <TooltipView {tooltip} />
 {/if}
 
-<KeyboardShortcutModal />
+{#if shortcutModal}
+    <KeyboardShortcutModal />
+{/if}

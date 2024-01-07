@@ -1,9 +1,10 @@
 <script lang="ts">
 import KeyboardShortcutContent from './KeyboardShortcutContent.svelte';
 import SvgIcon from '../../common/SvgIcon.svelte';
+import { modalViewModel } from '../viewmodel';
 
 function dismiss() {
-    console.log('dismiss');
+    modalViewModel.keyboardShortcutVisibilityStateFlow.value = false;
 }
 </script>
 

@@ -6,6 +6,8 @@ class ModalViewModel {
     mainDropDownMenuTargetFlow: Flow<TargetBounds | null> = new Flow(null);
 
     tooltipFlow: Flow<Tooltip | null> = new Flow(null);
+
+    keyboardShortcutVisibilityStateFlow: Flow<boolean> = new Flow(false);
 }
 
 export const modalViewModel = new ModalViewModel();
