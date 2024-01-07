@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Direction, directionToIconPathMap, type Tooltip } from './model';
 import { calcArrowLeft, calcArrowTop, calcBodyLeft, calcBodyTop } from './utils';
+import SvgIcon from '../../common/SvgIcon.svelte';
 
 export let tooltip: Tooltip;
 
@@ -12,21 +13,15 @@ $: arrowTop = calcArrowTop(arrow, tooltip);
 $: bodyLeft = calcBodyLeft(body, arrow, tooltip);
 $: bodyTop = calcBodyTop(body, arrow, tooltip);
 
-$: arrowSize =
-    tooltip.direction === Direction.TOP || tooltip.direction === Direction.BOTTOM
-        ? [10, 5, 20, 10]
-        : [5, 10, 10, 20];
+$: isVertical = tooltip.direction === Direction.TOP || tooltip.direction === Direction.BOTTOM;
+$: arrowSize = isVertical ? [10, 5] : [5, 10];
+$: arrowViewBoxSize = isVertical ? [20, 10] : [10, 20];
 </script>
 
 <div class="arrow" bind:this="{arrow}" style="left:{arrowLeft}px; top:{arrowTop}px">
-    <svg
-        width="{arrowSize[0]}"
-        height="{arrowSize[1]}"
-        viewBox="0 0 {arrowSize[2]} {arrowSize[3]}"
-        fill="currentColor"
-    >
+    <SvgIcon size="{arrowSize}" viewBoxSize="{arrowViewBoxSize}">
         <path d="{directionToIconPathMap[tooltip.direction]}"></path>
-    </svg>
+    </SvgIcon>
 </div>
 <div class="body" bind:this="{body}" style="left:{bodyLeft}px; top:{bodyTop}px">
     <span>{tooltip.text}</span>
