@@ -1,6 +1,7 @@
 <script lang="ts">
 import { mouseActionToContentMap, type MouseActionType } from './model';
 import TooltipTarget from '../../modal/tooltip/TooltipTarget.svelte';
+import SvgIcon from '../../common/SvgIcon.svelte';
 
 export let type: MouseActionType;
 export let onSelect: (type: MouseActionType) => void;
@@ -13,9 +14,9 @@ function onClick() {
 
 <TooltipTarget text="{mouseActionToContentMap[type].title}" offsetVertical="{8}">
     <button class="action" class:selected on:click="{onClick}">
-        <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
+        <SvgIcon viewBoxSize="{24}" size="{21}">
             <path d="{mouseActionToContentMap[type].iconPath}"></path>
-        </svg>
+        </SvgIcon>
     </button>
 </TooltipTarget>
 

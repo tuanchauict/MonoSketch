@@ -6,6 +6,7 @@ import { LifecycleOwner } from '../../mono/flow';
 import type { TargetBounds } from './model';
 import type { Tooltip } from './tooltip/model';
 import TooltipView from './tooltip/TooltipView.svelte';
+import KeyboardShortcutModal from './keyboard-shortcut/KeyboardShortcutModal.svelte';
 
 let mainDropDownTarget: TargetBounds | null = null;
 let tooltip: Tooltip | null = null;
@@ -35,3 +36,5 @@ onDestroy(() => {
 {#if tooltip}
     <TooltipView {tooltip} />
 {/if}
+
+<KeyboardShortcutModal />
