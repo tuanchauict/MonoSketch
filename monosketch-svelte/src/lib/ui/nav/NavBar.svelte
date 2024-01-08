@@ -18,7 +18,7 @@ import WorkingFile from './project/WorkingFile.svelte';
 
     <ToolbarContainer>
         <ProjectManagerButton />
-        <WorkingFile filename="Demo" />
+        <WorkingFile />
     </ToolbarContainer>
 
     <ToolbarContainer>

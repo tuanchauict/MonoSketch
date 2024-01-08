@@ -1,71 +1,56 @@
 <script lang="ts">
-import SvgIcon from '../../common/SvgIcon.svelte';
+import WorkingFileView from './WorkingFileView.svelte';
+import { projectDataViewModel } from '../../modal/recent-project/viewmodel';
+import { Flow, LifecycleOwner } from '../../../mono/flow';
+import { onDestroy, onMount } from 'svelte';
 import { modalViewModel } from '../../modal/viewmodel';
 import { TargetBounds } from '../../modal/model';
 
-export let filename: string;
+let filename = '';
+let node: HTMLElement;
 
-function showDropDownMenu(e: MouseEvent) {
-    modalViewModel.currentFileDropDownMenuTargetFlow.value = TargetBounds.fromElement(
-        e.currentTarget as HTMLElement,
-    );
-}
+const lifecycleOwner = new LifecycleOwner();
+const openingFileFlow = Flow.combine2(
+    projectDataViewModel.openingProjectIdFlow,
+    projectDataViewModel.renamingProjectIdFlow,
+    (id) => projectDataViewModel.getProject(id),
+);
+
+const renamingFileFlow = projectDataViewModel.renamingProjectIdFlow.map((id) => {
+    const project = projectDataViewModel.getProject(id);
+    return project ? project : null;
+});
+
+onMount(() => {
+    lifecycleOwner.onStart();
+    openingFileFlow.observe(lifecycleOwner, (project) => {
+        console.log('project', project);
+        // TODO: make the flow mapping ignore undefined value as return type.
+        filename = project!!.name;
+    });
+
+    renamingFileFlow.observe(lifecycleOwner, (project) => {
+        if (!project) {
+            return;
+        }
+        modalViewModel.renamingProjectModalStateFlow.value = {
+            id: project!!.id,
+            targetBounds: TargetBounds.fromElement(node),
+        };
+    });
+});
+
+onDestroy(() => {
+    lifecycleOwner.onStop();
+});
 </script>
 
-<div class="container">
-    <div class="file-info-container" on:click="{showDropDownMenu}">
-        <span class="file-info">
-            {filename}
-        </span>
-        <div class="icon">
-            <SvgIcon size="{16}">
-                <path
-                    d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                ></path>
-            </SvgIcon>
-        </div>
-    </div>
+<div bind:this="{node}">
+    <WorkingFileView {filename} />
 </div>
 
 <style lang="scss">
-@import '../../../style/variables.scss';
-
-$max-text-width: 210px;
-.container {
+div {
     display: flex;
-    align-items: center;
-    height: 100%;
-    width: $max-text-width + 31px;
-}
-
-.file-info-container {
-    display: flex;
-    align-items: center;
-
-    border-radius: 6px;
-    padding: 8px 4px 8px 8px;
-    font-family: $monospaceFont;
-    cursor: pointer;
-
-    &:hover {
-        background: var(--nav-action-hover-bg);
-    }
-}
-
-.file-info {
-    display: flex;
-    align-items: center;
-
-    font-size: 14px;
-    max-width: $max-text-width;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.icon {
-    display: flex;
-    margin-left: 4px;
-    padding-top: 4px;
 }
 </style>

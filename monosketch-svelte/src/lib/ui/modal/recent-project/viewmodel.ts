@@ -12,6 +12,7 @@ class ProjectDataViewModel {
 
     setProjectList(projectList: FileItem[]) {
         this._projectFlow.value = projectList;
+        this.openingProjectIdFlow.value = projectList[0].id;
     }
 
     newProject() {
@@ -21,7 +22,7 @@ class ProjectDataViewModel {
         }
         this.setProjectList([newFile, ...this._projectFlow.value!!]);
         this.openProject(newFile.id);
-        this.renameProject(newFile.id);
+        this.setRenamingProject(newFile.id);
     }
 
     openProject(id: string) {
@@ -40,8 +41,24 @@ class ProjectDataViewModel {
         this.deletingProjectIdFlow.value = '';
     }
 
-    renameProject(id: string) {
+    setRenamingProject(id: string) {
         this.renamingProjectIdFlow.value = id;
+    }
+
+    setProjectName(id: string, name: string) {
+        this._projectFlow.value = this._projectFlow.value!!.map((item) => {
+            if (item.id === id) {
+                return {
+                    ...item,
+                    name,
+                };
+            }
+            return item;
+        });
+    }
+
+    getProject(id: string): FileItem | undefined {
+        return this._projectFlow.value!!.find((item) => item.id === id);
     }
 }
 
