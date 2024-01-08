@@ -18,7 +18,7 @@ function onDismiss() {
     <div class="container">
         <FilterInput bind:value="{filterValue}" />
         <TopActions />
-        <FileList />
+        <FileList dismiss="{onDismiss}"/>
     </div>
 </NoBackgroundModal>
 

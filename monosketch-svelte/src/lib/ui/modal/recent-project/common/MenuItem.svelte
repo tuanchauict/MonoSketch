@@ -78,5 +78,6 @@ function onItemClick() {
     height: 100%;
     align-items: center;
     justify-content: flex-start;
+    opacity: 0.7;
 }
 </style>

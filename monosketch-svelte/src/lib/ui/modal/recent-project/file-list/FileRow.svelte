@@ -2,21 +2,25 @@
 import MenuItem from '../common/MenuItem.svelte';
 import FileActions from './FileActions.svelte';
 import FileIcon from './FileIcon.svelte';
-import type { FileAction } from '../model';
+import { FileAction, type FileItem } from '../model';
 
-export let name: string;
+export let file: FileItem;
 export let opening: boolean;
+export let deleting: boolean;
+export let onAction: (file: FileItem, action: FileAction) => void;
 
 function openFile() {
-    console.log('open file');
+    onAction(file, FileAction.Open);
 }
-function onAction(action: FileAction) {
+
+function onActionClick(action: FileAction) {
     console.log('clicked', action);
+    onAction(file, action);
 }
 </script>
 
-<MenuItem onClick="{openFile}">
+<MenuItem onClick="{openFile}" danger="{deleting}">
     <FileIcon slot="icon" {opening} />
-    <span slot="content">{name}</span>
-    <FileActions slot="actions" {onAction}/>
+    <span slot="content">{file.name}</span>
+    <FileActions slot="actions" onAction="{onActionClick}" confirmingRemove="{deleting}" />
 </MenuItem>
