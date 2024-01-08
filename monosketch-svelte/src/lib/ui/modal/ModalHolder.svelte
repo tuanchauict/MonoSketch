@@ -12,6 +12,7 @@ import RecentProjectDialog from './recent-project/RecentProjectDialog.svelte';
 
 let mainDropDownTarget: TargetBounds | null = null;
 let currentFileDropDownTarget: TargetBounds | null = null;
+let isProjectManagementModalVisible: boolean = false;
 let tooltip: Tooltip | null = null;
 let shortcutModal: boolean = false;
 
@@ -25,6 +26,10 @@ onMount(() => {
 
     modalViewModel.currentFileDropDownMenuTargetFlow.observe(lifecycleOwner, (target) => {
         currentFileDropDownTarget = target;
+    });
+
+    modalViewModel.projectManagementVisibilityStateFlow.observe(lifecycleOwner, (value) => {
+        isProjectManagementModalVisible = value;
     });
 
     modalViewModel.tooltipFlow.observe(lifecycleOwner, (value) => {
@@ -49,7 +54,9 @@ onDestroy(() => {
     <CurrentFileDropDown targetBounds="{currentFileDropDownTarget}" />
 {/if}
 
-<RecentProjectDialog />
+{#if isProjectManagementModalVisible}
+    <RecentProjectDialog />
+{/if}
 
 {#if tooltip}
     <TooltipView {tooltip} />

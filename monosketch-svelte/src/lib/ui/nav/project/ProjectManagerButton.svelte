@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
 import AppIcon from '../common/AppIcon.svelte';
 import { Direction } from '../../modal/tooltip/model';
 import TooltipTarget from '../../modal/tooltip/TooltipTarget.svelte';
+import { modalViewModel } from '../../modal/viewmodel';
 
 function onClick() {
-    // TODO: Implement this method
-    console.log('clicked');
+    modalViewModel.projectManagementVisibilityStateFlow.value = true;
 }
 </script>
 

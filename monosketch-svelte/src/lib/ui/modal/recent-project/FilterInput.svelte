@@ -6,7 +6,11 @@ export let value: string;
 let input: HTMLInputElement;
 
 onMount(() => {
-    input.focus();
+    setTimeout(() => {
+        // Need to wait for the DOM to be ready before focusing
+        input.focus();
+    }, 10);
+
 });
 </script>
 

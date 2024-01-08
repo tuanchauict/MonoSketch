@@ -3,6 +3,7 @@ import NoBackgroundModal from '../common/NoBackgroundModal.svelte';
 import FilterInput from './FilterInput.svelte';
 import TopActions from './top-actions/TopActions.svelte';
 import FileList from './file-list/FileList.svelte';
+import { modalViewModel } from '../viewmodel';
 
 const widthPx = '500px';
 const style = `top: 0; left: calc(50% - ${widthPx} / 2); width: ${widthPx};`;
@@ -10,15 +11,17 @@ const style = `top: 0; left: calc(50% - ${widthPx} / 2); width: ${widthPx};`;
 let filterValue = '';
 
 function onDismiss() {
-    console.log('dismissed');
+    modalViewModel.projectManagementVisibilityStateFlow.value = false;
 }
+
+// TODO: This does not dismiss when clicking outside the modal. Fix this.
 </script>
 
-<NoBackgroundModal {onDismiss} {style}>
+<NoBackgroundModal onDismiss="{() => {}}" {style}>
     <div class="container">
         <FilterInput bind:value="{filterValue}" />
         <TopActions />
-        <FileList dismiss="{onDismiss}"/>
+        <FileList dismiss="{onDismiss}" />
     </div>
 </NoBackgroundModal>
 

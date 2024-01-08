@@ -6,6 +6,8 @@ class ModalViewModel {
     mainDropDownMenuTargetFlow: Flow<TargetBounds | null> = new Flow(null);
     currentFileDropDownMenuTargetFlow: Flow<TargetBounds | null> = new Flow(null);
 
+    projectManagementVisibilityStateFlow: Flow<boolean> = new Flow(false);
+
     tooltipFlow: Flow<Tooltip | null> = new Flow(null);
 
     keyboardShortcutVisibilityStateFlow: Flow<boolean> = new Flow(false);

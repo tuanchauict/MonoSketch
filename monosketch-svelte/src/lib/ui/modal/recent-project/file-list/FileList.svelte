@@ -30,7 +30,6 @@ onMount(() => {
 
 onDestroy(() => {
     projectDataViewModel.cancelDeletingProject();
-    projectDataViewModel.openingProjectIdFlow.value = '';
 
     lifecycleOwner.onStop();
 });
@@ -39,6 +38,7 @@ function onAction(file: FileItem, action: FileAction) {
     switch (action) {
         case FileAction.Open:
             projectDataViewModel.openProject(file.id);
+            console.log('open');
             dismiss();
             break;
         case FileAction.OpenInNewTab:

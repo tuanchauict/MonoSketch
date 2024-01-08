@@ -10,8 +10,6 @@ class ProjectDataViewModel {
 
     setProjectList(projectList: FileItem[]) {
         this._projectFlow.value = projectList;
-        this.openingProjectIdFlow.value = projectList[0].id;
-        this.deletingProjectIdFlow.value = projectList[3].id;
     }
 
     openProject(id: string) {
