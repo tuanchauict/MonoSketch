@@ -13,7 +13,7 @@ onMount(() => {
 </script>
 
 <div>
-    <input type="text" bind:value="{name}" bind:this={textInput}/>
+    <input type="text" bind:value="{name}" bind:this="{textInput}" />
 </div>
 
 <style lang="scss">

@@ -13,10 +13,10 @@ function onItemClick() {
 </script>
 
 <div class="row" class:normal="{!danger}" class:danger>
-    <div class="icon"  on:click="{onItemClick}">
+    <div class="icon" on:click="{onItemClick}">
         <slot name="icon" />
     </div>
-    <div class="content"  on:click="{onItemClick}">
+    <div class="content" on:click="{onItemClick}">
         <slot name="content" />
     </div>
     <div class="actions">

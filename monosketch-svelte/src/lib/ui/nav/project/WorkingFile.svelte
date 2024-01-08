@@ -6,7 +6,8 @@ import { onDestroy, onMount } from 'svelte';
 import { modalViewModel } from '../../modal/viewmodel';
 import { TargetBounds } from '../../modal/model';
 
-let filename = '';
+let projectId = '';
+let projectName = '';
 let node: HTMLElement;
 
 const lifecycleOwner = new LifecycleOwner();
@@ -24,9 +25,9 @@ const renamingFileFlow = projectDataViewModel.renamingProjectIdFlow.map((id) => 
 onMount(() => {
     lifecycleOwner.onStart();
     openingFileFlow.observe(lifecycleOwner, (project) => {
-        console.log('project', project);
         // TODO: make the flow mapping ignore undefined value as return type.
-        filename = project!!.name;
+        projectId = project!!.id;
+        projectName = project!!.name;
     });
 
     renamingFileFlow.observe(lifecycleOwner, (project) => {
@@ -46,7 +47,7 @@ onDestroy(() => {
 </script>
 
 <div bind:this="{node}">
-    <WorkingFileView {filename} />
+    <WorkingFileView {projectId} {projectName} />
 </div>
 
 <style lang="scss">

@@ -3,19 +3,21 @@ import SvgIcon from '../../common/SvgIcon.svelte';
 import { modalViewModel } from '../../modal/viewmodel';
 import { TargetBounds } from '../../modal/model';
 
-export let filename: string;
+export let projectId: string;
+export let projectName: string;
 
 function showDropDownMenu(e: MouseEvent) {
-    modalViewModel.currentFileDropDownMenuTargetFlow.value = TargetBounds.fromElement(
-        e.currentTarget as HTMLElement,
-    );
+    modalViewModel.currentFileDropDownMenuTargetFlow.value = {
+        id: projectId,
+        targetBounds: TargetBounds.fromElement(e.currentTarget as HTMLElement),
+    };
 }
 </script>
 
 <div class="container">
     <div class="file-info-container" on:click="{showDropDownMenu}">
         <span class="file-info">
-            {filename}
+            {projectName}
         </span>
         <div class="icon">
             <SvgIcon size="{16}">

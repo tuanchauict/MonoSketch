@@ -1,17 +1,17 @@
 <script lang="ts">
 import DropDown from '../common/DropDown.svelte';
 import MenuItem from '../common/MenuItem.svelte';
-import type { TargetBounds } from '../../model';
 import { modalViewModel } from '../../viewmodel';
+import type { CurrentFileModel } from './model';
 
-export let targetBounds: TargetBounds;
+export let model: CurrentFileModel;
 
 function onDismiss() {
     modalViewModel.currentFileDropDownMenuTargetFlow.value = null;
 }
 
 function rename() {
-    console.log('rename');
+    modalViewModel.renamingProjectModalStateFlow.value = model;
 }
 
 function saveAs() {
@@ -23,7 +23,7 @@ function exportText() {
 }
 </script>
 
-<DropDown {targetBounds} {onDismiss} verticalOffsetPx="{6}">
+<DropDown targetBounds="{model.targetBounds}" {onDismiss} verticalOffsetPx="{6}">
     <MenuItem title="Rename" onClick="{rename}" dismiss="{onDismiss}" />
     <MenuItem title="Save As" onClick="{saveAs}" dismiss="{onDismiss}" />
     <MenuItem title="Export Text" onClick="{exportText}" dismiss="{onDismiss}" />

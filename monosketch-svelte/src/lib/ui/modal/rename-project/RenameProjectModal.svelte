@@ -32,4 +32,3 @@ onMount(() => {
 <NoBackgroundModal {onDismiss} {left} {top} width="{180}">
     <ProjectNameTextField bind:name />
 </NoBackgroundModal>
-

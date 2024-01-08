@@ -6,9 +6,9 @@ class ProjectDataViewModel {
     private _projectFlow: Flow<FileItem[]> = new Flow();
     projectFlow = this._projectFlow.immutable();
 
-    openingProjectIdFlow: Flow<string> = new Flow();
-    deletingProjectIdFlow: Flow<string> = new Flow();
-    renamingProjectIdFlow: Flow<string> = new Flow();
+    openingProjectIdFlow: Flow<string> = new Flow('');
+    deletingProjectIdFlow: Flow<string> = new Flow('');
+    renamingProjectIdFlow: Flow<string> = new Flow('');
 
     setProjectList(projectList: FileItem[]) {
         this._projectFlow.value = projectList;
@@ -19,7 +19,7 @@ class ProjectDataViewModel {
         const newFile: FileItem = {
             id: UUID.generate(),
             name: 'New Project',
-        }
+        };
         this.setProjectList([newFile, ...this._projectFlow.value!!]);
         this.openProject(newFile.id);
         this.setRenamingProject(newFile.id);

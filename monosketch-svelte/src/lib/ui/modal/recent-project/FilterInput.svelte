@@ -10,7 +10,6 @@ onMount(() => {
         // Need to wait for the DOM to be ready before focusing
         input.focus();
     }, 10);
-
 });
 </script>
 
