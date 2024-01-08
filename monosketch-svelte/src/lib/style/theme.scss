@@ -59,7 +59,9 @@ $themeMap: (
     --mainmenu-item-action-hover-bg: (#dcdcdc, #565555),
     // Export text
     --exporttext-container-bg: (#fff, #151515),
-    --exporttext-content-color: (#000, #fff)
+    --exporttext-content-color: (#000, #fff),
+    // Project management
+    --danger-item-bg: (#e53935, #e53935)
 );
 
 // Apply the style values

@@ -1,8 +1,18 @@
 <script lang="ts">
-export let isRemoving = false;
+export let danger = false;
+
+export let onClick = () => {};
+
+// Set this if you want to dismiss the menu when the item is clicked
+export let dismiss: () => void = () => {};
+
+function onItemClick() {
+    onClick();
+    dismiss();
+}
 </script>
 
-<div class="row" class:normal="{!isRemoving}" class:removing="{isRemoving}">
+<div class="row" class:normal="{!danger}" class:danger on:click="{onItemClick}">
     <div class="icon">
         <slot name="icon" />
     </div>
@@ -47,7 +57,7 @@ export let isRemoving = false;
         }
     }
 
-    &.removing {
+    &.danger {
         background: var(--danger-item-bg);
         color: white;
     }
@@ -64,7 +74,7 @@ export let isRemoving = false;
 
 .icon {
     display: flex;
-    width: 36px;
+    width: 30px;
     height: 100%;
     align-items: center;
     justify-content: flex-start;

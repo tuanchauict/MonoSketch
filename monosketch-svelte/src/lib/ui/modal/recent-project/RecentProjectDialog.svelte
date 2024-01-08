@@ -2,7 +2,7 @@
 import NoBackgroundModal from '../common/NoBackgroundModal.svelte';
 import FilterInput from './FilterInput.svelte';
 import MenuItem from './common/MenuItem.svelte';
-import TopActions from './TopActions.svelte';
+import TopActions from './top-actions/TopActions.svelte';
 
 const widthPx = '500px';
 const style = `top: 0; left: calc(50% - ${widthPx} / 2); width: ${widthPx};`;
