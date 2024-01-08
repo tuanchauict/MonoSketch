@@ -1,7 +1,7 @@
 <script lang="ts">
 import { modalViewModel } from '../viewmodel';
 import { TargetBounds } from '../model';
-import { Direction, Tooltip } from './model';
+import { Direction } from './model';
 import { onDestroy } from 'svelte';
 
 export let text: string;
@@ -10,6 +10,7 @@ export let offsetHorizontal: number = 0;
 export let offsetVertical: number = 0;
 
 let timeoutId: number;
+
 function showTooltip(e: MouseEvent) {
     const target = e.currentTarget as HTMLElement;
     const bounds = TargetBounds.fromElement(target);
@@ -19,7 +20,11 @@ function showTooltip(e: MouseEvent) {
     bounds.height += offsetVertical * 2;
 
     timeoutId = setTimeout(() => {
-        modalViewModel.tooltipFlow.value = new Tooltip(text, direction, bounds);
+        modalViewModel.tooltipFlow.value = {
+            text,
+            direction,
+            targetBounds: bounds,
+        };
     }, 600);
 }
 

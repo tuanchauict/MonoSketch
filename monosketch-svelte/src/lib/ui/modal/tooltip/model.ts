@@ -7,12 +7,10 @@ export enum Direction {
     LEFT,
 }
 
-export class Tooltip {
-    constructor(
-        public text: string,
-        public direction: Direction,
-        public targetBounds: TargetBounds,
-    ) {}
+export interface Tooltip {
+    text: string;
+    direction: Direction;
+    targetBounds: TargetBounds;
 }
 
 export const directionToIconPathMap = {
