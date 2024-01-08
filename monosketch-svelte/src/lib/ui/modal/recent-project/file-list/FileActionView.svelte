@@ -4,18 +4,19 @@ import type { FileAction } from '../model';
 export let action: FileAction;
 export let onClick: (action: FileAction) => void;
 
-function onActionClick(e: MouseEvent) {
-    e.stopPropagation();
+function onActionClick() {
     onClick(action);
 }
 </script>
 
-<button on:click="{onActionClick}">
+<!--Use div here instead of button to avoid the modal is dismissed when click-->
+<!--TODO: Fix this-->
+<div on:click="{onActionClick}">
     <slot />
-</button>
+</div>
 
 <style lang="scss">
-button {
+div {
     display: flex;
     background: none;
     border: none;

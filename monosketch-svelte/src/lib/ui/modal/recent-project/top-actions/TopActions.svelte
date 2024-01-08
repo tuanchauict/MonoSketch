@@ -2,12 +2,16 @@
 import MenuItem from '../common/MenuItem.svelte';
 import SvgIcon from '../../../common/SvgIcon.svelte';
 
+export let dismiss: () => void;
+
 function createNewFile() {
     console.log('createNewFile');
+    dismiss();
 }
 
 function importFromFile() {
     console.log('importFromFile');
+    dismiss();
 }
 </script>
 

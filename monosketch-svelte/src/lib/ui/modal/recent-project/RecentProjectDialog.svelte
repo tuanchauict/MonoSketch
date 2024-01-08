@@ -13,14 +13,12 @@ let filterValue = '';
 function onDismiss() {
     modalViewModel.projectManagementVisibilityStateFlow.value = false;
 }
-
-// TODO: This does not dismiss when clicking outside the modal. Fix this.
 </script>
 
-<NoBackgroundModal onDismiss="{() => {}}" {style}>
+<NoBackgroundModal {onDismiss} {style}>
     <div class="container">
         <FilterInput bind:value="{filterValue}" />
-        <TopActions />
+        <TopActions dismiss="{onDismiss}" />
         <FileList dismiss="{onDismiss}" />
     </div>
 </NoBackgroundModal>
