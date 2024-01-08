@@ -38,7 +38,6 @@ function onAction(file: FileItem, action: FileAction) {
     switch (action) {
         case FileAction.Open:
             projectDataViewModel.openProject(file.id);
-            console.log('open');
             dismiss();
             break;
         case FileAction.OpenInNewTab:

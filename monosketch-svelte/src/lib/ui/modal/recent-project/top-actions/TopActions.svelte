@@ -1,11 +1,12 @@
 <script lang="ts">
 import MenuItem from '../common/MenuItem.svelte';
 import SvgIcon from '../../../common/SvgIcon.svelte';
+import { projectDataViewModel } from '../viewmodel';
 
 export let dismiss: () => void;
 
 function createNewFile() {
-    console.log('createNewFile');
+    projectDataViewModel.newProject();
     dismiss();
 }
 
