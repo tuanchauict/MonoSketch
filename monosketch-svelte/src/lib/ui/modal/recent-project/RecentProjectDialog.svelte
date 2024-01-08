@@ -2,7 +2,7 @@
 import NoBackgroundModal from '../common/NoBackgroundModal.svelte';
 import FilterInput from './FilterInput.svelte';
 import TopActions from './top-actions/TopActions.svelte';
-import FileList from './file-list/FileList.svelte';
+import ProjectList from './project-list/ProjectList.svelte';
 import { modalViewModel } from '../viewmodel';
 
 const widthPx = '500px';
@@ -19,7 +19,7 @@ function onDismiss() {
     <div class="container">
         <FilterInput bind:value="{filterValue}" />
         <TopActions dismiss="{onDismiss}" />
-        <FileList dismiss="{onDismiss}" />
+        <ProjectList dismiss="{onDismiss}" />
     </div>
 </NoBackgroundModal>
 

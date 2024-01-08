@@ -7,14 +7,14 @@ import type { TargetBounds } from './model';
 import type { Tooltip } from './tooltip/model';
 import TooltipView from './tooltip/TooltipView.svelte';
 import KeyboardShortcutModal from './keyboard-shortcut/KeyboardShortcutModal.svelte';
-import CurrentFileDropDown from './menu/currentfile/CurrentFileDropDown.svelte';
+import CurrentProjectDropDown from './menu/current-project/CurrentProjectDropDown.svelte';
 import RecentProjectDialog from './recent-project/RecentProjectDialog.svelte';
 import type { RenameProjectModel } from './rename-project/model';
 import RenameProjectModal from './rename-project/RenameProjectModal.svelte';
-import type { CurrentFileModel } from './menu/currentfile/model';
+import type { CurrentProjectModel } from './menu/current-project/model';
 
 let mainDropDownTarget: TargetBounds | null = null;
-let currentProjectDropDownModel: CurrentFileModel | null = null;
+let currentProjectDropDownModel: CurrentProjectModel | null = null;
 let isProjectManagementModalVisible: boolean = false;
 let renamingProjectModel: RenameProjectModel | null = null;
 let tooltip: Tooltip | null = null;
@@ -28,7 +28,7 @@ onMount(() => {
         mainDropDownTarget = target;
     });
 
-    modalViewModel.currentFileDropDownMenuTargetFlow.observe(lifecycleOwner, (target) => {
+    modalViewModel.currentProjectDropDownMenuTargetFlow.observe(lifecycleOwner, (target) => {
         currentProjectDropDownModel = target;
     });
 
@@ -59,7 +59,7 @@ onDestroy(() => {
 {/if}
 
 {#if currentProjectDropDownModel}
-    <CurrentFileDropDown model="{currentProjectDropDownModel}" />
+    <CurrentProjectDropDown model="{currentProjectDropDownModel}" />
 {/if}
 
 {#if isProjectManagementModalVisible}

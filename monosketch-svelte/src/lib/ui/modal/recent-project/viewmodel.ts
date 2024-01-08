@@ -1,28 +1,28 @@
 import { Flow } from '../../../mono/flow';
-import { type FileItem, sampleFileItems } from './model';
+import { type ProjectItem, sampleProjectItems } from './model';
 import { UUID } from '../../../mono/uuid';
 
 class ProjectDataViewModel {
-    private _projectFlow: Flow<FileItem[]> = new Flow();
+    private _projectFlow: Flow<ProjectItem[]> = new Flow();
     projectFlow = this._projectFlow.immutable();
 
     openingProjectIdFlow: Flow<string> = new Flow('');
     deletingProjectIdFlow: Flow<string> = new Flow('');
     renamingProjectIdFlow: Flow<string> = new Flow('');
 
-    setProjectList(projectList: FileItem[]) {
+    setProjectList(projectList: ProjectItem[]) {
         this._projectFlow.value = projectList;
         this.openingProjectIdFlow.value = projectList[0].id;
     }
 
     newProject() {
-        const newFile: FileItem = {
+        const newProject: ProjectItem = {
             id: UUID.generate(),
             name: 'New Project',
         };
-        this.setProjectList([newFile, ...this._projectFlow.value!!]);
-        this.openProject(newFile.id);
-        this.setRenamingProject(newFile.id);
+        this.setProjectList([newProject, ...this._projectFlow.value!!]);
+        this.openProject(newProject.id);
+        this.setRenamingProject(newProject.id);
     }
 
     openProject(id: string) {
@@ -57,10 +57,10 @@ class ProjectDataViewModel {
         });
     }
 
-    getProject(id: string): FileItem | undefined {
+    getProject(id: string): ProjectItem | undefined {
         return this._projectFlow.value!!.find((item) => item.id === id);
     }
 }
 
 export const projectDataViewModel = new ProjectDataViewModel();
-projectDataViewModel.setProjectList(sampleFileItems);
+projectDataViewModel.setProjectList(sampleProjectItems);

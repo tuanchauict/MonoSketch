@@ -7,7 +7,7 @@ export let projectId: string;
 export let projectName: string;
 
 function showDropDownMenu(e: MouseEvent) {
-    modalViewModel.currentFileDropDownMenuTargetFlow.value = {
+    modalViewModel.currentProjectDropDownMenuTargetFlow.value = {
         id: projectId,
         targetBounds: TargetBounds.fromElement(e.currentTarget as HTMLElement),
     };
@@ -15,8 +15,8 @@ function showDropDownMenu(e: MouseEvent) {
 </script>
 
 <div class="container">
-    <div class="file-info-container" on:click="{showDropDownMenu}">
-        <span class="file-info">
+    <div class="info-container" on:click="{showDropDownMenu}">
+        <span class="info">
             {projectName}
         </span>
         <div class="icon">
@@ -40,7 +40,7 @@ $max-text-width: 210px;
     width: $max-text-width + 31px;
 }
 
-.file-info-container {
+.info-container {
     display: flex;
     align-items: center;
 
@@ -54,7 +54,7 @@ $max-text-width: 210px;
     }
 }
 
-.file-info {
+.info {
     display: flex;
     align-items: center;
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-import FileRow from './FileRow.svelte';
-import { FileAction, type FileItem } from '../model';
+import ProjectRow from './ProjectRow.svelte';
+import { ProjectAction, type ProjectItem } from '../model';
 import { onDestroy, onMount } from 'svelte';
 import { LifecycleOwner } from '../../../../mono/flow';
 import { projectDataViewModel } from '../viewmodel';
@@ -8,7 +8,7 @@ import { projectDataViewModel } from '../viewmodel';
 export let dismiss: () => void;
 
 const lifecycleOwner = new LifecycleOwner();
-let fileList: FileItem[] = [];
+let projectList: ProjectItem[] = [];
 let openingId: string = '';
 let deletingId: string = '';
 
@@ -16,7 +16,7 @@ onMount(() => {
     lifecycleOwner.onStart();
 
     projectDataViewModel.projectFlow.observe(lifecycleOwner, (list) => {
-        fileList = list;
+        projectList = list;
     });
 
     projectDataViewModel.openingProjectIdFlow.observe(lifecycleOwner, (id) => {
@@ -34,23 +34,23 @@ onDestroy(() => {
     lifecycleOwner.onStop();
 });
 
-function onAction(file: FileItem, action: FileAction) {
+function onAction(item: ProjectItem, action: ProjectAction) {
     switch (action) {
-        case FileAction.Open:
-            projectDataViewModel.openProject(file.id);
+        case ProjectAction.Open:
+            projectDataViewModel.openProject(item.id);
             dismiss();
             break;
-        case FileAction.OpenInNewTab:
+        case ProjectAction.OpenInNewTab:
             console.log('open in new tab');
             dismiss();
             break;
-        case FileAction.Remove:
-            projectDataViewModel.confirmDeletingProject(file.id);
+        case ProjectAction.Remove:
+            projectDataViewModel.confirmDeletingProject(item.id);
             break;
-        case FileAction.RemoveConfirmed:
-            projectDataViewModel.deleteProject(file.id);
+        case ProjectAction.RemoveConfirmed:
+            projectDataViewModel.deleteProject(item.id);
             break;
-        case FileAction.CancelRemove:
+        case ProjectAction.CancelRemove:
             projectDataViewModel.cancelDeletingProject();
             break;
     }
@@ -58,11 +58,11 @@ function onAction(file: FileItem, action: FileAction) {
 </script>
 
 <div>
-    {#each fileList as file (file.id)}
-        <FileRow
-            {file}
-            opening="{file.id === openingId}"
-            deleting="{file.id === deletingId}"
+    {#each projectList as project (project.id)}
+        <ProjectRow
+            {project}
+            opening="{project.id === openingId}"
+            deleting="{project.id === deletingId}"
             {onAction}
         />
     {:else}

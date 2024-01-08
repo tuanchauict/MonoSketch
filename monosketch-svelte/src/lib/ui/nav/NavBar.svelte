@@ -7,7 +7,7 @@ import ThemeButton from './right/ThemeButton.svelte';
 import Brand from './brand/Brand.svelte';
 import MouseActionGroup from './mouseaction/MouseActionGroup.svelte';
 import ProjectManagerButton from './project/ProjectManagerButton.svelte';
-import WorkingFile from './project/WorkingFile.svelte';
+import WorkingProject from './project/WorkingProject.svelte';
 </script>
 
 <div class="container">
@@ -18,7 +18,7 @@ import WorkingFile from './project/WorkingFile.svelte';
 
     <ToolbarContainer>
         <ProjectManagerButton />
-        <WorkingFile />
+        <WorkingProject />
     </ToolbarContainer>
 
     <ToolbarContainer>

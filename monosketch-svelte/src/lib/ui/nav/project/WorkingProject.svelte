@@ -1,5 +1,5 @@
 <script lang="ts">
-import WorkingFileView from './WorkingFileView.svelte';
+import WorkingProjectView from './WorkingProjectView.svelte';
 import { projectDataViewModel } from '../../modal/recent-project/viewmodel';
 import { Flow, LifecycleOwner } from '../../../mono/flow';
 import { onDestroy, onMount } from 'svelte';
@@ -11,26 +11,29 @@ let projectName = '';
 let node: HTMLElement;
 
 const lifecycleOwner = new LifecycleOwner();
-const openingFileFlow = Flow.combine2(
+
+// TODO: the current flow of showing the working project info and renaming project is not intuitive. Fix it!
+
+const openingProjectFlow = Flow.combine2(
     projectDataViewModel.openingProjectIdFlow,
     projectDataViewModel.renamingProjectIdFlow,
     (id) => projectDataViewModel.getProject(id),
 );
 
-const renamingFileFlow = projectDataViewModel.renamingProjectIdFlow.map((id) => {
+const renamingProjectFlow = projectDataViewModel.renamingProjectIdFlow.map((id) => {
     const project = projectDataViewModel.getProject(id);
     return project ? project : null;
 });
 
 onMount(() => {
     lifecycleOwner.onStart();
-    openingFileFlow.observe(lifecycleOwner, (project) => {
+    openingProjectFlow.observe(lifecycleOwner, (project) => {
         // TODO: make the flow mapping ignore undefined value as return type.
         projectId = project!!.id;
         projectName = project!!.name;
     });
 
-    renamingFileFlow.observe(lifecycleOwner, (project) => {
+    renamingProjectFlow.observe(lifecycleOwner, (project) => {
         if (!project) {
             return;
         }
@@ -47,7 +50,7 @@ onDestroy(() => {
 </script>
 
 <div bind:this="{node}">
-    <WorkingFileView {projectId} {projectName} />
+    <WorkingProjectView {projectId} {projectName} />
 </div>
 
 <style lang="scss">

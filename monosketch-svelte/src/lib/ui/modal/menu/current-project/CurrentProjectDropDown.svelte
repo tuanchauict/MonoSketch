@@ -2,12 +2,12 @@
 import DropDown from '../common/DropDown.svelte';
 import MenuItem from '../common/MenuItem.svelte';
 import { modalViewModel } from '../../viewmodel';
-import type { CurrentFileModel } from './model';
+import type { CurrentProjectModel } from './model';
 
-export let model: CurrentFileModel;
+export let model: CurrentProjectModel;
 
 function onDismiss() {
-    modalViewModel.currentFileDropDownMenuTargetFlow.value = null;
+    modalViewModel.currentProjectDropDownMenuTargetFlow.value = null;
 }
 
 function rename() {

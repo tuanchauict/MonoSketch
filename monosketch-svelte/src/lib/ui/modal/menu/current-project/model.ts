@@ -1,6 +1,6 @@
 import type { TargetBounds } from '../../model';
 
-export interface CurrentFileModel {
+export interface CurrentProjectModel {
     id: string;
     targetBounds: TargetBounds;
 }

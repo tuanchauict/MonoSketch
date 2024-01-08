@@ -1,10 +1,10 @@
 <script lang="ts">
-import type { FileAction } from '../model';
+import type { ProjectAction } from '../model';
 import TooltipTarget from '../../tooltip/TooltipTarget.svelte';
 import { Direction } from '../../tooltip/model';
 
-export let action: FileAction;
-export let onClick: (action: FileAction) => void;
+export let action: ProjectAction;
+export let onClick: (action: ProjectAction) => void;
 export let tooltip: string | undefined = undefined;
 
 function onActionClick() {

@@ -2,11 +2,11 @@ import { Flow } from '../../mono/flow';
 import type { TargetBounds } from './model';
 import type { Tooltip } from './tooltip/model';
 import type { RenameProjectModel } from './rename-project/model';
-import type { CurrentFileModel } from './menu/currentfile/model';
+import type { CurrentProjectModel } from './menu/current-project/model';
 
 class ModalViewModel {
     mainDropDownMenuTargetFlow: Flow<TargetBounds | null> = new Flow(null);
-    currentFileDropDownMenuTargetFlow: Flow<CurrentFileModel | null> = new Flow(null);
+    currentProjectDropDownMenuTargetFlow: Flow<CurrentProjectModel | null> = new Flow(null);
 
     projectManagementVisibilityStateFlow: Flow<boolean> = new Flow(false);
     renamingProjectModalStateFlow: Flow<RenameProjectModel | null> = new Flow(null);
