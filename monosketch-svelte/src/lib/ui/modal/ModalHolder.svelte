@@ -8,6 +8,7 @@ import type { Tooltip } from './tooltip/model';
 import TooltipView from './tooltip/TooltipView.svelte';
 import KeyboardShortcutModal from './keyboard-shortcut/KeyboardShortcutModal.svelte';
 import CurrentFileDropDown from './menu/currentfile/CurrentFileDropDown.svelte';
+import RecentProjectDialog from './recent-project/RecentProjectDialog.svelte';
 
 let mainDropDownTarget: TargetBounds | null = null;
 let currentFileDropDownTarget: TargetBounds | null = null;
@@ -47,6 +48,8 @@ onDestroy(() => {
 {#if currentFileDropDownTarget}
     <CurrentFileDropDown targetBounds="{currentFileDropDownTarget}" />
 {/if}
+
+<RecentProjectDialog />
 
 {#if tooltip}
     <TooltipView {tooltip} />

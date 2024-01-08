@@ -2,25 +2,16 @@
 import { onMount } from 'svelte';
 
 export let onDismiss: () => void;
-export let left: number;
-export let top: number;
-export let width: number;
+export let left: number = 0;
+export let top: number = 0;
+export let width: number = 0;
 export let height: number | null = null;
-
-let adjustedLeft = left + width > window.innerWidth ? window.innerWidth - width : left;
+export let style: string = '';
 
 let timeout: number | null = null;
 let checkbox: HTMLInputElement | null = null;
 
-let style = [
-    `left: ${adjustedLeft}px`,
-    `top: ${top}px`,
-    `width: ${width}px`,
-    height ? `height: ${height}px` : null,
-]
-    .filter(Boolean)
-    .join(';');
-
+let displayedStyle = style ? style : createStyle();
 onMount(() => {
     if (checkbox) {
         checkbox.focus();
@@ -49,6 +40,18 @@ function dismiss() {
     checkbox = null;
     onDismiss();
 }
+
+function createStyle() {
+    let adjustedLeft = left + width > window.innerWidth ? window.innerWidth - width : left;
+    return [
+        `left: ${adjustedLeft}px`,
+        `top: ${top}px`,
+        `width: ${width}px`,
+        height ? `height: ${height}px` : null,
+    ]
+        .filter(Boolean)
+        .join(';');
+}
 </script>
 
 <div
@@ -57,7 +60,7 @@ function dismiss() {
     on:keydown="{onKeyDown}"
     on:focusin="{onFocusIn}"
     on:focusout="{onFocusOut}"
-    {style}
+    style="{displayedStyle}"
 >
     <input type="checkbox" bind:this="{checkbox}" />
     <slot />
