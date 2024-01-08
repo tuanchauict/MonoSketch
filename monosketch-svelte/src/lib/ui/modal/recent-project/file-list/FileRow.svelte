@@ -20,7 +20,7 @@ function onActionClick(action: FileAction) {
 </script>
 
 <MenuItem onClick="{openFile}" danger="{deleting}">
-    <FileIcon slot="icon" {opening} />
+    <FileIcon slot="icon" {opening} {deleting} />
     <span slot="content">{file.name}</span>
     <FileActions slot="actions" onAction="{onActionClick}" confirmingRemove="{deleting}" />
 </MenuItem>

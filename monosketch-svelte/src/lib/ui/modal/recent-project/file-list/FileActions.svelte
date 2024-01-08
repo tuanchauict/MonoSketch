@@ -12,17 +12,25 @@ export let onAction: (action: FileAction) => void;
 
 <div>
     {#if !confirmingRemove}
-        <FileActionView action="{FileAction.OpenInNewTab}" onClick="{onAction}">
+        <FileActionView
+            action="{FileAction.OpenInNewTab}"
+            onClick="{onAction}"
+            tooltip="Open in new tab"
+        >
             <OpenInNewTab />
         </FileActionView>
-        <FileActionView action="{FileAction.Remove}" onClick="{onAction}">
+        <FileActionView action="{FileAction.Remove}" onClick="{onAction}" tooltip="Delete">
             <Remove />
         </FileActionView>
     {:else}
-        <FileActionView action="{FileAction.RemoveConfirmed}" onClick="{onAction}">
+        <FileActionView
+            action="{FileAction.RemoveConfirmed}"
+            onClick="{onAction}"
+            tooltip="Confirm"
+        >
             <RemoveConfirmation />
         </FileActionView>
-        <FileActionView action="{FileAction.CancelRemove}" onClick="{onAction}">
+        <FileActionView action="{FileAction.CancelRemove}" onClick="{onAction}" tooltip="Cancel">
             <CancelRemoval />
         </FileActionView>
     {/if}
@@ -32,6 +40,6 @@ export let onAction: (action: FileAction) => void;
 div {
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: 12px;
 }
 </style>

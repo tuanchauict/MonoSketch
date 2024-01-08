@@ -1,8 +1,11 @@
 <script lang="ts">
 import type { FileAction } from '../model';
+import TooltipTarget from '../../tooltip/TooltipTarget.svelte';
+import { Direction } from '../../tooltip/model';
 
 export let action: FileAction;
 export let onClick: (action: FileAction) => void;
+export let tooltip: string | undefined = undefined;
 
 function onActionClick() {
     onClick(action);
@@ -12,7 +15,13 @@ function onActionClick() {
 <!--Use div here instead of button to avoid the modal is dismissed when click-->
 <!--TODO: Fix this-->
 <div on:click="{onActionClick}">
-    <slot />
+    {#if tooltip}
+        <TooltipTarget text="{tooltip}" direction="{Direction.TOP}" offsetVertical="{4}">
+            <slot />
+        </TooltipTarget>
+    {:else}
+        <slot />
+    {/if}
 </div>
 
 <style lang="scss">

@@ -2,6 +2,7 @@
 import { modalViewModel } from '../viewmodel';
 import { TargetBounds } from '../model';
 import { Direction, Tooltip } from './model';
+import { onDestroy } from 'svelte';
 
 export let text: string;
 export let direction: Direction = Direction.BOTTOM;
@@ -26,6 +27,8 @@ function hideTooltip() {
     clearTimeout(timeoutId);
     modalViewModel.tooltipFlow.value = null;
 }
+
+onDestroy(hideTooltip);
 </script>
 
 <div on:mouseover="{showTooltip}" on:mouseout="{hideTooltip}">
