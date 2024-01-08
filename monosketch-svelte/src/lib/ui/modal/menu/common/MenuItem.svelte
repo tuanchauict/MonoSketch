@@ -1,9 +1,16 @@
 <script lang="ts">
 export let title: string;
 export let onClick: () => void;
+// Set this if you want to dismiss the menu when the item is clicked
+export let dismiss: () => void = () => {};
+
+function onItemClick() {
+    onClick();
+    dismiss();
+}
 </script>
 
-<div on:click="{onClick}">
+<div on:click="{onItemClick}">
     {title}
 </div>
 

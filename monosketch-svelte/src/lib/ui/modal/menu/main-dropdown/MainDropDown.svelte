@@ -1,15 +1,11 @@
 <script lang="ts">
-import NoBackgroundModal from '../../common/NoBackgroundModal.svelte';
 import { modalViewModel } from '../../viewmodel';
-import MenuItem from './MenuItem.svelte';
+import MenuItem from '../common/MenuItem.svelte';
 import FontAdjustmentItem from './FontAdjustmentItem.svelte';
 import type { TargetBounds } from '../../model';
+import DropDown from '../common/DropDown.svelte';
 
 export let targetBounds: TargetBounds;
-
-let left = targetBounds.left;
-let top = targetBounds.top + targetBounds.height + 7;
-let width = 180;
 
 function onDismiss() {
     modalViewModel.mainDropDownMenuTargetFlow.value = null;
@@ -21,33 +17,19 @@ function onFontSizeChange(isIncreased: boolean) {
 
 function toggleFormatPanelVisibility() {
     // TODO: implement
-    onDismiss();
 }
 
 function showKeyboardShortcuts() {
     modalViewModel.keyboardShortcutVisibilityStateFlow.value = true;
-    onDismiss();
 }
 </script>
 
-<NoBackgroundModal {onDismiss} {left} {top} {width}>
-    <div class="container">
-        <FontAdjustmentItem onChange="{onFontSizeChange}" />
-        <MenuItem title="Hide Formal panel" onClick="{toggleFormatPanelVisibility}" />
-        <MenuItem title="Keyboard shortcuts" onClick="{showKeyboardShortcuts}" />
-    </div>
-</NoBackgroundModal>
-
-<style lang="scss">
-@import '../../../../style/variables.scss';
-
-.container {
-    border-radius: 6px;
-    background: var(--modal-container-bg);
-    border: 1px solid var(--mainmenu-divider-color);
-    padding: 6px 0;
-    font-family: $monospaceFont;
-    width: 100%;
-    margin-right: 4px;
-}
-</style>
+<DropDown {targetBounds} {onDismiss} verticalOffsetPx="{7}">
+    <FontAdjustmentItem onChange="{onFontSizeChange}" />
+    <MenuItem
+        title="Hide Formal panel"
+        onClick="{toggleFormatPanelVisibility}"
+        dismiss="{onDismiss}"
+    />
+    <MenuItem title="Keyboard shortcuts" onClick="{showKeyboardShortcuts}" dismiss="{onDismiss}" />
+</DropDown>

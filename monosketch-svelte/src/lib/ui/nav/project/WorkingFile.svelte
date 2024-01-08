@@ -1,17 +1,29 @@
 <script lang="ts">
+import SvgIcon from '../../common/SvgIcon.svelte';
+import { modalViewModel } from '../../modal/viewmodel';
+import { TargetBounds } from '../../modal/model';
+
 export let filename: string;
+
+function showDropDownMenu(e: MouseEvent) {
+    modalViewModel.currentFileDropDownMenuTargetFlow.value = TargetBounds.fromElement(
+        e.currentTarget as HTMLElement,
+    );
+}
 </script>
 
 <div class="container">
-    <div class="file-info-container">
+    <div class="file-info-container" on:click="{showDropDownMenu}">
         <span class="file-info">
             {filename}
         </span>
-        <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path
-                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-            ></path>
-        </svg>
+        <div class="icon">
+            <SvgIcon size="{16}">
+                <path
+                    d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                ></path>
+            </SvgIcon>
+        </div>
     </div>
 </div>
 

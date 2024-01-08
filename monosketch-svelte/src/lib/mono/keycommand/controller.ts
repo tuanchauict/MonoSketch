@@ -17,7 +17,6 @@ export class KeyCommandController {
     }
 
     private updateKeyCommand = (e: KeyboardEvent) => {
-        console.log(this);
         // TODO: Resolve keyCode deprecated.
         const keyCommand =
             e.target === this.body

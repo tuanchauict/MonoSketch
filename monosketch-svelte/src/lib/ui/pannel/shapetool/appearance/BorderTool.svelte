@@ -8,8 +8,6 @@ let dashDash = 1;
 let dashGap = 0;
 let dashShift = 0;
 
-$: console.log(dashDash, dashGap, dashShift);
-
 function onItemSelect(id: string) {
     selectedId = id;
 }
