@@ -1,42 +1,35 @@
 <script lang="ts">
-import AppIcon from '../common/AppIcon.svelte';
-import { ThemeMode, themeModeToContentMap } from './model';
-import TooltipTarget from '$ui/modal/tooltip/TooltipTarget.svelte';
-import { Direction } from '$ui/modal/tooltip/model';
+import { ThemeMode } from '$mono/theme';
+import { getContext, onDestroy, onMount } from 'svelte';
+import { APP_CONTEXT } from '$mono/common/constant';
+import { AppContext } from '../../../../app/app-context';
+import { LifecycleOwner } from '$mono/flow';
+import ThemeModeIcon from '$ui/nav/right/ThemeModeIcon.svelte';
 
-export let themeMode: ThemeMode = ThemeMode.LIGHT;
+let themeMode: ThemeMode;
 
-$: updateTheme(themeMode);
+const appContext = getContext(APP_CONTEXT) as AppContext;
+const lifecycleOwner = new LifecycleOwner();
 
-function changeTheme() {
-    switch (themeMode) {
-        case ThemeMode.DARK:
-            themeMode = ThemeMode.LIGHT;
-            break;
-        case ThemeMode.LIGHT:
-            themeMode = ThemeMode.DARK;
-            break;
-    }
-}
+onMount(() => {
+    lifecycleOwner.onStart();
+
+    appContext.appUiStateManager.themeModeFlow.observe(lifecycleOwner, (mode) => {
+        themeMode = mode;
+    });
+});
+
+onDestroy(() => {
+    lifecycleOwner.onStop();
+});
 
 function updateTheme(mode: ThemeMode) {
-    switch (mode) {
-        case ThemeMode.LIGHT:
-            document.documentElement.classList.remove('dark');
-            break;
-        case ThemeMode.DARK:
-            document.documentElement.classList.add('dark');
-            break;
-    }
+    appContext.appUiStateManager.setTheme(mode);
 }
 </script>
 
-<TooltipTarget
-    direction="{Direction.BOTTOM}"
-    text="{themeModeToContentMap[themeMode].title}"
-    offsetVertical="{6.5}"
->
-    <AppIcon onClick="{changeTheme}" size="{20}" viewBoxSize="{16}">
-        <path d="{themeModeToContentMap[themeMode].iconPath}"></path>
-    </AppIcon>
-</TooltipTarget>
+{#if themeMode === ThemeMode.DARK}
+    <ThemeModeIcon onChangeTheme="{updateTheme}" themeMode="{ThemeMode.DARK}" />
+{:else}
+    <ThemeModeIcon onChangeTheme="{updateTheme}" themeMode="{ThemeMode.LIGHT}" />
+{/if}

@@ -41,3 +41,5 @@ export enum MouseCursor {
     RESIZE_ROW = 'row-resize',
     RESIZE_COL = 'col-resize',
 }
+
+export const APP_CONTEXT = 'app-context';
