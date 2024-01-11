@@ -13,7 +13,14 @@
          */
         "allowJs": true,
         "checkJs": true,
-        "isolatedModules": true
+        "isolatedModules": true,
+        "baseUrl": "./src",
+        "paths": {
+            "$app/*": ["app"],
+            "$mono/*": ["lib/mono/*"],
+            "$style/*": ["lib/style/*"],
+            "$ui/*": ["lib/ui/*"],
+        }
     },
     "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
     "references": [{ "path": "./tsconfig.node.json" }]

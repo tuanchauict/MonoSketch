@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Direction, directionToIconPathMap, type Tooltip } from './model';
 import { calcArrowLeft, calcArrowTop, calcBodyLeft, calcBodyTop } from './utils';
-import SvgIcon from '../../common/SvgIcon.svelte';
+import SvgIcon from '$ui/common/SvgIcon.svelte';
 
 export let tooltip: Tooltip;
 
@@ -28,7 +28,7 @@ $: arrowViewBoxSize = isVertical ? [20, 10] : [10, 20];
 </div>
 
 <style lang="scss">
-@import '../../../style/variables';
+@import '$style/variables';
 
 $tooltip-background-color: var(--tooltip-bg);
 $tooltip-color: var(--tooltip-color);

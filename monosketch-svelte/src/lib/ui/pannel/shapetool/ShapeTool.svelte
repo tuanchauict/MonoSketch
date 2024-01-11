@@ -16,7 +16,7 @@ import TextTool from './text/TextTool.svelte';
 </div>
 
 <style lang="scss">
-@import '../../../style/variables.scss';
+@import '$style/variables.scss';
 
 .container {
     display: flex;

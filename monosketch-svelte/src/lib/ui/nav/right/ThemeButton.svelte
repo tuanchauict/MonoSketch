@@ -1,8 +1,8 @@
 <script lang="ts">
 import AppIcon from '../common/AppIcon.svelte';
 import { ThemeMode, themeModeToContentMap } from './model';
-import TooltipTarget from '../../modal/tooltip/TooltipTarget.svelte';
-import { Direction } from '../../modal/tooltip/model';
+import TooltipTarget from '$ui/modal/tooltip/TooltipTarget.svelte';
+import { Direction } from '$ui/modal/tooltip/model';
 
 export let themeMode: ThemeMode = ThemeMode.LIGHT;
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { buttonContent, type ReorderType } from './model';
-import TooltipTarget from '../../../modal/tooltip/TooltipTarget.svelte';
-import { Direction } from '../../../modal/tooltip/model';
+import TooltipTarget from '$ui/modal/tooltip/TooltipTarget.svelte';
+import { Direction } from '$ui/modal/tooltip/model';
 
 export let icon: ReorderType;
 export let onClick: (icon: ReorderType) => void;

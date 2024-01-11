@@ -7,6 +7,7 @@ export default defineConfig({
     plugins: [svelte(), sassPlugin()],
     resolve: {
         alias: {
+            $app: '/src/app',
             $mono: '/src/lib/mono',
             $style: '/src/lib/style',
             $assets: '/src/assets',
