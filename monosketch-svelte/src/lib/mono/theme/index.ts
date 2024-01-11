@@ -46,17 +46,13 @@ export class ThemeManager {
 
     static getInstance(): ThemeManager {
         if (!ThemeManager.instance) {
-            ThemeManager.instance = new ThemeManager(ThemeMode.DARK);
+            ThemeManager.instance = new ThemeManager();
         }
         return ThemeManager.instance;
     }
 
     private _themeModeFlow: Flow<ThemeMode> = new Flow();
     themeModeFlow = this._themeModeFlow.immutable();
-
-    constructor(initialThemeMode: ThemeMode) {
-        this._themeModeFlow.value = initialThemeMode;
-    }
 
     /**
      * Gets color from [color] based on the current theme.
