@@ -9,8 +9,7 @@ export let themeMode: ThemeMode;
 export let onChangeTheme: (themeMode: ThemeMode) => void;
 
 function changeTheme() {
-    const nextThemeMode = themeMode === ThemeMode.LIGHT ? ThemeMode.DARK : ThemeMode.LIGHT;
-    onChangeTheme(nextThemeMode);
+    onChangeTheme(themeModeToContentMap[themeMode].next);
 }
 </script>
 

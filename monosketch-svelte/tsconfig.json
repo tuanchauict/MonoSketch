@@ -16,7 +16,7 @@
         "isolatedModules": true,
         "baseUrl": "./src",
         "paths": {
-            "$app/*": ["app"],
+            "$app/*": ["app/*"],
             "$mono/*": ["lib/mono/*"],
             "$style/*": ["lib/style/*"],
             "$ui/*": ["lib/ui/*"],

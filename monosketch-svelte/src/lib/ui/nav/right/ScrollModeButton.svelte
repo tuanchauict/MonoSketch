@@ -7,7 +7,7 @@ import { scrollModeToContentMap } from '$ui/nav/right/model';
 import { getContext, onDestroy, onMount } from 'svelte';
 import { LifecycleOwner } from '$mono/flow';
 import { APP_CONTEXT } from '$mono/common/constant';
-import type { AppContext } from '../../../../app/app-context';
+import type { AppContext } from '$app/app-context';
 
 let scrollMode: ScrollMode = ScrollMode.BOTH;
 const lifecycleOwner = new LifecycleOwner();
@@ -25,17 +25,7 @@ onDestroy(() => {
 });
 
 function changeMode() {
-    switch (scrollMode) {
-        case ScrollMode.BOTH:
-            appContext.appUiStateManager.setScrollMode(ScrollMode.VERTICAL);
-            break;
-        case ScrollMode.VERTICAL:
-            appContext.appUiStateManager.setScrollMode(ScrollMode.HORIZONTAL);
-            break;
-        case ScrollMode.HORIZONTAL:
-            appContext.appUiStateManager.setScrollMode(ScrollMode.BOTH);
-            break;
-    }
+    appContext.appUiStateManager.setScrollMode(scrollModeToContentMap[scrollMode].next);
 }
 </script>
 
