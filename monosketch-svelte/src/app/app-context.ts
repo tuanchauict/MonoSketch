@@ -13,5 +13,5 @@ export class AppContext {
             console.log('Theme changed');
             // TODO: Update theme in the workspace
         });
-    }
+    };
 }

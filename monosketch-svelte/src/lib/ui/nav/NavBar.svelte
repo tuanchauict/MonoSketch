@@ -21,7 +21,7 @@ import WorkingProject from './project/WorkingProject.svelte';
     </ToolbarContainer>
 
     <ToolbarContainer>
-        <ScrollModeButton/>
+        <ScrollModeButton />
         <ThemeButton />
         <AppDropdownMenu />
     </ToolbarContainer>
