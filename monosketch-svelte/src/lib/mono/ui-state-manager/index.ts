@@ -2,6 +2,7 @@ import { Flow, LifecycleOwner } from '$mono/flow';
 import { ScrollMode, type ThemeColor, type ThemeMode } from '$mono/ui-state-manager/states';
 import { AppThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { ScrollModeManager } from '$mono/ui-state-manager/scroll-mode-manager';
+import { PanelVisibilityManager } from '$mono/ui-state-manager/panel-visibility-manager';
 
 /**
  * A domain class for managing UI state of the app.
@@ -10,10 +11,12 @@ import { ScrollModeManager } from '$mono/ui-state-manager/scroll-mode-manager';
 export class AppUiStateManager {
     private appThemeManager = new AppThemeManager();
     private scrollModeManager = new ScrollModeManager();
+    private panelVisibilityManager = new PanelVisibilityManager();
 
     themeModeFlow: Flow<ThemeMode> = this.appThemeManager.themeModeFlow;
-
     scrollModeFlow: Flow<ScrollMode> = this.scrollModeManager.scrollModeFlow;
+    shapeFormatPanelVisibilityFlow: Flow<boolean> =
+        this.panelVisibilityManager.shapeFormatPanelVisibilityFlow;
 
     constructor(private appLifecycleOwner: LifecycleOwner) {}
 
@@ -31,5 +34,9 @@ export class AppUiStateManager {
 
     setScrollMode = (scrollMode: ScrollMode): void => {
         this.scrollModeManager.setScrollMode(scrollMode);
+    };
+
+    toggleShapeFormatPanelVisibility = (): void => {
+        this.panelVisibilityManager.toggleShapeFormatPanelVisibility();
     };
 }

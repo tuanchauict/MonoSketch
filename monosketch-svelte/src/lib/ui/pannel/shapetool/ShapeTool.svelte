@@ -1,19 +1,38 @@
-<script>
+<script lang="ts">
 import ReorderTool from './reorder/ReorderTool.svelte';
 import TransformTool from './transform/TransformTool.svelte';
 import AppearanceTool from './appearance/AppearanceTool.svelte';
 import TextTool from './text/TextTool.svelte';
+import { getContext, onMount } from 'svelte';
+import { AppContext } from '$app/app-context';
+import { APP_CONTEXT } from '$mono/common/constant';
+import { LifecycleOwner } from '$mono/flow';
+
+const appContext = getContext<AppContext>(APP_CONTEXT);
+const lifecycleOwner = new LifecycleOwner();
+
+let isVisible = true;
+
+onMount(() => {
+    lifecycleOwner.onStart();
+
+    appContext.appUiStateManager.shapeFormatPanelVisibilityFlow.observe(lifecycleOwner, (value) => {
+        isVisible = value;
+    });
+});
 </script>
 
-<div class="container">
-    <div class="body">
-        <ReorderTool />
-        <TransformTool />
-        <AppearanceTool />
-        <TextTool />
+{#if isVisible}
+    <div class="container">
+        <div class="body">
+            <ReorderTool />
+            <TransformTool />
+            <AppearanceTool />
+            <TextTool />
+        </div>
+        <div class="footer">Hello</div>
     </div>
-    <div class="footer">Hello</div>
-</div>
+{/if}
 
 <style lang="scss">
 @import '$style/variables.scss';

@@ -1,14 +1,14 @@
 <script lang="ts">
 import { getContext, onDestroy, onMount } from 'svelte';
 import { APP_CONTEXT } from '$mono/common/constant';
-import { AppContext } from '../../../../app/app-context';
+import { AppContext } from '$app/app-context';
 import { LifecycleOwner } from '$mono/flow';
 import ThemeModeIcon from '$ui/nav/right/ThemeModeIcon.svelte';
 import { ThemeMode } from '$mono/ui-state-manager/states';
 
 let themeMode: ThemeMode;
 
-const appContext = getContext(APP_CONTEXT) as AppContext;
+const appContext = getContext<AppContext>(APP_CONTEXT);
 const lifecycleOwner = new LifecycleOwner();
 
 onMount(() => {

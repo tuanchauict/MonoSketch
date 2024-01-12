@@ -11,7 +11,8 @@ import type { AppContext } from '$app/app-context';
 
 let scrollMode: ScrollMode = ScrollMode.BOTH;
 const lifecycleOwner = new LifecycleOwner();
-const appContext = getContext(APP_CONTEXT) as AppContext;
+const appContext = getContext<AppContext>(APP_CONTEXT);
+
 onMount(() => {
     lifecycleOwner.onStart();
 

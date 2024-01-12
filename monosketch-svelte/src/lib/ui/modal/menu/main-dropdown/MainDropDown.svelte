@@ -1,11 +1,21 @@
 <script lang="ts">
-import { modalViewModel } from '../../viewmodel';
 import MenuItem from '../common/MenuItem.svelte';
 import FontAdjustmentItem from './FontAdjustmentItem.svelte';
-import type { TargetBounds } from '../../model';
 import DropDown from '../common/DropDown.svelte';
+import { getContext } from 'svelte';
+import type { AppContext } from '$app/app-context';
+import { APP_CONTEXT } from '$mono/common/constant';
+import { modalViewModel } from '$ui/modal/viewmodel';
+import type { TargetBounds } from '$ui/modal/model';
 
 export let targetBounds: TargetBounds;
+
+const appContext = getContext<AppContext>(APP_CONTEXT);
+
+let isFormatPanelVisible = appContext.appUiStateManager.shapeFormatPanelVisibilityFlow.value;
+$: toggleFormatPannelVisibilityText = isFormatPanelVisible
+    ? 'Hide Format panel'
+    : 'Show Format panel';
 
 function onDismiss() {
     modalViewModel.mainDropDownMenuTargetFlow.value = null;
@@ -16,7 +26,7 @@ function onFontSizeChange(isIncreased: boolean) {
 }
 
 function toggleFormatPanelVisibility() {
-    // TODO: implement
+    appContext.appUiStateManager.toggleShapeFormatPanelVisibility();
 }
 
 function showKeyboardShortcuts() {
@@ -27,7 +37,7 @@ function showKeyboardShortcuts() {
 <DropDown {targetBounds} {onDismiss} verticalOffsetPx="{7}">
     <FontAdjustmentItem onChange="{onFontSizeChange}" />
     <MenuItem
-        title="Hide Formal panel"
+        title="{toggleFormatPannelVisibilityText}"
         onClick="{toggleFormatPanelVisibility}"
         dismiss="{onDismiss}"
     />
