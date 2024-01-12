@@ -1,11 +1,15 @@
-import { Flow } from '../flow';
+export enum ScrollMode {
+    BOTH = 'both',
+    VERTICAL = 'vertical',
+    HORIZONTAL = 'horizontal',
+}
 
 export enum ThemeMode {
     LIGHT = 'light',
     DARK = 'dark',
 }
 
-interface ThemeColor {
+export interface ThemeColor {
     lightColorCode: string;
     darkColorCode: string;
 }
@@ -37,37 +41,6 @@ export const ThemeColors = {
     SelectionDotStroke: themeColor('#64b5f6', '#f2ae00'),
     SelectionDotFill: themeColor('#FFFFFF', '#1E1E1E'),
 };
-
-/**
- * A class for managing the theme of the app.
- */
-export class ThemeManager {
-    private static instance: ThemeManager | null = null;
-
-    static getInstance(): ThemeManager {
-        if (!ThemeManager.instance) {
-            ThemeManager.instance = new ThemeManager();
-        }
-        return ThemeManager.instance;
-    }
-
-    private _themeModeFlow: Flow<ThemeMode> = new Flow();
-    themeModeFlow = this._themeModeFlow.immutable();
-
-    /**
-     * Gets color from [color] based on the current theme.
-     * The return is the hex code of RGB or RGBA, the same to the hex code used in CSS.
-     */
-    getColorCode(color: ThemeColor): string {
-        return this._themeModeFlow.value === ThemeMode.LIGHT
-            ? color.lightColorCode
-            : color.darkColorCode;
-    }
-
-    setTheme(themeMode: ThemeMode): void {
-        this._themeModeFlow.value = themeMode;
-    }
-}
 
 function themeColor(lightColorCode: string, darkColorCode: string): ThemeColor {
     return { lightColorCode, darkColorCode };

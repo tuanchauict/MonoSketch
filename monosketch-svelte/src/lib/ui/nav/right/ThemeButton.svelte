@@ -1,10 +1,10 @@
 <script lang="ts">
-import { ThemeMode } from '$mono/theme';
 import { getContext, onDestroy, onMount } from 'svelte';
 import { APP_CONTEXT } from '$mono/common/constant';
 import { AppContext } from '../../../../app/app-context';
 import { LifecycleOwner } from '$mono/flow';
 import ThemeModeIcon from '$ui/nav/right/ThemeModeIcon.svelte';
+import { ThemeMode } from '$mono/ui-state-manager/states';
 
 let themeMode: ThemeMode;
 

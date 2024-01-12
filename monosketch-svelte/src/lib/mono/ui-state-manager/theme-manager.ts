@@ -1,6 +1,37 @@
-import { ThemeManager, ThemeMode } from '$mono/theme';
-import { StorageDocument, StoreKeys } from '$mono/store-manager';
 import { Flow, LifecycleOwner } from '$mono/flow';
+import { type ThemeColor, ThemeMode } from '$mono/ui-state-manager/states';
+import { StorageDocument, StoreKeys } from '$mono/store-manager';
+
+/**
+ * A class for managing the theme of the app.
+ */
+export class ThemeManager {
+    private static instance: ThemeManager | null = null;
+
+    static getInstance(): ThemeManager {
+        if (!ThemeManager.instance) {
+            ThemeManager.instance = new ThemeManager();
+        }
+        return ThemeManager.instance;
+    }
+
+    private _themeModeFlow: Flow<ThemeMode> = new Flow();
+    themeModeFlow = this._themeModeFlow.immutable();
+
+    /**
+     * Gets color from [color] based on the current theme.
+     * The return is the hex code of RGB or RGBA, the same to the hex code used in CSS.
+     */
+    getThemedColorCode(color: ThemeColor): string {
+        return this._themeModeFlow.value === ThemeMode.LIGHT
+            ? color.lightColorCode
+            : color.darkColorCode;
+    }
+
+    setTheme(themeMode: ThemeMode): void {
+        this._themeModeFlow.value = themeMode;
+    }
+}
 
 /**
  * A class for managing theme of the app, including observing theme change from
@@ -38,5 +69,9 @@ export class AppThemeManager {
                 }
             },
         });
+    };
+
+    getThemedColorCode = (color: ThemeColor): string => {
+        return this.themeManager.getThemedColorCode(color);
     };
 }

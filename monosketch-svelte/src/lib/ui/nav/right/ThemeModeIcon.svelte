@@ -1,9 +1,9 @@
 <script lang="ts">
-import { ThemeMode } from '$mono/theme';
-import { Direction } from '$ui/modal/tooltip/model';
 import { themeModeToContentMap } from '$ui/nav/right/model';
 import TooltipTarget from '$ui/modal/tooltip/TooltipTarget.svelte';
 import AppIcon from '$ui/nav/common/AppIcon.svelte';
+import { Direction } from '$ui/modal/tooltip/model';
+import { ThemeMode } from '$mono/ui-state-manager/states';
 
 export let themeMode: ThemeMode;
 export let onChangeTheme: (themeMode: ThemeMode) => void;

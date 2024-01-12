@@ -1,34 +1,39 @@
 <script lang="ts">
-import { ScrollMode } from './model';
-import AppIcon from '../common/AppIcon.svelte';
-import TooltipTarget from '../../modal/tooltip/TooltipTarget.svelte';
-import { Direction } from '../../modal/tooltip/model';
+import TooltipTarget from '$ui/modal/tooltip/TooltipTarget.svelte';
+import { Direction } from '$ui/modal/tooltip/model';
+import { ScrollMode } from '$mono/ui-state-manager/states';
+import AppIcon from '$ui/nav/common/AppIcon.svelte';
+import { scrollModeToContentMap } from '$ui/nav/right/model';
+import { getContext, onDestroy, onMount } from 'svelte';
+import { LifecycleOwner } from '$mono/flow';
+import { APP_CONTEXT } from '$mono/common/constant';
+import type { AppContext } from '../../../../app/app-context';
 
-export let scrollMode: ScrollMode = ScrollMode.BOTH;
+let scrollMode: ScrollMode = ScrollMode.BOTH;
+const lifecycleOwner = new LifecycleOwner();
+const appContext = getContext(APP_CONTEXT) as AppContext;
+onMount(() => {
+    lifecycleOwner.onStart();
 
-$: path = getPath(scrollMode);
+    appContext.appUiStateManager.scrollModeFlow.observe(lifecycleOwner, (value) => {
+        scrollMode = value;
+    });
+});
 
-function getPath(mode: ScrollMode): string {
-    switch (mode) {
-        case ScrollMode.BOTH:
-            return 'M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM19.01.582a1.134 1.134 0 0 1 1.98 0l4.87 8.834c.41.744-.133 1.651-.99 1.651h-9.74c-.857 0-1.4-.907-.99-1.651L19.01.582ZM20.99 39.418a1.134 1.134 0 0 1-1.98 0l-4.87-8.834c-.41-.744.133-1.651.99-1.651h9.74c.857 0 1.4.907.99 1.651l-4.87 8.834ZM.582 20.99a1.134 1.134 0 0 1 0-1.98l8.834-4.87c.744-.41 1.651.133 1.651.99v9.74c0 .857-.907 1.4-1.651.99L.582 20.99ZM39.418 19.01a1.134 1.134 0 0 1 0 1.98l-8.834 4.87c-.744.41-1.651-.133-1.651-.99v-9.74c0-.857.907-1.4 1.651-.99l8.834 4.87Z';
-        case ScrollMode.VERTICAL:
-            return 'M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM19.01.582a1.134 1.134 0 0 1 1.98 0l4.87 8.834c.41.744-.133 1.651-.99 1.651h-9.74c-.857 0-1.4-.907-.99-1.651L19.01.582ZM20.99 39.418a1.134 1.134 0 0 1-1.98 0l-4.87-8.834c-.41-.744.133-1.651.99-1.651h9.74c.857 0 1.4.907.99 1.651l-4.87 8.834Z';
-        case ScrollMode.HORIZONTAL:
-            return 'M25 20a5 5 0 1 1-10 0 5 5 0 0 1 10 0ZM.582 20.99a1.134 1.134 0 0 1 0-1.98l8.834-4.87c.744-.41 1.651.133 1.651.99v9.74c0 .857-.907 1.4-1.651.99L.582 20.99ZM39.418 19.01a1.134 1.134 0 0 1 0 1.98l-8.834 4.87c-.744.41-1.651-.133-1.651-.99v-9.74c0-.857.907-1.4 1.651-.99l8.834 4.87Z';
-    }
-}
+onDestroy(() => {
+    lifecycleOwner.onStop();
+});
 
 function changeMode() {
     switch (scrollMode) {
         case ScrollMode.BOTH:
-            scrollMode = ScrollMode.VERTICAL;
+            appContext.appUiStateManager.setScrollMode(ScrollMode.VERTICAL);
             break;
         case ScrollMode.VERTICAL:
-            scrollMode = ScrollMode.HORIZONTAL;
+            appContext.appUiStateManager.setScrollMode(ScrollMode.HORIZONTAL);
             break;
         case ScrollMode.HORIZONTAL:
-            scrollMode = ScrollMode.BOTH;
+            appContext.appUiStateManager.setScrollMode(ScrollMode.BOTH);
             break;
     }
 }
@@ -36,6 +41,6 @@ function changeMode() {
 
 <TooltipTarget direction="{Direction.BOTTOM}" text="Scroll mode" offsetVertical="{6.5}">
     <AppIcon size="{16}" viewBoxSize="{40}" onClick="{changeMode}">
-        <path d="{path}"></path>
+        <path d="{scrollModeToContentMap[scrollMode].iconPath}"></path>
     </AppIcon>
 </TooltipTarget>

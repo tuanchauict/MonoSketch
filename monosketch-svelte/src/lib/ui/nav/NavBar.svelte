@@ -1,7 +1,6 @@
 <script>
 import ToolbarContainer from './common/ToolbarContainer.svelte';
 import ScrollModeButton from './right/ScrollModeButton.svelte';
-import { ScrollMode } from './right/model';
 import AppDropdownMenu from './right/AppDropdownMenu.svelte';
 import ThemeButton from './right/ThemeButton.svelte';
 import Brand from './brand/Brand.svelte';
@@ -22,7 +21,7 @@ import WorkingProject from './project/WorkingProject.svelte';
     </ToolbarContainer>
 
     <ToolbarContainer>
-        <ScrollModeButton scrollMode="{ScrollMode.BOTH}" />
+        <ScrollModeButton/>
         <ThemeButton />
         <AppDropdownMenu />
     </ToolbarContainer>
