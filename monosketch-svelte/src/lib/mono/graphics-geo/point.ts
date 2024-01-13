@@ -1,20 +1,34 @@
 import type { Comparable } from '$mono/base-interface/comparable';
 
-export class Point implements Comparable {
-    static readonly ZERO = new Point(0, 0);
+export interface IPoint extends Comparable {
+    left: number;
+    top: number;
+    row: number;
+    column: number;
+}
+
+/**
+ * A point class with integer location.
+ */
+export class Point implements IPoint {
+    static readonly ZERO = Point.of(0, 0);
 
     static of(left: number, top: number): Point {
         return new Point(left, top);
     }
 
     static from(point: { left: number; top: number }): Point {
-        return new Point(point.left, point.top);
+        return Point.of(point.left, point.top);
     }
 
     constructor(
         public readonly left: number,
         public readonly top: number,
-    ) {}
+    ) {
+        if (!(Number.isInteger(left) && Number.isInteger(top))) {
+            throw Error('location must be integer');
+        }
+    }
 
     get row(): number {
         return this.top;
@@ -36,14 +50,14 @@ export class Point implements Comparable {
      * other point.
      */
     minus(other: Point): Point {
-        return new Point(this.left - other.left, this.top - other.top);
+        return Point.of(this.left - other.left, this.top - other.top);
     }
 
     /**
      * Returns a new point that is the sum of this point and the other point.
      */
     plus(other: Point): Point {
-        return new Point(this.left + other.left, this.top + other.top);
+        return Point.of(this.left + other.left, this.top + other.top);
     }
 
     toString(): string {
@@ -92,4 +106,30 @@ export class DirectedPoint implements Comparable {
     }
 
     // TODO: implement serialize and deserialize
+}
+
+/**
+ * A point class that represents a point in 2D space whose values are in float number.
+ * This class is only used for calculation, should not use for serialization or storage.
+ */
+export class PointF implements IPoint {
+    constructor(
+        public left: number,
+        public top: number,
+    ) {}
+
+    get row(): number {
+        return this.top;
+    }
+
+    get column(): number {
+        return this.left;
+    }
+
+    equals(other: unknown): boolean {
+        if (!(other instanceof PointF)) {
+            return false;
+        }
+        return this.left === other.left && this.top === other.top;
+    }
 }

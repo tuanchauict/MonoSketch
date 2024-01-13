@@ -28,6 +28,16 @@ describe('Point test', () => {
         const b = new Point(3, 4);
         expect(a.plus(b)).toEqual(new Point(4, 6));
     });
+
+    test('cannot create point with float', () => {
+        expect(() => {
+            new Point(1.2, 0);
+        }).toThrow(Error('location must be integer'));
+
+        expect(() => {
+            new Point(1, 1.5);
+        }).toThrow(Error('location must be integer'));
+    });
 });
 
 describe('DirectedPoint test', () => {
