@@ -20,8 +20,8 @@ export class Size implements ISize {
     }
 
     constructor(
-        public width: number,
-        public height: number,
+        public readonly width: number,
+        public readonly height: number,
     ) {
         if (!(Number.isInteger(width) && Number.isInteger(height))) {
             throw Error('size must be integer');
