@@ -12,8 +12,8 @@ export class Point implements Comparable {
     }
 
     constructor(
-        public left: number,
-        public top: number,
+        public readonly left: number,
+        public readonly top: number,
     ) {}
 
     get row(): number {
@@ -64,8 +64,8 @@ export class DirectedPoint implements Comparable {
     }
 
     constructor(
-        public direction: Direction,
-        public point: Point,
+        public readonly direction: Direction,
+        public readonly point: Point,
     ) {}
 
     get left(): number {
