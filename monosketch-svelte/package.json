@@ -8,7 +8,8 @@
         "build": "vite build",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "format": "prettier -w ."
+        "format": "prettier -w .",
+        "test": "vitest --run"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^3.0.1",
