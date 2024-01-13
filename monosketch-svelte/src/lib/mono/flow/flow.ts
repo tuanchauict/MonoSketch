@@ -1,4 +1,5 @@
 import { type LifecycleObserver, LifecycleOwner } from './lifecycleowner';
+import { type Comparable } from '$mono/base-interface/comparable';
 
 interface Observer<T> {
     onChange(value: T): void;
@@ -228,9 +229,15 @@ export class Flow<T> {
         this.addInternalObserver(
             flow,
             new SimpleObserver((value) => {
-                if (value !== flow.valueInternal && value !== undefined) {
-                    flow.setValueInternal(value);
+                if (value === undefined) {
+                    // Ignore undefined values.
+                    return;
                 }
+
+                if (equals(value, flow.valueInternal)) {
+                    return;
+                }
+                flow.setValueInternal(value);
             }),
         );
         return flow;
@@ -336,4 +343,27 @@ class OnStopLifecycleObserver implements LifecycleObserver {
     onStop() {
         this.callback();
     }
+}
+
+/**
+ * Compares two values for equality.
+ * If both values are Comparable, then the equals method of the first value will be used.
+ */
+function equals(a: unknown, b: unknown): boolean {
+    if (a === b) {
+        // This also covers the case when a and b are both undefined or null.
+        // And also make use of the default equality check for primitive types.
+        return true;
+    }
+
+    if (a === null || a === undefined) {
+        // Since a and b are not equal, b must not be null or undefined.
+        return false;
+    }
+
+    if ((a as Comparable).equals) {
+        return (a as Comparable).equals(b);
+    }
+
+    return false;
 }

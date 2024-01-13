@@ -3,6 +3,7 @@
 import { test, expect } from 'vitest';
 import { Flow } from './flow';
 import { LifecycleOwner } from './lifecycleowner';
+import type { Comparable } from '$mono/base-interface/comparable';
 
 test('map value', () => {
     const flow = new Flow(1);
@@ -118,6 +119,62 @@ test('distinct until changed', () => {
 
     flow.value = 1;
     expect(counter).toBe(3); // Not run because the value is not changed
+});
+
+test('distinct until changed with custom equals', () => {
+    class Value implements Comparable {
+        constructor(public value: number) {}
+
+        equals(other: unknown): boolean {
+            return other instanceof Value && this.value === other.value;
+        }
+    }
+
+    const flow = new Flow<Value>(new Value(0));
+    const flow2 = flow.distinctUntilChanged();
+    let counter = 0;
+    let observedValue = undefined;
+    const observer = (value: unknown) => {
+        counter++;
+        observedValue = value;
+    };
+    flow2.observe(LifecycleOwner.start(), observer);
+    expect(counter).toBe(1); // Run when start observe because the value is defined
+    expect(observedValue).toBeInstanceOf(Value);
+    expect((observedValue as unknown as Value).value).toBe(0);
+
+    flow.value = new Value(0);
+    expect(counter).toBe(2); // Run because before this, the internal value is undefined
+    expect(observedValue).toBeInstanceOf(Value);
+    expect((observedValue as unknown as Value).value).toBe(0);
+
+    flow.value = new Value(0);
+    expect(counter).toBe(2); // Not run because the value is not changed
+});
+
+test('distinct until changed with null value', () => {
+    const flow = new Flow<number | null>(0);
+    const flow2 = flow.distinctUntilChanged();
+    let counter = 0;
+    let observedValue = undefined;
+    const observer = (value: unknown) => {
+        counter++;
+        observedValue = value;
+    };
+    flow2.observe(LifecycleOwner.start(), observer);
+    expect(counter).toBe(1); // Run when start observe because the value is defined
+    expect(observedValue).toBe(0);
+
+    flow.value = null;
+    expect(counter).toBe(2); // Run because before this, the internal value is undefined
+    expect(observedValue).toBeNull();
+
+    flow.value = null;
+    expect(counter).toBe(2); // Not run because the value is not changed
+
+    flow.value = 1;
+    expect(counter).toBe(3);
+    expect(observedValue).toBe(1);
 });
 
 test('throttle', async () => {
