@@ -1,4 +1,4 @@
-import { Flow } from '../../../mono/flow';
+import { Flow } from '../../../libs/flow';
 import { type ProjectItem, sampleProjectItems } from './model';
 import { UUID } from '../../../mono/uuid';
 

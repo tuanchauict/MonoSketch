@@ -1,4 +1,4 @@
-import { Flow, LifecycleOwner } from '$mono/flow';
+import { Flow, LifecycleOwner } from 'lib/libs/flow';
 import { type ThemeColor, ThemeMode } from '$mono/ui-state-manager/states';
 import { StorageDocument, StoreKeys } from '$mono/store-manager';
 

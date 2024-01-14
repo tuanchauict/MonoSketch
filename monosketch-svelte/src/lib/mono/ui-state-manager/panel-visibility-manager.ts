@@ -1,4 +1,4 @@
-import { Flow } from '$mono/flow';
+import { Flow } from 'lib/libs/flow';
 
 export class PanelVisibilityManager {
     private _shapeFormatPanelVisibilityFlow = new Flow<boolean>(true);

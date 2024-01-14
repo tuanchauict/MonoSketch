@@ -1,4 +1,4 @@
-import { Flow } from '../flow';
+import { Flow } from '../../libs/flow';
 import { type KeyCommand, KeyCommandType } from './interface';
 import { getCommandByType, getCommandByKey } from './keycommands';
 import { DEBUG_MODE } from '../build_environment';

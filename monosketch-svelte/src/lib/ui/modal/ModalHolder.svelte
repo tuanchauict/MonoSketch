@@ -2,7 +2,7 @@
 import MainDropDown from './menu/main-dropdown/MainDropDown.svelte';
 import { onDestroy, onMount } from 'svelte';
 import { modalViewModel } from './viewmodel';
-import { LifecycleOwner } from '../../mono/flow';
+import { LifecycleOwner } from '../../libs/flow';
 import type { TargetBounds } from './model';
 import type { Tooltip } from './tooltip/model';
 import TooltipView from './tooltip/TooltipView.svelte';

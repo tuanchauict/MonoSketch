@@ -1,4 +1,4 @@
-import { Flow, LifecycleOwner } from '$mono/flow';
+import { Flow, LifecycleOwner } from 'lib/libs/flow';
 import { ScrollMode, type ThemeColor, type ThemeMode } from '$mono/ui-state-manager/states';
 import { AppThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { ScrollModeManager } from '$mono/ui-state-manager/scroll-mode-manager';

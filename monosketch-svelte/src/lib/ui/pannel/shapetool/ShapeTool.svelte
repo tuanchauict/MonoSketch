@@ -6,7 +6,7 @@ import TextTool from './text/TextTool.svelte';
 import { getContext, onMount } from 'svelte';
 import { AppContext } from '$app/app-context';
 import { APP_CONTEXT } from '$mono/common/constant';
-import { LifecycleOwner } from '$mono/flow';
+import { LifecycleOwner } from 'lib/libs/flow';
 
 const appContext = getContext<AppContext>(APP_CONTEXT);
 const lifecycleOwner = new LifecycleOwner();

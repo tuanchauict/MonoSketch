@@ -1,7 +1,7 @@
 <script lang="ts">
 import WorkingProjectView from './WorkingProjectView.svelte';
 import { projectDataViewModel } from '../../modal/recent-project/viewmodel';
-import { Flow, LifecycleOwner } from '../../../mono/flow';
+import { Flow, LifecycleOwner } from '../../../libs/flow';
 import { onDestroy, onMount } from 'svelte';
 import { modalViewModel } from '../../modal/viewmodel';
 import { TargetBounds } from '../../modal/model';

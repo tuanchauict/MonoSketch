@@ -1,5 +1,5 @@
 import { type LifecycleObserver, LifecycleOwner } from './lifecycleowner';
-import { type Comparable } from '$mono/base-interface/comparable';
+import { type Comparable } from '$libs/comparable';
 
 interface Observer<T> {
     onChange(value: T): void;

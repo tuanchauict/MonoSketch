@@ -1,4 +1,4 @@
-import type { Comparable } from '$mono/base-interface/comparable';
+import type { Comparable } from '$libs/comparable';
 
 export interface ISize extends Comparable {
     width: number;

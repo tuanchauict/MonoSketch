@@ -1,4 +1,4 @@
-import { Flow } from '../../mono/flow';
+import { Flow } from '../../libs/flow';
 import type { TargetBounds } from './model';
 import type { Tooltip } from './tooltip/model';
 import type { RenameProjectModel } from './rename-project/model';

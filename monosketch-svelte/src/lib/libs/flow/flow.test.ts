@@ -3,7 +3,7 @@
 import { test, expect, describe } from 'vitest';
 import { Flow } from './flow';
 import { LifecycleOwner } from './lifecycleowner';
-import type { Comparable } from '$mono/base-interface/comparable';
+import type { Comparable } from '$libs/comparable';
 
 describe('Flow test', () => {
     describe('map', () => {

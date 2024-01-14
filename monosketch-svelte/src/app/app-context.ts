@@ -1,4 +1,4 @@
-import { LifecycleOwner } from '$mono/flow';
+import { LifecycleOwner } from 'lib/libs/flow';
 import { AppUiStateManager } from '$mono/ui-state-manager';
 
 export class AppContext {

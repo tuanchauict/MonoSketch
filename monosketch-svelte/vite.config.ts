@@ -12,6 +12,7 @@ export default defineConfig({
             $style: '/src/lib/style',
             $assets: '/src/assets',
             $ui: '/src/lib/ui',
+            $libs: '/src/lib',
         },
     },
 });

@@ -5,7 +5,7 @@ import { ScrollMode } from '$mono/ui-state-manager/states';
 import AppIcon from '$ui/nav/common/AppIcon.svelte';
 import { scrollModeToContentMap } from '$ui/nav/right/model';
 import { getContext, onDestroy, onMount } from 'svelte';
-import { LifecycleOwner } from '$mono/flow';
+import { LifecycleOwner } from 'lib/libs/flow';
 import { APP_CONTEXT } from '$mono/common/constant';
 import type { AppContext } from '$app/app-context';
 

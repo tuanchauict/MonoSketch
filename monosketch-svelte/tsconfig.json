@@ -17,9 +17,10 @@
         "baseUrl": "./src",
         "paths": {
             "$app/*": ["app/*"],
+            "$libs/*": ["lib/libs/*"],
             "$mono/*": ["lib/mono/*"],
             "$style/*": ["lib/style/*"],
-            "$ui/*": ["lib/ui/*"]
+            "$ui/*": ["lib/ui/*"],
         }
     },
     "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],

@@ -1,7 +1,7 @@
 import { type IPoint, Point } from './point';
 import { Size } from './size';
-import { IntRange } from '$mono/common/sequence';
-import type { Comparable } from '$mono/base-interface/comparable';
+import { IntRange } from '$libs/sequence';
+import type { Comparable } from '$libs/comparable';
 
 export class Rect implements Comparable {
     static readonly ZERO = Rect.byLTWH(0, 0, 0, 0);
