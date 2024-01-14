@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { DirectedPoint, Direction, Point } from '$mono/graphics-geo/point';
+import { DirectedPoint, Direction, Point } from '$libs/graphics-geo/point';
 
 describe('Point test', () => {
     test('row column', () => {

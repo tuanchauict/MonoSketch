@@ -1,4 +1,4 @@
-import { Point, PointF } from '$mono/graphics-geo/point';
+import { Point, PointF } from '$libs/graphics-geo/point';
 
 export enum MousePointerType {
     IDLE,

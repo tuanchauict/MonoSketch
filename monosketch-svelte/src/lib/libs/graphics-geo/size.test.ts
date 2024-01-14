@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { Size, SizeF } from '$mono/graphics-geo/size';
+import { Size, SizeF } from '$libs/graphics-geo/size';
 
 describe('Size test', () => {
     test('constructor', () => {

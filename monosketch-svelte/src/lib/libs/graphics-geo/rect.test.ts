@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { Rect } from '$mono/graphics-geo/rect';
-import { Point } from '$mono/graphics-geo/point';
+import { Rect } from '$libs/graphics-geo/rect';
+import { Point } from '$libs/graphics-geo/point';
 
 describe('Rect test', () => {
     test('byLTRB', () => {
