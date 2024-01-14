@@ -23,6 +23,7 @@
         "typescript": "^5.2.2",
         "vite": "^5.0.8",
         "vite-plugin-sass": "^0.1.0",
+        "vite-tsconfig-paths": "^4.2.3",
         "vitest": "^1.1.3"
     }
 }
