@@ -1,5 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import {
+    binarySearch,
+    getOrDefault,
+    getOrNull,
     IntRange,
     map,
     mapIndexed,
@@ -144,5 +147,53 @@ describe('test map', () => {
 describe('test filter', () => {
     test('filter', () => {
         expect([1, 2, 3].filter((value) => value % 2 !== 0)).toEqual([1, 3]);
+    });
+});
+
+describe('test binarySearch', () => {
+    test('happy', () => {
+        const array = [2, 3, 4, 5];
+
+        expect(binarySearch(array, (value) => value - 1)).toBe(-1);
+        expect(binarySearch(array, (value) => value - 2)).toBe(0);
+        expect(binarySearch(array, (value) => value - 3)).toBe(1);
+        expect(binarySearch(array, (value) => value - 4)).toBe(2);
+        expect(binarySearch(array, (value) => value - 5)).toBe(3);
+        expect(binarySearch(array, (value) => value - 6)).toBe(-5);
+    });
+
+    test('happy withIn range', () => {
+        const array = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+        expect(binarySearch(array, (value) => value - 1, [1, 4])).toBe(-2);
+        expect(binarySearch(array, (value) => value - 2, [1, 4])).toBe(-2);
+        expect(binarySearch(array, (value) => value - 3, [1, 4])).toBe(1);
+        expect(binarySearch(array, (value) => value - 4, [1, 4])).toBe(2);
+        expect(binarySearch(array, (value) => value - 5, [1, 4])).toBe(3);
+        expect(binarySearch(array, (value) => value - 6, [1, 4])).toBe(-5);
+    });
+});
+
+describe('test getOrNull', () => {
+    test('happy', () => {
+        const array = [1, 2, 3, 4];
+        expect(getOrNull(array, 0)).toBe(1);
+        expect(getOrNull(array, 1)).toBe(2);
+        expect(getOrNull(array, 2)).toBe(3);
+        expect(getOrNull(array, 3)).toBe(4);
+        expect(getOrNull(array, 4)).toBeNull();
+        expect(getOrNull(array, -1)).toBeNull();
+    });
+});
+
+describe('test getOrDefault', () => {
+    test('happy', () => {
+        const array = [1, 2, 3, 4];
+        expect(getOrDefault(array, 0, 0)).toBe(1);
+        expect(getOrDefault(array, 1, 0)).toBe(2);
+        expect(getOrDefault(array, 2, 0)).toBe(3);
+        expect(getOrDefault(array, 3, 0)).toBe(4);
+        expect(getOrDefault(array, 4, 0)).toBe(0);
+        expect(getOrDefault(array, -1, 0)).toBe(0);
     });
 });

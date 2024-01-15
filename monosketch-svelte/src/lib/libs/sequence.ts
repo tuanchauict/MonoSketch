@@ -105,3 +105,44 @@ export function filter<T>(iterable: Iterable<T>, func: (value: T) => boolean): T
     }
     return result;
 }
+
+/**
+ * Find the index of the first element that satisfies the predicate.
+ * @param array
+ * @param comparator A function that returns a negative number if the value is less than the target,
+ * a positive number if the value is greater than the target, or zero if the value is equal to the
+ * target.
+ * @param withIn The range to search within.
+ * @returns @return the index of the found element, if it is contained in the list within the specified range;
+ *  otherwise, the inverted insertion point `(-insertion point - 1)`.
+ *  The insertion point is defined as the index at which the element should be inserted,
+ *  so that the list (or the specified subrange of list) still remains sorted.
+ */
+export function binarySearch<T, X>(
+    array: T[],
+    comparator: (value: T) => number,
+    withIn: number[] = [0, array.length],
+): number {
+    let low = withIn[0];
+    let high = withIn[1] - 1;
+    while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        const compareResult = comparator(array[mid]);
+        if (compareResult < 0) {
+            low = mid + 1;
+        } else if (compareResult > 0) {
+            high = mid - 1;
+        } else {
+            return mid; // key found
+        }
+    }
+    return -(low + 1); // key not found
+}
+
+export function getOrNull<T>(array: T[], index: number): T | null {
+    return index >= 0 && index < array.length ? array[index] : null;
+}
+
+export function getOrDefault<T>(array: T[], index: number, defaultValue: T): T {
+    return index >= 0 && index < array.length ? array[index] : defaultValue;
+}
