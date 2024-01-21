@@ -1,5 +1,6 @@
 import { TargetBounds } from '../model';
 import { Direction, type Tooltip } from './model';
+import type { Rect } from '$libs/graphics-geo/rect';
 
 export function calcArrowLeft(arrow: HTMLElement, target: Tooltip): number {
     if (!arrow) {
@@ -9,9 +10,9 @@ export function calcArrowLeft(arrow: HTMLElement, target: Tooltip): number {
     const targetBounds = target.targetBounds;
     switch (target.direction) {
         case Direction.TOP:
-            return targetBounds.centerHorizontal - arrowBounds.width / 2;
+            return TargetBounds.centerHorizontal(targetBounds) - arrowBounds.width / 2;
         case Direction.BOTTOM:
-            return targetBounds.centerHorizontal - arrowBounds.width / 2;
+            return TargetBounds.centerHorizontal(targetBounds) - arrowBounds.width / 2;
         case Direction.LEFT:
             return targetBounds.top + (targetBounds.height - arrowBounds.height) / 2;
         case Direction.RIGHT:
@@ -47,12 +48,12 @@ export function calcBodyLeft(body: HTMLElement, arrow: HTMLElement, target: Tool
     switch (target.direction) {
         case Direction.TOP:
             return adjustHorizontalPosition(
-                targetBounds.centerHorizontal - bodyBounds.width / 2,
+                TargetBounds.centerHorizontal(targetBounds) - bodyBounds.width / 2,
                 bodyBounds,
             );
         case Direction.BOTTOM:
             return adjustHorizontalPosition(
-                targetBounds.centerHorizontal - bodyBounds.width / 2,
+                TargetBounds.centerHorizontal(targetBounds) - bodyBounds.width / 2,
                 bodyBounds,
             );
         case Direction.LEFT:
@@ -75,13 +76,13 @@ export function calcBodyTop(body: HTMLElement, arrow: HTMLElement, target: Toolt
         case Direction.BOTTOM:
             return targetBounds.top + targetBounds.height + arrowBounds.height;
         case Direction.LEFT:
-            return targetBounds.centerVertical - bodyBounds.height / 2;
+            return TargetBounds.centerVertical(targetBounds) - bodyBounds.height / 2;
         case Direction.RIGHT:
-            return targetBounds.centerVertical - bodyBounds.height / 2;
+            return TargetBounds.centerVertical(targetBounds) - bodyBounds.height / 2;
     }
 }
 
-function adjustHorizontalPosition(leftPx: number, bodyBounds: TargetBounds): number {
+function adjustHorizontalPosition(leftPx: number, bodyBounds: Rect): number {
     const bodyRightPx = leftPx + bodyBounds.width;
     if (bodyRightPx > document.body.clientWidth) {
         return document.body.clientWidth - bodyBounds.width - 4;

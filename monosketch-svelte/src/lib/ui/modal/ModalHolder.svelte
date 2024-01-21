@@ -2,8 +2,7 @@
 import MainDropDown from './menu/main-dropdown/MainDropDown.svelte';
 import { onDestroy, onMount } from 'svelte';
 import { modalViewModel } from './viewmodel';
-import { LifecycleOwner } from '../../libs/flow';
-import type { TargetBounds } from './model';
+import { LifecycleOwner } from '$libs/flow';
 import type { Tooltip } from './tooltip/model';
 import TooltipView from './tooltip/TooltipView.svelte';
 import KeyboardShortcutModal from './keyboard-shortcut/KeyboardShortcutModal.svelte';
@@ -12,8 +11,9 @@ import RecentProjectDialog from './recent-project/RecentProjectDialog.svelte';
 import type { RenameProjectModel } from './rename-project/model';
 import RenameProjectModal from './rename-project/RenameProjectModal.svelte';
 import type { CurrentProjectModel } from './menu/current-project/model';
+import type { Rect } from '$libs/graphics-geo/rect';
 
-let mainDropDownTarget: TargetBounds | null = null;
+let mainDropDownTarget: Rect | null = null;
 let currentProjectDropDownModel: CurrentProjectModel | null = null;
 let isProjectManagementModalVisible: boolean = false;
 let renamingProjectModel: RenameProjectModel | null = null;

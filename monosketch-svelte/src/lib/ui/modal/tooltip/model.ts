@@ -1,4 +1,4 @@
-import type { TargetBounds } from '../model';
+import type { Rect } from '$libs/graphics-geo/rect';
 
 export enum Direction {
     TOP,
@@ -10,7 +10,7 @@ export enum Direction {
 export interface Tooltip {
     text: string;
     direction: Direction;
-    targetBounds: TargetBounds;
+    targetBounds: Rect;
 }
 
 export const directionToIconPathMap = {

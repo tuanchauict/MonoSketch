@@ -1,10 +1,10 @@
 <script lang="ts">
 import WorkingProjectView from './WorkingProjectView.svelte';
-import { projectDataViewModel } from '../../modal/recent-project/viewmodel';
-import { Flow, LifecycleOwner } from '../../../libs/flow';
+import { projectDataViewModel } from '$ui/modal/recent-project/viewmodel';
+import { Flow, LifecycleOwner } from '$libs/flow';
 import { onDestroy, onMount } from 'svelte';
-import { modalViewModel } from '../../modal/viewmodel';
-import { TargetBounds } from '../../modal/model';
+import { modalViewModel } from '$ui/modal/viewmodel';
+import { TargetBounds } from '$ui/modal/model';
 
 let projectId = '';
 let projectName = '';

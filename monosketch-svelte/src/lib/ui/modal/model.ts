@@ -1,24 +1,11 @@
-/**
- * Bounds of the target element on the screen.
- */
-export class TargetBounds {
-    static fromElement(element: HTMLElement): TargetBounds {
+import { Rect } from '$libs/graphics-geo/rect';
+
+export namespace TargetBounds {
+    export function fromElement(element: HTMLElement): Rect {
         const bounds = element.getBoundingClientRect();
-        return new TargetBounds(bounds.left, bounds.top, bounds.width, bounds.height);
+        return Rect.byLTWH(bounds.left, bounds.top, bounds.width, bounds.height);
     }
 
-    constructor(
-        public left: number,
-        public top: number,
-        public width: number,
-        public height: number,
-    ) {}
-
-    get centerHorizontal(): number {
-        return this.left + this.width / 2;
-    }
-
-    get centerVertical(): number {
-        return this.top + this.height / 2;
-    }
+    export const centerHorizontal = (rect: Rect): number => rect.left + rect.width / 2;
+    export const centerVertical = (rect: Rect): number => rect.top + rect.height / 2;
 }

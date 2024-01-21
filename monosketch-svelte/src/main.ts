@@ -1,7 +1,7 @@
 import '$assets/fonts/stylesheet.css';
 import '$style/main.scss';
 import App from './App.svelte';
-import { AppContext } from './app/app-context';
+import { AppContext } from '$app/app-context';
 import { APP_CONTEXT } from '$mono/common/constant';
 
 const appContext = new AppContext();

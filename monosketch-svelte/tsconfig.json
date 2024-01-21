@@ -17,6 +17,7 @@
         "baseUrl": "./src",
         "paths": {
             "$app/*": ["app/*"],
+            "$assets/*": ["assets/*"],
             "$libs/*": ["lib/libs/*"],
             "$mono/*": ["lib/mono/*"],
             "$style/*": ["lib/style/*"],

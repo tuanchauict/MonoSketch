@@ -1,7 +1,7 @@
 <script lang="ts">
 import AppIcon from '../common/AppIcon.svelte';
-import { modalViewModel } from '../../modal/viewmodel';
-import { TargetBounds } from '../../modal/model.js';
+import { modalViewModel } from '$ui/modal/viewmodel';
+import { TargetBounds } from '$ui/modal/model';
 
 function showDropdown(e: MouseEvent) {
     modalViewModel.mainDropDownMenuTargetFlow.value = TargetBounds.fromElement(

@@ -1,8 +1,8 @@
 <script lang="ts">
 import NoBackgroundModal from '../../common/NoBackgroundModal.svelte';
-import type { TargetBounds } from '../../model';
+import type { Rect } from '$libs/graphics-geo/rect';
 
-export let targetBounds: TargetBounds;
+export let targetBounds: Rect;
 export let width: number = 180;
 export let onDismiss: () => void;
 export let horizontalOffsetPx: number = 0;

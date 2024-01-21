@@ -3,6 +3,7 @@ import { modalViewModel } from '../viewmodel';
 import { TargetBounds } from '../model';
 import { Direction } from './model';
 import { onDestroy } from 'svelte';
+import { Rect } from '$libs/graphics-geo/rect';
 
 export let text: string;
 export let direction: Direction = Direction.BOTTOM;
@@ -14,16 +15,18 @@ let timeoutId: number;
 function showTooltip(e: MouseEvent) {
     const target = e.currentTarget as HTMLElement;
     const bounds = TargetBounds.fromElement(target);
-    bounds.left -= offsetHorizontal;
-    bounds.top -= offsetVertical;
-    bounds.width += offsetHorizontal * 2;
-    bounds.height += offsetVertical * 2;
+    const targetBounds = Rect.byLTWH(
+        bounds.left - offsetHorizontal,
+        bounds.top - offsetVertical,
+        bounds.width + offsetHorizontal * 2,
+        bounds.height + offsetVertical * 2,
+    );
 
     timeoutId = setTimeout(() => {
         modalViewModel.tooltipFlow.value = {
             text,
             direction,
-            targetBounds: bounds,
+            targetBounds,
         };
     }, 600);
 }

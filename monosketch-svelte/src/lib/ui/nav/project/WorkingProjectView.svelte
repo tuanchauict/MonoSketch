@@ -1,7 +1,7 @@
 <script lang="ts">
 import SvgIcon from '../../common/SvgIcon.svelte';
-import { modalViewModel } from '../../modal/viewmodel';
-import { TargetBounds } from '../../modal/model';
+import { modalViewModel } from '$ui/modal/viewmodel';
+import { TargetBounds } from '$ui/modal/model';
 
 export let projectId: string;
 export let projectName: string;

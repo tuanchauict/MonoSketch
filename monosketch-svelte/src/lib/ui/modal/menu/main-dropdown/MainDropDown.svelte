@@ -6,9 +6,9 @@ import { getContext } from 'svelte';
 import type { AppContext } from '$app/app-context';
 import { APP_CONTEXT } from '$mono/common/constant';
 import { modalViewModel } from '$ui/modal/viewmodel';
-import type { TargetBounds } from '$ui/modal/model';
+import type { Rect } from '$libs/graphics-geo/rect';
 
-export let targetBounds: TargetBounds;
+export let targetBounds: Rect;
 
 const appContext = getContext<AppContext>(APP_CONTEXT);
 
