@@ -12,8 +12,18 @@ export class Rect implements Comparable {
         return new Rect(Point.of(left, top), Size.of(right - left + 1, bottom - top + 1));
     }
 
+    static byLTRBf(left: number, top: number, right: number, bottom: number): Rect {
+        [left, right] = [Math.min(left, right), Math.max(left, right)];
+        [top, bottom] = [Math.min(top, bottom), Math.max(top, bottom)];
+        return new Rect(Point.ofF(left, top), Size.ofF(right - left + 1, bottom - top + 1));
+    }
+
     static byLTWH(left: number, top: number, width: number, height: number): Rect {
         return new Rect(Point.of(left, top), Size.of(width, height));
+    }
+
+    static byLTWHf(left: number, top: number, width: number, height: number): Rect {
+        return new Rect(Point.ofF(left, top), Size.ofF(width, height));
     }
 
     private readonly validHorizontalRange: IntRange;

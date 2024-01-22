@@ -15,6 +15,10 @@ export class Size implements ISize {
         return new Size(width, height);
     }
 
+    static ofF(width: number, height: number): Size {
+        return new Size(Math.trunc(width), Math.trunc(height));
+    }
+
     static from(size: { width: number; height: number }): Size {
         return Size.of(size.width, size.height);
     }
