@@ -1,4 +1,5 @@
 import { Point, PointF } from '$libs/graphics-geo/point';
+import type { Comparable } from '$libs/comparable';
 
 export enum MousePointerType {
     IDLE,
@@ -10,7 +11,7 @@ export enum MousePointerType {
     DOUBLE_CLICK,
 }
 
-export interface MousePointerInfo {
+export interface MousePointerInfo extends Comparable {
     type: MousePointerType;
     boardCoordinate: Point;
     clientCoordinate: Point;
@@ -26,6 +27,18 @@ const MousePointerInfoDefaults: MousePointerInfo = {
     boardCoordinateF: new PointF(0, 0),
     mouseDownBoardCoordinate: Point.ZERO,
     isWithShiftKey: false,
+
+    equals(other: unknown): boolean {
+        return (
+            isMousePointerInfo(other) &&
+            this.type === other.type &&
+            this.boardCoordinate.equals(other.boardCoordinate) &&
+            this.clientCoordinate.equals(other.clientCoordinate) &&
+            this.boardCoordinateF.equals(other.boardCoordinateF) &&
+            this.mouseDownBoardCoordinate.equals(other.mouseDownBoardCoordinate) &&
+            this.isWithShiftKey === other.isWithShiftKey
+        );
+    },
 };
 
 const Idle = {
@@ -55,7 +68,7 @@ export const MousePointer = {
 
     up: (
         boardCoordinate: Point,
-        clientCoordinate: Point,
+        boardCoordinateF: PointF,
         mouseDownBoardCoordinate: Point,
         isWithShiftKey: boolean,
     ) => {
@@ -63,7 +76,7 @@ export const MousePointer = {
             ...MousePointerInfoDefaults,
             type: MousePointerType.UP,
             boardCoordinate,
-            clientCoordinate,
+            boardCoordinateF,
             mouseDownBoardCoordinate,
             isWithShiftKey,
         };
@@ -71,7 +84,7 @@ export const MousePointer = {
 
     drag: (
         boardCoordinate: Point,
-        clientCoordinate: Point,
+        boardCoordinateF: PointF,
         mouseDownBoardCoordinate: Point,
         isWithShiftKey: boolean,
     ) => {
@@ -79,7 +92,7 @@ export const MousePointer = {
             ...MousePointerInfoDefaults,
             type: MousePointerType.DRAG,
             boardCoordinate,
-            clientCoordinate,
+            boardCoordinateF,
             mouseDownBoardCoordinate,
             isWithShiftKey,
         };
@@ -102,3 +115,9 @@ export const MousePointer = {
         };
     },
 };
+
+const isMousePointerInfo = (value: unknown): value is MousePointerInfo =>
+    typeof value === 'object' &&
+    value !== null &&
+    'type' in value &&
+    (value as MousePointerInfo).type in MousePointerType;
