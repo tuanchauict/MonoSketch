@@ -17,8 +17,16 @@ export class Point implements IPoint {
         return new Point(left, top);
     }
 
+    static ofF(left: number, top: number): Point {
+        return new Point(Math.trunc(left), Math.trunc(top));
+    }
+
     static from(point: { left: number; top: number }): Point {
         return Point.of(point.left, point.top);
+    }
+
+    static fromF(point: { left: number; top: number }): Point {
+        return Point.ofF(point.left, point.top);
     }
 
     constructor(
