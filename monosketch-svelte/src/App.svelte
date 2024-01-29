@@ -2,13 +2,16 @@
 import NavBar from './lib/ui/nav/NavBar.svelte';
 import ModalHolder from './lib/ui/modal/ModalHolder.svelte';
 import ShapeTool from './lib/ui/pannel/shapetool/ShapeTool.svelte';
+import Workspace from '$ui/workspace/Workspace.svelte';
 </script>
 
 <nav>
     <NavBar />
 </nav>
 <main>
-    <div class="workspace"></div>
+    <div class="workspace">
+        <Workspace />
+    </div>
     <div class="right-panel">
         <ShapeTool />
     </div>

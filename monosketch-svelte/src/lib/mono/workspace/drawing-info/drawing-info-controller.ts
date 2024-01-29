@@ -3,7 +3,7 @@ import { DrawingInfo } from '$mono/workspace/drawing-info/drawing-info';
 import { SizeF } from '$libs/graphics-geo/size';
 import { Point } from '$libs/graphics-geo/point';
 
-const DEFAULT_FONT = "'Jetbrains Mono'";
+export const DEFAULT_FONT = "'Jetbrains Mono'";
 
 export class DrawingInfoController {
     private readonly context: CanvasRenderingContext2D;
@@ -11,12 +11,10 @@ export class DrawingInfoController {
     readonly drawingInfoFlow: Flow<DrawingInfo> =
         this.drawingInfoMutableFlow.distinctUntilChanged();
 
-    constructor(container: HTMLElement) {
-        const canvas = document.createElement('canvas');
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
-        container.appendChild(canvas);
-        this.context = canvas.getContext('2d')!!;
+    constructor(
+        private readonly canvas: HTMLCanvasElement,
+    ) {
+        this.context = this.canvas.getContext('2d')!!;
     }
 
     setFont = (fontSize: number) => {

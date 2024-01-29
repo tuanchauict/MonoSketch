@@ -40,10 +40,10 @@ export class DrawingInfo {
             this.rowCount,
         );
 
-        this.boardRowRange = new IntRange(this.boardOffsetRow, this.boardOffsetRow + this.rowCount);
+        this.boardRowRange = new IntRange(this.boardOffsetRow, this.boardOffsetRow + this.rowCount + 1);
         this.boardColumnRange = new IntRange(
             this.boardOffsetColumn,
-            this.boardOffsetColumn + this.columnCount,
+            this.boardOffsetColumn + this.columnCount + 1,
         );
     }
 
