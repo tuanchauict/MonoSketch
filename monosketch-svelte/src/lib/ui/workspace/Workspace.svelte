@@ -5,6 +5,7 @@ import { onDestroy, onMount } from 'svelte';
 let canvasContainer: HTMLDivElement;
 let drawingInfoCanvas: HTMLCanvasElement;
 let axisCanvas: HTMLCanvasElement;
+let gridCanvas: HTMLCanvasElement;
 
 let workspaceViewController: WorkspaceViewController;
 onMount(() => {
@@ -12,6 +13,7 @@ onMount(() => {
         canvasContainer,
         drawingInfoCanvas,
         axisCanvas,
+        gridCanvas,
     );
     workspaceViewController.onStart();
 });
@@ -23,6 +25,7 @@ onDestroy(() => {
 
 <div class="canvas-container" bind:this="{canvasContainer}">
     <canvas class="drawing-info" bind:this="{drawingInfoCanvas}"></canvas>
+    <canvas bind:this="{gridCanvas}"></canvas>
     <canvas bind:this="{axisCanvas}"></canvas>
 </div>
 

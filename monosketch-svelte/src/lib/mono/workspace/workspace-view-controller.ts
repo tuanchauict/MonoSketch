@@ -3,6 +3,7 @@ import { ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { DrawingInfo, DrawingInfoController } from '$mono/workspace/drawing-info';
 import { LifecycleOwner } from '$libs/flow';
 import { WindowViewModel } from '$mono/window/window-viewmodel';
+import { GridCanvasViewController } from '$mono/workspace/canvas/grid-canvas-view-controller';
 
 export class WorkspaceViewController extends LifecycleOwner {
     private canvasViewController?: CanvasViewController;
@@ -13,6 +14,7 @@ export class WorkspaceViewController extends LifecycleOwner {
         private readonly container: HTMLDivElement,
         drawingInfoCanvas: HTMLCanvasElement,
         axisCanvas: HTMLCanvasElement,
+        gridCanvas: HTMLCanvasElement,
     ) {
         super();
         this.drawingInfoController = new DrawingInfoController(drawingInfoCanvas);
@@ -22,6 +24,7 @@ export class WorkspaceViewController extends LifecycleOwner {
         this.canvasViewController = new CanvasViewController(
             container,
             axisCanvas,
+            gridCanvas,
             this.themeManager,
         );
     }
@@ -45,21 +48,26 @@ export class WorkspaceViewController extends LifecycleOwner {
 
 class CanvasViewController {
     private readonly axisCanvasViewController: AxisCanvasViewController;
+    private readonly gridCanvasViewController: GridCanvasViewController;
 
     constructor(
         private container: HTMLDivElement,
         axisCanvas: HTMLCanvasElement,
+        gridCanvas: HTMLCanvasElement,
         themeManager: ThemeManager,
     ) {
         this.axisCanvasViewController = new AxisCanvasViewController(axisCanvas, themeManager);
+        this.gridCanvasViewController = new GridCanvasViewController(gridCanvas, themeManager);
     }
 
     setDrawingInfo(drawInfo: DrawingInfo) {
         this.axisCanvasViewController.setDrawingInfo(drawInfo);
+        this.gridCanvasViewController.setDrawingInfo(drawInfo);
     }
 
     fullyRedraw = () => {
         this.axisCanvasViewController.draw();
+        this.gridCanvasViewController.draw();
     };
 
     drawBoard = () => {

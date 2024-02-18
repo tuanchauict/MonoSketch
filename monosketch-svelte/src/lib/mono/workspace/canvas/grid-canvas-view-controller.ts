@@ -2,6 +2,9 @@ import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-con
 import type { ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { ThemeColors } from '$mono/ui-state-manager/states';
 
+/**
+ * A class for managing the grid canvas.
+ */
 export class GridCanvasViewController extends BaseCanvasViewController {
     constructor(
         canvas: HTMLCanvasElement,
