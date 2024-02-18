@@ -18,7 +18,6 @@ export class AxisCanvasViewController extends BaseCanvasViewController {
     }
 
     setDrawingInfo = (drawingInfo: DrawingInfo) => {
-        console.log(drawingInfo);
         const canvasSizePx = Size.of(
             drawingInfo.canvasSizePx.width + AXIS_Y_WIDTH,
             drawingInfo.canvasSizePx.height + AXIS_X_HEIGHT,
