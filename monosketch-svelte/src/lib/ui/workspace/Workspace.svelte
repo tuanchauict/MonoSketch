@@ -1,6 +1,8 @@
 <script lang="ts">
 import { WorkspaceViewController } from '$mono/workspace/workspace-view-controller';
-import { onDestroy, onMount } from 'svelte';
+import { getContext, onDestroy, onMount } from 'svelte';
+import type { AppContext } from '$app/app-context';
+import { APP_CONTEXT } from '$mono/common/constant';
 
 let canvasContainer: HTMLDivElement;
 let drawingInfoCanvas: HTMLCanvasElement;
@@ -8,9 +10,12 @@ let axisCanvas: HTMLCanvasElement;
 let gridCanvas: HTMLCanvasElement;
 let interactionCanvas: HTMLCanvasElement;
 
+const appContext = getContext<AppContext>(APP_CONTEXT);
+
 let workspaceViewController: WorkspaceViewController;
 onMount(() => {
     workspaceViewController = new WorkspaceViewController(
+        appContext,
         canvasContainer,
         drawingInfoCanvas,
         gridCanvas,

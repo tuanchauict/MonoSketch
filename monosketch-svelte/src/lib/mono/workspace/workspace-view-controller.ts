@@ -6,13 +6,18 @@ import { WindowViewModel } from '$mono/window/window-viewmodel';
 import { GridCanvasViewController } from '$mono/workspace/canvas/grid-canvas-view-controller';
 import { InteractionCanvasViewController } from '$mono/workspace/canvas/interaction-canvas-view-controller';
 import type { InteractionBound } from '$mono/shape/interaction-bound';
+import { MouseEventObserver } from '$mono/workspace/mouse/mouse-event-observer';
+import { MousePointerType } from '$mono/workspace/mouse/mouse-pointer';
+import type { AppContext } from '$app/app-context';
+import { KeyCommandType } from '$mono/keycommand';
 
 export class WorkspaceViewController extends LifecycleOwner {
     private canvasViewController?: CanvasViewController;
-    private drawingInfoController?: DrawingInfoController;
+    private drawingInfoController: DrawingInfoController;
     private themeManager: ThemeManager = ThemeManager.getInstance();
 
     constructor(
+        private appContext: AppContext,
         private readonly container: HTMLDivElement,
         drawingInfoCanvas: HTMLCanvasElement,
         gridCanvas: HTMLCanvasElement,
@@ -21,7 +26,6 @@ export class WorkspaceViewController extends LifecycleOwner {
     ) {
         super();
         this.drawingInfoController = new DrawingInfoController(drawingInfoCanvas);
-
         this.drawingInfoController.setFont(14);
 
         this.canvasViewController = new CanvasViewController(
@@ -35,21 +39,44 @@ export class WorkspaceViewController extends LifecycleOwner {
 
     protected onStartInternal() {
         WindowViewModel.windowSizeUpdateEventFlow.observe(this, () => {
-            this.drawingInfoController?.setSize(
+            this.drawingInfoController.setSize(
                 this.container.clientWidth,
                 this.container.clientHeight,
             );
         });
-        this.drawingInfoController?.drawingInfoFlow?.observe(this, (drawingInfo) => {
+        this.observeMouseInteractions();
+
+        this.drawingInfoController.drawingInfoFlow?.observe(this, (drawingInfo) => {
             this?.canvasViewController?.setDrawingInfo(drawingInfo);
         });
         this.themeManager.themeModeFlow.observe(this, () => {
             this?.canvasViewController?.fullyRedraw();
         });
-        this.canvasViewController?.fullyRedraw();
 
-        // TODO: observe mouse moving event and set mouse moving state to canvas view controller
+        this.canvasViewController?.fullyRedraw();
     }
+
+    private observeMouseInteractions = () => {
+        const shiftKeyStateFlow = this.appContext.appUiStateManager.keyCommandFlow.map(
+            (keyCommand) => keyCommand.command === KeyCommandType.SHIFT_KEY,
+        );
+
+        const mouseEventObserver = new MouseEventObserver(
+            this,
+            this.container,
+            this.drawingInfoController.drawingInfoFlow,
+            shiftKeyStateFlow,
+            this.appContext.appUiStateManager.scrollModeFlow,
+        );
+        mouseEventObserver.mousePointerFlow.observe(this, (mousePointer) => {
+            this?.canvasViewController?.setMouseMoving(mousePointer.type === MousePointerType.DRAG);
+        });
+        mouseEventObserver.drawingOffsetPointPxFlow.observe(
+            this,
+            this.drawingInfoController.setOffset,
+        );
+        // TODO: Read offset from the storage of the project and feed it to mouseEventObserver
+    };
 }
 
 class CanvasViewController {
@@ -87,7 +114,7 @@ class CanvasViewController {
     drawInteractionBounds = (interactionBounds: InteractionBound[]) => {
         this.interactionCanvasViewController.setInteractionBounds(interactionBounds);
         this.interactionCanvasViewController.draw();
-    }
+    };
 
     setMouseMoving = (isMouseMoving: boolean) => {
         this.interactionCanvasViewController.setMouseMoving(isMouseMoving);
