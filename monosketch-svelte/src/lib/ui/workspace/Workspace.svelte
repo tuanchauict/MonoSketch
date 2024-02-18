@@ -6,14 +6,16 @@ let canvasContainer: HTMLDivElement;
 let drawingInfoCanvas: HTMLCanvasElement;
 let axisCanvas: HTMLCanvasElement;
 let gridCanvas: HTMLCanvasElement;
+let interactionCanvas: HTMLCanvasElement;
 
 let workspaceViewController: WorkspaceViewController;
 onMount(() => {
     workspaceViewController = new WorkspaceViewController(
         canvasContainer,
         drawingInfoCanvas,
-        axisCanvas,
         gridCanvas,
+        axisCanvas,
+        interactionCanvas,
     );
     workspaceViewController.onStart();
 });
@@ -27,6 +29,7 @@ onDestroy(() => {
     <canvas class="drawing-info" bind:this="{drawingInfoCanvas}"></canvas>
     <canvas bind:this="{gridCanvas}"></canvas>
     <canvas bind:this="{axisCanvas}"></canvas>
+    <canvas bind:this="{interactionCanvas}"></canvas>
 </div>
 
 <style lang="scss">
