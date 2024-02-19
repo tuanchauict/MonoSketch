@@ -9,6 +9,7 @@ let drawingInfoCanvas: HTMLCanvasElement;
 let axisCanvas: HTMLCanvasElement;
 let gridCanvas: HTMLCanvasElement;
 let interactionCanvas: HTMLCanvasElement;
+let selectionCanvas: HTMLCanvasElement;
 
 const appContext = getContext<AppContext>(APP_CONTEXT);
 
@@ -21,6 +22,7 @@ onMount(() => {
         gridCanvas,
         axisCanvas,
         interactionCanvas,
+        selectionCanvas,
     );
     workspaceViewController.onStart();
 });
@@ -35,6 +37,7 @@ onDestroy(() => {
     <canvas bind:this="{gridCanvas}"></canvas>
     <canvas bind:this="{axisCanvas}"></canvas>
     <canvas bind:this="{interactionCanvas}"></canvas>
+    <canvas bind:this="{selectionCanvas}"></canvas>
 </div>
 
 <style lang="scss">

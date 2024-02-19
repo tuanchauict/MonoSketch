@@ -10,6 +10,8 @@ import { MouseEventObserver } from '$mono/workspace/mouse/mouse-event-observer';
 import { MousePointerType } from '$mono/workspace/mouse/mouse-pointer';
 import type { AppContext } from '$app/app-context';
 import { KeyCommandType } from '$mono/keycommand';
+import type { Rect } from '$libs/graphics-geo/rect';
+import { SelectionCanvasViewController } from '$mono/workspace/canvas/selection-canvas-view-controller';
 
 export class WorkspaceViewController extends LifecycleOwner {
     private canvasViewController?: CanvasViewController;
@@ -23,6 +25,7 @@ export class WorkspaceViewController extends LifecycleOwner {
         gridCanvas: HTMLCanvasElement,
         axisCanvas: HTMLCanvasElement,
         interactionCanvas: HTMLCanvasElement,
+        selectionCanvas: HTMLCanvasElement,
     ) {
         super();
         this.drawingInfoController = new DrawingInfoController(drawingInfoCanvas);
@@ -33,6 +36,7 @@ export class WorkspaceViewController extends LifecycleOwner {
             gridCanvas,
             axisCanvas,
             interactionCanvas,
+            selectionCanvas,
             this.themeManager,
         );
     }
@@ -83,12 +87,14 @@ class CanvasViewController {
     private readonly axisCanvasViewController: AxisCanvasViewController;
     private readonly gridCanvasViewController: GridCanvasViewController;
     private readonly interactionCanvasViewController: InteractionCanvasViewController;
+    private readonly selectionCanvasViewController: SelectionCanvasViewController;
 
     constructor(
         private container: HTMLDivElement,
         gridCanvas: HTMLCanvasElement,
         axisCanvas: HTMLCanvasElement,
         interactionCanvas: HTMLCanvasElement,
+        selectionCanvas: HTMLCanvasElement,
         themeManager: ThemeManager,
     ) {
         this.axisCanvasViewController = new AxisCanvasViewController(axisCanvas, themeManager);
@@ -97,23 +103,34 @@ class CanvasViewController {
             interactionCanvas,
             themeManager,
         );
+        this.selectionCanvasViewController = new SelectionCanvasViewController(
+            selectionCanvas,
+            themeManager,
+        );
     }
 
     setDrawingInfo(drawInfo: DrawingInfo) {
         this.axisCanvasViewController.setDrawingInfo(drawInfo);
         this.gridCanvasViewController.setDrawingInfo(drawInfo);
         this.interactionCanvasViewController.setDrawingInfo(drawInfo);
+        this.selectionCanvasViewController.setDrawingInfo(drawInfo);
     }
 
     fullyRedraw = () => {
         this.axisCanvasViewController.draw();
         this.gridCanvasViewController.draw();
         this.interactionCanvasViewController.draw();
+        this.selectionCanvasViewController.draw();
     };
 
     drawInteractionBounds = (interactionBounds: InteractionBound[]) => {
         this.interactionCanvasViewController.setInteractionBounds(interactionBounds);
         this.interactionCanvasViewController.draw();
+    };
+
+    drawSelectionBound = (selectionBound?: Rect) => {
+        this.selectionCanvasViewController.setSelectingBound(selectionBound);
+        this.selectionCanvasViewController.draw();
     };
 
     setMouseMoving = (isMouseMoving: boolean) => {
