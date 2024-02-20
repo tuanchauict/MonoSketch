@@ -1,7 +1,7 @@
 /**
  * An enum for all in-use mouse cursors.
  */
-enum MouseCursor {
+export enum MouseCursor {
     DEFAULT = "default",
     TEXT = "text",
     CROSSHAIR = "crosshair",

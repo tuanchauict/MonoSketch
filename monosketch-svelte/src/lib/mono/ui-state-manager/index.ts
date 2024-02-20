@@ -3,6 +3,7 @@ import { ScrollMode, type ThemeColor, type ThemeMode } from '$mono/ui-state-mana
 import { AppThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { ScrollModeManager } from '$mono/ui-state-manager/scroll-mode-manager';
 import { PanelVisibilityManager } from '$mono/ui-state-manager/panel-visibility-manager';
+import { type KeyCommand, KeyCommandController } from '$mono/keycommand';
 
 /**
  * A domain class for managing UI state of the app.
@@ -12,11 +13,13 @@ export class AppUiStateManager {
     private appThemeManager = new AppThemeManager();
     private scrollModeManager = new ScrollModeManager();
     private panelVisibilityManager = new PanelVisibilityManager();
+    private keyCommandController = new KeyCommandController(document.body);
 
     themeModeFlow: Flow<ThemeMode> = this.appThemeManager.themeModeFlow;
     scrollModeFlow: Flow<ScrollMode> = this.scrollModeManager.scrollModeFlow;
     shapeFormatPanelVisibilityFlow: Flow<boolean> =
         this.panelVisibilityManager.shapeFormatPanelVisibilityFlow;
+    keyCommandFlow: Flow<KeyCommand> = this.keyCommandController.keyCommandFlow;
 
     constructor(private appLifecycleOwner: LifecycleOwner) {}
 
