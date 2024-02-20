@@ -12,6 +12,9 @@ import type { AppContext } from '$app/app-context';
 import { KeyCommandType } from '$mono/keycommand';
 import type { Rect } from '$libs/graphics-geo/rect';
 import { SelectionCanvasViewController } from '$mono/workspace/canvas/selection-canvas-view-controller';
+import { BoardCanvasViewController } from '$mono/workspace/canvas/board-canvas-view-controller';
+import type { MonoBoard } from '$mono/monobitmap/board/board';
+import { HighlightType, type Pixel } from '$mono/monobitmap/board/pixel';
 
 export class WorkspaceViewController extends LifecycleOwner {
     private canvasViewController?: CanvasViewController;
@@ -23,6 +26,7 @@ export class WorkspaceViewController extends LifecycleOwner {
         private readonly container: HTMLDivElement,
         drawingInfoCanvas: HTMLCanvasElement,
         gridCanvas: HTMLCanvasElement,
+        boardCanvas: HTMLCanvasElement,
         axisCanvas: HTMLCanvasElement,
         interactionCanvas: HTMLCanvasElement,
         selectionCanvas: HTMLCanvasElement,
@@ -34,6 +38,7 @@ export class WorkspaceViewController extends LifecycleOwner {
         this.canvasViewController = new CanvasViewController(
             container,
             gridCanvas,
+            boardCanvas,
             axisCanvas,
             interactionCanvas,
             selectionCanvas,
@@ -86,12 +91,14 @@ export class WorkspaceViewController extends LifecycleOwner {
 class CanvasViewController {
     private readonly axisCanvasViewController: AxisCanvasViewController;
     private readonly gridCanvasViewController: GridCanvasViewController;
+    private readonly boardCanvasViewController: BoardCanvasViewController;
     private readonly interactionCanvasViewController: InteractionCanvasViewController;
     private readonly selectionCanvasViewController: SelectionCanvasViewController;
 
     constructor(
         private container: HTMLDivElement,
         gridCanvas: HTMLCanvasElement,
+        boardCanvas: HTMLCanvasElement,
         axisCanvas: HTMLCanvasElement,
         interactionCanvas: HTMLCanvasElement,
         selectionCanvas: HTMLCanvasElement,
@@ -99,6 +106,11 @@ class CanvasViewController {
     ) {
         this.axisCanvasViewController = new AxisCanvasViewController(axisCanvas, themeManager);
         this.gridCanvasViewController = new GridCanvasViewController(gridCanvas, themeManager);
+        this.boardCanvasViewController = new BoardCanvasViewController(
+            boardCanvas,
+            new FakeMonoBoardImpl(),
+            themeManager,
+        );
         this.interactionCanvasViewController = new InteractionCanvasViewController(
             interactionCanvas,
             themeManager,
@@ -112,6 +124,7 @@ class CanvasViewController {
     setDrawingInfo(drawInfo: DrawingInfo) {
         this.axisCanvasViewController.setDrawingInfo(drawInfo);
         this.gridCanvasViewController.setDrawingInfo(drawInfo);
+        this.boardCanvasViewController.setDrawingInfo(drawInfo);
         this.interactionCanvasViewController.setDrawingInfo(drawInfo);
         this.selectionCanvasViewController.setDrawingInfo(drawInfo);
     }
@@ -119,6 +132,7 @@ class CanvasViewController {
     fullyRedraw = () => {
         this.axisCanvasViewController.draw();
         this.gridCanvasViewController.draw();
+        this.boardCanvasViewController.draw();
         this.interactionCanvasViewController.draw();
         this.selectionCanvasViewController.draw();
     };
@@ -138,6 +152,19 @@ class CanvasViewController {
     };
 
     drawBoard = () => {
-        // TODO: draw board
+        this.boardCanvasViewController.draw();
+        this.interactionCanvasViewController.draw();
+        this.selectionCanvasViewController.draw();
     };
+}
+
+// Fake implementation of MonoBoard for testing
+// TODO: Replace this with a real implementation
+class FakeMonoBoardImpl implements MonoBoard {
+    get = (row: number, column: number): Pixel => ({
+        isTransparent: false,
+        visualChar: ' ',
+        directionChar: ' ',
+        highlight: HighlightType.NO,
+    });
 }
