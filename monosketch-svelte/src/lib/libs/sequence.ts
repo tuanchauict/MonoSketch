@@ -146,3 +146,16 @@ export function getOrNull<T>(array: T[], index: number): T | null {
 export function getOrDefault<T>(array: T[], index: number, defaultValue: T): T {
     return index >= 0 && index < array.length ? array[index] : defaultValue;
 }
+
+/**
+ * Create a list of the specified size with the specified value.
+ * @param size
+ * @param value
+ */
+export function list<T>(size: number, value: () => T): T[] {
+    const result: T[] = [];
+    for (let i = 0; i < size; i++) {
+        result.push(value());
+    }
+    return result;
+}
