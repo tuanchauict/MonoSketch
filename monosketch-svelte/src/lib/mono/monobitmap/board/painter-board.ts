@@ -1,6 +1,5 @@
 import { HighlightType, Pixel } from '$mono/monobitmap/board/pixel';
 import { Rect } from '$libs/graphics-geo/rect';
-import { list } from '$libs/sequence';
 import { Size } from '$libs/graphics-geo/size';
 import type { Point } from '$libs/graphics-geo/point';
 import { MonoBitmap } from '$mono/monobitmap/bitmap/monobitmap';
@@ -8,6 +7,8 @@ import { isHalfTransparentChar } from '$mono/common/character';
 import type { Char } from '$libs/char';
 import { isConnectableChar } from '$mono/monobitmap/board/crosssing-resources';
 import type { CrossPoint } from '$mono/monobitmap/board/cross-point';
+import { ListExt } from '$libs/sequence';
+import list = ListExt.list;
 
 /**
  * A model class to manage drawn pixel.
