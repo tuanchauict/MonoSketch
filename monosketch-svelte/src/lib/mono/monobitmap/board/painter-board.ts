@@ -13,12 +13,14 @@ import type { CrossPoint } from '$mono/monobitmap/board/cross-point';
  * A model class to manage drawn pixel.
  * This is where a pixel is represented with its absolute position.
  */
-class PainterBoard {
+export class PainterBoard {
     private readonly matrix: Pixel[][];
 
     constructor(private bound: Rect) {
         this.matrix = list(bound.height, () => list(bound.width, () => new Pixel()));
     }
+
+    getBound = (): Rect => this.bound;
 
     clear = () => {
         for (let row of this.matrix) {
@@ -47,8 +49,8 @@ class PainterBoard {
         if (!overlap) {
             return;
         }
-        const [startCol, startRow] = overlap.position.minus(this.bound.position).toArray();
-        const [inStartCol, inStartRow] = overlap.position.minus(position).toArray();
+        const { left: startCol, top: startRow } = overlap.position.minus(this.bound.position);
+        const { left: inStartCol, top: inStartRow } = overlap.position.minus(position);
 
         for (let r = 0; r < overlap.height; r++) {
             const src = inMatrix[inStartRow + r];
@@ -93,10 +95,10 @@ class PainterBoard {
             return [];
         }
 
-        const [startCol, startRow] = overlap.position.minus(this.bound.position).toArray();
-        const [inStartCol, inStartRow] = overlap.position.minus(position).toArray();
+        const { left: startCol, top: startRow } = overlap.position.minus(this.bound.position);
+        const { left: inStartCol, top: inStartRow } = overlap.position.minus(position);
+        const { left: boundColumn, top: boundRow } = this.bound.position;
 
-        const [boundRow, boundColumn] = this.bound.position.toArray();
         const crossPoints: CrossPoint[] = [];
 
         for (let r = 0; r < overlap.height; r++) {
@@ -105,17 +107,17 @@ class PainterBoard {
             const src = inMatrix[bitmapRow];
             const dest = this.matrix[painterRow];
 
-            const sequence = src.asSequence(inStartCol, inStartCol + overlap.width);
-            for (let [index, visual, direction] of sequence) {
+            for (let cell of src.asSequence(inStartCol, inStartCol + overlap.width)) {
+                const index = cell.index - inStartCol;
                 const bitmapColumn = inStartCol + index;
                 const painterColumn = startCol + index;
                 const pixel = dest[painterColumn];
 
-                if (this.isApplicable(pixel, visual)) {
+                if (this.isApplicable(pixel, cell.visual)) {
                     // Not drawing half transparent character
                     // (full transparent character is removed by bitmap)
-                    if (!isHalfTransparentChar(visual)) {
-                        pixel.set(visual, direction, highlight);
+                    if (!isHalfTransparentChar(cell.visual)) {
+                        pixel.set(cell.visual, cell.direction, highlight);
                     }
                 } else {
                     // Crossing points will be drawn after finishing drawing all pixels of the
@@ -124,8 +126,8 @@ class PainterBoard {
                     crossPoints.push({
                         boardRow: painterRow + boundRow,
                         boardColumn: painterColumn + boundColumn,
-                        visualChar: visual,
-                        directionChar: direction,
+                        visualChar: cell.visual,
+                        directionChar: cell.direction,
                         leftChar: bitmap.getDirection(bitmapRow, bitmapColumn - 1),
                         rightChar: bitmap.getDirection(bitmapRow, bitmapColumn + 1),
                         topChar: bitmap.getDirection(bitmapRow - 1, bitmapColumn),
@@ -148,7 +150,7 @@ class PainterBoard {
         if (!overlap) {
             return;
         }
-        const [startCol, startRow] = overlap.position.minus(this.bound.position).toArray();
+        const { left: startCol, top: startRow } = overlap.position.minus(this.bound.position);
 
         for (let r = 0; r < overlap.height; r++) {
             const row = this.matrix[startRow + r];
@@ -165,9 +167,8 @@ class PainterBoard {
      * Note: This method is for testing only
      */
     setPoint = (position: Point, char: Char, highlight: HighlightType) => {
-        const [left, top] = position.toArray();
-        const columnIndex = left - this.bound.left;
-        const rowIndex = top - this.bound.top;
+        const columnIndex = position.left - this.bound.left;
+        const rowIndex = position.top - this.bound.top;
 
         if (
             columnIndex < 0 ||

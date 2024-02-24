@@ -159,3 +159,14 @@ export function list<T>(size: number, value: () => T): T[] {
     }
     return result;
 }
+
+export namespace MapExt {
+    export function getOrPut<K, V>(map: Map<K, V>, key: K, value: () => V): V {
+        let result = map.get(key);
+        if (result === undefined) {
+            result = value();
+            map.set(key, result);
+        }
+        return result;
+    }
+}

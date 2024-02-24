@@ -97,18 +97,17 @@ export namespace MonoBitmap {
                 const destVisual = this.visualMatrix[startRow + r];
                 const destDirection = this.directionMatrix[startRow + r];
 
-                const sequence = src.asSequence(inStartCol, inStartCol + overlap.width);
-
-                for (let [index, visual, direction] of sequence) {
+                for (let cell of src.asSequence(inStartCol, inStartCol + overlap.width)) {
+                    const index = cell.index - inStartCol;
                     const destIndex = startCol + index;
                     // visualChar from source is always not transparent (0) due to the optimization of Row
-                    if (isApplicable(destVisual[destIndex], visual)) {
-                        destVisual[startCol + index] = visual;
+                    if (isApplicable(destVisual[destIndex], cell.visual)) {
+                        destVisual[startCol + index] = cell.visual;
                     }
 
                     // TODO: Double check this condition
-                    if (isApplicable(destDirection[destIndex], direction)) {
-                        destDirection[startCol + index] = direction;
+                    if (isApplicable(destDirection[destIndex], cell.direction)) {
+                        destDirection[startCol + index] = cell.direction;
                     }
                 }
             }
@@ -161,7 +160,7 @@ export namespace MonoBitmap {
         *asSequence(
             fromIndex: number = 0,
             toExclusiveIndex: number = this.size,
-        ): Generator<[index: number, visual: Char, direction: Char]> {
+        ): Generator<Cell> {
             const foundLow = binarySearch(this.sortedCells, (cell) => cell.index - fromIndex);
             const low = foundLow >= 0 ? foundLow : -foundLow - 1;
 
@@ -170,7 +169,7 @@ export namespace MonoBitmap {
                 if (cell.index >= toExclusiveIndex) {
                     break;
                 }
-                yield [cell.index, cell.visual, cell.direction];
+                yield cell;
             }
         }
 

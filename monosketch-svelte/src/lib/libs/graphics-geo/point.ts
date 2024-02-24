@@ -72,14 +72,6 @@ export class Point implements IPoint {
         return `${this.left}|${this.top}`;
     }
 
-    /**
-     * Returns an array [left, top].
-     * This can be used for destructuring assignment.
-     */
-    toArray(): [number, number] {
-        return [this.left, this.top];
-    }
-
     // TODO: implement serialize and deserialize
 }
 
