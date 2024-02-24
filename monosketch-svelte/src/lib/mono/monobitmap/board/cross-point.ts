@@ -5,9 +5,9 @@ import type { Char } from '$libs/char';
  * [PainterBoard].
  * CrossPoint will then be drawn to the board after non-crossing pixels are drawn.
  *
- * @property [boardRow] and [boardColumn] are the location of point on the board.
- * @param [visualChar] is the character at the crossing point
- * @param [leftChar], [rightChar], [topChar], and [bottomChar] are 4 characters around the
+ * - [boardRow] and [boardColumn] are the location of point on the board.
+ * - [visualChar] is the character at the crossing point
+ * - [leftChar], [rightChar], [topChar], and [bottomChar] are 4 characters around the
  * crossing point
  */
 export interface CrossPoint {
