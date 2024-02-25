@@ -6,6 +6,7 @@ import { MapExt } from '$libs/sequence';
 import { Point } from '$libs/graphics-geo/point';
 import { MonoBitmap } from '$mono/monobitmap/bitmap/monobitmap';
 import type { CrossPoint } from '$mono/monobitmap/board/cross-point';
+import type { Char } from '$libs/char';
 
 const STANDARD_UNIT_SIZE = Size.of(16, 16);
 
@@ -15,6 +16,10 @@ const STANDARD_UNIT_SIZE = Size.of(16, 16);
 export class MonoBoard {
     private readonly painterBoards: Map<BoardAddress, PainterBoard> = new Map();
     private windowBound: Rect = Rect.ZERO;
+
+    get boardCount(): number {
+        return this.painterBoards.size;
+    }
 
     constructor(private readonly unitSize: Size = STANDARD_UNIT_SIZE) {}
 
@@ -37,18 +42,38 @@ export class MonoBoard {
         }
 
         this.drawCrossingPoints(crossingPoints, highlight);
-    }
+    };
+
+    // This method is for testing only
+    fillRect = (rect: Rect, char: Char, highlight: HighlightType) => {
+        const affectedBoards = this.getOrCreateOverlappedBoards(rect, true);
+        for (const board of affectedBoards) {
+            board.fillRect(rect, char, highlight);
+        }
+    };
 
     private drawCrossingPoints = (crossingPoints: CrossPoint[], highlight: HighlightType) => {
         // TODO: implement this method
-    }
+    };
 
-    get(left: number, top: number): Pixel {
+    getPoint = (position: Point): Pixel => {
+        return this.get(position.left, position.top);
+    };
+
+    get = (left: number, top: number): Pixel => {
         const address = this.toBoardAddress(left, top);
         const board = this.painterBoards.get(address);
         const pixel = board ? board.get(left, top) : null;
         return pixel ? pixel : Pixel.TRANSPARENT;
-    }
+    };
+
+    set = (left: number, top: number, char: Char, highlight: HighlightType) => {
+        this.getOrCreateBoard(left, top, true)?.setPoint(new Point(left, top), char, highlight);
+    };
+
+    setPoint = (position: Point, char: Char, highlight: HighlightType) => {
+        this.set(position.left, position.top, char, highlight);
+    };
 
     private getOrCreateOverlappedBoards = (
         rect: Rect,
@@ -107,6 +132,31 @@ export class MonoBoard {
         const rowIndex = Math.floor(top / this.unitSize.height);
         const columnIndex = Math.floor(left / this.unitSize.width);
         return BoardAddressManager.get(rowIndex, columnIndex);
+    };
+
+    toString = (): string => {
+        if (this.painterBoards.size === 0) {
+            return '';
+        }
+        const left = Math.min(
+            ...Array.from(this.painterBoards.keys(), (point) => point.columnIndex),
+        );
+        const right =
+            Math.max(...Array.from(this.painterBoards.keys(), (point) => point.columnIndex)) + 1;
+        const top = Math.min(...Array.from(this.painterBoards.keys(), (point) => point.rowIndex));
+        const bottom =
+            Math.max(...Array.from(this.painterBoards.keys(), (point) => point.rowIndex)) + 1;
+        const rect = Rect.byLTWH(
+            left * this.unitSize.width,
+            top * this.unitSize.height,
+            (right - left) * this.unitSize.width,
+            (bottom - top) * this.unitSize.height,
+        );
+        const painterBoard = new PainterBoard(rect);
+
+        Array.from(this.painterBoards.values()).forEach((pb) => painterBoard.fill(pb));
+
+        return painterBoard.toString();
     };
 }
 
