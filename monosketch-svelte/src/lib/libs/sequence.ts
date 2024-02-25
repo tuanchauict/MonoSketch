@@ -146,3 +146,36 @@ export function getOrNull<T>(array: T[], index: number): T | null {
 export function getOrDefault<T>(array: T[], index: number, defaultValue: T): T {
     return index >= 0 && index < array.length ? array[index] : defaultValue;
 }
+
+export namespace ListExt {
+    /**
+     * Create a list of the specified size with the specified value.
+     * @param size
+     * @param value
+     */
+    export function list<T>(size: number, value: () => T): T[] {
+        const result: T[] = [];
+        for (let i = 0; i < size; i++) {
+            result.push(value());
+        }
+        return result;
+    }
+}
+
+export namespace MapExt {
+    /**
+     * Get the value from the map with the specified key. If the key is not found, put the value
+     * created by the specified function into the map and return it.
+     * @param map
+     * @param key
+     * @param value
+     */
+    export function getOrPut<K, V>(map: Map<K, V>, key: K, value: () => V): V {
+        let result = map.get(key);
+        if (result === undefined) {
+            result = value();
+            map.set(key, result);
+        }
+        return result;
+    }
+}

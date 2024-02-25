@@ -4,8 +4,12 @@ import { binarySearch, getOrNull, mapIndexedNotNull, zip } from '$libs/sequence'
 import { isHalfTransparentChar, isTransparentChar, TRANSPARENT_CHAR } from '$mono/common/character';
 import { Rect } from '$libs/graphics-geo/rect';
 
-namespace MonoBitmap {
-    export class MonoBitmap {
+export namespace MonoBitmap {
+    /**
+     * A model class to hold the look of a shape after drawing.
+     * Create new object via [Builder].
+     */
+    export class Bitmap {
         readonly size: Size;
 
         constructor(public matrix: Row[]) {
@@ -71,7 +75,7 @@ namespace MonoBitmap {
             }
         }
 
-        fillBitmap(row: number, column: number, bitmap: MonoBitmap): void {
+        fillBitmap(row: number, column: number, bitmap: Bitmap): void {
             if (bitmap.isEmpty()) {
                 return;
             }
@@ -93,28 +97,27 @@ namespace MonoBitmap {
                 const destVisual = this.visualMatrix[startRow + r];
                 const destDirection = this.directionMatrix[startRow + r];
 
-                const updateCell = (index: number, visualChar: Char, directionChar: Char) => {
+                for (let cell of src.asSequence(inStartCol, inStartCol + overlap.width)) {
+                    const index = cell.index - inStartCol;
                     const destIndex = startCol + index;
                     // visualChar from source is always not transparent (0) due to the optimization of Row
-                    if (isApplicable(destVisual[destIndex], visualChar)) {
-                        destVisual[startCol + index] = visualChar;
+                    if (isApplicable(destVisual[destIndex], cell.visual)) {
+                        destVisual[startCol + index] = cell.visual;
                     }
 
                     // TODO: Double check this condition
-                    if (isApplicable(destDirection[destIndex], directionChar)) {
-                        destDirection[startCol + index] = directionChar;
+                    if (isApplicable(destDirection[destIndex], cell.direction)) {
+                        destDirection[startCol + index] = cell.direction;
                     }
-                };
-
-                src.forEachIndex(updateCell, inStartCol, inStartCol + overlap.width);
+                }
             }
         }
 
-        toBitmap(): MonoBitmap {
+        toBitmap(): Bitmap {
             const rows = this.visualMatrix.map(
                 (chars, index) => new Row(chars, this.directionMatrix[index]),
             );
-            return new MonoBitmap(rows);
+            return new Bitmap(rows);
         }
     }
 
@@ -154,19 +157,21 @@ namespace MonoBitmap {
             );
         }
 
-        forEachIndex(
-            callback: ForEachIndex,
-            fromIndex: number = 0,
-            toExclusiveIndex: number = this.size,
-        ) {
+        *asSequence(
+            fromIndexOptional?: number,
+            toExclusiveIndexOptional?: number,
+        ): Generator<Cell> {
+            const fromIndex = fromIndexOptional === undefined ? 0 : fromIndexOptional;
+            const toExclusiveIndex = toExclusiveIndexOptional === undefined ?  this.size : toExclusiveIndexOptional;
             const foundLow = binarySearch(this.sortedCells, (cell) => cell.index - fromIndex);
             const low = foundLow >= 0 ? foundLow : -foundLow - 1;
+
             for (let i = low; i < this.sortedCells.length; i++) {
                 const cell = this.sortedCells[i];
                 if (cell.index >= toExclusiveIndex) {
                     break;
                 }
-                callback(cell.index, cell.visual, cell.direction);
+                yield cell;
             }
         }
 
@@ -193,6 +198,4 @@ namespace MonoBitmap {
             public direction: Char,
         ) {}
     }
-
-    type ForEachIndex = (index: number, visual: Char, direction: Char) => void;
 }
