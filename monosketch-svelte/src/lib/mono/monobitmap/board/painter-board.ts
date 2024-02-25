@@ -208,13 +208,10 @@ export class PainterBoard {
     };
 
     toString = (): string => {
-        let result = '';
-        for (let row of this.matrix) {
-            for (let pixel of row) {
-                result += pixel.toString();
-            }
-            result += '\n';
-        }
-        return result;
+        return this.matrix.map(this.toRowString).join('\n');
     };
+
+    private toRowString(row: Pixel[]): string {
+        return row.map((pixel) => pixel.toString()).join('');
+    }
 }

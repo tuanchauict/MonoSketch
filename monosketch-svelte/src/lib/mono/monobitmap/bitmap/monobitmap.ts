@@ -158,9 +158,11 @@ export namespace MonoBitmap {
         }
 
         *asSequence(
-            fromIndex: number = 0,
-            toExclusiveIndex: number = this.size,
+            fromIndexOptional?: number,
+            toExclusiveIndexOptional?: number,
         ): Generator<Cell> {
+            const fromIndex = fromIndexOptional === undefined ? 0 : fromIndexOptional;
+            const toExclusiveIndex = toExclusiveIndexOptional === undefined ?  this.size : toExclusiveIndexOptional;
             const foundLow = binarySearch(this.sortedCells, (cell) => cell.index - fromIndex);
             const low = foundLow >= 0 ? foundLow : -foundLow - 1;
 
