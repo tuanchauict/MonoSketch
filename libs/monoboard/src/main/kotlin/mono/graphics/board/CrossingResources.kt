@@ -399,14 +399,113 @@ internal object CrossingResources {
         '╩' to (MASK_DOUBLE_HORIZONTAL or MASK_DOUBLE_TOP),
         '╦' to (MASK_DOUBLE_HORIZONTAL or MASK_DOUBLE_BOTTOM),
         '╬' to (MASK_DOUBLE_HORIZONTAL or MASK_DOUBLE_VERTICAL),
+
+        // Complex (SINGLE, BOLD) combinations
+        '╼' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT),
+        '╾' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT),
+
+        '╽' to (MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
+        '╿' to (MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
+
+        '┚' to (MASK_SINGLE_LEFT or MASK_BOLD_TOP),
+        '┙' to (MASK_BOLD_LEFT or MASK_SINGLE_TOP),
+
+        '┒' to (MASK_SINGLE_LEFT or MASK_BOLD_BOTTOM),
+        '┑' to (MASK_BOLD_LEFT or MASK_SINGLE_BOTTOM),
+
+        '┨' to (MASK_SINGLE_LEFT or MASK_BOLD_TOP or MASK_BOLD_BOTTOM),
+        '┦' to (MASK_SINGLE_LEFT or MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
+        '┧' to (MASK_SINGLE_LEFT or MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
+
+        '┥' to (MASK_BOLD_LEFT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
+        '┩' to (MASK_BOLD_LEFT or MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
+        '┪' to (MASK_BOLD_LEFT or MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
+
+        '┖' to (MASK_SINGLE_RIGHT or MASK_BOLD_TOP),
+        '┕' to (MASK_BOLD_RIGHT or MASK_SINGLE_TOP),
+
+        '┎' to (MASK_SINGLE_RIGHT or MASK_BOLD_BOTTOM),
+        '┍' to (MASK_BOLD_RIGHT or MASK_SINGLE_BOTTOM),
+
+        '┠' to (MASK_SINGLE_RIGHT or MASK_BOLD_TOP or MASK_BOLD_BOTTOM),
+        '┞' to (MASK_SINGLE_RIGHT or MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
+        '┟' to (MASK_SINGLE_RIGHT or MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
+
+        '┝' to (MASK_BOLD_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
+        '┡' to (MASK_BOLD_RIGHT or MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
+        '┢' to (MASK_BOLD_RIGHT or MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
+
+        '┷' to (MASK_BOLD_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_TOP),
+        '┶' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_TOP),
+        '┵' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_SINGLE_TOP),
+
+        '┸' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_TOP),
+        '┹' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_TOP),
+        '┺' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_BOLD_TOP),
+
+        '┯' to (MASK_BOLD_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_BOTTOM),
+        '┭' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_SINGLE_BOTTOM),
+        '┮' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_BOTTOM),
+
+        '┰' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_BOTTOM),
+        '┱' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_BOTTOM),
+        '┲' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_BOLD_BOTTOM),
+        
+        '┽' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
+        '┾' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
+        '╀' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
+        '╁' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
+
+        '╂' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_TOP or MASK_BOLD_BOTTOM),
+        '┿' to (MASK_BOLD_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
+        '╃' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
+        '╄' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
+        '╅' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
+        '╆' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
+
+        '╇' to (MASK_BOLD_LEFT or MASK_BOLD_RIGHT or MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
+        '╈' to (MASK_BOLD_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
+        '╉' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_TOP or MASK_BOLD_BOTTOM),
+        '╊' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_BOLD_TOP or MASK_BOLD_BOTTOM),
+        
+        // Complex (SINGLE, DOUBLE) combinations
+        '╒' to (MASK_DOUBLE_RIGHT or MASK_SINGLE_BOTTOM),
+        '╓' to (MASK_SINGLE_RIGHT or MASK_DOUBLE_BOTTOM),
+        
+        '╕' to (MASK_DOUBLE_LEFT or MASK_SINGLE_BOTTOM),
+        '╖' to (MASK_SINGLE_LEFT or MASK_DOUBLE_BOTTOM),
+
+        '╘' to (MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP),
+        '╙' to (MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP),
+        
+        '╛' to (MASK_SINGLE_LEFT or MASK_SINGLE_TOP),
+        '╜' to (MASK_SINGLE_LEFT or MASK_DOUBLE_TOP),
+        
+        '╞' to (MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
+        '╟' to (MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP or MASK_DOUBLE_BOTTOM),
+        
+        '╡' to (MASK_DOUBLE_LEFT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
+        '╢' to (MASK_SINGLE_LEFT or MASK_DOUBLE_TOP or MASK_DOUBLE_BOTTOM),
+        
+        '╤' to (MASK_DOUBLE_LEFT or MASK_DOUBLE_RIGHT or MASK_SINGLE_BOTTOM),
+        '╥' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_DOUBLE_BOTTOM),
+        
+        '╧' to (MASK_DOUBLE_LEFT or MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP),
+        '╨' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP),
+        
+        '╪' to (MASK_DOUBLE_LEFT or MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
+        '╫' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP or MASK_DOUBLE_BOTTOM),
+        
     )
 
     private val MASK_TO_CHAR_MAP =
         CHAR_TO_MASK_MAP.entries.associate { (key, value) -> value to key }
 
     init {
-        for ((key, value) in MASK_TO_CHAR_MAP) {
-            console.log(maskToString(key), value.toString())
+        if (Build.DEBUG) {
+            for ((key, value) in MASK_TO_CHAR_MAP) {
+                console.log(value.toString(), maskToString(key))
+            }
         }
     }
 
@@ -437,7 +536,7 @@ internal object CrossingResources {
         val innerMask = mask1 or mask2
         val outerMask = maskLeft or maskRight or maskTop or maskBottom
         val mask = innerMask and outerMask
-        
+
         if (Build.DEBUG) {
             console.log(
                 listOf(
@@ -468,5 +567,5 @@ internal object CrossingResources {
 
     private fun standardize(char: Char): Char = STANDARDIZED_CHARS[char] ?: char
 
-    private fun maskToString(mask: Int): String = mask.toString(2).padStart(4, '0')
+    private fun maskToString(mask: Int): String = mask.toString(2).padStart(12, '0')
 }
