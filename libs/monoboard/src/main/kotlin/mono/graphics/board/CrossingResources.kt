@@ -519,19 +519,35 @@ internal object CrossingResources {
         surroundingLeft2: Char,
         surroundingRight2: Char,
         surroundingTop2: Char,
-        surroundingBottom2: Char,
+        surroundingBottom2: Char
     ): Char? {
         val mask1 = getCharMask(char1, MASK_CROSS)
         val mask2 = getCharMask(char2, MASK_CROSS)
 
         val maskLeft =
-            if (surroundingLeft1 in LEFT_IN_CHARS || surroundingLeft2 in LEFT_IN_CHARS) MASK_LEFT else 0
+            if (surroundingLeft1 in LEFT_IN_CHARS || surroundingLeft2 in LEFT_IN_CHARS) {
+                MASK_LEFT
+            } else {
+                0
+            }
         val maskRight =
-            if (surroundingRight1 in RIGHT_IN_CHARS || surroundingRight2 in RIGHT_IN_CHARS) MASK_RIGHT else 0
+            if (surroundingRight1 in RIGHT_IN_CHARS || surroundingRight2 in RIGHT_IN_CHARS) {
+                MASK_RIGHT
+            } else {
+                0
+            }
         val maskTop =
-            if (surroundingTop1 in TOP_IN_CHARS || surroundingTop2 in TOP_IN_CHARS) MASK_TOP else 0
+            if (surroundingTop1 in TOP_IN_CHARS || surroundingTop2 in TOP_IN_CHARS) {
+                MASK_TOP
+            } else {
+                0
+            }
         val maskBottom =
-            if (surroundingBottom1 in BOTTOM_IN_CHARS || surroundingBottom2 in BOTTOM_IN_CHARS) MASK_BOTTOM else 0
+            if (surroundingBottom1 in BOTTOM_IN_CHARS || surroundingBottom2 in BOTTOM_IN_CHARS) {
+                MASK_BOTTOM
+            } else {
+                0
+            }
 
         val innerMask = mask1 or mask2
         val outerMask = maskLeft or maskRight or maskTop or maskBottom
@@ -549,7 +565,7 @@ internal object CrossingResources {
                     "$surroundingRight1:$surroundingRight2:${maskToString(maskRight)}",
                     "$surroundingTop1:$surroundingTop2:${maskToString(maskTop)}",
                     "$surroundingBottom1:$surroundingBottom2:${maskToString(maskBottom)}",
-                    "-> ${maskToString(outerMask)}",
+                    "-> ${maskToString(outerMask)}"
                 ).toString(),
                 maskToString(outerMask),
                 "->",
