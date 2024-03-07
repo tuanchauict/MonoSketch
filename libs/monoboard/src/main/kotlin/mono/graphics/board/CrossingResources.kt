@@ -479,7 +479,7 @@ internal object CrossingResources {
         '╘' to (MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP),
         '╙' to (MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP),
 
-        '╛' to (MASK_SINGLE_LEFT or MASK_SINGLE_TOP),
+        '╛' to (MASK_DOUBLE_LEFT or MASK_SINGLE_TOP),
         '╜' to (MASK_SINGLE_LEFT or MASK_DOUBLE_TOP),
 
         '╞' to (MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
