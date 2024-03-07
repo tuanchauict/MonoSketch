@@ -38,6 +38,7 @@ internal object CrossingResources {
 
     private val CONNECTABLE_CHARS = "─│┌└┐┘┬┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
 
+    // TODO: Extend the list with complex combination chars.
     private val LEFT_IN_CHARS: Set<Char> = "─┌└┬┴├┼".extendChars().flatMap { it.toList() }.toSet()
     private val RIGHT_IN_CHARS: Set<Char> = "─┐┘┬┴┤┼".extendChars().flatMap { it.toList() }.toSet()
     private val TOP_IN_CHARS: Set<Char> = "│┌┐┬├┤┼".extendChars().flatMap { it.toList() }.toSet()
@@ -450,7 +451,7 @@ internal object CrossingResources {
         '┰' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_BOTTOM),
         '┱' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_BOTTOM),
         '┲' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_BOLD_BOTTOM),
-        
+
         '┽' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
         '┾' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
         '╀' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_TOP or MASK_SINGLE_BOTTOM),
@@ -467,35 +468,34 @@ internal object CrossingResources {
         '╈' to (MASK_BOLD_LEFT or MASK_BOLD_RIGHT or MASK_SINGLE_TOP or MASK_BOLD_BOTTOM),
         '╉' to (MASK_BOLD_LEFT or MASK_SINGLE_RIGHT or MASK_BOLD_TOP or MASK_BOLD_BOTTOM),
         '╊' to (MASK_SINGLE_LEFT or MASK_BOLD_RIGHT or MASK_BOLD_TOP or MASK_BOLD_BOTTOM),
-        
+
         // Complex (SINGLE, DOUBLE) combinations
         '╒' to (MASK_DOUBLE_RIGHT or MASK_SINGLE_BOTTOM),
         '╓' to (MASK_SINGLE_RIGHT or MASK_DOUBLE_BOTTOM),
-        
+
         '╕' to (MASK_DOUBLE_LEFT or MASK_SINGLE_BOTTOM),
         '╖' to (MASK_SINGLE_LEFT or MASK_DOUBLE_BOTTOM),
 
         '╘' to (MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP),
         '╙' to (MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP),
-        
+
         '╛' to (MASK_SINGLE_LEFT or MASK_SINGLE_TOP),
         '╜' to (MASK_SINGLE_LEFT or MASK_DOUBLE_TOP),
-        
+
         '╞' to (MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
         '╟' to (MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP or MASK_DOUBLE_BOTTOM),
-        
+
         '╡' to (MASK_DOUBLE_LEFT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
         '╢' to (MASK_SINGLE_LEFT or MASK_DOUBLE_TOP or MASK_DOUBLE_BOTTOM),
-        
+
         '╤' to (MASK_DOUBLE_LEFT or MASK_DOUBLE_RIGHT or MASK_SINGLE_BOTTOM),
         '╥' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_DOUBLE_BOTTOM),
-        
+
         '╧' to (MASK_DOUBLE_LEFT or MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP),
         '╨' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP),
-        
+
         '╪' to (MASK_DOUBLE_LEFT or MASK_DOUBLE_RIGHT or MASK_SINGLE_TOP or MASK_SINGLE_BOTTOM),
-        '╫' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP or MASK_DOUBLE_BOTTOM),
-        
+        '╫' to (MASK_SINGLE_LEFT or MASK_SINGLE_RIGHT or MASK_DOUBLE_TOP or MASK_DOUBLE_BOTTOM)
     )
 
     private val MASK_TO_CHAR_MAP =
