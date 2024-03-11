@@ -587,7 +587,7 @@ internal object CrossingResources {
     }
 
     internal fun getCharMask(char: Char, mask: Int): Int {
-        val charMask = CHAR_TO_MASK_MAP[char] ?: 0
+        val charMask = CHAR_TO_MASK_MAP[standardize(char)] ?: 0
         return charMask and mask
     }
 
