@@ -535,29 +535,13 @@ internal object CrossingResources {
         )
 
         val maskLeft =
-            if (adjacentLeftUpper in LEFT_IN_CHARS || adjacentLeftLower in LEFT_IN_CHARS) {
-                MASK_LEFT
-            } else {
-                0
-            }
+            if (adjacentLeftUpper.hasLeft || adjacentLeftLower.hasLeft) MASK_LEFT else 0
         val maskRight =
-            if (adjacentRightUpper in RIGHT_IN_CHARS || adjacentRightLower in RIGHT_IN_CHARS) {
-                MASK_RIGHT
-            } else {
-                0
-            }
+            if (adjacentRightUpper.hasRight || adjacentRightLower.hasRight) MASK_RIGHT else 0
         val maskTop =
-            if (adjacentTopUpper in TOP_IN_CHARS || adjacentTopLower in TOP_IN_CHARS) {
-                MASK_TOP
-            } else {
-                0
-            }
+            if (adjacentTopUpper.hasTop || adjacentTopLower.hasTop) MASK_TOP else 0
         val maskBottom =
-            if (adjacentBottomUpper in BOTTOM_IN_CHARS || adjacentBottomLower in BOTTOM_IN_CHARS) {
-                MASK_BOTTOM
-            } else {
-                0
-            }
+            if (adjacentBottomUpper.hasBottom || adjacentBottomLower.hasBottom) MASK_BOTTOM else 0
 
         val innerMask = maskUpper or maskLower
         val outerMask = maskLeft or maskRight or maskTop or maskBottom
