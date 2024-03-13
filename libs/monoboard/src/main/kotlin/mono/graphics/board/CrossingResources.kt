@@ -277,7 +277,6 @@ internal object CrossingResources {
         }
         .toMap()
 
-
     private fun String.extendChars(): Sequence<String> =
         (0..2).asSequence()
             .map { getSingleKey(this, it) }
