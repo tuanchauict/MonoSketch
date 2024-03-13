@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, tuanchauict
+ * Copyright (c) 2023-2024, tuanchauict
  */
 
 package mono.graphics.board
@@ -39,10 +39,14 @@ internal object CrossingResources {
     private val CONNECTABLE_CHARS = "─│┌└┐┘┬┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
 
     // TODO: Extend the list with complex combination chars.
-    private val LEFT_IN_CHARS: Set<Char> = "─┌└┬┴├┼".extendChars().flatMap { it.toList() }.toSet()
-    private val RIGHT_IN_CHARS: Set<Char> = "─┐┘┬┴┤┼".extendChars().flatMap { it.toList() }.toSet()
-    private val TOP_IN_CHARS: Set<Char> = "│┌┐┬├┤┼".extendChars().flatMap { it.toList() }.toSet()
-    private val BOTTOM_IN_CHARS: Set<Char> = "│└┘┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
+    private val LEFT_IN_CHARS: Set<Char> =
+        "─┌└┬┴├┼".extendChars().flatMap { it.toList() }.toSet()
+    private val RIGHT_IN_CHARS: Set<Char> =
+        "─┐┘┬┴┤┼".extendChars().flatMap { it.toList() }.toSet()
+    private val TOP_IN_CHARS: Set<Char> =
+        "│┌┐┬├┤┼".extendChars().flatMap { it.toList() }.toSet()
+    private val BOTTOM_IN_CHARS: Set<Char> =
+        "│└┘┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
 
     private val SINGLE_CONNECTOR_CHAR_MAP = sequenceOf(
         "─│" to mapOf(
@@ -362,7 +366,7 @@ internal object CrossingResources {
     private const val MASK_RIGHT = MASK_SINGLE_RIGHT or MASK_BOLD_RIGHT or MASK_DOUBLE_RIGHT
     private const val MASK_TOP = MASK_SINGLE_TOP or MASK_BOLD_TOP or MASK_DOUBLE_TOP
     private const val MASK_BOTTOM = MASK_SINGLE_BOTTOM or MASK_BOLD_BOTTOM or MASK_DOUBLE_BOTTOM
-    private const val MASK_CROSS = MASK_SINGLE_CROSS or MASK_BOLD_CROSS or MASK_DOUBLE_CROSS
+    internal const val MASK_CROSS = MASK_SINGLE_CROSS or MASK_BOLD_CROSS or MASK_DOUBLE_CROSS
 
     private val CHAR_TO_MASK_MAP = mapOf(
         '─' to MASK_SINGLE_HORIZONTAL,
@@ -501,8 +505,10 @@ internal object CrossingResources {
     private val MASK_TO_CHAR_MAP =
         CHAR_TO_MASK_MAP.entries.associate { (key, value) -> value to key }
 
+    private const val DEBUG = false
+
     init {
-        if (Build.DEBUG) {
+        if (Build.DEBUG && DEBUG) {
             for ((key, value) in MASK_TO_CHAR_MAP) {
                 console.log(value.toString(), maskToString(key))
             }
@@ -510,61 +516,49 @@ internal object CrossingResources {
     }
 
     fun getCrossingChar(
-        char1: Char,
-        surroundingLeft1: Char,
-        surroundingRight1: Char,
-        surroundingTop1: Char,
-        surroundingBottom1: Char,
-        char2: Char,
-        surroundingLeft2: Char,
-        surroundingRight2: Char,
-        surroundingTop2: Char,
-        surroundingBottom2: Char
+        upper: Char,
+        adjacentLeftUpper: Char,
+        adjacentRightUpper: Char,
+        adjacentTopUpper: Char,
+        adjacentBottomUpper: Char,
+        lower: Char,
+        adjacentLeftLower: Char,
+        adjacentRightLower: Char,
+        adjacentTopLower: Char,
+        adjacentBottomLower: Char
     ): Char? {
-        val mask1 = getCharMask(char1, MASK_CROSS)
-        val mask2 = getCharMask(char2, MASK_CROSS)
+        val maskUpper = getCharMask(upper, MASK_CROSS)
+        // Directions exist in the upper char exclude the direction in the lower char.
+        val maskLower = getCharMask(
+            lower,
+            createExcludeMask(maskUpper)
+        )
 
         val maskLeft =
-            if (surroundingLeft1 in LEFT_IN_CHARS || surroundingLeft2 in LEFT_IN_CHARS) {
-                MASK_LEFT
-            } else {
-                0
-            }
+            if (adjacentLeftUpper.hasLeft || adjacentLeftLower.hasLeft) MASK_LEFT else 0
         val maskRight =
-            if (surroundingRight1 in RIGHT_IN_CHARS || surroundingRight2 in RIGHT_IN_CHARS) {
-                MASK_RIGHT
-            } else {
-                0
-            }
+            if (adjacentRightUpper.hasRight || adjacentRightLower.hasRight) MASK_RIGHT else 0
         val maskTop =
-            if (surroundingTop1 in TOP_IN_CHARS || surroundingTop2 in TOP_IN_CHARS) {
-                MASK_TOP
-            } else {
-                0
-            }
+            if (adjacentTopUpper.hasTop || adjacentTopLower.hasTop) MASK_TOP else 0
         val maskBottom =
-            if (surroundingBottom1 in BOTTOM_IN_CHARS || surroundingBottom2 in BOTTOM_IN_CHARS) {
-                MASK_BOTTOM
-            } else {
-                0
-            }
+            if (adjacentBottomUpper.hasBottom || adjacentBottomLower.hasBottom) MASK_BOTTOM else 0
 
-        val innerMask = mask1 or mask2
+        val innerMask = maskUpper or maskLower
         val outerMask = maskLeft or maskRight or maskTop or maskBottom
         val mask = innerMask and outerMask
 
         if (Build.DEBUG) {
             console.log(
                 listOf(
-                    "$char1:${maskToString(mask1)}",
-                    "$char2:${maskToString(mask2)}",
+                    "$upper:${maskToString(maskUpper)}",
+                    "$lower:${maskToString(maskLower)}",
                     "-> ${maskToString(innerMask)}"
                 ).toString(),
                 listOf(
-                    "$surroundingLeft1:$surroundingLeft2:${maskToString(maskLeft)}",
-                    "$surroundingRight1:$surroundingRight2:${maskToString(maskRight)}",
-                    "$surroundingTop1:$surroundingTop2:${maskToString(maskTop)}",
-                    "$surroundingBottom1:$surroundingBottom2:${maskToString(maskBottom)}",
+                    "$adjacentLeftUpper:$adjacentLeftLower:${maskToString(maskLeft)}",
+                    "$adjacentRightUpper:$adjacentRightLower:${maskToString(maskRight)}",
+                    "$adjacentTopUpper:$adjacentTopLower:${maskToString(maskTop)}",
+                    "$adjacentBottomUpper:$adjacentBottomLower:${maskToString(maskBottom)}",
                     "-> ${maskToString(outerMask)}"
                 ).toString(),
                 maskToString(outerMask),
@@ -576,12 +570,23 @@ internal object CrossingResources {
         return MASK_TO_CHAR_MAP[mask]
     }
 
-    private fun getCharMask(char: Char, mask: Int): Int {
-        val charMask = CHAR_TO_MASK_MAP[char] ?: 0
+    internal fun getCharMask(char: Char, mask: Int): Int {
+        val charMask = CHAR_TO_MASK_MAP[standardize(char)] ?: 0
         return charMask and mask
     }
 
     private fun standardize(char: Char): Char = STANDARDIZED_CHARS[char] ?: char
 
-    private fun maskToString(mask: Int): String = mask.toString(2).padStart(12, '0')
+    fun maskToString(mask: Int): String = mask.toString(2).padStart(12, '0')
+
+    /**
+     * Creates a mask that excludes bits from any direction existing in the given mask.
+     * For example, if mask is from `│` (`0000.0000.1100`), the result will be `0011.0011.0011`
+     */
+    internal fun createExcludeMask(mask: Int): Int {
+        // and with MASK_CROSS to remove the overflow bits.
+        val allDirectionsMask =
+            ((mask shl 8) or (mask shl 4) or mask or (mask shr 4) or (mask shr 8)) and MASK_CROSS
+        return MASK_CROSS xor allDirectionsMask
+    }
 }

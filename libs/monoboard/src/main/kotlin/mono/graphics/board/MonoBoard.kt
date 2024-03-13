@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, tuanchauict
+ * Copyright (c) 2023-2024, tuanchauict
  */
 
 package mono.graphics.board
@@ -103,16 +103,16 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
             val top = charPoint.top
             val currentPixel = get(left, top)
             val crossingChar = CrossingResources.getCrossingChar(
-                char1 = charPoint.visualChar,
-                surroundingLeft1 = charPoint.leftChar,
-                surroundingRight1 = charPoint.rightChar,
-                surroundingTop1 = charPoint.topChar,
-                surroundingBottom1 = charPoint.bottomChar,
-                char2 = get(left, top).visualChar,
-                surroundingLeft2 = get(left - 1, top).directionChar,
-                surroundingRight2 = get(left + 1, top).directionChar,
-                surroundingTop2 = get(left, top - 1).directionChar,
-                surroundingBottom2 = get(left, top + 1).directionChar
+                upper = charPoint.visualChar,
+                adjacentLeftUpper = charPoint.leftChar,
+                adjacentRightUpper = charPoint.rightChar,
+                adjacentTopUpper = charPoint.topChar,
+                adjacentBottomUpper = charPoint.bottomChar,
+                lower = get(left, top).visualChar,
+                adjacentLeftLower = get(left - 1, top).directionChar,
+                adjacentRightLower = get(left + 1, top).directionChar,
+                adjacentTopLower = get(left, top - 1).directionChar,
+                adjacentBottomLower = get(left, top + 1).directionChar
             )
             if (crossingChar != null) {
                 currentPixel.set(crossingChar, crossingChar, highlight)
