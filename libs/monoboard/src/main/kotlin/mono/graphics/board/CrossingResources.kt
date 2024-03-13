@@ -36,18 +36,6 @@ internal object CrossingResources {
         '╰' to '└'
     )
 
-    private val CONNECTABLE_CHARS = "─│┌└┐┘┬┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
-
-    // TODO: Extend the list with complex combination chars.
-    private val LEFT_IN_CHARS: Set<Char> =
-        "─┌└┬┴├┼".extendChars().flatMap { it.toList() }.toSet()
-    private val RIGHT_IN_CHARS: Set<Char> =
-        "─┐┘┬┴┤┼".extendChars().flatMap { it.toList() }.toSet()
-    private val TOP_IN_CHARS: Set<Char> =
-        "│┌┐┬├┤┼".extendChars().flatMap { it.toList() }.toSet()
-    private val BOTTOM_IN_CHARS: Set<Char> =
-        "│└┘┴├┤┼".extendChars().flatMap { it.toList() }.toSet()
-
     private val SINGLE_CONNECTOR_CHAR_MAP = sequenceOf(
         "─│" to mapOf(
             inDirectionMark(hasRight = true, hasVertical = true) to '├',
@@ -289,20 +277,6 @@ internal object CrossingResources {
         }
         .toMap()
 
-    val Char.isConnectable: Boolean
-        get() = standardize(this) in CONNECTABLE_CHARS
-
-    val Char.hasLeft: Boolean
-        get() = standardize(this) in LEFT_IN_CHARS
-
-    val Char.hasRight: Boolean
-        get() = standardize(this) in RIGHT_IN_CHARS
-
-    val Char.hasTop: Boolean
-        get() = standardize(this) in TOP_IN_CHARS
-
-    val Char.hasBottom: Boolean
-        get() = standardize(this) in BOTTOM_IN_CHARS
 
     private fun String.extendChars(): Sequence<String> =
         (0..2).asSequence()
@@ -504,6 +478,21 @@ internal object CrossingResources {
 
     private val MASK_TO_CHAR_MAP =
         CHAR_TO_MASK_MAP.entries.associate { (key, value) -> value to key }
+
+    val Char.isConnectable: Boolean
+        get() = standardize(this) in CHAR_TO_MASK_MAP
+
+    val Char.hasLeft: Boolean
+        get() = getCharMask(standardize(this), MASK_RIGHT) > 0
+
+    val Char.hasRight: Boolean
+        get() = getCharMask(standardize(this), MASK_LEFT) > 0
+
+    val Char.hasTop: Boolean
+        get() = getCharMask(standardize(this), MASK_BOTTOM) > 0
+
+    val Char.hasBottom: Boolean
+        get() = getCharMask(standardize(this), MASK_TOP) > 0
 
     private const val DEBUG = false
 
