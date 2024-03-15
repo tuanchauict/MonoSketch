@@ -29,8 +29,8 @@ onMount(() => {
     lifecycleOwner.onStart();
     openingProjectFlow.observe(lifecycleOwner, (project) => {
         // TODO: make the flow mapping ignore undefined value as return type.
-        projectId = project!!.id;
-        projectName = project!!.name;
+        projectId = project!.id;
+        projectName = project!.name;
     });
 
     renamingProjectFlow.observe(lifecycleOwner, (project) => {
@@ -38,7 +38,7 @@ onMount(() => {
             return;
         }
         modalViewModel.renamingProjectModalStateFlow.value = {
-            id: project!!.id,
+            id: project!.id,
             targetBounds: TargetBounds.fromElement(node),
         };
     });
