@@ -21,7 +21,7 @@ module.exports = {
             }
         },
         {
-            files: ['src/**/*.svelte'],
+            files: ["src/**/*.svelte", "src/*.svelte"],
             parser: 'svelte-eslint-parser',
             parserOptions: {
                 parser: '@typescript-eslint/parser',
@@ -35,6 +35,10 @@ module.exports = {
         extraFileExtensions: ['.svelte']
     },
     rules: {
+        "indent": ["error", 4, {
+            "SwitchCase": 1,
+        }],
+        "semi": ["error", "always"],
         "@typescript-eslint/indent": ["error", 4],
         "space-before-function-paren": ["error", {
             "anonymous": "never",
@@ -42,6 +46,5 @@ module.exports = {
             "asyncArrow": "always",
         }],
         "svelte/valid-compile": "off", // temporary ignore this rule until fixing a11y issues
-        "indent": "off", // use @typescript-eslint/indent instead
     }
 }
