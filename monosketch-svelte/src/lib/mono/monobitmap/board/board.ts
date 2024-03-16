@@ -27,7 +27,7 @@ export class MonoBoard {
         this.windowBound = bound;
         this.painterBoards.clear();
         const affectedBoards = this.getOrCreateOverlappedBoards(bound, false);
-        for (let board of affectedBoards) {
+        for (const board of affectedBoards) {
             board.clear();
         }
     };
@@ -52,6 +52,7 @@ export class MonoBoard {
         }
     };
 
+    // eslint-disable-next-line
     private drawCrossingPoints = (crossingPoints: CrossPoint[], highlight: HighlightType) => {
         // TODO: implement this method
     };
@@ -173,7 +174,7 @@ class BoardAddressManager {
         for (let rowIndex = -4; rowIndex < 10; rowIndex++) {
             addressMap.set(rowIndex, new Map<number, BoardAddress>());
             for (let columnIndex = -4; columnIndex < 16; columnIndex++) {
-                addressMap.get(rowIndex)!!.set(columnIndex, { rowIndex, columnIndex });
+                addressMap.get(rowIndex)!.set(columnIndex, { rowIndex, columnIndex });
             }
         }
     }
@@ -183,10 +184,10 @@ class BoardAddressManager {
         if (!addressMap.has(rowIndex)) {
             addressMap.set(rowIndex, new Map<number, BoardAddress>());
         }
-        const row = addressMap.get(rowIndex)!!;
+        const row = addressMap.get(rowIndex)!;
         if (!row.has(columnIndex)) {
             row.set(columnIndex, { rowIndex, columnIndex });
         }
-        return row.get(columnIndex)!!;
+        return row.get(columnIndex)!;
     }
 }

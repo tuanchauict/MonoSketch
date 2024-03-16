@@ -29,12 +29,12 @@ export class GridCanvasViewController extends BaseCanvasViewController {
 
         const path = new Path2D();
 
-        for (let row of drawingInfo.boardRowRange) {
+        for (const row of drawingInfo.boardRowRange) {
             const yPx = drawingInfo.toYPx(row);
             this.addHLine(path, zeroX, yPx, maxX - zeroX);
         }
 
-        for (let column of drawingInfo.boardColumnRange) {
+        for (const column of drawingInfo.boardColumnRange) {
             const xPx = drawingInfo.toXPx(column);
             this.addVLine(path, xPx, zeroY, maxY - zeroY);
         }

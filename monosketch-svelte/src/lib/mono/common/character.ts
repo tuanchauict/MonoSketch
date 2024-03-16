@@ -10,8 +10,8 @@ export const NBSP: Char = String.fromCharCode(0x00A0);
 
 export const isTransparentChar = (char: Char): boolean => {
     return char === TRANSPARENT_CHAR;
-}
+};
 
 export const isHalfTransparentChar = (char: Char): boolean => {
     return char === HALF_TRANSPARENT_CHAR;
-}
+};

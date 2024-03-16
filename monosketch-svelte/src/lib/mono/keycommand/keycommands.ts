@@ -211,12 +211,12 @@ export function getCommandByKey(
             }
         }
     }
-    return getCommandByType(KeyCommandType.IDLE)!!;
+    return getCommandByType(KeyCommandType.IDLE)!;
 }
 
 export function getCommandByType(base: KeyCommandType): KeyCommand {
     if (KeyCodeToKeyCommandMap.size === 0) {
         initKeyToKeyCommandMap();
     }
-    return KeyCommandMap.get(base)!!;
+    return KeyCommandMap.get(base)!;
 }

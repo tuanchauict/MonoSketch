@@ -25,8 +25,8 @@ export class PainterBoard {
     getBound = (): Rect => this.bound;
 
     clear = () => {
-        for (let row of this.matrix) {
-            for (let pixel of row) {
+        for (const row of this.matrix) {
+            for (const pixel of row) {
                 pixel.reset();
             }
         }
@@ -109,7 +109,7 @@ export class PainterBoard {
             const src = inMatrix[bitmapRow];
             const dest = this.matrix[painterRow];
 
-            for (let cell of src.asSequence(inStartCol, inStartCol + overlap.width)) {
+            for (const cell of src.asSequence(inStartCol, inStartCol + overlap.width)) {
                 const index = cell.index - inStartCol;
                 const bitmapColumn = inStartCol + index;
                 const painterColumn = startCol + index;

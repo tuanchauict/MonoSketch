@@ -4,9 +4,6 @@ const M_LEFT = 0b1;
 const M_RIGHT = 0b10;
 const M_TOP = 0b100;
 const M_BOTTOM = 0b1000;
-const M_VERTICAL = M_TOP | M_BOTTOM;
-const M_HORIZONTAL = M_LEFT | M_RIGHT;
-
 const SINGLE_PAIRS: { [key: string]: string } = {
     '─': '─━═',
     '│': '│┃║',
@@ -98,6 +95,7 @@ export namespace CrossingResources {
         return leftMark | topMark | rightMark | bottomMark;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const getDirectionMap = (char1: Char, char2: Char): Map<number, Char> | null => {
         throw new Error('Not implemented');
     };

@@ -20,8 +20,8 @@ export class BoardCanvasViewController extends BaseCanvasViewController {
     protected drawInternal() {
         const drawingInfo = this.drawingInfo;
         this.context.font = drawingInfo.font;
-        for (let row of drawingInfo.boardRowRange) {
-            for (let column of drawingInfo.boardColumnRange) {
+        for (const row of drawingInfo.boardRowRange) {
+            for (const column of drawingInfo.boardColumnRange) {
                 this.drawPixel(this.board.get(row, column), row, column);
             }
         }

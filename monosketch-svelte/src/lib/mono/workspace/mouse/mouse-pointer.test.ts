@@ -39,10 +39,10 @@ describe('equals test', () => {
                 }),
             ).toBe(false);
             expect(
-                    mouseDown.equals({
-                        ...mouseDown,
-                        isWithShiftKey: true,
-                    }),
+                mouseDown.equals({
+                    ...mouseDown,
+                    isWithShiftKey: true,
+                }),
             ).toBe(false);
         });
     });
