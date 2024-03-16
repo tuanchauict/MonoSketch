@@ -34,6 +34,10 @@ module.exports = {
         project: './tsconfig.json',
         extraFileExtensions: ['.svelte']
     },
+    ignorePatterns: [
+        "vite.config.ts",
+        "svelte.config.js",
+    ],
     rules: {
         "indent": ["error", 4, {
             "SwitchCase": 1,

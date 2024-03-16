@@ -11,10 +11,10 @@ context.set(APP_CONTEXT, appContext);
 
 window.onresize = () => {
     WindowViewModel.windowSizeUpdateEventFlow.value = true;
-}
+};
 
 const app = new App({
-    // @ts-ignore
+    // @ts-expect-error - Safe to ignore
     target: document.getElementById('app'),
     context: context,
 });
