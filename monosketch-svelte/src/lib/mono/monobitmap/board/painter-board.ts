@@ -8,7 +8,7 @@ import type { Char } from '$libs/char';
 import type { CrossPoint } from '$mono/monobitmap/board/cross-point';
 import { ListExt } from '$libs/sequence';
 import list = ListExt.list;
-import { CrossingResources } from '$mono/monobitmap/board/crosssing-resources';
+import { CrossingResources } from '$mono/monobitmap/board/crossing-resources';
 import isConnectableChar = CrossingResources.isConnectableChar;
 
 /**
