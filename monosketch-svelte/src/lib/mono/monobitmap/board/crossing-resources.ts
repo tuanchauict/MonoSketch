@@ -1,5 +1,5 @@
-import type {Char} from '$libs/char';
-import {DEBUG_MODE} from "$mono/build_environment";
+import type { Char } from '$libs/char';
+import { DEBUG_MODE } from "$mono/build_environment";
 
 const DEBUG = false;
 
@@ -18,7 +18,7 @@ const SINGLE_PAIRS: { [key: string]: string } = {
 };
 
 const extendChars = (key: string): string[] =>
-    Array.from({length: 3}, (_, index) => getSingleKey(key, index));
+    Array.from({ length: 3 }, (_, index) => getSingleKey(key, index));
 
 const getSingleKey = (key: string, index: number): string =>
     key
