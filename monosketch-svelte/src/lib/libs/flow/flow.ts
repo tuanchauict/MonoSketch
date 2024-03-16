@@ -35,16 +35,14 @@ class ThrottleObserver<T> implements Observer<T> {
             return;
         }
         if (this.timeout == 0) {
-            // @ts-ignore
             this.timeoutId = requestAnimationFrame(this.timeoutTick);
         } else {
-            // @ts-ignore
             this.timeoutId = setTimeout(this.timeoutTick, this.timeout);
         }
     };
 
     private timeoutTick = () => {
-        let newValue = this.currentValue;
+        const newValue = this.currentValue;
         if (newValue === undefined) {
             return;
         }
@@ -74,9 +72,9 @@ export class Flow<T> {
         parent: Array<Flow<unknown>>,
         transform: (value: T0) => T,
     ): Flow<T> {
-        let flow = new Flow<T>();
+        const flow = new Flow<T>();
         flow.parent = parent;
-        // @ts-ignore : Allow unsafe call to transform.
+        // @ts-expect-error : Allow unsafe call to transform.
         flow.transform = transform;
         flow.isImmutable = true;
         return flow;
@@ -124,16 +122,16 @@ export class Flow<T> {
         }
         if (flows.length == 1) {
             console.warn('You are combining a single flow. Use flow.map instead.');
-            // @ts-ignore : Allow unsafe call to transform.
+            // @ts-expect-error : Allow unsafe call to transform.
             return flows[0].map(transform);
         }
 
         const flow = Flow.immutable(flows, transform);
-        for (let parent of flows) {
+        for (const parent of flows) {
             parent.addInternalObserver(
                 flow,
-                new SimpleObserver((_) => {
-                    let values = flows.map((flow) => flow.valueInternal);
+                new SimpleObserver(() => {
+                    const values = flows.map((flow) => flow.valueInternal);
                     if (values.includes(undefined)) {
                         // Only update the value when all values are available.
                         return;
@@ -145,7 +143,7 @@ export class Flow<T> {
         return flow;
     }
 
-    // @ts-ignore : Allow the value to be undefined.
+    // @ts-expect-error : Allow the value to be undefined.
     constructor(value: T = undefined) {
         if (value !== undefined) {
             this.valueInternal = value;
@@ -185,7 +183,7 @@ export class Flow<T> {
             this.delegateValueToObserver(observer, value);
         }
 
-        for (let [flow, observer] of this.internalObservers) {
+        for (const [flow, observer] of this.internalObservers) {
             if (flow.hasSubscribers()) {
                 this.delegateValueToObserver(observer, value);
             }
@@ -284,7 +282,7 @@ export class Flow<T> {
         if (!lifecycleOwner.isActive) {
             return;
         }
-        let simpleObserver = new SimpleObserver(observer);
+        const simpleObserver = new SimpleObserver(observer);
         this.observers.push(simpleObserver);
         lifecycleOwner.addObserver(
             new OnStopLifecycleObserver(() => {
@@ -317,7 +315,7 @@ export class Flow<T> {
         if (this.isValueUpdatedReactivelyRequired || this.observers.length > 0) {
             return true;
         }
-        for (let child of this.internalObservers.keys()) {
+        for (const child of this.internalObservers.keys()) {
             if (child.hasSubscribers()) {
                 return true;
             }
@@ -331,7 +329,7 @@ export class Flow<T> {
      * used.
      */
     stopReceivingUpdates() {
-        for (let parent of this.parent!) {
+        for (const parent of this.parent!) {
             parent.internalObservers.delete(this);
         }
     }

@@ -15,7 +15,7 @@ export class LifecycleOwner {
     private state: LifecycleState = LifecycleState.INITIALIZED;
 
     static start(): LifecycleOwner {
-        let owner = new LifecycleOwner();
+        const owner = new LifecycleOwner();
         owner.onStart();
         return owner;
     }

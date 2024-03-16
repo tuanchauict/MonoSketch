@@ -28,12 +28,12 @@ describe('Flow test', () => {
             });
 
             expect(counter).toBe(0);
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(flow2.valueInternal).toBeUndefined();
 
             flow.value = 2;
             expect(counter).toBe(0);
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(flow2.valueInternal).toBeUndefined();
 
             expect(counter).toBe(0);
@@ -54,7 +54,7 @@ describe('Flow test', () => {
 
             flow.observe(lifecycleOwner, observer);
 
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(lifecycleOwner.observers.length).toBe(0); // Before start, no observer is added
 
             lifecycleOwner.onStart();
@@ -87,13 +87,13 @@ describe('Flow test', () => {
             };
             flow2.observe(LifecycleOwner.start(), observer);
             expect(counter).toBe(1); // Run when start observe because the value is defined
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(flow2.valueInternal).toBeUndefined(); // Although the observer is run, the actual value is not set yet
             expect(observedValue).toBe(1);
 
             flow.value = 2;
             expect(counter).toBe(2);
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(flow2.valueInternal).toBe(3); // The actual value is set with the new value of the primary flow
             expect(observedValue).toBe(3);
         });
@@ -436,17 +436,17 @@ describe('Flow test', () => {
             const flow = new Flow<number>(1);
             const flow2 = flow.map((value) => value + 1);
             expect(flow2.value).toBe(2);
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(flow2.valueInternal).toBeUndefined();
 
             flow2.makeValueUpdateReactively();
             expect(flow2.value).toBe(2);
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(flow2.valueInternal).toBe(2);
 
             flow.value = 2;
             expect(flow2.value).toBe(3);
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(flow2.valueInternal).toBe(3);
         });
 
@@ -455,9 +455,9 @@ describe('Flow test', () => {
             const flow2 = flow.map((value) => value + 1);
             flow2.observe(LifecycleOwner.start(), () => {});
             flow.value = 2;
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(flow.hasSubscribers()).toBe(true);
-            // @ts-ignore
+            // @ts-expect-error - private method
             expect(flow2.valueInternal).toBe(3);
             expect(flow2.value).toBe(3);
         });

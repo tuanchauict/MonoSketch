@@ -46,5 +46,6 @@ module.exports = {
             "asyncArrow": "always",
         }],
         "svelte/valid-compile": "off", // temporary ignore this rule until fixing a11y issues
+        "@typescript-eslint/no-namespace": "off", // temporary ignore this rule
     }
 }

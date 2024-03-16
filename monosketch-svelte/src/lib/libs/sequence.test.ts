@@ -85,6 +85,7 @@ describe('test range', () => {
 
     test('range with zero step', () => {
         expect(() => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             for (const _ of range(1, 5, 0)) {
                 // do nothing
             }
