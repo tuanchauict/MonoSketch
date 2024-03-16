@@ -70,7 +70,7 @@ export class BaseCanvasViewController {
         this.canvas.height = Math.trunc(heightPx * dpr);
         this.canvas.style.width = widthPx + 'px';
         this.canvas.style.height = heightPx + 'px';
-        this.context.scale(dpr, dpr)
+        this.context.scale(dpr, dpr);
     };
 }
 

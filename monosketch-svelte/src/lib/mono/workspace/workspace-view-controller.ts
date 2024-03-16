@@ -13,8 +13,7 @@ import { KeyCommandType } from '$mono/keycommand';
 import type { Rect } from '$libs/graphics-geo/rect';
 import { SelectionCanvasViewController } from '$mono/workspace/canvas/selection-canvas-view-controller';
 import { BoardCanvasViewController } from '$mono/workspace/canvas/board-canvas-view-controller';
-import type { MonoBoard } from '$mono/monobitmap/board/board';
-import { HighlightType, type Pixel } from '$mono/monobitmap/board/pixel';
+import { MonoBoard } from '$mono/monobitmap/board/board';
 
 export class WorkspaceViewController extends LifecycleOwner {
     private canvasViewController?: CanvasViewController;
@@ -108,7 +107,7 @@ class CanvasViewController {
         this.gridCanvasViewController = new GridCanvasViewController(gridCanvas, themeManager);
         this.boardCanvasViewController = new BoardCanvasViewController(
             boardCanvas,
-            new FakeMonoBoardImpl(),
+            new MonoBoard(),
             themeManager,
         );
         this.interactionCanvasViewController = new InteractionCanvasViewController(
@@ -156,15 +155,4 @@ class CanvasViewController {
         this.interactionCanvasViewController.draw();
         this.selectionCanvasViewController.draw();
     };
-}
-
-// Fake implementation of MonoBoard for testing
-// TODO: Replace this with a real implementation
-class FakeMonoBoardImpl implements MonoBoard {
-    get = (row: number, column: number): Pixel => ({
-        isTransparent: false,
-        visualChar: ' ',
-        directionChar: ' ',
-        highlight: HighlightType.NO,
-    });
 }

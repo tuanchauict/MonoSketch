@@ -59,7 +59,7 @@ export class AxisCanvasViewController extends BaseCanvasViewController {
 
         this.addHLine(path, 0, xAxisHeight, canvasSizePx.width);
 
-        for (let row of drawingInfo.boardRowRange) {
+        for (const row of drawingInfo.boardRowRange) {
             const text = `${row}`;
             const yPx = xAxisHeight + drawingInfo.toYPx(row) + 3;
             const xPx = yAxisWidth - 0.5 * cellSizePx.width;
@@ -74,7 +74,7 @@ export class AxisCanvasViewController extends BaseCanvasViewController {
 
         this.addVLine(path, yAxisWidth, 0, canvasSizePx.height);
 
-        for (let column of drawingInfo.boardColumnRange) {
+        for (const column of drawingInfo.boardColumnRange) {
             if (column % 20 !== 0) {
                 continue;
             }

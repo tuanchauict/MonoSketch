@@ -97,7 +97,7 @@ export namespace MonoBitmap {
                 const destVisual = this.visualMatrix[startRow + r];
                 const destDirection = this.directionMatrix[startRow + r];
 
-                for (let cell of src.asSequence(inStartCol, inStartCol + overlap.width)) {
+                for (const cell of src.asSequence(inStartCol, inStartCol + overlap.width)) {
                     const index = cell.index - inStartCol;
                     const destIndex = startCol + index;
                     // visualChar from source is always not transparent (0) due to the optimization of Row

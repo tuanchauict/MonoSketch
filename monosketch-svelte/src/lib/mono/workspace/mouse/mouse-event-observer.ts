@@ -35,7 +35,7 @@ export class MouseEventObserver {
         shiftKeyStateFlow: Flow<boolean>,
         private scrollModeFlow: Flow<ScrollMode>,
     ) {
-        this.drawingInfo = drawingInfoFlow.value!!;
+        this.drawingInfo = drawingInfoFlow.value!;
 
         container.onmousedown = this.setMouseDownPointer;
         container.onmouseup = this.setMouseUpPointer;
@@ -126,11 +126,11 @@ export class MouseEventObserver {
                     // new event to listeners).
                     return !mouseBoardCoordinate.equals(currentValue.boardCoordinate)
                         ? MousePointer.drag(
-                              this.toBoardCoordinate(event),
-                              this.toBoardCoordinateF(event),
-                              currentValue.boardCoordinate,
-                              event.shiftKey,
-                          )
+                            this.toBoardCoordinate(event),
+                            this.toBoardCoordinateF(event),
+                            currentValue.boardCoordinate,
+                            event.shiftKey,
+                        )
                         : null;
                 case MousePointerType.DRAG:
                     return MousePointer.drag(
@@ -185,7 +185,7 @@ export class MouseEventObserver {
         this.mouseWheelDeltaY = accumulateWheelDeltaTop - usableDeltaTop;
     };
 
-    private getCurrentMousePointer = (): MousePointerInfo => this.mousePointerMutableFlow.value!!;
+    private getCurrentMousePointer = (): MousePointerInfo => this.mousePointerMutableFlow.value!;
 
     /**
      * Returns scroll delta x and y of the wheel event after adjusting with meta keys:

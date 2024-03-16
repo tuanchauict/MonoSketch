@@ -20,7 +20,7 @@ class ProjectDataViewModel {
             id: UUID.generate(),
             name: 'New Project',
         };
-        this.setProjectList([newProject, ...this._projectFlow.value!!]);
+        this.setProjectList([newProject, ...this._projectFlow.value!]);
         this.openProject(newProject.id);
         this.setRenamingProject(newProject.id);
     }
@@ -34,7 +34,7 @@ class ProjectDataViewModel {
     }
 
     deleteProject(id: string) {
-        this._projectFlow.value = this._projectFlow.value!!.filter((item) => item.id !== id);
+        this._projectFlow.value = this._projectFlow.value!.filter((item) => item.id !== id);
     }
 
     cancelDeletingProject() {
@@ -46,7 +46,7 @@ class ProjectDataViewModel {
     }
 
     setProjectName(id: string, name: string) {
-        this._projectFlow.value = this._projectFlow.value!!.map((item) => {
+        this._projectFlow.value = this._projectFlow.value!.map((item) => {
             if (item.id === id) {
                 return {
                     ...item,
@@ -58,7 +58,7 @@ class ProjectDataViewModel {
     }
 
     getProject(id: string): ProjectItem | undefined {
-        return this._projectFlow.value!!.find((item) => item.id === id);
+        return this._projectFlow.value!.find((item) => item.id === id);
     }
 }
 

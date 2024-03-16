@@ -14,11 +14,11 @@ export class DrawingInfoController {
     constructor(
         private readonly canvas: HTMLCanvasElement,
     ) {
-        this.context = this.canvas.getContext('2d')!!;
+        this.context = this.canvas.getContext('2d')!;
     }
 
     setFont = (fontSize: number) => {
-        const currentInfo = this.drawingInfoMutableFlow.value!!;
+        const currentInfo = this.drawingInfoMutableFlow.value!;
         const cellSizePx = getCellSizePx(this.context, currentInfo.font, fontSize);
         const cellCharOffsetPx = SizeF.of(0.0, cellSizePx.height * 0.2);
         this.drawingInfoMutableFlow.value = currentInfo.copyWith({
@@ -31,13 +31,13 @@ export class DrawingInfoController {
     };
 
     setSize = (widthPx: number, heightPx: number) => {
-        this.drawingInfoMutableFlow.value = this.drawingInfoMutableFlow.value!!.copyWith({
+        this.drawingInfoMutableFlow.value = this.drawingInfoMutableFlow.value!.copyWith({
             canvasSizePx: SizeF.of(widthPx, heightPx),
         });
     };
 
     setOffset = (offsetPx: Point) => {
-        this.drawingInfoMutableFlow.value = this.drawingInfoMutableFlow.value!!.copyWith({
+        this.drawingInfoMutableFlow.value = this.drawingInfoMutableFlow.value!.copyWith({
             offsetPx,
         });
     };

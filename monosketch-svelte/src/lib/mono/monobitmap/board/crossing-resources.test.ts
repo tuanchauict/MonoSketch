@@ -52,7 +52,7 @@ const identifySurroundMask = (left: string, right: string, top: string, bottom: 
         result |= M_BOTTOM;
     }
     return result;
-}
+};
 
 const identifyInnerMask = (char: string): number => {
     let result = 0;
@@ -73,7 +73,7 @@ const identifyInnerMask = (char: string): number => {
         result |= M_TOP;
     }
     return result;
-}
+};
 
 const directionMask = (char1: string, char2: string, left: string, right: string, top: string, bottom: string): number => {
     const mask1 = identifyInnerMask(char1);
@@ -85,7 +85,7 @@ const directionMask = (char1: string, char2: string, left: string, right: string
     const result = inner & surround;
     console.log(toBinaryString(result));
     return result;
-}
+};
 
 function toBinaryString(num: number): string {
     const text = num.toString(2);

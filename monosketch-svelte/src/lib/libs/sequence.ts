@@ -39,7 +39,6 @@ export function* range(start: number, end: number, step: number = 1): Generator<
 export function* zip<T1, T2>(iter1: Iterable<T1>, iter2: Iterable<T2>): Generator<[T1, T2]> {
     const iterator1 = iter1[Symbol.iterator]();
     const iterator2 = iter2[Symbol.iterator]();
-    let index = 0;
     while (true) {
         const result1 = iterator1.next();
         const result2 = iterator2.next();
@@ -47,7 +46,6 @@ export function* zip<T1, T2>(iter1: Iterable<T1>, iter2: Iterable<T2>): Generato
             break;
         }
         yield [result1.value, result2.value];
-        index++;
     }
 }
 
@@ -118,7 +116,7 @@ export function filter<T>(iterable: Iterable<T>, func: (value: T) => boolean): T
  *  The insertion point is defined as the index at which the element should be inserted,
  *  so that the list (or the specified subrange of list) still remains sorted.
  */
-export function binarySearch<T, X>(
+export function binarySearch<T>(
     array: T[],
     comparator: (value: T) => number,
     withIn: number[] = [0, array.length],
