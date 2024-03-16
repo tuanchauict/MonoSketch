@@ -1,3 +1,4 @@
+import { CrossingResources } from "$mono/monobitmap/board/crossing-resources";
 import { HighlightType, Pixel } from '$mono/monobitmap/board/pixel';
 import { PainterBoard } from '$mono/monobitmap/board/painter-board';
 import { Size } from '$libs/graphics-geo/size';
@@ -7,6 +8,7 @@ import { Point } from '$libs/graphics-geo/point';
 import { MonoBitmap } from '$mono/monobitmap/bitmap/monobitmap';
 import type { CrossPoint } from '$mono/monobitmap/board/cross-point';
 import type { Char } from '$libs/char';
+import getCrossingChar = CrossingResources.getCrossingChar;
 
 const STANDARD_UNIT_SIZE = Size.of(16, 16);
 
@@ -21,7 +23,8 @@ export class MonoBoard {
         return this.painterBoards.size;
     }
 
-    constructor(private readonly unitSize: Size = STANDARD_UNIT_SIZE) {}
+    constructor(private readonly unitSize: Size = STANDARD_UNIT_SIZE) {
+    }
 
     clearAndSetWindow = (bound: Rect) => {
         this.windowBound = bound;
@@ -52,9 +55,29 @@ export class MonoBoard {
         }
     };
 
-    // eslint-disable-next-line
     private drawCrossingPoints = (crossingPoints: CrossPoint[], highlight: HighlightType) => {
-        // TODO: implement this method
+        for (const charPoint of crossingPoints) {
+            const left = charPoint.boardColumn;
+            const top = charPoint.boardRow;
+            const currentPixel = this.get(left, top);
+            const crossingChar = getCrossingChar(
+                // Upper
+                charPoint.visualChar,
+                charPoint.leftChar,
+                charPoint.rightChar,
+                charPoint.topChar,
+                charPoint.bottomChar,
+                // Lower
+                this.get(left, top).visualChar,
+                this.get(left - 1, top).directionChar,
+                this.get(left + 1, top).directionChar,
+                this.get(left, top - 1).directionChar,
+                this.get(left, top + 1).directionChar,
+            );
+            const visualChar = crossingChar ?? charPoint.visualChar;
+            const directionChar = crossingChar ?? charPoint.directionChar;
+            currentPixel.set(visualChar, directionChar, highlight);
+        }
     };
 
     getPoint = (position: Point): Pixel => {
@@ -69,7 +92,8 @@ export class MonoBoard {
     };
 
     set = (left: number, top: number, char: Char, highlight: HighlightType) => {
-        this.getOrCreateBoard(left, top, true)?.setPoint(new Point(left, top), char, highlight);
+        this.getOrCreateBoard(left, top, true)
+            ?.setPoint(new Point(left, top), char, highlight);
     };
 
     setPoint = (position: Point, char: Char, highlight: HighlightType) => {
