@@ -3,29 +3,6 @@ import { DEBUG_MODE } from "$mono/build_environment";
 
 const DEBUG = false;
 
-const SINGLE_PAIRS: { [key: string]: string } = {
-    '─': '─━═',
-    '│': '│┃║',
-    '┐': '┐┓╗',
-    '┌': '┌┏╔',
-    '┘': '┘┛╝',
-    '└': '└┗╚',
-    '┬': '┬┳╦',
-    '┴': '┴┻╩',
-    '├': '├┣╠',
-    '┤': '┤┫╣',
-    '┼': '┼╋╬',
-};
-
-const extendChars = (key: string): string[] =>
-    Array.from({ length: 3 }, (_, index) => getSingleKey(key, index));
-
-const getSingleKey = (key: string, index: number): string =>
-    key
-        .split('')
-        .map((char) => SINGLE_PAIRS[char]![index])
-        .join('');
-
 export namespace CrossingResources {
     const STANDARDIZED_CHARS: { [key: string]: string } = {
         '-': '─',
@@ -36,26 +13,6 @@ export namespace CrossingResources {
         '╯': '┘',
         '╰': '└',
     };
-
-    const LEFT_IN_CHARS: Set<Char> = [...'─┌└┬┴├┼']
-        .map(extendChars)
-        .flat()
-        .reduce((acc, char) => new Set([...acc, char]), new Set<Char>());
-
-    const RIGHT_IN_CHARS: Set<Char> = [...'─┐┘┬┴┤┼']
-        .map(extendChars)
-        .flat()
-        .reduce((acc, char) => new Set([...acc, char]), new Set<Char>());
-
-    const TOP_IN_CHARS: Set<Char> = [...'│┌┐┬├┤┼']
-        .map(extendChars)
-        .flat()
-        .reduce((acc, char) => new Set([...acc, char]), new Set<Char>());
-
-    const BOTTOM_IN_CHARS: Set<Char> = [...'│└┘┴├┤┼']
-        .map(extendChars)
-        .flat()
-        .reduce((acc, char) => new Set([...acc, char]), new Set<Char>());
 
     // Constants representing bit masks for directions (single lines)
     const MASK_SINGLE_LEFT = 0b0001;
@@ -232,13 +189,13 @@ export namespace CrossingResources {
 
     const standardize = (char: Char): Char => STANDARDIZED_CHARS[char] ?? char;
 
-    export const hasLeft = (char: Char): boolean => standardize(char) in LEFT_IN_CHARS;
+    export const hasLeft = (char: Char): boolean => getCharMask(standardize(char), MASK_RIGHT) > 0;
 
-    export const hasRight = (char: Char): boolean => standardize(char) in RIGHT_IN_CHARS;
+    export const hasRight = (char: Char): boolean => getCharMask(standardize(char), MASK_LEFT) > 0;
 
-    export const hasTop = (char: Char): boolean => standardize(char) in TOP_IN_CHARS;
+    export const hasTop = (char: Char): boolean => getCharMask(standardize(char), MASK_BOTTOM) > 0;
 
-    export const hasBottom = (char: Char): boolean => standardize(char) in BOTTOM_IN_CHARS;
+    export const hasBottom = (char: Char): boolean => getCharMask(standardize(char), MASK_TOP) > 0;
 
     export const isConnectableChar = (char: Char): boolean => (CHAR_TO_MASK_MAP[char] ?? 0) > 0;
 
