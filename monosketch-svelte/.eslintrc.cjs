@@ -53,5 +53,15 @@ module.exports = {
         "@typescript-eslint/no-namespace": "off", // temporary ignore this rule
         "svelte/no-inner-declarations": "off",
         "object-curly-spacing": ["error", "always"],
+        "@typescript-eslint/no-unused-vars": ["warn", {
+            "vars": "all",
+            "args": "after-used",
+            "ignoreRestSiblings": true,
+            "varsIgnorePattern": "^_",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_"
+        }],
+        "eol-last": ["error", "always"],
     }
 }
