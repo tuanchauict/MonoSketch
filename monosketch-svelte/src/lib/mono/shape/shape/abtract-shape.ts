@@ -34,14 +34,14 @@ export abstract class AbstractShape extends ShapeIdentifier implements Comparabl
     /**
      * Extra information which is specific to each shape.
      */
-    private extraInner: ShapeExtra = NoExtra;
+    protected extraInner: ShapeExtra = NoExtra;
 
     /**
      * @param id with null means the id will be automatically generated.
      * @param parentId the id of the parent shape. If the shape is a top-level shape, this value is
      * null.
      */
-    protected constructor(id?: string, parentId?: string) {
+    protected constructor(id: string | null, parentId?: string) {
         super(id ?? UUID.generate());
         this.parentId = parentId || null;
         this.versionCode = AbstractShape.nextVersionCode();
@@ -57,10 +57,8 @@ export abstract class AbstractShape extends ShapeIdentifier implements Comparabl
 
     abstract toSerializableShape(isIdIncluded: boolean): AbstractSerializableShape;
 
-    abstract equals(other: unknown): boolean;
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    setBound(newBound: Rect): void {
+    setBound(newBound: Rect) {
         // Default implementation does nothing, can be overridden
     }
 
@@ -82,7 +80,7 @@ export abstract class AbstractShape extends ShapeIdentifier implements Comparabl
      * Updates properties of the shape by [action]. The [action] returns true if the shape's
      * properties are changed.
      */
-    update(action: () => boolean): void {
+    update(action: () => boolean) {
         const isChanged = action();
         if (isChanged) {
             this.versionCode = AbstractShape.nextVersionCode(this.versionCode);
@@ -99,6 +97,20 @@ export abstract class AbstractShape extends ShapeIdentifier implements Comparabl
 
     isOverlapped(rect: Rect): boolean {
         return this.bound.isOverlapped(rect);
+    }
+
+    /**
+     * Returns true if the shape is the same type to [other] and has the same id and version code to the [other].
+     * @param other
+     */
+    equals(other: unknown): boolean {
+        if (!(other instanceof AbstractShape)) {
+            return false;
+        }
+        if (this.constructor !== other.constructor) {
+            return false;
+        }
+        return this.id === other.id && this.versionCode === other.versionCode;
     }
 
     /**
