@@ -533,7 +533,16 @@ internal object CrossingResources {
 
         val innerMask = maskUpper or maskLower
         val outerMask = maskLeft or maskRight or maskTop or maskBottom
-        val mask = innerMask and outerMask
+
+        val outerDirectionCount = countMask(outerMask) / 3 // 3 is the number of format.
+        val mask = if (countMask(maskUpper) > outerDirectionCount) {
+            // If the upper char has more directions than the outer directions, use the inner mask
+            // only. This happens when the upper char is a sole char with no or not enough adjacent
+            // chars. For example, use ├ for the line anchor.
+            innerMask
+        } else {
+            innerMask and outerMask
+        }
 
         if (Build.DEBUG) {
             console.log(
@@ -576,5 +585,18 @@ internal object CrossingResources {
         val allDirectionsMask =
             ((mask shl 8) or (mask shl 4) or mask or (mask shr 4) or (mask shr 8)) and MASK_CROSS
         return MASK_CROSS xor allDirectionsMask
+    }
+
+    /**
+     * Counts the number of bits that are set to 1 in the given mask.
+     */
+    private fun countMask(mask: Int): Int {
+        var count = 0
+        var m = mask
+        while (m != 0) {
+            count += m and 1
+            m = m shr 1
+        }
+        return count
     }
 }
