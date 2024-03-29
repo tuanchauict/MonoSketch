@@ -29,7 +29,6 @@ export class ShapeIdentifier implements Identifier {
 export abstract class AbstractShape extends ShapeIdentifier implements Comparable {
     parentId: string | null;
     versionCode: number;
-    abstract bound: Rect;
 
     /**
      * Extra information which is specific to each shape.
@@ -56,6 +55,8 @@ export abstract class AbstractShape extends ShapeIdentifier implements Comparabl
     }
 
     abstract toSerializableShape(isIdIncluded: boolean): AbstractSerializableShape;
+
+    abstract get bound(): Rect;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setBound(newBound: Rect) {
