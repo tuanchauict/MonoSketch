@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, tuanchauict
+ * Copyright (c) 2023-2024, tuanchauict
  */
 
 package mono.graphics.board
@@ -45,7 +45,7 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
             crossingPoints += board.fill(position, bitmap, highlight)
         }
 
-        drawCrossingPoints(crossingPoints, highlight)
+        drawCrossingPoints2(crossingPoints, highlight)
     }
 
     private fun drawCrossingPoints(crossingPoints: List<CrossPoint>, highlight: Highlight) {
@@ -94,6 +94,31 @@ class MonoBoard(private val unitSize: Size = STANDARD_UNIT_SIZE) {
                 directionChar = directionMap[directionMark] ?: charPoint.directionChar,
                 highlight = highlight
             )
+        }
+    }
+
+    private fun drawCrossingPoints2(crossingPoints: List<CrossPoint>, highlight: Highlight) {
+        for (charPoint in crossingPoints) {
+            val left = charPoint.left
+            val top = charPoint.top
+            val currentPixel = get(left, top)
+            val crossingChar = CrossingResources.getCrossingChar(
+                upper = charPoint.visualChar,
+                adjacentLeftUpper = charPoint.leftChar,
+                adjacentRightUpper = charPoint.rightChar,
+                adjacentTopUpper = charPoint.topChar,
+                adjacentBottomUpper = charPoint.bottomChar,
+                lower = get(left, top).visualChar,
+                adjacentLeftLower = get(left - 1, top).directionChar,
+                adjacentRightLower = get(left + 1, top).directionChar,
+                adjacentTopLower = get(left, top - 1).directionChar,
+                adjacentBottomLower = get(left, top + 1).directionChar
+            )
+            if (crossingChar != null) {
+                currentPixel.set(crossingChar, crossingChar, highlight)
+            } else {
+                currentPixel.set(charPoint.visualChar, charPoint.directionChar, highlight)
+            }
         }
     }
 
