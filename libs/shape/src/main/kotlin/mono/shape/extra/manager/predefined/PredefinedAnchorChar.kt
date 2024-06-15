@@ -13,6 +13,8 @@ internal object PredefinedAnchorChar {
     val PREDEFINED_ANCHOR_CHARS = listOf(
         AnchorChar(id = "A1", displayName = "▶", '◀', '▶', '▲', '▼'),
         AnchorChar(id = "A12", displayName = "▷", '◁', '▷', '△', '▽'),
+        AnchorChar(id = "A13", displayName = "►", '◄', '►', '▲', '▼'),
+        AnchorChar(id = "A14", displayName = "▻", '◅', '▻', '△', '▽'),
         AnchorChar(id = "A2", displayName = "■", '■'),
         AnchorChar(id = "A21", displayName = "□", '□'),
         AnchorChar(id = "A220", displayName = "◆", '◆'),
