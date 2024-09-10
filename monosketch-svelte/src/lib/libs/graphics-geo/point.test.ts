@@ -32,11 +32,11 @@ describe('Point test', () => {
     test('cannot create point with float', () => {
         expect(() => {
             new Point(1.2, 0);
-        }).toThrow(Error('location must be integer'));
+        }).toThrow(Error('location must be integer (1.2, 0)'));
 
         expect(() => {
             new Point(1, 1.5);
-        }).toThrow(Error('location must be integer'));
+        }).toThrow(Error('location must be integer (1, 1.5)'));
     });
 });
 

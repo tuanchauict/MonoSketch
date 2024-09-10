@@ -34,7 +34,7 @@ export class Point implements IPoint {
         public readonly top: number,
     ) {
         if (!(Number.isInteger(left) && Number.isInteger(top))) {
-            throw Error(`location must be integer ${left} ${top}`);
+            throw Error(`location must be integer (${left}, ${top})`);
         }
     }
 
