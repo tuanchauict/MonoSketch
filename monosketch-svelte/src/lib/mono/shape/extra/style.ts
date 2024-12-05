@@ -1,4 +1,5 @@
 import type { Char } from "$libs/char";
+import type { Comparable } from "$libs/comparable";
 import type { Drawable } from "$mono/monobitmap/drawable";
 
 /**
@@ -170,7 +171,7 @@ export enum TextVerticalAlign {
 /**
  * A model for defining text aligns.
  */
-export class TextAlign {
+export class TextAlign implements Comparable {
     constructor(
         public readonly horizontalAlign: TextHorizontalAlign,
         public readonly verticalAlign: TextVerticalAlign,
@@ -193,6 +194,23 @@ export class TextAlign {
     static from(textHorizontalAlign: number, textVerticalAlign: number): TextAlign {
         const horizontalAlign = this.ALL_HORIZONTAL_ALIGNS[textHorizontalAlign];
         const verticalAlign = this.ALL_VERTICAL_ALIGNS[textVerticalAlign];
+        return new TextAlign(horizontalAlign, verticalAlign);
+    }
+
+    equals(other: unknown): boolean {
+        if (!(other instanceof TextAlign)) {
+            return false;
+        }
+        return (
+            this.horizontalAlign === other.horizontalAlign &&
+            this.verticalAlign === other.verticalAlign
+        );
+    }
+
+    copy({
+             horizontalAlign = this.horizontalAlign,
+             verticalAlign = this.verticalAlign,
+         }: Partial<TextAlign> = {}): TextAlign {
         return new TextAlign(horizontalAlign, verticalAlign);
     }
 }
