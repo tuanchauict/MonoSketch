@@ -2,7 +2,7 @@ import type { Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import { RectangleExtra, type ShapeExtra } from "$mono/shape/extra/shape-extra";
 import { SerializableRectangle } from "$mono/shape/serialization/serializable-shape";
-import { AbstractShape } from "$mono/shape/shape/abtract-shape";
+import { AbstractShape } from "$mono/shape/shape/abstract-shape";
 
 /**
  * A rectangle shape.
