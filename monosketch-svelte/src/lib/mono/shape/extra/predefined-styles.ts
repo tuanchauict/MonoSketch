@@ -145,27 +145,26 @@ export class PredefinedAnchorChar {
  */
 export class PredefinedRectangleBorderStyle {
     private static readonly PATTERN_TEXT_NO_BORDER = `
-        +++
-        + +
-        +++
-    `.trim().replace(/\+/g, HALF_TRANSPARENT_CHAR);
++++
++ +
++++`.trim().replace(/\+/g, HALF_TRANSPARENT_CHAR);
 
     private static readonly PATTERN_TEXT_0 = `
-        ┌─┐
-        │ │
-        └─┘
+┌─┐
+│ │
+└─┘
     `.trim();
 
     private static readonly PATTERN_TEXT_1 = `
-        ┏━┓
-        ┃ ┃
-        ┗━┛
+┏━┓
+┃ ┃
+┗━┛
     `.trim();
 
     private static readonly PATTERN_TEXT_2 = `
-        ╔═╗
-        ║ ║
-        ╚═╝
+╔═╗
+║ ║
+╚═╝
     `.trim();
 
     private static readonly REPEATABLE_RANGE_0 = new RepeatRepeatableRange(1, 1);

@@ -48,7 +48,7 @@ export class NinePatchDrawablePattern {
 
     constructor(public width: number, public height: number, private chars: Char[]) {
         if (chars.length < width * height) {
-            throw new Error("Mismatch between size and number of chars provided");
+            throw new Error(`Mismatch between size (${width}x${height}) and number of chars provided (${chars.length})`);
         }
     }
 
@@ -64,7 +64,7 @@ export class NinePatchDrawablePattern {
         }
         const width = array[0].length;
         const height = array.length;
-        const chars = array.map((char) => char === transparentChar ? TRANSPARENT_CHAR : char);
+        const chars = array.join("").split("").map(char => char === transparentChar ? TRANSPARENT_CHAR : char);
         return new NinePatchDrawablePattern(width, height, chars);
     }
 }
