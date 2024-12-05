@@ -1,5 +1,4 @@
 import type { Comparable } from "$libs/comparable";
-import { TODO } from "$libs/todo";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
 import { PredefinedStraightStrokeStyle } from "$mono/shape/extra/predefined-styles";
 import {
@@ -8,9 +7,13 @@ import {
     RectangleFillStyle,
     StraightStrokeDashPattern,
     StraightStrokeStyle,
-    TextAlign,
+    TextAlign, TextHorizontalAlign, TextVerticalAlign,
 } from "$mono/shape/extra/style";
-import { SerializableLineExtra, type SerializableRectExtra } from "$mono/shape/serialization/serializable-shape";
+import {
+    SerializableLineExtra,
+    type SerializableRectExtra,
+    SerializableTextExtra,
+} from "$mono/shape/serialization/serializable-shape";
 
 /**
  * An interface for extra properties of a shape.
@@ -67,6 +70,28 @@ export class LineExtra implements ShapeExtra {
             this.userSelectedEndAnchor.id === other.userSelectedEndAnchor.id &&
             this.dashPattern.toSerializableValue() === other.dashPattern.toSerializableValue() &&
             this.isRoundedCorner === other.isRoundedCorner
+        );
+    }
+
+    copy({
+             isStrokeEnabled = this.isStrokeEnabled,
+             userSelectedStrokeStyle = this.userSelectedStrokeStyle,
+             isStartAnchorEnabled = this.isStartAnchorEnabled,
+             userSelectedStartAnchor = this.userSelectedStartAnchor,
+             isEndAnchorEnabled = this.isEndAnchorEnabled,
+             userSelectedEndAnchor = this.userSelectedEndAnchor,
+             dashPattern = this.dashPattern,
+             isRoundedCorner = this.isRoundedCorner,
+         }: Partial<LineExtra> = {}): LineExtra {
+        return new LineExtra(
+            isStrokeEnabled,
+            userSelectedStrokeStyle,
+            isStartAnchorEnabled,
+            userSelectedStartAnchor,
+            isEndAnchorEnabled,
+            userSelectedEndAnchor,
+            dashPattern,
+            isRoundedCorner,
         );
     }
 
@@ -157,6 +182,24 @@ export class RectangleExtra implements ShapeExtra {
         );
     }
 
+    copy({
+             isFillEnabled = this.isFillEnabled,
+             userSelectedFillStyle = this.userSelectedFillStyle,
+             isBorderEnabled = this.isBorderEnabled,
+             userSelectedBorderStyle = this.userSelectedBorderStyle,
+             dashPattern = this.dashPattern,
+             corner = this.corner,
+         }: Partial<RectangleExtra> = {}): RectangleExtra {
+        return new RectangleExtra(
+            isFillEnabled,
+            userSelectedFillStyle,
+            isBorderEnabled,
+            userSelectedBorderStyle,
+            dashPattern,
+            corner,
+        );
+    }
+
     toSerializableExtra(): SerializableRectExtra {
         return {
             isFillEnabled: this.isFillEnabled,
@@ -184,13 +227,64 @@ export class RectangleExtra implements ShapeExtra {
  * A {@link ShapeExtra} for a text.
  */
 export class TextExtra implements ShapeExtra {
-    constructor() {
-        TODO();
+    constructor(
+        public boundExtra: RectangleExtra,
+        public textAlign: TextAlign,
+    ) {
+    }
+
+    hasBorder(): boolean {
+        return this.boundExtra.isBorderEnabled;
     }
 
     equals(other: unknown): boolean {
-        TODO("Method not implemented.");
-        return false;
+        if (!(other instanceof TextExtra)) {
+            return false;
+        }
+        return (
+            this.boundExtra.equals(other.boundExtra) &&
+            this.textAlign.equals(other.textAlign)
+        );
+    }
+
+    copy({
+             boundExtra = this.boundExtra,
+             textAlign = this.textAlign,
+         }: Partial<TextExtra> = {}): TextExtra {
+        return new TextExtra(
+            boundExtra,
+            textAlign,
+        );
+    }
+
+    toSerializableExtra(): SerializableTextExtra {
+        return {
+            boundExtra: this.boundExtra.toSerializableExtra(),
+            textHorizontalAlign: this.textAlign.horizontalAlign,
+            textVerticalAlign: this.textAlign.verticalAlign,
+        };
+    }
+
+    static fromSerializable(serializableExtra: SerializableTextExtra): TextExtra {
+        return new TextExtra(
+            RectangleExtra.fromSerializable(serializableExtra.boundExtra),
+            TextAlign.from(serializableExtra.textHorizontalAlign, serializableExtra.textVerticalAlign),
+        );
+    }
+
+    static NO_BOUND = new TextExtra(
+        ShapeExtraManager.defaultRectangleExtra.copy({
+            isFillEnabled: false,
+            isBorderEnabled: false,
+        }),
+        new TextAlign(TextHorizontalAlign.LEFT, TextVerticalAlign.TOP),
+    );
+
+    static withDefault(): TextExtra {
+        return new TextExtra(
+            ShapeExtraManager.defaultRectangleExtra,
+            ShapeExtraManager.defaultTextAlign,
+        );
     }
 }
 
