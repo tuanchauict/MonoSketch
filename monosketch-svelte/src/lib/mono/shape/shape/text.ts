@@ -12,7 +12,7 @@ import { AbstractShape } from "$mono/shape/shape/abstract-shape";
 /**
  * A text shape which contains a bound and a text.
  */
-class Text extends AbstractShape {
+export class Text extends AbstractShape {
     private userSettingSize: Size = Size.ZERO;
 
     // Text can be auto resized by text
@@ -28,6 +28,7 @@ class Text extends AbstractShape {
         this.boundInner = rect;
         this.isTextEditableInner = isTextEditable;
         this.userSettingSize = rect.size;
+        this.extraInner = TextExtra.withDefault();
         this.updateRenderableText();
     }
 
@@ -124,6 +125,10 @@ class Text extends AbstractShape {
         if (this.text !== this.renderableTextInner.text || maxRowCharCount !== this.renderableTextInner.maxRowCharCount) {
             this.renderableTextInner = new RenderableText(this.text, Math.max(maxRowCharCount, 1));
         }
+    }
+
+    get renderableText(): RenderableText {
+        return this.renderableTextInner;
     }
 
     makeTextEditable(): void {
