@@ -1,53 +1,182 @@
 import type { Comparable } from "$libs/comparable";
 import { TODO } from "$libs/todo";
-import type { SerializableRectExtra } from "$mono/shape/serialization/serializable-shape";
+import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
+import { PredefinedStraightStrokeStyle } from "$mono/shape/extra/predefined-styles";
+import {
+    AnchorChar,
+    RectangleBorderCornerPattern,
+    RectangleFillStyle,
+    StraightStrokeDashPattern,
+    StraightStrokeStyle,
+    TextAlign,
+} from "$mono/shape/extra/style";
+import { SerializableLineExtra, type SerializableRectExtra } from "$mono/shape/serialization/serializable-shape";
 
 /**
  * An interface for extra properties of a shape.
  */
-export interface ShapeExtra extends Comparable{
+export interface ShapeExtra extends Comparable {
 }
 
 export const NoExtra: ShapeExtra = {
     equals(other: unknown): boolean {
         return other === NoExtra;
-    }
+    },
 };
 
 /**
  * A {@link ShapeExtra} for a line.
  */
 export class LineExtra implements ShapeExtra {
-    constructor() {
-        TODO();
+    constructor(
+        public isStrokeEnabled: boolean,
+        public userSelectedStrokeStyle: StraightStrokeStyle,
+        public isStartAnchorEnabled: boolean,
+        public userSelectedStartAnchor: AnchorChar,
+        public isEndAnchorEnabled: boolean,
+        public userSelectedEndAnchor: AnchorChar,
+        public dashPattern: StraightStrokeDashPattern,
+        public isRoundedCorner: boolean,
+    ) {
+    }
+
+    get startAnchor(): AnchorChar | null {
+        return this.isStartAnchorEnabled ? this.userSelectedStartAnchor : null;
+    }
+
+    get endAnchor(): AnchorChar | null {
+        return this.isEndAnchorEnabled ? this.userSelectedEndAnchor : null;
+    }
+
+    get strokeStyle(): StraightStrokeStyle | null {
+        return this.isStrokeEnabled
+            ? PredefinedStraightStrokeStyle.getStyle(this.userSelectedStrokeStyle.id, this.isRoundedCorner)
+            : null;
     }
 
     equals(other: unknown): boolean {
-        TODO("Method not implemented.");
-        return false;
+        if (!(other instanceof LineExtra)) {
+            return false;
+        }
+        return (
+            this.isStrokeEnabled === other.isStrokeEnabled &&
+            this.userSelectedStrokeStyle.id === other.userSelectedStrokeStyle.id &&
+            this.isStartAnchorEnabled === other.isStartAnchorEnabled &&
+            this.userSelectedStartAnchor.id === other.userSelectedStartAnchor.id &&
+            this.isEndAnchorEnabled === other.isEndAnchorEnabled &&
+            this.userSelectedEndAnchor.id === other.userSelectedEndAnchor.id &&
+            this.dashPattern.toSerializableValue() === other.dashPattern.toSerializableValue() &&
+            this.isRoundedCorner === other.isRoundedCorner
+        );
+    }
+
+    static fromSerializable(serializableExtra: SerializableLineExtra): LineExtra {
+        return new LineExtra(
+            serializableExtra.isStrokeEnabled,
+            ShapeExtraManager.getLineStrokeStyle(serializableExtra.userSelectedStrokeStyleId),
+            serializableExtra.isStartAnchorEnabled,
+            ShapeExtraManager.getStartHeadAnchorChar(serializableExtra.userSelectedStartAnchorId),
+            serializableExtra.isEndAnchorEnabled,
+            ShapeExtraManager.getEndHeadAnchorChar(serializableExtra.userSelectedEndAnchorId),
+            StraightStrokeDashPattern.fromSerializableValue(serializableExtra.dashPattern),
+            serializableExtra.isRoundedCorner,
+        );
+    }
+
+    toSerializableExtra(): SerializableLineExtra {
+        return {
+            isStrokeEnabled: this.isStrokeEnabled,
+            userSelectedStrokeStyleId: this.userSelectedStrokeStyle.id,
+            isStartAnchorEnabled: this.isStartAnchorEnabled,
+            userSelectedStartAnchorId: this.userSelectedStartAnchor.id,
+            isEndAnchorEnabled: this.isEndAnchorEnabled,
+            userSelectedEndAnchorId: this.userSelectedEndAnchor.id,
+            dashPattern: this.dashPattern.toSerializableValue(),
+            isRoundedCorner: this.isRoundedCorner,
+        };
     }
 }
 
 /**
  * A {@link ShapeExtra} for a rectangle box.
  */
-export class RectangleExtra implements ShapeExtra, Comparable{
-    constructor() {
-        TODO();
+export class RectangleExtra implements ShapeExtra {
+    constructor(
+        public isFillEnabled: boolean,
+        public userSelectedFillStyle: RectangleFillStyle,
+        public isBorderEnabled: boolean,
+        public userSelectedBorderStyle: StraightStrokeStyle,
+        public dashPattern: StraightStrokeDashPattern,
+        public corner: RectangleBorderCornerPattern,
+    ) {
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static create(
+        isFillEnabled: boolean,
+        userSelectedFillStyle: RectangleFillStyle,
+        isBorderEnabled: boolean,
+        userSelectedBorderStyle: StraightStrokeStyle,
+        dashPattern: StraightStrokeDashPattern,
+        isRoundedCorner: boolean,
+    ): RectangleExtra {
+        return new RectangleExtra(
+            isFillEnabled,
+            userSelectedFillStyle,
+            isBorderEnabled,
+            userSelectedBorderStyle,
+            dashPattern,
+            isRoundedCorner ? RectangleBorderCornerPattern.ENABLED : RectangleBorderCornerPattern.DISABLED,
+        );
+    }
+
+    get isRoundedCorner(): boolean {
+        return this.corner === RectangleBorderCornerPattern.ENABLED;
+    }
+
+    get fillStyle(): RectangleFillStyle | null {
+        return this.isFillEnabled ? this.userSelectedFillStyle : null;
+    }
+
+    get strokeStyle(): StraightStrokeStyle | null {
+        return this.isBorderEnabled
+            ? PredefinedStraightStrokeStyle.getStyle(this.userSelectedBorderStyle.id, this.isRoundedCorner)
+            : null;
+    }
+
     equals(other: unknown): boolean {
-        TODO("Method not implemented.");
-        return false;
+        if (!(other instanceof RectangleExtra)) {
+            return false;
+        }
+        return (
+            this.isFillEnabled === other.isFillEnabled &&
+            this.userSelectedFillStyle.id === other.userSelectedFillStyle.id &&
+            this.isBorderEnabled === other.isBorderEnabled &&
+            this.userSelectedBorderStyle.id === other.userSelectedBorderStyle.id &&
+            this.dashPattern.toSerializableValue() === other.dashPattern.toSerializableValue() &&
+            this.corner.toSerializableValue() === other.corner.toSerializableValue()
+        );
     }
 
     toSerializableExtra(): SerializableRectExtra {
-        throw new Error("Method not implemented.");
+        return {
+            isFillEnabled: this.isFillEnabled,
+            userSelectedFillStyleId: this.userSelectedFillStyle.id,
+            isBorderEnabled: this.isBorderEnabled,
+            userSelectedBorderStyleId: this.userSelectedBorderStyle.id,
+            dashPattern: this.dashPattern.toSerializableValue(),
+            corner: this.corner.toSerializableValue(),
+        };
     }
 
-    static fromSerializable(extra: SerializableRectExtra): RectangleExtra {
-        return new RectangleExtra();
+    static fromSerializable(serializableExtra: SerializableRectExtra): RectangleExtra {
+        return new RectangleExtra(
+            serializableExtra.isFillEnabled,
+            ShapeExtraManager.getRectangleFillStyle(serializableExtra.userSelectedFillStyleId),
+            serializableExtra.isBorderEnabled,
+            ShapeExtraManager.getRectangleBorderStyle(serializableExtra.userSelectedBorderStyleId),
+            StraightStrokeDashPattern.fromSerializableValue(serializableExtra.dashPattern),
+            RectangleBorderCornerPattern.fromSerializableValue(serializableExtra.corner),
+        );
     }
 }
 
@@ -64,3 +193,4 @@ export class TextExtra implements ShapeExtra {
         return false;
     }
 }
+
