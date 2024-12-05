@@ -4,8 +4,13 @@
 
 
 import { HALF_TRANSPARENT_CHAR, NBSP, TRANSPARENT_CHAR } from "$mono/common/character";
-import { CharDrawable } from "$mono/monobitmap/drawable";
-import { AnchorChar, RectangleFillStyle, StraightStrokeStyle } from "$mono/shape/extra/style";
+import {
+    CharDrawable,
+    NinePatchDrawable,
+    NinePatchDrawablePattern,
+    RepeatRepeatableRange,
+} from "$mono/monobitmap/drawable";
+import { AnchorChar, RectangleBorderStyle, RectangleFillStyle, StraightStrokeStyle } from "$mono/shape/extra/style";
 
 /**
  * An object for listing all predefined rectangle fill styles.
@@ -18,11 +23,11 @@ export class PredefinedRectangleFillStyle {
     );
 
     static readonly PREDEFINED_STYLES: RectangleFillStyle[] = [
-        new RectangleFillStyle("F1", NBSP, new CharDrawable(' ')),
-        new RectangleFillStyle("F2", "█", new CharDrawable('█')),
-        new RectangleFillStyle("F3", "▒", new CharDrawable('▒')),
-        new RectangleFillStyle("F4", "░", new CharDrawable('░')),
-        new RectangleFillStyle("F5", "▚", new CharDrawable('▚')),
+        RectangleFillStyle.create({ id: "F1", displayName: NBSP, drawable: new CharDrawable(' ') }),
+        RectangleFillStyle.create({ id: "F2", displayName: "█", drawable: new CharDrawable('█') }),
+        RectangleFillStyle.create({ id: "F3", displayName: "▒", drawable: new CharDrawable('▒') }),
+        RectangleFillStyle.create({ id: "F4", displayName: "░", drawable: new CharDrawable('░') }),
+        RectangleFillStyle.create({ id: "F5", displayName: "▚", drawable: new CharDrawable('▚') }),
     ];
 
     static readonly PREDEFINED_STYLE_MAP: { [id: string]: RectangleFillStyle } = Object.fromEntries(
@@ -47,10 +52,46 @@ export class PredefinedStraightStrokeStyle {
 
     private static readonly ALL_STYLES: StraightStrokeStyle[] = [
         PredefinedStraightStrokeStyle.NO_STROKE,
-        new StraightStrokeStyle("S1", "─", '─', '│', '┐', '┌', '┘', '└',),
-        new StraightStrokeStyle("S2", "━", '━', '┃', '┓', '┏', '┛', '┗',),
-        new StraightStrokeStyle("S3", "═", '═', '║', '╗', '╔', '╝', '╚',),
-        new StraightStrokeStyle("S4", "▢", '─', '│', '╮', '╭', '╯', '╰',),
+        StraightStrokeStyle.create({
+            id: "S1",
+            displayName: "─",
+            horizontal: '─',
+            vertical: '│',
+            downLeft: '┐',
+            upRight: '┌',
+            upLeft: '┘',
+            downRight: '└',
+        }),
+        StraightStrokeStyle.create({
+            id: "S2",
+            displayName: "━",
+            horizontal: '━',
+            vertical: '┃',
+            downLeft: '┓',
+            upRight: '┏',
+            upLeft: '┛',
+            downRight: '┗',
+        }),
+        StraightStrokeStyle.create({
+            id: "S3",
+            displayName: "═",
+            horizontal: '═',
+            vertical: '║',
+            downLeft: '╗',
+            upRight: '╔',
+            upLeft: '╝',
+            downRight: '╚',
+        }),
+        StraightStrokeStyle.create({
+            id: "S4",
+            displayName: "▢",
+            horizontal: '─',
+            vertical: '│',
+            downLeft: '╮',
+            upRight: '╭',
+            upLeft: '╯',
+            downRight: '╰',
+        }),
     ];
 
     private static readonly ID_TO_STYLE_MAP: { [id: string]: StraightStrokeStyle } = Object.fromEntries(
@@ -78,21 +119,98 @@ export class PredefinedStraightStrokeStyle {
  */
 export class PredefinedAnchorChar {
     static readonly PREDEFINED_ANCHOR_CHARS: AnchorChar[] = [
-        new AnchorChar("A1", "▶", '◀', '▶', '▲', '▼'),
-        new AnchorChar("A12", "▷", '◁', '▷', '△', '▽'),
-        AnchorChar.fromSingle("A2", "■", '■'),
-        AnchorChar.fromSingle("A21", "□", '□'),
-        AnchorChar.fromSingle("A220", "◆", '◆'),
-        AnchorChar.fromSingle("A221", "◇", '◇'),
-        AnchorChar.fromSingle("A3", "○", '○'),
-        AnchorChar.fromSingle("A4", "◎", '◎'),
-        AnchorChar.fromSingle("A5", "●", '●'),
-        new AnchorChar("A6", "├", '├', '┤', '┬', '┴'),
-        new AnchorChar("A61", "┣", '┣', '┫', '┳', '┻'),
-        new AnchorChar("A62", "╠", '╠', '╣', '╦', '╩'),
+        AnchorChar.create({ id: "A1", displayName: "▶", left: '◀', right: '▶', top: '▲', bottom: '▼' }),
+        AnchorChar.create({ id: "A12", displayName: "▷", left: '◁', right: '▷', top: '△', bottom: '▽' }),
+        AnchorChar.create({ id: "A13", displayName: "►", left: '◄', right: '►', top: '▲', bottom: '▼' }),
+        AnchorChar.create({ id: "A14", displayName: "▻", left: '◅', right: '▻', top: '△', bottom: '▽' }),
+        AnchorChar.create({ id: "A2", displayName: "■", all: '■' }),
+        AnchorChar.create({ id: "A21", displayName: "□", all: '□' }),
+        AnchorChar.create({ id: "A220", displayName: "◆", all: '◆' }),
+        AnchorChar.create({ id: "A221", displayName: "◇", all: '◇' }),
+        AnchorChar.create({ id: "A3", displayName: "○", all: '○' }),
+        AnchorChar.create({ id: "A4", displayName: "◎", all: '◎' }),
+        AnchorChar.create({ id: "A5", displayName: "●", all: '●' }),
+        AnchorChar.create({ id: "A6", displayName: "├", left: '├', right: '┤', top: '┬', bottom: '┴' }),
+        AnchorChar.create({ id: "A61", displayName: "┣", left: '┣', right: '┫', top: '┳', bottom: '┻' }),
+        AnchorChar.create({ id: "A62", displayName: "╠", left: '╠', right: '╣', top: '╦', bottom: '╩' }),
     ];
 
     static readonly PREDEFINED_ANCHOR_CHAR_MAP: { [id: string]: AnchorChar } = Object.fromEntries(
         PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS.map(char => [char.id, char]),
+    );
+}
+
+/**
+ * An object for listing all predefined rectangle border styles.
+ */
+export class PredefinedRectangleBorderStyle {
+    private static readonly PATTERN_TEXT_NO_BORDER = `
+        +++
+        + +
+        +++
+    `.trim().replace(/\+/g, HALF_TRANSPARENT_CHAR);
+
+    private static readonly PATTERN_TEXT_0 = `
+        ┌─┐
+        │ │
+        └─┘
+    `.trim();
+
+    private static readonly PATTERN_TEXT_1 = `
+        ┏━┓
+        ┃ ┃
+        ┗━┛
+    `.trim();
+
+    private static readonly PATTERN_TEXT_2 = `
+        ╔═╗
+        ║ ║
+        ╚═╝
+    `.trim();
+
+    private static readonly REPEATABLE_RANGE_0 = new RepeatRepeatableRange(1, 1);
+
+    static readonly NO_BORDER = new RectangleBorderStyle(
+        "B0",
+        "No border",
+        new NinePatchDrawable(
+            NinePatchDrawablePattern.fromText(PredefinedRectangleBorderStyle.PATTERN_TEXT_NO_BORDER),
+            PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
+            PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0
+        )
+    );
+
+    static readonly PREDEFINED_STYLES: RectangleBorderStyle[] = [
+        new RectangleBorderStyle(
+            "B1",
+            "─",
+            new NinePatchDrawable(
+                NinePatchDrawablePattern.fromText(PredefinedRectangleBorderStyle.PATTERN_TEXT_0),
+                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
+                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0
+            )
+        ),
+        new RectangleBorderStyle(
+            "B2",
+            "━",
+            new NinePatchDrawable(
+                NinePatchDrawablePattern.fromText(PredefinedRectangleBorderStyle.PATTERN_TEXT_1),
+                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
+                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0
+            )
+        ),
+        new RectangleBorderStyle(
+            "B3",
+            "═",
+            new NinePatchDrawable(
+                NinePatchDrawablePattern.fromText(PredefinedRectangleBorderStyle.PATTERN_TEXT_2),
+                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
+                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0
+            )
+        )
+    ];
+
+    static readonly PREDEFINED_STYLE_MAP: { [id: string]: RectangleBorderStyle } = Object.fromEntries(
+        PredefinedRectangleBorderStyle.PREDEFINED_STYLES.map(style => [style.id, style])
     );
 }

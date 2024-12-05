@@ -272,7 +272,7 @@ export class TextExtra implements ShapeExtra {
         );
     }
 
-    static NO_BOUND = new TextExtra(
+    static readonly NO_BOUND = new TextExtra(
         ShapeExtraManager.defaultRectangleExtra.copy({
             isFillEnabled: false,
             isBorderEnabled: false,

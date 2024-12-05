@@ -19,9 +19,19 @@ export class AnchorChar {
     ) {
     }
 
-    // Constructor with the same character for all sides
-    static fromSingle(id: string, displayName: string, all: Char): AnchorChar {
-        return new AnchorChar(id, displayName, all, all, all, all);
+    static create({ id, displayName, left, right, top, bottom, all }: {
+        id: string,
+        displayName: string,
+        left?: Char,
+        right?: Char,
+        top?: Char,
+        bottom?: Char,
+        all?: Char
+    }): AnchorChar {
+        if (all !== undefined) {
+            return new AnchorChar(id, displayName, all, all, all, all);
+        }
+        return new AnchorChar(id, displayName, left!, right!, top!, bottom!);
     }
 }
 
@@ -92,6 +102,14 @@ export class RectangleFillStyle {
         public readonly drawable: Drawable,
     ) {
     }
+
+    static create({ id, displayName, drawable }: {
+        id: string,
+        displayName: string,
+        drawable: Drawable
+    }): RectangleFillStyle {
+        return new RectangleFillStyle(id, displayName, drawable);
+    }
 }
 
 /**
@@ -153,6 +171,29 @@ export class StraightStrokeStyle {
         public readonly upLeft: Char,
         public readonly downRight: Char,
     ) {
+    }
+
+    static create(
+        {
+            id,
+            displayName,
+            horizontal,
+            vertical,
+            downLeft,
+            upRight,
+            upLeft,
+            downRight,
+        }: {
+            id: string,
+            displayName: string,
+            horizontal: Char,
+            vertical: Char,
+            downLeft: Char,
+            upRight: Char,
+            upLeft: Char,
+            downRight: Char,
+        }): StraightStrokeStyle {
+        return new StraightStrokeStyle(id, displayName, horizontal, vertical, downLeft, upRight, upLeft, downRight);
     }
 }
 
