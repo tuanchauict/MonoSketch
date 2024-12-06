@@ -8,14 +8,14 @@ import type { Drawable } from "$mono/monobitmap/drawable/drawable";
  * horizontal and vertical repeatable range.
  */
 export class NinePatchDrawable implements Drawable {
-    private pattern: Pattern;
-    private horizontalRepeatableRange: RepeatableRange;
-    private verticalRepeatableRange: RepeatableRange;
+    private pattern: NinePatchDrawablePattern;
+    private horizontalRepeatableRange: NinePatchDrawableRepeatableRange;
+    private verticalRepeatableRange: NinePatchDrawableRepeatableRange;
 
     constructor(
-        pattern: Pattern,
-        horizontalRepeatableRange: RepeatableRange = new ScaleRepeatableRange(0, pattern.width - 1),
-        verticalRepeatableRange: RepeatableRange = new ScaleRepeatableRange(0, pattern.height - 1),
+        pattern: NinePatchDrawablePattern,
+        horizontalRepeatableRange: NinePatchDrawableRepeatableRange = new ScaleRepeatableRange(0, pattern.width - 1),
+        verticalRepeatableRange: NinePatchDrawableRepeatableRange = new ScaleRepeatableRange(0, pattern.height - 1),
     ) {
         this.pattern = pattern;
         this.horizontalRepeatableRange = horizontalRepeatableRange;
@@ -44,11 +44,11 @@ export class NinePatchDrawable implements Drawable {
 /**
  * A data class which provides a basic render characters for 9-patch image.
  */
-export class Pattern {
+export class NinePatchDrawablePattern {
 
     constructor(public width: number, public height: number, private chars: Char[]) {
         if (chars.length < width * height) {
-            throw new Error("Mismatch between size and number of chars provided");
+            throw new Error(`Mismatch between size (${width}x${height}) and number of chars provided (${chars.length})`);
         }
     }
 
@@ -57,22 +57,22 @@ export class Pattern {
         return this.chars[index];
     }
 
-    static fromText(text: string, delimiter: Char = '\n', transparentChar: Char = ' '): Pattern {
+    static fromText(text: string, delimiter: Char = '\n', transparentChar: Char = ' '): NinePatchDrawablePattern {
         const array = text.split(delimiter);
         if (array.length === 0) {
-            return new Pattern(0, 0, []);
+            return new NinePatchDrawablePattern(0, 0, []);
         }
         const width = array[0].length;
         const height = array.length;
-        const chars = array.map((char) => char === transparentChar ? TRANSPARENT_CHAR : char);
-        return new Pattern(width, height, chars);
+        const chars = array.join("").split("").map(char => char === transparentChar ? TRANSPARENT_CHAR : char);
+        return new NinePatchDrawablePattern(width, height, chars);
     }
 }
 
 /**
  * The algorithm for repeating the repeated range.
  */
-export abstract class RepeatableRange {
+export abstract class NinePatchDrawableRepeatableRange {
     protected start: number;
     protected endInclusive: number;
 
@@ -104,7 +104,7 @@ export abstract class RepeatableRange {
 /**
  * The algorithm for repeating the repeated range: `01` -> `00001111`
  */
-export class ScaleRepeatableRange extends RepeatableRange {
+export class ScaleRepeatableRange extends NinePatchDrawableRepeatableRange {
     scaleIndex(index: number, minRepeatingIndex: number, maxRepeatingIndex: number, rangeSize: number): number {
         const repeatingSize = maxRepeatingIndex - minRepeatingIndex + 1;
         return minRepeatingIndex + Math.floor((index - minRepeatingIndex) * rangeSize / repeatingSize);
@@ -114,7 +114,7 @@ export class ScaleRepeatableRange extends RepeatableRange {
 /**
  * The algorithm for repeating the repeated range: `01` -> `01010101`
  */
-export class RepeatRepeatableRange extends RepeatableRange {
+export class RepeatRepeatableRange extends NinePatchDrawableRepeatableRange {
     scaleIndex(index: number, minRepeatingIndex: number, maxRepeatingIndex: number, rangeSize: number): number {
         return minRepeatingIndex + (index - minRepeatingIndex) % rangeSize;
     }

@@ -40,7 +40,7 @@ export abstract class AbstractShape extends ShapeIdentifier implements Comparabl
      * @param parentId the id of the parent shape. If the shape is a top-level shape, this value is
      * null.
      */
-    protected constructor(id: string | null, parentId?: string) {
+    protected constructor(id: string | null, parentId: string | null) {
         super(id ?? UUID.generate());
         this.parentId = parentId || null;
         this.versionCode = AbstractShape.nextVersionCode();

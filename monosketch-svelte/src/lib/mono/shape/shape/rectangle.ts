@@ -1,8 +1,9 @@
 import type { Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
+import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
 import { RectangleExtra, type ShapeExtra } from "$mono/shape/extra/shape-extra";
 import { SerializableRectangle } from "$mono/shape/serialization/serializable-shape";
-import { AbstractShape } from "$mono/shape/shape/abtract-shape";
+import { AbstractShape } from "$mono/shape/shape/abstract-shape";
 
 /**
  * A rectangle shape.
@@ -10,10 +11,10 @@ import { AbstractShape } from "$mono/shape/shape/abtract-shape";
 class Rectangle extends AbstractShape {
     private boundInner: Rect;
 
-    constructor(rect: Rect, id: string | null, parentId?: string) {
+    constructor(rect: Rect, id: string | null, parentId: string | null = null) {
         super(id, parentId);
         this.boundInner = rect;
-        this.setExtra(new RectangleExtra());
+        this.setExtra(ShapeExtraManager.defaultRectangleExtra);
     }
 
     // Constructor that takes startPoint and endPoint
