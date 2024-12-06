@@ -4,7 +4,7 @@
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/tuanchauict/monosketch)](https://github.com/tuanchauict/MonoSketch/releases)
 [![Twitter Follow](https://img.shields.io/twitter/follow/MonoSketchApp)](https://twitter.com/MonoSketchApp)
 
-
+> This project is under rewritten to TypeScript, check out [`port-to-js`](https://github.com/tuanchauict/MonoSketch/tree/port-to-js) branch or PR https://github.com/tuanchauict/MonoSketch/pull/584 for more detail
 
 # What is it?
 
