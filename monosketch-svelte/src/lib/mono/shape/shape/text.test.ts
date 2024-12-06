@@ -58,7 +58,7 @@ describe('TextTest', () => {
         const target = new Text(Rect.byLTWH(0, 0, 5, 5));
 
         target.setText('0 1234 12345\n1   2 3 4 5678901 23');
-        target.setExtra(TextExtra.noBound());
+        target.setExtra(TextExtra.NO_BOUND);
         expect(target.renderableText.getRenderableText()).toEqual([
             '0', '1234', '12345', '1   2', '3 4', '56789', '01 23'
         ]);
