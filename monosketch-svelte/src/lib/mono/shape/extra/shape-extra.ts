@@ -45,6 +45,19 @@ export class LineExtra implements ShapeExtra, ILineExtra {
     ) {
     }
 
+    static create(extra: ILineExtra): LineExtra {
+        return new LineExtra(
+            extra.isStrokeEnabled,
+            extra.userSelectedStrokeStyle,
+            extra.isStartAnchorEnabled,
+            extra.userSelectedStartAnchor,
+            extra.isEndAnchorEnabled,
+            extra.userSelectedEndAnchor,
+            extra.dashPattern,
+            extra.isRoundedCorner,
+        );
+    }
+
     get startAnchor(): AnchorChar | null {
         return this.isStartAnchorEnabled ? this.userSelectedStartAnchor : null;
     }
