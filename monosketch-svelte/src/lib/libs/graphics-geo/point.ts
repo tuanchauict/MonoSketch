@@ -92,6 +92,10 @@ export class DirectedPoint implements Comparable {
         return new DirectedPoint(direction, new Point(left, top));
     }
 
+    static ofF(direction: Direction, left: number, top: number): DirectedPoint {
+        return new DirectedPoint(direction, new Point(Math.trunc(left), Math.trunc(top)));
+    }
+
     constructor(
         public readonly direction: Direction,
         public readonly point: Point,
