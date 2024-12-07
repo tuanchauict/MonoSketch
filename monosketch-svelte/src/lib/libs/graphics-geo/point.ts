@@ -68,6 +68,13 @@ export class Point implements IPoint {
         return Point.of(this.left + other.left, this.top + other.top);
     }
 
+    /**
+     * Returns a new point with updated properties.
+     */
+    copy({ left = this.left, top = this.top }: { left?: number; top?: number } = {}): Point {
+        return new Point(left, top);
+    }
+
     toString(): string {
         return `${this.left}|${this.top}`;
     }
@@ -88,7 +95,8 @@ export class DirectedPoint implements Comparable {
     constructor(
         public readonly direction: Direction,
         public readonly point: Point,
-    ) {}
+    ) {
+    }
 
     get left(): number {
         return this.point.left;
@@ -96,6 +104,13 @@ export class DirectedPoint implements Comparable {
 
     get top(): number {
         return this.point.top;
+    }
+
+    copy({ direction = this.direction, point = this.point }: {
+        direction?: Direction;
+        point?: Point
+    } = {}): DirectedPoint {
+        return new DirectedPoint(direction, point);
     }
 
     equals(other: unknown): boolean {
@@ -124,7 +139,8 @@ export class PointF implements IPoint {
     constructor(
         public left: number,
         public top: number,
-    ) {}
+    ) {
+    }
 
     get row(): number {
         return this.top;
