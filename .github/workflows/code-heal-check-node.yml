@@ -1,4 +1,4 @@
-name: Code health check
+name: Code health check Node
 on:
   pull_request:
   push:
