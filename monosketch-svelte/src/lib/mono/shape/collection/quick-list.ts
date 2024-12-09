@@ -27,14 +27,14 @@ export class AddPosition {
  */
 export class QuickList<T extends Identifier> implements Iterable<T> {
     private linkedList: DoubleLinkedList<T> = new DoubleLinkedList<T>();
-    private map: Map<string, Node<T>> = new Map<string, Node<T>>();
+    private idToNodeMap: Map<string, Node<T>> = new Map<string, Node<T>>();
 
     get size(): number {
-        return this.map.size;
+        return this.idToNodeMap.size;
     }
 
     contains(element: T): boolean {
-        return this.map.has(element.id);
+        return this.idToNodeMap.has(element.id);
     }
 
     containsAll(elements: Iterable<T>): boolean {
@@ -66,7 +66,7 @@ export class QuickList<T extends Identifier> implements Iterable<T> {
                 case AddPosition.First:
                     return this.linkedList.head;
                 default: // AddPosition after
-                    return this.map.get(position.identifier!.id);
+                    return this.idToNodeMap.get(position.identifier!.id);
             }
         })();
 
@@ -75,7 +75,7 @@ export class QuickList<T extends Identifier> implements Iterable<T> {
         }
 
         const node = this.linkedList.add(element, preNode);
-        this.map.set(element.id, node);
+        this.idToNodeMap.set(element.id, node);
 
         return true;
     }
@@ -89,11 +89,11 @@ export class QuickList<T extends Identifier> implements Iterable<T> {
     }
 
     remove(identifier: Identifier): T | null {
-        const node = this.map.get(identifier.id);
+        const node = this.idToNodeMap.get(identifier.id);
         if (!node) {
             return null;
         }
-        this.map.delete(identifier.id);
+        this.idToNodeMap.delete(identifier.id);
         this.linkedList.remove(node);
         return node.value;
     }
@@ -101,12 +101,12 @@ export class QuickList<T extends Identifier> implements Iterable<T> {
     removeAll(): T[] {
         const result = Array.from(this);
         this.linkedList.clear();
-        this.map.clear();
+        this.idToNodeMap.clear();
         return result;
     }
 
     get(id: string): T | null {
-        return this.map.get(id)?.value || null;
+        return this.idToNodeMap.get(id)?.value || null;
     }
 
     move(identifier: Identifier, moveActionType: MoveActionType): boolean {
@@ -114,7 +114,7 @@ export class QuickList<T extends Identifier> implements Iterable<T> {
             return false;
         }
 
-        const node = this.map.get(identifier.id);
+        const node = this.idToNodeMap.get(identifier.id);
         if (!node) {
             return false;
         }
