@@ -8,17 +8,25 @@ import { AbstractShape } from "$mono/shape/shape/abstract-shape";
 /**
  * A rectangle shape.
  */
-class Rectangle extends AbstractShape {
+export class Rectangle extends AbstractShape {
     private boundInner: Rect;
 
-    constructor(rect: Rect, id: string | null, parentId: string | null = null) {
+    constructor(rect: Rect, id: string | null = null, parentId: string | null = null) {
         super(id, parentId);
         this.boundInner = rect;
-        this.setExtra(ShapeExtraManager.defaultRectangleExtra);
+        this.setExtra(RectangleExtra.create(ShapeExtraManager.defaultRectangleExtra));
+    }
+
+    static fromRect({ rect, id = null, parentId = null }: {
+        rect: Rect,
+        id?: string | null,
+        parentId?: string | null
+    }): Rectangle {
+        return new Rectangle(rect, id, parentId);
     }
 
     // Constructor that takes startPoint and endPoint
-    static fromPoints(startPoint: Point, endPoint: Point, id: string | null, parentId?: string): Rectangle {
+    static fromPoints(startPoint: Point, endPoint: Point, id: string | null, parentId: string | null = null): Rectangle {
         const rect = Rect.byLTRB(startPoint.left, startPoint.top, endPoint.left, endPoint.top);
         return new Rectangle(rect, id, parentId);
     }
