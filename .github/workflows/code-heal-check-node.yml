@@ -1,0 +1,49 @@
+name: Code health check
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - port-to-js
+jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            monosketch-svelte/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('monosketch-svelte/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: cd monosketch-svelte && npm install
+      - name: Run Vitest
+        run: cd monosketch-svelte && npm run test
+
+  bundle_svelte:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            monosketch-svelte/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('monosketch-svelte/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: cd monosketch-svelte && npm install
+      - name: Build Svelte
+        run: cd monosketch-svelte && npm run build
