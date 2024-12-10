@@ -1,0 +1,53 @@
+name: Code health check Node
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - port-to-js
+jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            monosketch-svelte/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('monosketch-svelte/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: cd monosketch-svelte && pnpm install
+      - name: Run Vitest
+        run: cd monosketch-svelte && pnpm run test
+
+  bundle_svelte:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            monosketch-svelte/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('monosketch-svelte/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: cd monosketch-svelte && pnpm install
+      - name: Build Svelte
+        run: cd monosketch-svelte && pnpm run build
