@@ -146,6 +146,11 @@ export class PointF implements IPoint {
     ) {
     }
 
+    static create({ left, top }: { left: number; top: number }): PointF {
+        return new PointF(left, top);
+    }
+
+
     get row(): number {
         return this.top;
     }
