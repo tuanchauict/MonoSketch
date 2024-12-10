@@ -3,6 +3,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
+    "experimentalDecorators": true,
     "module": "ESNext",
     "resolveJsonModule": true,
     /**
