@@ -10,6 +10,62 @@ import { Rect } from '$libs/graphics-geo/rect';
 type PointAroundTuple = [DirectedPoint, Around];
 
 describe('ShapeConnectorUseCase', () => {
+    it('testGetAround_notAround', () => {
+        const rect = Rect.byLTRB(4, 20, 10, 30);
+
+        const nonAroundPoints: DirectedPoint[] = [
+            // Around left edge
+            DirectedPoint.ofF(Direction.HORIZONTAL, 2, 25),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 6, 25),
+            // Around right edge
+            DirectedPoint.ofF(Direction.HORIZONTAL, 8, 25),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 12, 25),
+            // Around top edge
+            DirectedPoint.ofF(Direction.HORIZONTAL, 6, 18),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 6, 22),
+            // Around bottom edge
+            DirectedPoint.ofF(Direction.HORIZONTAL, 6, 28),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 6, 32),
+            // On left edge - outside top
+            DirectedPoint.ofF(Direction.HORIZONTAL, 3, 18),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 4, 18),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 5, 18),
+            // On left edge - outside bottom
+            DirectedPoint.ofF(Direction.HORIZONTAL, 3, 32),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 4, 32),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 5, 32),
+            // On right edge - outside top
+            DirectedPoint.ofF(Direction.HORIZONTAL, 9, 18),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 10, 18),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 11, 18),
+            // On right edge - outside bottom
+            DirectedPoint.ofF(Direction.HORIZONTAL, 9, 32),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 10, 32),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 11, 32),
+            // On top edge - outside left
+            DirectedPoint.ofF(Direction.HORIZONTAL, 2, 19),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 2, 20),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 2, 21),
+            // On top edge - outside right
+            DirectedPoint.ofF(Direction.HORIZONTAL, 12, 19),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 12, 20),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 12, 21),
+            // On bottom edge - outside left
+            DirectedPoint.ofF(Direction.HORIZONTAL, 2, 29),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 2, 30),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 2, 31),
+            // On bottom edge - outside right
+            DirectedPoint.ofF(Direction.HORIZONTAL, 12, 29),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 12, 30),
+            DirectedPoint.ofF(Direction.HORIZONTAL, 12, 31),
+        ];
+
+        for (const point of nonAroundPoints) {
+            console.log(point);
+            expect(ShapeConnectorUseCase.getAround(point, rect)).toBeNull();
+        }
+    })
+
     it('testGetAround_Left', () => {
         const rect = Rect.byLTRB(4, 20, 10, 30);
         const leftPointsToExpectedAround: PointAroundTuple[] = [

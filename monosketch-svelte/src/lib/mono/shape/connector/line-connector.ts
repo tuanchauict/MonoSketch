@@ -15,7 +15,7 @@ import { Rectangle } from "$mono/shape/shape/rectangle";
  * This is a minimal version of [LineConnector] that only has required information to identify
  * the connector.
  */
-class ConnectorIdentifier implements Identifier {
+export class ConnectorIdentifier implements Identifier {
     id: string;
 
     constructor(lineId: string, anchor: LineAnchor) {
@@ -31,7 +31,7 @@ class ConnectorIdentifier implements Identifier {
  * @property ratio The relative position of the connector based on the size of the box.
  * @property offset The absolute offset of the connector to the box
  */
-class LineConnector extends ConnectorIdentifier {
+export class LineConnector extends ConnectorIdentifier {
     constructor(
         public lineId: string,
         public anchor: LineAnchor,
