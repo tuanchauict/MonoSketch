@@ -1,12 +1,14 @@
 // Base class for all serializable shapes
 import { Point } from "$libs/graphics-geo/point";
 import type { DirectedPoint } from "$libs/graphics-geo/point";
-import type { Rect } from "$libs/graphics-geo/rect";
+import { Rect } from "$libs/graphics-geo/rect";
 import {
     SerializableLineExtra,
-    type SerializableRectExtra,
+    SerializableRectExtra,
     SerializableTextExtra,
 } from "$mono/shape/serialization/extras";
+import { Jsonizable, Serializer, SerialName } from "$mono/shape/serialization/serializable";
+import { RectSerializer } from "$mono/shape/serialization/serializers";
 
 /**
  * An abstract class for all serializable shapes.
@@ -29,25 +31,66 @@ export abstract class AbstractSerializableShape {
 
     abstract versionCode: number;
 
+    /**
+     * A hint for type selection when serializing and deserializing.
+     */
+    abstract type: string;
+
     get actualId(): string | null {
         return this.id ?? null;
     }
-}
 
-// TODO: Define serialize name for each class
+    protected constructor() {
+    }
+}
 
 /**
  * A serializable class for a rectangle shape.
  */
+@Jsonizable
 export class SerializableRectangle extends AbstractSerializableShape {
-    constructor(
-        public id: string | null,
-        public isIdTemporary: boolean,
-        public versionCode: number,
-        public bound: Rect,
-        public extra: SerializableRectExtra,
-    ) {
+    @SerialName("type")
+    type: string = "R";
+
+    @SerialName("i")
+    public id: string | null = null;
+    @SerialName("idtemp")
+    public isIdTemporary: boolean = false;
+    @SerialName("v")
+    public versionCode: number = 0;
+    @SerialName("b")
+    @Serializer(RectSerializer)
+    public bound: Rect = Rect.ZERO;
+    @SerialName("e")
+    public extra: SerializableRectExtra = SerializableRectExtra.EMPTY;
+
+    private constructor() {
         super();
+    }
+
+    static create(
+        {
+            id,
+            isIdTemporary,
+            versionCode,
+            bound,
+            extra,
+        }: {
+            id: string | null;
+            isIdTemporary: boolean;
+            versionCode: number;
+            bound: Rect;
+            extra: SerializableRectExtra;
+        },
+    ): SerializableRectangle {
+        const result = new SerializableRectangle();
+        result.id = id;
+        result.isIdTemporary = isIdTemporary;
+        result.versionCode = versionCode;
+        result.bound = bound;
+        result.extra = extra;
+
+        return result;
     }
 }
 
@@ -55,6 +98,9 @@ export class SerializableRectangle extends AbstractSerializableShape {
  * A serializable class for a text shape.
  */
 export class SerializableText extends AbstractSerializableShape {
+    @SerialName("type")
+    type: string = "T";
+
     constructor(
         public id: string | null,
         public isIdTemporary: boolean,
@@ -73,6 +119,9 @@ export class SerializableText extends AbstractSerializableShape {
  * A serializable class for a line shape.
  */
 export class SerializableLine extends AbstractSerializableShape {
+    @SerialName("type")
+    type: string = "L";
+
     constructor(
         public id: string | null,
         public isIdTemporary: boolean,
@@ -91,6 +140,9 @@ export class SerializableLine extends AbstractSerializableShape {
  * A serializable class for a group shape.
  */
 export class SerializableGroup extends AbstractSerializableShape {
+    @SerialName("type")
+    type: string = "G";
+
     constructor(
         public id: string | null,
         public isIdTemporary: boolean,

@@ -69,12 +69,14 @@ export class Rectangle extends AbstractShape {
     }
 
     toSerializableShape(isIdIncluded: boolean): SerializableRectangle {
-        return new SerializableRectangle(
-            isIdIncluded ? this.id : null,
-            !isIdIncluded,
-            this.versionCode,
-            this.bound,
-            this.extra.toSerializableExtra(),
+        return SerializableRectangle.create(
+            {
+                id: isIdIncluded ? this.id : null,
+                isIdTemporary: !isIdIncluded,
+                versionCode: this.versionCode,
+                bound: this.bound,
+                extra: this.extra.toSerializableExtra(),
+            },
         );
     }
 }
