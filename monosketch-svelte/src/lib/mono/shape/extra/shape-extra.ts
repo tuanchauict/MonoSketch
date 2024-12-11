@@ -12,10 +12,10 @@ import {
     TextVerticalAlign,
 } from "$mono/shape/extra/style";
 import {
-    SerializableLineExtra,
-    type SerializableRectExtra,
+    type SerializableLineExtra,
+    SerializableRectExtra,
     SerializableTextExtra,
-} from "$mono/shape/serialization/serializable-shape";
+} from "$mono/shape/serialization/extras";
 
 /**
  * An interface for extra properties of a shape.

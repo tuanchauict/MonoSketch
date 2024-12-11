@@ -5,8 +5,6 @@
 import { Point, PointF } from "$libs/graphics-geo/point";
 import { LineAnchor } from "$mono/shape/shape/linehelper";
 
-
-
 /**
  * A serializer for [LineAnchor]
  */

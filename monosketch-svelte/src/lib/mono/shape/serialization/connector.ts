@@ -4,7 +4,7 @@
 
 import { Point, PointF } from "$libs/graphics-geo/point";
 import { Jsonizable, Serializer, SerialName } from "$mono/shape/serialization/serializable";
-import { AnchorSerializer, PointFSerializer, PointSerializer } from "$mono/shape/serialization/serializer";
+import { AnchorSerializer, PointFSerializer, PointSerializer } from "$mono/shape/serialization/serializers";
 import { LineAnchor } from "$mono/shape/shape/linehelper";
 
 @Jsonizable
