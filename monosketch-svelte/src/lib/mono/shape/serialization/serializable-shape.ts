@@ -2,6 +2,11 @@
 import { Point } from "$libs/graphics-geo/point";
 import type { DirectedPoint } from "$libs/graphics-geo/point";
 import type { Rect } from "$libs/graphics-geo/rect";
+import {
+    SerializableLineExtra,
+    type SerializableRectExtra,
+    SerializableTextExtra,
+} from "$mono/shape/serialization/extras";
 
 /**
  * An abstract class for all serializable shapes.
@@ -47,21 +52,6 @@ export class SerializableRectangle extends AbstractSerializableShape {
 }
 
 /**
- * A serializable class for extra properties of a rectangle shape.
- */
-export class SerializableRectExtra {
-    constructor(
-        public isFillEnabled: boolean,
-        public userSelectedFillStyleId: string,
-        public isBorderEnabled: boolean,
-        public userSelectedBorderStyleId: string,
-        public dashPattern: string,
-        public corner: string,
-    ) {
-    }
-}
-
-/**
  * A serializable class for a text shape.
  */
 export class SerializableText extends AbstractSerializableShape {
@@ -78,17 +68,6 @@ export class SerializableText extends AbstractSerializableShape {
     }
 }
 
-/**
- * A serializable class for extra properties of a text shape.
- */
-export class SerializableTextExtra {
-    constructor(
-        public boundExtra: SerializableRectExtra,
-        public textHorizontalAlign: number,
-        public textVerticalAlign: number,
-    ) {
-    }
-}
 
 /**
  * A serializable class for a line shape.
@@ -105,23 +84,6 @@ export class SerializableLine extends AbstractSerializableShape {
         public wasMovingEdge: boolean,
     ) {
         super();
-    }
-}
-
-/**
- * A serializable class for extra properties of a line shape.
- */
-export class SerializableLineExtra {
-    constructor(
-        public isStrokeEnabled: boolean = true,
-        public userSelectedStrokeStyleId: string,
-        public isStartAnchorEnabled: boolean = false,
-        public userSelectedStartAnchorId: string,
-        public isEndAnchorEnabled: boolean = false,
-        public userSelectedEndAnchorId: string,
-        public dashPattern: string,
-        public isRoundedCorner: boolean = false,
-    ) {
     }
 }
 

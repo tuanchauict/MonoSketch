@@ -13,9 +13,9 @@ import {
 } from "$mono/shape/extra/style";
 import {
     SerializableLineExtra,
-    type SerializableRectExtra,
+    SerializableRectExtra,
     SerializableTextExtra,
-} from "$mono/shape/serialization/serializable-shape";
+} from "$mono/shape/serialization/extras";
 
 /**
  * An interface for extra properties of a shape.
@@ -124,7 +124,7 @@ export class LineExtra implements ShapeExtra, ILineExtra {
     }
 
     toSerializableExtra(): SerializableLineExtra {
-        return {
+        return SerializableLineExtra.create({
             isStrokeEnabled: this.isStrokeEnabled,
             userSelectedStrokeStyleId: this.userSelectedStrokeStyle.id,
             isStartAnchorEnabled: this.isStartAnchorEnabled,
@@ -133,7 +133,7 @@ export class LineExtra implements ShapeExtra, ILineExtra {
             userSelectedEndAnchorId: this.userSelectedEndAnchor.id,
             dashPattern: this.dashPattern.toSerializableValue(),
             isRoundedCorner: this.isRoundedCorner,
-        };
+        });
     }
 }
 
@@ -209,14 +209,14 @@ export class RectangleExtra implements ShapeExtra, IRectangleExtra {
     }
 
     toSerializableExtra(): SerializableRectExtra {
-        return {
+        return SerializableRectExtra.create({
             isFillEnabled: this.isFillEnabled,
             userSelectedFillStyleId: this.userSelectedFillStyle.id,
             isBorderEnabled: this.isBorderEnabled,
             userSelectedBorderStyleId: this.userSelectedBorderStyle.id,
             dashPattern: this.dashPattern.toSerializableValue(),
             corner: this.corner.toSerializableValue(),
-        };
+        });
     }
 
     static fromSerializable(serializableExtra: SerializableRectExtra): RectangleExtra {
@@ -266,11 +266,11 @@ export class TextExtra implements ShapeExtra {
     }
 
     toSerializableExtra(): SerializableTextExtra {
-        return {
+        return SerializableTextExtra.create({
             boundExtra: this.boundExtra.toSerializableExtra(),
             textHorizontalAlign: this.textAlign.horizontalAlign,
             textVerticalAlign: this.textAlign.verticalAlign,
-        };
+        });
     }
 
     static fromSerializable(serializableExtra: SerializableTextExtra): TextExtra {

@@ -165,4 +165,6 @@ export class PointF implements IPoint {
         }
         return this.left === other.left && this.top === other.top;
     }
+
+    static ZERO = new PointF(0, 0);
 }
