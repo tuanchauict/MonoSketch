@@ -249,9 +249,9 @@ export class TextAlign implements Comparable {
     }
 
     copy({
-             horizontalAlign = this.horizontalAlign,
-             verticalAlign = this.verticalAlign,
-         }: Partial<TextAlign> = {}): TextAlign {
+        horizontalAlign = this.horizontalAlign,
+        verticalAlign = this.verticalAlign,
+    }: Partial<TextAlign> = {}): TextAlign {
         return new TextAlign(horizontalAlign, verticalAlign);
     }
 }

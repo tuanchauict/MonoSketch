@@ -114,7 +114,7 @@ class LineHelperImpl {
     }
 
     isHorizontal(p1: Point, p2: Point): boolean {
-        return p1.top === p2.top
+        return p1.top === p2.top;
     }
 }
 
@@ -157,10 +157,10 @@ export class LineEdge implements Comparable {
     }
 
     copy({
-             id = this.id,
-             startPoint = this.startPoint,
-             endPoint = this.endPoint,
-         }: {
+        id = this.id,
+        startPoint = this.startPoint,
+        endPoint = this.endPoint,
+    }: {
         id?: number,
         startPoint?: Point,
         endPoint?: Point,
@@ -199,4 +199,4 @@ const isPointsOnSameStraightLine = (p1: DirectedPoint, p2: DirectedPoint): boole
 
 const toRightAngleDirection = (direction: Direction): Direction => {
     return direction === Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
-}
+};

@@ -34,7 +34,7 @@ export const AnchorSerializer = {
                 throw new Error(`Unrecognizable value ${value}`);
         }
     },
-}
+};
 
 export const PointSerializer = {
     serialize(value: Point): string {
@@ -48,7 +48,7 @@ export const PointSerializer = {
         }
         return new Point(x, y);
     },
-}
+};
 
 export const PointArraySerializer = {
     serialize(value: Point[]): string[] {
@@ -58,7 +58,7 @@ export const PointArraySerializer = {
     deserialize(value: string[]): Point[] {
         return value.map(PointSerializer.deserialize);
     },
-}
+};
 
 /**
  * A serializer for [PointF]
@@ -75,7 +75,7 @@ export const PointFSerializer = {
         }
         return new PointF(x, y);
     },
-}
+};
 
 export const DirectedPointSerializer = {
     MARSHAL_HORIZONTAL: "H",
@@ -96,7 +96,7 @@ export const DirectedPointSerializer = {
 
         return DirectedPoint.of(direction, parseInt(left), parseInt(top));
     },
-}
+};
 
 export const RectSerializer = {
     serialize(value: Rect): string {
@@ -110,4 +110,4 @@ export const RectSerializer = {
         }
         return Rect.byLTWH(left, top, width, height);
     },
-}
+};

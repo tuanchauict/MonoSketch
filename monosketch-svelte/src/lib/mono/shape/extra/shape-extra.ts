@@ -89,15 +89,15 @@ export class LineExtra implements ShapeExtra, ILineExtra {
     }
 
     copy({
-             isStrokeEnabled = this.isStrokeEnabled,
-             userSelectedStrokeStyle = this.userSelectedStrokeStyle,
-             isStartAnchorEnabled = this.isStartAnchorEnabled,
-             userSelectedStartAnchor = this.userSelectedStartAnchor,
-             isEndAnchorEnabled = this.isEndAnchorEnabled,
-             userSelectedEndAnchor = this.userSelectedEndAnchor,
-             dashPattern = this.dashPattern,
-             isRoundedCorner = this.isRoundedCorner,
-         }: Partial<LineExtra> = {}): LineExtra {
+        isStrokeEnabled = this.isStrokeEnabled,
+        userSelectedStrokeStyle = this.userSelectedStrokeStyle,
+        isStartAnchorEnabled = this.isStartAnchorEnabled,
+        userSelectedStartAnchor = this.userSelectedStartAnchor,
+        isEndAnchorEnabled = this.isEndAnchorEnabled,
+        userSelectedEndAnchor = this.userSelectedEndAnchor,
+        dashPattern = this.dashPattern,
+        isRoundedCorner = this.isRoundedCorner,
+    }: Partial<LineExtra> = {}): LineExtra {
         return new LineExtra(
             isStrokeEnabled,
             userSelectedStrokeStyle,
@@ -191,13 +191,13 @@ export class RectangleExtra implements ShapeExtra, IRectangleExtra {
     }
 
     copy({
-             isFillEnabled = this.isFillEnabled,
-             userSelectedFillStyle = this.userSelectedFillStyle,
-             isBorderEnabled = this.isBorderEnabled,
-             userSelectedBorderStyle = this.userSelectedBorderStyle,
-             dashPattern = this.dashPattern,
-             corner = this.corner,
-         }: Partial<RectangleExtra> = {}): RectangleExtra {
+        isFillEnabled = this.isFillEnabled,
+        userSelectedFillStyle = this.userSelectedFillStyle,
+        isBorderEnabled = this.isBorderEnabled,
+        userSelectedBorderStyle = this.userSelectedBorderStyle,
+        dashPattern = this.dashPattern,
+        corner = this.corner,
+    }: Partial<RectangleExtra> = {}): RectangleExtra {
         return new RectangleExtra(
             isFillEnabled,
             userSelectedFillStyle,
@@ -256,9 +256,9 @@ export class TextExtra implements ShapeExtra {
     }
 
     copy({
-             boundExtra = this.boundExtra,
-             textAlign = this.textAlign,
-         }: Partial<TextExtra> = {}): TextExtra {
+        boundExtra = this.boundExtra,
+        textAlign = this.textAlign,
+    }: Partial<TextExtra> = {}): TextExtra {
         return new TextExtra(
             boundExtra.copy(),
             textAlign,

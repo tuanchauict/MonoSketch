@@ -64,7 +64,7 @@ describe('ShapeConnectorUseCase', () => {
             console.log(point);
             expect(ShapeConnectorUseCase.getAround(point, rect)).toBeNull();
         }
-    })
+    });
 
     it('testGetAround_Left', () => {
         const rect = Rect.byLTRB(4, 20, 10, 30);

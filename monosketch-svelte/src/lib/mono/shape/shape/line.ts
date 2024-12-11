@@ -83,10 +83,12 @@ export class Line extends AbstractShape {
      */
     private confirmedJointPoints: Point[] = [];
 
-    constructor(startPoint: DirectedPoint,
-                endPoint: DirectedPoint,
-                id: string | null = null,
-                parentId: string | null = null) {
+    constructor(
+        startPoint: DirectedPoint,
+        endPoint: DirectedPoint,
+        id: string | null = null,
+        parentId: string | null = null,
+    ) {
         super(id, parentId);
         this.startPoint = startPoint;
         this.endPoint = endPoint;
@@ -213,9 +215,11 @@ export class Line extends AbstractShape {
      *            x
      * ```
      */
-    moveAnchorPoint(anchorPointUpdate: LineAnchorPointUpdate,
-                    isReduceRequired: boolean,
-                    justMoveAnchor: boolean): void {
+    moveAnchorPoint(
+        anchorPointUpdate: LineAnchorPointUpdate,
+        isReduceRequired: boolean,
+        justMoveAnchor: boolean,
+    ): void {
         this.update(() => {
             switch (anchorPointUpdate.anchor) {
                 case LineAnchor.START:

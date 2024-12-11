@@ -5,6 +5,8 @@
 import { describe, expect, it } from "vitest";
 import { SerializableLineExtra, SerializableRectExtra, SerializableTextExtra } from './extras';
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 describe('SerializableRectExtra', () => {
     it('should create a SerializableRectExtra instance correctly', () => {
         const original = SerializableRectExtra.create({
@@ -37,7 +39,7 @@ describe('SerializableRectExtra', () => {
             bu: 'borderStyle2',
             du: 'dashPattern3',
             rc: 'corner4',
-        }
+        };
 
         // @ts-ignore
         const deserialized = SerializableRectExtra.fromJson(json);
@@ -98,7 +100,7 @@ describe('SerializableTextExtra', () => {
             },
             tha: 3,
             tva: 4,
-        }
+        };
 
         // @ts-ignore
         const deserialized = SerializableTextExtra.fromJson(json);
@@ -157,7 +159,7 @@ describe('SerializableLineExtra', () => {
             aeu: 'endAnchor2',
             du: 'dashPattern2',
             rc: false,
-        }
+        };
 
         // @ts-ignore
         const deserialized = SerializableLineExtra.fromJson(json);

@@ -2,6 +2,9 @@
  * Copyright (c) 2024, tuanchauict
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types, @typescript-eslint/no-this-alias */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 /**
  * An interface for custom serialization and deserialization.
  */
@@ -22,7 +25,7 @@ export const serializer =
  * @see Serializable
  */
 export function SerialName(name: string) {
-    return function (target: any, propertyKey: string | symbol) {
+    return function(target: any, propertyKey: string | symbol) {
         if (!target.constructor.serialNames) {
             target.constructor.serialNames = {};
         }
@@ -37,7 +40,7 @@ export function SerialName(name: string) {
  * @see Serializable
  */
 export function Serializer(serializer: Serializable) {
-    return function (target: any, propertyKey: string | symbol) {
+    return function(target: any, propertyKey: string | symbol) {
         if (!target.constructor.serializers) {
             target.constructor.serializers = {};
         }
@@ -69,7 +72,7 @@ export function Jsonizable(constructor: Function) {
     // @ts-ignore
     const serializers = constructor.serializers;
 
-    constructor.prototype.toJson = function () {
+    constructor.prototype.toJson = function() {
         const json: any = {};
         const instance = this;
         for (const key in instance) {
@@ -94,7 +97,7 @@ export function Jsonizable(constructor: Function) {
     };
 
     // @ts-ignore
-    constructor.fromJson = function (data: any) {
+    constructor.fromJson = function(data: any) {
         // @ts-ignore
         const instance = new constructor();
         for (const key of Object.keys(instance)) {
