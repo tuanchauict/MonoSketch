@@ -13,6 +13,8 @@ import {
 } from "$mono/shape/serialization/shapes";
 import { describe, expect, it } from "vitest";
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 describe('SerializableRectangle', () => {
     it('should serialize correctly', () => {
         const original = SerializableRectangle.create({

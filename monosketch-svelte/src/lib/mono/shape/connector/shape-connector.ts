@@ -59,7 +59,7 @@ export class ShapeConnector {
     private calculateConnectorRatioAndOffset(anchorPoint: DirectedPoint, boxBound: Rect): [PointF, Point] | null {
         const around = ShapeConnectorUseCase.getAround(anchorPoint, boxBound);
         if (!around) {
-            return null
+            return null;
         }
 
         const ratio = ShapeConnectorUseCase.calculateRatio(around, anchorPoint, boxBound);

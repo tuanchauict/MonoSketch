@@ -5,6 +5,8 @@
 import { Jsonizable, serializer, Serializer, SerialName } from "$mono/shape/serialization/serializable";
 import { describe, expect, it } from "vitest";
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 enum AnEnum {
     A,
     B,
@@ -35,7 +37,7 @@ const AnEnumSerializer = {
                 throw new Error(`Unrecognizable value ${value}`);
         }
     },
-}
+};
 
 @Jsonizable
 class Bar {
@@ -74,7 +76,7 @@ const PairSerializer = serializer(
         }
         return new Pair(first, second);
     }
-)
+);
 
 @Jsonizable
 class Foo {
@@ -118,7 +120,7 @@ describe("Serializable", () => {
             aBoolean: false,
             anEnum: 'xB',
             p: "3|4",
-        }
+        };
         // @ts-ignore
         const foo2 = Foo.fromJson(json);
         expect(foo2.bar.aString).toBe("a new string");
@@ -127,5 +129,5 @@ describe("Serializable", () => {
         expect(foo2.anEnum).toBe(AnEnum.B);
         expect(foo2.pair.first).toBe(3);
         expect(foo2.pair.second).toBe(4);
-    })
-})
+    });
+});

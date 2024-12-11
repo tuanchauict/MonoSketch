@@ -50,7 +50,7 @@ export abstract class AbstractSerializableShape {
 @Jsonizable
 export class SerializableRectangle extends AbstractSerializableShape {
     @SerialName("type")
-    type: string = "R";
+    public type: string = "R";
 
     @SerialName("i")
     public id: string | null = null;
@@ -100,7 +100,7 @@ export class SerializableRectangle extends AbstractSerializableShape {
 @Jsonizable
 export class SerializableText extends AbstractSerializableShape {
     @SerialName("type")
-    type: string = "T";
+    public type: string = "T";
 
     @SerialName("i")
     public id: string | null = null;
@@ -161,7 +161,7 @@ export class SerializableText extends AbstractSerializableShape {
 @Jsonizable
 export class SerializableLine extends AbstractSerializableShape {
     @SerialName("type")
-    type: string = "L";
+    public type: string = "L";
 
     @SerialName("i")
     public id: string | null = null;
@@ -221,13 +221,13 @@ export class SerializableLine extends AbstractSerializableShape {
         return result;
     }
 }
-
-
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
 const ShapeArraySerializer = {
     serialize: (value: AbstractSerializableShape[]): any[] => {
         // @ts-ignore
         return value.map((shape) => shape.toJson());
     },
+
     deserialize: (value: any[]): AbstractSerializableShape[] => {
         return value.map((json) => {
             const type = json["type"];
@@ -249,14 +249,16 @@ const ShapeArraySerializer = {
             }
         });
     },
-}
+};
+/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
+
 /**
  * A serializable class for a group shape.
  */
 @Jsonizable
 export class SerializableGroup extends AbstractSerializableShape {
     @SerialName("type")
-    type: string = "G";
+    public type: string = "G";
 
     @SerialName("i")
     public id: string | null = null;

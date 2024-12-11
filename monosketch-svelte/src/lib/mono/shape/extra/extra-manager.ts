@@ -2,7 +2,7 @@
  * Copyright (c) 2024, tuanchauict
  */
 
-import {Flow} from "$libs/flow";
+import { Flow } from "$libs/flow";
 import {
     PredefinedAnchorChar,
     PredefinedRectangleFillStyle,
@@ -109,23 +109,23 @@ class ShapeExtraManagerImpl implements IShapeExtraManager {
     defaultExtraStateUpdateFlow: Flow<void> = this.defaultExtraStateUpdateMutableFlow.immutable();
 
     setDefaultValues({
-                         isFillEnabled,
-                         fillStyleId,
-                         isBorderEnabled,
-                         borderStyleId,
-                         isBorderRoundedCorner,
-                         borderDashPattern,
-                         isLineStrokeEnabled,
-                         lineStrokeStyleId,
-                         isLineStrokeRoundedCorner,
-                         lineDashPattern,
-                         isStartHeadAnchorCharEnabled,
-                         startHeadAnchorCharId,
-                         isEndHeadAnchorCharEnabled,
-                         endHeadAnchorCharId,
-                         textHorizontalAlign,
-                         textVerticalAlign,
-                     }: {
+        isFillEnabled,
+        fillStyleId,
+        isBorderEnabled,
+        borderStyleId,
+        isBorderRoundedCorner,
+        borderDashPattern,
+        isLineStrokeEnabled,
+        lineStrokeStyleId,
+        isLineStrokeRoundedCorner,
+        lineDashPattern,
+        isStartHeadAnchorCharEnabled,
+        startHeadAnchorCharId,
+        isEndHeadAnchorCharEnabled,
+        endHeadAnchorCharId,
+        textHorizontalAlign,
+        textVerticalAlign,
+    }: {
         isFillEnabled?: boolean;
         fillStyleId?: string;
         isBorderEnabled?: boolean;

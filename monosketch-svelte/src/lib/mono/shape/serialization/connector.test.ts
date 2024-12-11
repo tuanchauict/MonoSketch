@@ -7,6 +7,8 @@ import { SerializableLineConnector } from "./connector";
 import { LineAnchor } from "$mono/shape/shape/linehelper";
 import { Point, PointF } from "$libs/graphics-geo/point";
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 describe("SerializableLineConnector", () => {
     it("should serialize to JSON correctly", () => {
         const original = SerializableLineConnector.create({
@@ -20,7 +22,7 @@ describe("SerializableLineConnector", () => {
         // @ts-ignore
         const json = original.toJson();
         console.log(json);
-        expect(json).toStrictEqual({ i: 'line-1', a: 1, t: 'shape-1', r: '0.5|0.5', o: '10|20' })
+        expect(json).toStrictEqual({ i: 'line-1', a: 1, t: 'shape-1', r: '0.5|0.5', o: '10|20' });
     });
 
     it("should deserialize from JSON correctly", () => {
@@ -38,6 +40,6 @@ describe("SerializableLineConnector", () => {
                     offset: new Point(30, 40),
                 }
             )
-        )
+        );
     });
 });
