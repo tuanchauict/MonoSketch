@@ -115,6 +115,4 @@ export class Rect implements Comparable {
     toString(): string {
         return `[${this.left}, ${this.top}] - [${this.width} x ${this.height}]`;
     }
-
-    // TODO: implement serialize and deserialize
 }

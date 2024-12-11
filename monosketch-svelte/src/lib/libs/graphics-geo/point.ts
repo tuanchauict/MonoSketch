@@ -78,8 +78,6 @@ export class Point implements IPoint {
     toString(): string {
         return `${this.left}|${this.top}`;
     }
-
-    // TODO: implement serialize and deserialize
 }
 
 export enum Direction {
