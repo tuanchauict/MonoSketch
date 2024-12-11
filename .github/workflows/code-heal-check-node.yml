@@ -51,3 +51,26 @@ jobs:
         run: cd monosketch-svelte && pnpm install
       - name: Build Svelte
         run: cd monosketch-svelte && pnpm run build
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            monosketch-svelte/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('monosketch-svelte/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: cd monosketch-svelte && pnpm install
+      - name: Run Lint
+        run: cd monosketch-svelte && pnpm run lint
