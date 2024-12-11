@@ -120,16 +120,16 @@ export class Line extends AbstractShape {
     }
 
     toSerializableShape(isIdIncluded: boolean): AbstractSerializableShape {
-        return new SerializableLine(
-            this.id,
-            !isIdIncluded,
-            this.versionCode,
-            this.startPoint,
-            this.endPoint,
-            this.jointPoints,
-            this.extraInner.toSerializableExtra(),
-            this.wasMovingEdge(),
-        );
+        return SerializableLine.create({
+            id: this.id,
+            isIdTemporary: !isIdIncluded,
+            versionCode: this.versionCode,
+            startPoint: this.startPoint,
+            endPoint: this.endPoint,
+            jointPoints: this.jointPoints,
+            extra: this.extraInner.toSerializableExtra(),
+            wasMovingEdge: this.wasMovingEdge(),
+        });
     }
 
     setBound(newBound: Rect): void {

@@ -1,6 +1,6 @@
 // Base class for all serializable shapes
 import { Point } from "$libs/graphics-geo/point";
-import type { DirectedPoint } from "$libs/graphics-geo/point";
+import { DirectedPoint } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import {
     SerializableLineExtra,
@@ -8,7 +8,7 @@ import {
     SerializableTextExtra,
 } from "$mono/shape/serialization/extras";
 import { Jsonizable, Serializer, SerialName } from "$mono/shape/serialization/serializable";
-import { RectSerializer } from "$mono/shape/serialization/serializers";
+import { DirectedPointSerializer, PointArraySerializer, RectSerializer } from "$mono/shape/serialization/serializers";
 
 /**
  * An abstract class for all serializable shapes.
@@ -158,21 +158,67 @@ export class SerializableText extends AbstractSerializableShape {
 /**
  * A serializable class for a line shape.
  */
+@Jsonizable
 export class SerializableLine extends AbstractSerializableShape {
     @SerialName("type")
     type: string = "L";
 
-    constructor(
-        public id: string | null,
-        public isIdTemporary: boolean,
-        public versionCode: number,
-        public startPoint: DirectedPoint,
-        public endPoint: DirectedPoint,
-        public jointPoints: Point[],
-        public extra: SerializableLineExtra,
-        public wasMovingEdge: boolean,
-    ) {
+    @SerialName("i")
+    public id: string | null = null;
+    @SerialName("idtemp")
+    public isIdTemporary: boolean = false;
+    @SerialName("v")
+    public versionCode: number = 0;
+    @SerialName("ps")
+    @Serializer(DirectedPointSerializer)
+    public startPoint: DirectedPoint = DirectedPoint.ZERO;
+    @SerialName("pe")
+    @Serializer(DirectedPointSerializer)
+    public endPoint: DirectedPoint = DirectedPoint.ZERO;
+    @SerialName("jps")
+    @Serializer(PointArraySerializer)
+    public jointPoints: Point[] = [];
+    @SerialName("e")
+    public extra: SerializableLineExtra = SerializableLineExtra.EMPTY;
+    @SerialName("em")
+    public wasMovingEdge: boolean = true;
+
+    private constructor() {
         super();
+    }
+
+    static create(
+        {
+            id,
+            isIdTemporary,
+            versionCode,
+            startPoint,
+            endPoint,
+            jointPoints,
+            extra,
+            wasMovingEdge,
+        }: {
+            id: string | null;
+            isIdTemporary: boolean;
+            versionCode: number;
+            startPoint: DirectedPoint;
+            endPoint: DirectedPoint;
+            jointPoints: Point[];
+            extra: SerializableLineExtra;
+            wasMovingEdge: boolean;
+        },
+    ): SerializableLine {
+        const result = new SerializableLine();
+        result.id = id;
+        result.isIdTemporary = isIdTemporary;
+        result.versionCode = versionCode;
+        result.startPoint = startPoint;
+        result.endPoint = endPoint;
+        result.jointPoints = jointPoints;
+        result.extra = extra;
+        result.wasMovingEdge = wasMovingEdge;
+
+        return result;
     }
 }
 

@@ -2,9 +2,10 @@
  * Copyright (c) 2024, tuanchauict
  */
 
+import { DirectedPoint, Direction, Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
-import { SerializableRectExtra, SerializableTextExtra } from "$mono/shape/serialization/extras";
-import { SerializableRectangle, SerializableText } from "$mono/shape/serialization/shapes";
+import { SerializableLineExtra, SerializableRectExtra, SerializableTextExtra } from "$mono/shape/serialization/extras";
+import { SerializableLine, SerializableRectangle, SerializableText } from "$mono/shape/serialization/shapes";
 import { describe, expect, it } from "vitest";
 
 describe('SerializableRectangle', () => {
@@ -77,7 +78,7 @@ describe('SerializableRectangle', () => {
                     dashPattern: 'dashPattern2',
                     corner: 'corner2',
                 }),
-            })
+            }),
         );
     });
 
@@ -113,7 +114,7 @@ describe('SerializableRectangle', () => {
                     dashPattern: 'dashPattern2',
                     corner: 'corner2',
                 }),
-            })
+            }),
         );
     });
 });
@@ -135,7 +136,7 @@ describe('SerializableText', () => {
                         userSelectedBorderStyleId: 'borderStyle1',
                         dashPattern: 'dashPattern1',
                         corner: 'corner1',
-                    }
+                    },
                 ),
                 textHorizontalAlign: 0,
                 textVerticalAlign: 1,
@@ -210,13 +211,13 @@ describe('SerializableText', () => {
                             userSelectedBorderStyleId: 'borderStyle2',
                             dashPattern: 'dashPattern2',
                             corner: 'corner2',
-                        }
+                        },
                     ),
                     textHorizontalAlign: 2,
                     textVerticalAlign: 1,
                 }),
                 isTextEditable: false,
-            })
+            }),
         );
     });
 
@@ -260,13 +261,154 @@ describe('SerializableText', () => {
                             userSelectedBorderStyleId: 'borderStyle2',
                             dashPattern: 'dashPattern2',
                             corner: 'corner2',
-                        }
+                        },
                     ),
                     textHorizontalAlign: 2,
                     textVerticalAlign: 1,
                 }),
                 isTextEditable: true,
-            })
+            }),
+        );
+    });
+});
+
+describe('SerializableLine', () => {
+    it('should serialize correctly', () => {
+        const original = SerializableLine.create({
+            id: 'line1',
+            isIdTemporary: false,
+            versionCode: 1,
+            startPoint: DirectedPoint.of(Direction.HORIZONTAL, 10, 20),
+            endPoint: DirectedPoint.of(Direction.VERTICAL, 30, 40),
+            jointPoints: [Point.of(15, 25), Point.of(20, 30)],
+            extra: SerializableLineExtra.create({
+                isStrokeEnabled: true,
+                userSelectedStrokeStyleId: 'strokeStyle1',
+                isStartAnchorEnabled: true,
+                userSelectedStartAnchorId: 'startAnchor1',
+                isEndAnchorEnabled: true,
+                userSelectedEndAnchorId: 'endAnchor1',
+                dashPattern: 'dashPattern1',
+                isRoundedCorner: true,
+            }),
+            wasMovingEdge: false,
+        });
+
+        // @ts-ignore
+        const json = original.toJson();
+        console.log(json);
+        expect(json).toStrictEqual({
+            type: 'L',
+            i: 'line1',
+            idtemp: false,
+            v: 1,
+            ps: 'H|10|20',
+            pe: 'V|30|40',
+            jps: ['15|25', '20|30'],
+            e: {
+                se: true,
+                su: 'strokeStyle1',
+                ase: true,
+                asu: 'startAnchor1',
+                aee: true,
+                aeu: 'endAnchor1',
+                du: 'dashPattern1',
+                rc: true,
+            },
+            em: false,
+        });
+    });
+
+    it('should deserialize correctly', () => {
+        const json = {
+            type: 'L',
+            i: 'line2',
+            idtemp: true,
+            v: 2,
+            ps: 'H|10|20',
+            pe: 'V|30|40',
+            jps: ['15|25', '20|30'],
+            e: {
+                se: true,
+                su: 'strokeStyle1',
+                ase: true,
+                asu: 'startAnchor1',
+                aee: true,
+                aeu: 'endAnchor1',
+                du: 'dashPattern1',
+                rc: true,
+            },
+            em: true,
+        };
+
+        // @ts-ignore
+        const deserialized = SerializableLine.fromJson(json);
+        expect(deserialized).toStrictEqual(
+            SerializableLine.create({
+                id: 'line2',
+                isIdTemporary: true,
+                versionCode: 2,
+                startPoint: DirectedPoint.of(Direction.HORIZONTAL, 10, 20),
+                endPoint: DirectedPoint.of(Direction.VERTICAL, 30, 40),
+                jointPoints: [Point.of(15, 25), Point.of(20, 30)],
+                extra: SerializableLineExtra.create({
+                    isStrokeEnabled: true,
+                    userSelectedStrokeStyleId: 'strokeStyle1',
+                    isStartAnchorEnabled: true,
+                    userSelectedStartAnchorId: 'startAnchor1',
+                    isEndAnchorEnabled: true,
+                    userSelectedEndAnchorId: 'endAnchor1',
+                    dashPattern: 'dashPattern1',
+                    isRoundedCorner: true,
+                }),
+                wasMovingEdge: true,
+            }),
+        );
+    });
+
+    it("should deserialize with null id correctly", () => {
+        const json = {
+            type: 'L',
+            i: null,
+            idtemp: true,
+            v: 2,
+            ps: 'H|10|20',
+            pe: 'V|30|40',
+            jps: ['15|25', '20|30'],
+            e: {
+                se: true,
+                su: 'strokeStyle1',
+                ase: true,
+                asu: 'startAnchor1',
+                aee: true,
+                aeu: 'endAnchor1',
+                du: 'dashPattern1',
+                rc: true,
+            },
+            em: true,
+        };
+        // @ts-ignore
+        const deserialized = SerializableLine.fromJson(json);
+        expect(deserialized).toStrictEqual(
+            SerializableLine.create({
+                id: null,
+                isIdTemporary: true,
+                versionCode: 2,
+                startPoint: DirectedPoint.of(Direction.HORIZONTAL, 10, 20),
+                endPoint: DirectedPoint.of(Direction.VERTICAL, 30, 40),
+                jointPoints: [Point.of(15, 25), Point.of(20, 30)],
+                extra: SerializableLineExtra.create({
+                    isStrokeEnabled: true,
+                    userSelectedStrokeStyleId: 'strokeStyle1',
+                    isStartAnchorEnabled: true,
+                    userSelectedStartAnchorId: 'startAnchor1',
+                    isEndAnchorEnabled: true,
+                    userSelectedEndAnchorId: 'endAnchor1',
+                    dashPattern: 'dashPattern1',
+                    isRoundedCorner: true,
+                }),
+                wasMovingEdge: true,
+            }),
         );
     });
 });
