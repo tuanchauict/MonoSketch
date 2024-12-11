@@ -10,7 +10,7 @@ import {
     SerializableLine,
     SerializableRectangle,
     SerializableText,
-} from "$mono/shape/serialization/serializable-shape";
+} from "$mono/shape/serialization/shapes";
 import { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { Line } from "$mono/shape/shape/line";
 import { Rectangle } from "$mono/shape/shape/rectangle";

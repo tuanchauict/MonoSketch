@@ -4,7 +4,7 @@ import type { Rect } from "$libs/graphics-geo/rect";
 import type { Identifier } from "$mono/shape/collection/identifier";
 import { NoExtra } from "$mono/shape/extra/shape-extra";
 import type { ShapeExtra } from "$mono/shape/extra/shape-extra";
-import type { AbstractSerializableShape } from "$mono/shape/serialization/serializable-shape";
+import type { AbstractSerializableShape } from "$mono/shape/serialization/shapes";
 import { UUID } from "$mono/uuid";
 
 /**

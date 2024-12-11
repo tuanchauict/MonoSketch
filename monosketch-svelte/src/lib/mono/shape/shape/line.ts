@@ -2,7 +2,7 @@ import { DirectedPoint, Direction, Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
 import { LineExtra, type ShapeExtra } from "$mono/shape/extra/shape-extra";
-import { AbstractSerializableShape, SerializableLine } from "$mono/shape/serialization/serializable-shape";
+import { AbstractSerializableShape, SerializableLine } from "$mono/shape/serialization/shapes";
 import { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { LineHelper, LineEdge, LineAnchor, type LineAnchorPointUpdate } from "$mono/shape/shape/linehelper";
 

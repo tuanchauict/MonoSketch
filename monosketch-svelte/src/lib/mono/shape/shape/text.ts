@@ -6,7 +6,7 @@ import { Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import { Size } from "$libs/graphics-geo/size";
 import { type ShapeExtra, TextExtra } from "$mono/shape/extra/shape-extra";
-import { AbstractSerializableShape, SerializableText } from "$mono/shape/serialization/serializable-shape";
+import { AbstractSerializableShape, SerializableText } from "$mono/shape/serialization/shapes";
 import { AbstractShape } from "$mono/shape/shape/abstract-shape";
 
 /**
