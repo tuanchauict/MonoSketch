@@ -209,14 +209,14 @@ export class RectangleExtra implements ShapeExtra, IRectangleExtra {
     }
 
     toSerializableExtra(): SerializableRectExtra {
-        return {
+        return SerializableRectExtra.create({
             isFillEnabled: this.isFillEnabled,
             userSelectedFillStyleId: this.userSelectedFillStyle.id,
             isBorderEnabled: this.isBorderEnabled,
             userSelectedBorderStyleId: this.userSelectedBorderStyle.id,
             dashPattern: this.dashPattern.toSerializableValue(),
             corner: this.corner.toSerializableValue(),
-        };
+        });
     }
 
     static fromSerializable(serializableExtra: SerializableRectExtra): RectangleExtra {
