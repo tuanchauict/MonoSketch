@@ -132,7 +132,7 @@ export class DirectedPoint implements Comparable {
         return new DirectedPoint(this.direction, this.point.plus(base));
     }
 
-    // TODO: implement serialize and deserialize
+    static ZERO = new DirectedPoint(Direction.HORIZONTAL, Point.ZERO);
 }
 
 /**

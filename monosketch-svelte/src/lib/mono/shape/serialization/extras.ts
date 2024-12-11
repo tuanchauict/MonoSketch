@@ -151,4 +151,6 @@ export class SerializableLineExtra {
 
         return result;
     }
+
+    static EMPTY: SerializableLineExtra = new SerializableLineExtra();
 }

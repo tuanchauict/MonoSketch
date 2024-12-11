@@ -2,7 +2,7 @@
  * Copyright (c) 2024, tuanchauict
  */
 
-import { Point, PointF } from "$libs/graphics-geo/point";
+import { DirectedPoint, Direction, Point, PointF } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import { LineAnchor } from "$mono/shape/shape/linehelper";
 
@@ -50,6 +50,16 @@ export const PointSerializer = {
     },
 }
 
+export const PointArraySerializer = {
+    serialize(value: Point[]): string[] {
+        return value.map(PointSerializer.serialize);
+    },
+
+    deserialize(value: string[]): Point[] {
+        return value.map(PointSerializer.deserialize);
+    },
+}
+
 /**
  * A serializer for [PointF]
  */
@@ -64,6 +74,27 @@ export const PointFSerializer = {
             throw new Error(`Invalid PointF format: ${value}`);
         }
         return new PointF(x, y);
+    },
+}
+
+export const DirectedPointSerializer = {
+    MARSHAL_HORIZONTAL: "H",
+    MARSHAL_VERTICAL: "V",
+
+    serialize(value: DirectedPoint): string {
+        const serializedDirection = value.direction === Direction.HORIZONTAL
+            ? DirectedPointSerializer.MARSHAL_HORIZONTAL
+            : DirectedPointSerializer.MARSHAL_VERTICAL;
+        return `${serializedDirection}|${value.point.left}|${value.point.top}`;
+    },
+
+    deserialize(value: string): DirectedPoint {
+        const [serializedDirection, left, top] = value.split("|");
+        const direction = serializedDirection === DirectedPointSerializer.MARSHAL_HORIZONTAL
+            ? Direction.HORIZONTAL
+            : Direction.VERTICAL;
+
+        return DirectedPoint.of(direction, parseInt(left), parseInt(top));
     },
 }
 
