@@ -52,17 +52,42 @@ export class SerializableRectExtra {
 
         return result;
     }
+
+    static EMPTY: SerializableRectExtra = new SerializableRectExtra();
 }
 
 /**
  * A serializable class for extra properties of a text shape.
  */
+@Jsonizable
 export class SerializableTextExtra {
-    constructor(
-        public boundExtra: SerializableRectExtra,
-        public textHorizontalAlign: number,
-        public textVerticalAlign: number,
-    ) {
+    @SerialName("be")
+    public boundExtra: SerializableRectExtra = SerializableRectExtra.EMPTY;
+    @SerialName("tha")
+    public textHorizontalAlign: number = 0;
+    @SerialName("tva")
+    public textVerticalAlign: number = 0;
+
+    private constructor() {
+    }
+
+    static create(
+        {
+            boundExtra,
+            textHorizontalAlign,
+            textVerticalAlign,
+        }: {
+            boundExtra: SerializableRectExtra,
+            textHorizontalAlign: number,
+            textVerticalAlign: number,
+        },
+    ): SerializableTextExtra {
+        const result = new SerializableTextExtra();
+        result.boundExtra = boundExtra;
+        result.textHorizontalAlign = textHorizontalAlign;
+        result.textVerticalAlign = textVerticalAlign;
+
+        return result;
     }
 }
 

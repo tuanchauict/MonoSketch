@@ -266,11 +266,11 @@ export class TextExtra implements ShapeExtra {
     }
 
     toSerializableExtra(): SerializableTextExtra {
-        return {
+        return SerializableTextExtra.create({
             boundExtra: this.boundExtra.toSerializableExtra(),
             textHorizontalAlign: this.textAlign.horizontalAlign,
             textVerticalAlign: this.textAlign.verticalAlign,
-        };
+        });
     }
 
     static fromSerializable(serializableExtra: SerializableTextExtra): TextExtra {
