@@ -3,6 +3,7 @@
  */
 
 import { Point, PointF } from "$libs/graphics-geo/point";
+import { Rect } from "$libs/graphics-geo/rect";
 import { LineAnchor } from "$mono/shape/shape/linehelper";
 
 /**
@@ -32,7 +33,7 @@ export const AnchorSerializer = {
             default:
                 throw new Error(`Unrecognizable value ${value}`);
         }
-    }
+    },
 }
 
 export const PointSerializer = {
@@ -46,7 +47,7 @@ export const PointSerializer = {
             throw new Error(`Invalid Point format: ${value}`);
         }
         return new Point(x, y);
-    }
+    },
 }
 
 /**
@@ -63,5 +64,19 @@ export const PointFSerializer = {
             throw new Error(`Invalid PointF format: ${value}`);
         }
         return new PointF(x, y);
-    }
+    },
+}
+
+export const RectSerializer = {
+    serialize(value: Rect): string {
+        return `${value.left}|${value.top}|${value.width}|${value.height}`;
+    },
+
+    deserialize(value: string): Rect {
+        const [left, top, width, height] = value.split("|").map(Number);
+        if (isNaN(left) || isNaN(top) || isNaN(width) || isNaN(width)) {
+            throw new Error(`Invalid Rect format: ${value}`);
+        }
+        return Rect.byLTWH(left, top, width, height);
+    },
 }
