@@ -2,7 +2,7 @@ import { DirectedPoint, Direction, Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
 import { LineExtra, type ShapeExtra } from "$mono/shape/extra/shape-extra";
-import { AbstractSerializableShape, SerializableLine } from "$mono/shape/serialization/serializable-shape";
+import { AbstractSerializableShape, SerializableLine } from "$mono/shape/serialization/shapes";
 import { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { LineHelper, LineEdge, LineAnchor, type LineAnchorPointUpdate } from "$mono/shape/shape/linehelper";
 
@@ -120,16 +120,16 @@ export class Line extends AbstractShape {
     }
 
     toSerializableShape(isIdIncluded: boolean): AbstractSerializableShape {
-        return new SerializableLine(
-            this.id,
-            !isIdIncluded,
-            this.versionCode,
-            this.startPoint,
-            this.endPoint,
-            this.jointPoints,
-            this.extraInner.toSerializableExtra(),
-            this.wasMovingEdge(),
-        );
+        return SerializableLine.create({
+            id: this.id,
+            isIdTemporary: !isIdIncluded,
+            versionCode: this.versionCode,
+            startPoint: this.startPoint,
+            endPoint: this.endPoint,
+            jointPoints: this.jointPoints,
+            extra: this.extraInner.toSerializableExtra(),
+            wasMovingEdge: this.wasMovingEdge(),
+        });
     }
 
     setBound(newBound: Rect): void {

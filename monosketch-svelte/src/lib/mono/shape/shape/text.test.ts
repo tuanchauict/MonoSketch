@@ -4,7 +4,7 @@
 
 import { Rect } from "$libs/graphics-geo/rect";
 import { TextExtra } from "$mono/shape/extra/shape-extra";
-import type { SerializableText } from "$mono/shape/serialization/serializable-shape";
+import type { SerializableText } from "$mono/shape/serialization/shapes";
 import { describe, it, expect } from 'vitest';
 import {Text} from './text';
 

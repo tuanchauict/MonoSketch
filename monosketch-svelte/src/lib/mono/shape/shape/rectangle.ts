@@ -2,7 +2,7 @@ import type { Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
 import { RectangleExtra, type ShapeExtra } from "$mono/shape/extra/shape-extra";
-import { SerializableRectangle } from "$mono/shape/serialization/serializable-shape";
+import { SerializableRectangle } from "$mono/shape/serialization/shapes";
 import { AbstractShape } from "$mono/shape/shape/abstract-shape";
 
 /**
@@ -69,12 +69,14 @@ export class Rectangle extends AbstractShape {
     }
 
     toSerializableShape(isIdIncluded: boolean): SerializableRectangle {
-        return new SerializableRectangle(
-            isIdIncluded ? this.id : null,
-            !isIdIncluded,
-            this.versionCode,
-            this.bound,
-            this.extra.toSerializableExtra(),
+        return SerializableRectangle.create(
+            {
+                id: isIdIncluded ? this.id : null,
+                isIdTemporary: !isIdIncluded,
+                versionCode: this.versionCode,
+                bound: this.bound,
+                extra: this.extra.toSerializableExtra(),
+            },
         );
     }
 }

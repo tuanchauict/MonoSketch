@@ -2,7 +2,7 @@
  * Copyright (c) 2024, tuanchauict
  */
 
-import type { SerializableLine } from "$mono/shape/serialization/serializable-shape";
+import type { SerializableLine } from "$mono/shape/serialization/shapes";
 import { describe, it, expect } from 'vitest';
 import { DirectedPoint, Direction, Point } from '$libs/graphics-geo/point';
 import { Line } from '$mono/shape/shape/line';

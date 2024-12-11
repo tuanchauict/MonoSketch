@@ -89,6 +89,8 @@ export class SerializableTextExtra {
 
         return result;
     }
+
+    static EMPTY: SerializableTextExtra = new SerializableTextExtra();
 }
 
 /**
@@ -149,4 +151,6 @@ export class SerializableLineExtra {
 
         return result;
     }
+
+    static EMPTY: SerializableLineExtra = new SerializableLineExtra();
 }

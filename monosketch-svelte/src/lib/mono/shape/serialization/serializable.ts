@@ -109,9 +109,10 @@ export function Jsonizable(constructor: Function) {
             // 1st: Check if the field has a serializer
             // 2nd: Check if the field has a fromJson method
             // 3rd: Use the value directly
+            console.log(field, key, value);
             if (serializers[key]) {
                 instance[key] = serializers[key].deserialize(value);
-            } else if (field.constructor && field.constructor.fromJson) {
+            } else if (field && field.constructor && field.constructor.fromJson) {
                 instance[key] = field.constructor.fromJson(value);
             } else {
                 instance[key] = value;
