@@ -6,7 +6,7 @@ import { type DirectedPoint, Point, PointF } from "$libs/graphics-geo/point";
 import type { Rect } from "$libs/graphics-geo/rect";
 import { TwoWayQuickMap } from "$mono/shape/collection/two-way-quick-map";
 import { ConnectorIdentifier, LineConnector, ShapeConnectorUseCase } from "$mono/shape/connector/line-connector";
-import { SerializableLineConnector } from "$mono/shape/serialization/serializable-connector";
+import { SerializableLineConnector } from "$mono/shape/serialization/connector";
 import { AbstractShape, ShapeIdentifier } from "$mono/shape/shape/abstract-shape";
 import { Line } from "$mono/shape/shape/line";
 import { LineAnchor } from "$mono/shape/shape/linehelper";
@@ -84,24 +84,14 @@ export class ShapeConnector {
 
     static toSerializableConnector(
         lineConnector: LineConnector,
-        targetOrIdentifier: ShapeIdentifier | AbstractShape,
+        targetOrIdentifier: ShapeIdentifier,
     ): SerializableLineConnector {
-        if (targetOrIdentifier instanceof AbstractShape) {
-            return new SerializableLineConnector(
-                lineConnector.lineId,
-                lineConnector.anchor,
-                targetOrIdentifier.id,
-                lineConnector.ratio,
-                lineConnector.offset,
-            );
-        } else {
-            return new SerializableLineConnector(
-                lineConnector.lineId,
-                lineConnector.anchor,
-                targetOrIdentifier.id,
-                lineConnector.ratio,
-                lineConnector.offset,
-            );
-        }
+        return SerializableLineConnector.create({
+            lineId: lineConnector.lineId,
+            anchor: lineConnector.anchor,
+            targetId: targetOrIdentifier.id,
+            ratio: lineConnector.ratio,
+            offset: lineConnector.offset,
+        });
     }
 }
