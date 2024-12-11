@@ -110,3 +110,19 @@ export class Group extends AbstractShape {
         return Array.from(this.items).map(callback);
     }
 }
+
+/**
+ * A special [Group] for the root group of the file.
+ * This group contains some extra information for storing and restoring from file.
+ */
+export function RootGroup(id: string | null): Group;
+export function RootGroup(serializableGroup: SerializableGroup): Group;
+
+export function RootGroup(idOrSerializableGroup: string | null | SerializableGroup = null): Group {
+    if (idOrSerializableGroup instanceof SerializableGroup) {
+        return Group.fromSerializable(idOrSerializableGroup);
+    } else {
+        return new Group(idOrSerializableGroup, null);
+    }
+}
+
