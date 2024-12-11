@@ -58,12 +58,12 @@ export class Group extends AbstractShape {
     }
 
     toSerializableShape(isIdIncluded: boolean): SerializableGroup {
-        return new SerializableGroup(
-            this.id,
-            !isIdIncluded,
-            this.versionCode,
-            this.mapItems(item => item.toSerializableShape(isIdIncluded)),
-        );
+        return SerializableGroup.create({
+            id: this.id,
+            isIdTemporary: !isIdIncluded,
+            versionCode: this.versionCode,
+            shapes: this.mapItems(item => item.toSerializableShape(isIdIncluded)),
+        });
     }
 
     add(shape: AbstractShape, position: AddPosition = AddPosition.Last): void {

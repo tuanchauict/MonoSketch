@@ -222,19 +222,75 @@ export class SerializableLine extends AbstractSerializableShape {
     }
 }
 
+
+const ShapeArraySerializer = {
+    serialize: (value: AbstractSerializableShape[]): any[] => {
+        // @ts-ignore
+        return value.map((shape) => shape.toJson());
+    },
+    deserialize: (value: any[]): AbstractSerializableShape[] => {
+        return value.map((json) => {
+            const type = json["type"];
+            switch (type) {
+                case "R":
+                    // @ts-ignore
+                    return SerializableRectangle.fromJson(json);
+                case "T":
+                    // @ts-ignore
+                    return SerializableText.fromJson(json);
+                case "L":
+                    // @ts-ignore
+                    return SerializableLine.fromJson(json);
+                case "G":
+                    // @ts-ignore
+                    return SerializableGroup.fromJson(json);
+                default:
+                    throw new Error(`Unrecognizable type ${type}`);
+            }
+        });
+    },
+}
 /**
  * A serializable class for a group shape.
  */
+@Jsonizable
 export class SerializableGroup extends AbstractSerializableShape {
     @SerialName("type")
     type: string = "G";
 
-    constructor(
-        public id: string | null,
-        public isIdTemporary: boolean,
-        public versionCode: number,
-        public shapes: AbstractSerializableShape[],
-    ) {
+    @SerialName("i")
+    public id: string | null = null;
+    @SerialName("idtemp")
+    public isIdTemporary: boolean = false;
+    @SerialName("v")
+    public versionCode: number = 0;
+    @SerialName("ss")
+    @Serializer(ShapeArraySerializer)
+    public shapes: AbstractSerializableShape[] = [];
+
+    private constructor() {
         super();
+    }
+
+    static create(
+        {
+            id,
+            isIdTemporary,
+            versionCode,
+            shapes,
+        }: {
+            id: string | null;
+            isIdTemporary: boolean;
+            versionCode: number;
+            shapes: AbstractSerializableShape[];
+        },
+    ): SerializableGroup {
+        const result = new SerializableGroup();
+        result.id = id;
+        result.isIdTemporary = isIdTemporary;
+        result.versionCode = versionCode;
+        result.shapes = shapes;
+
+        return result;
     }
 }
