@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { SerializableRectExtra, SerializableTextExtra } from './extras';
+import { SerializableLineExtra, SerializableRectExtra, SerializableTextExtra } from './extras';
 
 describe('SerializableRectExtra', () => {
     it('should create a SerializableRectExtra instance correctly', () => {
@@ -114,6 +114,63 @@ describe('SerializableTextExtra', () => {
                 }),
                 textHorizontalAlign: 3,
                 textVerticalAlign: 4,
+            })
+        );
+    });
+});
+
+describe('SerializableLineExtra', () => {
+    it('should create a SerializableLineExtra instance correctly', () => {
+        const original = SerializableLineExtra.create({
+            isStrokeEnabled: true,
+            userSelectedStrokeStyleId: 'strokeStyle1',
+            isStartAnchorEnabled: true,
+            userSelectedStartAnchorId: 'startAnchor1',
+            isEndAnchorEnabled: true,
+            userSelectedEndAnchorId: 'endAnchor1',
+            dashPattern: 'dashPattern1',
+            isRoundedCorner: true,
+        });
+
+        // @ts-ignore
+        const json = original.toJson();
+        console.log(json);
+        expect(json).toStrictEqual({
+            se: true,
+            su: 'strokeStyle1',
+            ase: true,
+            asu: 'startAnchor1',
+            aee: true,
+            aeu: 'endAnchor1',
+            du: 'dashPattern1',
+            rc: true,
+        });
+    });
+
+    it('should serialize and deserialize correctly', () => {
+        const json = {
+            se: false,
+            su: 'strokeStyle2',
+            ase: false,
+            asu: 'startAnchor2',
+            aee: false,
+            aeu: 'endAnchor2',
+            du: 'dashPattern2',
+            rc: false,
+        }
+
+        // @ts-ignore
+        const deserialized = SerializableLineExtra.fromJson(json);
+        expect(deserialized).toStrictEqual(
+            SerializableLineExtra.create({
+                isStrokeEnabled: false,
+                userSelectedStrokeStyleId: 'strokeStyle2',
+                isStartAnchorEnabled: false,
+                userSelectedStartAnchorId: 'startAnchor2',
+                isEndAnchorEnabled: false,
+                userSelectedEndAnchorId: 'endAnchor2',
+                dashPattern: 'dashPattern2',
+                isRoundedCorner: false,
             })
         );
     });

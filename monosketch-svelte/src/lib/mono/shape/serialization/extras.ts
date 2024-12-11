@@ -94,16 +94,59 @@ export class SerializableTextExtra {
 /**
  * A serializable class for extra properties of a line shape.
  */
+@Jsonizable
 export class SerializableLineExtra {
-    constructor(
-        public isStrokeEnabled: boolean = true,
-        public userSelectedStrokeStyleId: string,
-        public isStartAnchorEnabled: boolean = false,
-        public userSelectedStartAnchorId: string,
-        public isEndAnchorEnabled: boolean = false,
-        public userSelectedEndAnchorId: string,
-        public dashPattern: string,
-        public isRoundedCorner: boolean = false,
-    ) {
+    @SerialName("se")
+    public isStrokeEnabled: boolean = true;
+    @SerialName("su")
+    public userSelectedStrokeStyleId: string = "";
+    @SerialName("ase")
+    public isStartAnchorEnabled: boolean = false;
+    @SerialName("asu")
+    public userSelectedStartAnchorId: string = "";
+    @SerialName("aee")
+    public isEndAnchorEnabled: boolean = false;
+    @SerialName("aeu")
+    public userSelectedEndAnchorId: string = "";
+    @SerialName("du")
+    public dashPattern: string = "";
+    @SerialName("rc")
+    public isRoundedCorner: boolean = false;
+
+    private constructor() {
+    }
+
+    static create(
+        {
+            isStrokeEnabled,
+            userSelectedStrokeStyleId,
+            isStartAnchorEnabled,
+            userSelectedStartAnchorId,
+            isEndAnchorEnabled,
+            userSelectedEndAnchorId,
+            dashPattern,
+            isRoundedCorner,
+        }: {
+            isStrokeEnabled: boolean;
+            userSelectedStrokeStyleId: string;
+            isStartAnchorEnabled: boolean;
+            userSelectedStartAnchorId: string;
+            isEndAnchorEnabled: boolean;
+            userSelectedEndAnchorId: string;
+            dashPattern: string;
+            isRoundedCorner: boolean;
+        },
+    ): SerializableLineExtra {
+        const result = new SerializableLineExtra();
+        result.isStrokeEnabled = isStrokeEnabled;
+        result.userSelectedStrokeStyleId = userSelectedStrokeStyleId;
+        result.isStartAnchorEnabled = isStartAnchorEnabled;
+        result.userSelectedStartAnchorId = userSelectedStartAnchorId;
+        result.isEndAnchorEnabled = isEndAnchorEnabled;
+        result.userSelectedEndAnchorId = userSelectedEndAnchorId;
+        result.dashPattern = dashPattern;
+        result.isRoundedCorner = isRoundedCorner;
+
+        return result;
     }
 }

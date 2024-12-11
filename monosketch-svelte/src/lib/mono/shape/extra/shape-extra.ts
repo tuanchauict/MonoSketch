@@ -12,7 +12,7 @@ import {
     TextVerticalAlign,
 } from "$mono/shape/extra/style";
 import {
-    type SerializableLineExtra,
+    SerializableLineExtra,
     SerializableRectExtra,
     SerializableTextExtra,
 } from "$mono/shape/serialization/extras";
@@ -124,7 +124,7 @@ export class LineExtra implements ShapeExtra, ILineExtra {
     }
 
     toSerializableExtra(): SerializableLineExtra {
-        return {
+        return SerializableLineExtra.create({
             isStrokeEnabled: this.isStrokeEnabled,
             userSelectedStrokeStyleId: this.userSelectedStrokeStyle.id,
             isStartAnchorEnabled: this.isStartAnchorEnabled,
@@ -133,7 +133,7 @@ export class LineExtra implements ShapeExtra, ILineExtra {
             userSelectedEndAnchorId: this.userSelectedEndAnchor.id,
             dashPattern: this.dashPattern.toSerializableValue(),
             isRoundedCorner: this.isRoundedCorner,
-        };
+        });
     }
 }
 
