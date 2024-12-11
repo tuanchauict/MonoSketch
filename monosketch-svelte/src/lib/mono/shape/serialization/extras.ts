@@ -89,6 +89,8 @@ export class SerializableTextExtra {
 
         return result;
     }
+
+    static EMPTY: SerializableTextExtra = new SerializableTextExtra();
 }
 
 /**

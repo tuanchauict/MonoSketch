@@ -97,20 +97,60 @@ export class SerializableRectangle extends AbstractSerializableShape {
 /**
  * A serializable class for a text shape.
  */
+@Jsonizable
 export class SerializableText extends AbstractSerializableShape {
     @SerialName("type")
     type: string = "T";
 
-    constructor(
-        public id: string | null,
-        public isIdTemporary: boolean,
-        public versionCode: number,
-        public bound: Rect,
-        public text: string,
-        public extra: SerializableTextExtra,
-        public isTextEditable: boolean,
-    ) {
+    @SerialName("i")
+    public id: string | null = null;
+    @SerialName("idtemp")
+    public isIdTemporary: boolean = false;
+    @SerialName("v")
+    public versionCode: number = 0;
+    @SerialName("b")
+    @Serializer(RectSerializer)
+    public bound: Rect = Rect.ZERO;
+    @SerialName("t")
+    public text: string = "";
+    @SerialName("e")
+    public extra: SerializableTextExtra = SerializableTextExtra.EMPTY;
+    @SerialName("te")
+    public isTextEditable: boolean = false;
+
+    private constructor() {
         super();
+    }
+
+    static create(
+        {
+            id,
+            isIdTemporary,
+            versionCode,
+            bound,
+            text,
+            extra,
+            isTextEditable,
+        }: {
+            id: string | null;
+            isIdTemporary: boolean;
+            versionCode: number;
+            bound: Rect;
+            text: string;
+            extra: SerializableTextExtra;
+            isTextEditable: boolean;
+        },
+    ): SerializableText {
+        const result = new SerializableText();
+        result.id = id;
+        result.isIdTemporary = isIdTemporary;
+        result.versionCode = versionCode;
+        result.bound = bound;
+        result.text = text;
+        result.extra = extra;
+        result.isTextEditable = isTextEditable;
+
+        return result;
     }
 }
 

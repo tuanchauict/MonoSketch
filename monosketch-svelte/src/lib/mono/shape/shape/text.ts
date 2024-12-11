@@ -109,15 +109,15 @@ export class Text extends AbstractShape {
     }
 
     toSerializableShape(isIdIncluded: boolean): AbstractSerializableShape {
-        return new SerializableText(
-            this.id,
-            !isIdIncluded,
-            this.versionCode,
-            this.bound,
-            this.text,
-            this.extra.toSerializableExtra(),
-            this.isTextEditable,
-        );
+        return SerializableText.create({
+            id: this.id,
+            isIdTemporary: !isIdIncluded,
+            versionCode: this.versionCode,
+            bound: this.bound,
+            text: this.text,
+            extra: this.extra.toSerializableExtra(),
+            isTextEditable: this.isTextEditable,
+        });
     }
 
     private updateRenderableText(): void {
