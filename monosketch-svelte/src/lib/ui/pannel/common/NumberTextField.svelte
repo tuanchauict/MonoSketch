@@ -84,8 +84,7 @@ input[type='number'] {
 }
 
 input[type='number'] {
-    // Firefox
-    -moz-appearance: textfield;
+    appearance: textfield;
 
     // Webkit browsers like Safari, Chrome, etc.
     &::-webkit-inner-spin-button,

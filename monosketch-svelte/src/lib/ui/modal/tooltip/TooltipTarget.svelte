@@ -36,8 +36,13 @@ function hideTooltip() {
 onDestroy(hideTooltip);
 </script>
 
-<div on:mouseover="{showTooltip}" on:mouseout="{hideTooltip}">
-    <slot />
+<div role="tooltip"
+     on:mouseover="{showTooltip}"
+     on:mouseout="{hideTooltip}"
+     on:focus="{() => {}}"
+     on:blur="{hideTooltip}"
+>
+    <slot/>
 </div>
 
 <style lang="scss">
