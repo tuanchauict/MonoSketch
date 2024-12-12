@@ -13,8 +13,7 @@ function onActionClick() {
 </script>
 
 <!--Use div here instead of button to avoid the modal is dismissed when click-->
-<!--TODO: Fix this-->
-<div on:click="{onActionClick}">
+<div role="button" tabindex="0" on:click="{onActionClick}" on:keydown="{(e) => e.key === 'Enter' && onActionClick()}">
     {#if tooltip}
         <TooltipTarget text="{tooltip}" direction="{Direction.TOP}" offsetVertical="{4}">
             <slot />
