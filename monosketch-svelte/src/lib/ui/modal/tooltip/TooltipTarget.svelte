@@ -38,7 +38,7 @@ onDestroy(hideTooltip);
 
 <div
     role="button"
-    tabindex="0"
+    tabindex="-1"
     on:mouseover="{showTooltip}"
     on:mouseout="{hideTooltip}"
     on:focus="{() => {}}"
