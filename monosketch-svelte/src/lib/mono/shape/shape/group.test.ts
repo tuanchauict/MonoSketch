@@ -13,7 +13,7 @@ describe('Group', () => {
     let target: Group;
 
     beforeEach(() => {
-        target = new Group(null, PARENT_ID);
+        target = Group.create({ parentId: PARENT_ID });
     });
 
     it('testAdd', () => {
@@ -50,8 +50,8 @@ describe('Group', () => {
     });
 
     it('testRemove', () => {
-        const shape1 =  Rectangle.fromRect({ rect: Rect.ZERO });
-        const shape2 =  Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape1 = Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape2 = Rectangle.fromRect({ rect: Rect.ZERO });
 
         target.add(shape1);
         target.add(shape2);
@@ -66,9 +66,9 @@ describe('Group', () => {
     });
 
     it('testMove_up', () => {
-        const shape1 =  Rectangle.fromRect({ rect: Rect.ZERO });
-        const shape2 =  Rectangle.fromRect({ rect: Rect.ZERO });
-        const shape3 =  Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape1 = Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape2 = Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape3 = Rectangle.fromRect({ rect: Rect.ZERO });
 
         target.add(shape1);
         target.add(shape2);
@@ -79,9 +79,9 @@ describe('Group', () => {
     });
 
     it('testMove_down', () => {
-        const shape1 =  Rectangle.fromRect({ rect: Rect.ZERO });
-        const shape2 =  Rectangle.fromRect({ rect: Rect.ZERO });
-        const shape3 =  Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape1 = Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape2 = Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape3 = Rectangle.fromRect({ rect: Rect.ZERO });
 
         target.add(shape1);
         target.add(shape2);
@@ -92,9 +92,9 @@ describe('Group', () => {
     });
 
     it('testMove_top', () => {
-        const shape1 =  Rectangle.fromRect({ rect: Rect.ZERO });
-        const shape2 =  Rectangle.fromRect({ rect: Rect.ZERO });
-        const shape3 =  Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape1 = Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape2 = Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape3 = Rectangle.fromRect({ rect: Rect.ZERO });
 
         target.add(shape1);
         target.add(shape2);
@@ -105,9 +105,9 @@ describe('Group', () => {
     });
 
     it('testMove_bottom', () => {
-        const shape1 =  Rectangle.fromRect({ rect: Rect.ZERO });
-        const shape2 =  Rectangle.fromRect({ rect: Rect.ZERO });
-        const shape3 =  Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape1 = Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape2 = Rectangle.fromRect({ rect: Rect.ZERO });
+        const shape3 = Rectangle.fromRect({ rect: Rect.ZERO });
 
         target.add(shape1);
         target.add(shape2);
