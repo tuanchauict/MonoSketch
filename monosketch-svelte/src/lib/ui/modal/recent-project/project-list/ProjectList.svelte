@@ -2,7 +2,7 @@
 import ProjectRow from './ProjectRow.svelte';
 import { ProjectAction, type ProjectItem } from '../model';
 import { onDestroy, onMount } from 'svelte';
-import { LifecycleOwner } from '../../../../libs/flow';
+import { LifecycleOwner } from '$libs/flow';
 import { projectDataViewModel } from '../viewmodel';
 
 export let dismiss: () => void;

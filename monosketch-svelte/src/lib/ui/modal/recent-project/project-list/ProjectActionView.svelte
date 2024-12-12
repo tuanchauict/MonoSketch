@@ -12,8 +12,7 @@ function onActionClick() {
 }
 </script>
 
-<!--Use div here instead of button to avoid the modal is dismissed when click-->
-<div role="button" tabindex="0" on:click="{onActionClick}" on:keydown="{(e) => e.key === 'Enter' && onActionClick()}">
+<button on:click="{onActionClick}" on:keydown="{(e) => e.key === 'Enter' && onActionClick()}">
     {#if tooltip}
         <TooltipTarget text="{tooltip}" direction="{Direction.TOP}" offsetVertical="{4}">
             <slot />
@@ -21,10 +20,10 @@ function onActionClick() {
     {:else}
         <slot />
     {/if}
-</div>
+</button>
 
 <style lang="scss">
-div {
+button {
     display: flex;
     background: none;
     border: none;
