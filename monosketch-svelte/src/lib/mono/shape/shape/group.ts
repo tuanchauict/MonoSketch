@@ -2,6 +2,7 @@
  * Copyright (c) 2024, tuanchauict
  */
 
+import type { Comparable } from "$libs/comparable";
 import { Rect } from "$libs/graphics-geo/rect";
 import { AddPosition, MoveActionType, QuickList } from "$mono/shape/collection/quick-list";
 import {
@@ -19,7 +20,7 @@ import { Text } from "$mono/shape/shape/text";
 /**
  * A special shape which manages a collection of shapes.
  */
-export class Group extends AbstractShape {
+export class Group extends AbstractShape implements Comparable {
     private quickList: QuickList<AbstractShape> = new QuickList();
     items: Iterable<AbstractShape> = this.quickList;
 
@@ -108,6 +109,16 @@ export class Group extends AbstractShape {
 
     private mapItems<T>(callback: (item: AbstractShape) => T): T[] {
         return Array.from(this.items).map(callback);
+    }
+
+    equals(other: any): boolean {
+        if (this === other) {
+            return true;
+        }
+        if (!(other instanceof Group)) {
+            return false;
+        }
+        return this.id === other.id && this.versionCode === other.versionCode && this.parentId === other.parentId;
     }
 }
 
