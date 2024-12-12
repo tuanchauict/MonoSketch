@@ -143,4 +143,4 @@ const ChangeOrderTypeToMoveActionType: Record<ChangeOrderType, MoveActionType> =
     [ChangeOrderType.BACKWARD]: MoveActionType.UP,
     [ChangeOrderType.FRONT]: MoveActionType.BOTTOM,
     [ChangeOrderType.BACK]: MoveActionType.TOP,
-}
+};

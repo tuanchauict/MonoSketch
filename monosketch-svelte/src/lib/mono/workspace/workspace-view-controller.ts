@@ -148,7 +148,7 @@ class CanvasViewController {
     };
 
     getInteractionPoint = (pointPx: Point): InteractionPoint | null =>
-        this.interactionCanvasViewController.getInteractionPoint(pointPx)
+        this.interactionCanvasViewController.getInteractionPoint(pointPx);
 
     setMouseMoving = (isMouseMoving: boolean) => {
         this.interactionCanvasViewController.setMouseMoving(isMouseMoving);

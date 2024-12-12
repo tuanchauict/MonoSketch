@@ -123,7 +123,7 @@ export class Group extends AbstractShape implements Comparable {
         return Array.from(this.items).map(callback);
     }
 
-    equals(other: any): boolean {
+    equals(other: unknown): boolean {
         if (this === other) {
             return true;
         }

@@ -133,5 +133,5 @@ export class InteractionCanvasViewController extends BaseCanvasViewController {
         // TODO: Implement this method
         TODO("Implement this method");
         return null;
-    }
+    };
 }

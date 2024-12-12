@@ -27,7 +27,7 @@ describe('ShapeManagerTest', () => {
 
     const addShape = (shape: AbstractShape) => {
         target.execute(new AddShape(shape));
-    }
+    };
 
     test('testExecute_Add', () => {
         const shape1 = new MockShape(Rect.ZERO);
