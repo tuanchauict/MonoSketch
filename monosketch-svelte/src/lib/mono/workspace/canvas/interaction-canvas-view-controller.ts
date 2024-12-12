@@ -1,3 +1,5 @@
+import type { Point } from "$libs/graphics-geo/point";
+import { TODO } from "$libs/todo";
 import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-controller';
 import type { ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import {
@@ -126,4 +128,10 @@ export class InteractionCanvasViewController extends BaseCanvasViewController {
         path.rect(leftPx, topPx, rightPx - leftPx, bottomPx - topPx);
         return path;
     };
+
+    getInteractionPoint = (pointPx: Point): InteractionPoint | null => {
+        // TODO: Implement this method
+        TODO("Implement this method");
+        return null;
+    }
 }

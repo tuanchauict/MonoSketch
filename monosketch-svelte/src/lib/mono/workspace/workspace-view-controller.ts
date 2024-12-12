@@ -1,3 +1,4 @@
+import type { Point } from "$libs/graphics-geo/point";
 import { AxisCanvasViewController } from '$mono/workspace/canvas/axis-canvas-view-controller';
 import { ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { DrawingInfo, DrawingInfoController } from '$mono/workspace/drawing-info';
@@ -5,7 +6,7 @@ import { LifecycleOwner } from '$libs/flow';
 import { WindowViewModel } from '$mono/window/window-viewmodel';
 import { GridCanvasViewController } from '$mono/workspace/canvas/grid-canvas-view-controller';
 import { InteractionCanvasViewController } from '$mono/workspace/canvas/interaction-canvas-view-controller';
-import type { InteractionBound } from '$mono/shape/interaction-bound';
+import type { InteractionBound, InteractionPoint } from '$mono/shape/interaction-bound';
 import { MouseEventObserver } from '$mono/workspace/mouse/mouse-event-observer';
 import { MousePointerType } from '$mono/workspace/mouse/mouse-pointer';
 import type { AppContext } from '$app/app-context';
@@ -145,6 +146,9 @@ class CanvasViewController {
         this.selectionCanvasViewController.setSelectingBound(selectionBound);
         this.selectionCanvasViewController.draw();
     };
+
+    getInteractionPoint = (pointPx: Point): InteractionPoint | null =>
+        this.interactionCanvasViewController.getInteractionPoint(pointPx)
 
     setMouseMoving = (isMouseMoving: boolean) => {
         this.interactionCanvasViewController.setMouseMoving(isMouseMoving);
