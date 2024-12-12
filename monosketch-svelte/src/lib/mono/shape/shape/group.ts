@@ -2,6 +2,7 @@
  * Copyright (c) 2024, tuanchauict
  */
 
+import type { Comparable } from "$libs/comparable";
 import { Rect } from "$libs/graphics-geo/rect";
 import { AddPosition, MoveActionType, QuickList } from "$mono/shape/collection/quick-list";
 import {
@@ -19,16 +20,28 @@ import { Text } from "$mono/shape/shape/text";
 /**
  * A special shape which manages a collection of shapes.
  */
-export class Group extends AbstractShape {
+export class Group extends AbstractShape implements Comparable {
     private quickList: QuickList<AbstractShape> = new QuickList();
     items: Iterable<AbstractShape> = this.quickList;
+
+    /**
+     * Returns an array of items in this group.
+     * This creates a new array every time it is called.
+     */
+    get itemArray(): AbstractShape[] {
+        return Array.from(this.items);
+    }
 
     get itemCount(): number {
         return this.quickList.size;
     }
 
-    constructor(id: string | null = null, parentId: string | null = null) {
+    private constructor(id: string | null = null, parentId: string | null = null) {
         super(id, parentId);
+    }
+
+    static create({ id = null, parentId = null }: { id?: string | null, parentId?: string | null } = {}): Group {
+        return new Group(id, parentId);
     }
 
     get bound(): Rect {
@@ -109,6 +122,16 @@ export class Group extends AbstractShape {
     private mapItems<T>(callback: (item: AbstractShape) => T): T[] {
         return Array.from(this.items).map(callback);
     }
+
+    equals(other: unknown): boolean {
+        if (this === other) {
+            return true;
+        }
+        if (!(other instanceof Group)) {
+            return false;
+        }
+        return this.id === other.id && this.versionCode === other.versionCode && this.parentId === other.parentId;
+    }
 }
 
 /**
@@ -122,7 +145,7 @@ export function RootGroup(idOrSerializableGroup: string | null | SerializableGro
     if (idOrSerializableGroup instanceof SerializableGroup) {
         return Group.fromSerializable(idOrSerializableGroup);
     } else {
-        return new Group(idOrSerializableGroup, null);
+        return Group.create({ id: idOrSerializableGroup, parentId: null });
     }
 }
 

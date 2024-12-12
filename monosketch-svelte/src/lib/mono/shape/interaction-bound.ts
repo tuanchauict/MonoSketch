@@ -14,6 +14,9 @@ export interface InteractionBound {
     readonly interactionPoints: InteractionPoint[];
 }
 
+/**
+ * A class which defines interaction bound for scalable shapes.
+ */
 export class ScalableInteractionBound implements InteractionBound {
     readonly type = InteractionBoundType.SCALABLE_SHAPE;
 
