@@ -24,12 +24,24 @@ export class Group extends AbstractShape implements Comparable {
     private quickList: QuickList<AbstractShape> = new QuickList();
     items: Iterable<AbstractShape> = this.quickList;
 
+    /**
+     * Returns an array of items in this group.
+     * This creates a new array every time it is called.
+     */
+    get itemArray(): AbstractShape[] {
+        return Array.from(this.items);
+    }
+
     get itemCount(): number {
         return this.quickList.size;
     }
 
-    constructor(id: string | null = null, parentId: string | null = null) {
+    private constructor(id: string | null = null, parentId: string | null = null) {
         super(id, parentId);
+    }
+
+    static create({ id = null, parentId = null }: { id?: string | null, parentId?: string | null } = {}): Group {
+        return new Group(id, parentId);
     }
 
     get bound(): Rect {
@@ -133,7 +145,7 @@ export function RootGroup(idOrSerializableGroup: string | null | SerializableGro
     if (idOrSerializableGroup instanceof SerializableGroup) {
         return Group.fromSerializable(idOrSerializableGroup);
     } else {
-        return new Group(idOrSerializableGroup, null);
+        return Group.create({ id: idOrSerializableGroup, parentId: null });
     }
 }
 

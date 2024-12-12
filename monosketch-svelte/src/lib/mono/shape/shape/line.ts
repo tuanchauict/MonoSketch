@@ -83,7 +83,7 @@ export class Line extends AbstractShape {
      */
     private confirmedJointPoints: Point[] = [];
 
-    constructor(
+    private constructor(
         startPoint: DirectedPoint,
         endPoint: DirectedPoint,
         id: string | null = null,
@@ -94,6 +94,15 @@ export class Line extends AbstractShape {
         this.endPoint = endPoint;
         this.jointPoints = LineHelper.createJointPoints([startPoint, endPoint]);
         this.edges = LineHelper.createEdges(this.jointPoints);
+    }
+
+    static fromPoints({ startPoint, endPoint, id = null, parentId = null }: {
+        startPoint: DirectedPoint,
+        endPoint: DirectedPoint,
+        id?: string | null,
+        parentId?: string | null
+    }): Line {
+        return new Line(startPoint, endPoint, id, parentId);
     }
 
     get reducedJoinPoints(): Point[] {

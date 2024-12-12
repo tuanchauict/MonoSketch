@@ -12,7 +12,7 @@ describe('TextTest', () => {
     const PARENT_ID = '1';
 
     it('testSerialization_init', () => {
-        const text = new Text(Rect.byLTWH(1, 2, 3, 4), PARENT_ID);
+        const text = Text.fromRect({ rect: Rect.byLTWH(1, 2, 3, 4), parentId: PARENT_ID });
 
         const serializableText = text.toSerializableShape(true) as SerializableText;
         expect(text.text).toBe(serializableText.text);
@@ -21,7 +21,7 @@ describe('TextTest', () => {
     });
 
     it('testSerialization_updateBound', () => {
-        const text = new Text(Rect.byLTWH(1, 2, 3, 4), PARENT_ID);
+        const text = Text.fromRect({ rect: Rect.byLTWH(1, 2, 3, 4), parentId: PARENT_ID });
         text.setBound(Rect.byLTWH(5, 6, 7, 8));
 
         const serializableText = text.toSerializableShape(true) as SerializableText;
@@ -31,7 +31,7 @@ describe('TextTest', () => {
     });
 
     it('testSerialization_updateText', () => {
-        const text = new Text(Rect.byLTWH(1, 2, 3, 4), PARENT_ID);
+        const text = Text.fromRect({ rect: Rect.byLTWH(1, 2, 3, 4), parentId: PARENT_ID });
         text.setText('Hello Hello!');
 
         const serializableText = text.toSerializableShape(true) as SerializableText;
@@ -41,7 +41,7 @@ describe('TextTest', () => {
     });
 
     it('testSerialization_restore', () => {
-        const text = new Text(Rect.byLTWH(1, 2, 3, 4), PARENT_ID);
+        const text = Text.fromRect({ rect: Rect.byLTWH(1, 2, 3, 4), parentId: PARENT_ID });
         text.setText('Hello Hello!');
         text.setBound(Rect.byLTWH(5, 5, 2, 2));
 
@@ -55,7 +55,7 @@ describe('TextTest', () => {
     });
 
     it('testConvertRenderableText', () => {
-        const target = new Text(Rect.byLTWH(0, 0, 5, 5));
+        const target = Text.fromRect({ rect: Rect.byLTWH(0, 0, 5, 5) });
 
         target.setText('0 1234 12345\n1   2 3 4 5678901 23');
         target.setExtra(TextExtra.NO_BOUND);
@@ -65,7 +65,7 @@ describe('TextTest', () => {
     });
 
     it('testContentBound', () => {
-        const target = new Text(Rect.byLTWH(1, 2, 5, 6));
+        const target = Text.fromRect({ rect: Rect.byLTWH(1, 2, 5, 6) });
 
         const defaultBoundExtra = target.extra.boundExtra;
 

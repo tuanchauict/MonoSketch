@@ -23,13 +23,22 @@ export class Text extends AbstractShape {
     private isTextEditingInner: boolean = false;
     private renderableTextInner: RenderableText = RenderableText.EMPTY;
 
-    constructor(rect: Rect, id: string | null = null, parentId: string | null = null, isTextEditable: boolean = true) {
+    private constructor(rect: Rect, id: string | null = null, parentId: string | null = null, isTextEditable: boolean = true) {
         super(id, parentId);
         this.boundInner = rect;
         this.isTextEditableInner = isTextEditable;
         this.userSettingSize = rect.size;
         this.extraInner = TextExtra.withDefault();
         this.updateRenderableText();
+    }
+
+    static fromRect({ rect, id = null, parentId = null, isTextEditable = true }: {
+        rect: Rect,
+        id?: string | null,
+        parentId?: string | null,
+        isTextEditable?: boolean
+    }): Text {
+        return new Text(rect, id, parentId, isTextEditable);
     }
 
     static fromPoints(startPoint: Point, endPoint: Point, id: string | null = null, parentId: string | null = null, isTextEditable: boolean): Text {

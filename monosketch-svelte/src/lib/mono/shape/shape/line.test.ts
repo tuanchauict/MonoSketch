@@ -14,7 +14,7 @@ describe('Line', () => {
     it('testSerialization_init', () => {
         const startPoint = DirectedPoint.of(Direction.VERTICAL, 1, 2);
         const endPoint = DirectedPoint.of(Direction.HORIZONTAL, 3, 4);
-        const line = new Line(startPoint, endPoint, undefined, PARENT_ID);
+        const line = Line.fromPoints({ startPoint: startPoint, endPoint: endPoint, parentId: PARENT_ID });
 
         const serializableLine = line.toSerializableShape(true) as SerializableLine;
         expect(serializableLine.startPoint).toEqual(startPoint);
@@ -27,7 +27,7 @@ describe('Line', () => {
     it('testSerialization_moveAnchorPoints', () => {
         const startPoint = DirectedPoint.of(Direction.VERTICAL, 1, 2);
         const endPoint = DirectedPoint.of(Direction.HORIZONTAL, 3, 4);
-        const line = new Line(startPoint, endPoint, undefined, PARENT_ID);
+        const line = Line.fromPoints({ startPoint: startPoint, endPoint: endPoint, parentId: PARENT_ID });
 
         const newStartPoint = DirectedPoint.of(Direction.HORIZONTAL, 4, 5);
         const newEndPoint = DirectedPoint.of(Direction.VERTICAL, 7, 8);
@@ -53,7 +53,7 @@ describe('Line', () => {
     it('testSerialization_moveEdge', () => {
         const startPoint = DirectedPoint.of(Direction.VERTICAL, 1, 2);
         const endPoint = DirectedPoint.of(Direction.HORIZONTAL, 3, 4);
-        const line = new Line(startPoint, endPoint, undefined, PARENT_ID);
+        const line = Line.fromPoints({ startPoint: startPoint, endPoint: endPoint, parentId: PARENT_ID });
         line.moveEdge(line.edges[0].id, new Point(10, 10), true);
 
         const serializableLine = line.toSerializableShape(true) as SerializableLine;
@@ -67,7 +67,7 @@ describe('Line', () => {
     it('testSerialization_restoreInit', () => {
         const startPoint = DirectedPoint.of(Direction.VERTICAL, 1, 2);
         const endPoint = DirectedPoint.of(Direction.HORIZONTAL, 3, 4);
-        const line = new Line(startPoint, endPoint, undefined, PARENT_ID);
+        const line = Line.fromPoints({ startPoint: startPoint, endPoint: endPoint, parentId: PARENT_ID });
 
         const serializableLine = line.toSerializableShape(true) as SerializableLine;
         const line2 = Line.fromSerializable(serializableLine, PARENT_ID);
@@ -81,7 +81,7 @@ describe('Line', () => {
     it('testSerialization_restoreAfterMovingAnchorPoints', () => {
         const startPoint = DirectedPoint.of(Direction.VERTICAL, 1, 2);
         const endPoint = DirectedPoint.of(Direction.HORIZONTAL, 3, 4);
-        const line = new Line(startPoint, endPoint, undefined, PARENT_ID);
+        const line = Line.fromPoints({ startPoint: startPoint, endPoint: endPoint, parentId: PARENT_ID });
 
         const newStartPoint = DirectedPoint.of(Direction.HORIZONTAL, 4, 5);
         const newEndPoint = DirectedPoint.of(Direction.VERTICAL, 7, 8);
@@ -108,7 +108,7 @@ describe('Line', () => {
     it('testSerialization_restoreAfterMovingEdge', () => {
         const startPoint = DirectedPoint.of(Direction.VERTICAL, 1, 2);
         const endPoint = DirectedPoint.of(Direction.HORIZONTAL, 3, 4);
-        const line = new Line(startPoint, endPoint, undefined, PARENT_ID);
+        const line = Line.fromPoints({ startPoint: startPoint, endPoint: endPoint, parentId: PARENT_ID });
         line.moveEdge(line.edges[0].id, new Point(10, 10), true);
 
         const serializableLine = line.toSerializableShape(true) as SerializableLine;
