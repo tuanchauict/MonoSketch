@@ -20,13 +20,14 @@ export interface InteractionBound {
 export class ScalableInteractionBound implements InteractionBound {
     readonly type = InteractionBoundType.SCALABLE_SHAPE;
 
-    constructor(
+    private constructor(
         public readonly interactionPoints: InteractionPoint[],
         public readonly left: number,
         public readonly top: number,
         public readonly right: number,
         public readonly bottom: number,
-    ) {}
+    ) {
+    }
 
     static of = (targetedShapeId: string, shapeBound: Rect): ScalableInteractionBound => {
         const left = shapeBound.left - 0.25;
@@ -35,57 +36,60 @@ export class ScalableInteractionBound implements InteractionBound {
         const bottom = shapeBound.bottom + 0.25;
         const horizontalMiddle = (left + right) / 2;
         const verticalMiddle = (top + bottom) / 2;
+
+        const interactionPoints: InteractionPoint[] = [
+            {
+                shapeId: targetedShapeId,
+                type: InteractionPointType.TOP_LEFT,
+                left: left,
+                top: top,
+            },
+            {
+                shapeId: targetedShapeId,
+                type: InteractionPointType.TOP_MIDDLE,
+                left: horizontalMiddle,
+                top: top,
+            },
+            {
+                shapeId: targetedShapeId,
+                type: InteractionPointType.TOP_RIGHT,
+                left: right,
+                top: top,
+            },
+            {
+                shapeId: targetedShapeId,
+                type: InteractionPointType.MIDDLE_LEFT,
+                left: left,
+                top: verticalMiddle,
+            },
+            {
+                shapeId: targetedShapeId,
+                type: InteractionPointType.MIDDLE_RIGHT,
+                left: right,
+                top: verticalMiddle,
+            },
+            {
+                shapeId: targetedShapeId,
+                type: InteractionPointType.BOTTOM_LEFT,
+                left: left,
+                top: bottom,
+            },
+            {
+                shapeId: targetedShapeId,
+                type: InteractionPointType.BOTTOM_MIDDLE,
+                left: horizontalMiddle,
+                top: bottom,
+            },
+            {
+                shapeId: targetedShapeId,
+                type: InteractionPointType.BOTTOM_RIGHT,
+                left: right,
+                top: bottom,
+            },
+        ]
+
         return new ScalableInteractionBound(
-            [
-                {
-                    shapeId: targetedShapeId,
-                    type: InteractionPointType.TOP_LEFT,
-                    left: left,
-                    top: top,
-                },
-                {
-                    shapeId: targetedShapeId,
-                    type: InteractionPointType.TOP_MIDDLE,
-                    left: horizontalMiddle,
-                    top: top,
-                },
-                {
-                    shapeId: targetedShapeId,
-                    type: InteractionPointType.TOP_RIGHT,
-                    left: right,
-                    top: top,
-                },
-                {
-                    shapeId: targetedShapeId,
-                    type: InteractionPointType.MIDDLE_LEFT,
-                    left: left,
-                    top: verticalMiddle,
-                },
-                {
-                    shapeId: targetedShapeId,
-                    type: InteractionPointType.MIDDLE_RIGHT,
-                    left: right,
-                    top: verticalMiddle,
-                },
-                {
-                    shapeId: targetedShapeId,
-                    type: InteractionPointType.BOTTOM_LEFT,
-                    left: left,
-                    top: bottom,
-                },
-                {
-                    shapeId: targetedShapeId,
-                    type: InteractionPointType.BOTTOM_MIDDLE,
-                    left: horizontalMiddle,
-                    top: bottom,
-                },
-                {
-                    shapeId: targetedShapeId,
-                    type: InteractionPointType.BOTTOM_RIGHT,
-                    left: right,
-                    top: bottom,
-                },
-            ],
+            interactionPoints,
             left,
             top,
             right,
@@ -97,7 +101,8 @@ export class ScalableInteractionBound implements InteractionBound {
 export class LineInteractionBound implements InteractionBound {
     readonly type = InteractionBoundType.LINE;
 
-    constructor(public readonly interactionPoints: InteractionPoint[]) {}
+    constructor(public readonly interactionPoints: InteractionPoint[]) {
+    }
 }
 
 /**
@@ -130,21 +135,16 @@ export enum InteractionPointType {
     LINE_ANCHOR,
 }
 
-export const scalableInteractionPointTypeToCursor = (type: InteractionPointType): MouseCursor => {
-    switch (type) {
-        case InteractionPointType.TOP_LEFT:
-        case InteractionPointType.BOTTOM_RIGHT:
-            return MouseCursor.RESIZE_NWSE;
-        case InteractionPointType.TOP_MIDDLE:
-        case InteractionPointType.BOTTOM_MIDDLE:
-            return MouseCursor.RESIZE_NS;
-        case InteractionPointType.TOP_RIGHT:
-        case InteractionPointType.BOTTOM_LEFT:
-            return MouseCursor.RESIZE_NESW;
-        case InteractionPointType.MIDDLE_LEFT:
-        case InteractionPointType.MIDDLE_RIGHT:
-            return MouseCursor.RESIZE_EW;
-        default:
-            return MouseCursor.DEFAULT;
-    }
+export const scalableInteractionPointTypeToCursor: Record<InteractionPointType, MouseCursor> = {
+    [InteractionPointType.TOP_LEFT]: MouseCursor.RESIZE_NWSE,
+    [InteractionPointType.BOTTOM_RIGHT]: MouseCursor.RESIZE_NWSE,
+    [InteractionPointType.TOP_MIDDLE]: MouseCursor.RESIZE_NS,
+    [InteractionPointType.BOTTOM_MIDDLE]: MouseCursor.RESIZE_NS,
+    [InteractionPointType.TOP_RIGHT]: MouseCursor.RESIZE_NESW,
+    [InteractionPointType.BOTTOM_LEFT]: MouseCursor.RESIZE_NESW,
+    [InteractionPointType.MIDDLE_LEFT]: MouseCursor.RESIZE_EW,
+    [InteractionPointType.MIDDLE_RIGHT]: MouseCursor.RESIZE_EW,
+    [InteractionPointType.LINE_HORIZONTAL]: MouseCursor.DEFAULT,
+    [InteractionPointType.LINE_VERTICAL]: MouseCursor.DEFAULT,
+    [InteractionPointType.LINE_ANCHOR]: MouseCursor.DEFAULT,
 };
