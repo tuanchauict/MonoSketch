@@ -101,7 +101,7 @@ export class Ungroup implements Command {
     }
 
     execute(shapeManager: ShapeManager, parent: Group) {
-        const items = this.group.itemArray.toReversed();
+        const items = this.group.itemArray.reverse();
 
         for (const shape of items) {
             this.group.remove(shape);
