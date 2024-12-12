@@ -6,15 +6,32 @@ const decreaseFont = () => onChange(false);
 </script>
 
 <div class="container">
-    <div class="item decrease" on:click="{decreaseFont}">A</div>
-    <div class="item increase" on:click="{increaseFont}">A</div>
+    <button type="button" class="item decrease"
+            on:click="{decreaseFont}"
+            on:keydown="{(e) => e.key === 'Enter' && decreaseFont()}">
+        A
+    </button>
+    <button type="button" class="item increase"
+            on:click="{increaseFont}"
+            on:keydown="{(e) => e.key === 'Enter' && increaseFont()}">
+        A
+    </button>
 </div>
-
 <style lang="scss">
 .container {
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+button {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
 }
 
 .item {
