@@ -6,7 +6,7 @@ import { TargetBounds } from '$ui/modal/model';
 export let projectId: string;
 export let projectName: string;
 
-function showDropDownMenu(e: MouseEvent) {
+function showDropDownMenu(e: Event) {
     modalViewModel.currentProjectDropDownMenuTargetFlow.value = {
         id: projectId,
         targetBounds: TargetBounds.fromElement(e.currentTarget as HTMLElement),
@@ -15,7 +15,9 @@ function showDropDownMenu(e: MouseEvent) {
 </script>
 
 <div class="container">
-    <div class="info-container" on:click="{showDropDownMenu}">
+    <div role="button" tabindex="0" class="info-container"
+         on:click="{showDropDownMenu}"
+         on:keydown="{(e) => e.key === 'Enter' && showDropDownMenu(e)}">
         <span class="info">
             {projectName}
         </span>

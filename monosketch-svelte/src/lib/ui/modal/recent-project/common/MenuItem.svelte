@@ -13,12 +13,17 @@ function onItemClick() {
 </script>
 
 <div class="row" class:normal="{!danger}" class:danger>
-    <div class="icon" on:click="{onItemClick}">
-        <slot name="icon" />
+    <div role="button" tabindex="0" class="content-container"
+         on:click="{onItemClick}"
+         on:keydown="{(e) => e.key === 'Enter' && onItemClick()}">
+        <div class="icon" >
+            <slot name="icon" />
+        </div>
+        <div class="content">
+            <slot name="content" />
+        </div>
     </div>
-    <div class="content" on:click="{onItemClick}">
-        <slot name="content" />
-    </div>
+
     <div class="actions">
         <slot name="actions" />
     </div>
@@ -61,6 +66,15 @@ function onItemClick() {
         background: var(--danger-item-bg);
         color: white;
     }
+}
+
+.content-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+    height: 100%;
 }
 
 .content {

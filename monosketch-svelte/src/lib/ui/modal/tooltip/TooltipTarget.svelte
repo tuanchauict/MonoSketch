@@ -36,11 +36,13 @@ function hideTooltip() {
 onDestroy(hideTooltip);
 </script>
 
-<div role="tooltip"
-     on:mouseover="{showTooltip}"
-     on:mouseout="{hideTooltip}"
-     on:focus="{() => {}}"
-     on:blur="{hideTooltip}"
+<div
+    role="button"
+    tabindex="-1"
+    on:mouseover="{showTooltip}"
+    on:mouseout="{hideTooltip}"
+    on:focus="{() => {}}"
+    on:blur="{hideTooltip}"
 >
     <slot/>
 </div>

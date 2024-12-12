@@ -1,3 +1,9 @@
+<!--
+Elements inside this modal should not block click event propagation.
+This helps the modals identify if the click event was inside the modal or outside to
+dismiss the modal correctly.
+-->
+
 <script lang="ts">
 import { onMount } from 'svelte';
 
@@ -24,9 +30,24 @@ function onKeyDown(event: KeyboardEvent) {
     }
 }
 
+function onClick() {
+    if (!timeout) {
+        return;
+    }
+    clearTimeout(timeout);
+    timeout = null;
+
+    // Ensure the modal is focused when clicked inside.
+    if (document.hasFocus()) {
+        checkbox?.focus();
+    }
+}
+
 function onFocusIn() {
     if (timeout) {
         clearTimeout(timeout);
+
+        timeout = null;
     }
 }
 
@@ -56,7 +77,9 @@ function createStyle() {
 
 <div
     class="modal"
+    role="button"
     tabindex="-1"
+    on:click="{onClick}"
     on:keydown="{onKeyDown}"
     on:focusin="{onFocusIn}"
     on:focusout="{onFocusOut}"

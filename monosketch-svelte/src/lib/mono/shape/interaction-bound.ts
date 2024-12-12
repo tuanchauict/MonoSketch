@@ -86,7 +86,7 @@ export class ScalableInteractionBound implements InteractionBound {
                 left: right,
                 top: bottom,
             },
-        ]
+        ];
 
         return new ScalableInteractionBound(
             interactionPoints,

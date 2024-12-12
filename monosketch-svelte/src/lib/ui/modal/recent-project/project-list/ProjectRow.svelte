@@ -14,7 +14,6 @@ function openProject() {
 }
 
 function onActionClick(action: ProjectAction) {
-    console.log('clicked', action);
     onAction(project, action);
 }
 </script>

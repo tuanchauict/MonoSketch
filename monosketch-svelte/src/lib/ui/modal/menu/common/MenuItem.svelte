@@ -10,14 +10,19 @@ function onItemClick() {
 }
 </script>
 
-<div on:click="{onItemClick}">
+<button on:click="{onItemClick}">
     {title}
-</div>
+</button>
 
 <style lang="scss">
-div {
+button {
     padding: 5px 8px 5px 16px;
     margin: 0;
+    display: block;
+    width: 100%;
+    font-family: inherit;
+    text-align: start;
+    border: none;
     cursor: pointer;
     overflow: hidden;
     color: var(--mainmenu-item-color);
