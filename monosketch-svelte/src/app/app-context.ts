@@ -4,7 +4,7 @@ import { ShapeManager } from "$mono/shape/shape-manager";
 import { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import { BrowserManager } from "$mono/window/browser-manager";
 import { LifecycleOwner } from 'lib/libs/flow';
-import { AppUiStateManager } from '$mono/ui-state-manager';
+import { AppUiStateManager } from '$mono/ui-state-manager/app-ui-state-manager';
 
 /**
  * Main class of the app to handle all kinds of events, UI, actions, etc.
