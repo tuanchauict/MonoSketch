@@ -16,6 +16,9 @@ import { SelectionCanvasViewController } from '$mono/workspace/canvas/selection-
 import { BoardCanvasViewController } from '$mono/workspace/canvas/board-canvas-view-controller';
 import { MonoBoard } from '$mono/monobitmap/board/board';
 
+/**
+ * The main controller of the workspace view.
+ */
 export class WorkspaceViewController extends LifecycleOwner {
     private canvasViewController?: CanvasViewController;
     private drawingInfoController: DrawingInfoController;

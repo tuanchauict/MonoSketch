@@ -31,7 +31,7 @@ export class AppUiStateManager {
     constructor(
         private appLifecycleOwner: LifecycleOwner,
     ) {
-        const storedFontSize = this.settingDocument.get(StoreKeys.FONT_SIZE, "13")!!;
+        const storedFontSize = this.settingDocument.get(StoreKeys.FONT_SIZE, "13")!;
         this.fontSizeMutableFlow = new Flow<number>(parseInt(storedFontSize));
         this.fontSizeFlow = this.fontSizeMutableFlow.immutable();
     }
@@ -59,14 +59,14 @@ export class AppUiStateManager {
                 this.changeFontSize(payload.isIncreased);
                 break;
         }
-    }
+    };
 
     private changeFontSize = (isIncreased: boolean): void => {
         const offset = isIncreased ? 2 : -2;
-        const currentFontSize = this.fontSizeMutableFlow.value!!;
+        const currentFontSize = this.fontSizeMutableFlow.value!;
         const newFontSize = currentFontSize + offset;
         this.fontSizeMutableFlow.value = newFontSize;
 
         this.settingDocument.set(StoreKeys.FONT_SIZE, newFontSize.toString());
-    }
+    };
 }

@@ -15,4 +15,4 @@ export const UiStatePayload = {
     ChangeScrollMode: (scrollMode: ScrollMode): UiStatePayloadType => ({ type: "ChangeScrollMode", scrollMode }),
     ChangeTheme: (themeMode: ThemeMode): UiStatePayloadType => ({ type: "ChangeTheme", themeMode }),
     ChangeFontSize: (isIncreased: boolean): UiStatePayloadType => ({ type: "ChangeFontSize", isIncreased }),
-}
+};
