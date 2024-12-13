@@ -197,4 +197,4 @@ export const OneTimeAction = {
 
     Undo: { type: 'Undo' } as OneTimeActionType,
     Redo: { type: 'Redo' } as OneTimeActionType,
-}
+};
