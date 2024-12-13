@@ -7,6 +7,7 @@ import type { AppContext } from '$app/app-context';
 import { APP_CONTEXT } from '$mono/common/constant';
 import { modalViewModel } from '$ui/modal/viewmodel';
 import type { Rect } from '$libs/graphics-geo/rect';
+import {UiStatePayload} from "$mono/ui-state-manager/ui-state-payload";
 
 export let targetBounds: Rect;
 
@@ -26,7 +27,7 @@ function onFontSizeChange(isIncreased: boolean) {
 }
 
 function toggleFormatPanelVisibility() {
-    appContext.appUiStateManager.toggleShapeFormatPanelVisibility();
+    appContext.appUiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(!isFormatPanelVisible));
 }
 
 function showKeyboardShortcuts() {

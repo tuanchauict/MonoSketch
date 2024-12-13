@@ -1,10 +1,10 @@
 import { Flow } from 'lib/libs/flow';
 
 export class PanelVisibilityManager {
-    private _shapeFormatPanelVisibilityFlow = new Flow<boolean>(true);
-    shapeFormatPanelVisibilityFlow = this._shapeFormatPanelVisibilityFlow.immutable();
+    private shapeFormatPanelVisibilityMutableFlow = new Flow<boolean>(true);
+    shapeFormatPanelVisibilityFlow = this.shapeFormatPanelVisibilityMutableFlow.immutable();
 
-    toggleShapeFormatPanelVisibility(): void {
-        this._shapeFormatPanelVisibilityFlow.value = !this._shapeFormatPanelVisibilityFlow.value;
+    setShapeFormatPanelVisibility(isVisible: boolean): void {
+        this.shapeFormatPanelVisibilityMutableFlow.value = isVisible;
     }
 }

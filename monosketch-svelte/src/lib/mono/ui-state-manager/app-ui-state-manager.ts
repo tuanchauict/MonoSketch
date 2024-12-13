@@ -1,3 +1,4 @@
+import type { UiStatePayloadType } from "$mono/ui-state-manager/ui-state-payload";
 import { Flow, LifecycleOwner } from 'lib/libs/flow';
 import { ScrollMode, type ThemeColor, type ThemeMode } from '$mono/ui-state-manager/states';
 import { AppThemeManager } from '$mono/ui-state-manager/theme-manager';
@@ -27,19 +28,24 @@ export class AppUiStateManager {
         this.appThemeManager.observeTheme(this.appLifecycleOwner, onThemeChange);
     };
 
-    setTheme = (themeMode: ThemeMode): void => {
-        this.appThemeManager.setTheme(themeMode);
-    };
-
     getThemedColorCode = (color: ThemeColor): string => {
         return this.appThemeManager.getThemedColorCode(color);
     };
 
-    setScrollMode = (scrollMode: ScrollMode): void => {
-        this.scrollModeManager.setScrollMode(scrollMode);
-    };
-
-    toggleShapeFormatPanelVisibility = (): void => {
-        this.panelVisibilityManager.toggleShapeFormatPanelVisibility();
-    };
+    updateUiState = (payload: UiStatePayloadType): void => {
+        switch (payload.type) {
+            case 'ShapeToolVisibility':
+                this.panelVisibilityManager.setShapeFormatPanelVisibility(payload.isVisible);
+                break;
+            case 'ChangeScrollMode':
+                this.scrollModeManager.setScrollMode(payload.scrollMode);
+                break;
+            case 'ChangeTheme':
+                this.appThemeManager.setTheme(payload.themeMode);
+                break;
+            case 'ChangeFontSize':
+                // this.appThemeManager.changeFontSize(payload.isIncreased);
+                break;
+        }
+    }
 }
