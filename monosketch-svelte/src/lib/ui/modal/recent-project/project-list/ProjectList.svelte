@@ -4,6 +4,7 @@ import { ProjectAction, type ProjectItem } from '../model';
 import { onDestroy, onMount } from 'svelte';
 import { LifecycleOwner } from '$libs/flow';
 import { projectDataViewModel } from '../viewmodel';
+import { BrowserManager } from "$mono/window/browser-manager";
 
 export let dismiss: () => void;
 
@@ -41,7 +42,8 @@ function onAction(item: ProjectItem, action: ProjectAction) {
             dismiss();
             break;
         case ProjectAction.OpenInNewTab:
-            console.log('open in new tab');
+            // Need to delay for a short time the action to ensure the modal is closed before opening the new tab
+            setTimeout(() => BrowserManager.openInNewTab(item.id), 10);
             dismiss();
             break;
         case ProjectAction.Remove:
