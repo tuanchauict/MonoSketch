@@ -5,10 +5,10 @@ import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
  * A class for managing the states related to the browser such as the title, address bar, etc.
  */
 export class BrowserManager {
-    private readonly onUrlUpdate: (url: string) => void;
+    private readonly onUrlUpdate: (projectId: string) => void;
     private willChangedByUrlPopStateEvent: boolean = false;
 
-    constructor(onUrlUpdate: (url: string) => void) {
+    constructor(onUrlUpdate: (projectId: string) => void) {
         this.onUrlUpdate = onUrlUpdate;
 
         // Initialize the class by calling the URL update callback with the current root ID
