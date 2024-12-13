@@ -23,7 +23,7 @@ function onDismiss() {
 }
 
 function onFontSizeChange(isIncreased: boolean) {
-    console.log(isIncreased);
+    appContext.appUiStateManager.updateUiState(UiStatePayload.ChangeFontSize(isIncreased));
 }
 
 function toggleFormatPanelVisibility() {
