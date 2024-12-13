@@ -1,6 +1,5 @@
 import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-controller';
-import  { type ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import type { Rect } from '$libs/graphics-geo/rect';
 import { ThemeColors } from '$mono/ui-state-manager/states';
 

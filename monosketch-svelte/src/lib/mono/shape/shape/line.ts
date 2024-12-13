@@ -404,7 +404,7 @@ export class Line extends AbstractShape {
         return this.edges.some(edge => edge.contains(point));
     }
 
-    isVertex(point: Point): boolean {
+    isVertex(_point: Point): boolean {
         return false; // TODO: Correct this to any of its joint points
     }
 

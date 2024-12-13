@@ -129,7 +129,7 @@ export class InteractionCanvasViewController extends BaseCanvasViewController {
         return path;
     };
 
-    getInteractionPoint = (pointPx: Point): InteractionPoint | null => {
+    getInteractionPoint = (_pointPx: Point): InteractionPoint | null => {
         // TODO: Implement this method
         TODO("Implement this method");
         return null;

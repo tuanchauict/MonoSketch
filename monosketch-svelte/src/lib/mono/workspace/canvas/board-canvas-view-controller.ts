@@ -42,4 +42,4 @@ const HighlightTypeToThemeColor: Record<HighlightType, ThemeColor> = {
     [HighlightType.SELECTED]: ThemeColors.ShapeSelected,
     [HighlightType.TEXT_EDITING]: ThemeColors.ShapeTextEditing,
     [HighlightType.LINE_CONNECT_FOCUSING]: ThemeColors.ShapeLineConnectTarget,
-}
+};
