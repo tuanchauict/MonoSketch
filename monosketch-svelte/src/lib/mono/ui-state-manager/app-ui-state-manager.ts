@@ -1,3 +1,4 @@
+import { StorageDocument, StoreKeys } from "$mono/store-manager";
 import type { UiStatePayloadType } from "$mono/ui-state-manager/ui-state-payload";
 import { Flow, LifecycleOwner } from 'lib/libs/flow';
 import { ScrollMode, type ThemeColor, type ThemeMode } from '$mono/ui-state-manager/states';
@@ -15,6 +16,8 @@ export class AppUiStateManager {
     private scrollModeManager = new ScrollModeManager();
     private panelVisibilityManager = new PanelVisibilityManager();
     private keyCommandController = new KeyCommandController(document.body);
+    private settingDocument: StorageDocument = StorageDocument.get(StoreKeys.SETTINGS);
+
 
     themeModeFlow: Flow<ThemeMode> = this.appThemeManager.themeModeFlow;
     scrollModeFlow: Flow<ScrollMode> = this.scrollModeManager.scrollModeFlow;
@@ -22,7 +25,16 @@ export class AppUiStateManager {
         this.panelVisibilityManager.shapeFormatPanelVisibilityFlow;
     keyCommandFlow: Flow<KeyCommand> = this.keyCommandController.keyCommandFlow;
 
-    constructor(private appLifecycleOwner: LifecycleOwner) {}
+    private fontSizeMutableFlow: Flow<number>;
+    fontSizeFlow: Flow<number>;
+
+    constructor(
+        private appLifecycleOwner: LifecycleOwner,
+    ) {
+        const storedFontSize = this.settingDocument.get(StoreKeys.FONT_SIZE, "13")!!;
+        this.fontSizeMutableFlow = new Flow<number>(parseInt(storedFontSize));
+        this.fontSizeFlow = this.fontSizeMutableFlow.immutable();
+    }
 
     observeTheme = (onThemeChange: () => void): void => {
         this.appThemeManager.observeTheme(this.appLifecycleOwner, onThemeChange);
@@ -44,8 +56,17 @@ export class AppUiStateManager {
                 this.appThemeManager.setTheme(payload.themeMode);
                 break;
             case 'ChangeFontSize':
-                // this.appThemeManager.changeFontSize(payload.isIncreased);
+                this.changeFontSize(payload.isIncreased);
                 break;
         }
+    }
+
+    private changeFontSize = (isIncreased: boolean): void => {
+        const offset = isIncreased ? 2 : -2;
+        const currentFontSize = this.fontSizeMutableFlow.value!!;
+        const newFontSize = currentFontSize + offset;
+        this.fontSizeMutableFlow.value = newFontSize;
+
+        this.settingDocument.set(StoreKeys.FONT_SIZE, newFontSize.toString());
     }
 }
