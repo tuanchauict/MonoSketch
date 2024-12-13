@@ -1,4 +1,5 @@
-import { TODO } from "$libs/todo";
+import { ActionManager } from "$mono/action-manager/action-manager";
+import { OneTimeAction } from "$mono/action-manager/one-time-actions";
 import { ShapeManager } from "$mono/shape/shape-manager";
 import { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import { BrowserManager } from "$mono/window/browser-manager";
@@ -27,10 +28,14 @@ export class AppContext {
     };
 
     private init() {
-        const browserManager = new BrowserManager((url: string) => {
-            console.log('URL updated:', url);
-            // TODO: Update the workspace based on the URL
-            TODO("Update the workspace based on the URL");
+        const actionManager = new ActionManager(
+            this.appLifecycleOwner,
+            this.appUiStateManager.keyCommandFlow.map((keyCommand) => keyCommand.command),
+        );
+        actionManager.installDebugCommand();
+
+        const browserManager = new BrowserManager((projectId: string) => {
+            actionManager.setOneTimeAction(OneTimeAction.ProjectAction.SwitchProject(projectId));
         });
         browserManager.startObserveStateChange(
             this.shapeManager.rootIdFlow,
