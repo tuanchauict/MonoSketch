@@ -1,5 +1,5 @@
+import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-controller';
-import { type ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { HighlightType, type Pixel } from '$mono/monobitmap/board/pixel';
 import { ThemeColors } from '$mono/ui-state-manager/states';
 import type { MonoBoard } from '$mono/monobitmap/board/board';
@@ -12,7 +12,7 @@ export class BoardCanvasViewController extends BaseCanvasViewController {
     constructor(
         canvas: HTMLCanvasElement,
         private board: MonoBoard,
-        private themeManager: ThemeManager,
+        private appUiStateManager: AppUiStateManager,
     ) {
         super(canvas);
     }
@@ -31,7 +31,7 @@ export class BoardCanvasViewController extends BaseCanvasViewController {
         if (pixel.isTransparent) {
             return;
         }
-        this.context.fillStyle = this.themeManager.getThemedColorCode(this.getPixelColor(pixel));
+        this.context.fillStyle = this.appUiStateManager.getThemedColorCode(this.getPixelColor(pixel));
         this.drawText(pixel.visualChar, row, column);
     };
 

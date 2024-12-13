@@ -1,7 +1,7 @@
 import type { Point } from "$libs/graphics-geo/point";
 import { TODO } from "$libs/todo";
+import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-controller';
-import type { ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import {
     type InteractionBound,
     InteractionBoundType,
@@ -26,7 +26,7 @@ export class InteractionCanvasViewController extends BaseCanvasViewController {
 
     constructor(
         canvas: HTMLCanvasElement,
-        private themeManager: ThemeManager,
+        private appUiStateManager: AppUiStateManager,
     ) {
         super(canvas);
         this.context.imageSmoothingQuality = 'high';
@@ -76,7 +76,7 @@ export class InteractionCanvasViewController extends BaseCanvasViewController {
 
     private drawScalableInteractionBound = (bound: ScalableInteractionBound) => {
         const context = this.context;
-        context.strokeStyle = this.themeManager.getThemedColorCode(
+        context.strokeStyle = this.appUiStateManager.getThemedColorCode(
             ThemeColors.SelectionBoundStroke,
         );
         context.lineWidth = 1.0;
@@ -109,8 +109,8 @@ export class InteractionCanvasViewController extends BaseCanvasViewController {
             dotPath.moveTo(xPx, yPx);
             dotPath.arc(xPx, yPx, dotRadius, 0, FULL_CIRCLE_ARG);
         }
-        context.strokeStyle = this.themeManager.getThemedColorCode(strokeColor);
-        context.fillStyle = this.themeManager.getThemedColorCode(fillColor);
+        context.strokeStyle = this.appUiStateManager.getThemedColorCode(strokeColor);
+        context.fillStyle = this.appUiStateManager.getThemedColorCode(fillColor);
         context.imageSmoothingEnabled = true;
         context.stroke(dotPath);
         context.fill(dotPath);

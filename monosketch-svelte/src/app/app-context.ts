@@ -21,10 +21,7 @@ export class AppContext {
 
         this.init();
 
-        this.appUiStateManager.observeTheme(() => {
-            console.log('Theme changed');
-            // TODO: Update theme in the workspace
-        });
+        this.appUiStateManager.observeTheme();
     };
 
     private init() {

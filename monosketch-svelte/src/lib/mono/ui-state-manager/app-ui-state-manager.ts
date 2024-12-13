@@ -1,3 +1,4 @@
+import { DEBUG_MODE } from "$mono/build_environment";
 import { StorageDocument, StoreKeys } from "$mono/store-manager";
 import type { UiStatePayloadType } from "$mono/ui-state-manager/ui-state-payload";
 import { Flow, LifecycleOwner } from 'lib/libs/flow';
@@ -18,26 +19,39 @@ export class AppUiStateManager {
     private keyCommandController = new KeyCommandController(document.body);
     private settingDocument: StorageDocument = StorageDocument.get(StoreKeys.SETTINGS);
 
-
     themeModeFlow: Flow<ThemeMode> = this.appThemeManager.themeModeFlow;
     scrollModeFlow: Flow<ScrollMode> = this.scrollModeManager.scrollModeFlow;
     shapeFormatPanelVisibilityFlow: Flow<boolean> =
         this.panelVisibilityManager.shapeFormatPanelVisibilityFlow;
     keyCommandFlow: Flow<KeyCommand> = this.keyCommandController.keyCommandFlow;
 
-    private fontSizeMutableFlow: Flow<number>;
-    fontSizeFlow: Flow<number>;
+    private fontSizeMutableFlow = new Flow<number>(parseInt(this.settingDocument.get(StoreKeys.FONT_SIZE, "13")!));
+    fontSizeFlow: Flow<number> = this.fontSizeMutableFlow.distinctUntilChanged();
+
+    /**
+     * A flow that emits true when the font is ready to use.
+     */
+    private fontReadyMutableFlow = new Flow<boolean>(false);
+    fontReadyFlow: Flow<boolean> = this.fontReadyMutableFlow.immutable();
 
     constructor(
         private appLifecycleOwner: LifecycleOwner,
     ) {
-        const storedFontSize = this.settingDocument.get(StoreKeys.FONT_SIZE, "13")!;
-        this.fontSizeMutableFlow = new Flow<number>(parseInt(storedFontSize));
-        this.fontSizeFlow = this.fontSizeMutableFlow.immutable();
+        const workspaceFont = new FontFace(
+            'JetBrainsMono-Regular',
+            `url('/src/assets/fonts/JetBrainsMono-Regular.woff2')`,
+        );
+        workspaceFont.load().then(() => {
+            document.fonts.add(workspaceFont);
+            this.fontReadyMutableFlow.value = true;
+            if (DEBUG_MODE) {
+                console.log('Font loaded');
+            }
+        });
     }
 
-    observeTheme = (onThemeChange: () => void): void => {
-        this.appThemeManager.observeTheme(this.appLifecycleOwner, onThemeChange);
+    observeTheme = (): void => {
+        this.appThemeManager.observeTheme(this.appLifecycleOwner);
     };
 
     getThemedColorCode = (color: ThemeColor): string => {
@@ -65,8 +79,9 @@ export class AppUiStateManager {
         const offset = isIncreased ? 2 : -2;
         const currentFontSize = this.fontSizeMutableFlow.value!;
         const newFontSize = currentFontSize + offset;
-        this.fontSizeMutableFlow.value = newFontSize;
+        const coercedFontSize = Math.max(13, Math.min(25, newFontSize));
+        this.fontSizeMutableFlow.value = coercedFontSize;
 
-        this.settingDocument.set(StoreKeys.FONT_SIZE, newFontSize.toString());
+        this.settingDocument.set(StoreKeys.FONT_SIZE, coercedFontSize.toString());
     };
 }

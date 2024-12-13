@@ -1,5 +1,5 @@
+import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-controller';
-import type { ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { ThemeColors } from '$mono/ui-state-manager/states';
 
 /**
@@ -8,14 +8,14 @@ import { ThemeColors } from '$mono/ui-state-manager/states';
 export class GridCanvasViewController extends BaseCanvasViewController {
     constructor(
         canvas: HTMLCanvasElement,
-        private themeManager: ThemeManager,
+        private appUiStateManager: AppUiStateManager,
     ) {
         super(canvas);
     }
 
     protected drawInternal = () => {
         const context = this.context;
-        context.strokeStyle = this.themeManager.getThemedColorCode(ThemeColors.GridLine);
+        context.strokeStyle = this.appUiStateManager.getThemedColorCode(ThemeColors.GridLine);
         context.lineWidth = 0.25;
         context.stroke(this.createGridPath());
     };

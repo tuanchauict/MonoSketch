@@ -54,11 +54,9 @@ export class AppThemeManager {
         this.themeManager.setTheme(themeMode);
     };
 
-    observeTheme = (appLifecycleOwner: LifecycleOwner, onThemeChange: () => void): void => {
+    observeTheme = (appLifecycleOwner: LifecycleOwner): void => {
         this.themeManager.themeModeFlow.observe(appLifecycleOwner, (themeMode) => {
             document.documentElement.className = themeMode;
-            onThemeChange();
-
             this.settingsDocument.set(StoreKeys.THEME_MODE, themeMode);
         });
 

@@ -1,3 +1,4 @@
+import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-controller';
 import  { type ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import type { Rect } from '$libs/graphics-geo/rect';
@@ -13,7 +14,7 @@ export class SelectionCanvasViewController extends BaseCanvasViewController {
 
     constructor(
         canvas: HTMLCanvasElement,
-        private themeManager: ThemeManager,
+        private appUiStateManager: AppUiStateManager,
     ) {
         super(canvas);
     }
@@ -29,7 +30,6 @@ export class SelectionCanvasViewController extends BaseCanvasViewController {
         }
 
         const context = this.context;
-        const themeManager = this.themeManager;
         const drawingInfo = this.drawingInfo;
 
         const leftPx = drawingInfo.toXPx(bound.left);
@@ -39,7 +39,7 @@ export class SelectionCanvasViewController extends BaseCanvasViewController {
 
         const path = new Path2D();
         path.rect(leftPx, topPx, rightPx - leftPx, bottomPx - topPx);
-        context.strokeStyle = themeManager.getThemedColorCode(ThemeColors.SelectionAreaStroke);
+        context.strokeStyle = this.appUiStateManager.getThemedColorCode(ThemeColors.SelectionAreaStroke);
         context.lineWidth = 1.0;
         context.setLineDash(DASH_PATTERN);
         context.stroke(path);
