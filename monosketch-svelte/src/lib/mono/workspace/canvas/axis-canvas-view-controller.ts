@@ -1,5 +1,5 @@
+import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { DrawingInfo } from '$mono/workspace/drawing-info';
-import type { ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { Size } from '$libs/graphics-geo/size';
 import { DEFAULT_FONT } from '$mono/workspace/drawing-info/drawing-info-controller';
 import { ThemeColors } from '$mono/ui-state-manager/states';
@@ -12,7 +12,7 @@ const AXIS_X_HEIGHT = 18.0;
 export class AxisCanvasViewController extends BaseCanvasViewController {
     constructor(
         canvas: HTMLCanvasElement,
-        private themeManager: ThemeManager,
+        private appUiStateManager: AppUiStateManager,
     ) {
         super(canvas);
     }
@@ -39,7 +39,7 @@ export class AxisCanvasViewController extends BaseCanvasViewController {
 
     private drawAxis = () => {
         const context = this.context;
-        const themeManager = this.themeManager;
+        const themeManager = this.appUiStateManager;
         const drawingInfo = this.drawingInfo;
 
         const cellSizePx = this.drawingInfo.cellSizePx;

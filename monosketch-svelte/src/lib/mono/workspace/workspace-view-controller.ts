@@ -1,6 +1,6 @@
 import type { Point } from "$libs/graphics-geo/point";
+import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { AxisCanvasViewController } from '$mono/workspace/canvas/axis-canvas-view-controller';
-import { ThemeManager } from '$mono/ui-state-manager/theme-manager';
 import { DrawingInfo, DrawingInfoController } from '$mono/workspace/drawing-info';
 import { LifecycleOwner } from '$libs/flow';
 import { WindowViewModel } from '$mono/window/window-viewmodel';
@@ -16,10 +16,12 @@ import { SelectionCanvasViewController } from '$mono/workspace/canvas/selection-
 import { BoardCanvasViewController } from '$mono/workspace/canvas/board-canvas-view-controller';
 import { MonoBoard } from '$mono/monobitmap/board/board';
 
+/**
+ * The main controller of the workspace view.
+ */
 export class WorkspaceViewController extends LifecycleOwner {
-    private canvasViewController?: CanvasViewController;
+    private canvasViewController: CanvasViewController;
     private drawingInfoController: DrawingInfoController;
-    private themeManager: ThemeManager = ThemeManager.getInstance();
 
     constructor(
         private appContext: AppContext,
@@ -42,7 +44,7 @@ export class WorkspaceViewController extends LifecycleOwner {
             axisCanvas,
             interactionCanvas,
             selectionCanvas,
-            this.themeManager,
+            this.appContext.appUiStateManager,
         );
     }
 
@@ -56,13 +58,21 @@ export class WorkspaceViewController extends LifecycleOwner {
         this.observeMouseInteractions();
 
         this.drawingInfoController.drawingInfoFlow?.observe(this, (drawingInfo) => {
-            this?.canvasViewController?.setDrawingInfo(drawingInfo);
+            this?.canvasViewController.setDrawingInfo(drawingInfo);
         });
-        this.themeManager.themeModeFlow.observe(this, () => {
-            this?.canvasViewController?.fullyRedraw();
+        this.appContext.appUiStateManager.themeModeFlow.observe(this, () => {
+            this?.canvasViewController.fullyRedraw();
+        });
+        this.appContext.appUiStateManager.fontSizeFlow.observe(this, (fontSize) => {
+            this.drawingInfoController.setFont(fontSize);
+        });
+        this.appContext.appUiStateManager.fontReadyFlow.observe(this, (fontReady) => {
+            if (fontReady) {
+                this.canvasViewController.fullyRedraw();
+            }
         });
 
-        this.canvasViewController?.fullyRedraw();
+        this.canvasViewController.fullyRedraw();
     }
 
     private observeMouseInteractions = () => {
@@ -102,22 +112,22 @@ class CanvasViewController {
         axisCanvas: HTMLCanvasElement,
         interactionCanvas: HTMLCanvasElement,
         selectionCanvas: HTMLCanvasElement,
-        themeManager: ThemeManager,
+        appUiStateManager: AppUiStateManager,
     ) {
-        this.axisCanvasViewController = new AxisCanvasViewController(axisCanvas, themeManager);
-        this.gridCanvasViewController = new GridCanvasViewController(gridCanvas, themeManager);
+        this.axisCanvasViewController = new AxisCanvasViewController(axisCanvas, appUiStateManager);
+        this.gridCanvasViewController = new GridCanvasViewController(gridCanvas, appUiStateManager);
         this.boardCanvasViewController = new BoardCanvasViewController(
             boardCanvas,
             new MonoBoard(),
-            themeManager,
+            appUiStateManager,
         );
         this.interactionCanvasViewController = new InteractionCanvasViewController(
             interactionCanvas,
-            themeManager,
+            appUiStateManager,
         );
         this.selectionCanvasViewController = new SelectionCanvasViewController(
             selectionCanvas,
-            themeManager,
+            appUiStateManager,
         );
     }
 

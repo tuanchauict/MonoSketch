@@ -5,6 +5,7 @@ import { AppContext } from '$app/app-context';
 import { LifecycleOwner } from 'lib/libs/flow';
 import ThemeModeIcon from '$ui/nav/right/ThemeModeIcon.svelte';
 import { ThemeMode } from '$mono/ui-state-manager/states';
+import { UiStatePayload } from "$mono/ui-state-manager/ui-state-payload";
 
 let themeMode: ThemeMode;
 
@@ -24,7 +25,7 @@ onDestroy(() => {
 });
 
 function updateTheme(mode: ThemeMode) {
-    appContext.appUiStateManager.setTheme(mode);
+    appContext.appUiStateManager.updateUiState(UiStatePayload.ChangeTheme(mode));
 }
 </script>
 
