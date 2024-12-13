@@ -56,7 +56,7 @@ export class WorkspaceObjectDao {
         }
         const jsonArray = JSON.parse(storedValue);
         // @ts-expect-error fromJson
-        return jsonArray.map((json: any) => SerializableLineConnector.fromJson(json));
+        return jsonArray.map((json) => SerializableLineConnector.fromJson(json));
     }
 
     set connectors(value: SerializableLineConnector[]) {
@@ -102,11 +102,11 @@ export class WorkspaceObjectDao {
             StoreKeys.OBJECT_NAME,
             StoreKeys.OBJECT_LAST_MODIFIED,
             StoreKeys.OBJECT_LAST_OPENED,
-        ]
+        ];
         for (const key of storeKeys) {
             this.objectDocument.remove(key);
         }
     }
 }
 
-const DEFAULT_NAME = "Undefined"
+const DEFAULT_NAME = "Undefined";
