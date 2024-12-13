@@ -4,7 +4,7 @@ import { ProjectAction, type ProjectItem } from '../model';
 import { onDestroy, onMount } from 'svelte';
 import { LifecycleOwner } from '$libs/flow';
 import { projectDataViewModel } from '../viewmodel';
-import {BrowserManager} from "$mono/window/browser-manager";
+import { BrowserManager } from "$mono/window/browser-manager";
 
 export let dismiss: () => void;
 

@@ -15,11 +15,11 @@ window.onresize = () => {
 
 window.onfocus = () => {
     WindowViewModel.applicationActiveStateFlow.value = true;
-}
+};
 
 window.onblur = () => {
     WindowViewModel.applicationActiveStateFlow.value = false;
-}
+};
 
 document.addEventListener('visibilitychange', () => {
     WindowViewModel.applicationActiveStateFlow.value = document['visibilityState'] === 'visible';
