@@ -27,11 +27,19 @@ type AppSettingActionType =
     | { type: 'HideFormatPanel' }
     | { type: 'ShowKeyboardShortcuts' };
 
-type TextAlignmentActionType =
-    | { type: 'TextAlignment'; newHorizontalAlign?: TextHorizontalAlign; newVerticalAlign?: TextVerticalAlign };
+type TextAlignmentActionType = {
+    type: 'TextAlignment';
+    newHorizontalAlign?: TextHorizontalAlign | null;
+    newVerticalAlign?: TextVerticalAlign | null;
+};
 
-type ChangeShapeBoundActionType =
-    | { type: 'ChangeShapeBound'; newLeft?: number; newTop?: number; newWidth?: number; newHeight?: number };
+type ChangeShapeBoundActionType = {
+    type: 'ChangeShapeBound';
+    newLeft?: number | null;
+    newTop?: number | null;
+    newWidth?: number | null;
+    newHeight?: number | null
+};
 
 /**
  * A type which defines all action types which are only have affect once.
@@ -48,15 +56,15 @@ export type OneTimeActionType =
     | TextAlignmentActionType
     | { type: 'MoveShapes'; offsetRow: number; offsetCol: number }
     | ChangeShapeBoundActionType
-    | { type: 'ChangeShapeFillExtra'; isEnabled?: boolean; newFillStyleId?: string }
-    | { type: 'ChangeShapeBorderExtra'; isEnabled?: boolean; newBorderStyleId?: string }
-    | { type: 'ChangeShapeBorderDashPatternExtra'; dash?: number; gap?: number; offset?: number }
+    | { type: 'ChangeShapeFillExtra'; isEnabled?: boolean | null; newFillStyleId?: string | null }
+    | { type: 'ChangeShapeBorderExtra'; isEnabled?: boolean | null; newBorderStyleId?: string | null }
+    | { type: 'ChangeShapeBorderDashPatternExtra'; dash?: number | null; gap?: number | null; offset?: number | null }
     | { type: 'ChangeShapeBorderCornerExtra'; isRoundedCorner: boolean }
-    | { type: 'ChangeLineStrokeExtra'; isEnabled?: boolean; newStrokeStyleId?: string }
-    | { type: 'ChangeLineStrokeDashPatternExtra'; dash?: number; gap?: number; offset?: number }
+    | { type: 'ChangeLineStrokeExtra'; isEnabled?: boolean | null; newStrokeStyleId?: string | null }
+    | { type: 'ChangeLineStrokeDashPatternExtra'; dash?: number | null; gap?: number | null; offset?: number | null }
     | { type: 'ChangeLineStrokeCornerExtra'; isRoundedCorner: boolean }
-    | { type: 'ChangeLineStartAnchorExtra'; isEnabled?: boolean; newHeadId?: string }
-    | { type: 'ChangeLineEndAnchorExtra'; isEnabled?: boolean; newHeadId?: string }
+    | { type: 'ChangeLineStartAnchorExtra'; isEnabled?: boolean | null; newHeadId?: string | null }
+    | { type: 'ChangeLineEndAnchorExtra'; isEnabled?: boolean | null; newHeadId?: string | null }
     | { type: 'ReorderShape'; orderType: ChangeOrderType }
     | { type: 'Copy'; isRemoveRequired: boolean }
     | { type: 'Duplicate' }
@@ -65,47 +73,51 @@ export type OneTimeActionType =
     | { type: 'Redo' };
 
 export const OneTimeAction = {
-    Idle: { type: 'Idle' },
+    Idle: { type: 'Idle' } as OneTimeActionType,
 
     ProjectAction: {
         RenameCurrentProject: (newName: string) => ({ type: 'RenameCurrentProject', newName }),
-        NewProject: { type: 'NewProject' },
-        ExportSelectedShapes: { type: 'ExportSelectedShapes' },
-        SwitchProject: (projectId: string) => ({ type: 'SwitchProject', projectId }),
-        RemoveProject: (projectId: string) => ({ type: 'RemoveProject', projectId }),
-        SaveShapesAs: { type: 'SaveShapesAs' },
-        OpenShapes: { type: 'OpenShapes' },
+        NewProject: { type: 'NewProject' } as OneTimeActionType,
+        ExportSelectedShapes: { type: 'ExportSelectedShapes' } as OneTimeActionType,
+        SwitchProject: (projectId: string): OneTimeActionType => ({ type: 'SwitchProject', projectId }),
+        RemoveProject: (projectId: string): OneTimeActionType => ({ type: 'RemoveProject', projectId }),
+        SaveShapesAs: { type: 'SaveShapesAs' } as OneTimeActionType,
+        OpenShapes: { type: 'OpenShapes' } as OneTimeActionType,
     },
 
     AppSettingAction: {
-        ChangeFontSize: (isIncreased: boolean) => ({ type: 'ChangeFontSize', isIncreased }),
-        ShowFormatPanel: { type: 'ShowFormatPanel' },
-        HideFormatPanel: { type: 'HideFormatPanel' },
-        ShowKeyboardShortcuts: { type: 'ShowKeyboardShortcuts' },
+        ChangeFontSize: (isIncreased: boolean): OneTimeActionType => ({ type: 'ChangeFontSize', isIncreased }),
+        ShowFormatPanel: { type: 'ShowFormatPanel' } as OneTimeActionType,
+        HideFormatPanel: { type: 'HideFormatPanel' } as OneTimeActionType,
+        ShowKeyboardShortcuts: { type: 'ShowKeyboardShortcuts' } as OneTimeActionType,
     },
 
-    SelectAllShapes: { type: 'SelectAllShapes' },
-    DeselectShapes: { type: 'DeselectShapes' },
-    DeleteSelectedShapes: { type: 'DeleteSelectedShapes' },
-    EditSelectedShapes: { type: 'EditSelectedShapes' },
-    EditSelectedShape: (shape: AbstractShape | null) => ({ type: 'EditSelectedShape', shape }),
+    SelectAllShapes: { type: 'SelectAllShapes' } as OneTimeActionType,
+    DeselectShapes: { type: 'DeselectShapes' } as OneTimeActionType,
+    DeleteSelectedShapes: { type: 'DeleteSelectedShapes' } as OneTimeActionType,
+    EditSelectedShapes: { type: 'EditSelectedShapes' } as OneTimeActionType,
+    EditSelectedShape: (shape: AbstractShape | null): OneTimeActionType => ({ type: 'EditSelectedShape', shape }),
 
     TextAlignment: ({ newHorizontalAlign = null, newVerticalAlign = null }: {
         newHorizontalAlign?: TextHorizontalAlign | null;
         newVerticalAlign?: TextVerticalAlign | null
-    }) => ({
+    }): OneTimeActionType => ({
         type: 'TextAlignment',
         newHorizontalAlign,
         newVerticalAlign,
     }),
 
-    MoveShapes: (offsetRow: number, offsetCol: number) => ({ type: 'MoveShapes', offsetRow, offsetCol }),
+    MoveShapes: (offsetRow: number, offsetCol: number): OneTimeActionType => ({
+        type: 'MoveShapes',
+        offsetRow,
+        offsetCol,
+    }),
     ChangeShapeBound: ({ newLeft = null, newTop = null, newWidth = null, newHeight = null }: {
         newLeft?: number | null;
         newTop?: number | null;
         newWidth?: number | null;
         newHeight?: number | null;
-    }) => ({
+    }): OneTimeActionType => ({
         type: 'ChangeShapeBound',
         newLeft,
         newTop,
@@ -115,7 +127,7 @@ export const OneTimeAction = {
     ChangeShapeFillExtra: ({ isEnabled = null, newFillStyleId = null }: {
         isEnabled?: boolean | null;
         newFillStyleId?: string | null
-    }) => ({
+    }): OneTimeActionType => ({
         type: 'ChangeShapeFillExtra',
         isEnabled,
         newFillStyleId,
@@ -123,19 +135,19 @@ export const OneTimeAction = {
     ChangeShapeBorderExtra: ({ isEnabled = null, newBorderStyleId = null }: {
         isEnabled?: boolean | null;
         newBorderStyleId?: string | null
-    }) => ({
+    }): OneTimeActionType => ({
         type: 'ChangeShapeBorderExtra',
         isEnabled,
         newBorderStyleId,
     }),
 
-    ChangeShapeBorderDashPatternExtra: (dash?: number, gap?: number, offset?: number) => ({
+    ChangeShapeBorderDashPatternExtra: (dash?: number, gap?: number, offset?: number): OneTimeActionType => ({
         type: 'ChangeShapeBorderDashPatternExtra',
         dash,
         gap,
         offset,
     }),
-    ChangeShapeBorderCornerExtra: (isRoundedCorner: boolean) => ({
+    ChangeShapeBorderCornerExtra: (isRoundedCorner: boolean): OneTimeActionType => ({
         type: 'ChangeShapeBorderCornerExtra',
         isRoundedCorner,
     }),
@@ -143,12 +155,12 @@ export const OneTimeAction = {
     ChangeLineStrokeExtra: ({ isEnabled = null, newStrokeStyleId = null }: {
         isEnabled?: boolean | null;
         newStrokeStyleId?: string | null
-    }) => ({
+    }): OneTimeActionType => ({
         type: 'ChangeLineStrokeExtra',
         isEnabled,
         newStrokeStyleId,
     }),
-    ChangeLineStrokeDashPatternExtra: (dash?: number, gap?: number, offset?: number) => ({
+    ChangeLineStrokeDashPatternExtra: (dash?: number, gap?: number, offset?: number): OneTimeActionType => ({
         type: 'ChangeLineStrokeDashPatternExtra',
         dash,
         gap,
@@ -162,7 +174,7 @@ export const OneTimeAction = {
     ChangeLineStartAnchorExtra: ({ isEnabled = null, newHeadId = null }: {
         isEnabled?: boolean | null;
         newHeadId?: string | null
-    }) => ({
+    }): OneTimeActionType => ({
         type: 'ChangeLineStartAnchorExtra',
         isEnabled,
         newHeadId,
@@ -171,18 +183,18 @@ export const OneTimeAction = {
     ChangeLineEndAnchorExtra: ({ isEnabled = null, newHeadId = null }: {
         isEnabled?: boolean | null;
         newHeadId?: string | null
-    }) => ({
+    }): OneTimeActionType => ({
         type: 'ChangeLineEndAnchorExtra',
         isEnabled,
         newHeadId,
     }),
 
-    ReorderShape: (orderType: ChangeOrderType) => ({ type: 'ReorderShape', orderType }),
-    Copy: (isRemoveRequired: boolean) => ({ type: 'Copy', isRemoveRequired }),
-    Duplicate: { type: 'Duplicate' },
+    ReorderShape: (orderType: ChangeOrderType): OneTimeActionType => ({ type: 'ReorderShape', orderType }),
+    Copy: (isRemoveRequired: boolean): OneTimeActionType => ({ type: 'Copy', isRemoveRequired }),
+    Duplicate: { type: 'Duplicate' } as OneTimeActionType,
 
-    CopyText: { type: 'CopyText' },
+    CopyText: { type: 'CopyText' } as OneTimeActionType,
 
-    Undo: { type: 'Undo' },
-    Redo: { type: 'Redo' },
-};
+    Undo: { type: 'Undo' } as OneTimeActionType,
+    Redo: { type: 'Redo' } as OneTimeActionType,
+}
