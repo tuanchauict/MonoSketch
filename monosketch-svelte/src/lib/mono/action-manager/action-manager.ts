@@ -12,11 +12,17 @@ import { type OneTimeActionType, OneTimeAction } from './one-time-actions';
  * A class which gathers UI events and converts them into equivalent command.
  */
 export class ActionManager {
-    private retainableActionFlow: Flow<RetainableActionType> = new Flow(RetainableActionType.IDLE);
-    private oneTimeActionFlow: Flow<OneTimeActionType> = new Flow(OneTimeAction.Idle);
+    private retainableActionMutableFlow: Flow<RetainableActionType> = new Flow(RetainableActionType.IDLE);
+    retainableActionFlow = this.retainableActionMutableFlow.distinctUntilChanged();
 
-    constructor(lifecycleOwner: LifecycleOwner, keyCommandFlow: Flow<KeyCommandType>) {
-        keyCommandFlow.distinctUntilChanged().observe(lifecycleOwner, this.onKeyEvent.bind(this));
+    private oneTimeActionMutableFlow: Flow<OneTimeActionType> = new Flow(OneTimeAction.Idle);
+    oneTimeActionFlow = this.oneTimeActionMutableFlow.immutable();
+
+    constructor(private lifecycleOwner: LifecycleOwner) {
+    }
+
+    observeKeyCommand(keyCommandFlow: Flow<KeyCommandType>) {
+        keyCommandFlow.distinctUntilChanged().observe(this.lifecycleOwner, this.onKeyEvent.bind(this));
     }
 
     private onKeyEvent(keyCommand: KeyCommandType) {
@@ -97,12 +103,12 @@ export class ActionManager {
     }
 
     setRetainableAction(actionType: RetainableActionType) {
-        this.retainableActionFlow.value = actionType;
+        this.retainableActionMutableFlow.value = actionType;
     }
 
     setOneTimeAction(actionType: OneTimeActionType) {
-        this.oneTimeActionFlow.value = actionType;
-        this.oneTimeActionFlow.value = OneTimeAction.Idle;
+        this.oneTimeActionMutableFlow.value = actionType;
+        this.oneTimeActionMutableFlow.value = OneTimeAction.Idle;
     }
 
     installDebugCommand() {

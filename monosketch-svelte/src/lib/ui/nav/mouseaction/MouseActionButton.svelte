@@ -1,5 +1,5 @@
 <script lang="ts">
-import { mouseActionToContentMap, type MouseActionType } from './model';
+import { MouseActionToContentMap, type MouseActionType } from './model';
 import TooltipTarget from '../../modal/tooltip/TooltipTarget.svelte';
 import SvgIcon from '../../common/SvgIcon.svelte';
 
@@ -12,10 +12,10 @@ function onClick() {
 }
 </script>
 
-<TooltipTarget text="{mouseActionToContentMap[type].title}" offsetVertical="{8}">
+<TooltipTarget text="{MouseActionToContentMap[type].title}" offsetVertical="{8}">
     <button class="action" class:selected on:click="{onClick}">
         <SvgIcon viewBoxSize="{24}" size="{21}">
-            <path d="{mouseActionToContentMap[type].iconPath}"></path>
+            <path d="{MouseActionToContentMap[type].iconPath}"></path>
         </SvgIcon>
     </button>
 </TooltipTarget>
