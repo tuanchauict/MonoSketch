@@ -26,7 +26,7 @@ export class AppContext {
         this.appUiStateManager.observeTheme();
         this.actionManager.observeKeyCommand(
             this.appUiStateManager.keyCommandFlow.map((keyCommand) => keyCommand.command),
-        )
+        );
     };
 
     private init() {

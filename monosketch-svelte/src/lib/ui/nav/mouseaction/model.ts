@@ -49,4 +49,4 @@ export const RetainableActionTypeToMouseActionTypeMap: Record<RetainableActionTy
     [RetainableActionType.ADD_RECTANGLE]: MouseActionType.ADD_RECTANGLE,
     [RetainableActionType.ADD_TEXT]: MouseActionType.ADD_TEXT,
     [RetainableActionType.ADD_LINE]: MouseActionType.ADD_LINE,
-}
+};

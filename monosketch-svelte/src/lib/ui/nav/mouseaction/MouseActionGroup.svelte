@@ -6,10 +6,10 @@ import {
     mouseActionTypes,
     RetainableActionTypeToMouseActionTypeMap
 } from './model';
-import {getContext, onDestroy, onMount} from "svelte";
-import type {AppContext} from "$app/app-context";
-import {APP_CONTEXT} from "$mono/common/constant";
-import {LifecycleOwner} from "$libs/flow";
+import { getContext, onDestroy, onMount } from "svelte";
+import type { AppContext } from "$app/app-context";
+import { APP_CONTEXT } from "$mono/common/constant";
+import { LifecycleOwner } from "$libs/flow";
 
 let selectedActionType: MouseActionType = MouseActionType.SELECTION;
 
