@@ -7,6 +7,7 @@ import { getContext, onMount } from 'svelte';
 import { AppContext } from '$app/app-context';
 import { APP_CONTEXT } from '$mono/common/constant';
 import { LifecycleOwner } from 'lib/libs/flow';
+import Footer from "./Footer.svelte";
 
 const appContext = getContext<AppContext>(APP_CONTEXT);
 const lifecycleOwner = new LifecycleOwner();
@@ -30,7 +31,7 @@ onMount(() => {
             <AppearanceTool />
             <TextTool />
         </div>
-        <div class="footer">Hello</div>
+        <Footer/>
     </div>
 {/if}
 
@@ -54,12 +55,5 @@ onMount(() => {
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
-}
-
-.footer {
-    padding: 10px 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 </style>
