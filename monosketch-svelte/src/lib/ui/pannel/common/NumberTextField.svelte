@@ -2,7 +2,7 @@
 export let label: string;
 export let value: number;
 export let minValue: number | null = null;
-export let isEnabled = true;
+export let isEnabled: boolean = true;
 export let boundIncludesLabel = false;
 </script>
 

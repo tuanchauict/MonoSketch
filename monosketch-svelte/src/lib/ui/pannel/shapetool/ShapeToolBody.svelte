@@ -53,7 +53,7 @@
 {/if}
 
 {#if isTransformToolVisible }
-    <TransformTool/>
+    <TransformTool {viewModel}/>
 {/if}
 
 {#if isAppearanceToolVisible }
