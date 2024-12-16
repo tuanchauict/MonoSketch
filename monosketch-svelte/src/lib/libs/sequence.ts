@@ -145,6 +145,17 @@ export function getOrDefault<T>(array: T[], index: number, defaultValue: T): T {
     return index >= 0 && index < array.length ? array[index] : defaultValue;
 }
 
+export function singleOrNull<T>(array: T[] | Set<T>): T | null {
+    if (array instanceof Set) {
+        if (array.size === 1) {
+            return array.values().next().value ?? null;
+        } else {
+            return null;
+        }
+    }
+    return array.length === 1 ? array[0] : null;
+}
+
 export namespace ListExt {
     /**
      * Create a list of the specified size with the specified value.

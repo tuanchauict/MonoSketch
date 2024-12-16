@@ -1,7 +1,11 @@
 <script lang="ts">
 import Tool from './Tool.svelte';
 import CloudItem from './CloudItem.svelte';
-import { lineAnchorOptions } from '../model';
+import type { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
+import { getContext } from "svelte";
+import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
+
+let viewModel: ShapeToolViewModel = getContext(SHAPE_TOOL_VIEWMODEL);
 
 export let title: string;
 export let selectedId: string;
@@ -13,12 +17,12 @@ function onItemSelect(id: string) {
 
 <Tool {title} available="{true}">
     <div>
-        {#each lineAnchorOptions as option}
+        {#each viewModel.headOptions as option}
             <CloudItem
                 id="{option.id}"
                 selected="{option.id === selectedId}"
                 useDashBorder="{option.useDashBorder}"
-                onSelect="{onItemSelect}">{option.title}</CloudItem
+                onSelect="{onItemSelect}">{option.name}</CloudItem
             >
         {/each}
     </div>

@@ -16,23 +16,24 @@ export class AppContext {
 
     shapeManager = new ShapeManager();
 
+    actionManager = new ActionManager(this.appLifecycleOwner);
+
     onStart = (): void => {
         this.appLifecycleOwner.onStart();
 
         this.init();
 
         this.appUiStateManager.observeTheme();
+        this.actionManager.observeKeyCommand(
+            this.appUiStateManager.keyCommandFlow.map((keyCommand) => keyCommand.command),
+        );
     };
 
     private init() {
-        const actionManager = new ActionManager(
-            this.appLifecycleOwner,
-            this.appUiStateManager.keyCommandFlow.map((keyCommand) => keyCommand.command),
-        );
-        actionManager.installDebugCommand();
+        this.actionManager.installDebugCommand();
 
         const browserManager = new BrowserManager((projectId: string) => {
-            actionManager.setOneTimeAction(OneTimeAction.ProjectAction.SwitchProject(projectId));
+            this.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.SwitchProject(projectId));
         });
         browserManager.startObserveStateChange(
             this.shapeManager.rootIdFlow,

@@ -9,7 +9,7 @@ const KeyCommandOptionsDefaults: KeyCommand = {
     isRepeatable: false,
 };
 
-export const KeyCommands: KeyCommand[] = [
+const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.IDLE,
