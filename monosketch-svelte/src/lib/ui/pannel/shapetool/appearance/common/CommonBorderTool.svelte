@@ -1,39 +1,43 @@
 <script lang="ts">
-import Tool from './Tool.svelte';
-import CloudItem from './CloudItem.svelte';
-import { strokeOptions } from '../model';
-import RoundedCornerButton from './RoundedCornerButton.svelte';
-import DashPattern from './DashPattern.svelte';
+    import Tool from './Tool.svelte';
+    import CloudItem from './CloudItem.svelte';
+    import RoundedCornerButton from './RoundedCornerButton.svelte';
+    import DashPattern from './DashPattern.svelte';
+    import type { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
+    import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
+    import { getContext } from "svelte";
 
-export let title: string;
-export let selectedId = 'B1';
-export let cornerRounded: boolean;
+    export let title: string;
+    export let selectedId = 'B1';
+    export let cornerRounded: boolean;
 
-export let dashDash: number;
-export let dashGap: number;
-export let dashShift: number;
+    export let dashDash: number;
+    export let dashGap: number;
+    export let dashShift: number;
 
-export let onItemSelect: (id: string) => void;
-export let onCornerRounded: (rounded: boolean) => void;
+    export let onItemSelect: (id: string) => void;
+    export let onCornerRounded: (rounded: boolean) => void;
 
-$: isCornerRoundable = selectedId === 'B1';
+    let viewModel: ShapeToolViewModel = getContext(SHAPE_TOOL_VIEWMODEL);
 
-function onRoundedCornerButtonClick() {
-    onCornerRounded(!cornerRounded);
-}
+    $: isCornerRoundable = selectedId === 'B1';
+
+    function onRoundedCornerButtonClick() {
+        onCornerRounded(!cornerRounded);
+    }
 </script>
 
 <Tool {title} available="{true}">
     <div class="border">
         <div class="cloud">
-            {#each strokeOptions as option}
+            {#each viewModel.strokeOptions as option}
                 <CloudItem
-                    id="{option.id}"
-                    selected="{option.id === selectedId}"
-                    useDashBorder="{option.useDashBorder}"
-                    onSelect="{onItemSelect}"
+                        id="{option.id}"
+                        selected="{option.id === selectedId}"
+                        useDashBorder="{option.useDashBorder}"
+                        onSelect="{onItemSelect}"
                 >
-                    {option.title}
+                    {option.name}
                 </CloudItem>
             {/each}
         </div>
@@ -41,33 +45,33 @@ function onRoundedCornerButtonClick() {
         {#if isCornerRoundable}
             <div class="rounded-corner">
                 <RoundedCornerButton
-                    selected="{cornerRounded}"
-                    onClick="{onRoundedCornerButtonClick}"
+                        selected="{cornerRounded}"
+                        onClick="{onRoundedCornerButtonClick}"
                 />
             </div>
         {/if}
     </div>
-    <DashPattern bind:dash="{dashDash}" bind:gap="{dashGap}" bind:shift="{dashShift}" />
+    <DashPattern bind:dash="{dashDash}" bind:gap="{dashGap}" bind:shift="{dashShift}"/>
 </Tool>
 
 <style lang="scss">
-.border {
-    display: flex;
-    flex-direction: row;
-    gap: 7px;
-}
+    .border {
+        display: flex;
+        flex-direction: row;
+        gap: 7px;
+    }
 
-.cloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-}
+    .cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
 
-.rounded-corner {
-    display: flex;
-    align-items: center;
-    margin-left: 8px;
-    padding-left: 8px;
-    border-left: 1px solid var(--shapetool-section-divider-color);
-}
+    .rounded-corner {
+        display: flex;
+        align-items: center;
+        margin-left: 8px;
+        padding-left: 8px;
+        border-left: 1px solid var(--shapetool-section-divider-color);
+    }
 </style>
