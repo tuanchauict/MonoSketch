@@ -57,7 +57,7 @@
     <TransformTool/>
 {/if}
 
-{#if isAppearanceToolVisible || true}
+{#if isAppearanceToolVisible}
     <AppearanceTool/>
 {/if}
 
