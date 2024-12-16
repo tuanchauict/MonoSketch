@@ -46,9 +46,25 @@ export class ShapeToolViewModel {
 
     public readonly textAlignFlow: Flow<TextAlign | null>;
 
-    public readonly fillOptions: AppearanceOptionItem[];
-    public readonly strokeOptions: AppearanceOptionItem[];
-    public readonly headOptions: AppearanceOptionItem[];
+    public readonly fillOptions: AppearanceOptionItem[] =
+        ShapeExtraManager.getAllPredefinedRectangleFillStyles().map(({ id, displayName }) => ({
+            id,
+            name: displayName,
+            useDashBorder: id === 'F1',
+        }));
+
+    public readonly strokeOptions: AppearanceOptionItem[] =
+        ShapeExtraManager.getAllPredefinedStrokeStyles().map(({ id, displayName }) => ({
+            id,
+            name: displayName,
+            useDashBorder: false,
+        }));
+    public readonly headOptions: AppearanceOptionItem[] =
+        ShapeExtraManager.getAllPredefinedAnchorChars().map(({ id, displayName }) => ({
+            id,
+            name: displayName,
+            useDashBorder: false,
+        }));
 
     constructor(
         selectedShapesFlow: Flow<Set<AbstractShape>>,
@@ -111,13 +127,6 @@ export class ShapeToolViewModel {
         );
 
         this.textAlignFlow = this.createTextAlignFlow(singleShapeFlow, retainableActionFlow);
-
-        this.fillOptions = ShapeExtraManager.getAllPredefinedRectangleFillStyles()
-            .map((style) => ({ id: style.id, name: style.displayName }));
-        this.strokeOptions = ShapeExtraManager.getAllPredefinedStrokeStyles()
-            .map((style) => ({ id: style.id, name: style.displayName }));
-        this.headOptions = ShapeExtraManager.getAllPredefinedAnchorChars()
-            .map((char) => ({ id: char.id, name: char.displayName }));
     }
 
     private createTextAlignFlow(

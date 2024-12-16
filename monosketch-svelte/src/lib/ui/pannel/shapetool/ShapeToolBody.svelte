@@ -7,11 +7,12 @@
     import ReorderTool from "$ui/pannel/shapetool/reorder/ReorderTool.svelte";
     import AppearanceTool from "$ui/pannel/shapetool/appearance/AppearanceTool.svelte";
     import TextTool from "$ui/pannel/shapetool/text/TextTool.svelte";
-    import { onDestroy, onMount } from "svelte";
+    import { getContext, onDestroy, onMount } from "svelte";
     import { LifecycleOwner } from "$libs/flow";
     import { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
+    import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
 
-    export let viewModel: ShapeToolViewModel;
+    let viewModel: ShapeToolViewModel = getContext<ShapeToolViewModel>(SHAPE_TOOL_VIEWMODEL);
 
     const lifecycleOwner = new LifecycleOwner();
 
@@ -53,10 +54,10 @@
 {/if}
 
 {#if isTransformToolVisible }
-    <TransformTool {viewModel}/>
+    <TransformTool/>
 {/if}
 
-{#if isAppearanceToolVisible }
+{#if isAppearanceToolVisible || true}
     <AppearanceTool/>
 {/if}
 

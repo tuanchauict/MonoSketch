@@ -1,19 +1,12 @@
+
 class CloudOption {
     constructor(
         public id: string,
         public title: string,
         public useDashBorder: boolean = false,
-    ) {}
+    ) {
+    }
 }
-
-export const fillOptions: CloudOption[] = [
-    new CloudOption('F0', '×', true),
-    new CloudOption('F1', '\u00A0'),
-    new CloudOption('F2', '█'),
-    new CloudOption('F3', '▒'),
-    new CloudOption('F4', '░'),
-    new CloudOption('F5', '▚'),
-];
 
 export const strokeOptions: CloudOption[] = [
     new CloudOption('B0', '\u00A0'),

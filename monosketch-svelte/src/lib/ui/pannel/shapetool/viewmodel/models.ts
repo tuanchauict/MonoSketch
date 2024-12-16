@@ -12,6 +12,7 @@ export interface CloudItemSelectionState {
 export interface AppearanceOptionItem {
     id: string;
     name: string;
+    useDashBorder: boolean;
 }
 
 export function selectedOrDefault<T>({ selectedFlow, defaultFlow }: {
