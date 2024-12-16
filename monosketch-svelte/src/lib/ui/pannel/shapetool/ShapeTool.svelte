@@ -1,16 +1,20 @@
 <script lang="ts">
-import ReorderTool from './reorder/ReorderTool.svelte';
-import TransformTool from './transform/TransformTool.svelte';
-import AppearanceTool from './appearance/AppearanceTool.svelte';
-import TextTool from './text/TextTool.svelte';
-import { getContext, onMount } from 'svelte';
+import { getContext, onDestroy, onMount } from 'svelte';
 import { AppContext } from '$app/app-context';
 import { APP_CONTEXT } from '$mono/common/constant';
-import { LifecycleOwner } from 'lib/libs/flow';
+import { Flow, LifecycleOwner } from 'lib/libs/flow';
 import Footer from "./Footer.svelte";
+import ShapeToolBody from "$ui/pannel/shapetool/ShapeToolBody.svelte";
+import { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
 
 const appContext = getContext<AppContext>(APP_CONTEXT);
 const lifecycleOwner = new LifecycleOwner();
+
+const viewModel = new ShapeToolViewModel(
+    new Flow(new Set()), // TODO: Replace with real flow
+    appContext.shapeManager.versionFlow,
+    appContext.actionManager
+);
 
 let isVisible = true;
 
@@ -21,15 +25,16 @@ onMount(() => {
         isVisible = value;
     });
 });
+
+onDestroy(() => {
+    lifecycleOwner.onStop();
+});
 </script>
 
 {#if isVisible}
     <div class="container">
         <div class="body">
-            <ReorderTool />
-            <TransformTool />
-            <AppearanceTool />
-            <TextTool />
+            <ShapeToolBody {viewModel}/>
         </div>
         <Footer/>
     </div>
