@@ -105,7 +105,7 @@ function createStrokeRoundedCornerState(extra: ILineExtra | null): boolean | nul
     if (extra == null) {
         return null;
     }
-    return extra.isStrokeEnabled ? extra.isRoundedCorner : null
+    return extra.isStrokeEnabled ? extra.isRoundedCorner : null;
 }
 
 function createStartHeadState(extra: ILineExtra | null): CloudItemSelectionState | null {

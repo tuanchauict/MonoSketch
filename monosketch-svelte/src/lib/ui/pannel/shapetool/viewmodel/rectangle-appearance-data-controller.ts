@@ -106,5 +106,5 @@ function createBorderRoundedCornerState(extra: IRectangleExtra | null): boolean 
     if (extra == null) {
         return null;
     }
-    return extra.isBorderEnabled ? extra.corner == RectangleBorderCornerPattern.ENABLED : null
+    return extra.isBorderEnabled ? extra.corner == RectangleBorderCornerPattern.ENABLED : null;
 }

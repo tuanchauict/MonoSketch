@@ -12,8 +12,8 @@ import type { StraightStrokeDashPattern, TextAlign } from "$mono/shape/extra/sty
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { Rectangle } from "$mono/shape/shape/rectangle";
 import { Text } from "$mono/shape/shape/text";
-import { selectedOrDefault, type CloudItemSelectionState, type AppearanceOptionItem } from "./models";
 import { LineAppearanceDataController } from "./line-appearance-data-controller";
+import { type AppearanceOptionItem, type CloudItemSelectionState, selectedOrDefault } from "./models";
 import { RectangleAppearanceDataController } from "./rectangle-appearance-data-controller";
 
 /**
@@ -45,8 +45,6 @@ export class ShapeToolViewModel {
     public readonly appearanceVisibilityFlow: Flow<boolean>;
 
     public readonly textAlignFlow: Flow<TextAlign | null>;
-
-    public readonly hasAnyToolFlow: Flow<boolean>;
 
     public readonly fillOptions: AppearanceOptionItem[];
     public readonly strokeOptions: AppearanceOptionItem[];
@@ -112,18 +110,7 @@ export class ShapeToolViewModel {
             (isRectAvailable, isLineAvailable) => isRectAvailable || isLineAvailable,
         );
 
-        const textAlignFlow = this.createTextAlignFlow(singleShapeFlow, retainableActionFlow);
-        this.textAlignFlow = textAlignFlow;
-
-        this.hasAnyToolFlow = Flow.combineList(
-            [
-                singleShapeFlow.map((shape) => shape !== null),
-                this.rectangleAppearanceDataController.hasAnyVisibleToolFlow,
-                this.lineAppearanceDataController.hasAnyVisibleToolFlow,
-                textAlignFlow.map((align) => align !== null),
-            ],
-            (states) => states.some((state) => state === true),
-        );
+        this.textAlignFlow = this.createTextAlignFlow(singleShapeFlow, retainableActionFlow);
 
         this.fillOptions = ShapeExtraManager.getAllPredefinedRectangleFillStyles()
             .map((style) => ({ id: style.id, name: style.displayName }));
