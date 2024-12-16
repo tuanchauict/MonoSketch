@@ -11,7 +11,7 @@ import { RectangleBorderCornerPattern, type StraightStrokeDashPattern } from "$m
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { Rectangle } from "$mono/shape/shape/rectangle";
 import { Text } from "$mono/shape/shape/text";
-import type { CloudItemSelectionState } from "$ui/pannel/shapetool/viewmodel/models";
+import { type CloudItemSelectionState, selectedOrDefault } from "$ui/pannel/shapetool/viewmodel/models";
 
 /**
  * A class which manages the appearance data of a rectangle related shape.
@@ -92,13 +92,6 @@ export class RectangleAppearanceDataController {
             defaultFlow: this.defaultRectangleExtraFlow.map(createBorderRoundedCornerState),
         });
     }
-}
-
-function selectedOrDefault<T>({ selectedFlow, defaultFlow }: {
-    selectedFlow: Flow<T | null>,
-    defaultFlow: Flow<T | null>
-}): Flow<T | null> {
-    return Flow.combine2(selectedFlow, defaultFlow, (a, b) => a ?? b);
 }
 
 function createFillAppearanceVisibilityState(extra: IRectangleExtra | null): CloudItemSelectionState | null {

@@ -10,7 +10,7 @@ import type { LineExtra } from "$mono/shape/extra/shape-extra";
 import { type StraightStrokeDashPattern } from "$mono/shape/extra/style";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { Line } from "$mono/shape/shape/line";
-import type { CloudItemSelectionState } from "$ui/pannel/shapetool/viewmodel/models";
+import { selectedOrDefault, type CloudItemSelectionState } from "./models";
 
 /**
  * A class which manages the appearance data of a line related shape.
@@ -117,11 +117,4 @@ function createStartHeadState(extra: ILineExtra | null): CloudItemSelectionState
 
 function createEndHeadState(extra: ILineExtra | null): CloudItemSelectionState | null {
     return extra == null ? null : { isChecked: extra.isEndAnchorEnabled, selectedId: extra.userSelectedEndAnchor.id };
-}
-
-function selectedOrDefault<T>({ selectedFlow, defaultFlow }: {
-    selectedFlow: Flow<T | null>,
-    defaultFlow: Flow<T | null>
-}): Flow<T | null> {
-    return Flow.combine2(selectedFlow, defaultFlow, (a, b) => a ?? b);
 }
