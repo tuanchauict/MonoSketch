@@ -16,7 +16,7 @@
     let dashPattern: StrokeDashPattern | null | undefined = viewModel.shapeBorderDashTypeFlow.value;
 
     function onItemSelect(id: string | null) {
-        viewModel.update(OneTimeAction.ChangeShapeBorderExtra({newBorderStyleId: id, isEnabled: id !== null}));
+        viewModel.update(OneTimeAction.ChangeShapeBorderExtra({ newBorderStyleId: id, isEnabled: id !== null }));
     }
 
     function onCornerRoundedChange(value: boolean) {

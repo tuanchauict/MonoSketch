@@ -26,7 +26,7 @@
     });
 
     function onItemSelect(id: string | null) {
-        viewModel.update(OneTimeAction.ChangeShapeFillExtra({isEnabled: id !== null, newFillStyleId: id}));
+        viewModel.update(OneTimeAction.ChangeShapeFillExtra({ isEnabled: id !== null, newFillStyleId: id }));
     }
 </script>
 {#if shapeFillToolSelectionState}

@@ -8,9 +8,9 @@ import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
 let viewModel: ShapeToolViewModel = getContext(SHAPE_TOOL_VIEWMODEL);
 
 export let title: string;
-export let selectedId: string;
+export let selectedId: string | null;
 
-function onItemSelect(id: string) {
+function onItemSelect(id: string | null) {
     selectedId = id;
 }
 </script>
@@ -21,7 +21,6 @@ function onItemSelect(id: string) {
             <CloudItem
                 id="{option.id}"
                 selected="{option.id === selectedId}"
-                useDashBorder="{option.useDashBorder}"
                 onSelect="{onItemSelect}">{option.name}</CloudItem
             >
         {/each}

@@ -10,7 +10,7 @@
     let offset: number = dashPattern?.offset ?? 0;
 
     function onChangeInternal() {
-        onChange({dash, gap, offset})
+        onChange({ dash, gap, offset });
     }
 </script>
 

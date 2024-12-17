@@ -130,7 +130,7 @@ class ShapeExtraManagerImpl {
             textVerticalAlign ?? this.defaultTextAlign.verticalAlign,
         );
 
-        this.defaultExtraStateUpdateMutableFlow.value = this.defaultExtraStateUpdateFlow.value!! + 1;
+        this.defaultExtraStateUpdateMutableFlow.value = this.defaultExtraStateUpdateFlow.value! + 1;
     }
 
     getRectangleFillStyle(
