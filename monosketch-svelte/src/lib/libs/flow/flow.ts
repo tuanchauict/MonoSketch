@@ -131,7 +131,9 @@ export class Flow<T> {
             parent.addInternalObserver(
                 flow,
                 new SimpleObserver(() => {
-                    const values = flows.map((flow) => flow.valueInternal);
+                    // TODO: Getting value with `.value` can increase the computation cost since the value is computed
+                    //  from its parent flows. We should consider optimizing this.
+                    const values = flows.map((flow) => flow.value);
                     if (values.includes(undefined)) {
                         // Only update the value when all values are available.
                         return;

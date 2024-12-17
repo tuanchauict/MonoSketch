@@ -129,7 +129,8 @@ describe('Flow test', () => {
 
         test('distinct until changed with custom equals', () => {
             class Value implements Comparable {
-                constructor(public value: number) {}
+                constructor(public value: number) {
+                }
 
                 equals(other: unknown): boolean {
                     return other instanceof Value && this.value === other.value;
@@ -276,6 +277,73 @@ describe('Flow test', () => {
 
             expect(counter).toBe(0); // Run when start observe because the value is defined
             expect(observedValue).toBeUndefined();
+        });
+
+        test('combine 2 flows with immutable', () => {
+            const flow10 = new Flow<number>(1);
+            const flow11 = flow10.immutable();
+            const flow20 = new Flow(100);
+            const flow21 = flow20.immutable();
+
+            const target = Flow.combine2(flow11, flow21, (value1, value2) => value1 + value2);
+
+            let counter = 0;
+            let observedValue = undefined;
+            const observer = (value: unknown) => {
+                counter++;
+                observedValue = value;
+            };
+            flow10.value = 2;
+            flow10.value = 3;
+
+            target.observe(LifecycleOwner.start(), observer);
+            expect(counter).toBe(1); // Run when start observe because the value is defined
+            expect(observedValue).toBe(103);
+
+            flow10.value = 4;
+            expect(counter).toBe(2);
+            expect(observedValue).toBe(104);
+
+            flow20.value = 200;
+            expect(counter).toBe(3);
+            expect(observedValue).toBe(204);
+        });
+
+        test('combine 2 flows with combine', () => {
+            const flow1 = new Flow<number>(1);
+            const flow2 = new Flow<number>(100);
+            const flow3 = new Flow(1000);
+            const target = Flow.combine2(
+                Flow.combine2(flow2, flow1, (value1, value2) => value1 + value2),
+                flow3.immutable(),
+                (value1, value2) => value1 + value2);
+
+            let counter = 0;
+            let observedValue = undefined;
+            const observer = (value: unknown) => {
+                counter++;
+                observedValue = value;
+            };
+            target.observe(LifecycleOwner.start(), observer);
+
+            expect(counter).toBe(1); // Run when start observe because the value is defined
+            expect(observedValue).toBe(1101);
+
+            flow1.value = 2;
+            expect(counter).toBe(2);
+            expect(observedValue).toBe(1102);
+
+            flow1.value = 3;
+            expect(counter).toBe(3);
+            expect(observedValue).toBe(1103);
+
+            flow2.value = 200;
+            expect(counter).toBe(4);
+            expect(observedValue).toBe(1203);
+
+            flow3.value = 2000;
+            expect(counter).toBe(5);
+            expect(observedValue).toBe(2203);
         });
 
         test('combine 3 flows', () => {
@@ -453,7 +521,8 @@ describe('Flow test', () => {
         test('get value from secondary flow with subscribe', () => {
             const flow = new Flow<number>(1);
             const flow2 = flow.map((value) => value + 1);
-            flow2.observe(LifecycleOwner.start(), () => {});
+            flow2.observe(LifecycleOwner.start(), () => {
+            });
             flow.value = 2;
             // @ts-expect-error - private method
             expect(flow.hasSubscribers()).toBe(true);
