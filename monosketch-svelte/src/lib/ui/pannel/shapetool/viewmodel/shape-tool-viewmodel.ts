@@ -6,6 +6,7 @@ import { Flow } from "$libs/flow";
 import type { Rect } from "$libs/graphics-geo/rect";
 import { singleOrNull } from "$libs/sequence";
 import type { ActionManager } from "$mono/action-manager/action-manager";
+import type { OneTimeActionType } from "$mono/action-manager/one-time-actions";
 import { RetainableActionType } from "$mono/action-manager/retainable-actions";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
 import type { StraightStrokeDashPattern, TextAlign } from "$mono/shape/extra/style";
@@ -50,20 +51,17 @@ export class ShapeToolViewModel {
         ShapeExtraManager.getAllPredefinedRectangleFillStyles().map(({ id, displayName }) => ({
             id,
             name: displayName,
-            useDashBorder: id === 'F1',
         }));
 
     public readonly strokeOptions: AppearanceOptionItem[] =
         ShapeExtraManager.getAllPredefinedStrokeStyles().map(({ id, displayName }) => ({
             id,
             name: displayName,
-            useDashBorder: false,
         }));
     public readonly headOptions: AppearanceOptionItem[] =
         ShapeExtraManager.getAllPredefinedAnchorChars().map(({ id, displayName }) => ({
             id,
             name: displayName,
-            useDashBorder: false,
         }));
 
     constructor(
@@ -127,6 +125,11 @@ export class ShapeToolViewModel {
         );
 
         this.textAlignFlow = this.createTextAlignFlow(singleShapeFlow, retainableActionFlow);
+    }
+
+    update(action: OneTimeActionType) {
+        // TODO: Handle action
+        console.log("update action", action);
     }
 
     private createTextAlignFlow(
