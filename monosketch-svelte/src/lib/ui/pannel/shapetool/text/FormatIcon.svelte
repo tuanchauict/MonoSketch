@@ -1,18 +1,14 @@
 <script lang="ts">
-import { type TextAlignment, textAlignmentMap } from './model';
 
-export let type: TextAlignment;
 export let selected: boolean;
-export let onChange: (type: TextAlignment) => void;
+export let iconPath: string;
+export let onClick: () => void;
 
-function onClick() {
-    onChange(type);
-}
 </script>
 
 <button class:selected on:click="{onClick}">
     <svg width="20" height="14" viewBox="0 0 20 14" fill="currentColor">
-        <path d="{textAlignmentMap[type].iconPath}"></path>
+        <path d="{iconPath}"></path>
     </svg>
 </button>
 

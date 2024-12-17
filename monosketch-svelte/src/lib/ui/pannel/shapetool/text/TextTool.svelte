@@ -1,64 +1,98 @@
 <script lang="ts">
-import Section from '../../common/Section.svelte';
-import FormatIcon from './FormatIcon.svelte';
-import { horizontalAlignmentTypes, TextAlignment, verticalAlignmentTypes } from './model';
+    import Section from '../../common/Section.svelte';
+    import FormatIcon from './FormatIcon.svelte';
+    import { HorizontalAlignIconMap, VerticalAlignIconMap } from './model';
+    import { TextAlign, TextHorizontalAlign, TextVerticalAlign } from "$mono/shape/extra/style";
+    import { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
+    import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
+    import { getContext, onDestroy, onMount } from "svelte";
+    import { LifecycleOwner } from "$libs/flow";
+    import { OneTimeAction } from "$mono/action-manager/one-time-actions";
 
-let selectedHorizontalAlignment: TextAlignment = TextAlignment.HORIZONTAL_LEFT;
-let selectedVerticalAlignment: TextAlignment = TextAlignment.VERTICAL_TOP;
+    let viewModel = getContext<ShapeToolViewModel>(SHAPE_TOOL_VIEWMODEL);
+    let lifecycleOwner = new LifecycleOwner();
 
-function onHorizontalChange(type: TextAlignment) {
-    selectedHorizontalAlignment = type;
-}
+    let horizontalAlign: TextHorizontalAlign | null | undefined = viewModel.textAlignFlow.value?.horizontalAlign;
+    let verticalAlign: TextVerticalAlign | null | undefined = viewModel.textAlignFlow.value?.verticalAlign;
 
-function onVerticalChange(type: TextAlignment) {
-    selectedVerticalAlignment = type;
-}
+    function onHorizontalChange(type: TextHorizontalAlign) {
+        horizontalAlign = type;
+        viewModel.update(OneTimeAction.TextAlignment({
+            newHorizontalAlign: horizontalAlign,
+            newVerticalAlign: verticalAlign
+        }));
+    }
+
+    function onVerticalChange(type: TextVerticalAlign) {
+        verticalAlign = type;
+        viewModel.update(OneTimeAction.TextAlignment({
+            newHorizontalAlign: horizontalAlign,
+            newVerticalAlign: verticalAlign
+        }));
+    }
+
+    onMount(() => {
+        lifecycleOwner.onStart();
+
+        viewModel.textAlignFlow.observe(lifecycleOwner, (value) => {
+            if (!value) {
+                return;
+            }
+            horizontalAlign = value.horizontalAlign;
+            verticalAlign = value.verticalAlign;
+        });
+    });
+
+    onDestroy(() => {
+        lifecycleOwner.onStop();
+    });
 </script>
 
-<Section title="TEXT">
-    <div class="row">
-        <span>Alignment</span>
-        <div class="container">
-            {#each horizontalAlignmentTypes as type}
-                <FormatIcon
-                    {type}
-                    onChange="{onHorizontalChange}"
-                    selected="{selectedHorizontalAlignment === type}"
-                />
-            {/each}
+{#if horizontalAlign !== null && verticalAlign !== null}
+    <Section title="TEXT">
+        <div class="row">
+            <span>Alignment</span>
+            <div class="container">
+                {#each TextAlign.ALL_HORIZONTAL_ALIGNS as type}
+                    <FormatIcon
+                            onClick="{() => onHorizontalChange(type)}"
+                            iconPath="{HorizontalAlignIconMap[type]}"
+                            selected="{horizontalAlign === type}"
+                    />
+                {/each}
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <span>Position</span>
-        <div class="container">
-            {#each verticalAlignmentTypes as type}
-                <FormatIcon
-                    {type}
-                    onChange="{onVerticalChange}"
-                    selected="{selectedVerticalAlignment === type}"
-                />
-            {/each}
+        <div class="row">
+            <span>Position</span>
+            <div class="container">
+                {#each TextAlign.ALL_VERTICAL_ALIGNS as type}
+                    <FormatIcon
+                            onClick="{() => onVerticalChange(type)}"
+                            iconPath="{VerticalAlignIconMap[type]}"
+                            selected="{verticalAlign === type}"
+                    />
+                {/each}
+            </div>
         </div>
-    </div>
-</Section>
-
+    </Section>
+{/if}
 <style lang="scss">
-$gap: 8px;
-.row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: $gap;
-}
+    $gap: 8px;
+    .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: $gap;
+    }
 
-.container {
-    display: flex;
-    flex-direction: row;
-    gap: $gap;
-}
+    .container {
+        display: flex;
+        flex-direction: row;
+        gap: $gap;
+    }
 
-span {
-    width: 66px;
-}
+    span {
+        width: 66px;
+    }
 </style>

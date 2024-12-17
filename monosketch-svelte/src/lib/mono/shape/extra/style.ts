@@ -219,13 +219,13 @@ export class TextAlign implements Comparable {
     ) {
     }
 
-    private static ALL_HORIZONTAL_ALIGNS: TextHorizontalAlign[] = [
+    static ALL_HORIZONTAL_ALIGNS: TextHorizontalAlign[] = [
         TextHorizontalAlign.LEFT,
         TextHorizontalAlign.MIDDLE,
         TextHorizontalAlign.RIGHT,
     ];
 
-    private static ALL_VERTICAL_ALIGNS: TextVerticalAlign[] = [
+    static ALL_VERTICAL_ALIGNS: TextVerticalAlign[] = [
         TextVerticalAlign.TOP,
         TextVerticalAlign.MIDDLE,
         TextVerticalAlign.BOTTOM,
