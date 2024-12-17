@@ -37,7 +37,7 @@
                     id="{null}"
                     selected="{shapeFillToolSelectionState.selectedId === null}"
                     useDashBorder="{true}"
-                    onSelect="{onItemSelect}">&nbsp;
+                    onSelect="{onItemSelect}">×
             </CloudItem>
 
             {#each viewModel.fillOptions as option}
