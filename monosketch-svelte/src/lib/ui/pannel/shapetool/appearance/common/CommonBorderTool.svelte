@@ -47,7 +47,7 @@
             {/each}
         </div>
 
-        {#if PredefinedStraightStrokeStyle.isCornerRoundable(selectedId)}}
+        {#if PredefinedStraightStrokeStyle.isCornerRoundable(selectedId)}
             <div class="rounded-corner">
                 <RoundedCornerButton
                         selected="{cornerRounded ?? false}"
