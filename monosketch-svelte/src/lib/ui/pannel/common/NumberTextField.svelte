@@ -4,6 +4,8 @@ export let value: number;
 export let minValue: number | null = null;
 export let isEnabled: boolean = true;
 export let boundIncludesLabel = false;
+
+export let onChange: () => void;
 </script>
 
 <div class:child-bounds="{!boundIncludesLabel}">
@@ -12,6 +14,7 @@ export let boundIncludesLabel = false;
         type="number"
         bind:value
         disabled="{!isEnabled}"
+        on:change={onChange}
         min="{minValue !== null ? minValue : ''}"
     />
 </div>

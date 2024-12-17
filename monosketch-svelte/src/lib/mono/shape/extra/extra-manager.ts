@@ -37,49 +37,7 @@ export interface IRectangleExtra {
     corner: RectangleBorderCornerPattern;
 }
 
-interface IShapeExtraManager {
-    defaultRectangleExtra: IRectangleExtra;
-    defaultLineExtra: ILineExtra;
-    defaultTextAlign: TextAlign;
-    defaultExtraStateUpdateFlow: Flow<void>;
-
-    setDefaultValues(params: {
-        isFillEnabled?: boolean;
-        fillStyleId?: string;
-        isBorderEnabled?: boolean;
-        borderStyleId?: string;
-        isBorderRoundedCorner?: boolean;
-        borderDashPattern?: StraightStrokeDashPattern;
-        isLineStrokeEnabled?: boolean;
-        lineStrokeStyleId?: string;
-        isLineStrokeRoundedCorner?: boolean;
-        lineDashPattern?: StraightStrokeDashPattern;
-        isStartHeadAnchorCharEnabled?: boolean;
-        startHeadAnchorCharId?: string;
-        isEndHeadAnchorCharEnabled?: boolean;
-        endHeadAnchorCharId?: string;
-        textHorizontalAlign?: TextHorizontalAlign;
-        textVerticalAlign?: TextVerticalAlign;
-    }): void;
-
-    getRectangleFillStyle(id?: string, defaultStyle?: RectangleFillStyle): RectangleFillStyle;
-
-    getAllPredefinedRectangleFillStyles(): RectangleFillStyle[];
-
-    getRectangleBorderStyle(id?: string, defaultStyle?: StraightStrokeStyle): StraightStrokeStyle;
-
-    getLineStrokeStyle(id?: string, defaultStyle?: StraightStrokeStyle): StraightStrokeStyle;
-
-    getAllPredefinedStrokeStyles(): StraightStrokeStyle[];
-
-    getStartHeadAnchorChar(id?: string, defaultChar?: AnchorChar): AnchorChar;
-
-    getEndHeadAnchorChar(id?: string, defaultChar?: AnchorChar): AnchorChar;
-
-    getAllPredefinedAnchorChars(): AnchorChar[];
-}
-
-class ShapeExtraManagerImpl implements IShapeExtraManager {
+class ShapeExtraManagerImpl {
     defaultRectangleExtra: IRectangleExtra = {
         isFillEnabled: false,
         userSelectedFillStyle: PredefinedRectangleFillStyle.PREDEFINED_STYLES[0],
@@ -105,8 +63,8 @@ class ShapeExtraManagerImpl implements IShapeExtraManager {
         TextVerticalAlign.MIDDLE,
     );
 
-    private defaultExtraStateUpdateMutableFlow = new Flow<void>();
-    defaultExtraStateUpdateFlow: Flow<void> = this.defaultExtraStateUpdateMutableFlow.immutable();
+    private readonly defaultExtraStateUpdateMutableFlow = new Flow(0);
+    readonly defaultExtraStateUpdateFlow: Flow<number> = this.defaultExtraStateUpdateMutableFlow.immutable();
 
     setDefaultValues({
         isFillEnabled,
@@ -172,7 +130,7 @@ class ShapeExtraManagerImpl implements IShapeExtraManager {
             textVerticalAlign ?? this.defaultTextAlign.verticalAlign,
         );
 
-        this.defaultExtraStateUpdateMutableFlow.value = undefined;
+        this.defaultExtraStateUpdateMutableFlow.value = this.defaultExtraStateUpdateFlow.value! + 1;
     }
 
     getRectangleFillStyle(

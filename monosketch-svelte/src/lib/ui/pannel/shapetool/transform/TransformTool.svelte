@@ -5,6 +5,7 @@
     import { LifecycleOwner } from "$libs/flow";
     import { getContext, onDestroy, onMount } from "svelte";
     import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
+    import { OneTimeAction } from "$mono/action-manager/one-time-actions";
 
     let viewModel: ShapeToolViewModel = getContext(SHAPE_TOOL_VIEWMODEL);
 
@@ -16,7 +17,16 @@
     let width = 0;
     let isResizeable = viewModel.singleShapeResizeableFlow.value;
 
-    // TODO: Notify value changed to shape manager
+    function onChange() {
+        viewModel.update(
+            OneTimeAction.ChangeShapeBound({
+                newLeft: x,
+                newTop: y,
+                newWidth: width,
+                newHeight: height,
+            })
+        );
+    }
 
     onMount(() => {
         lifecycleOwner.onStart();
@@ -48,6 +58,7 @@
                     label="X"
                     bind:value="{x}"
                     boundIncludesLabel="{true}"
+                    {onChange}
             />
         </div>
         <div class="cell">
@@ -57,6 +68,7 @@
                     minValue="{1}"
                     boundIncludesLabel="{true}"
                     isEnabled="{isResizeable}"
+                    {onChange}
             />
         </div>
         <div class="cell">
@@ -64,6 +76,7 @@
                     label="Y"
                     bind:value="{y}"
                     boundIncludesLabel="{true}"
+                    {onChange}
             />
         </div>
         <div class="cell">
@@ -73,6 +86,7 @@
                     minValue="{1}"
                     boundIncludesLabel="{true}"
                     isEnabled="{isResizeable}"
+                    {onChange}
             />
         </div>
     </div>

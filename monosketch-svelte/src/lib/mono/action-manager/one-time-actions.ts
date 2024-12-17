@@ -141,7 +141,11 @@ export const OneTimeAction = {
         newBorderStyleId,
     }),
 
-    ChangeShapeBorderDashPatternExtra: (dash?: number, gap?: number, offset?: number): OneTimeActionType => ({
+    ChangeShapeBorderDashPatternExtra: ({ dash, gap, offset }: {
+        dash?: number,
+        gap?: number,
+        offset?: number
+    }): OneTimeActionType => ({
         type: 'ChangeShapeBorderDashPatternExtra',
         dash,
         gap,
@@ -160,13 +164,17 @@ export const OneTimeAction = {
         isEnabled,
         newStrokeStyleId,
     }),
-    ChangeLineStrokeDashPatternExtra: (dash?: number, gap?: number, offset?: number): OneTimeActionType => ({
+    ChangeLineStrokeDashPatternExtra: ({ dash, gap, offset }: {
+        dash?: number,
+        gap?: number,
+        offset?: number
+    }): OneTimeActionType => ({
         type: 'ChangeLineStrokeDashPatternExtra',
         dash,
         gap,
         offset,
     }),
-    ChangeLineStrokeCornerExtra: (isRoundedCorner: boolean) => ({
+    ChangeLineStrokeCornerExtra: (isRoundedCorner: boolean): OneTimeActionType => ({
         type: 'ChangeLineStrokeCornerExtra',
         isRoundedCorner,
     }),

@@ -6,13 +6,18 @@ import { Flow } from "$libs/flow";
 
 export interface CloudItemSelectionState {
     isChecked: boolean;
-    selectedId: string;
+    selectedId: string | null;
 }
 
 export interface AppearanceOptionItem {
     id: string;
     name: string;
-    useDashBorder: boolean;
+}
+
+export interface StrokeDashPattern {
+    dash: number;
+    gap: number;
+    offset: number;
 }
 
 export function selectedOrDefault<T>({ selectedFlow, defaultFlow }: {

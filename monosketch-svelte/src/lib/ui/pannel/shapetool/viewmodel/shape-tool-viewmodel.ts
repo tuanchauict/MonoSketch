@@ -6,6 +6,7 @@ import { Flow } from "$libs/flow";
 import type { Rect } from "$libs/graphics-geo/rect";
 import { singleOrNull } from "$libs/sequence";
 import type { ActionManager } from "$mono/action-manager/action-manager";
+import type { OneTimeActionType } from "$mono/action-manager/one-time-actions";
 import { RetainableActionType } from "$mono/action-manager/retainable-actions";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
 import type { StraightStrokeDashPattern, TextAlign } from "$mono/shape/extra/style";
@@ -13,7 +14,12 @@ import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { Rectangle } from "$mono/shape/shape/rectangle";
 import { Text } from "$mono/shape/shape/text";
 import { LineAppearanceDataController } from "./line-appearance-data-controller";
-import { type AppearanceOptionItem, type CloudItemSelectionState, selectedOrDefault } from "./models";
+import {
+    type AppearanceOptionItem,
+    type CloudItemSelectionState,
+    selectedOrDefault,
+    type StrokeDashPattern,
+} from "./models";
 import { RectangleAppearanceDataController } from "./rectangle-appearance-data-controller";
 
 /**
@@ -36,7 +42,7 @@ export class ShapeToolViewModel {
     public readonly shapeBorderRoundedCornerFlow: Flow<boolean | null>;
 
     public readonly lineStrokeTypeFlow: Flow<CloudItemSelectionState | null>;
-    public readonly lineStrokeDashTypeFlow: Flow<StraightStrokeDashPattern | null>;
+    public readonly lineStrokeDashTypeFlow: Flow<StrokeDashPattern | null>;
     public readonly lineStrokeRoundedCornerFlow: Flow<boolean | null>;
 
     public readonly lineStartHeadFlow: Flow<CloudItemSelectionState | null>;
@@ -50,20 +56,17 @@ export class ShapeToolViewModel {
         ShapeExtraManager.getAllPredefinedRectangleFillStyles().map(({ id, displayName }) => ({
             id,
             name: displayName,
-            useDashBorder: id === 'F1',
         }));
 
     public readonly strokeOptions: AppearanceOptionItem[] =
         ShapeExtraManager.getAllPredefinedStrokeStyles().map(({ id, displayName }) => ({
             id,
             name: displayName,
-            useDashBorder: false,
         }));
     public readonly headOptions: AppearanceOptionItem[] =
         ShapeExtraManager.getAllPredefinedAnchorChars().map(({ id, displayName }) => ({
             id,
             name: displayName,
-            useDashBorder: false,
         }));
 
     constructor(
@@ -127,6 +130,11 @@ export class ShapeToolViewModel {
         );
 
         this.textAlignFlow = this.createTextAlignFlow(singleShapeFlow, retainableActionFlow);
+    }
+
+    update(action: OneTimeActionType) {
+        // TODO: Handle action
+        console.log("update action", action);
     }
 
     private createTextAlignFlow(
