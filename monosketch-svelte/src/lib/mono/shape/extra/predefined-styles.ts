@@ -109,7 +109,10 @@ export class PredefinedStraightStrokeStyle {
         return PredefinedStraightStrokeStyle.ID_TO_STYLE_MAP[adjustedId];
     }
 
-    static isCornerRoundable(id: string): boolean {
+    static isCornerRoundable(id: string | null | undefined): boolean {
+        if (id === null || id === undefined) {
+            return false;
+        }
         return id in PredefinedStraightStrokeStyle.STYLE_TO_ROUNDED_CORNER_STYLE_MAP;
     }
 }
