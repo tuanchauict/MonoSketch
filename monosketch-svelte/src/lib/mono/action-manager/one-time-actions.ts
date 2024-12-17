@@ -141,7 +141,11 @@ export const OneTimeAction = {
         newBorderStyleId,
     }),
 
-    ChangeShapeBorderDashPatternExtra: (dash?: number, gap?: number, offset?: number): OneTimeActionType => ({
+    ChangeShapeBorderDashPatternExtra: ({ dash, gap, offset }: {
+        dash?: number,
+        gap?: number,
+        offset?: number
+    }): OneTimeActionType => ({
         type: 'ChangeShapeBorderDashPatternExtra',
         dash,
         gap,

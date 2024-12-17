@@ -6,21 +6,21 @@
     import type { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
     import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
     import { getContext } from "svelte";
+    import { PredefinedStraightStrokeStyle } from "$mono/shape/extra/predefined-styles";
+    import type { StrokeDashPattern } from "$ui/pannel/shapetool/viewmodel/models";
 
     export let title: string;
-    export let selectedId = 'B1';
-    export let cornerRounded: boolean;
+    export let selectedId: string | null;
 
-    export let dashDash: number;
-    export let dashGap: number;
-    export let dashShift: number;
+    export let cornerRounded: boolean | null;
 
-    export let onItemSelect: (id: string) => void;
+    export let dashPattern: StrokeDashPattern | null;
+
+    export let onItemSelect: (id: string | null) => void;
     export let onCornerRounded: (rounded: boolean) => void;
+    export let onDashPatternChange: (dashPattern: StrokeDashPattern) => void;
 
     let viewModel: ShapeToolViewModel = getContext(SHAPE_TOOL_VIEWMODEL);
-
-    $: isCornerRoundable = selectedId === 'B1';
 
     function onRoundedCornerButtonClick() {
         onCornerRounded(!cornerRounded);
@@ -30,11 +30,16 @@
 <Tool {title} available="{true}">
     <div class="border">
         <div class="cloud">
+            <!-- Disable-item -->
+            <CloudItem
+                    id="{null}"
+                    selected="{selectedId === null}"
+                    onSelect="{onItemSelect}">&nbsp;
+            </CloudItem>
             {#each viewModel.strokeOptions as option}
                 <CloudItem
                         id="{option.id}"
                         selected="{option.id === selectedId}"
-                        useDashBorder="{option.useDashBorder}"
                         onSelect="{onItemSelect}"
                 >
                     {option.name}
@@ -42,16 +47,16 @@
             {/each}
         </div>
 
-        {#if isCornerRoundable}
+        {#if PredefinedStraightStrokeStyle.isCornerRoundable(selectedId)}}
             <div class="rounded-corner">
                 <RoundedCornerButton
-                        selected="{cornerRounded}"
+                        selected="{cornerRounded ?? false}"
                         onClick="{onRoundedCornerButtonClick}"
                 />
             </div>
         {/if}
     </div>
-    <DashPattern bind:dash="{dashDash}" bind:gap="{dashGap}" bind:shift="{dashShift}"/>
+    <DashPattern {dashPattern} onChange="{onDashPatternChange}"/>
 </Tool>
 
 <style lang="scss">

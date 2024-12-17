@@ -14,7 +14,7 @@ import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { Rectangle } from "$mono/shape/shape/rectangle";
 import { Text } from "$mono/shape/shape/text";
 import { LineAppearanceDataController } from "./line-appearance-data-controller";
-import { type AppearanceOptionItem, type CloudItemSelectionState, selectedOrDefault } from "./models";
+import { type AppearanceOptionItem, type CloudItemSelectionState, type DashPattern, selectedOrDefault } from "./models";
 import { RectangleAppearanceDataController } from "./rectangle-appearance-data-controller";
 
 /**
@@ -37,7 +37,7 @@ export class ShapeToolViewModel {
     public readonly shapeBorderRoundedCornerFlow: Flow<boolean | null>;
 
     public readonly lineStrokeTypeFlow: Flow<CloudItemSelectionState | null>;
-    public readonly lineStrokeDashTypeFlow: Flow<StraightStrokeDashPattern | null>;
+    public readonly lineStrokeDashTypeFlow: Flow<DashPattern | null>;
     public readonly lineStrokeRoundedCornerFlow: Flow<boolean | null>;
 
     public readonly lineStartHeadFlow: Flow<CloudItemSelectionState | null>;

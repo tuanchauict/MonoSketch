@@ -14,6 +14,12 @@ export interface AppearanceOptionItem {
     name: string;
 }
 
+export interface StrokeDashPattern {
+    dash: number;
+    gap: number;
+    offset: number;
+}
+
 export function selectedOrDefault<T>({ selectedFlow, defaultFlow }: {
     selectedFlow: Flow<T | null>,
     defaultFlow: Flow<T | null>

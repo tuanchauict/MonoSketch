@@ -1,29 +1,61 @@
 <script lang="ts">
-import CommonBorderTool from './common/CommonBorderTool.svelte';
+    import CommonBorderTool from './common/CommonBorderTool.svelte';
+    import { getContext, onDestroy, onMount } from "svelte";
+    import { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
+    import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
+    import { LifecycleOwner } from "$libs/flow";
+    import type { StrokeDashPattern } from "$ui/pannel/shapetool/viewmodel/models";
+    import { OneTimeAction } from "$mono/action-manager/one-time-actions";
 
-let selectedId = 'B1';
-let cornerRounded = false;
+    let viewModel = getContext<ShapeToolViewModel>(SHAPE_TOOL_VIEWMODEL);
+    let lifecycleOwner = new LifecycleOwner();
 
-let dashDash = 1;
-let dashGap = 0;
-let dashShift = 0;
+    let selectedStrokeItem = viewModel.shapeBorderTypeFlow.value;
+    let cornerRounded = viewModel.shapeBorderRoundedCornerFlow.value;
 
-function onItemSelect(id: string) {
-    selectedId = id;
-}
+    let dashPattern: StrokeDashPattern | null | undefined = viewModel.shapeBorderDashTypeFlow.value;
 
-function onCornerRoundedChange(value: boolean) {
-    cornerRounded = value;
-}
+    function onItemSelect(id: string | null) {
+        viewModel.update(OneTimeAction.ChangeShapeBorderExtra({newBorderStyleId: id, isEnabled: id !== null}));
+    }
+
+    function onCornerRoundedChange(value: boolean) {
+        viewModel.update(OneTimeAction.ChangeShapeBorderCornerExtra(value));
+    }
+
+    function onDashPatternChange(dashPattern: StrokeDashPattern) {
+        viewModel.update(OneTimeAction.ChangeShapeBorderDashPatternExtra(dashPattern));
+    }
+
+    onMount(() => {
+        lifecycleOwner.onStart();
+
+        viewModel.shapeBorderTypeFlow.observe(lifecycleOwner, (value) => {
+            selectedStrokeItem = value;
+        });
+
+        viewModel.shapeBorderRoundedCornerFlow.observe(lifecycleOwner, (value) => {
+            cornerRounded = value;
+        });
+
+        viewModel.shapeBorderDashTypeFlow.observe(lifecycleOwner, (value) => {
+            dashPattern = value;
+        });
+    });
+
+    onDestroy(() => {
+        lifecycleOwner.onStop();
+    });
 </script>
 
-<CommonBorderTool
-    title="Border"
-    {onItemSelect}
-    {selectedId}
-    {cornerRounded}
-    onCornerRounded="{onCornerRoundedChange}"
-    bind:dashDash
-    bind:dashGap
-    bind:dashShift
-/>
+{#if selectedStrokeItem && cornerRounded !== undefined && dashPattern !== undefined}
+    <CommonBorderTool
+            title="Border"
+            {onItemSelect}
+            selectedId="{selectedStrokeItem.selectedId}"
+            {cornerRounded}
+            onCornerRounded="{onCornerRoundedChange}"
+            {dashPattern}
+            {onDashPatternChange}
+    />
+{/if}
