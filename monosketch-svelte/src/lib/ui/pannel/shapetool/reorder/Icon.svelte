@@ -1,20 +1,16 @@
 <script lang="ts">
-import { buttonContent, type ReorderType } from './model';
-import TooltipTarget from '$ui/modal/tooltip/TooltipTarget.svelte';
-import { Direction } from '$ui/modal/tooltip/model';
+    import TooltipTarget from '$ui/modal/tooltip/TooltipTarget.svelte';
+    import { Direction } from '$ui/modal/tooltip/model';
 
-export let icon: ReorderType;
-export let onClick: (icon: ReorderType) => void;
+    export let title: string;
+export let iconPath: string;
+export let onClick: () => void;
 </script>
 
-<TooltipTarget text="{buttonContent[icon].title}" direction="{Direction.TOP}">
-    <button
-        on:click="{() => {
-            onClick(icon);
-        }}"
-    >
+<TooltipTarget text="{title}" direction="{Direction.TOP}">
+    <button on:click="{onClick}">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-            <path d="{buttonContent[icon].icon}"></path>
+            <path d="{iconPath}"></path>
         </svg>
     </button>
 </TooltipTarget>
