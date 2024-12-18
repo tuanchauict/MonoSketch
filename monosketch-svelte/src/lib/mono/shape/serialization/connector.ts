@@ -49,3 +49,16 @@ export class SerializableLineConnector {
         return result;
     }
 }
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const SerializableLineConnectorArraySerializer = {
+    serialize(value: SerializableLineConnector[]): any[] {
+        // @ts-expect-error toJson is attached by Jsonizable
+        return value.map(connector => connector.toJson());
+    },
+    deserialize(value: any[]): SerializableLineConnector[] {
+        // @ts-expect-error fromJson is attached by Jsonizable
+        return value.map(json => SerializableLineConnector.fromJson(json));
+    },
+};
+/* eslint-enable @typescript-eslint/no-explicit-any */
