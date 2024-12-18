@@ -221,10 +221,10 @@ export class SerializableLine extends AbstractSerializableShape {
         return result;
     }
 }
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
-const ShapeArraySerializer = {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const ShapeArraySerializer = {
     serialize: (value: AbstractSerializableShape[]): any[] => {
-        // @ts-ignore
+        // @ts-expect-error toJson is attached by Jsonizable
         return value.map((shape) => shape.toJson());
     },
 
@@ -233,16 +233,16 @@ const ShapeArraySerializer = {
             const type = json["type"];
             switch (type) {
                 case "R":
-                    // @ts-ignore
+                    // @ts-expect-error fromJson is attached by Jsonizable
                     return SerializableRectangle.fromJson(json);
                 case "T":
-                    // @ts-ignore
+                    // @ts-expect-error fromJson is attached by Jsonizable
                     return SerializableText.fromJson(json);
                 case "L":
-                    // @ts-ignore
+                    // @ts-expect-error fromJson is attached by Jsonizable
                     return SerializableLine.fromJson(json);
                 case "G":
-                    // @ts-ignore
+                    // @ts-expect-error fromJson is attached by Jsonizable
                     return SerializableGroup.fromJson(json);
                 default:
                     throw new Error(`Unrecognizable type ${type}`);
@@ -250,7 +250,7 @@ const ShapeArraySerializer = {
         });
     },
 };
-/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * A serializable class for a group shape.
