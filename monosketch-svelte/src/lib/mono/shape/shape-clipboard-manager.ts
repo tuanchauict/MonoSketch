@@ -25,7 +25,7 @@ export class ShapeClipboardManager {
     private clipboardShapeMutableFlow: Flow<ClipboardObject> = new Flow(ClipboardObject.create([], []));
     public clipboardShapeFlow: Flow<ClipboardObject> = this.clipboardShapeMutableFlow.immutable();
 
-    constructor(private body: HTMLElement) {
+    constructor() {
         document.onpaste = (event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -48,14 +48,15 @@ export class ShapeClipboardManager {
     }
 
     private parseJsonFromString(text: string) {
-        let json: any = null;
         try {
-            json = JSON.parse(text);
+            const json = JSON.parse(text);
+            // Backward compatibility with old clipboard format
+            return Array.isArray(json) ? { shapes: json, connectors: [] } : json;
         } catch (e) {
+            console.error('Failed to parse JSON from clipboard text', e);
             return null;
         }
-        // Backward compatibility with old clipboard format
-        return Array.isArray(json) ? { shapes: json, connectors: [] } : json;
+
     }
 
     private createTextShapeFromText(text: string): SerializableText {
@@ -77,8 +78,7 @@ export class ShapeClipboardManager {
 
     public setClipboard(clipboardObject: ClipboardObject) {
         // @ts-expect-error toJson is attached by Jsonizable
-        const json = clipboardObject.toJson();
-        const text = JSON.stringify(clipboardObject);
+        const text = JSON.stringify(clipboardObject.toJson());
         this.setClipboardText(text);
     }
 

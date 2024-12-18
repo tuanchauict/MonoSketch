@@ -26,7 +26,7 @@ describe('ClipboardObjectTest', () => {
                 lineId: '1',
                 anchor: LineAnchor.START,
                 targetId: '2',
-                ratio: PointF.create({left: 0, top: 0}),
+                ratio: PointF.create({ left: 0, top: 0 }),
                 offset: Point.ZERO,
             },
         );

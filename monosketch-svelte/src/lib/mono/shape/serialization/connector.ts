@@ -60,5 +60,5 @@ export const SerializableLineConnectorArraySerializer = {
         // @ts-expect-error fromJson is attached by Jsonizable
         return value.map(json => SerializableLineConnector.fromJson(json));
     },
-}
+};
 /* eslint-enable @typescript-eslint/no-explicit-any */
