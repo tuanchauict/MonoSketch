@@ -103,4 +103,4 @@ export class ZoneOwnersManager {
     }
 }
 
-const toAddressIndex = (number: number): number => number >> 4
+const toAddressIndex = (number: number): number => number >> 4;

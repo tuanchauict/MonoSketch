@@ -36,7 +36,7 @@ export class ShapeZoneAddressManager {
         const position = shape.bound.position;
         const addresses = new Set<ZoneAddress>();
         for (let ir = 0; ir < bitmap.matrix.length; ir++) {
-            for (let {index} of bitmap.matrix[ir].asSequence()) {
+            for (const { index } of bitmap.matrix[ir].asSequence()) {
                 const row = ir + position.row;
                 const col = index + position.column;
                 const address = ZoneAddressFactory.toAddress(row, col);
@@ -44,7 +44,7 @@ export class ShapeZoneAddressManager {
             }
         }
 
-        const versionizedZoneAddresses = {version: shape.versionCode, addresses};
+        const versionizedZoneAddresses = { version: shape.versionCode, addresses };
         this.idToZoneAddressMap.set(shape.id, versionizedZoneAddresses);
         return versionizedZoneAddresses.addresses;
     }
