@@ -148,9 +148,9 @@ export class PredefinedAnchorChar {
  */
 export class PredefinedRectangleBorderStyle {
     private static readonly PATTERN_TEXT_NO_BORDER = `
-+++
-+ +
-+++`.trim().replace(/\+/g, HALF_TRANSPARENT_CHAR);
+###
+# #
+###`.trim().replace(/#/g, HALF_TRANSPARENT_CHAR);
 
     private static readonly PATTERN_TEXT_0 = `
 ┌─┐
