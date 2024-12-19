@@ -39,23 +39,23 @@ describe('MonoBoard', () => {
 
         expect(target.toString()).toStrictEqual(
             trimMargin(`
-                |                |
-                | AAA            |
-                | AAA            |
-                | AAA            |
-                |                |
-                |                |
-                |                |
-                |                |
-                |                |
-                |                |
-                |                |
-                |                |
-                |                |
-                |                |
-                |                |
-                |                |
-            `),
+                |                x
+                | AAA            x
+                | AAA            x
+                | AAA            x
+                |                x
+                |                x
+                |                x
+                |                x
+                |                x
+                |                x
+                |                x
+                |                x
+                |                x
+                |                x
+                |                x
+                |                x
+            `.replaceAll('x', '')), // Use x to keep the extra spaces. Otherwise, the spaces will be trimmed due to lint.
         );
 
         expect(target.boardCount).toBe(1);
@@ -63,39 +63,39 @@ describe('MonoBoard', () => {
         target.fillRect(Rect.byLTWH(-3, -3, 3, 3), 'B', HighlightType.NO);
         expect(target.toString()).toStrictEqual(
             trimMargin(`
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |             BBB                |
-                |             BBB                |
-                |             BBB                |
-                |                                |
-                |                 AAA            |
-                |                 AAA            |
-                |                 AAA            |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-        `),
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |             BBB                x
+                |             BBB                x
+                |             BBB                x
+                |                                x
+                |                 AAA            x
+                |                 AAA            x
+                |                 AAA            x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+            `.replaceAll('x', '')), // Use x to keep the extra spaces. Otherwise, the spaces will be trimmed due to lint.
         );
 
         expect(target.boardCount).toBe(2);
@@ -103,39 +103,39 @@ describe('MonoBoard', () => {
         target.fillRect(Rect.byLTWH(-1, 0, 3, 1), 'C', HighlightType.NO);
         expect(target.toString()).toStrictEqual(
             trimMargin(`
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |             BBB                |
-                |             BBB                |
-                |             BBB                |
-                |               CCC              |
-                |                 AAA            |
-                |                 AAA            |
-                |                 AAA            |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-                |                                |
-        `),
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |             BBB                x
+                |             BBB                x
+                |             BBB                x
+                |               CCC              x
+                |                 AAA            x
+                |                 AAA            x
+                |                 AAA            x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                |                                x
+                `.replaceAll('x', '')), // Use x to keep the extra spaces. Otherwise, the spaces will be trimmed due to lint.
         );
 
         expect(target.boardCount).toBe(3);
