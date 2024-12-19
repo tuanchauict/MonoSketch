@@ -9,6 +9,8 @@ export let direction: Direction = Direction.BOTTOM;
 export let offsetHorizontal: number = 0;
 export let offsetVertical: number = 0;
 
+export let style: string = '';
+
 let timeoutId: number;
 
 function showTooltip(e: MouseEvent) {
@@ -39,6 +41,7 @@ onDestroy(hideTooltip);
 <div
     role="button"
     tabindex="-1"
+    style="{style}"
     on:mouseover="{showTooltip}"
     on:mouseout="{hideTooltip}"
     on:focus="{() => {}}"
