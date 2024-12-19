@@ -27,6 +27,10 @@ export namespace MonoBitmap {
 
         getDirection = (row: number, column: number): Char =>
             !this.isEmpty() ? this.matrix[row].getDirection(column) : TRANSPARENT_CHAR;
+
+        toString(): string {
+            return this.matrix.map((row) => row.toString()).join('\n');
+        }
     }
 
     export class Builder {
@@ -188,6 +192,14 @@ export namespace MonoBitmap {
         private getCell(column: number): Cell | null {
             const index = binarySearch(this.sortedCells, (cell) => cell.index - column);
             return getOrNull(this.sortedCells, index);
+        }
+
+        toString(): string {
+            const list = Array(this.size).fill(' ');
+            for (const cell of this.sortedCells) {
+                list[cell.index] = cell.visual;
+            }
+            return list.join('');
         }
     }
 

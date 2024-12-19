@@ -79,6 +79,10 @@ export class Text extends AbstractShape {
         });
     }
 
+    get isTextEditing(): boolean {
+        return this.isTextEditingInner;
+    }
+
     get contentBound(): Rect {
         return this.extra.boundExtra.isBorderEnabled
             ? Rect.byLTWH(this.bound.left + 1, this.bound.top + 1, this.bound.width - 2, this.bound.height - 2)

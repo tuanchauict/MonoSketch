@@ -8,7 +8,7 @@ describe('StringExt', () => {
             | 2 |
             | 3 |
         `;
-        const expected = ` 1 \n 2 \n 3 `;
+        const expected = ` 1 |\n 2 |\n 3 |`;
         expect(StringExt.trimMargin(input)).toStrictEqual(expected);
     });
 
@@ -18,7 +18,7 @@ describe('StringExt', () => {
             # 2 |
             # 3 |
         `;
-        const expected = ` 1 \n 2 \n 3 `;
+        const expected = ` 1 |\n 2 |\n 3 |`;
         expect(StringExt.trimMargin(input, '#')).toStrictEqual(expected);
     });
 });
