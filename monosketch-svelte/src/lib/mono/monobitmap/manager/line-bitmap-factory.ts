@@ -45,7 +45,8 @@ export class LineBitmapFactory {
 
         const firstPoint = this.createPointChar(lines[0][0], lines[0][1], strokeStyle);
 
-        const charPoints = zip(lines, lines.slice(1)).flatMap(([[p0, p1], [_, p2]]) => {
+        const linePairs = Array.from(zip(lines, lines.slice(1)));
+        const charPoints = linePairs.flatMap(([[p0, p1], [_, p2]]) => {
             const line = this.createLineChar(p0, p1, strokeStyle);
             const connectChar = this.getRightAngleChar(strokeStyle, p0, p1, p2);
             const connectPoint = new PointChar(p1.left, p1.top, connectChar);
