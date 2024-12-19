@@ -27,7 +27,7 @@ export class MonoBitmapManager {
             return cachedBitmap;
         }
 
-        let bitmap = this.createBitmap(shape);
+        const bitmap = this.createBitmap(shape);
 
         if (bitmap) {
             this.idToBitmapMap.set(shape.id, { versionCode: shape.versionCode, bitmap });

@@ -27,5 +27,5 @@ export namespace StringExt {
         const minIndent = Math.min(...indentLengths);
 
         return lines.map(line => line.slice(minIndent)).join('\n').trim();
-    }
+    };
 }
