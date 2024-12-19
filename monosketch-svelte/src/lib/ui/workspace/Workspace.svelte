@@ -5,8 +5,7 @@
     import { APP_CONTEXT } from '$mono/common/constant';
     import TooltipTarget from "$ui/modal/tooltip/TooltipTarget.svelte";
     import { Direction } from "$ui/modal/tooltip/model";
-    import { AXIS_Y_WIDTH } from "$mono/workspace/canvas/axis-canvas-view-controller";
-    import { AXIS_X_HEIGHT } from "$mono/workspace/canvas/axis-canvas-view-controller.js";
+    import { AXIS_X_HEIGHT, AXIS_Y_WIDTH } from "$mono/workspace/canvas/axis-canvas-view-controller";
 
     let canvasContainer: HTMLDivElement;
     let drawingInfoCanvas: HTMLCanvasElement;
