@@ -47,8 +47,10 @@
     <canvas bind:this="{selectionCanvas}"></canvas>
 
     <TooltipTarget text="Jump to (0, 0)" direction="{Direction.RIGHT}"
-                   style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px">
-        <button tabindex="-1" class="jump" on:click={() => workspaceViewController.forceUpdateOffset()}></button>
+                   style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px;">
+        <button tabindex="-1" class="jump"
+                style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px"
+                on:click={() => workspaceViewController.forceUpdateOffset()}></button>
     </TooltipTarget>
 </div>
 
@@ -76,8 +78,6 @@
         position: absolute;
         left: 0;
         top: 0;
-        width: 100%;
-        height: 100%;
         background: none;
         border: none;
         cursor: pointer;
