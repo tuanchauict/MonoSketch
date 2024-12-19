@@ -1,4 +1,4 @@
-import type { Point } from "$libs/graphics-geo/point";
+import { Point } from "$libs/graphics-geo/point";
 import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { AxisCanvasViewController } from '$mono/workspace/canvas/axis-canvas-view-controller';
 import { DrawingInfo, DrawingInfoController } from '$mono/workspace/drawing-info';
@@ -22,6 +22,8 @@ import { MonoBoard } from '$mono/monobitmap/board/board';
 export class WorkspaceViewController extends LifecycleOwner {
     private canvasViewController: CanvasViewController;
     private drawingInfoController: DrawingInfoController;
+
+    private mouseEventObserver: MouseEventObserver | null = null;
 
     constructor(
         private appContext: AppContext,
@@ -94,8 +96,13 @@ export class WorkspaceViewController extends LifecycleOwner {
             this,
             this.drawingInfoController.setOffset,
         );
+        this.mouseEventObserver = mouseEventObserver;
         // TODO: Read offset from the storage of the project and feed it to mouseEventObserver
     };
+
+    forceUpdateOffset() {
+        this.mouseEventObserver?.forceUpdateOffset(Point.of(0, 0));
+    }
 }
 
 class CanvasViewController {

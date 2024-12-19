@@ -6,8 +6,8 @@ import { ThemeColors } from '$mono/ui-state-manager/states';
 import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-controller';
 
 const AXIS_RULER_SIZE = 12.0;
-const AXIS_Y_WIDTH = 33.0;
-const AXIS_X_HEIGHT = 18.0;
+export const AXIS_Y_WIDTH = 33.0;
+export const AXIS_X_HEIGHT = 18.0;
 
 export class AxisCanvasViewController extends BaseCanvasViewController {
     constructor(
