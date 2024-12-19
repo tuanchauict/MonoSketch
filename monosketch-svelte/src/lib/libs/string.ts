@@ -24,4 +24,13 @@ export namespace StringExt {
         });
         return trimmedLines.filter((line) => line !== null).join('\n');
     };
+
+    export const trimIndent = (str: string): string => {
+        const lines = str.split('\n');
+        const nonEmptyLines = lines.filter(line => line.trim().length > 0);
+        const indentLengths = nonEmptyLines.map(line => line.match(/^\s*/)?.[0].length ?? 0);
+        const minIndent = Math.min(...indentLengths);
+
+        return lines.map(line => line.slice(minIndent)).join('\n').trim();
+    }
 }
