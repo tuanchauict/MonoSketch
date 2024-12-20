@@ -2,6 +2,8 @@
  * Copyright (c) 2024, tuanchauict
  */
 
+import type { Workspace } from "$app/workspace";
+import { LifecycleOwner } from "$libs/flow";
 import { Flow } from '$libs/flow/flow';
 import { getOrNull } from "$libs/sequence";
 import { DEBUG_MODE } from "$mono/build_environment";
@@ -22,7 +24,7 @@ export class StateHistoryManager {
 
     constructor(
         private environment: CommandEnvironment,
-        private canvasViewController: any,
+        private workspace: Workspace,
         private workspaceDao: WorkspaceDao,
     ) {
     }
@@ -35,21 +37,25 @@ export class StateHistoryManager {
      * If [rootId] is not in the database, a new object will be created and use [rootId] as the id
      * of the root shape.
      */
-    restoreAndStartObserveStateChange(rootId: string) {
+    restoreState(rootId: string) {
         const objectDao = this.getObjectDaoById(rootId);
 
         this.restoreShapes(objectDao);
-        this.canvasViewController.setOffset(objectDao.offset);
+        this.workspace.setDrawingOffset(objectDao.offset);
+    }
 
-        Flow.combine2(
+    observeStateChange(lifecycleOwner: LifecycleOwner) {
+        const versionCodeWIthEditingModeFlow = Flow.combine2(
+            // TODO: Add versionFlow to environment.
             this.environment.shapeManager.versionFlow,
             this.environment.editingModeFlow,
-            (versionCode, editingMode) => {
-                if (!editingMode.isEditing && versionCode !== editingMode.skippedVersion) {
-                    this.registerBackupShapes(versionCode);
-                }
-            },
+            (versionCode, editingMode) => ({ versionCode, editingMode }),
         );
+        versionCodeWIthEditingModeFlow.observe(lifecycleOwner, ({ versionCode, editingMode }) => {
+            if (!editingMode.isEditing && versionCode !== editingMode.skippedVersion) {
+                this.registerBackupShapes(versionCode);
+            }
+        });
     }
 
     /**
@@ -89,8 +95,9 @@ export class StateHistoryManager {
     }
 
     private backupShapes() {
-        const root = this.environment.shapeManager.root;
+        const root = this.environment.currentRootGroup;
         const serializableGroup = root.toSerializableShape(true);
+        // TODO: Add connectors to environment.
         const shapeConnector = this.environment.shapeManager.shapeConnector;
         const serializableLineConnectors = shapeConnector.toSerializable();
 

@@ -50,7 +50,7 @@
                    style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px;">
         <button tabindex="-1" class="jump"
                 style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px"
-                on:click={() => workspaceViewController.setOffset(Point.ZERO)}></button>
+                on:click={() => workspaceViewController.setDrawingOffset(Point.ZERO)}></button>
     </TooltipTarget>
 </div>
 

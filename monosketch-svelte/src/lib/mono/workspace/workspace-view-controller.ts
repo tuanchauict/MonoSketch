@@ -100,19 +100,14 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
             (keyCommand) => keyCommand.command === KeyCommandType.SHIFT_KEY,
         );
         this.mouseEventObserver.observeEvents(this, shiftKeyStateFlow);
-        // TODO: Read offset from the storage of the project and feed it to mouseEventObserver
     };
-
-    setOffset(offset: Point) {
-        this.mouseEventObserver?.forceUpdateOffset(offset);
-    }
 
     getDrawingInfo(): DrawingInfo {
         return this.drawingInfoController.drawingInfoFlow.value!;
     }
 
     setDrawingOffset(offsetPx: Point) {
-        this.drawingInfoController.setOffset(offsetPx);
+        this.mouseEventObserver?.forceUpdateOffset(offsetPx);
     }
 
     get drawingOffsetPointPxFlow(): Flow<Point> {

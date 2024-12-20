@@ -84,6 +84,7 @@ export class AppContext {
             new MonoBitmapManager(),
             this.workspace!,
             this.workspaceDao,
+            browserManager.rootIdFromUrl,
         );
         // TODO: Replicate from MonoSketchApplication
     }

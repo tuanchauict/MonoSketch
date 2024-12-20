@@ -6,6 +6,7 @@ import type { Workspace } from "$app/workspace";
 import { Flow, LifecycleOwner } from "$libs/flow";
 import type { Point, Direction } from "$libs/graphics-geo/point";
 import type { Rect } from "$libs/graphics-geo/rect";
+import { DEBUG_MODE } from "$mono/build_environment";
 import { MonoBoard } from "$mono/monobitmap/board";
 import type { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
 import { AddShape, RemoveShape } from "$mono/shape/command/shape-manager-commands";
@@ -17,18 +18,20 @@ import { type Command, ShapeManager } from "$mono/shape/shape-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import type { Group } from "$mono/shape/shape/group";
 import { type CommandEnvironment, EditingMode } from "$mono/state-manager/command-environment";
+import { StateHistoryManager } from "$mono/state-manager/state-history-manager";
 import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 
 /**
  * A class which connects components in the app.
  */
 export class MainStateManager {
-    private editingModeFlow: Flow<EditingMode> = new Flow(EditingMode.idle(null));
-    private commandEnvironment: CommandEnvironment;
+    private readonly editingModeFlow: Flow<EditingMode> = new Flow(EditingMode.idle(null));
+    private readonly commandEnvironment: CommandEnvironment;
 
     private workingParentGroup: Group;
 
     private readonly shapeSearcher: ShapeSearcher;
+    private readonly stateHistoryManager: StateHistoryManager;
 
     constructor(
         private readonly mainBoard: MonoBoard,
@@ -37,7 +40,12 @@ export class MainStateManager {
         private readonly bitmapManager: MonoBitmapManager,
         private readonly workspace: Workspace,
         private readonly workspaceDao: WorkspaceDao,
+        initialRootId: string,
     ) {
+        if (DEBUG_MODE) {
+            console.log(`Root ID: ${initialRootId}`);
+        }
+
         this.shapeSearcher = new ShapeSearcher(shapeManager, shape => bitmapManager.getBitmap(shape));
         this.commandEnvironment = new CommandEnvironmentImpl({
             mainStateManager: this,
@@ -45,14 +53,20 @@ export class MainStateManager {
             selectedShapeManager: this.selectedShapeManager,
             shapeSearcher: this.shapeSearcher,
             workspace: this.workspace,
+            workspaceDao: this.workspaceDao,
 
             getWorkingParentGroup: () => this.workingParentGroup,
             setWorkingParentGroup: (group: Group) => this.workingParentGroup = group,
+
+            replaceRoot: (newRoot: Group, newShapeConnector: ShapeConnector) => {
+                this.replaceRoot(newRoot, newShapeConnector);
+            },
         });
 
+        this.stateHistoryManager = new StateHistoryManager(this.commandEnvironment, this.workspace, this.workspaceDao);
+        this.stateHistoryManager.restoreState(initialRootId);
+
         this.workingParentGroup = shapeManager.root;
-        // Set the initial drawing offset of the workspace with the value from the persistent.
-        this.workspace.setDrawingOffset(this.workspaceDao.getObject(this.shapeManager.root.id).offset);
     }
 
     onStart(lifecycleOwner: LifecycleOwner): void {
@@ -62,6 +76,23 @@ export class MainStateManager {
         this.shapeManager.rootIdFlow.observe(lifecycleOwner, (rootId) => {
             this.workspace.setDrawingOffset(this.workspaceDao.getObject(rootId).offset);
         });
+
+        this.stateHistoryManager.observeStateChange(lifecycleOwner);
+    }
+
+    replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void {
+        const currentRoot = this.shapeManager.root;
+        if (currentRoot.id !== newRoot.id) {
+            this.workspaceDao.getObject(newRoot.id).lastModifiedTimestampMillis = Date.now();
+            this.workspace.setDrawingOffset(
+                this.workspaceDao.getObject(newRoot.id).offset,
+            );
+            this.stateHistoryManager.clear();
+        }
+
+        this.shapeManager.replaceRoot(newRoot, newShapeConnector);
+        this.workingParentGroup = this.shapeManager.root;
+        this.commandEnvironment.clearSelectedShapes();
     }
 }
 
@@ -71,10 +102,13 @@ interface DependencyManager {
     readonly selectedShapeManager: SelectedShapeManager;
     readonly shapeSearcher: ShapeSearcher;
     readonly workspace: Workspace;
+    readonly workspaceDao: WorkspaceDao;
 
     getWorkingParentGroup(): Group;
 
     setWorkingParentGroup(group: Group): void;
+
+    replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void;
 }
 
 class CommandEnvironmentImpl implements CommandEnvironment {
@@ -87,7 +121,6 @@ class CommandEnvironmentImpl implements CommandEnvironment {
     ) {
         this.shapeManager = dependencies.shapeManager;
     }
-
 
     get workingParentGroup(): Group {
         return this.dependencies.getWorkingParentGroup();
@@ -102,7 +135,7 @@ class CommandEnvironmentImpl implements CommandEnvironment {
     };
 
     replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void {
-        throw new Error("Method not implemented.");
+        this.dependencies.replaceRoot(newRoot, newShapeConnector);
     }
 
     enterEditingMode(): void {
