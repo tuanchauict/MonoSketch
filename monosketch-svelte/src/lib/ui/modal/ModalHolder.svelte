@@ -12,6 +12,8 @@ import type { RenameProjectModel } from './rename-project/model';
 import RenameProjectModal from './rename-project/RenameProjectModal.svelte';
 import type { CurrentProjectModel } from './menu/current-project/model';
 import type { Rect } from '$libs/graphics-geo/rect';
+import type { ExistingProjectModel } from "$ui/modal/existing-project/model";
+import ExistingProjectDialog from "$ui/modal/existing-project/ExistingProjectDialog.svelte";
 
 let mainDropDownTarget: Rect | null = null;
 let currentProjectDropDownModel: CurrentProjectModel | null = null;
@@ -19,6 +21,8 @@ let isProjectManagementModalVisible: boolean = false;
 let renamingProjectModel: RenameProjectModel | null = null;
 let tooltip: Tooltip | null = null;
 let shortcutModal: boolean = false;
+
+let existingProjectModel: ExistingProjectModel | null = null;
 
 const lifecycleOwner = new LifecycleOwner();
 onMount(() => {
@@ -46,6 +50,10 @@ onMount(() => {
 
     modalViewModel.keyboardShortcutVisibilityStateFlow.observe(lifecycleOwner, (value) => {
         shortcutModal = value;
+    });
+
+    modalViewModel.existingProjectFlow.observe(lifecycleOwner, (value) => {
+        existingProjectModel = value;
     });
 });
 
@@ -76,4 +84,8 @@ onDestroy(() => {
 
 {#if shortcutModal}
     <KeyboardShortcutModal />
+{/if}
+
+{#if existingProjectModel}
+    <ExistingProjectDialog model="{existingProjectModel}" />
 {/if}
