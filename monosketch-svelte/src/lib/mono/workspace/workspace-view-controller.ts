@@ -1,3 +1,4 @@
+import type { Workspace } from "$app/workspace";
 import { Point } from "$libs/graphics-geo/point";
 import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { AxisCanvasViewController } from '$mono/workspace/canvas/axis-canvas-view-controller';
@@ -19,7 +20,7 @@ import { MonoBoard } from '$mono/monobitmap/board/board';
 /**
  * The main controller of the workspace view.
  */
-export class WorkspaceViewController extends LifecycleOwner {
+export class WorkspaceViewController extends LifecycleOwner implements Workspace {
     private canvasViewController: CanvasViewController;
     private drawingInfoController: DrawingInfoController;
 
@@ -40,7 +41,7 @@ export class WorkspaceViewController extends LifecycleOwner {
         this.drawingInfoController.setFont(14);
 
         this.canvasViewController = new CanvasViewController(
-            container,
+            appContext.monoBoard,
             gridCanvas,
             boardCanvas,
             axisCanvas,
@@ -48,6 +49,7 @@ export class WorkspaceViewController extends LifecycleOwner {
             selectionCanvas,
             this.appContext.appUiStateManager,
         );
+        appContext.setWorkspace(this);
     }
 
     protected onStartInternal() {
@@ -113,7 +115,7 @@ class CanvasViewController {
     private readonly selectionCanvasViewController: SelectionCanvasViewController;
 
     constructor(
-        private container: HTMLDivElement,
+        monoBoard: MonoBoard,
         gridCanvas: HTMLCanvasElement,
         boardCanvas: HTMLCanvasElement,
         axisCanvas: HTMLCanvasElement,
@@ -125,7 +127,7 @@ class CanvasViewController {
         this.gridCanvasViewController = new GridCanvasViewController(gridCanvas, appUiStateManager);
         this.boardCanvasViewController = new BoardCanvasViewController(
             boardCanvas,
-            new MonoBoard(),
+            monoBoard,
             appUiStateManager,
         );
         this.interactionCanvasViewController = new InteractionCanvasViewController(

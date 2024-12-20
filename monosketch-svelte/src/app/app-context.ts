@@ -1,6 +1,10 @@
+import type { Workspace } from "$app/workspace";
 import { ActionManager } from "$mono/action-manager/action-manager";
 import { OneTimeAction } from "$mono/action-manager/one-time-actions";
+import { DEBUG_MODE } from "$mono/build_environment";
+import { MonoBoard } from "$mono/monobitmap/board";
 import { ShapeManager } from "$mono/shape/shape-manager";
+import { MainStateManager } from "$mono/state-manager/main-state-manager";
 import { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import { BrowserManager } from "$mono/window/browser-manager";
 import { LifecycleOwner } from 'lib/libs/flow';
@@ -11,12 +15,16 @@ import { AppUiStateManager } from '$mono/ui-state-manager/app-ui-state-manager';
  */
 export class AppContext {
     appLifecycleOwner = new LifecycleOwner();
-
     appUiStateManager = new AppUiStateManager(this.appLifecycleOwner);
 
+    monoBoard: MonoBoard = new MonoBoard();
     shapeManager = new ShapeManager();
 
     actionManager = new ActionManager(this.appLifecycleOwner);
+
+    // Workspace must be set before MainStateManager is initiated.
+    private workspace: Workspace | null = null;
+    private mainStateManager: MainStateManager | null = null;
 
     onStart = (): void => {
         this.appLifecycleOwner.onStart();
@@ -29,7 +37,24 @@ export class AppContext {
         );
     };
 
+    setWorkspace(workspace: Workspace) {
+        this.workspace = workspace;
+        this.init();
+    }
+
     private init() {
+        if (this.workspace === null) {
+            if (DEBUG_MODE) {
+                console.warn('Workspace is not set');
+            }
+            return;
+        }
+        if (this.mainStateManager !== null) {
+            if (DEBUG_MODE) {
+                console.warn('MainStateManager is already set');
+            }
+            return;
+        }
         this.actionManager.installDebugCommand();
 
         const browserManager = new BrowserManager((projectId: string) => {
