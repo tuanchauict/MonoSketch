@@ -25,7 +25,6 @@ import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
  * A class which connects components in the app.
  */
 export class MainStateManager {
-    private readonly editingModeFlow: Flow<EditingMode> = new Flow(EditingMode.idle(null));
     private readonly commandEnvironment: CommandEnvironment;
 
     private workingParentGroup: Group;
