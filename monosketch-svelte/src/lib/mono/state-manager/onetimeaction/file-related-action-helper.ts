@@ -2,7 +2,6 @@
  * Copyright (c) 2024, tuanchauict
  */
 
-import { TODO } from "$libs/todo";
 import type { ProjectActionType } from "$mono/action-manager/one-time-actions";
 import { Extra, MonoFile } from "$mono/file/mono-file";
 import { ShapeSerializationUtil } from "$mono/file/shape-serialization-util";
@@ -15,6 +14,7 @@ import { ExportShapesHelper } from "$mono/state-manager/export/export-shapes-hel
 import { FileMediator } from "$mono/state-manager/onetimeaction/file-mediator";
 import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import { DEFAULT_NAME } from "$mono/store-manager/dao/workspace-object-dao";
+import { modalViewModel } from "$ui/modal/viewmodel";
 
 /**
  * A helper class to handle file-related one-time actions in the application.
@@ -124,16 +124,16 @@ export class FileRelatedActionsHelper {
         const rootGroup = RootGroup(monoFile.root);
         const existingProject = this.workspaceDao.getObject(rootGroup.id);
         if (existingProject.rootGroup) {
-            showExistingProjectDialog(
-                existingProject.name,
-                existingProject.lastModifiedTimestampMillis,
-                () => {
+            modalViewModel.existingProjectFlow.value = {
+                projectName: existingProject.name,
+                lastEditedTimeMillis: existingProject.lastModifiedTimestampMillis,
+                onReplace: () => {
                     this.prepareAndApplyNewRoot(RootGroup(monoFile.root.copy({ isIdTemporary: true })), monoFile.extra);
                 },
-                () => {
+                onKeepBoth: () => {
                     this.prepareAndApplyNewRoot(rootGroup, monoFile.extra);
-                },
-            );
+                }
+            };
         } else {
             this.prepareAndApplyNewRoot(rootGroup, monoFile.extra);
         }
@@ -163,15 +163,4 @@ export class FileRelatedActionsHelper {
         const shapeConnector = new ShapeConnector();
         this.environment.replaceRoot(rootGroup, shapeConnector);
     }
-}
-
-function showExistingProjectDialog(
-    projectName: string,
-    lastModifiedTimestampMillis: number,
-    onReplace: () => void,
-    onMerge: () => void,
-) {
-    TODO("showExitingProjectDialog");
-    // TODO: Show dialog
-    console.log("Project already exists", projectName, lastModifiedTimestampMillis);
 }
