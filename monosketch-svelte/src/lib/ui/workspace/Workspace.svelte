@@ -6,6 +6,7 @@
     import TooltipTarget from "$ui/modal/tooltip/TooltipTarget.svelte";
     import { Direction } from "$ui/modal/tooltip/model";
     import { AXIS_X_HEIGHT, AXIS_Y_WIDTH } from "$mono/workspace/canvas/axis-canvas-view-controller";
+    import { Point } from "$libs/graphics-geo/point";
 
     let canvasContainer: HTMLDivElement;
     let drawingInfoCanvas: HTMLCanvasElement;
@@ -49,7 +50,7 @@
                    style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px;">
         <button tabindex="-1" class="jump"
                 style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px"
-                on:click={() => workspaceViewController.forceUpdateOffset()}></button>
+                on:click={() => workspaceViewController.setDrawingOffset(Point.ZERO)}></button>
     </TooltipTarget>
 </div>
 

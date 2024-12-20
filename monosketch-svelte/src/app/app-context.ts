@@ -1,6 +1,12 @@
+import type { Workspace } from "$app/workspace";
 import { ActionManager } from "$mono/action-manager/action-manager";
 import { OneTimeAction } from "$mono/action-manager/one-time-actions";
+import { DEBUG_MODE } from "$mono/build_environment";
+import { MonoBoard } from "$mono/monobitmap/board";
+import { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
+import { SelectedShapeManager } from "$mono/shape/selected-shape-manager";
 import { ShapeManager } from "$mono/shape/shape-manager";
+import { MainStateManager } from "$mono/state-manager/main-state-manager";
 import { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import { BrowserManager } from "$mono/window/browser-manager";
 import { LifecycleOwner } from 'lib/libs/flow';
@@ -11,12 +17,18 @@ import { AppUiStateManager } from '$mono/ui-state-manager/app-ui-state-manager';
  */
 export class AppContext {
     appLifecycleOwner = new LifecycleOwner();
-
     appUiStateManager = new AppUiStateManager(this.appLifecycleOwner);
 
+    monoBoard: MonoBoard = new MonoBoard();
     shapeManager = new ShapeManager();
 
     actionManager = new ActionManager(this.appLifecycleOwner);
+
+    workspaceDao: WorkspaceDao = WorkspaceDao.instance;
+
+    // Workspace must be set before MainStateManager is initiated.
+    private workspace: Workspace | null = null;
+    private mainStateManager: MainStateManager | null = null;
 
     onStart = (): void => {
         this.appLifecycleOwner.onStart();
@@ -27,10 +39,35 @@ export class AppContext {
         this.actionManager.observeKeyCommand(
             this.appUiStateManager.keyCommandFlow.map((keyCommand) => keyCommand.command),
         );
+
+        this.mainStateManager?.onStart(this.appLifecycleOwner);
     };
 
+    setWorkspace(workspace: Workspace) {
+        this.workspace = workspace;
+        this.init();
+
+        if (this.appLifecycleOwner.isActive) {
+            this.mainStateManager?.onStart(this.appLifecycleOwner);
+        }
+    }
+
     private init() {
+        if (this.workspace === null) {
+            if (DEBUG_MODE) {
+                console.warn('Workspace is not set');
+            }
+            return;
+        }
+        if (this.mainStateManager !== null) {
+            if (DEBUG_MODE) {
+                console.warn('MainStateManager is already set');
+            }
+            return;
+        }
         this.actionManager.installDebugCommand();
+
+        const selectedShapeManager = new SelectedShapeManager();
 
         const browserManager = new BrowserManager((projectId: string) => {
             this.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.SwitchProject(projectId));
@@ -40,6 +77,15 @@ export class AppContext {
             this.appLifecycleOwner,
             WorkspaceDao.instance);
 
+        this.mainStateManager = new MainStateManager(
+            this.monoBoard,
+            this.shapeManager,
+            selectedShapeManager,
+            new MonoBitmapManager(),
+            this.workspace!,
+            this.workspaceDao,
+            browserManager.rootIdFromUrl,
+        );
         // TODO: Replicate from MonoSketchApplication
     }
 }

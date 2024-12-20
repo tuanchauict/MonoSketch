@@ -21,7 +21,7 @@ export class MouseEventObserver {
     private mouseWheelDeltaY: number = 0.0;
 
     private drawingOffsetPointPxMutableFlow = new Flow<Point>(Point.ZERO);
-    readonly drawingOffsetPointPxFlow = this.drawingOffsetPointPxMutableFlow;
+    readonly drawingOffsetPointPxFlow = this.drawingOffsetPointPxMutableFlow.immutable();
 
     private mousePointerMutableFlow = new Flow<MousePointerInfo>(MousePointer.idle);
     readonly mousePointerFlow = this.mousePointerMutableFlow;
@@ -31,8 +31,7 @@ export class MouseEventObserver {
     constructor(
         lifecycleOwner: LifecycleOwner,
         container: HTMLElement,
-        drawingInfoFlow: Flow<DrawingInfo>,
-        shiftKeyStateFlow: Flow<boolean>,
+        private drawingInfoFlow: Flow<DrawingInfo>,
         private scrollModeFlow: Flow<ScrollMode>,
     ) {
         this.drawingInfo = drawingInfoFlow.value!;
@@ -41,13 +40,13 @@ export class MouseEventObserver {
         container.onmouseup = this.setMouseUpPointer;
         container.onmousemove = this.setMouseMovePointer;
         container.onwheel = this.setMouseWheel;
+    }
 
-        if (!lifecycleOwner.isActive) {
-            throw Error('LifecycleOwner is not active');
-        }
-        drawingInfoFlow.observe(lifecycleOwner, (drawingInfo) => {
+    observeEvents(lifecycleOwner: LifecycleOwner, shiftKeyStateFlow: Flow<boolean>): void {
+        this.drawingInfoFlow.observe(lifecycleOwner, (drawingInfo) => {
             this.drawingInfo = drawingInfo;
         });
+
         shiftKeyStateFlow.observe(lifecycleOwner, (isWithShiftKey) => {
             const currentValue = this.getCurrentMousePointer();
             if (currentValue.type !== MousePointerType.DRAG) {
