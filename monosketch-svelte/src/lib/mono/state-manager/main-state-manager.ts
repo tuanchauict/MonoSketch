@@ -41,6 +41,7 @@ export class MainStateManager {
             shapeManager: this.shapeManager,
             selectedShapeManager: this.selectedShapeManager,
             shapeSearcher: this.shapeSearcher,
+            workspace: this.workspace,
 
             getWorkingParentGroup: () => this.workingParentGroup,
             setWorkingParentGroup: (group: Group) => this.workingParentGroup = group,
@@ -55,6 +56,7 @@ interface DependencyManager {
     readonly shapeManager: ShapeManager;
     readonly selectedShapeManager: SelectedShapeManager;
     readonly shapeSearcher: ShapeSearcher;
+    readonly workspace: Workspace;
 
     getWorkingParentGroup(): Group;
 
@@ -181,18 +183,18 @@ class CommandEnvironmentImpl implements CommandEnvironment {
     }
 
     toXPx(column: number): number {
-        throw new Error("Method not implemented.");
+        return this.dependencies.workspace.getDrawingInfo().toXPx(column);
     }
 
     toYPx(row: number): number {
-        throw new Error("Method not implemented.");
+        return this.dependencies.workspace.getDrawingInfo().toYPx(row);
     }
 
     toWidthPx(width: number): number {
-        throw new Error("Method not implemented.");
+        return this.dependencies.workspace.getDrawingInfo().toWidthPx(width);
     }
 
     toHeightPx(height: number): number {
-        throw new Error("Method not implemented.");
+        return this.dependencies.workspace.getDrawingInfo().toHeightPx(height);
     }
 }

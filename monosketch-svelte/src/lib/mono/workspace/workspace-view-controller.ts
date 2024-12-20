@@ -79,7 +79,7 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         this.canvasViewController.fullyRedraw();
     }
 
-    private observeMouseInteractions = () => {
+    private observeMouseInteractions() {
         const shiftKeyStateFlow = this.appContext.appUiStateManager.keyCommandFlow.map(
             (keyCommand) => keyCommand.command === KeyCommandType.SHIFT_KEY,
         );
@@ -104,6 +104,10 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
 
     forceUpdateOffset() {
         this.mouseEventObserver?.forceUpdateOffset(Point.of(0, 0));
+    }
+
+    getDrawingInfo(): DrawingInfo {
+        return this.drawingInfoController.drawingInfoFlow.value!;
     }
 }
 
@@ -148,7 +152,7 @@ class CanvasViewController {
         this.selectionCanvasViewController.setDrawingInfo(drawInfo);
     }
 
-    fullyRedraw = () => {
+    fullyRedraw() {
         this.axisCanvasViewController.draw();
         this.gridCanvasViewController.draw();
         this.boardCanvasViewController.draw();
@@ -156,24 +160,25 @@ class CanvasViewController {
         this.selectionCanvasViewController.draw();
     };
 
-    drawInteractionBounds = (interactionBounds: InteractionBound[]) => {
+    drawInteractionBounds(interactionBounds: InteractionBound[]) {
         this.interactionCanvasViewController.setInteractionBounds(interactionBounds);
         this.interactionCanvasViewController.draw();
     };
 
-    drawSelectionBound = (selectionBound?: Rect) => {
+    drawSelectionBound(selectionBound?: Rect) {
         this.selectionCanvasViewController.setSelectingBound(selectionBound);
         this.selectionCanvasViewController.draw();
     };
 
-    getInteractionPoint = (pointPx: Point): InteractionPoint | null =>
-        this.interactionCanvasViewController.getInteractionPoint(pointPx);
+    getInteractionPoint(pointPx: Point): InteractionPoint | null {
+        return this.interactionCanvasViewController.getInteractionPoint(pointPx);
+    }
 
-    setMouseMoving = (isMouseMoving: boolean) => {
+    setMouseMoving(isMouseMoving: boolean) {
         this.interactionCanvasViewController.setMouseMoving(isMouseMoving);
     };
 
-    drawBoard = () => {
+    drawBoard() {
         this.boardCanvasViewController.draw();
         this.interactionCanvasViewController.draw();
         this.selectionCanvasViewController.draw();
