@@ -274,6 +274,8 @@ export class SerializableGroup extends AbstractSerializableShape {
         super();
     }
 
+    static EMPTY: SerializableGroup = new SerializableGroup();
+
     static create(
         {
             id,
