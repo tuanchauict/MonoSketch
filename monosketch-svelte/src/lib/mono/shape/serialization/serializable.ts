@@ -85,12 +85,13 @@ export function Jsonizable(constructor: Function) {
             // 1st: Check if the field has a serializer
             // 2nd: Check if the field has a toJson method
             // 3rd: Use the value directly
+            const field = instance[key];
             if (serializers[key]) {
-                json[serializedKey] = serializers[key].serialize(instance[key]);
-            } else if (instance[key].toJson) {
-                json[serializedKey] = instance[key].toJson();
+                json[serializedKey] = serializers[key].serialize(field);
+            } else if (field && field.toJson) {
+                json[serializedKey] = field.toJson();
             } else {
-                json[serializedKey] = instance[key];
+                json[serializedKey] = field;
             }
         }
         return json;
