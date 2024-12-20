@@ -6,6 +6,7 @@ import type { Workspace } from "$app/workspace";
 import { Flow, LifecycleOwner } from "$libs/flow";
 import type { Point, Direction } from "$libs/graphics-geo/point";
 import type { Rect } from "$libs/graphics-geo/rect";
+import type { ActionManager } from "$mono/action-manager/action-manager";
 import { DEBUG_MODE } from "$mono/build_environment";
 import { MonoBoard } from "$mono/monobitmap/board";
 import type { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
@@ -14,12 +15,15 @@ import type { ShapeConnector } from "$mono/shape/connector/shape-connector";
 import type { InteractionPoint } from "$mono/shape/interaction-bound";
 import { ShapeSearcher } from "$mono/shape/searcher/shape-searcher";
 import type { FocusingShape, SelectedShapeManager, ShapeFocusType } from "$mono/shape/selected-shape-manager";
+import type { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import { type Command, ShapeManager } from "$mono/shape/shape-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import type { Group } from "$mono/shape/shape/group";
 import { type CommandEnvironment, EditingMode } from "$mono/state-manager/command-environment";
+import { OneTimeActionHandler } from "$mono/state-manager/one-time-action-handler";
 import { StateHistoryManager } from "$mono/state-manager/state-history-manager";
 import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
+import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 
 /**
  * A class which connects components in the app.
@@ -32,6 +36,8 @@ export class MainStateManager {
     private readonly shapeSearcher: ShapeSearcher;
     private readonly stateHistoryManager: StateHistoryManager;
 
+    private readonly oneTimeActionHandler: OneTimeActionHandler;
+
     constructor(
         private readonly mainBoard: MonoBoard,
         private readonly shapeManager: ShapeManager,
@@ -39,6 +45,9 @@ export class MainStateManager {
         private readonly bitmapManager: MonoBitmapManager,
         private readonly workspace: Workspace,
         private readonly workspaceDao: WorkspaceDao,
+        private readonly actionManager: ActionManager,
+        shapeClipboardManager: ShapeClipboardManager,
+        appUiStateManager: AppUiStateManager,
         initialRootId: string,
     ) {
         if (DEBUG_MODE) {
@@ -66,6 +75,15 @@ export class MainStateManager {
         this.stateHistoryManager.restoreState(initialRootId);
 
         this.workingParentGroup = shapeManager.root;
+
+        this.oneTimeActionHandler = new OneTimeActionHandler(
+            this.commandEnvironment,
+            this.bitmapManager,
+            shapeClipboardManager,
+            this.stateHistoryManager,
+            appUiStateManager,
+            this.workspaceDao,
+        );
     }
 
     onStart(lifecycleOwner: LifecycleOwner): void {
@@ -77,6 +95,7 @@ export class MainStateManager {
         });
 
         this.stateHistoryManager.observeStateChange(lifecycleOwner);
+        this.oneTimeActionHandler.observe(lifecycleOwner, this.actionManager.oneTimeActionFlow);
     }
 
     replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void {

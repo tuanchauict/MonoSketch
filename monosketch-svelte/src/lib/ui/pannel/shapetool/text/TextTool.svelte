@@ -17,14 +17,18 @@
 
     function onHorizontalChange(type: TextHorizontalAlign) {
         horizontalAlign = type;
-        viewModel.update(OneTimeAction.TextAlignment({
-            newHorizontalAlign: horizontalAlign,
-            newVerticalAlign: verticalAlign
-        }));
+        notifyChange();
     }
 
     function onVerticalChange(type: TextVerticalAlign) {
         verticalAlign = type;
+        notifyChange();
+    }
+
+    function notifyChange() {
+        if (!verticalAlign || !horizontalAlign) {
+            return;
+        }
         viewModel.update(OneTimeAction.TextAlignment({
             newHorizontalAlign: horizontalAlign,
             newVerticalAlign: verticalAlign
