@@ -7,9 +7,11 @@ import { singleOrNull } from "$libs/sequence";
 import type { OneTimeActionType } from "$mono/action-manager/one-time-actions";
 import type { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
 import type { ChangeOrderType } from "$mono/shape/command/shape-manager-commands";
+import { MakeTextEditable, UpdateTextEditingMode } from "$mono/shape/command/text-commands";
 import { type TextHorizontalAlign, TextVerticalAlign } from "$mono/shape/extra/style";
 import type { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
+import { Text } from "$mono/shape/shape/text";
 import { ClipboardManager } from "$mono/state-manager/clipboard-manager";
 import type { CommandEnvironment } from "$mono/state-manager/command-environment";
 import { FileRelatedActionsHelper } from "$mono/state-manager/onetimeaction/file-related-action-helper";
@@ -20,7 +22,7 @@ import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-mana
 /**
  * A class to handle one time actions.
  */
-class OneTimeActionHandler {
+export class OneTimeActionHandler {
     private readonly fileRelatedActionsHelper: FileRelatedActionsHelper;
     private readonly clipboardManager: ClipboardManager;
 
@@ -56,10 +58,6 @@ class OneTimeActionHandler {
                 case "OpenShapes":
                     this.fileRelatedActionsHelper.handleProjectAction(action);
                     break;
-
-                    // case OneTimeActionType.AppSettingAction:
-                    //     appSettingActionHelper.handleAppSettingAction(it);
-                    //     break;
 
                 // ---------
                 case "CopyText":
@@ -158,11 +156,29 @@ class OneTimeActionHandler {
     }
 
     private deleteSelectedShapes() {
-        // TODO: Implement deleteSelectedShapes
+        const environment = this.environment;
+        for (const shape of environment.getSelectedShapes()) {
+            environment.removeShape(shape);
+            // TODO: Add removeConnectorsOfShape() to CommandEnvironment
+            environment.shapeManager.shapeConnector.removeShape(shape);
+        }
+        environment.clearSelectedShapes();
     }
 
     private editSelectedShape(shape: AbstractShape | null) {
-        // TODO: Implement editSelectedShape
+        if (shape instanceof Text) {
+            this.environment.enterEditingMode();
+            const oldText = shape.text;
+            this.environment.shapeManager.execute(new MakeTextEditable(shape));
+            this.environment.shapeManager.execute(new UpdateTextEditingMode(shape, true));
+
+            console.log("Edit text shape", oldText);
+            // TODO: Uncomment this code after implementing EditTextShapeHelper
+            // EditTextShapeHelper.showEditTextDialog(this.environment, shape, false, () => {
+            //     this.environment.shapeManager.execute(new UpdateTextEditingMode(shape, false));
+            //     this.environment.exitEditingMode(oldText !== shape.text);
+            // });
+        }
     }
 
     private setTextAlignment(newHorizontalAlign: TextHorizontalAlign, newVerticalAlign: TextVerticalAlign) {

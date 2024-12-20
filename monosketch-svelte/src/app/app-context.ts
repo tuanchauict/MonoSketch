@@ -5,6 +5,7 @@ import { DEBUG_MODE } from "$mono/build_environment";
 import { MonoBoard } from "$mono/monobitmap/board";
 import { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
 import { SelectedShapeManager } from "$mono/shape/selected-shape-manager";
+import { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import { ShapeManager } from "$mono/shape/shape-manager";
 import { MainStateManager } from "$mono/state-manager/main-state-manager";
 import { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
@@ -82,8 +83,11 @@ export class AppContext {
             this.shapeManager,
             selectedShapeManager,
             new MonoBitmapManager(),
-            this.workspace!,
+            this.workspace,
             this.workspaceDao,
+            this.actionManager,
+            new ShapeClipboardManager(),
+            this.appUiStateManager,
             browserManager.rootIdFromUrl,
         );
         // TODO: Replicate from MonoSketchApplication
