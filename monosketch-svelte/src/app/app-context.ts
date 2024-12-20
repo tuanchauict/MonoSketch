@@ -3,6 +3,8 @@ import { ActionManager } from "$mono/action-manager/action-manager";
 import { OneTimeAction } from "$mono/action-manager/one-time-actions";
 import { DEBUG_MODE } from "$mono/build_environment";
 import { MonoBoard } from "$mono/monobitmap/board";
+import { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
+import { SelectedShapeManager } from "$mono/shape/selected-shape-manager";
 import { ShapeManager } from "$mono/shape/shape-manager";
 import { MainStateManager } from "$mono/state-manager/main-state-manager";
 import { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
@@ -22,6 +24,8 @@ export class AppContext {
 
     actionManager = new ActionManager(this.appLifecycleOwner);
 
+    workspaceDao: WorkspaceDao = WorkspaceDao.instance;
+
     // Workspace must be set before MainStateManager is initiated.
     private workspace: Workspace | null = null;
     private mainStateManager: MainStateManager | null = null;
@@ -35,11 +39,17 @@ export class AppContext {
         this.actionManager.observeKeyCommand(
             this.appUiStateManager.keyCommandFlow.map((keyCommand) => keyCommand.command),
         );
+
+        this.mainStateManager?.onStart(this.appLifecycleOwner);
     };
 
     setWorkspace(workspace: Workspace) {
         this.workspace = workspace;
         this.init();
+
+        if (this.appLifecycleOwner.isActive) {
+            this.mainStateManager?.onStart(this.appLifecycleOwner);
+        }
     }
 
     private init() {
@@ -57,6 +67,8 @@ export class AppContext {
         }
         this.actionManager.installDebugCommand();
 
+        const selectedShapeManager = new SelectedShapeManager();
+
         const browserManager = new BrowserManager((projectId: string) => {
             this.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.SwitchProject(projectId));
         });
@@ -65,6 +77,14 @@ export class AppContext {
             this.appLifecycleOwner,
             WorkspaceDao.instance);
 
+        this.mainStateManager = new MainStateManager(
+            this.monoBoard,
+            this.shapeManager,
+            selectedShapeManager,
+            new MonoBitmapManager(),
+            this.workspace!,
+            this.workspaceDao,
+        );
         // TODO: Replicate from MonoSketchApplication
     }
 }

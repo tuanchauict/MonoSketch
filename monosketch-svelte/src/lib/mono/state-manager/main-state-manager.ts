@@ -11,12 +11,13 @@ import type { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-man
 import { AddShape, RemoveShape } from "$mono/shape/command/shape-manager-commands";
 import type { ShapeConnector } from "$mono/shape/connector/shape-connector";
 import type { InteractionPoint } from "$mono/shape/interaction-bound";
-import type { ShapeSearcher } from "$mono/shape/searcher/shape-searcher";
+import { ShapeSearcher } from "$mono/shape/searcher/shape-searcher";
 import type { FocusingShape, SelectedShapeManager, ShapeFocusType } from "$mono/shape/selected-shape-manager";
 import { type Command, ShapeManager } from "$mono/shape/shape-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import type { Group } from "$mono/shape/shape/group";
 import { type CommandEnvironment, EditingMode } from "$mono/state-manager/command-environment";
+import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 
 /**
  * A class which connects components in the app.
@@ -27,15 +28,17 @@ export class MainStateManager {
 
     private workingParentGroup: Group;
 
+    private readonly shapeSearcher: ShapeSearcher;
+
     constructor(
-        lifecycleOwner: LifecycleOwner,
         private readonly mainBoard: MonoBoard,
         private readonly shapeManager: ShapeManager,
         private readonly selectedShapeManager: SelectedShapeManager,
-        private readonly shapeSearcher: ShapeSearcher,
         private readonly bitmapManager: MonoBitmapManager,
         private readonly workspace: Workspace,
+        private readonly workspaceDao: WorkspaceDao,
     ) {
+        this.shapeSearcher = new ShapeSearcher(shapeManager, shape => bitmapManager.getBitmap(shape));
         this.commandEnvironment = new CommandEnvironmentImpl({
             mainStateManager: this,
             shapeManager: this.shapeManager,
@@ -48,6 +51,17 @@ export class MainStateManager {
         });
 
         this.workingParentGroup = shapeManager.root;
+        // Set the initial drawing offset of the workspace with the value from the persistent.
+        this.workspace.setDrawingOffset(this.workspaceDao.getObject(this.shapeManager.root.id).offset);
+    }
+
+    onStart(lifecycleOwner: LifecycleOwner): void {
+        this.workspace.drawingOffsetPointPxFlow.observe(lifecycleOwner, (offsetPointPx) => {
+            this.workspaceDao.getObject(this.shapeManager.root.id).offset = offsetPointPx;
+        });
+        this.shapeManager.rootIdFlow.observe(lifecycleOwner, (rootId) => {
+            this.workspace.setDrawingOffset(this.workspaceDao.getObject(rootId).offset);
+        });
     }
 }
 

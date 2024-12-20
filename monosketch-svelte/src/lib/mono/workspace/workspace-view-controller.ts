@@ -3,7 +3,7 @@ import { Point } from "$libs/graphics-geo/point";
 import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { AxisCanvasViewController } from '$mono/workspace/canvas/axis-canvas-view-controller';
 import { DrawingInfo, DrawingInfoController } from '$mono/workspace/drawing-info';
-import { LifecycleOwner } from '$libs/flow';
+import { Flow, LifecycleOwner } from '$libs/flow';
 import { WindowViewModel } from '$mono/window/window-viewmodel';
 import { GridCanvasViewController } from '$mono/workspace/canvas/grid-canvas-view-controller';
 import { InteractionCanvasViewController } from '$mono/workspace/canvas/interaction-canvas-view-controller';
@@ -24,7 +24,7 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
     private canvasViewController: CanvasViewController;
     private drawingInfoController: DrawingInfoController;
 
-    private mouseEventObserver: MouseEventObserver | null = null;
+    private mouseEventObserver: MouseEventObserver;
 
     constructor(
         private appContext: AppContext,
@@ -49,6 +49,14 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
             selectionCanvas,
             this.appContext.appUiStateManager,
         );
+
+        this.mouseEventObserver = new MouseEventObserver(
+            this,
+            this.container,
+            this.drawingInfoController.drawingInfoFlow,
+            this.appContext.appUiStateManager.scrollModeFlow,
+        );
+
         appContext.setWorkspace(this);
     }
 
@@ -80,34 +88,35 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
     }
 
     private observeMouseInteractions() {
-        const shiftKeyStateFlow = this.appContext.appUiStateManager.keyCommandFlow.map(
-            (keyCommand) => keyCommand.command === KeyCommandType.SHIFT_KEY,
-        );
-
-        const mouseEventObserver = new MouseEventObserver(
-            this,
-            this.container,
-            this.drawingInfoController.drawingInfoFlow,
-            shiftKeyStateFlow,
-            this.appContext.appUiStateManager.scrollModeFlow,
-        );
-        mouseEventObserver.mousePointerFlow.observe(this, (mousePointer) => {
+        this.mouseEventObserver.mousePointerFlow.observe(this, (mousePointer) => {
             this?.canvasViewController?.setMouseMoving(mousePointer.type === MousePointerType.DRAG);
         });
-        mouseEventObserver.drawingOffsetPointPxFlow.observe(
+        this.mouseEventObserver.drawingOffsetPointPxFlow.observe(
             this,
             this.drawingInfoController.setOffset,
         );
-        this.mouseEventObserver = mouseEventObserver;
+
+        const shiftKeyStateFlow = this.appContext.appUiStateManager.keyCommandFlow.map(
+            (keyCommand) => keyCommand.command === KeyCommandType.SHIFT_KEY,
+        );
+        this.mouseEventObserver.observeEvents(this, shiftKeyStateFlow);
         // TODO: Read offset from the storage of the project and feed it to mouseEventObserver
     };
 
-    forceUpdateOffset() {
-        this.mouseEventObserver?.forceUpdateOffset(Point.of(0, 0));
+    setOffset(offset: Point) {
+        this.mouseEventObserver?.forceUpdateOffset(offset);
     }
 
     getDrawingInfo(): DrawingInfo {
         return this.drawingInfoController.drawingInfoFlow.value!;
+    }
+
+    setDrawingOffset(offsetPx: Point) {
+        this.drawingInfoController.setOffset(offsetPx);
+    }
+
+    get drawingOffsetPointPxFlow(): Flow<Point> {
+        return this.mouseEventObserver.drawingOffsetPointPxFlow;
     }
 }
 
