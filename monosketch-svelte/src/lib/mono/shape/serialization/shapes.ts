@@ -280,6 +280,15 @@ export class SerializableGroup extends AbstractSerializableShape {
         super();
     }
 
+    copy({ isIdTemporary = this.isIdTemporary, }: { isIdTemporary: boolean; }): SerializableGroup {
+        return SerializableGroup.create({
+            id: this.id,
+            isIdTemporary,
+            versionCode: this.versionCode,
+            shapes: this.shapes,
+        });
+    }
+
     static EMPTY: SerializableGroup = new SerializableGroup();
 
     static create(
