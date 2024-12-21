@@ -6,11 +6,14 @@ import { Flow, LifecycleOwner } from "$libs/flow";
 import { singleOrNull } from "$libs/sequence";
 import type { OneTimeActionType } from "$mono/action-manager/one-time-actions";
 import type { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
-import type { ChangeOrderType } from "$mono/shape/command/shape-manager-commands";
+import { ChangeExtra } from "$mono/shape/command/general-shape-commands";
+import { ChangeOrder, type ChangeOrderType } from "$mono/shape/command/shape-manager-commands";
 import { MakeTextEditable, UpdateTextEditingMode } from "$mono/shape/command/text-commands";
-import { type TextHorizontalAlign, TextVerticalAlign } from "$mono/shape/extra/style";
+import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
+import { TextAlign, type TextHorizontalAlign, TextVerticalAlign } from "$mono/shape/extra/style";
 import type { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
+import type { Line } from "$mono/shape/shape/line";
 import { Text } from "$mono/shape/shape/text";
 import { ClipboardManager } from "$mono/state-manager/clipboard-manager";
 import type { CommandEnvironment } from "$mono/state-manager/command-environment";
@@ -182,7 +185,21 @@ export class OneTimeActionHandler {
     }
 
     private setTextAlignment(newHorizontalAlign: TextHorizontalAlign, newVerticalAlign: TextVerticalAlign) {
-
+        const textShape = this.singleSelectedShape() as Text | null;
+        if (textShape === null) {
+            ShapeExtraManager.setDefaultValues({
+                textHorizontalAlign: newHorizontalAlign,
+                textVerticalAlign: newVerticalAlign,
+            });
+            return;
+        }
+        const extra = textShape.extra;
+        const newTextAlign = new TextAlign(
+            newHorizontalAlign ?? extra.textAlign.horizontalAlign,
+            newVerticalAlign ?? extra.textAlign.verticalAlign,
+        );
+        const newExtra = extra.copy({ textAlign: newTextAlign });
+        this.environment.shapeManager.execute(new ChangeExtra(textShape, newExtra));
     }
 
     private moveSelectedShapes(offsetRow: number, offsetCol: number) {
@@ -222,14 +239,55 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedShapeStartAnchorExtra(isEnabled: boolean, newHeadId: string | null) {
-
+        const line = this.singleSelectedShape() as Line | null;
+        if (line === null) {
+            ShapeExtraManager.setDefaultValues({
+                isStartHeadAnchorCharEnabled: isEnabled,
+                startHeadAnchorCharId: newHeadId ?? undefined,
+            });
+            return;
+        }
+        const currentExtra = line.extra;
+        const newAnchor = ShapeExtraManager.getStartHeadAnchorChar(
+            newHeadId ?? undefined,
+            currentExtra.userSelectedEndAnchor,
+        );
+        const newExtra = currentExtra.copy({
+            isStartAnchorEnabled: isEnabled ?? currentExtra.isEndAnchorEnabled,
+            userSelectedStartAnchor: newAnchor,
+        });
+        this.environment.shapeManager.execute(new ChangeExtra(line, newExtra));
     }
 
     private setSelectedShapeEndAnchorExtra(isEnabled: boolean, newHeadId: string | null) {
-
+        const line = this.singleSelectedShape() as Line | null;
+        if (line === null) {
+            ShapeExtraManager.setDefaultValues({
+                isEndHeadAnchorCharEnabled: isEnabled,
+                endHeadAnchorCharId: newHeadId ?? undefined,
+            });
+            return;
+        }
+        const currentExtra = line.extra;
+        const newAnchor = ShapeExtraManager.getEndHeadAnchorChar(
+            newHeadId ?? undefined,
+            currentExtra.userSelectedEndAnchor,
+        );
+        const newExtra = currentExtra.copy({
+            isEndAnchorEnabled: isEnabled ?? currentExtra.isEndAnchorEnabled,
+            userSelectedEndAnchor: newAnchor,
+        });
+        this.environment.shapeManager.execute(new ChangeExtra(line, newExtra));
     }
 
     private changeShapeOrder(orderType: ChangeOrderType) {
+        const singleSelectedShape = this.singleSelectedShape();
+        if (singleSelectedShape !== null) {
+            this.environment.shapeManager.execute(new ChangeOrder(singleSelectedShape, orderType));
+        }
+    }
 
+    private singleSelectedShape(): AbstractShape | null {
+        return singleOrNull(this.environment.getSelectedShapes());
     }
 }
