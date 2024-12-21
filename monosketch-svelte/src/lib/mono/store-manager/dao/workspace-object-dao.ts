@@ -109,4 +109,4 @@ export class WorkspaceObjectDao {
     }
 }
 
-const DEFAULT_NAME = "Undefined";
+export const DEFAULT_NAME = "Undefined";

@@ -68,6 +68,8 @@ export class SerializableRectangle extends AbstractSerializableShape {
         super();
     }
 
+    static EMPTY: SerializableRectangle = new SerializableRectangle();
+
     static create(
         {
             id,
@@ -221,6 +223,7 @@ export class SerializableLine extends AbstractSerializableShape {
         return result;
     }
 }
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const ShapeArraySerializer = {
     serialize: (value: AbstractSerializableShape[]): any[] => {
@@ -229,27 +232,30 @@ export const ShapeArraySerializer = {
     },
 
     deserialize: (value: any[]): AbstractSerializableShape[] => {
-        return value.map((json) => {
-            const type = json["type"];
-            switch (type) {
-                case "R":
-                    // @ts-expect-error fromJson is attached by Jsonizable
-                    return SerializableRectangle.fromJson(json);
-                case "T":
-                    // @ts-expect-error fromJson is attached by Jsonizable
-                    return SerializableText.fromJson(json);
-                case "L":
-                    // @ts-expect-error fromJson is attached by Jsonizable
-                    return SerializableLine.fromJson(json);
-                case "G":
-                    // @ts-expect-error fromJson is attached by Jsonizable
-                    return SerializableGroup.fromJson(json);
-                default:
-                    throw new Error(`Unrecognizable type ${type}`);
-            }
-        });
+        return value.map(deserializeShape);
     },
 };
+
+export function deserializeShape(shape: any): AbstractSerializableShape {
+    const type = shape["type"];
+    switch (type) {
+        case "R":
+            // @ts-expect-error fromJson is attached by Jsonizable
+            return SerializableRectangle.fromJson(shape);
+        case "T":
+            // @ts-expect-error fromJson is attached by Jsonizable
+            return SerializableText.fromJson(shape);
+        case "L":
+            // @ts-expect-error fromJson is attached by Jsonizable
+            return SerializableLine.fromJson(shape);
+        case "G":
+            // @ts-expect-error fromJson is attached by Jsonizable
+            return SerializableGroup.fromJson(shape);
+        default:
+            throw new Error(`Unrecognizable type ${type}`);
+    }
+}
+
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
@@ -273,6 +279,17 @@ export class SerializableGroup extends AbstractSerializableShape {
     private constructor() {
         super();
     }
+
+    copy({ isIdTemporary = this.isIdTemporary, }: { isIdTemporary: boolean; }): SerializableGroup {
+        return SerializableGroup.create({
+            id: this.id,
+            isIdTemporary,
+            versionCode: this.versionCode,
+            shapes: this.shapes,
+        });
+    }
+
+    static EMPTY: SerializableGroup = new SerializableGroup();
 
     static create(
         {

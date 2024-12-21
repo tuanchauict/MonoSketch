@@ -26,6 +26,7 @@ button {
     cursor: pointer;
     overflow: hidden;
     color: var(--mainmenu-item-color);
+    background: none;
     white-space: nowrap;
     font-size: 14px;
     line-height: 21px;
