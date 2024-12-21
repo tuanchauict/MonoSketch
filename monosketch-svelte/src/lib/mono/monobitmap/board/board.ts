@@ -188,7 +188,7 @@ export class MonoBoard {
         const painterBoard = new PainterBoard(bound);
         Array.from(this.painterBoards.values()).forEach((pb) => painterBoard.fill(pb));
         return painterBoard.toString();
-    }
+    };
 }
 
 type BoardAddress = {
