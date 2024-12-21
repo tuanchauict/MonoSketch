@@ -17,10 +17,13 @@
 
 <Dialog title="Existing project"
         content="Do you want to open the existing project?"
+
         confirmText="Replace"
         onConfirm={() => model.onReplace()}
+
         cancelText="Keep both"
         onCancel={() => model.onKeepBoth()}
+
         onDismiss={handleDismiss}
 >
 

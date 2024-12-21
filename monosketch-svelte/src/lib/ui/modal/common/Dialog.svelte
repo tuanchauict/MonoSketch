@@ -21,42 +21,125 @@
         onCancel();
         onDismiss();
     }
-
 </script>
 
 <div class="modal" role="button" tabindex="-1"
      on:click="{onDismiss}"
      on:keydown="{(e) => e.key === 'Escape' && onDismiss()}"
 >
-    <div class="modal-content">
+    <div class="modal-content" role="button" tabindex="-1"
+         on:click|preventDefault|stopPropagation on:keydown>
         {#if title}
             <h2>{title}</h2>
         {/if}
         {#if content}
-            <p>{content}</p>
+            <p class:no-title={title.length === 0}>{content}</p>
         {/if}
-        <button on:click="{handleConfirm}">{confirmText}</button>
-        <button on:click="{handleCancel}">{cancelText}</button>
+        <div class="actions">
+            {#if cancelText}
+                <button class="secondary" on:click="{handleCancel}">{cancelText}</button>
+            {/if}
+            {#if confirmText}
+                <button class="primary" on:click="{handleConfirm}">{confirmText}</button>
+            {/if}
+        </div>
     </div>
 </div>
 
-<style>
+<style lang="scss">
+    @import "../../../style/variables";
+
     .modal {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--modal-background-bg);
     }
 
     .modal-content {
-        background-color: white;
-        padding: 20px;
+        background: var(--modal-container-bg);
+        border: 1px solid var(--modal-container-bg);
+        min-width: 350px;
+        max-width: 450px;
         border-radius: 5px;
-        text-align: center;
+        padding: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        font-family: $monospaceFont;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    h2 {
+        font-size: 19px;
+        margin: 4px 8px 8px;
+        color: var(--modal-title-color);
+    }
+
+    p {
+        font-size: 14px;
+        line-height: 1.4;
+        margin: 0 8px 8px;
+        color: var(--contentText);
+
+        &.no-title {
+            font-size: 16px;
+        }
+    }
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 16px;
+    }
+
+    button {
+        margin-left: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        user-select: none;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        padding: 4px 8px;
+        background: none;
+
+        &.primary {
+            background: var(--primary-action-color);
+            color: white;
+        }
+
+        &.secondary {
+            border-color: var(--secondary-action-border-color);
+            color: var(--secondary-action-text-color);
+        }
+
+        &:hover {
+            &.primary {
+                background: var(--primary-action-hover-color);
+            }
+
+            &.secondary {
+                background-color: var(--secondary-action-hover-color);
+                color: white;
+                border-color: transparent;
+            }
+        }
+
+        &:active {
+            &.primary {
+                background: var(--primary-action-pressed-color);
+            }
+
+            &.secondary {
+                background-color: var(--secondary-action-pressed-color);
+                color: white;
+                border-color: transparent;
+            }
+        }
     }
 </style>
