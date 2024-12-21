@@ -83,7 +83,7 @@ export enum KeyCommandType {
 
 export interface KeyCommand {
     command: KeyCommandType;
-    key: KeyMap[];
+    keys: KeyMap[];
     commandKeyState: MetaKeyState;
     shiftKeyState: MetaKeyState;
     isKeyEventPropagationAllowed: boolean;
