@@ -91,8 +91,8 @@ $secondaryActionThemeColors: (
 // Apply the style values
 :root {
   @include theme($themeMap);
-  @include theme($mainModalColors, ".modal");
-  @include theme($primaryActionThemeColors, ".modal .primary");
-  @include theme($primaryActionDangerThemeColors, ".modal .primary.danger");
-  @include theme($secondaryActionThemeColors, ".modal .secondary");
+  @include theme($mainModalColors, ".dialog-modal");
+  @include theme($primaryActionThemeColors, ".dialog-modal .primary");
+  @include theme($primaryActionDangerThemeColors, ".dialog-modal .primary.danger");
+  @include theme($secondaryActionThemeColors, ".dialog-modal .secondary");
 }

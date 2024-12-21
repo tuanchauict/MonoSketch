@@ -13,10 +13,14 @@
     function handleDismiss() {
         modalViewModel.existingProjectFlow.value = null;
     }
+
+    function createReadableDate(timestamp: number): string {
+        const date = new Date(timestamp);
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+    }
 </script>
 
 <Dialog title="Existing project"
-        content="Do you want to open the existing project?"
 
         confirmText="Replace"
         onConfirm={() => model.onReplace()}
@@ -26,5 +30,27 @@
 
         onDismiss={handleDismiss}
 >
-
+    <section>
+        <p>Same project id exists in the data store</p>
+        <ul>
+            <li>Project name: {model.projectName}</li>
+            <li>Last edit: {createReadableDate(model.lastEditedTimeMillis)}</li>
+        </ul>
+    </section>
 </Dialog>
+
+<style lang="scss">
+section {
+    margin: 0 8px;
+    color: var(--contentText);
+}
+
+ul {
+    margin: 0 4px;
+    padding: 8px;
+}
+
+li:last-child {
+    margin-top: 4px;
+}
+</style>

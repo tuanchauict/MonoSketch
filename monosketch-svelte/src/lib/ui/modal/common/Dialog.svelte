@@ -4,12 +4,15 @@
 
 <script lang="ts">
     export let title: string;
-    export let content: string;
+    export let content: string = "";
 
     export let confirmText: string = "Confirm";
     export let cancelText: string = "Cancel";
     export let onConfirm: () => void;
     export let onCancel: () => void;
+
+    export let dismissOnClickingOutside: boolean = true;
+
     export let onDismiss: () => void;
 
     function handleConfirm() {
@@ -21,11 +24,17 @@
         onCancel();
         onDismiss();
     }
+
+    function handleClickOutside(event: Event) {
+        if (dismissOnClickingOutside && event.target === event.currentTarget) {
+            onDismiss();
+        }
+    }
 </script>
 
-<div class="modal" role="button" tabindex="-1"
-     on:click="{onDismiss}"
-     on:keydown="{(e) => e.key === 'Escape' && onDismiss()}"
+<div class="dialog-modal" role="button" tabindex="-1"
+     on:click="{handleClickOutside}"
+     on:keydown="{(e) => e.key === 'Escape' && handleClickOutside(e)}"
 >
     <div class="modal-content" role="button" tabindex="-1"
          on:click|preventDefault|stopPropagation on:keydown>
@@ -34,6 +43,8 @@
         {/if}
         {#if content}
             <p class:no-title={title.length === 0}>{content}</p>
+        {:else }
+            <slot />
         {/if}
         <div class="actions">
             {#if cancelText}
@@ -49,7 +60,7 @@
 <style lang="scss">
     @import "../../../style/variables";
 
-    .modal {
+    .dialog-modal {
         position: fixed;
         top: 0;
         left: 0;
