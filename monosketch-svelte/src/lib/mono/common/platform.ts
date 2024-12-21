@@ -1,6 +1,5 @@
 export const isCommandKeySupported = (): boolean => {
-    // TODO: Resolve platform deprecated.
-    return navigator.platform.startsWith('Mac');
+    return navigator.userAgent.includes('Mac');
 };
 
 export const isCommandKeyOn = (e: KeyboardEvent): boolean => {
