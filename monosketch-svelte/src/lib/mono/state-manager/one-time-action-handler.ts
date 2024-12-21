@@ -235,7 +235,14 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedLineStrokeCornerExtra(isRoundedCorner: boolean) {
-
+        const line = this.singleSelectedShape() as Line | null;
+        if (line === null) {
+            ShapeExtraManager.setDefaultValues({ isLineStrokeRoundedCorner: isRoundedCorner });
+            return;
+        }
+        const currentExtra = line.extra;
+        const newExtra = currentExtra.copy({ isRoundedCorner: isRoundedCorner });
+        this.environment.shapeManager.execute(new ChangeExtra(line, newExtra));
     }
 
     private setSelectedShapeStartAnchorExtra(isEnabled: boolean, newHeadId: string | null) {
