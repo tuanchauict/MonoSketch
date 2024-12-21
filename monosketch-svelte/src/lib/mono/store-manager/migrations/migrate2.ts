@@ -1,3 +1,4 @@
+import { ThemeMode } from "$mono/ui-state-manager/states";
 import type { Migration } from './interface';
 import type { StoreManager } from '../store-manager';
 import { StoreKeys } from '../consts';
@@ -17,7 +18,7 @@ function migrateSettings(storageManager: StoreManager): void {
         storageManager,
         'local-theme-mode',
         StoreKeys.getPath(StoreKeys.SETTINGS, StoreKeys.THEME_MODE),
-        'DARK',
+        ThemeMode.LIGHT,
     );
 }
 
