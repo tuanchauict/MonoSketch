@@ -14,10 +14,14 @@ $: left = model.targetBounds.left;
 $: top = model.targetBounds.top + model.targetBounds.height + 6;
 
 function onDismiss() {
+    modalViewModel.renamingProjectModalStateFlow.value = null;
+}
+
+function onSubmit() {
     if (name) {
         projectDataViewModel.setProjectName(model.id, name);
     }
-    projectDataViewModel.setRenamingProject('');
+    projectDataViewModel.setRenamingProject(model.id, name);
     modalViewModel.renamingProjectModalStateFlow.value = null;
 }
 
@@ -29,6 +33,6 @@ onMount(() => {
 });
 </script>
 
-<NoBackgroundModal {onDismiss} {left} {top} width="{180}">
+<NoBackgroundModal {onDismiss} {onSubmit} {left} {top} width="{180}">
     <ProjectNameTextField bind:name />
 </NoBackgroundModal>

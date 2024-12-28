@@ -76,7 +76,7 @@ export const OneTimeAction = {
     Idle: { type: 'Idle' } as OneTimeActionType,
 
     ProjectAction: {
-        RenameCurrentProject: (newName: string) => ({ type: 'RenameCurrentProject', newName }),
+        RenameCurrentProject: (newName: string): OneTimeActionType => ({ type: 'RenameCurrentProject', newName }),
         NewProject: { type: 'NewProject' } as OneTimeActionType,
         ExportSelectedShapes: { type: 'ExportSelectedShapes' } as OneTimeActionType,
         SwitchProject: (projectId: string): OneTimeActionType => ({ type: 'SwitchProject', projectId }),

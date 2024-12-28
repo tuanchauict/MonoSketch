@@ -7,6 +7,7 @@ dismiss the modal correctly.
 <script lang="ts">
 import { onMount } from 'svelte';
 
+export let onSubmit: () => void = () => {};
 export let onDismiss: () => void;
 export let left: number = 0;
 export let top: number = 0;
@@ -27,6 +28,8 @@ onMount(() => {
 function onKeyDown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
         dismiss();
+    } else if (event.key === 'Enter') {
+        submit();
     }
 }
 
@@ -59,6 +62,12 @@ function onFocusOut() {
 
 function dismiss() {
     checkbox = null;
+    onDismiss();
+}
+
+function submit() {
+    checkbox = null;
+    onSubmit();
     onDismiss();
 }
 
