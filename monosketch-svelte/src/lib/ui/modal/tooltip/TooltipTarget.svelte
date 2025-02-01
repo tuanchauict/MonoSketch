@@ -3,6 +3,7 @@
     import { TooltipDirection } from './model';
     import { onDestroy } from 'svelte';
     import TooltipView from "$ui/modal/tooltip/TooltipView.svelte";
+    import type { Rect } from "$libs/graphics-geo/rect";
 
     export let text: string;
     export let direction: TooltipDirection = TooltipDirection.BOTTOM;
@@ -12,25 +13,23 @@
     export let style: string = '';
 
     let timeoutId: number;
-
-    let isTooltipVisible = false;
+    let targetBounds: Rect | undefined;
 
     let ref: HTMLDivElement;
-    $: targetBounds = ref ? TargetBounds.expandTargetBounds(
-            TargetBounds.fromElement(ref),
-            offsetHorizontal,
-            offsetVertical,
-    ) : undefined;
 
     function showTooltip() {
         timeoutId = setTimeout(() => {
-            isTooltipVisible = true;
+            targetBounds = ref ? TargetBounds.expandTargetBounds(
+                    TargetBounds.fromElement(ref),
+                    offsetHorizontal,
+                    offsetVertical,
+            ) : undefined;
         }, 600);
     }
 
     function hideTooltip() {
         clearTimeout(timeoutId);
-        isTooltipVisible = false;
+        targetBounds = undefined;
     }
 
     onDestroy(hideTooltip);
@@ -48,7 +47,7 @@
 >
     <slot/>
 </div>
-{#if isTooltipVisible && targetBounds}
+{#if targetBounds}
     <TooltipView {text} {direction} {targetBounds}/>
 {/if}
 <style lang="scss">
