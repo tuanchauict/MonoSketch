@@ -9,7 +9,6 @@ class ModalViewModel {
     mainDropDownMenuTargetFlow: Flow<Rect | null> = new Flow(null);
     currentProjectDropDownMenuTargetFlow: Flow<CurrentProjectModel | null> = new Flow(null);
 
-    projectManagementVisibilityStateFlow: Flow<boolean> = new Flow(false);
     renamingProjectModalStateFlow: Flow<RenameProjectModel | null> = new Flow(null);
 
     tooltipFlow: Flow<Tooltip | null> = new Flow(null);

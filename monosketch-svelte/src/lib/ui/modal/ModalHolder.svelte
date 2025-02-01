@@ -7,7 +7,6 @@ import type { Tooltip } from './tooltip/model';
 import TooltipView from './tooltip/TooltipView.svelte';
 import KeyboardShortcutModal from './keyboard-shortcut/KeyboardShortcutModal.svelte';
 import CurrentProjectDropDown from './menu/current-project/CurrentProjectDropDown.svelte';
-import RecentProjectDialog from './recent-project/RecentProjectDialog.svelte';
 import type { RenameProjectModel } from './rename-project/model';
 import RenameProjectModal from './rename-project/RenameProjectModal.svelte';
 import type { CurrentProjectModel } from './menu/current-project/model';
@@ -17,7 +16,6 @@ import ExistingProjectDialog from "$ui/modal/existing-project/ExistingProjectDia
 
 let mainDropDownTarget: Rect | null = null;
 let currentProjectDropDownModel: CurrentProjectModel | null = null;
-let isProjectManagementModalVisible: boolean = false;
 let renamingProjectModel: RenameProjectModel | null = null;
 let tooltip: Tooltip | null = null;
 let shortcutModal: boolean = false;
@@ -34,10 +32,6 @@ onMount(() => {
 
     modalViewModel.currentProjectDropDownMenuTargetFlow.observe(lifecycleOwner, (target) => {
         currentProjectDropDownModel = target;
-    });
-
-    modalViewModel.projectManagementVisibilityStateFlow.observe(lifecycleOwner, (value) => {
-        isProjectManagementModalVisible = value;
     });
 
     modalViewModel.renamingProjectModalStateFlow.observe(lifecycleOwner, (value) => {
@@ -68,10 +62,6 @@ onDestroy(() => {
 
 {#if currentProjectDropDownModel}
     <CurrentProjectDropDown model="{currentProjectDropDownModel}" />
-{/if}
-
-{#if isProjectManagementModalVisible}
-    <RecentProjectDialog />
 {/if}
 
 {#if renamingProjectModel}
