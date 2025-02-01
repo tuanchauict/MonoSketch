@@ -1,13 +1,13 @@
 <script lang="ts">
     import TooltipTarget from '$ui/modal/tooltip/TooltipTarget.svelte';
-    import { Direction } from '$ui/modal/tooltip/model';
+    import { TooltipDirection } from '$ui/modal/tooltip/model';
 
     export let title: string;
 export let iconPath: string;
 export let onClick: () => void;
 </script>
 
-<TooltipTarget text="{title}" direction="{Direction.TOP}">
+<TooltipTarget text="{title}" direction="{TooltipDirection.TOP}">
     <button on:click="{onClick}">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
             <path d="{iconPath}"></path>

@@ -2,7 +2,7 @@
 import { themeModeToContentMap } from '$ui/nav/right/model';
 import TooltipTarget from '$ui/modal/tooltip/TooltipTarget.svelte';
 import AppIcon from '$ui/nav/common/AppIcon.svelte';
-import { Direction } from '$ui/modal/tooltip/model';
+import { TooltipDirection } from '$ui/modal/tooltip/model';
 import { ThemeMode } from '$mono/ui-state-manager/states';
 
 export let themeMode: ThemeMode;
@@ -14,7 +14,7 @@ function changeTheme() {
 </script>
 
 <TooltipTarget
-    direction="{Direction.BOTTOM}"
+    direction="{TooltipDirection.BOTTOM}"
     text="{themeModeToContentMap[themeMode].title}"
     offsetVertical="{6.5}"
 >

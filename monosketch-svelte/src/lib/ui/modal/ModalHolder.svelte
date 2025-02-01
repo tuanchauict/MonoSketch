@@ -3,8 +3,6 @@ import MainDropDown from './menu/main-dropdown/MainDropDown.svelte';
 import { onDestroy, onMount } from 'svelte';
 import { modalViewModel } from './viewmodel';
 import { LifecycleOwner } from '$libs/flow';
-import type { Tooltip } from './tooltip/model';
-import TooltipView from './tooltip/TooltipView.svelte';
 import KeyboardShortcutModal from './keyboard-shortcut/KeyboardShortcutModal.svelte';
 import CurrentProjectDropDown from './menu/current-project/CurrentProjectDropDown.svelte';
 import type { RenameProjectModel } from './rename-project/model';
@@ -17,7 +15,6 @@ import ExistingProjectDialog from "$ui/modal/existing-project/ExistingProjectDia
 let mainDropDownTarget: Rect | null = null;
 let currentProjectDropDownModel: CurrentProjectModel | null = null;
 let renamingProjectModel: RenameProjectModel | null = null;
-let tooltip: Tooltip | null = null;
 let shortcutModal: boolean = false;
 
 let existingProjectModel: ExistingProjectModel | null = null;
@@ -36,10 +33,6 @@ onMount(() => {
 
     modalViewModel.renamingProjectModalStateFlow.observe(lifecycleOwner, (value) => {
         renamingProjectModel = value;
-    });
-
-    modalViewModel.tooltipFlow.observe(lifecycleOwner, (value) => {
-        tooltip = value;
     });
 
     modalViewModel.keyboardShortcutVisibilityStateFlow.observe(lifecycleOwner, (value) => {
@@ -66,10 +59,6 @@ onDestroy(() => {
 
 {#if renamingProjectModel}
     <RenameProjectModal model="{renamingProjectModel}" />
-{/if}
-
-{#if tooltip}
-    <TooltipView {tooltip} />
 {/if}
 
 {#if shortcutModal}

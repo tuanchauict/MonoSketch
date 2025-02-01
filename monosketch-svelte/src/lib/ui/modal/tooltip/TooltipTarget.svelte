@@ -1,59 +1,60 @@
 <script lang="ts">
-import { modalViewModel } from '../viewmodel';
-import { TargetBounds } from '../model';
-import { Direction } from './model';
-import { onDestroy } from 'svelte';
+    import { TargetBounds } from '../model';
+    import { TooltipDirection } from './model';
+    import { onDestroy } from 'svelte';
+    import TooltipView from "$ui/modal/tooltip/TooltipView.svelte";
 
-export let text: string;
-export let direction: Direction = Direction.BOTTOM;
-export let offsetHorizontal: number = 0;
-export let offsetVertical: number = 0;
+    export let text: string;
+    export let direction: TooltipDirection = TooltipDirection.BOTTOM;
+    export let offsetHorizontal: number = 0;
+    export let offsetVertical: number = 0;
 
-export let style: string = '';
+    export let style: string = '';
 
-let timeoutId: number;
+    let timeoutId: number;
 
-function showTooltip(e: MouseEvent) {
-    const target = e.currentTarget as HTMLElement;
-    const targetBounds = TargetBounds.expandTargetBounds(
-        TargetBounds.fromElement(target),
-        offsetHorizontal,
-        offsetVertical,
-    );
+    let isTooltipVisible = false;
 
-    timeoutId = setTimeout(() => {
-        modalViewModel.tooltipFlow.value = {
-            text,
-            direction,
-            targetBounds,
-        };
-    }, 600);
-}
+    let ref: HTMLDivElement;
+    $: targetBounds = ref ? TargetBounds.expandTargetBounds(
+            TargetBounds.fromElement(ref),
+            offsetHorizontal,
+            offsetVertical,
+    ) : undefined;
 
-function hideTooltip() {
-    clearTimeout(timeoutId);
-    modalViewModel.tooltipFlow.value = null;
-}
+    function showTooltip() {
+        timeoutId = setTimeout(() => {
+            isTooltipVisible = true;
+        }, 600);
+    }
 
-onDestroy(hideTooltip);
+    function hideTooltip() {
+        clearTimeout(timeoutId);
+        isTooltipVisible = false;
+    }
+
+    onDestroy(hideTooltip);
 </script>
 
 <div
-    role="button"
-    tabindex="-1"
-    style="{style}"
-    on:mouseover="{showTooltip}"
-    on:mouseout="{hideTooltip}"
-    on:focus="{() => {}}"
-    on:blur="{hideTooltip}"
+        role="button"
+        tabindex="-1"
+        style="{style}"
+        on:mouseover="{showTooltip}"
+        on:mouseout="{hideTooltip}"
+        on:focus="{() => {}}"
+        on:blur="{hideTooltip}"
+        bind:this="{ref}"
 >
     <slot/>
 </div>
-
+{#if isTooltipVisible && targetBounds}
+    <TooltipView {text} {direction} {targetBounds}/>
+{/if}
 <style lang="scss">
-div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 </style>

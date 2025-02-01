@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { ProjectAction } from '../model';
 import TooltipTarget from '../../tooltip/TooltipTarget.svelte';
-import { Direction } from '../../tooltip/model';
+import { TooltipDirection } from '../../tooltip/model';
 
 export let action: ProjectAction;
 export let onClick: (action: ProjectAction) => void;
@@ -14,7 +14,7 @@ function onActionClick() {
 
 <button on:click="{onActionClick}" on:keydown="{(e) => e.key === 'Enter' && onActionClick()}">
     {#if tooltip}
-        <TooltipTarget text="{tooltip}" direction="{Direction.TOP}" offsetVertical="{4}">
+        <TooltipTarget text="{tooltip}" direction="{TooltipDirection.TOP}" offsetVertical="{4}">
             <slot />
         </TooltipTarget>
     {:else}

@@ -4,7 +4,7 @@
     import type { AppContext } from '$app/app-context';
     import { APP_CONTEXT } from '$mono/common/constant';
     import TooltipTarget from "$ui/modal/tooltip/TooltipTarget.svelte";
-    import { Direction } from "$ui/modal/tooltip/model";
+    import { TooltipDirection } from "$ui/modal/tooltip/model";
     import { AXIS_X_HEIGHT, AXIS_Y_WIDTH } from "$mono/workspace/canvas/axis-canvas-view-controller";
     import { Point } from "$libs/graphics-geo/point";
 
@@ -46,7 +46,7 @@
     <canvas bind:this="{interactionCanvas}"></canvas>
     <canvas bind:this="{selectionCanvas}"></canvas>
 
-    <TooltipTarget text="Jump to (0, 0)" direction="{Direction.RIGHT}"
+    <TooltipTarget text="Jump to (0, 0)" direction="{TooltipDirection.RIGHT}"
                    style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px;">
         <button tabindex="-1" class="jump"
                 style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px"
