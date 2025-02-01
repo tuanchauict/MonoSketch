@@ -4,3 +4,9 @@ export interface CurrentProjectModel {
     id: string;
     targetBounds: Rect;
 }
+
+export enum CurrentProjectMenuAction {
+    RENAME,
+    SAVE_AS,
+    EXPORT,
+}
