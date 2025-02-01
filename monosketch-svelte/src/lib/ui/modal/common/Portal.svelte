@@ -3,10 +3,10 @@
   -->
 
 <script lang="ts">
-    export let parent: HTMLElement = document.querySelector('#modal')!!;
+    export let parent: string = '#modal';
 
     function portal(node: HTMLElement) {
-        parent.appendChild(node);
+        document.querySelector(parent)!!.appendChild(node);
 
         return {
             destroy() {
