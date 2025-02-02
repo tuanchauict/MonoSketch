@@ -6,7 +6,7 @@
     import WorkingProject from "$ui/nav/project/WorkingProject.svelte";
     import ProjectManagerButton from "$ui/nav/project/ProjectManagerButton.svelte";
     import ToolbarContainer from "$ui/nav/common/ToolbarContainer.svelte";
-    import { ProjectDataViewModel } from "$ui/modal/recent-project/project-data-viewmodel";
+    import { ProjectDataViewModel } from "$ui/nav/project/project-data-viewmodel";
     import { setContext } from "svelte";
     import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
     import { sampleProjectItems } from "$ui/modal/recent-project/model";

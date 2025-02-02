@@ -5,7 +5,7 @@
     import { getContext, onMount } from "svelte";
     import { LifecycleOwner } from "$libs/flow";
     import RenameProjectModal from "$ui/modal/rename-project/RenameProjectModal.svelte";
-    import type { ProjectDataViewModel } from "$ui/modal/recent-project/project-data-viewmodel";
+    import type { ProjectDataViewModel } from "$ui/nav/project/project-data-viewmodel";
     import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
 
     export let projectId: string;

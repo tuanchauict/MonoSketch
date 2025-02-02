@@ -5,7 +5,7 @@ import { getContext, onDestroy, onMount } from 'svelte';
 import { LifecycleOwner } from '$libs/flow';
 import { BrowserManager } from "$mono/window/browser-manager";
 import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
-import type { ProjectDataViewModel } from "$ui/modal/recent-project/project-data-viewmodel";
+import type { ProjectDataViewModel } from "$ui/nav/project/project-data-viewmodel";
 
 export let dismiss: () => void;
 

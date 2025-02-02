@@ -1,7 +1,7 @@
 <script lang="ts">
     import MenuItem from '../common/MenuItem.svelte';
     import SvgIcon from '../../../common/SvgIcon.svelte';
-    import { type ProjectDataViewModel } from '$ui/modal/recent-project/project-data-viewmodel';
+    import { type ProjectDataViewModel } from '$ui/nav/project/project-data-viewmodel';
     import { getContext } from "svelte";
     import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
 

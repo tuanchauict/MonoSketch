@@ -3,7 +3,7 @@ import NoBackgroundModal from '../common/NoBackgroundModal.svelte';
 import ProjectNameTextField from './ProjectNameTextField.svelte';
 import { getContext, onMount } from 'svelte';
 import type { Rect } from "$libs/graphics-geo/rect";
-import type { ProjectDataViewModel } from "$ui/modal/recent-project/project-data-viewmodel";
+import type { ProjectDataViewModel } from "$ui/nav/project/project-data-viewmodel";
 import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
 
 export let projectId: string;

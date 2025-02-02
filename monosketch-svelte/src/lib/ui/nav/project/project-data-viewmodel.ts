@@ -1,5 +1,9 @@
+/*
+ * Copyright (c) 2025, tuanchauict
+ */
+
 import { Flow } from '$libs/flow';
-import { type ProjectItem } from './model';
+import { type ProjectItem } from '../../modal/recent-project/model';
 import { UUID } from '$mono/uuid';
 
 export class ProjectDataViewModel {
