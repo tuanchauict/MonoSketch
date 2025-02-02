@@ -1,8 +1,12 @@
-import { Flow } from '../../../libs/flow';
-import { type ProjectItem, sampleProjectItems } from './model';
-import { UUID } from '../../../mono/uuid';
+/*
+ * Copyright (c) 2025, tuanchauict
+ */
 
-class ProjectDataViewModel {
+import { Flow } from '$libs/flow';
+import { type ProjectItem } from '../../modal/recent-project/model';
+import { UUID } from '$mono/uuid';
+
+export class ProjectDataViewModel {
     private _projectFlow: Flow<ProjectItem[]> = new Flow();
     projectFlow = this._projectFlow.immutable();
 
@@ -61,6 +65,3 @@ class ProjectDataViewModel {
         return this._projectFlow.value!.find((item) => item.id === id);
     }
 }
-
-export const projectDataViewModel = new ProjectDataViewModel();
-projectDataViewModel.setProjectList(sampleProjectItems);

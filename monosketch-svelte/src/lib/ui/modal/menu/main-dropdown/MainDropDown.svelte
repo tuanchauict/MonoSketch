@@ -10,6 +10,7 @@ import type { Rect } from '$libs/graphics-geo/rect';
 import { UiStatePayload } from "$mono/ui-state-manager/ui-state-payload";
 
 export let targetBounds: Rect;
+export let onDismiss: () => void;
 
 const appContext = getContext<AppContext>(APP_CONTEXT);
 
@@ -17,10 +18,6 @@ let isFormatPanelVisible = appContext.appUiStateManager.shapeFormatPanelVisibili
 $: toggleFormatPannelVisibilityText = isFormatPanelVisible
     ? 'Hide Format panel'
     : 'Show Format panel';
-
-function onDismiss() {
-    modalViewModel.mainDropDownMenuTargetFlow.value = null;
-}
 
 function onFontSizeChange(isIncreased: boolean) {
     appContext.appUiStateManager.updateUiState(UiStatePayload.ChangeFontSize(isIncreased));

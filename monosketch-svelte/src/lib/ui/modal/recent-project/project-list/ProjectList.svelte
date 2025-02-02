@@ -1,20 +1,22 @@
 <script lang="ts">
 import ProjectRow from './ProjectRow.svelte';
 import { ProjectAction, type ProjectItem } from '../model';
-import { onDestroy, onMount } from 'svelte';
+import { getContext, onDestroy, onMount } from 'svelte';
 import { LifecycleOwner } from '$libs/flow';
-import { projectDataViewModel } from '../viewmodel';
 import { BrowserManager } from "$mono/window/browser-manager";
+import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
+import type { ProjectDataViewModel } from "$ui/nav/project/project-data-viewmodel";
 
 export let dismiss: () => void;
 
-const lifecycleOwner = new LifecycleOwner();
+const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
+
 let projectList: ProjectItem[] = [];
 let openingId: string = '';
 let deletingId: string = '';
 
 onMount(() => {
-    lifecycleOwner.onStart();
+    const lifecycleOwner = LifecycleOwner.start();
 
     projectDataViewModel.projectFlow.observe(lifecycleOwner, (list) => {
         projectList = list;
@@ -27,12 +29,14 @@ onMount(() => {
     projectDataViewModel.deletingProjectIdFlow.observe(lifecycleOwner, (id) => {
         deletingId = id;
     });
+
+    return () => {
+        lifecycleOwner.onStop();
+    };
 });
 
 onDestroy(() => {
     projectDataViewModel.cancelDeletingProject();
-
-    lifecycleOwner.onStop();
 });
 
 function onAction(item: ProjectItem, action: ProjectAction) {

@@ -1,60 +1,55 @@
 <script lang="ts">
-import WorkingProjectView from './WorkingProjectView.svelte';
-import { projectDataViewModel } from '$ui/modal/recent-project/viewmodel';
-import { Flow, LifecycleOwner } from '$libs/flow';
-import { onDestroy, onMount } from 'svelte';
-import { modalViewModel } from '$ui/modal/viewmodel';
-import { TargetBounds } from '$ui/modal/model';
+    import WorkingProjectView from './WorkingProjectView.svelte';
+    import { Flow, LifecycleOwner } from '$libs/flow';
+    import { getContext, onMount } from 'svelte';
+    import type { ProjectDataViewModel } from "$ui/nav/project/project-data-viewmodel";
+    import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
 
-let projectId = '';
-let projectName = '';
-let node: HTMLElement;
+    const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
 
-const lifecycleOwner = new LifecycleOwner();
+    let projectId = '';
+    let projectName = '';
 
-// TODO: the current flow of showing the working project info and renaming project is not intuitive. Fix it!
+    // TODO: the current flow of showing the working project info and renaming project is not intuitive. Fix it!
 
-const openingProjectFlow = Flow.combine2(
-    projectDataViewModel.openingProjectIdFlow,
-    projectDataViewModel.renamingProjectIdFlow,
-    (id) => projectDataViewModel.getProject(id),
-);
+    const openingProjectFlow = Flow.combine2(
+        projectDataViewModel.openingProjectIdFlow,
+        projectDataViewModel.renamingProjectIdFlow,
+        (id) => projectDataViewModel.getProject(id),
+    );
 
-const renamingProjectFlow = projectDataViewModel.renamingProjectIdFlow.map((id) => {
-    const project = projectDataViewModel.getProject(id);
-    return project ? project : null;
-});
-
-onMount(() => {
-    lifecycleOwner.onStart();
-    openingProjectFlow.observe(lifecycleOwner, (project) => {
-        // TODO: make the flow mapping ignore undefined value as return type.
-        projectId = project!.id;
-        projectName = project!.name;
+    const renamingProjectFlow = projectDataViewModel.renamingProjectIdFlow.map((id) => {
+        const project = projectDataViewModel.getProject(id);
+        return project ? project : null;
     });
 
-    renamingProjectFlow.observe(lifecycleOwner, (project) => {
-        if (!project) {
-            return;
-        }
-        modalViewModel.renamingProjectModalStateFlow.value = {
-            id: project!.id,
-            targetBounds: TargetBounds.fromElement(node),
+    onMount(() => {
+        const lifecycleOwner = LifecycleOwner.start();
+        openingProjectFlow.observe(lifecycleOwner, (project) => {
+            // TODO: make the flow mapping ignore undefined value as return type.
+            projectId = project!.id;
+            projectName = project!.name;
+        });
+
+        renamingProjectFlow.observe(lifecycleOwner, (project) => {
+            if (!project) {
+                return;
+            }
+            projectDataViewModel.setRenamingProject(project.id);
+        });
+
+        return () => {
+            lifecycleOwner.onStop();
         };
     });
-});
-
-onDestroy(() => {
-    lifecycleOwner.onStop();
-});
 </script>
 
-<div bind:this="{node}">
-    <WorkingProjectView {projectId} {projectName} />
+<div>
+    <WorkingProjectView {projectId} {projectName}/>
 </div>
 
 <style lang="scss">
-div {
-    display: flex;
-}
+    div {
+        display: flex;
+    }
 </style>
