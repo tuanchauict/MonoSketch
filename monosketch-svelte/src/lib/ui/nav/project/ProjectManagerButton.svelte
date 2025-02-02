@@ -31,9 +31,3 @@
     <RecentProjectDialog onDismiss="{onDialogDismiss}"/>
 {/if}
 
-<style lang="scss">
-    div {
-        position: absolute;
-        inset: 0;
-    }
-</style>

@@ -20,9 +20,9 @@
     function showTooltip() {
         timeoutId = setTimeout(() => {
             targetBounds = ref ? TargetBounds.expandTargetBounds(
-                    TargetBounds.fromElement(ref),
-                    offsetHorizontal,
-                    offsetVertical,
+                TargetBounds.fromElement(ref),
+                offsetHorizontal,
+                offsetVertical,
             ) : undefined;
         }, 600);
     }

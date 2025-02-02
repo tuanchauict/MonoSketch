@@ -6,7 +6,7 @@
     export let parent: string = '#modal';
 
     function portal(node: HTMLElement) {
-        document.querySelector(parent)!!.appendChild(node);
+        document.querySelector(parent)!.appendChild(node);
 
         return {
             destroy() {

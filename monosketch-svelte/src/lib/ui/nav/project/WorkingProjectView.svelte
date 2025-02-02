@@ -15,7 +15,7 @@
 
     function showMenu() {
         targetBounds = button ? TargetBounds.fromElement(button) : undefined;
-        isDropDownMenuVisible = true
+        isDropDownMenuVisible = true;
     }
 
     function onMenuDismiss() {
