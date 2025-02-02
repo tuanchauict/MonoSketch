@@ -1,12 +1,15 @@
 <script lang="ts">
 import NoBackgroundModal from '../common/NoBackgroundModal.svelte';
 import ProjectNameTextField from './ProjectNameTextField.svelte';
-import { onMount } from 'svelte';
-import { projectDataViewModel } from '$ui/modal/recent-project/project-data-viewmodel';
+import { getContext, onMount } from 'svelte';
 import type { Rect } from "$libs/graphics-geo/rect";
+import type { ProjectDataViewModel } from "$ui/modal/recent-project/project-data-viewmodel";
+import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
 
 export let projectId: string;
 export let targetBounds: Rect;
+
+const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
 
 let name: string;
 

@@ -2,11 +2,15 @@
     import DropDown from '../common/DropDown.svelte';
     import MenuItem from '../common/MenuItem.svelte';
     import type { Rect } from "$libs/graphics-geo/rect";
-    import { projectDataViewModel } from '$ui/modal/recent-project/project-data-viewmodel';
+    import { getContext } from "svelte";
+    import type { ProjectDataViewModel } from "$ui/modal/recent-project/project-data-viewmodel";
+    import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
 
     export let projectId: string;
     export let targetBounds: Rect;
     export let onDismiss: () => void;
+
+    const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
 
     function rename() {
         projectDataViewModel.setRenamingProject(projectId);

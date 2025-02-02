@@ -2,13 +2,16 @@
     import SvgIcon from '../../common/SvgIcon.svelte';
     import { TargetBounds } from '$ui/modal/model';
     import CurrentProjectDropDown from "$ui/modal/menu/current-project/CurrentProjectDropDown.svelte";
-    import { onMount } from "svelte";
-    import { projectDataViewModel } from '$ui/modal/recent-project/project-data-viewmodel';
+    import { getContext, onMount } from "svelte";
     import { LifecycleOwner } from "$libs/flow";
     import RenameProjectModal from "$ui/modal/rename-project/RenameProjectModal.svelte";
+    import type { ProjectDataViewModel } from "$ui/modal/recent-project/project-data-viewmodel";
+    import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
 
     export let projectId: string;
     export let projectName: string;
+
+    const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
 
     let button: HTMLElement;
     let isDropDownMenuVisible = false;

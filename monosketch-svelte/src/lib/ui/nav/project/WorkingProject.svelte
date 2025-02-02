@@ -1,8 +1,11 @@
 <script lang="ts">
 import WorkingProjectView from './WorkingProjectView.svelte';
-import { projectDataViewModel } from '$ui/modal/recent-project/project-data-viewmodel';
 import { Flow, LifecycleOwner } from '$libs/flow';
-import { onMount } from 'svelte';
+import { getContext, onMount } from 'svelte';
+import type { ProjectDataViewModel } from "$ui/modal/recent-project/project-data-viewmodel";
+import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
+
+const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
 
 let projectId = '';
 let projectName = '';
