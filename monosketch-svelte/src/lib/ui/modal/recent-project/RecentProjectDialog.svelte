@@ -12,7 +12,7 @@
     let filterValue = '';
 </script>
 
-<NoBackgroundModal {onDismiss} {style}>
+<NoBackgroundModal {onDismiss} customStyle="{style}">
     <div class="container">
         <FilterInput bind:value="{filterValue}"/>
         <TopActions dismiss="{onDismiss}"/>

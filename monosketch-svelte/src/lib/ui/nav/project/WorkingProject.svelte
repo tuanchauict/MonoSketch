@@ -2,15 +2,13 @@
 import WorkingProjectView from './WorkingProjectView.svelte';
 import { projectDataViewModel } from '$ui/modal/recent-project/viewmodel';
 import { Flow, LifecycleOwner } from '$libs/flow';
-import { onDestroy, onMount } from 'svelte';
+import { onMount } from 'svelte';
 import { modalViewModel } from '$ui/modal/viewmodel';
 import { TargetBounds } from '$ui/modal/model';
 
 let projectId = '';
 let projectName = '';
 let node: HTMLElement;
-
-const lifecycleOwner = new LifecycleOwner();
 
 // TODO: the current flow of showing the working project info and renaming project is not intuitive. Fix it!
 
@@ -26,7 +24,7 @@ const renamingProjectFlow = projectDataViewModel.renamingProjectIdFlow.map((id) 
 });
 
 onMount(() => {
-    lifecycleOwner.onStart();
+    const lifecycleOwner = LifecycleOwner.start();
     openingProjectFlow.observe(lifecycleOwner, (project) => {
         // TODO: make the flow mapping ignore undefined value as return type.
         projectId = project!.id;
@@ -42,10 +40,10 @@ onMount(() => {
             targetBounds: TargetBounds.fromElement(node),
         };
     });
-});
 
-onDestroy(() => {
-    lifecycleOwner.onStop();
+    return () => {
+        lifecycleOwner.onStop();
+    };
 });
 </script>
 

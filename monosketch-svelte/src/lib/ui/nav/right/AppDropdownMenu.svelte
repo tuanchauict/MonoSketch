@@ -4,16 +4,24 @@
     import type { Rect } from "$libs/graphics-geo/rect";
     import MainDropDown from "$ui/modal/menu/main-dropdown/MainDropDown.svelte";
 
+    let targetView: HTMLElement | undefined;
     let targetBounds: Rect | undefined;
 
     function showDropdown(e: MouseEvent) {
-        targetBounds = TargetBounds.fromElement(e.currentTarget as HTMLElement);
+        targetView = e.currentTarget as HTMLElement;
+        updateTargetBounds();
     }
 
     function onDismiss() {
+        targetView = undefined;
         targetBounds = undefined;
     }
+
+    function updateTargetBounds() {
+        targetBounds = targetView ? TargetBounds.fromElement(targetView) : undefined;
+    }
 </script>
+<svelte:window on:resize="{updateTargetBounds}" />
 
 <AppIcon size="{20}" viewBoxSize="{20}" onClick="{showDropdown}">
     <path

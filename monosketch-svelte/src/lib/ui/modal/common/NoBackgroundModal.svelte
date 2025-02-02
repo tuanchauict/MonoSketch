@@ -13,12 +13,12 @@ dismiss the modal correctly.
     export let top: number = 0;
     export let width: number = 0;
     export let height: number | null = null;
-    export let style: string = '';
+    export let customStyle: string = '';
 
     let timeout: number | null = null;
     let checkbox: HTMLInputElement | null = null;
+    $: adjustedLeft = left + width > window.innerWidth ? window.innerWidth - width : left;
 
-    let displayedStyle = style ? style : createStyle();
     onMount(() => {
         if (checkbox) {
             checkbox.focus();
@@ -62,33 +62,40 @@ dismiss the modal correctly.
         checkbox = null;
         onDismiss();
     }
-
-    function createStyle() {
-        let adjustedLeft = left + width > window.innerWidth ? window.innerWidth - width : left;
-        return [
-            `left: ${adjustedLeft}px`,
-            `top: ${top}px`,
-            `width: ${width}px`,
-            height ? `height: ${height}px` : null,
-        ]
-                .filter(Boolean)
-                .join(';');
-    }
 </script>
 <Portal>
-    <div
-            class="modal"
-            role="button"
-            tabindex="-1"
-            on:click="{onClick}"
-            on:keydown="{onKeyDown}"
-            on:focusin="{onFocusIn}"
-            on:focusout="{onFocusOut}"
-            style="{displayedStyle}"
-    >
-        <input type="checkbox" bind:this="{checkbox}"/>
-        <slot/>
-    </div>
+    {#if customStyle}
+        <div
+                class="modal"
+                role="button"
+                tabindex="-1"
+                on:click="{onClick}"
+                on:keydown="{onKeyDown}"
+                on:focusin="{onFocusIn}"
+                on:focusout="{onFocusOut}"
+                style="{customStyle}"
+        >
+            <input type="checkbox" bind:this="{checkbox}"/>
+            <slot/>
+        </div>
+    {:else }
+        <div
+                class="modal"
+                role="button"
+                tabindex="-1"
+                on:click="{onClick}"
+                on:keydown="{onKeyDown}"
+                on:focusin="{onFocusIn}"
+                on:focusout="{onFocusOut}"
+                style:left="{adjustedLeft}px"
+                style:top="{top}px"
+                style:width="{width}px"
+                style:height="{height}px"
+        >
+            <input type="checkbox" bind:this="{checkbox}"/>
+            <slot/>
+        </div>
+    {/if}
 </Portal>
 <style>
     .modal {

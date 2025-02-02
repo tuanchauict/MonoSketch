@@ -9,11 +9,12 @@
 
     let button: HTMLElement;
     let isDropDownMenuVisible = false;
+    let isRenameProjectVisible = false;
 
-    // TODO: Update target bounds when the window is resized.
     $: targetBounds = button ? TargetBounds.fromElement(button) : undefined;
 
     function showMenu() {
+        targetBounds = button ? TargetBounds.fromElement(button) : undefined;
         isDropDownMenuVisible = true
     }
 
@@ -22,9 +23,24 @@
     }
 
     function onAction(action: CurrentProjectMenuAction) {
-        console.log(action);
+        switch (action) {
+            case CurrentProjectMenuAction.RENAME:
+                console.log('rename');
+                isRenameProjectVisible = true;
+                break;
+            case CurrentProjectMenuAction.SAVE_AS:
+                console.log('saveAs');
+                break;
+            case CurrentProjectMenuAction.EXPORT:
+                console.log('exportText');
+                break;
+        }
+    }
+    function updateTargetBounds() {
+        targetBounds = button ? TargetBounds.fromElement(button) : undefined;
     }
 </script>
+<svelte:window on:resize="{updateTargetBounds}" />
 
 <div class="container">
     <div role="button" tabindex="0" class="info-container"
