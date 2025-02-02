@@ -2,7 +2,7 @@
 import NoBackgroundModal from '../common/NoBackgroundModal.svelte';
 import ProjectNameTextField from './ProjectNameTextField.svelte';
 import { onMount } from 'svelte';
-import { projectDataViewModel } from '../recent-project/viewmodel';
+import { projectDataViewModel } from '$ui/modal/recent-project/project-data-viewmodel';
 import type { Rect } from "$libs/graphics-geo/rect";
 
 export let projectId: string;

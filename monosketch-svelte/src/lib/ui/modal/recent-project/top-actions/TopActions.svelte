@@ -1,7 +1,7 @@
 <script lang="ts">
 import MenuItem from '../common/MenuItem.svelte';
 import SvgIcon from '../../../common/SvgIcon.svelte';
-import { projectDataViewModel } from '../viewmodel';
+import { projectDataViewModel } from '$ui/modal/recent-project/project-data-viewmodel';
 
 export let dismiss: () => void;
 

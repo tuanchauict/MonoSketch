@@ -2,7 +2,7 @@
     import DropDown from '../common/DropDown.svelte';
     import MenuItem from '../common/MenuItem.svelte';
     import type { Rect } from "$libs/graphics-geo/rect";
-    import { projectDataViewModel } from "$ui/modal/recent-project/viewmodel";
+    import { projectDataViewModel } from '$ui/modal/recent-project/project-data-viewmodel';
 
     export let projectId: string;
     export let targetBounds: Rect;

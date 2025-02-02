@@ -1,6 +1,6 @@
 <script lang="ts">
 import WorkingProjectView from './WorkingProjectView.svelte';
-import { projectDataViewModel } from '$ui/modal/recent-project/viewmodel';
+import { projectDataViewModel } from '$ui/modal/recent-project/project-data-viewmodel';
 import { Flow, LifecycleOwner } from '$libs/flow';
 import { onMount } from 'svelte';
 
