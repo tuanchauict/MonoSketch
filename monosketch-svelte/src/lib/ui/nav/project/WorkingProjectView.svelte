@@ -2,7 +2,10 @@
     import SvgIcon from '../../common/SvgIcon.svelte';
     import { TargetBounds } from '$ui/modal/model';
     import CurrentProjectDropDown from "$ui/modal/menu/current-project/CurrentProjectDropDown.svelte";
-    import { CurrentProjectMenuAction } from "$ui/modal/menu/current-project/model";
+    import { onMount } from "svelte";
+    import { projectDataViewModel } from "$ui/modal/recent-project/viewmodel";
+    import { LifecycleOwner } from "$libs/flow";
+    import RenameProjectModal from "$ui/modal/rename-project/RenameProjectModal.svelte";
 
     export let projectId: string;
     export let projectName: string;
@@ -22,25 +25,22 @@
         isDropDownMenuVisible = false;
     }
 
-    function onAction(action: CurrentProjectMenuAction) {
-        switch (action) {
-            case CurrentProjectMenuAction.RENAME:
-                console.log('rename');
-                isRenameProjectVisible = true;
-                break;
-            case CurrentProjectMenuAction.SAVE_AS:
-                console.log('saveAs');
-                break;
-            case CurrentProjectMenuAction.EXPORT:
-                console.log('exportText');
-                break;
-        }
-    }
     function updateTargetBounds() {
         targetBounds = button ? TargetBounds.fromElement(button) : undefined;
     }
+
+    onMount(() => {
+        const lifecycleOwner = LifecycleOwner.start();
+        projectDataViewModel.renamingProjectIdFlow.observe(lifecycleOwner, (id) => {
+            isRenameProjectVisible = id !== '';
+        });
+
+        return () => {
+            lifecycleOwner.onStop();
+        };
+    });
 </script>
-<svelte:window on:resize="{updateTargetBounds}" />
+<svelte:window on:resize="{updateTargetBounds}"/>
 
 <div class="container">
     <div role="button" tabindex="0" class="info-container"
@@ -61,7 +61,11 @@
 </div>
 
 {#if isDropDownMenuVisible && targetBounds}
-    <CurrentProjectDropDown {projectId} {targetBounds} onDismiss="{onMenuDismiss}" {onAction}/>
+    <CurrentProjectDropDown {projectId} {targetBounds} onDismiss="{onMenuDismiss}"/>
+{/if}
+
+{#if isRenameProjectVisible && targetBounds}
+    <RenameProjectModal {projectId} {targetBounds}/>
 {/if}
 
 <style lang="scss">

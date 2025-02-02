@@ -1,31 +1,23 @@
 <script lang="ts">
     import DropDown from '../common/DropDown.svelte';
     import MenuItem from '../common/MenuItem.svelte';
-    import { modalViewModel } from '../../viewmodel';
     import type { Rect } from "$libs/graphics-geo/rect";
-    import { CurrentProjectMenuAction } from "$ui/modal/menu/current-project/model";
+    import { projectDataViewModel } from "$ui/modal/recent-project/viewmodel";
 
     export let projectId: string;
     export let targetBounds: Rect;
     export let onDismiss: () => void;
-    export let onAction: (action: CurrentProjectMenuAction) => void;
 
     function rename() {
-        modalViewModel.renamingProjectModalStateFlow.value = {
-            id: projectId,
-            targetBounds: targetBounds,
-        };
-        onAction(CurrentProjectMenuAction.RENAME);
+        projectDataViewModel.setRenamingProject(projectId);
     }
 
     function saveAs() {
         console.log('saveAs');
-        onAction(CurrentProjectMenuAction.SAVE_AS);
     }
 
     function exportText() {
         console.log('exportText');
-        onAction(CurrentProjectMenuAction.EXPORT);
     }
 </script>
 

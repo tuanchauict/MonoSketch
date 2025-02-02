@@ -3,12 +3,9 @@ import WorkingProjectView from './WorkingProjectView.svelte';
 import { projectDataViewModel } from '$ui/modal/recent-project/viewmodel';
 import { Flow, LifecycleOwner } from '$libs/flow';
 import { onMount } from 'svelte';
-import { modalViewModel } from '$ui/modal/viewmodel';
-import { TargetBounds } from '$ui/modal/model';
 
 let projectId = '';
 let projectName = '';
-let node: HTMLElement;
 
 // TODO: the current flow of showing the working project info and renaming project is not intuitive. Fix it!
 
@@ -35,10 +32,7 @@ onMount(() => {
         if (!project) {
             return;
         }
-        modalViewModel.renamingProjectModalStateFlow.value = {
-            id: project!.id,
-            targetBounds: TargetBounds.fromElement(node),
-        };
+        projectDataViewModel.setRenamingProject(project.id);
     });
 
     return () => {
@@ -47,7 +41,7 @@ onMount(() => {
 });
 </script>
 
-<div bind:this="{node}">
+<div>
     <WorkingProjectView {projectId} {projectName} />
 </div>
 

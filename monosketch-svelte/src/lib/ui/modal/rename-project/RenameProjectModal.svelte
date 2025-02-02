@@ -1,34 +1,34 @@
 <script lang="ts">
-import type { RenameProjectModel } from './model';
 import NoBackgroundModal from '../common/NoBackgroundModal.svelte';
-import { modalViewModel } from '../viewmodel';
 import ProjectNameTextField from './ProjectNameTextField.svelte';
 import { onMount } from 'svelte';
 import { projectDataViewModel } from '../recent-project/viewmodel';
+import type { Rect } from "$libs/graphics-geo/rect";
 
-export let model: RenameProjectModel;
+export let projectId: string;
+export let targetBounds: Rect;
 
 let name: string;
 
-$: left = model.targetBounds.left;
-$: top = model.targetBounds.top + model.targetBounds.height + 6;
+$: left = targetBounds.left;
+$: top = targetBounds.top + targetBounds.height + 6;
 
-function onDismiss() {
+function onDone() {
     if (name) {
-        projectDataViewModel.setProjectName(model.id, name);
+        projectDataViewModel.setProjectName(projectId, name);
     }
+    // Reset the renaming project id to empty string. This will close the modal.
     projectDataViewModel.setRenamingProject('');
-    modalViewModel.renamingProjectModalStateFlow.value = null;
 }
 
 onMount(() => {
-    const project = projectDataViewModel.getProject(model.id);
+    const project = projectDataViewModel.getProject(projectId);
     if (project) {
         name = project.name;
     }
 });
 </script>
 
-<NoBackgroundModal {onDismiss} {left} {top} width="{180}">
+<NoBackgroundModal onDismiss="{onDone}" {left} {top} width="{180}">
     <ProjectNameTextField bind:name />
 </NoBackgroundModal>

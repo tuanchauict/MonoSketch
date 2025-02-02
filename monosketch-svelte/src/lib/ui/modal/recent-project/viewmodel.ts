@@ -1,6 +1,6 @@
-import { Flow } from '../../../libs/flow';
+import { Flow } from '$libs/flow';
 import { type ProjectItem, sampleProjectItems } from './model';
-import { UUID } from '../../../mono/uuid';
+import { UUID } from '$mono/uuid';
 
 class ProjectDataViewModel {
     private _projectFlow: Flow<ProjectItem[]> = new Flow();
