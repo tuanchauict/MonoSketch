@@ -13,9 +13,9 @@
     // TODO: the current flow of showing the working project info and renaming project is not intuitive. Fix it!
 
     const openingProjectFlow = Flow.combine2(
-            projectDataViewModel.openingProjectIdFlow,
-            projectDataViewModel.renamingProjectIdFlow,
-            (id) => projectDataViewModel.getProject(id),
+        projectDataViewModel.openingProjectIdFlow,
+        projectDataViewModel.renamingProjectIdFlow,
+        (id) => projectDataViewModel.getProject(id),
     );
 
     const renamingProjectFlow = projectDataViewModel.renamingProjectIdFlow.map((id) => {
