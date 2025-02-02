@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getContext, onDestroy, onMount } from 'svelte';
+import { getContext, onMount } from 'svelte';
 import { APP_CONTEXT } from '$mono/common/constant';
 import { AppContext } from '$app/app-context';
 import { LifecycleOwner } from 'lib/libs/flow';
@@ -10,18 +10,17 @@ import { UiStatePayload } from "$mono/ui-state-manager/ui-state-payload";
 let themeMode: ThemeMode;
 
 const appContext = getContext<AppContext>(APP_CONTEXT);
-const lifecycleOwner = new LifecycleOwner();
 
 onMount(() => {
-    lifecycleOwner.onStart();
+    const lifecycleOwner = LifecycleOwner.start();
 
     appContext.appUiStateManager.themeModeFlow.observe(lifecycleOwner, (mode) => {
         themeMode = mode;
     });
-});
 
-onDestroy(() => {
-    lifecycleOwner.onStop();
+    return () => {
+        lifecycleOwner.onStop();
+    };
 });
 
 function updateTheme(mode: ThemeMode) {

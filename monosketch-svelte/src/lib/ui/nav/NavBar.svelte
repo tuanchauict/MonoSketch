@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import ToolbarContainer from './common/ToolbarContainer.svelte';
     import ScrollModeButton from './right/ScrollModeButton.svelte';
     import AppDropdownMenu from './right/AppDropdownMenu.svelte';
