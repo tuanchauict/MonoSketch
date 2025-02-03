@@ -25,7 +25,9 @@ export class ShapeManager {
     private rootInner: Group = RootGroup(null);
     private allShapeMap: Map<string | null, AbstractShape> = new Map([[this.rootInner.id, this.rootInner]]);
 
-    private rootIdMutableFlow: Flow<string> = new Flow(this.rootInner.id);
+    // The initial rootInner is a default root, means the app is not ready.
+    // The rootId should be undefined until `replaceRoot` is called.
+    private rootIdMutableFlow: Flow<string> = new Flow();
     public readonly rootIdFlow: Flow<string> = this.rootIdMutableFlow.immutable();
 
     public shapeConnectorInner: ShapeConnector = new ShapeConnector();
@@ -38,7 +40,6 @@ export class ShapeManager {
     public readonly versionFlow: Flow<number> = this.versionMutableFlow.immutable();
 
     constructor() {
-        this.replaceRoot(this.rootInner, this.shapeConnectorInner);
     }
 
     get root(): Group {
