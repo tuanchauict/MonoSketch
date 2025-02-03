@@ -30,7 +30,7 @@ export class StateHistoryManager {
     }
 
     /**
-     * Restores and starts observing the state change of the object with [rootId].
+     * Restores of the object with [rootId].
      * If [rootId] is empty, the last opened object is used. In case of there is no objects in the
      * database, a new ID is generated with [UUID.generate].
      *
@@ -39,7 +39,6 @@ export class StateHistoryManager {
      */
     restoreState(rootId: string) {
         const objectDao = this.getObjectDaoById(rootId);
-
         this.restoreShapes(objectDao);
         this.workspace.setDrawingOffset(objectDao.offset);
     }

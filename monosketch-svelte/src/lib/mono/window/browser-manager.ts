@@ -1,5 +1,4 @@
 import { Flow, LifecycleOwner } from "$libs/flow";
-import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 
 /**
  * A class for managing the states related to the browser such as the title, address bar, etc.
@@ -37,14 +36,7 @@ export class BrowserManager {
     startObserveStateChange(
         workingProjectIdFlow: Flow<string>,
         lifecycleOwner: LifecycleOwner,
-        workspaceDao: WorkspaceDao,
     ): void {
-        // Observe changes to the project ID and update the document title
-        workingProjectIdFlow.observe(lifecycleOwner, projectId => {
-            const project = workspaceDao.getObject(projectId);
-            document.title = `${project.name} - MonoSketch`;
-        });
-
         // Observe distinct changes to the project ID and update the URL
         workingProjectIdFlow.distinctUntilChanged().observe(lifecycleOwner, projectId => {
             if (projectId === this.rootIdFromUrl || this.willChangedByUrlPopStateEvent) {
@@ -56,6 +48,11 @@ export class BrowserManager {
             const newUrl = `${window.location.origin}${window.location.pathname}?${searchParams}`;
             window.history.pushState({ path: newUrl }, "", newUrl);
         });
+    }
+
+    updateAppTitle(projectName: string) {
+        // Update the document title with the current project name
+        document.title = `${projectName} - MonoSketch`;
     }
 
     // Static property for the URL parameter key

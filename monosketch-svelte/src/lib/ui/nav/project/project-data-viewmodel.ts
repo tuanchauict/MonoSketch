@@ -11,13 +11,18 @@ export class ProjectDataViewModel {
     private _projectFlow: Flow<ProjectItem[]> = new Flow();
     projectFlow = this._projectFlow.immutable();
 
-    openingProjectIdFlow: Flow<string>;
-    deletingProjectIdFlow: Flow<string> = new Flow('');
     renamingProjectIdFlow: Flow<string> = new Flow('');
+    openingProjectFlow: Flow<ProjectItem>;
+    deletingProjectIdFlow: Flow<string> = new Flow('');
+
 
     constructor(private appContext: AppContext) {
         this.updateProjectList();
-        this.openingProjectIdFlow = appContext.shapeManager.rootIdFlow;
+        this.openingProjectFlow = Flow.combine2(
+            appContext.shapeManager.rootIdFlow,
+            this.renamingProjectIdFlow,
+            (id) => this.getProject(id),
+        );
     }
 
     updateProjectList() {
@@ -40,7 +45,8 @@ export class ProjectDataViewModel {
     }
 
     openProject(id: string) {
-        this.openingProjectIdFlow.value = id;
+        // TODO: notify changing project with id
+        console.log('Open project with id:', id);
     }
 
     confirmDeletingProject(id: string) {

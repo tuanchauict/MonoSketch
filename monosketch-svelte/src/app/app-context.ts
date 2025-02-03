@@ -25,6 +25,10 @@ export class AppContext {
 
     actionManager = new ActionManager(this.appLifecycleOwner);
 
+    browserManager = new BrowserManager((projectId: string) => {
+        this.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.SwitchProject(projectId));
+    });
+
     workspaceDao: WorkspaceDao = WorkspaceDao.instance;
 
     // Workspace must be set before MainStateManager is initiated.
@@ -42,6 +46,7 @@ export class AppContext {
         );
 
         this.mainStateManager?.onStart(this.appLifecycleOwner);
+        this.browserManager.startObserveStateChange(this.shapeManager.rootIdFlow, this.appLifecycleOwner,);
     };
 
     setWorkspace(workspace: Workspace) {
@@ -68,27 +73,17 @@ export class AppContext {
         }
         this.actionManager.installDebugCommand();
 
-        const selectedShapeManager = new SelectedShapeManager();
-
-        const browserManager = new BrowserManager((projectId: string) => {
-            this.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.SwitchProject(projectId));
-        });
-        browserManager.startObserveStateChange(
-            this.shapeManager.rootIdFlow,
-            this.appLifecycleOwner,
-            WorkspaceDao.instance);
-
         this.mainStateManager = new MainStateManager(
             this.monoBoard,
             this.shapeManager,
-            selectedShapeManager,
+            new SelectedShapeManager(),
             new MonoBitmapManager(),
             this.workspace,
             this.workspaceDao,
             this.actionManager,
             new ShapeClipboardManager(),
             this.appUiStateManager,
-            browserManager.rootIdFromUrl,
+            this.browserManager.rootIdFromUrl,
         );
         // TODO: Replicate from MonoSketchApplication
     }
