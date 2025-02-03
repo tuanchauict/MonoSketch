@@ -74,6 +74,6 @@ export class ProjectDataViewModel {
         return {
             id,
             name: objectDao.name,
-        }
+        };
     }
 }
