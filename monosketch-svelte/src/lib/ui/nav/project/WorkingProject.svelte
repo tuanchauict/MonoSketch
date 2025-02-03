@@ -18,24 +18,13 @@
         (id) => projectDataViewModel.getProject(id),
     );
 
-    const renamingProjectFlow = projectDataViewModel.renamingProjectIdFlow.map((id) => {
-        const project = projectDataViewModel.getProject(id);
-        return project ? project : null;
-    });
-
     onMount(() => {
         const lifecycleOwner = LifecycleOwner.start();
         openingProjectFlow.observe(lifecycleOwner, (project) => {
+            console.log('project', project);
             // TODO: make the flow mapping ignore undefined value as return type.
             projectId = project!.id;
             projectName = project!.name;
-        });
-
-        renamingProjectFlow.observe(lifecycleOwner, (project) => {
-            if (!project) {
-                return;
-            }
-            projectDataViewModel.setRenamingProject(project.id);
         });
 
         return () => {

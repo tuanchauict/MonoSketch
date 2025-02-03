@@ -11,7 +11,7 @@ export const StoreKeys = {
     FONT_SIZE: 'font-size',
 
     WORKSPACE: 'workspace',
-    LAST_OPEN: 'last-open',
+    LAST_OPEN: 'last-open', // deprecated
 
     OBJECT_NAME: 'name',
     OBJECT_CONTENT: 'content',

@@ -1,4 +1,4 @@
-import { StorageDocument } from "$mono/store-manager";
+import { StorageDocument, StoreKeys } from "$mono/store-manager";
 import { WorkspaceObjectDao } from "$mono/store-manager/dao/workspace-object-dao";
 
 /**
@@ -13,16 +13,22 @@ export class WorkspaceDao {
     private constructor(workspaceDocument: StorageDocument) {
         this.workspaceDocument = workspaceDocument;
         this.objectDaos = new Map<string, WorkspaceObjectDao>();
+
+        workspaceDocument.setObserver(StoreKeys.LAST_OPEN, {
+            onChange: (key, oldValue, newValue) => {
+                console.log(`Last opened object changed: ${oldValue} -> ${newValue}`);
+            },
+        });
     }
 
     // Accessor property for lastOpenedObjectId
     get lastOpenedObjectId(): string | null {
-        return this.workspaceDocument.get(WorkspaceDao.LAST_OPEN);
+        return this.workspaceDocument.get(StoreKeys.LAST_OPEN);
     }
 
     set lastOpenedObjectId(value: string | null) {
         if (value !== null) {
-            this.workspaceDocument.set(WorkspaceDao.LAST_OPEN, value);
+            this.workspaceDocument.set(StoreKeys.LAST_OPEN, value);
         }
     }
 
@@ -46,24 +52,18 @@ export class WorkspaceDao {
     // Gets list of all objects in the storage, ordered by last opened time desc.
     getObjects(): WorkspaceObjectDao[] {
         return Array.from(this.workspaceDocument.getKeys(key =>
-            key.startsWith(WorkspaceDao.WORKSPACE + WorkspaceDao.PATH_SEPARATOR) &&
-            key.endsWith(WorkspaceDao.PATH_SEPARATOR + WorkspaceDao.OBJECT_CONTENT)
+            key.startsWith(StoreKeys.WORKSPACE + StoreKeys.PATH_SEPARATOR) &&
+            key.endsWith(StoreKeys.PATH_SEPARATOR + StoreKeys.OBJECT_CONTENT),
         ))
-            .map(key => this.getObject(key.split(WorkspaceDao.PATH_SEPARATOR)[1]))
+            .map(key => this.getObject(key.split(StoreKeys.PATH_SEPARATOR)[1]))
             .sort((a, b) => b.lastOpened - a.lastOpened); // Assuming lastOpened is a numeric timestamp
     }
 
     // Singleton instance accessor
     static get instance(): WorkspaceDao {
         if (!WorkspaceDao._instance) {
-            WorkspaceDao._instance = new WorkspaceDao(StorageDocument.get(WorkspaceDao.WORKSPACE));
+            WorkspaceDao._instance = new WorkspaceDao(StorageDocument.get(StoreKeys.WORKSPACE));
         }
         return WorkspaceDao._instance;
     }
-
-    // Constants
-    private static readonly LAST_OPEN = "lastOpen";
-    private static readonly WORKSPACE = "workspace";
-    private static readonly PATH_SEPARATOR = "/";
-    private static readonly OBJECT_CONTENT = "objectContent";
 }
