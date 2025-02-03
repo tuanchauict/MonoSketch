@@ -1,6 +1,6 @@
 <script lang="ts">
 import ProjectRow from './ProjectRow.svelte';
-import { ProjectAction, type ProjectItem } from '../model';
+import { ProjectAction, type ProjectItem } from '$ui/nav/project/model';
 import { getContext, onDestroy, onMount } from 'svelte';
 import { LifecycleOwner } from '$libs/flow';
 import { BrowserManager } from "$mono/window/browser-manager";
@@ -18,12 +18,14 @@ let deletingId: string = '';
 onMount(() => {
     const lifecycleOwner = LifecycleOwner.start();
 
+    // Manually update the project list to ensure the list is up-to-date when the modal is opened
+    projectDataViewModel.updateProjectList();
     projectDataViewModel.projectFlow.observe(lifecycleOwner, (list) => {
         projectList = list;
     });
 
-    projectDataViewModel.openingProjectIdFlow.observe(lifecycleOwner, (id) => {
-        openingId = id;
+    projectDataViewModel.openingProjectFlow.observe(lifecycleOwner, (project) => {
+        openingId = project.id;
     });
 
     projectDataViewModel.deletingProjectIdFlow.observe(lifecycleOwner, (id) => {

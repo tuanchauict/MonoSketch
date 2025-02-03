@@ -1,6 +1,6 @@
 <script lang="ts">
 import ProjectActionView from './ProjectActionView.svelte';
-import { ProjectAction } from '../model';
+import { ProjectAction } from '$ui/nav/project/model';
 import OpenInNewTab from './icons/OpenInNewTab.svelte';
 import Remove from './icons/Remove.svelte';
 import RemoveConfirmation from './icons/RemoveConfirmation.svelte';

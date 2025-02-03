@@ -2,7 +2,7 @@
 import MenuItem from '../common/MenuItem.svelte';
 import ProjectActions from './ProjectActions.svelte';
 import ProjectIcon from './ProjectIcon.svelte';
-import { ProjectAction, type ProjectItem } from '../model';
+import { ProjectAction, type ProjectItem } from '$ui/nav/project/model';
 
 export let project: ProjectItem;
 export let opening: boolean;

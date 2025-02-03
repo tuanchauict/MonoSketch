@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { ProjectAction } from '../model';
+import type { ProjectAction } from '$ui/nav/project/model';
 import TooltipTarget from '../../tooltip/TooltipTarget.svelte';
 import { TooltipDirection } from '../../tooltip/model';
 

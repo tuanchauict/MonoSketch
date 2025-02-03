@@ -2,21 +2,36 @@
  * Copyright (c) 2025, tuanchauict
  */
 
+import type { AppContext } from "$app/app-context";
 import { Flow } from '$libs/flow';
-import { type ProjectItem } from '../../modal/recent-project/model';
+import { type ProjectItem } from 'lib/ui/nav/project/model';
 import { UUID } from '$mono/uuid';
 
 export class ProjectDataViewModel {
     private _projectFlow: Flow<ProjectItem[]> = new Flow();
     projectFlow = this._projectFlow.immutable();
 
-    openingProjectIdFlow: Flow<string> = new Flow('');
-    deletingProjectIdFlow: Flow<string> = new Flow('');
     renamingProjectIdFlow: Flow<string> = new Flow('');
+    openingProjectFlow: Flow<ProjectItem>;
+    deletingProjectIdFlow: Flow<string> = new Flow('');
 
-    setProjectList(projectList: ProjectItem[]) {
-        this._projectFlow.value = projectList;
-        this.openingProjectIdFlow.value = projectList[0].id;
+
+    constructor(private appContext: AppContext) {
+        this.updateProjectList();
+        this.openingProjectFlow = Flow.combine2(
+            appContext.shapeManager.rootIdFlow,
+            this.renamingProjectIdFlow,
+            (id) => this.getProject(id),
+        );
+    }
+
+    updateProjectList() {
+        this._projectFlow.value = this.appContext.workspaceDao.getObjects().map((dao) => {
+            return {
+                id: dao.objectId,
+                name: dao.name,
+            };
+        });
     }
 
     newProject() {
@@ -24,13 +39,14 @@ export class ProjectDataViewModel {
             id: UUID.generate(),
             name: 'New Project',
         };
-        this.setProjectList([newProject, ...this._projectFlow.value!]);
+        this.updateProjectList();
         this.openProject(newProject.id);
         this.setRenamingProject(newProject.id);
     }
 
     openProject(id: string) {
-        this.openingProjectIdFlow.value = id;
+        // TODO: notify changing project with id
+        console.log('Open project with id:', id);
     }
 
     confirmDeletingProject(id: string) {
@@ -50,18 +66,14 @@ export class ProjectDataViewModel {
     }
 
     setProjectName(id: string, name: string) {
-        this._projectFlow.value = this._projectFlow.value!.map((item) => {
-            if (item.id === id) {
-                return {
-                    ...item,
-                    name,
-                };
-            }
-            return item;
-        });
+        this.appContext.workspaceDao.getObject(id).name = name;
     }
 
-    getProject(id: string): ProjectItem | undefined {
-        return this._projectFlow.value!.find((item) => item.id === id);
+    getProject(id: string): ProjectItem {
+        const objectDao = this.appContext.workspaceDao.getObject(id);
+        return {
+            id,
+            name: objectDao.name,
+        };
     }
 }
