@@ -2,6 +2,7 @@
 import { onMount } from 'svelte';
 
 export let name: string;
+export let onDone: () => void;
 
 let textInput: HTMLInputElement;
 
@@ -10,10 +11,22 @@ onMount(() => {
         textInput.focus();
     }, 10);
 });
+
+function onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+        // Prevent the default behavior of the Enter key to avoid submitting the form
+        event.preventDefault();
+        onDone();
+    } else if (event.key === 'Escape') {
+        name = '';
+        onDone();
+        event.preventDefault();
+    }
+}
 </script>
 
 <div>
-    <input type="text" bind:value="{name}" bind:this="{textInput}" />
+    <input type="text" bind:value="{name}" bind:this="{textInput}" on:keydown="{onKeydown}"/>
 </div>
 
 <style lang="scss">

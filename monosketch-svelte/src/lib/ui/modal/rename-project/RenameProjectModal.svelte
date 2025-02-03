@@ -33,5 +33,5 @@ onMount(() => {
 </script>
 
 <NoBackgroundModal onDismiss="{onDone}" {left} {top} width="{180}">
-    <ProjectNameTextField bind:name />
+    <ProjectNameTextField bind:name {onDone}/>
 </NoBackgroundModal>
