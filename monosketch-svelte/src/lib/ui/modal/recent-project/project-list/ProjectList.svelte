@@ -24,8 +24,8 @@ onMount(() => {
         projectList = list;
     });
 
-    projectDataViewModel.openingProjectIdFlow.observe(lifecycleOwner, (id) => {
-        openingId = id;
+    projectDataViewModel.openingProjectFlow.observe(lifecycleOwner, (project) => {
+        openingId = project.id;
     });
 
     projectDataViewModel.deletingProjectIdFlow.observe(lifecycleOwner, (id) => {
