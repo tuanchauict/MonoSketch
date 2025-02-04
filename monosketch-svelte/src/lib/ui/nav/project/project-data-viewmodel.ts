@@ -3,7 +3,7 @@
  */
 
 import type { AppContext } from "$app/app-context";
-import { Flow } from '$libs/flow';
+import { Flow, LifecycleOwner } from '$libs/flow';
 import { type ProjectItem } from 'lib/ui/nav/project/model';
 import { UUID } from '$mono/uuid';
 
@@ -15,12 +15,14 @@ export class ProjectDataViewModel {
     openingProjectFlow: Flow<ProjectItem>;
     deletingProjectIdFlow: Flow<string> = new Flow('');
 
+    lifecycleOwner: LifecycleOwner = new LifecycleOwner();
 
     constructor(private appContext: AppContext) {
         this.updateProjectList();
-        this.openingProjectFlow = Flow.combine2(
+        this.openingProjectFlow = Flow.combine3(
             appContext.shapeManager.rootIdFlow,
             this.renamingProjectIdFlow,
+            appContext.workspaceDao.workspaceUpdateFlow,
             (id) => this.getProject(id),
         );
     }

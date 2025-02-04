@@ -7,11 +7,9 @@ import { StorageDocument, StoreKeys } from "$mono/store-manager";
  * A dao for an object (aka project or file) in the workspace.
  */
 export class WorkspaceObjectDao {
-    objectId: string;
     private objectDocument: StorageDocument;
 
-    constructor(objectId: string, workspaceDocument: StorageDocument) {
-        this.objectId = objectId;
+    constructor(public objectId: string, private workspaceDocument: StorageDocument) {
         this.objectDocument = workspaceDocument.childDocument(objectId);
     }
 
@@ -63,6 +61,7 @@ export class WorkspaceObjectDao {
         // @ts-expect-error toJson
         const jsonArray = value.map(connector => connector.toJson());
         this.objectDocument.set(StoreKeys.OBJECT_CONNECTORS, JSON.stringify(jsonArray));
+        this.lastModifiedTimestampMillis = Date.now();
     }
 
     get name(): string {
@@ -84,6 +83,8 @@ export class WorkspaceObjectDao {
 
     set lastModifiedTimestampMillis(value: number) {
         this.objectDocument.set(StoreKeys.OBJECT_LAST_MODIFIED, value.toString());
+        this.workspaceDocument.set(StoreKeys.LAST_MODIFIED_TIME, value.toString());
+        this.workspaceDocument.set(StoreKeys.LAST_MODIFIED_PROJECT_ID, this.objectId);
     }
 
     get lastOpened(): number {

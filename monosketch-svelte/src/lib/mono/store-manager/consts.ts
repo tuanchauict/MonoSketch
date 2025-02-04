@@ -11,7 +11,8 @@ export const StoreKeys = {
     FONT_SIZE: 'font-size',
 
     WORKSPACE: 'workspace',
-    LAST_OPEN: 'last-open', // deprecated
+    LAST_MODIFIED_PROJECT_ID: 'last-open', // last opened object id
+    LAST_MODIFIED_TIME: 'last-modified', // last modified timestamp of the workspace
 
     OBJECT_NAME: 'name',
     OBJECT_CONTENT: 'content',

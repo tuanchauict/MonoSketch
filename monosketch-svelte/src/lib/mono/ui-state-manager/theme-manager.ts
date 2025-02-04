@@ -60,12 +60,10 @@ export class AppThemeManager {
             this.settingsDocument.set(StoreKeys.THEME_MODE, themeMode);
         });
 
-        this.settingsDocument.setObserver(StoreKeys.THEME_MODE, {
-            onChange: (key, oldValue, newValue) => {
-                if (newValue) {
-                    this.themeManager.setTheme(newValue as ThemeMode);
-                }
-            },
+        this.settingsDocument.setObserver(StoreKeys.THEME_MODE, (_key, _oldValue, newValue) => {
+            if (newValue) {
+                this.themeManager.setTheme(newValue as ThemeMode);
+            }
         });
     };
 

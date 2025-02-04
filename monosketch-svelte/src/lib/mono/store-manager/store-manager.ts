@@ -5,9 +5,7 @@ import { MigrateTo2 } from './migrations/migrate2';
 /**
  * An interface for observing storage change.
  */
-export interface StoreObserver {
-    onChange(key: string, oldValue: string | null, newValue: string | null): void;
-}
+export type StoreObserver = (key: string, oldValue: string | null, newValue: string | null) => void
 
 /**
  * A class for managing storage.
@@ -82,7 +80,7 @@ export class StoreManager {
     private onStorageChange = (event: StorageEvent) => {
         const key = event.key;
         if (key && this.keyToObserverMap[key]) {
-            this.keyToObserverMap[key].onChange(key, event.oldValue, event.newValue);
+            this.keyToObserverMap[key](key, event.oldValue, event.newValue);
         }
     };
 }

@@ -1,3 +1,4 @@
+import { Flow } from "$libs/flow";
 import { StorageDocument, StoreKeys } from "$mono/store-manager";
 import { WorkspaceObjectDao } from "$mono/store-manager/dao/workspace-object-dao";
 
@@ -10,25 +11,26 @@ export class WorkspaceDao {
     private readonly workspaceDocument: StorageDocument;
     private objectDaos: Map<string, WorkspaceObjectDao>;
 
+    private workspaceUpdateMutableFlow: Flow<string> = new Flow('');
+    workspaceUpdateFlow: Flow<string> = this.workspaceUpdateMutableFlow.immutable();
+
     private constructor(workspaceDocument: StorageDocument) {
         this.workspaceDocument = workspaceDocument;
         this.objectDaos = new Map<string, WorkspaceObjectDao>();
 
-        workspaceDocument.setObserver(StoreKeys.LAST_OPEN, {
-            onChange: (key, oldValue, newValue) => {
-                console.log(`Last opened object changed: ${oldValue} -> ${newValue}`);
-            },
+        workspaceDocument.setObserver(StoreKeys.LAST_MODIFIED_TIME, () => {
+            this.workspaceUpdateMutableFlow.value = this.lastOpenedObjectId ?? '';
         });
     }
 
     // Accessor property for lastOpenedObjectId
     get lastOpenedObjectId(): string | null {
-        return this.workspaceDocument.get(StoreKeys.LAST_OPEN);
+        return this.workspaceDocument.get(StoreKeys.LAST_MODIFIED_PROJECT_ID);
     }
 
     set lastOpenedObjectId(value: string | null) {
         if (value !== null) {
-            this.workspaceDocument.set(StoreKeys.LAST_OPEN, value);
+            this.workspaceDocument.set(StoreKeys.LAST_MODIFIED_PROJECT_ID, value);
         }
     }
 
