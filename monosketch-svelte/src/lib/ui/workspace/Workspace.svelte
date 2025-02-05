@@ -70,8 +70,8 @@
 
     .drawing-info {
         position: absolute;
-        left: -1000px;
-        top: -1000px;
+        left: -200%;
+        top: -200%;
     }
 
     .jump {
