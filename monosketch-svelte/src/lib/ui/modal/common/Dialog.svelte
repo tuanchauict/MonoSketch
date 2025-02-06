@@ -3,25 +3,25 @@
   -->
 
 <script lang="ts">
-    export let title: string;
-    export let content: string = "";
+    import { fade, slide } from "svelte/transition";
+    import type { AlertDialogModel } from "$ui/modal/common/AlertDialog";
 
-    export let confirmText: string = "Confirm";
-    export let cancelText: string = "Cancel";
-    export let onConfirm: () => void;
-    export let onCancel: () => void;
+    export let model: AlertDialogModel;
 
-    export let dismissOnClickingOutside: boolean = true;
+    let title = model.title || '';
+    let message = model.message || '';
+    let primaryAction = model.primaryAction;
+    let secondaryAction = model.secondaryAction;
+    let dismissOnClickingOutside = model.dismissOnClickingOutside ?? true;
+    let onDismiss = model.onDismiss || (() => {});
 
-    export let onDismiss: () => void;
-
-    function handleConfirm() {
-        onConfirm();
+    function handlePrimaryAction() {
+        primaryAction?.onClick();
         onDismiss();
     }
 
-    function handleCancel() {
-        onCancel();
+    function handleSecondaryAction() {
+        secondaryAction?.onClick();
         onDismiss();
     }
 
@@ -31,32 +31,34 @@
         }
     }
 </script>
-
 <div class="dialog-modal" role="button" tabindex="-1"
+     transition:fade={{ duration: 200 }}
      on:click="{handleClickOutside}"
      on:keydown="{(e) => e.key === 'Escape' && handleClickOutside(e)}"
 >
     <div class="modal-content" role="button" tabindex="-1"
+            transition:slide={{ duration: 200 }}
          on:click|preventDefault|stopPropagation on:keydown>
         {#if title}
             <h2>{title}</h2>
         {/if}
-        {#if content}
-            <p class:no-title={title.length === 0}>{content}</p>
+        {#if message}
+            <p class:no-title={!title}>{message}</p>
         {:else }
-            <slot />
+            <slot/>
         {/if}
-        <div class="actions">
-            {#if cancelText}
-                <button class="secondary" on:click="{handleCancel}">{cancelText}</button>
-            {/if}
-            {#if confirmText}
-                <button class="primary" on:click="{handleConfirm}">{confirmText}</button>
-            {/if}
-        </div>
+        {#if primaryAction || secondaryAction}
+            <div class="actions">
+                {#if secondaryAction}
+                    <button class="secondary" on:click="{handleSecondaryAction}">{secondaryAction.text}</button>
+                {/if}
+                {#if primaryAction}
+                    <button class="primary" on:click="{handlePrimaryAction}">{primaryAction.text}</button>
+                {/if}
+            </div>
+        {/if}
     </div>
 </div>
-
 <style lang="scss">
     @import "../../../style/variables";
 
@@ -78,7 +80,7 @@
         min-width: 350px;
         max-width: 450px;
         border-radius: 5px;
-        padding: 12px;
+        padding: 16px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
         font-family: $monospaceFont;
 
@@ -107,6 +109,7 @@
         display: flex;
         justify-content: flex-end;
         margin-top: 16px;
+        font-family: $monospaceFont;
     }
 
     button {
@@ -116,8 +119,11 @@
         user-select: none;
         border-radius: 4px;
         border: 1px solid transparent;
-        padding: 4px 8px;
+        padding: 4px 10px;
         background: none;
+        min-width: 50px;
+        font-weight: bold;
+        font-family: $monospaceFont;
 
         &.primary {
             background: var(--primary-action-color);
