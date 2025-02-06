@@ -14,7 +14,7 @@ import { ExportShapesHelper } from "$mono/state-manager/export/export-shapes-hel
 import { FileMediator } from "$mono/state-manager/onetimeaction/file-mediator";
 import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import { DEFAULT_NAME } from "$mono/store-manager/dao/workspace-object-dao";
-import { modalViewModel } from "$ui/modal/viewmodel";
+import { AlertDialog } from "$ui/modal/common/AlertDialog";
 
 /**
  * A helper class to handle file-related one-time actions in the application.
@@ -34,7 +34,7 @@ export class FileRelatedActionsHelper {
     ) {
         this.exportShapesHelper = new ExportShapesHelper(
             (shape) => bitmapManager.getBitmap(shape),
-            shapeClipboardManager.setClipboardText.bind(shapeClipboardManager)
+            shapeClipboardManager.setClipboardText.bind(shapeClipboardManager),
         );
     }
 
@@ -124,16 +124,26 @@ export class FileRelatedActionsHelper {
         const rootGroup = RootGroup(monoFile.root);
         const existingProject = this.workspaceDao.getObject(rootGroup.id);
         if (existingProject.rootGroup) {
-            modalViewModel.existingProjectFlow.value = {
-                projectName: existingProject.name,
-                lastEditedTimeMillis: existingProject.lastModifiedTimestampMillis,
-                onReplace: () => {
-                    this.prepareAndApplyNewRoot(RootGroup(monoFile.root.copy({ isIdTemporary: true })), monoFile.extra);
+            AlertDialog(
+                {
+                    title: "Project already exists",
+                    message: `A project with the same ID already exists. Do you want to replace it?
+ - ${existingProject.name}
+ - Last edited: ${new Date(existingProject.lastModifiedTimestampMillis).toLocaleString()}`,
+                    primaryAction: {
+                        text: "Replace",
+                        onClick: () => {
+                            this.prepareAndApplyNewRoot(rootGroup, monoFile.extra);
+                        },
+                    },
+                    secondaryAction: {
+                        text: "Keep both",
+                        onClick: () => {
+                            this.prepareAndApplyNewRoot(RootGroup(monoFile.root.copy({ isIdTemporary: true })), monoFile.extra);
+                        },
+                    },
                 },
-                onKeepBoth: () => {
-                    this.prepareAndApplyNewRoot(rootGroup, monoFile.extra);
-                }
-            };
+            );
         } else {
             this.prepareAndApplyNewRoot(rootGroup, monoFile.extra);
         }
