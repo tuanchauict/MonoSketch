@@ -55,6 +55,7 @@ export class ProjectDataViewModel {
 
     deleteProject(id: string) {
         this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.RemoveProject(id));
+        this.updateProjectList();
     }
 
     cancelDeletingProject() {
