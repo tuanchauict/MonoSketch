@@ -3,9 +3,19 @@
     import { TargetBounds } from '$ui/modal/model';
     import type { Rect } from "$libs/graphics-geo/rect";
     import MainDropDown from "$ui/modal/menu/main-dropdown/MainDropDown.svelte";
+    import KeyboardShortcutModal from "$ui/modal/keyboard-shortcut/KeyboardShortcutModal.svelte";
+    import { MainMenuAction } from "$ui/modal/menu/main-dropdown/model";
+    import { UiStatePayload } from "$mono/ui-state-manager/ui-state-payload";
+    import { getContext } from "svelte";
+    import type { AppContext } from "$app/app-context";
+    import { APP_CONTEXT } from "$mono/common/constant";
+
+    const appContext = getContext<AppContext>(APP_CONTEXT);
 
     let targetView: HTMLElement | undefined;
     let targetBounds: Rect | undefined;
+
+    let isKeyboardShortcutsVisible = false;
 
     function showDropdown(e: MouseEvent) {
         targetView = e.currentTarget as HTMLElement;
@@ -20,8 +30,27 @@
     function updateTargetBounds() {
         targetBounds = targetView ? TargetBounds.fromElement(targetView) : undefined;
     }
+
+    function onAction(action: MainMenuAction) {
+        switch (action) {
+            case MainMenuAction.IncreaseFontSize:
+                appContext.appUiStateManager.updateUiState(UiStatePayload.ChangeFontSize(true));
+                break;
+            case MainMenuAction.DecreaseFontSize:
+                appContext.appUiStateManager.updateUiState(UiStatePayload.ChangeFontSize(false));
+                break;
+            case MainMenuAction.ShowFormatPanel:
+                appContext.appUiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(true));
+                break;
+            case MainMenuAction.HideFormatPanel:
+                appContext.appUiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(false));
+                break;
+            case MainMenuAction.ShowKeyboardShortcut:
+                isKeyboardShortcutsVisible = true;
+        }
+    }
 </script>
-<svelte:window on:resize="{updateTargetBounds}" />
+<svelte:window on:resize="{updateTargetBounds}"/>
 
 <AppIcon size="{20}" viewBoxSize="{20}" onClick="{showDropdown}">
     <path
@@ -36,5 +65,9 @@
 </AppIcon>
 
 {#if targetBounds}
-    <MainDropDown targetBounds="{targetBounds}" {onDismiss}/>
+    <MainDropDown targetBounds="{targetBounds}" {onAction} {onDismiss}/>
+{/if}
+
+{#if isKeyboardShortcutsVisible}
+    <KeyboardShortcutModal onDismiss="{() => isKeyboardShortcutsVisible = false}"/>
 {/if}
