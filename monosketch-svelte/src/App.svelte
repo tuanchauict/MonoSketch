@@ -1,6 +1,5 @@
 <script lang="ts">
 import NavBar from './lib/ui/nav/NavBar.svelte';
-import ModalHolder from './lib/ui/modal/ModalHolder.svelte';
 import ShapeTool from './lib/ui/pannel/shapetool/ShapeTool.svelte';
 import Workspace from '$ui/workspace/Workspace.svelte';
 </script>
@@ -16,8 +15,6 @@ import Workspace from '$ui/workspace/Workspace.svelte';
         <ShapeTool />
     </div>
 </main>
-
-<ModalHolder />
 
 <style lang="scss">
 $nav-height: 48px;

@@ -5,11 +5,11 @@ import DropDown from '../common/DropDown.svelte';
 import { getContext } from 'svelte';
 import type { AppContext } from '$app/app-context';
 import { APP_CONTEXT } from '$mono/common/constant';
-import { modalViewModel } from '$ui/modal/viewmodel';
 import type { Rect } from '$libs/graphics-geo/rect';
-import { UiStatePayload } from "$mono/ui-state-manager/ui-state-payload";
+import { MainMenuAction } from "$ui/modal/menu/main-dropdown/model";
 
 export let targetBounds: Rect;
+export let onAction: (action: MainMenuAction) => void;
 export let onDismiss: () => void;
 
 const appContext = getContext<AppContext>(APP_CONTEXT);
@@ -20,15 +20,23 @@ $: toggleFormatPannelVisibilityText = isFormatPanelVisible
     : 'Show Format panel';
 
 function onFontSizeChange(isIncreased: boolean) {
-    appContext.appUiStateManager.updateUiState(UiStatePayload.ChangeFontSize(isIncreased));
+    if (isIncreased) {
+        onAction(MainMenuAction.IncreaseFontSize);
+    } else {
+        onAction(MainMenuAction.DecreaseFontSize);
+    }
 }
 
 function toggleFormatPanelVisibility() {
-    appContext.appUiStateManager.updateUiState(UiStatePayload.ShapeToolVisibility(!isFormatPanelVisible));
+    if (isFormatPanelVisible) {
+        onAction(MainMenuAction.HideFormatPanel);
+    } else {
+        onAction(MainMenuAction.ShowFormatPanel);
+    }
 }
 
 function showKeyboardShortcuts() {
-    modalViewModel.keyboardShortcutVisibilityStateFlow.value = true;
+    onAction(MainMenuAction.ShowKeyboardShortcut);
 }
 </script>
 
