@@ -4,8 +4,8 @@
 
 import type { AppContext } from "$app/app-context";
 import { Flow, LifecycleOwner } from '$libs/flow';
+import { OneTimeAction } from "$mono/action-manager/one-time-actions";
 import { type ProjectItem } from 'lib/ui/nav/project/model';
-import { UUID } from '$mono/uuid';
 
 export class ProjectDataViewModel {
     private _projectFlow: Flow<ProjectItem[]> = new Flow();
@@ -19,9 +19,8 @@ export class ProjectDataViewModel {
 
     constructor(private appContext: AppContext) {
         this.updateProjectList();
-        this.openingProjectFlow = Flow.combine3(
+        this.openingProjectFlow = Flow.combine2(
             appContext.shapeManager.rootIdFlow,
-            this.renamingProjectIdFlow,
             appContext.workspaceDao.workspaceUpdateFlow,
             (id) => this.getProject(id),
         );
@@ -37,18 +36,17 @@ export class ProjectDataViewModel {
     }
 
     newProject() {
-        const newProject: ProjectItem = {
-            id: UUID.generate(),
-            name: 'New Project',
-        };
-        this.updateProjectList();
-        this.openProject(newProject.id);
-        this.setRenamingProject(newProject.id);
+        this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.NewProject);
+
+        // Delay for a short time to ensure the new project is created before renaming.
+        // TODO: Find a better way to handle this.
+        setTimeout(() => {
+            this.setRenamingProject(this.appContext.shapeManager.rootIdFlow.value || '');
+        }, 100);
     }
 
     openProject(id: string) {
-        // TODO: notify changing project with id
-        console.log('Open project with id:', id);
+        this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.SwitchProject(id));
     }
 
     confirmDeletingProject(id: string) {
@@ -56,7 +54,8 @@ export class ProjectDataViewModel {
     }
 
     deleteProject(id: string) {
-        this._projectFlow.value = this._projectFlow.value!.filter((item) => item.id !== id);
+        this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.RemoveProject(id));
+        this.updateProjectList();
     }
 
     cancelDeletingProject() {
@@ -67,11 +66,11 @@ export class ProjectDataViewModel {
         this.renamingProjectIdFlow.value = id;
     }
 
-    setProjectName(id: string, name: string) {
-        this.appContext.workspaceDao.getObject(id).name = name;
+    setCurrentProjectName(name: string) {
+        this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.RenameCurrentProject(name));
     }
 
-    getProject(id: string): ProjectItem {
+    private getProject(id: string): ProjectItem {
         const objectDao = this.appContext.workspaceDao.getObject(id);
         return {
             id,

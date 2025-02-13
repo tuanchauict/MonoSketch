@@ -68,7 +68,7 @@
 {/if}
 
 {#if isRenameProjectVisible && targetBounds}
-    <RenameProjectModal {projectId} {targetBounds}/>
+    <RenameProjectModal {projectName} {targetBounds}/>
 {/if}
 
 <style lang="scss">
