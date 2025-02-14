@@ -115,4 +115,8 @@ export class Rect implements Comparable {
     toString(): string {
         return `[${this.left}, ${this.top}] - [${this.width} x ${this.height}]`;
     }
+
+    copy({ position, size }: { position?: Point; size?: Size }): Rect {
+        return new Rect(position ?? this.position, size ?? this.size);
+    }
 }
