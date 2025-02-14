@@ -4,7 +4,6 @@ import { ScrollMode } from '$mono/ui-state-manager/states';
 import { Point, PointF } from '$libs/graphics-geo/point';
 import {
     MousePointer,
-    type MousePointerInfo,
     MousePointerType,
 } from '$mono/workspace/mouse/mouse-pointer';
 
@@ -23,7 +22,7 @@ export class MouseEventObserver {
     private drawingOffsetPointPxMutableFlow = new Flow<Point>(Point.ZERO);
     readonly drawingOffsetPointPxFlow = this.drawingOffsetPointPxMutableFlow.immutable();
 
-    private mousePointerMutableFlow = new Flow<MousePointerInfo>(MousePointer.idle);
+    private mousePointerMutableFlow = new Flow<MousePointer>(MousePointer.idle);
     readonly mousePointerFlow = this.mousePointerMutableFlow;
 
     private readonly mouseDoubleClickDetector = new MouseDoubleClickDetector();
@@ -184,7 +183,7 @@ export class MouseEventObserver {
         this.mouseWheelDeltaY = accumulateWheelDeltaTop - usableDeltaTop;
     };
 
-    private getCurrentMousePointer = (): MousePointerInfo => this.mousePointerMutableFlow.value!;
+    private getCurrentMousePointer = (): MousePointer => this.mousePointerMutableFlow.value!;
 
     /**
      * Returns scroll delta x and y of the wheel event after adjusting with meta keys:

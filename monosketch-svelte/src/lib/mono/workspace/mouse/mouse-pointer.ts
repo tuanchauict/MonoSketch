@@ -1,5 +1,4 @@
 import { Point, PointF } from '$libs/graphics-geo/point';
-import type { Comparable } from '$libs/comparable';
 
 export enum MousePointerType {
     IDLE,
@@ -11,113 +10,91 @@ export enum MousePointerType {
     DOUBLE_CLICK,
 }
 
-export interface MousePointerInfo extends Comparable {
-    type: MousePointerType;
+export type MousePointerIdle = { type: MousePointerType.IDLE };
+export type MousePointerMove = { type: MousePointerType.MOVE; boardCoordinate: Point; clientCoordinate: Point };
+export type MousePointerDown = {
+    type: MousePointerType.DOWN;
     boardCoordinate: Point;
     clientCoordinate: Point;
+    isWithShiftKey: boolean
+};
+export type MousePointerDrag = {
+    type: MousePointerType.DRAG;
+    boardCoordinate: Point;
     boardCoordinateF: PointF;
     mouseDownBoardCoordinate: Point;
-    isWithShiftKey: boolean;
-}
-
-const MousePointerInfoDefaults: MousePointerInfo = {
-    type: MousePointerType.IDLE,
-    boardCoordinate: Point.ZERO,
-    clientCoordinate: Point.ZERO,
-    boardCoordinateF: new PointF(0, 0),
-    mouseDownBoardCoordinate: Point.ZERO,
-    isWithShiftKey: false,
-
-    equals(other: unknown): boolean {
-        return (
-            isMousePointerInfo(other) &&
-            this.type === other.type &&
-            this.boardCoordinate.equals(other.boardCoordinate) &&
-            this.clientCoordinate.equals(other.clientCoordinate) &&
-            this.boardCoordinateF.equals(other.boardCoordinateF) &&
-            this.mouseDownBoardCoordinate.equals(other.mouseDownBoardCoordinate) &&
-            this.isWithShiftKey === other.isWithShiftKey
-        );
-    },
+    isWithShiftKey: boolean
 };
-
-const Idle = {
-    ...MousePointerInfoDefaults,
+export type MousePointerUp = {
+    type: MousePointerType.UP;
+    boardCoordinate: Point;
+    boardCoordinateF: PointF;
+    mouseDownBoardCoordinate: Point;
+    isWithShiftKey: boolean
 };
+export type MousePointerClick = { type: MousePointerType.CLICK; boardCoordinate: Point; isWithShiftKey: boolean };
+export type MousePointerDoubleClick = { type: MousePointerType.DOUBLE_CLICK; boardCoordinate: Point };
 
-export const MousePointer = {
-    idle: Idle,
-    move: (boardCoordinate: Point, clientCoordinate: Point) => {
-        return {
-            ...MousePointerInfoDefaults,
-            type: MousePointerType.MOVE,
-            boardCoordinate,
-            clientCoordinate,
-        };
-    },
 
-    down: (boardCoordinate: Point, clientCoordinate: Point, isWithShiftKey: boolean) => {
-        return {
-            ...MousePointerInfoDefaults,
-            type: MousePointerType.DOWN,
-            boardCoordinate,
-            clientCoordinate,
-            isWithShiftKey,
-        };
-    },
+/**
+ * Type representing different mouse event pointer states
+ */
+export type MousePointer =
+    | MousePointerIdle
+    | MousePointerMove
+    | MousePointerDown
+    | MousePointerUp
+    | MousePointerDrag
+    | MousePointerClick
+    | MousePointerDoubleClick;
 
-    up: (
+
+export namespace MousePointer {
+    export const idle: MousePointerIdle = { type: MousePointerType.IDLE };
+
+    export function move(boardCoordinate: Point, clientCoordinate: Point): MousePointerMove {
+        return { type: MousePointerType.MOVE, boardCoordinate, clientCoordinate };
+    }
+
+    export function down(boardCoordinate: Point, clientCoordinate: Point, isWithShiftKey: boolean): MousePointerDown {
+        return { type: MousePointerType.DOWN, boardCoordinate, clientCoordinate, isWithShiftKey };
+    }
+
+    export function up(
         boardCoordinate: Point,
         boardCoordinateF: PointF,
         mouseDownBoardCoordinate: Point,
         isWithShiftKey: boolean,
-    ) => {
+    ): MousePointerUp {
         return {
-            ...MousePointerInfoDefaults,
             type: MousePointerType.UP,
             boardCoordinate,
             boardCoordinateF,
             mouseDownBoardCoordinate,
             isWithShiftKey,
         };
-    },
+    }
 
-    drag: (
+    export function drag(
         boardCoordinate: Point,
         boardCoordinateF: PointF,
         mouseDownBoardCoordinate: Point,
         isWithShiftKey: boolean,
-    ) => {
+    ): MousePointerDrag {
         return {
-            ...MousePointerInfoDefaults,
             type: MousePointerType.DRAG,
             boardCoordinate,
             boardCoordinateF,
             mouseDownBoardCoordinate,
             isWithShiftKey,
         };
-    },
+    }
 
-    click: (boardCoordinate: Point, isWithShiftKey: boolean) => {
-        return {
-            ...MousePointerInfoDefaults,
-            type: MousePointerType.CLICK,
-            boardCoordinate,
-            isWithShiftKey,
-        };
-    },
+    export function click(boardCoordinate: Point, isWithShiftKey: boolean): MousePointerClick {
+        return { type: MousePointerType.CLICK, boardCoordinate, isWithShiftKey };
+    }
 
-    doubleClick: (boardCoordinate: Point) => {
-        return {
-            ...MousePointerInfoDefaults,
-            type: MousePointerType.DOUBLE_CLICK,
-            boardCoordinate,
-        };
-    },
-};
-
-const isMousePointerInfo = (value: unknown): value is MousePointerInfo =>
-    typeof value === 'object' &&
-    value !== null &&
-    'type' in value &&
-    (value as MousePointerInfo).type in MousePointerType;
+    export function doubleClick(boardCoordinate: Point): MousePointerDoubleClick {
+        return { type: MousePointerType.DOUBLE_CLICK, boardCoordinate };
+    }
+}
