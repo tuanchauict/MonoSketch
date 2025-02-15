@@ -1,6 +1,6 @@
 import { Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
-import type { LineAnchor } from "$mono/shape/shape/linehelper";
+import { LineAnchor } from "$mono/shape/shape/linehelper";
 import { MouseCursor } from "$mono/workspace/mouse/cursor-type";
 
 /**
@@ -8,7 +8,7 @@ import { MouseCursor } from "$mono/workspace/mouse/cursor-type";
  *
  * [left] and [top] are the center position of the interaction point, with board-related unit.
  */
-abstract class InteractionPoint {
+export abstract class InteractionPoint {
     protected constructor(
         readonly shapeId: string,
         readonly left: number,
