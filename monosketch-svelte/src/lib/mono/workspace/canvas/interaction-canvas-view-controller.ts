@@ -1,5 +1,4 @@
 import type { Point } from "$libs/graphics-geo/point";
-import { TODO } from "$libs/todo";
 import {
     type InteractionBound,
     LineInteractionBound,
@@ -125,9 +124,23 @@ export class InteractionCanvasViewController extends BaseCanvasViewController {
         return path;
     };
 
-    getInteractionPoint = (_pointPx: Point): InteractionPoint | null => {
-        // TODO: Implement this method
-        TODO("Implement this method");
+    getInteractionPoint = (pointPx: Point): InteractionPoint | null => {
+        for (const bound of this.interactionBounds.reverse()) {
+            const interactionPoint = this.getClosePointOfBound(bound, pointPx);
+            if (interactionPoint) {
+                return interactionPoint;
+            }
+        }
         return null;
     };
+
+    private getClosePointOfBound(bound: InteractionBound, pointPx: Point) {
+        for (const interactionPoint of bound.interactionPoints.reverse()) {
+            const leftPx = this.drawingInfo.toXPx(interactionPoint.left);
+            const topPx = this.drawingInfo.toYPx(interactionPoint.top);
+            if (Math.abs(leftPx - pointPx.left) < 6 && Math.abs(topPx - pointPx.top) < 6) {
+                return interactionPoint;
+            }
+        }
+    }
 }

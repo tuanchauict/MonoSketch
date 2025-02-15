@@ -4,10 +4,11 @@
 
 import type { Workspace } from "$app/workspace";
 import { Flow, LifecycleOwner } from "$libs/flow";
-import type { Point, Direction } from "$libs/graphics-geo/point";
+import type { Direction, Point } from "$libs/graphics-geo/point";
 import type { Rect } from "$libs/graphics-geo/rect";
 import { unit, type Unit } from "$libs/unit";
 import type { ActionManager } from "$mono/action-manager/action-manager";
+import { RetainableActionTypeMouseCursor } from "$mono/action-manager/retainable-actions";
 import { DEBUG_MODE } from "$mono/build_environment";
 import { MonoBoard } from "$mono/monobitmap/board";
 import { HighlightType } from "$mono/monobitmap/board/pixel";
@@ -28,6 +29,8 @@ import { OneTimeActionHandler } from "$mono/state-manager/one-time-action-handle
 import { StateHistoryManager } from "$mono/state-manager/state-history-manager";
 import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
+import { MouseCursor } from "$mono/workspace/mouse/cursor-type";
+import { MousePointer, MousePointerType } from "$mono/workspace/mouse/mouse-pointer";
 
 /**
  * A class which connects components in the app.
@@ -114,7 +117,13 @@ export class MainStateManager {
         this.stateHistoryManager.observeStateChange(lifecycleOwner);
         this.oneTimeActionHandler.observe(lifecycleOwner, this.actionManager.oneTimeActionFlow);
 
-        this.redrawRequestMutableFlow.throttle(0).observe(lifecycleOwner, this.redraw);
+        this.redrawRequestMutableFlow.throttle(0).observe(lifecycleOwner, () => this.redraw());
+
+        this.workspace.mousePointerFlow.distinctUntilChanged().observe(lifecycleOwner, (mousePointer) => {
+            console.log(mousePointer);
+            this.mouseInteractionController.onMouseEvent(mousePointer);
+            this.updateMouseCursor(mousePointer);
+        });
     }
 
     replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void {
@@ -179,6 +188,29 @@ export class MainStateManager {
                 return HighlightType.SELECTED;
             case null:
                 return HighlightType.NO;
+        }
+    }
+
+    private updateMouseCursor(mousePointer: MousePointer) {
+        const mouseCursor = (() => {
+            switch (mousePointer.type) {
+                case MousePointerType.MOVE: {
+                    const interactionPoint = this.commandEnvironment.getInteractionPoint(mousePointer.clientCoordinate);
+                    return interactionPoint?.mouseCursor
+                        ?? RetainableActionTypeMouseCursor[this.mouseInteractionController.currentRetainableActionType];
+                }
+                case MousePointerType.DRAG: {
+                    const mouseCommand = this.mouseInteractionController.activeMouseCommand;
+                    return mouseCommand?.mouseCursor ?? MouseCursor.DEFAULT;
+                }
+                case MousePointerType.UP:
+                    return MouseCursor.DEFAULT;
+                default:
+                    return null;
+            }
+        })();
+        if (mouseCursor) {
+            this.workspace.setMouseCursor(mouseCursor);
         }
     }
 }
@@ -263,7 +295,7 @@ class CommandEnvironmentImpl implements CommandEnvironment {
     }
 
     getInteractionPoint(pointPx: Point): InteractionPoint | null {
-        throw new Error("Method not implemented.");
+        return this.dependencies.workspace.getInteractionPoint(pointPx);
     }
 
     updateInteractionBounds(): void {

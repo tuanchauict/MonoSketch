@@ -9,8 +9,9 @@ import { Flow, LifecycleOwner } from '$libs/flow';
 import { WindowViewModel } from '$mono/window/window-viewmodel';
 import { GridCanvasViewController } from '$mono/workspace/canvas/grid-canvas-view-controller';
 import { InteractionCanvasViewController } from '$mono/workspace/canvas/interaction-canvas-view-controller';
+import type { MouseCursor } from "$mono/workspace/mouse/cursor-type";
 import { MouseEventObserver } from '$mono/workspace/mouse/mouse-event-observer';
-import { MousePointerType } from '$mono/workspace/mouse/mouse-pointer';
+import { type MousePointer, MousePointerType } from '$mono/workspace/mouse/mouse-pointer';
 import  { type AppContext } from '$app/app-context';
 import { KeyCommandType } from '$mono/keycommand';
 import  { type Rect } from '$libs/graphics-geo/rect';
@@ -71,6 +72,12 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         return this.mouseEventObserver.drawingOffsetPointPxFlow;
     }
 
+    get mousePointerFlow(): Flow<MousePointer> {
+        return this.mouseEventObserver.mousePointerFlow;
+    };
+
+
+
     protected onStartInternal() {
         WindowViewModel.windowSizeUpdateEventFlow.observe(this, () => {
             this.drawingInfoController.setSize(
@@ -120,6 +127,14 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
 
     setDrawingOffset(offsetPx: Point) {
         this.mouseEventObserver?.forceUpdateOffset(offsetPx);
+    }
+
+    setMouseCursor(mouseCursor: MouseCursor) {
+        this.container.style.cursor = mouseCursor;
+    }
+
+    getInteractionPoint(pointPx: Point): InteractionPoint | null {
+        return this.canvasViewController.getInteractionPoint(pointPx);
     }
 
     draw(): void {

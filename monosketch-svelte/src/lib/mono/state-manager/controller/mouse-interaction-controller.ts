@@ -24,6 +24,10 @@ export class MouseInteractionController {
     ) {
     }
 
+    get activeMouseCommand(): MouseCommand | null {
+        return this.currentMouseCommand;
+    }
+
     get currentRetainableActionType(): RetainableActionType {
         return this.actionManager.retainableActionFlow.value!;
     }
