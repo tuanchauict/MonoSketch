@@ -1,14 +1,13 @@
 import type { Point } from "$libs/graphics-geo/point";
 import { TODO } from "$libs/todo";
-import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
-import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-controller';
 import {
     type InteractionBound,
-    InteractionBoundType,
-    type InteractionPoint,
     LineInteractionBound,
     ScalableInteractionBound,
-} from '$mono/shape/interaction-bound';
+} from "$mono/shape-interaction-bound/interaction-bound";
+import type { InteractionPoint } from "$mono/shape-interaction-bound/interaction-point";
+import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
+import { BaseCanvasViewController } from '$mono/workspace/canvas/base-canvas-controller';
 import { type ThemeColor, ThemeColors } from '$mono/ui-state-manager/states';
 
 const DOT_RADIUS = 3.2;
@@ -42,13 +41,10 @@ export class InteractionCanvasViewController extends BaseCanvasViewController {
 
     protected drawInternal = () => {
         for (const bound of this.interactionBounds) {
-            switch (bound.type) {
-                case InteractionBoundType.LINE:
-                    this.drawLineInteractionBound(bound as LineInteractionBound);
-                    break;
-                case InteractionBoundType.SCALABLE_SHAPE:
-                    this.drawScalableInteractionBound(bound as ScalableInteractionBound);
-                    break;
+            if (bound instanceof LineInteractionBound) {
+                this.drawLineInteractionBound(bound);
+            } else if (bound instanceof ScalableInteractionBound) {
+                this.drawScalableInteractionBound(bound);
             }
         }
     };

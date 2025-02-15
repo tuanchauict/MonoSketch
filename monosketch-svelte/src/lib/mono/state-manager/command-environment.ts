@@ -5,7 +5,7 @@
 import { Flow } from "$libs/flow";
 import { Direction, type Point } from "$libs/graphics-geo/point";
 import type { Rect } from "$libs/graphics-geo/rect";
-import type { InteractionPoint } from "$mono/shape/interaction-bound";
+import type { InteractionPoint } from "$mono/shape-interaction-bound/interaction-point";
 import { type FocusingShape, ShapeFocusType } from "$mono/shape/selected-shape-manager";
 import { type Command, ShapeManager } from '$mono/shape/shape-manager';
 import { ShapeConnector } from '$mono/shape/connector/shape-connector';

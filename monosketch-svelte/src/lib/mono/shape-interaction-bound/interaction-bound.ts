@@ -43,7 +43,7 @@ export class ScalableInteractionBound implements InteractionBound {
             new ScaleInteractionPoint.BottomLeft(targetedShapeId, left, bottom),
             new ScaleInteractionPoint.BottomMiddle(targetedShapeId, horizontalMiddle, bottom),
             new ScaleInteractionPoint.BottomRight(targetedShapeId, right, bottom),
-        ]
+        ];
         return new ScalableInteractionBound(interactionPoints, left, top, right, bottom);
     }
 }

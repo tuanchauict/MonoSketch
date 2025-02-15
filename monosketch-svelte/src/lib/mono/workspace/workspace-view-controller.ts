@@ -1,5 +1,7 @@
 import type { Workspace } from "$app/workspace";
 import { Point } from "$libs/graphics-geo/point";
+import type { InteractionBound } from "$mono/shape-interaction-bound/interaction-bound";
+import type { InteractionPoint } from "$mono/shape-interaction-bound/interaction-point";
 import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { AxisCanvasViewController } from '$mono/workspace/canvas/axis-canvas-view-controller';
 import { DrawingInfo, DrawingInfoController } from '$mono/workspace/drawing-info';
@@ -7,7 +9,6 @@ import { Flow, LifecycleOwner } from '$libs/flow';
 import { WindowViewModel } from '$mono/window/window-viewmodel';
 import { GridCanvasViewController } from '$mono/workspace/canvas/grid-canvas-view-controller';
 import { InteractionCanvasViewController } from '$mono/workspace/canvas/interaction-canvas-view-controller';
-import type { InteractionBound, InteractionPoint } from '$mono/shape/interaction-bound';
 import { MouseEventObserver } from '$mono/workspace/mouse/mouse-event-observer';
 import { MousePointerType } from '$mono/workspace/mouse/mouse-pointer';
 import type { AppContext } from '$app/app-context';
