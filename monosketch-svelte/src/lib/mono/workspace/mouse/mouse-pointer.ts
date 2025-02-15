@@ -10,7 +10,7 @@ export enum MousePointerType {
     DOUBLE_CLICK,
 }
 
-export type MousePointerIdle = { type: MousePointerType.IDLE };
+export type MousePointerIdle = { type: MousePointerType.IDLE; boardCoordinate: Point };
 export type MousePointerMove = { type: MousePointerType.MOVE; boardCoordinate: Point; clientCoordinate: Point };
 export type MousePointerDown = {
     type: MousePointerType.DOWN;
@@ -50,7 +50,7 @@ export type MousePointer =
 
 
 export namespace MousePointer {
-    export const idle: MousePointerIdle = { type: MousePointerType.IDLE };
+    export const idle: MousePointerIdle = { type: MousePointerType.IDLE, boardCoordinate: Point.ZERO };
 
     export function move(boardCoordinate: Point, clientCoordinate: Point): MousePointerMove {
         return { type: MousePointerType.MOVE, boardCoordinate, clientCoordinate };
