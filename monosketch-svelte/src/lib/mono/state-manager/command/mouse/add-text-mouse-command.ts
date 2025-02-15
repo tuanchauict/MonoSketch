@@ -18,7 +18,7 @@ import { MouseCommand } from "./mouse-command";
  * 1. Identify the initial bound for the text shape
  * 2. Open a modal for entering text content when mouse up.
  */
-class AddTextMouseCommand implements MouseCommand {
+export class AddTextMouseCommand implements MouseCommand {
     mouseCursor: MouseCursor = MouseCursor.CROSSHAIR;
 
     private workingShape: Text | null = null;
