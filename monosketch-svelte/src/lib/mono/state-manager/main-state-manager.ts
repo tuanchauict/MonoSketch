@@ -6,6 +6,7 @@ import type { Workspace } from "$app/workspace";
 import { Flow, LifecycleOwner } from "$libs/flow";
 import type { Point, Direction } from "$libs/graphics-geo/point";
 import type { Rect } from "$libs/graphics-geo/rect";
+import { unit, type Unit } from "$libs/unit";
 import type { ActionManager } from "$mono/action-manager/action-manager";
 import { DEBUG_MODE } from "$mono/build_environment";
 import { MonoBoard } from "$mono/monobitmap/board";
@@ -20,6 +21,7 @@ import { type Command, ShapeManager } from "$mono/shape/shape-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import type { Group } from "$mono/shape/shape/group";
 import { type CommandEnvironment, EditingMode } from "$mono/state-manager/command-environment";
+import { MouseInteractionController } from "$mono/state-manager/controller/mouse-interaction-controller";
 import { OneTimeActionHandler } from "$mono/state-manager/one-time-action-handler";
 import { StateHistoryManager } from "$mono/state-manager/state-history-manager";
 import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
@@ -37,6 +39,11 @@ export class MainStateManager {
     private readonly stateHistoryManager: StateHistoryManager;
 
     private readonly oneTimeActionHandler: OneTimeActionHandler;
+
+    private readonly redrawRequestMutableFlow: Flow<Unit> = new Flow(unit);
+    private readonly mouseInteractionController: MouseInteractionController;
+
+    private readonly windowBoardBoundFlow: Flow<Rect>;
 
     constructor(
         private readonly mainBoard: MonoBoard,
@@ -84,6 +91,14 @@ export class MainStateManager {
             appUiStateManager,
             this.workspaceDao,
         );
+
+        this.mouseInteractionController = new MouseInteractionController(
+            this.commandEnvironment,
+            this.actionManager,
+            this.requestRedraw
+        );
+
+        this.windowBoardBoundFlow = this.workspace.windowBoardBoundFlow;
     }
 
     onStart(lifecycleOwner: LifecycleOwner): void {
@@ -96,6 +111,8 @@ export class MainStateManager {
 
         this.stateHistoryManager.observeStateChange(lifecycleOwner);
         this.oneTimeActionHandler.observe(lifecycleOwner, this.actionManager.oneTimeActionFlow);
+
+        this.redrawRequestMutableFlow.throttle(0).observe(lifecycleOwner, this.redraw);
     }
 
     replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void {
@@ -111,6 +128,26 @@ export class MainStateManager {
         this.shapeManager.replaceRoot(newRoot, newShapeConnector);
         this.workingParentGroup = this.shapeManager.root;
         this.commandEnvironment.clearSelectedShapes();
+    }
+
+    private requestRedraw() {
+        this.redrawRequestMutableFlow.value = unit;
+    }
+
+    private redraw() {
+        this.redrawMainBoard();
+        this.workspace.draw();
+    }
+
+    private redrawMainBoard() {
+        const windowBoardBound = this.windowBoardBoundFlow.value!;
+        this.shapeSearcher.clear(windowBoardBound);
+        this.mainBoard.clearAndSetWindow(windowBoardBound);
+        this.drawShapeToMainBoard(this.shapeManager.root);
+    }
+
+    private drawShapeToMainBoard(shape: AbstractShape) {
+        // TODO: Implement this method
     }
 }
 

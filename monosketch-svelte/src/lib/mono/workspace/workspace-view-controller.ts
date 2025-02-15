@@ -11,9 +11,9 @@ import { GridCanvasViewController } from '$mono/workspace/canvas/grid-canvas-vie
 import { InteractionCanvasViewController } from '$mono/workspace/canvas/interaction-canvas-view-controller';
 import { MouseEventObserver } from '$mono/workspace/mouse/mouse-event-observer';
 import { MousePointerType } from '$mono/workspace/mouse/mouse-pointer';
-import type { AppContext } from '$app/app-context';
+import  { type AppContext } from '$app/app-context';
 import { KeyCommandType } from '$mono/keycommand';
-import type { Rect } from '$libs/graphics-geo/rect';
+import  { type Rect } from '$libs/graphics-geo/rect';
 import { SelectionCanvasViewController } from '$mono/workspace/canvas/selection-canvas-view-controller';
 import { BoardCanvasViewController } from '$mono/workspace/canvas/board-canvas-view-controller';
 import { MonoBoard } from '$mono/monobitmap/board/board';
@@ -61,6 +61,16 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         appContext.setWorkspace(this);
     }
 
+    get windowBoardBoundFlow(): Flow<Rect> {
+        return this.drawingInfoController.drawingInfoFlow
+            .map((drawingInfo) => drawingInfo.boardBound)
+            .distinctUntilChanged();
+    }
+
+    get drawingOffsetPointPxFlow(): Flow<Point> {
+        return this.mouseEventObserver.drawingOffsetPointPxFlow;
+    }
+
     protected onStartInternal() {
         WindowViewModel.windowSizeUpdateEventFlow.observe(this, () => {
             this.drawingInfoController.setSize(
@@ -70,11 +80,11 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         });
         this.observeMouseInteractions();
 
-        this.drawingInfoController.drawingInfoFlow?.observe(this, (drawingInfo) => {
-            this?.canvasViewController.setDrawingInfo(drawingInfo);
+        this.drawingInfoController.drawingInfoFlow.observe(this, (drawingInfo) => {
+            this.canvasViewController.setDrawingInfo(drawingInfo);
         });
         this.appContext.appUiStateManager.themeModeFlow.observe(this, () => {
-            this?.canvasViewController.fullyRedraw();
+            this.canvasViewController.fullyRedraw();
         });
         this.appContext.appUiStateManager.fontSizeFlow.observe(this, (fontSize) => {
             this.drawingInfoController.setFont(fontSize);
@@ -103,6 +113,7 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         this.mouseEventObserver.observeEvents(this, shiftKeyStateFlow);
     };
 
+
     getDrawingInfo(): DrawingInfo {
         return this.drawingInfoController.drawingInfoFlow.value!;
     }
@@ -111,8 +122,8 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         this.mouseEventObserver?.forceUpdateOffset(offsetPx);
     }
 
-    get drawingOffsetPointPxFlow(): Flow<Point> {
-        return this.mouseEventObserver.drawingOffsetPointPxFlow;
+    draw(): void {
+        this.canvasViewController.drawBoard();
     }
 }
 
