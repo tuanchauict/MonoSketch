@@ -10,16 +10,18 @@ import { unit, type Unit } from "$libs/unit";
 import type { ActionManager } from "$mono/action-manager/action-manager";
 import { DEBUG_MODE } from "$mono/build_environment";
 import { MonoBoard } from "$mono/monobitmap/board";
+import { HighlightType } from "$mono/monobitmap/board/pixel";
 import type { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
 import type { InteractionPoint } from "$mono/shape-interaction-bound/interaction-point";
 import { AddShape, RemoveShape } from "$mono/shape/command/shape-manager-commands";
 import type { ShapeConnector } from "$mono/shape/connector/shape-connector";
 import { ShapeSearcher } from "$mono/shape/searcher/shape-searcher";
-import type { FocusingShape, SelectedShapeManager, ShapeFocusType } from "$mono/shape/selected-shape-manager";
+import { type FocusingShape, type SelectedShapeManager, ShapeFocusType } from "$mono/shape/selected-shape-manager";
 import type { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import { type Command, ShapeManager } from "$mono/shape/shape-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
-import type { Group } from "$mono/shape/shape/group";
+import { Group } from "$mono/shape/shape/group";
+import { Text } from "$mono/shape/shape/text";
 import { type CommandEnvironment, EditingMode } from "$mono/state-manager/command-environment";
 import { MouseInteractionController } from "$mono/state-manager/controller/mouse-interaction-controller";
 import { OneTimeActionHandler } from "$mono/state-manager/one-time-action-handler";
@@ -95,7 +97,7 @@ export class MainStateManager {
         this.mouseInteractionController = new MouseInteractionController(
             this.commandEnvironment,
             this.actionManager,
-            this.requestRedraw
+            this.requestRedraw,
         );
 
         this.windowBoardBoundFlow = this.workspace.windowBoardBoundFlow;
@@ -147,7 +149,37 @@ export class MainStateManager {
     }
 
     private drawShapeToMainBoard(shape: AbstractShape) {
-        // TODO: Implement this method
+        if (shape instanceof Group) {
+            for (const child of shape.items) {
+                this.drawShapeToMainBoard(child);
+            }
+            return;
+        }
+
+        const bitmap = this.bitmapManager.getBitmap(shape);
+        if (!bitmap) {
+            return;
+        }
+        this.mainBoard.fillBitmap(shape.bound.position, bitmap, this.getHighlightType(shape));
+        this.shapeSearcher.register(shape);
+    }
+
+    private getHighlightType(shape: AbstractShape): HighlightType {
+        if (shape instanceof Text && shape.isTextEditing) {
+            return HighlightType.TEXT_EDITING;
+        }
+        if (this.commandEnvironment.getSelectedShapes().has(shape)) {
+            return HighlightType.SELECTED;
+        }
+        const focusingType = this.selectedShapeManager.getFocusingType(shape);
+        switch (focusingType) {
+            case ShapeFocusType.LINE_CONNECTING:
+                return HighlightType.LINE_CONNECT_FOCUSING;
+            case ShapeFocusType.SELECT_MODE_HOVER:
+                return HighlightType.SELECTED;
+            case null:
+                return HighlightType.NO;
+        }
     }
 }
 
