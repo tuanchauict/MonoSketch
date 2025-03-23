@@ -26,16 +26,16 @@ export class MonoBoard {
     constructor(private readonly unitSize: Size = STANDARD_UNIT_SIZE) {
     }
 
-    clearAndSetWindow = (bound: Rect) => {
+    clearAndSetWindow(bound: Rect) {
         this.windowBound = bound;
         this.painterBoards.clear();
         const affectedBoards = this.getOrCreateOverlappedBoards(bound, false);
         for (const board of affectedBoards) {
             board.clear();
         }
-    };
+    }
 
-    fillBitmap = (position: Point, bitmap: MonoBitmap.Bitmap, highlight: HighlightType) => {
+    fillBitmap(position: Point, bitmap: MonoBitmap.Bitmap, highlight: HighlightType) {
         const rect = new Rect(position, bitmap.size);
         const affectedBoards = this.getOrCreateOverlappedBoards(rect, true);
 
@@ -45,10 +45,10 @@ export class MonoBoard {
         }
 
         this.drawCrossingPoints(crossingPoints, highlight);
-    };
+    }
 
     // This method is for testing only
-    fillRect = (rect: Rect, char: Char, highlight: HighlightType) => {
+    fillRect(rect: Rect, char: Char, highlight: HighlightType) {
         const affectedBoards = this.getOrCreateOverlappedBoards(rect, true);
         for (const board of affectedBoards) {
             board.fillRect(rect, char, highlight);
@@ -84,14 +84,14 @@ export class MonoBoard {
         return this.get(position.left, position.top);
     };
 
-    get = (left: number, top: number): Pixel => {
+    get(left: number, top: number): Pixel {
         const address = this.toBoardAddress(left, top);
         const board = this.painterBoards.get(address);
         const pixel = board ? board.get(left, top) : null;
         return pixel ? pixel : Pixel.TRANSPARENT;
     };
 
-    set = (left: number, top: number, char: Char, highlight: HighlightType) => {
+    set(left: number, top: number, char: Char, highlight: HighlightType) {
         this.getOrCreateBoard(left, top, true)
             ?.setPoint(new Point(left, top), char, highlight);
     };
