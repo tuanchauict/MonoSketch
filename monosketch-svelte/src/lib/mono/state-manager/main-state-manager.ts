@@ -121,6 +121,9 @@ export class MainStateManager {
         this.shapeManager.rootIdFlow.observe(lifecycleOwner, (rootId) => {
             this.workspace.setDrawingOffset(this.workspaceDao.getObject(rootId).offset);
         });
+        this.shapeManager.versionFlow.observe(lifecycleOwner, (version) => {
+            this.requestRedraw();
+        });
 
         this.stateHistoryManager.observeStateChange(lifecycleOwner);
         this.oneTimeActionHandler.observe(lifecycleOwner, this.actionManager.oneTimeActionFlow);

@@ -59,7 +59,9 @@ export class AddTextMouseCommand implements MouseCommand {
 
     private onMouseUp(environment: CommandEnvironment, mousePointer: MousePointerUp) {
         const text = this.workingShape;
-        if (!text) return;
+        if (!text) {
+            return
+        }
 
         this.changeShapeBound(environment, mousePointer.mouseDownBoardCoordinate, mousePointer.boardCoordinate);
 
@@ -130,8 +132,9 @@ export class AddTextMouseCommand implements MouseCommand {
 
     private changeShapeBound(environment: CommandEnvironment, point1: Point, point2: Point) {
         const currentShape = this.workingShape;
-        if (!currentShape) return;
-
+        if (!currentShape) {
+            return
+        }
         const rect = Rect.byLTRB(point1.left, point1.top, point2.left, point2.top);
         environment.shapeManager.execute(new ChangeBound(currentShape, rect));
     }
