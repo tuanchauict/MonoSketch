@@ -47,7 +47,7 @@ export interface CommandEnvironment {
 
     removeShape(shape: AbstractShape | null): void;
 
-    getShapes(point: Point): Iterable<AbstractShape>;
+    getShapes(point: Point): AbstractShape[];
 
     getAllShapesInZone(bound: Rect): Iterable<AbstractShape>;
 

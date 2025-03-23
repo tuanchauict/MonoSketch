@@ -283,7 +283,7 @@ class CommandEnvironmentImpl implements CommandEnvironment {
         }
     }
 
-    getShapes(point: Point): Iterable<AbstractShape> {
+    getShapes(point: Point): AbstractShape[] {
         return this.dependencies.shapeSearcher.getShapes(point);
     }
 
