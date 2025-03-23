@@ -1,4 +1,4 @@
-import { Point } from "$libs/graphics-geo/point";
+import { Point, PointF } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import { LineAnchor } from "$mono/shape/shape/linehelper";
 import { MouseCursor } from "$mono/workspace/mouse/cursor-type";
@@ -32,7 +32,7 @@ export namespace ScaleInteractionPoint {
             super(shapeId, left, top, mouseCursor);
         }
 
-        abstract createNewShapeBound(currentBound: Rect, newPoint: Point): Rect;
+        abstract createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect;
     }
 
     // Helper functions (similar to companion object in Kotlin)
@@ -49,7 +49,7 @@ export namespace ScaleInteractionPoint {
             super(shapeId, left, top, MouseCursor.RESIZE_NWSE);
         }
 
-        createNewShapeBound(currentBound: Rect, newPoint: Point): Rect {
+        createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect {
             return Rect.byLTRB(
                 adjustUpperBound(newPoint.left),
                 adjustUpperBound(newPoint.top),
@@ -64,7 +64,7 @@ export namespace ScaleInteractionPoint {
             super(shapeId, left, top, MouseCursor.RESIZE_NS);
         }
 
-        createNewShapeBound(currentBound: Rect, newPoint: Point): Rect {
+        createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect {
             return Rect.byLTRB(
                 currentBound.left,
                 adjustUpperBound(newPoint.top),
@@ -79,7 +79,7 @@ export namespace ScaleInteractionPoint {
             super(shapeId, left, top, MouseCursor.RESIZE_NESW);
         }
 
-        createNewShapeBound(currentBound: Rect, newPoint: Point): Rect {
+        createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect {
             return Rect.byLTRB(
                 currentBound.left,
                 adjustUpperBound(newPoint.top),
@@ -94,7 +94,7 @@ export namespace ScaleInteractionPoint {
             super(shapeId, left, top, MouseCursor.RESIZE_EW);
         }
 
-        createNewShapeBound(currentBound: Rect, newPoint: Point): Rect {
+        createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect {
             return Rect.byLTRB(
                 adjustUpperBound(newPoint.left),
                 currentBound.top,
@@ -109,7 +109,7 @@ export namespace ScaleInteractionPoint {
             super(shapeId, left, top, MouseCursor.RESIZE_EW);
         }
 
-        createNewShapeBound(currentBound: Rect, newPoint: Point): Rect {
+        createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect {
             return Rect.byLTRB(
                 currentBound.left,
                 currentBound.top,
@@ -124,7 +124,7 @@ export namespace ScaleInteractionPoint {
             super(shapeId, left, top, MouseCursor.RESIZE_NESW);
         }
 
-        createNewShapeBound(currentBound: Rect, newPoint: Point): Rect {
+        createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect {
             return Rect.byLTRB(
                 adjustUpperBound(newPoint.left),
                 currentBound.top,
@@ -139,7 +139,7 @@ export namespace ScaleInteractionPoint {
             super(shapeId, left, top, MouseCursor.RESIZE_NS);
         }
 
-        createNewShapeBound(currentBound: Rect, newPoint: Point): Rect {
+        createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect {
             return Rect.byLTRB(
                 currentBound.left,
                 currentBound.top,
@@ -154,7 +154,7 @@ export namespace ScaleInteractionPoint {
             super(shapeId, left, top, MouseCursor.RESIZE_NWSE);
         }
 
-        createNewShapeBound(currentBound: Rect, newPoint: Point): Rect {
+        createNewShapeBound(currentBound: Rect, newPoint: PointF): Rect {
             return Rect.byLTRB(
                 currentBound.left,
                 currentBound.top,
