@@ -140,6 +140,10 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
     draw(): void {
         this.canvasViewController.drawBoard();
     }
+
+    drawSelectionBound(bound: Rect | null): void {
+        this.canvasViewController.drawSelectionBound(bound);
+    }
 }
 
 class CanvasViewController {
@@ -196,7 +200,7 @@ class CanvasViewController {
         this.interactionCanvasViewController.draw();
     };
 
-    drawSelectionBound(selectionBound?: Rect) {
+    drawSelectionBound(selectionBound: Rect | null) {
         this.selectionCanvasViewController.setSelectingBound(selectionBound);
         this.selectionCanvasViewController.draw();
     };

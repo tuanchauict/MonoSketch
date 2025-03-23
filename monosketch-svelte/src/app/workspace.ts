@@ -27,4 +27,6 @@ export interface Workspace {
     getInteractionPoint(pointPx: Point): InteractionPoint | null;
 
     draw(): void;
+
+    drawSelectionBound(bound: Rect | null): void;
 }

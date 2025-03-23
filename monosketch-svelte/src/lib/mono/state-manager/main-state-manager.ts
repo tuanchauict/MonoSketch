@@ -5,7 +5,8 @@
 import type { Workspace } from "$app/workspace";
 import { Flow, LifecycleOwner } from "$libs/flow";
 import type { Direction, Point } from "$libs/graphics-geo/point";
-import type { Rect } from "$libs/graphics-geo/rect";
+import { Rect } from "$libs/graphics-geo/rect";
+import { any } from "$libs/sequence";
 import { unit, type Unit } from "$libs/unit";
 import type { ActionManager } from "$mono/action-manager/action-manager";
 import { RetainableActionTypeMouseCursor } from "$mono/action-manager/retainable-actions";
@@ -47,8 +48,6 @@ export class MainStateManager {
 
     private readonly redrawRequestMutableFlow: Flow<Unit> = new Flow(unit);
     private readonly mouseInteractionController: MouseInteractionController;
-
-    private readonly windowBoardBoundFlow: Flow<Rect>;
 
     constructor(
         private readonly mainBoard: MonoBoard,
@@ -102,14 +101,23 @@ export class MainStateManager {
             this.actionManager,
             () => this.requestRedraw(),
         );
+    }
 
-        this.windowBoardBoundFlow = this.workspace.windowBoardBoundFlow;
+    get windowBoardBound(): Rect {
+        return this.workspace.windowBoardBoundFlow.value ?? Rect.ZERO;
     }
 
     onStart(lifecycleOwner: LifecycleOwner): void {
         this.workspace.drawingOffsetPointPxFlow.observe(lifecycleOwner, (offsetPointPx) => {
             this.workspaceDao.getObject(this.shapeManager.root.id).offset = offsetPointPx;
         });
+        this.workspace.windowBoardBoundFlow.observe(lifecycleOwner, (windowBoardBound) => {
+            if (DEBUG_MODE) {
+                console.log(`¶ Drawing info: window board size ${windowBoardBound} • pixel size ${this.workspace.getDrawingInfo().boundPx}`);
+            }
+            this.requestRedraw();
+        });
+
         this.shapeManager.rootIdFlow.observe(lifecycleOwner, (rootId) => {
             this.workspace.setDrawingOffset(this.workspaceDao.getObject(rootId).offset);
         });
@@ -141,8 +149,6 @@ export class MainStateManager {
     }
 
     private requestRedraw() {
-        console.log(this.redrawRequestMutableFlow);
-        console.log(this);
         this.redrawRequestMutableFlow.value = unit;
     }
 
@@ -152,7 +158,7 @@ export class MainStateManager {
     }
 
     private redrawMainBoard() {
-        const windowBoardBound = this.windowBoardBoundFlow.value!;
+        const windowBoardBound = this.windowBoardBound;
         this.shapeSearcher.clear(windowBoardBound);
         this.mainBoard.clearAndSetWindow(windowBoardBound);
         this.drawShapeToMainBoard(this.shapeManager.root);
@@ -213,6 +219,10 @@ export class MainStateManager {
         if (mouseCursor) {
             this.workspace.setMouseCursor(mouseCursor);
         }
+    }
+
+    updateInteractionBounds(selectedShapes: Set<AbstractShape>): void {
+        throw new Error("Method not implemented.");
     }
 }
 
@@ -292,7 +302,7 @@ class CommandEnvironmentImpl implements CommandEnvironment {
     }
 
     getWindowBound(): Rect {
-        throw new Error("Method not implemented.");
+        return this.dependencies.workspace.windowBoardBoundFlow.value ?? Rect.ZERO;
     }
 
     getInteractionPoint(pointPx: Point): InteractionPoint | null {
@@ -300,15 +310,15 @@ class CommandEnvironmentImpl implements CommandEnvironment {
     }
 
     updateInteractionBounds(): void {
-        throw new Error("Method not implemented.");
+        this.dependencies.mainStateManager.updateInteractionBounds(this.dependencies.selectedShapeManager.selectedShapes);
     }
 
     isPointInInteractionBounds(point: Point): boolean {
-        throw new Error("Method not implemented.");
+        return any(this.dependencies.selectedShapeManager.selectedShapes, shape => shape.contains(point));
     }
 
     setSelectionBound(bound: Rect | null): void {
-        throw new Error("Method not implemented.");
+        this.dependencies.workspace.drawSelectionBound(bound);
     }
 
     get selectedShapesFlow(): Flow<Set<AbstractShape>> {
@@ -338,7 +348,9 @@ class CommandEnvironmentImpl implements CommandEnvironment {
     }
 
     selectAllShapes(): void {
-        throw new Error("Method not implemented.");
+        for (const shape of this.dependencies.getWorkingParentGroup().items) {
+            this.addSelectedShape(shape);
+        }
     }
 
     clearSelectedShapes(): void {
