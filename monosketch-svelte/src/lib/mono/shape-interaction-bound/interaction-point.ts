@@ -1,4 +1,4 @@
-import { Point, PointF } from "$libs/graphics-geo/point";
+import { PointF } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import { LineAnchor } from "$mono/shape/shape/linehelper";
 import { MouseCursor } from "$mono/workspace/mouse/cursor-type";
