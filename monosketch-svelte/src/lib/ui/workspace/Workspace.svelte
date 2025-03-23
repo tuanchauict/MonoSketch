@@ -37,15 +37,8 @@
         workspaceViewController.onStop();
     });
 </script>
-
-<div class="canvas-container" bind:this="{canvasContainer}">
-    <canvas class="drawing-info" bind:this="{drawingInfoCanvas}"></canvas>
-    <canvas bind:this="{gridCanvas}"></canvas>
-    <canvas bind:this="{boardCanvas}"></canvas>
+<div class="canvas-container">
     <canvas bind:this="{axisCanvas}"></canvas>
-    <canvas bind:this="{interactionCanvas}"></canvas>
-    <canvas bind:this="{selectionCanvas}"></canvas>
-
     <TooltipTarget text="Jump to (0, 0)" direction="{TooltipDirection.RIGHT}"
                    style="width: {AXIS_Y_WIDTH}px; height: {AXIS_X_HEIGHT}px;">
         <button tabindex="-1" class="jump"
@@ -53,11 +46,26 @@
                 on:click={() => workspaceViewController.setDrawingOffset(Point.ZERO)}></button>
     </TooltipTarget>
 </div>
+<div class="canvas-container shift" bind:this="{canvasContainer}">
+    <canvas class="drawing-info" bind:this="{drawingInfoCanvas}"></canvas>
+    <canvas bind:this="{gridCanvas}"></canvas>
+    <canvas bind:this="{boardCanvas}"></canvas>
+    <canvas bind:this="{interactionCanvas}"></canvas>
+    <canvas bind:this="{selectionCanvas}"></canvas>
+</div>
 
 <style lang="scss">
     .canvas-container {
-        width: 100%;
-        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+
+        &.shift {
+            left: 33px;
+            top: 18px;
+        }
     }
 
     canvas {
