@@ -43,28 +43,39 @@ export class ShapeSearcher {
      * Note: Group shape is not included in the result.
      */
     getShapes(point: Point): AbstractShape[] {
-        return this.zoneOwnersManager.getPotentialOwners(point)
-            .map(ownerId => this.shapeManager.getShape(ownerId))
-            .filter((shape): shape is AbstractShape => !!shape)
-            .filter(shape => {
-                const position = shape.bound.position;
-                const bitmap = this.getBitmap(shape);
-                if (!bitmap) {
-                    return false;
-                }
-                const bitmapRow = point.row - position.row;
-                const bitmapCol = point.column - position.column;
-                const isTransparent = isTransparentChar(bitmap.getVisual(bitmapRow, bitmapCol));
-                return !isTransparent;
-            });
+        const potentialOwners = this.zoneOwnersManager.getPotentialOwners(point);
+        const shapes: AbstractShape[] = [];
+        for (const ownerId of potentialOwners) {
+            const shape = this.shapeManager.getShape(ownerId);
+            if (!shape) {
+                continue;
+            }
+            const position = shape.bound.position;
+            const bitmap = this.getBitmap(shape);
+            if (!bitmap) {
+                continue;
+            }
+            const bitmapRow = point.row - position.row;
+            const bitmapCol = point.column - position.column;
+            const isTransparent = isTransparentChar(bitmap.getVisual(bitmapRow, bitmapCol));
+            if (!isTransparent) {
+                shapes.push(shape);
+            }
+        }
+        return shapes;
     }
 
     getAllShapesInZone(bound: Rect): AbstractShape[] {
         const zoneOwners = Array.from(this.zoneOwnersManager.getAllPotentialOwnersInZone(bound));
-        return zoneOwners
-            .map(ownerId => this.shapeManager.getShape(ownerId))
-            .filter((shape): shape is AbstractShape => shape !== null)
-            .filter(shape => shape.isOverlapped(bound));
+        const shapes: AbstractShape[] = [];
+        for (const ownerId of zoneOwners) {
+            const shape = this.shapeManager.getShape(ownerId);
+            if (shape && shape.isOverlapped(bound)) {
+                shapes.push(shape);
+            }
+        }
+
+        return shapes;
     }
 
     /**
