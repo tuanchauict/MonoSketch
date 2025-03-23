@@ -100,7 +100,7 @@ export class MainStateManager {
         this.mouseInteractionController = new MouseInteractionController(
             this.commandEnvironment,
             this.actionManager,
-            this.requestRedraw,
+            () => this.requestRedraw(),
         );
 
         this.windowBoardBoundFlow = this.workspace.windowBoardBoundFlow;
@@ -120,7 +120,6 @@ export class MainStateManager {
         this.redrawRequestMutableFlow.throttle(0).observe(lifecycleOwner, () => this.redraw());
 
         this.workspace.mousePointerFlow.distinctUntilChanged().observe(lifecycleOwner, (mousePointer) => {
-            console.log(mousePointer);
             this.mouseInteractionController.onMouseEvent(mousePointer);
             this.updateMouseCursor(mousePointer);
         });
@@ -142,6 +141,8 @@ export class MainStateManager {
     }
 
     private requestRedraw() {
+        console.log(this.redrawRequestMutableFlow);
+        console.log(this);
         this.redrawRequestMutableFlow.value = unit;
     }
 
