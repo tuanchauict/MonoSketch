@@ -22,7 +22,7 @@ class SelectShapeMouseCommandImpl implements MouseCommand {
                         mousePointer.boardCoordinate.left,
                         mousePointer.boardCoordinate.top,
                     ),
-                )
+                );
                 return MouseCommand.CommandResultType.WORKING;
             case MousePointerType.UP: {
                 environment.setSelectionBound(null);

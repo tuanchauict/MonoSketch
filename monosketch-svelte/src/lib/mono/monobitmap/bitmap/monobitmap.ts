@@ -26,7 +26,7 @@ export namespace MonoBitmap {
             return getOrNull(this.matrix, row)?.getVisual(column) ?? TRANSPARENT_CHAR;
         }
 
-        getDirection  (row: number, column: number): Char {
+        getDirection(row: number, column: number): Char {
             return getOrNull(this.matrix, row)?.getDirection(column) ?? TRANSPARENT_CHAR;
         }
 
