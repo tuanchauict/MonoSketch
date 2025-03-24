@@ -1,5 +1,7 @@
 import type { Workspace } from "$app/workspace";
 import { Point } from "$libs/graphics-geo/point";
+import type { InteractionBound } from "$mono/shape-interaction-bound/interaction-bound";
+import type { InteractionPoint } from "$mono/shape-interaction-bound/interaction-point";
 import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 import { AxisCanvasViewController } from '$mono/workspace/canvas/axis-canvas-view-controller';
 import { DrawingInfo, DrawingInfoController } from '$mono/workspace/drawing-info';
@@ -7,12 +9,12 @@ import { Flow, LifecycleOwner } from '$libs/flow';
 import { WindowViewModel } from '$mono/window/window-viewmodel';
 import { GridCanvasViewController } from '$mono/workspace/canvas/grid-canvas-view-controller';
 import { InteractionCanvasViewController } from '$mono/workspace/canvas/interaction-canvas-view-controller';
-import type { InteractionBound, InteractionPoint } from '$mono/shape/interaction-bound';
+import type { MouseCursor } from "$mono/workspace/mouse/cursor-type";
 import { MouseEventObserver } from '$mono/workspace/mouse/mouse-event-observer';
-import { MousePointerType } from '$mono/workspace/mouse/mouse-pointer';
-import type { AppContext } from '$app/app-context';
+import { type MousePointer, MousePointerType } from '$mono/workspace/mouse/mouse-pointer';
+import  { type AppContext } from '$app/app-context';
 import { KeyCommandType } from '$mono/keycommand';
-import type { Rect } from '$libs/graphics-geo/rect';
+import  { type Rect } from '$libs/graphics-geo/rect';
 import { SelectionCanvasViewController } from '$mono/workspace/canvas/selection-canvas-view-controller';
 import { BoardCanvasViewController } from '$mono/workspace/canvas/board-canvas-view-controller';
 import { MonoBoard } from '$mono/monobitmap/board/board';
@@ -60,6 +62,22 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         appContext.setWorkspace(this);
     }
 
+    get windowBoardBoundFlow(): Flow<Rect> {
+        return this.drawingInfoController.drawingInfoFlow
+            .map((drawingInfo) => drawingInfo.boardBound)
+            .distinctUntilChanged();
+    }
+
+    get drawingOffsetPointPxFlow(): Flow<Point> {
+        return this.mouseEventObserver.drawingOffsetPointPxFlow;
+    }
+
+    get mousePointerFlow(): Flow<MousePointer> {
+        return this.mouseEventObserver.mousePointerFlow;
+    };
+
+
+
     protected onStartInternal() {
         WindowViewModel.windowSizeUpdateEventFlow.observe(this, () => {
             this.drawingInfoController.setSize(
@@ -69,11 +87,11 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         });
         this.observeMouseInteractions();
 
-        this.drawingInfoController.drawingInfoFlow?.observe(this, (drawingInfo) => {
-            this?.canvasViewController.setDrawingInfo(drawingInfo);
+        this.drawingInfoController.drawingInfoFlow.observe(this, (drawingInfo) => {
+            this.canvasViewController.setDrawingInfo(drawingInfo);
         });
         this.appContext.appUiStateManager.themeModeFlow.observe(this, () => {
-            this?.canvasViewController.fullyRedraw();
+            this.canvasViewController.fullyRedraw();
         });
         this.appContext.appUiStateManager.fontSizeFlow.observe(this, (fontSize) => {
             this.drawingInfoController.setFont(fontSize);
@@ -102,6 +120,7 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         this.mouseEventObserver.observeEvents(this, shiftKeyStateFlow);
     };
 
+
     getDrawingInfo(): DrawingInfo {
         return this.drawingInfoController.drawingInfoFlow.value!;
     }
@@ -110,8 +129,20 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         this.mouseEventObserver?.forceUpdateOffset(offsetPx);
     }
 
-    get drawingOffsetPointPxFlow(): Flow<Point> {
-        return this.mouseEventObserver.drawingOffsetPointPxFlow;
+    setMouseCursor(mouseCursor: MouseCursor) {
+        this.container.style.cursor = mouseCursor;
+    }
+
+    getInteractionPoint(pointPx: Point): InteractionPoint | null {
+        return this.canvasViewController.getInteractionPoint(pointPx);
+    }
+
+    draw(): void {
+        this.canvasViewController.drawBoard();
+    }
+
+    drawSelectionBound(bound: Rect | null): void {
+        this.canvasViewController.drawSelectionBound(bound);
     }
 }
 
@@ -169,7 +200,7 @@ class CanvasViewController {
         this.interactionCanvasViewController.draw();
     };
 
-    drawSelectionBound(selectionBound?: Rect) {
+    drawSelectionBound(selectionBound: Rect | null) {
         this.selectionCanvasViewController.setSelectingBound(selectionBound);
         this.selectionCanvasViewController.draw();
     };

@@ -93,7 +93,7 @@ export class Text extends AbstractShape {
         return this.boundInner;
     }
 
-    set bound(newBound: Rect) {
+    setBound(newBound: Rect) {
         this.update(() => {
             const isUpdated = this.boundInner !== newBound;
             this.userSettingSize = newBound.size;

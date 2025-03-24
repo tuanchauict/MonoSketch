@@ -37,7 +37,7 @@ export class PainterBoard {
      * If a pixel in input [PainterBoard] is transparent, the value in the current board at that
      * position won't be overwritten.
      */
-    fill = (board: PainterBoard) => {
+    fill(board: PainterBoard) {
         if (this.matrix.length == 0 || this.matrix[0].length == 0) {
             return;
         }
@@ -81,11 +81,11 @@ export class PainterBoard {
      * If a pixel in input [bitmap] is transparent, the value in the current board at that
      * position won't be overwritten.
      */
-    fillBitmap = (
+    fillBitmap(
         position: Point,
         bitmap: MonoBitmap.Bitmap,
         highlight: HighlightType,
-    ): Array<CrossPoint> => {
+    ): Array<CrossPoint> {
         if (bitmap.isEmpty()) {
             return [];
         }

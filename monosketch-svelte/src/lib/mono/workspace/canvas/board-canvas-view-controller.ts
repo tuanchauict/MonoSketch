@@ -22,12 +22,12 @@ export class BoardCanvasViewController extends BaseCanvasViewController {
         this.context.font = drawingInfo.font;
         for (const row of drawingInfo.boardRowRange) {
             for (const column of drawingInfo.boardColumnRange) {
-                this.drawPixel(this.board.get(row, column), row, column);
+                this.drawPixel(this.board.get(column, row), row, column);
             }
         }
     }
 
-    private drawPixel = (pixel: Pixel, row: number, column: number) => {
+    private drawPixel(pixel: Pixel, row: number, column: number) {
         if (pixel.isTransparent) {
             return;
         }

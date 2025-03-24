@@ -156,6 +156,15 @@ export function singleOrNull<T>(array: T[] | Set<T>): T | null {
     return array.length === 1 ? array[0] : null;
 }
 
+export function any<T>(iterable: Iterable<T>, func: (value: T) => boolean): boolean {
+    for (const value of iterable) {
+        if (func(value)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 export namespace ListExt {
     /**
      * Create a list of the specified size with the specified value.

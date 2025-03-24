@@ -17,6 +17,7 @@ import type { Line } from "$mono/shape/shape/line";
 import { Text } from "$mono/shape/shape/text";
 import { ClipboardManager } from "$mono/state-manager/clipboard-manager";
 import type { CommandEnvironment } from "$mono/state-manager/command-environment";
+import { EditTextShapeHelper } from "$mono/state-manager/command/text/edit-text-shape-helper";
 import { FileRelatedActionsHelper } from "$mono/state-manager/onetimeaction/file-related-action-helper";
 import type { StateHistoryManager } from "$mono/state-manager/state-history-manager";
 import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
@@ -176,11 +177,10 @@ export class OneTimeActionHandler {
             this.environment.shapeManager.execute(new UpdateTextEditingMode(shape, true));
 
             console.log("Edit text shape", oldText);
-            // TODO: Uncomment this code after implementing EditTextShapeHelper
-            // EditTextShapeHelper.showEditTextDialog(this.environment, shape, false, () => {
-            //     this.environment.shapeManager.execute(new UpdateTextEditingMode(shape, false));
-            //     this.environment.exitEditingMode(oldText !== shape.text);
-            // });
+            EditTextShapeHelper.showEditTextDialog(this.environment, shape, false, () => {
+                this.environment.shapeManager.execute(new UpdateTextEditingMode(shape, false));
+                this.environment.exitEditingMode(oldText !== shape.text);
+            });
         }
     }
 

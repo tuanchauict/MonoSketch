@@ -22,11 +22,13 @@ export namespace MonoBitmap {
 
         isEmpty = (): boolean => this.size.equals(Size.ZERO);
 
-        getVisual = (row: number, column: number): Char =>
-            !this.isEmpty() ? this.matrix[row].getVisual(column) : TRANSPARENT_CHAR;
+        getVisual(row: number, column: number): Char {
+            return getOrNull(this.matrix, row)?.getVisual(column) ?? TRANSPARENT_CHAR;
+        }
 
-        getDirection = (row: number, column: number): Char =>
-            !this.isEmpty() ? this.matrix[row].getDirection(column) : TRANSPARENT_CHAR;
+        getDirection(row: number, column: number): Char {
+            return getOrNull(this.matrix, row)?.getDirection(column) ?? TRANSPARENT_CHAR;
+        }
 
         toString(): string {
             return this.matrix.map((row) => row.toString()).join('\n');
@@ -161,12 +163,12 @@ export namespace MonoBitmap {
             );
         }
 
-        *asSequence(
+        * asSequence(
             fromIndexOptional?: number,
             toExclusiveIndexOptional?: number,
         ): Generator<Cell> {
             const fromIndex = fromIndexOptional === undefined ? 0 : fromIndexOptional;
-            const toExclusiveIndex = toExclusiveIndexOptional === undefined ?  this.size : toExclusiveIndexOptional;
+            const toExclusiveIndex = toExclusiveIndexOptional === undefined ? this.size : toExclusiveIndexOptional;
             const foundLow = binarySearch(this.sortedCells, (cell) => cell.index - fromIndex);
             const low = foundLow >= 0 ? foundLow : -foundLow - 1;
 
@@ -208,6 +210,7 @@ export namespace MonoBitmap {
             public index: number,
             public visual: Char,
             public direction: Char,
-        ) {}
+        ) {
+        }
     }
 }

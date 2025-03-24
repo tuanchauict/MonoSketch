@@ -9,7 +9,7 @@ const DASH_PATTERN = [8, 6];
  * A canvas view controller to render the selection rectangle bound indicator.
  */
 export class SelectionCanvasViewController extends BaseCanvasViewController {
-    private selectingBound?: Rect;
+    private selectingBound: Rect | null = null;
 
     constructor(
         canvas: HTMLCanvasElement,
@@ -18,7 +18,7 @@ export class SelectionCanvasViewController extends BaseCanvasViewController {
         super(canvas);
     }
 
-    setSelectingBound = (selectingBound?: Rect) => {
+    setSelectingBound(selectingBound: Rect | null) {
         this.selectingBound = selectingBound;
     };
 

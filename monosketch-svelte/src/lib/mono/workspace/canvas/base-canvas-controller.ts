@@ -42,9 +42,10 @@ export class BaseCanvasViewController {
         this.drawInternal();
     };
 
-    protected drawInternal() {}
+    protected drawInternal() {
+    }
 
-    protected drawText = (text: string, row: number, column: number) => {
+    protected drawText(text: string, row: number, column: number) {
         const yPx = this.drawingInfo.toYPx(row);
         const xPx = this.drawingInfo.toXPx(column);
         this.context.fillText(
