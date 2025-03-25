@@ -85,6 +85,12 @@ export enum Direction {
     VERTICAL,
 }
 
+export namespace Direction {
+    export function normalizedDirection(direction: Direction): Direction {
+        return direction === Direction.HORIZONTAL ? Direction.HORIZONTAL : Direction.VERTICAL;
+    }
+}
+
 export class DirectedPoint implements Comparable {
     static of(direction: Direction, left: number, top: number): DirectedPoint {
         return new DirectedPoint(direction, new Point(left, top));
