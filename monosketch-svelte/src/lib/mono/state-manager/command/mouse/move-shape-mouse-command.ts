@@ -36,7 +36,7 @@ export class MoveShapeMouseCommand implements MouseCommand {
         moveShapes(environment, this.shapes, mouseType === MousePointerType.UP, shape => {
             const initialPosition = this.initialPositions.get(shape.id);
             return initialPosition ? initialPosition.plus(offset) : null;
-        })
+        });
         environment.updateInteractionBounds();
 
         const isDone = mouseType === MousePointerType.UP || mouseType == MousePointerType.IDLE;
