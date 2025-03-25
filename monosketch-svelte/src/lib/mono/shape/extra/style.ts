@@ -161,7 +161,7 @@ export class StraightStrokeDashPattern {
  * A class for defining a stroke style of straight line.
  */
 export class StraightStrokeStyle {
-    constructor(
+    private constructor(
         public readonly id: string,
         public readonly displayName: string,
         public readonly horizontal: Char,

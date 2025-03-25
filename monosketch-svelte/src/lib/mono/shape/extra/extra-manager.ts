@@ -48,7 +48,7 @@ class ShapeExtraManagerImpl {
     };
 
     defaultLineExtra: ILineExtra = {
-        isStrokeEnabled: false,
+        isStrokeEnabled: true,
         userSelectedStrokeStyle: PredefinedStraightStrokeStyle.PREDEFINED_STYLES[0],
         isStartAnchorEnabled: false,
         userSelectedStartAnchor: PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS[0],
