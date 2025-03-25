@@ -6,7 +6,7 @@ import { AddLineMouseCommand } from "$mono/state-manager/command/mouse/add-line-
 import { AddTextMouseCommand } from "$mono/state-manager/command/mouse/add-text-mouse-command";
 import { LineInteractionMouseCommand } from "$mono/state-manager/command/mouse/line-interaction-mouse-command";
 import { MouseCommand } from "$mono/state-manager/command/mouse/mouse-command";
-import { MoveShapeMouseCommand } from "$mono/state-manager/command/mouse/mouse-shape-mouse-command";
+import { MoveShapeMouseCommand } from "$mono/state-manager/command/mouse/move-shape-mouse-command";
 import { ScaleShapeMouseCommand } from "$mono/state-manager/command/mouse/scale-shape-mouse-command";
 import { SelectShapeMouseCommand } from "$mono/state-manager/command/mouse/select-shape-mouse-command";
 import {
@@ -72,8 +72,8 @@ export class MouseCommandFactory {
             environment.addSelectedShape(focusingShape.shape);
         }
 
-        const selectedShapes = environment.getSelectedShapes();
-        if (selectedShapes.size === 0) {
+        const selectedShapes = Array.from(environment.getSelectedShapes());
+        if (selectedShapes.length === 0) {
             return null;
         }
 
