@@ -39,15 +39,17 @@ export class PredefinedRectangleFillStyle {
  * An object for listing all predefined StraightStrokeStyle
  */
 export class PredefinedStraightStrokeStyle {
-    static readonly NO_STROKE = new StraightStrokeStyle(
-        "S0",
-        "No Stroke",
-        HALF_TRANSPARENT_CHAR,
-        HALF_TRANSPARENT_CHAR,
-        HALF_TRANSPARENT_CHAR,
-        HALF_TRANSPARENT_CHAR,
-        HALF_TRANSPARENT_CHAR,
-        HALF_TRANSPARENT_CHAR,
+    static readonly NO_STROKE = StraightStrokeStyle.create(
+        {
+            id: "S0",
+            displayName: "No Stroke",
+            horizontal: HALF_TRANSPARENT_CHAR,
+            vertical: HALF_TRANSPARENT_CHAR,
+            downLeft: HALF_TRANSPARENT_CHAR,
+            upRight: HALF_TRANSPARENT_CHAR,
+            upLeft: HALF_TRANSPARENT_CHAR,
+            downRight: HALF_TRANSPARENT_CHAR,
+        },
     );
 
     private static readonly ALL_STYLES: StraightStrokeStyle[] = [
@@ -94,7 +96,7 @@ export class PredefinedStraightStrokeStyle {
         }),
     ];
 
-    private static readonly ID_TO_STYLE_MAP: { [id: string]: StraightStrokeStyle } = Object.fromEntries(
+    private static readonly ID_TO_STYLE_MAP: Map<string, StraightStrokeStyle> = new Map(
         PredefinedStraightStrokeStyle.ALL_STYLES.map(style => [style.id, style]),
     );
 
@@ -102,11 +104,12 @@ export class PredefinedStraightStrokeStyle {
         "S1": "S4",
     };
 
-    static readonly PREDEFINED_STYLES: StraightStrokeStyle[] = ["S1", "S2", "S3"].map(id => PredefinedStraightStrokeStyle.ID_TO_STYLE_MAP[id]);
+    static readonly PREDEFINED_STYLES: StraightStrokeStyle[] =
+        ["S1", "S2", "S3"].map(id => PredefinedStraightStrokeStyle.ID_TO_STYLE_MAP.get(id)!);
 
     static getStyle(id: string, isRounded: boolean = false): StraightStrokeStyle | null {
         const adjustedId = isRounded ? PredefinedStraightStrokeStyle.STYLE_TO_ROUNDED_CORNER_STYLE_MAP[id] || id : id;
-        return PredefinedStraightStrokeStyle.ID_TO_STYLE_MAP[adjustedId];
+        return PredefinedStraightStrokeStyle.ID_TO_STYLE_MAP.get(adjustedId) ?? null;
     }
 
     static isCornerRoundable(id: string | null | undefined): boolean {
@@ -178,8 +181,8 @@ export class PredefinedRectangleBorderStyle {
         new NinePatchDrawable(
             NinePatchDrawablePattern.fromText(PredefinedRectangleBorderStyle.PATTERN_TEXT_NO_BORDER),
             PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
-            PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0
-        )
+            PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
+        ),
     );
 
     static readonly PREDEFINED_STYLES: RectangleBorderStyle[] = [
@@ -189,8 +192,8 @@ export class PredefinedRectangleBorderStyle {
             new NinePatchDrawable(
                 NinePatchDrawablePattern.fromText(PredefinedRectangleBorderStyle.PATTERN_TEXT_0),
                 PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
-                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0
-            )
+                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
+            ),
         ),
         new RectangleBorderStyle(
             "B2",
@@ -198,8 +201,8 @@ export class PredefinedRectangleBorderStyle {
             new NinePatchDrawable(
                 NinePatchDrawablePattern.fromText(PredefinedRectangleBorderStyle.PATTERN_TEXT_1),
                 PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
-                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0
-            )
+                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
+            ),
         ),
         new RectangleBorderStyle(
             "B3",
@@ -207,12 +210,12 @@ export class PredefinedRectangleBorderStyle {
             new NinePatchDrawable(
                 NinePatchDrawablePattern.fromText(PredefinedRectangleBorderStyle.PATTERN_TEXT_2),
                 PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
-                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0
-            )
-        )
+                PredefinedRectangleBorderStyle.REPEATABLE_RANGE_0,
+            ),
+        ),
     ];
 
     static readonly PREDEFINED_STYLE_MAP: { [id: string]: RectangleBorderStyle } = Object.fromEntries(
-        PredefinedRectangleBorderStyle.PREDEFINED_STYLES.map(style => [style.id, style])
+        PredefinedRectangleBorderStyle.PREDEFINED_STYLES.map(style => [style.id, style]),
     );
 }
