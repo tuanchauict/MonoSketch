@@ -28,10 +28,10 @@ export class LineInteractionMouseCommand implements MouseCommand {
         switch (mousePointer.type) {
             case MousePointerType.DRAG:
                 this.move(environment, mousePointer.boardCoordinate, false, !mousePointer.isWithShiftKey);
-                break
+                break;
             case MousePointerType.UP:
                 this.move(environment, mousePointer.boardCoordinate, true, !mousePointer.isWithShiftKey);
-                break
+                break;
         }
 
         return mousePointer.type === MousePointerType.IDLE ? CommandResultType.DONE : CommandResultType.WORKING;
