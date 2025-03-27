@@ -140,7 +140,7 @@ export class MainStateManager {
 
         this.selectedShapeManager.selectedShapesFlow.observe(lifecycleOwner, (selectedShapes) => {
             this.updateInteractionBounds(selectedShapes);
-        })
+        });
     }
 
     replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void {
