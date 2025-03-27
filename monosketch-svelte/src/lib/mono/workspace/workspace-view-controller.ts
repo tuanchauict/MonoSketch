@@ -141,6 +141,10 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         this.canvasViewController.drawBoard();
     }
 
+    drawInteractionBounds(interactionBounds: InteractionBound[]) {
+        this.canvasViewController.drawInteractionBounds(interactionBounds);
+    }
+
     drawSelectionBound(bound: Rect | null): void {
         this.canvasViewController.drawSelectionBound(bound);
     }

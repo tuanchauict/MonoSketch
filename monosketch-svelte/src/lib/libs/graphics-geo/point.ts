@@ -154,7 +154,6 @@ export class PointF implements IPoint {
         return new PointF(left, top);
     }
 
-
     get row(): number {
         return this.top;
     }

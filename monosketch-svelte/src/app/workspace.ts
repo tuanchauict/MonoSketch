@@ -5,6 +5,7 @@
 import { Flow } from "$libs/flow";
 import type { Point } from "$libs/graphics-geo/point";
 import type { Rect } from "$libs/graphics-geo/rect";
+import type { InteractionBound } from "$mono/shape-interaction-bound/interaction-bound";
 import type { InteractionPoint } from "$mono/shape-interaction-bound/interaction-point";
 import { DrawingInfo } from "$mono/workspace/drawing-info";
 import type { MouseCursor } from "$mono/workspace/mouse/cursor-type";
@@ -27,6 +28,8 @@ export interface Workspace {
     getInteractionPoint(pointPx: Point): InteractionPoint | null;
 
     draw(): void;
+
+    drawInteractionBounds(interactionBounds: InteractionBound[]): void;
 
     drawSelectionBound(bound: Rect | null): void;
 }

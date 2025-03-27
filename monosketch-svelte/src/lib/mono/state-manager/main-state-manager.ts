@@ -6,7 +6,7 @@ import type { Workspace } from "$app/workspace";
 import { Flow, LifecycleOwner } from "$libs/flow";
 import type { Direction, Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
-import { any } from "$libs/sequence";
+import { any, mapNotNull } from "$libs/sequence";
 import { unit, type Unit } from "$libs/unit";
 import type { ActionManager } from "$mono/action-manager/action-manager";
 import { RetainableActionTypeMouseCursor } from "$mono/action-manager/retainable-actions";
@@ -14,6 +14,7 @@ import { DEBUG_MODE } from "$mono/build_environment";
 import { MonoBoard } from "$mono/monobitmap/board";
 import { HighlightType } from "$mono/monobitmap/board/pixel";
 import type { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
+import { LineInteractionBound, ScalableInteractionBound } from "$mono/shape-interaction-bound/interaction-bound";
 import type { InteractionPoint } from "$mono/shape-interaction-bound/interaction-point";
 import { AddShape, RemoveShape } from "$mono/shape/command/shape-manager-commands";
 import type { ShapeConnector } from "$mono/shape/connector/shape-connector";
@@ -23,6 +24,8 @@ import type { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager"
 import { type Command, ShapeManager } from "$mono/shape/shape-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { Group } from "$mono/shape/shape/group";
+import { Line } from "$mono/shape/shape/line";
+import { Rectangle } from "$mono/shape/shape/rectangle";
 import { Text } from "$mono/shape/shape/text";
 import { type CommandEnvironment, EditingMode } from "$mono/state-manager/command-environment";
 import { MouseInteractionController } from "$mono/state-manager/controller/mouse-interaction-controller";
@@ -134,6 +137,10 @@ export class MainStateManager {
             this.mouseInteractionController.onMouseEvent(mousePointer);
             this.updateMouseCursor(mousePointer);
         });
+
+        this.selectedShapeManager.selectedShapesFlow.observe(lifecycleOwner, (selectedShapes) => {
+            this.updateInteractionBounds(selectedShapes);
+        });
     }
 
     replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void {
@@ -225,7 +232,17 @@ export class MainStateManager {
     }
 
     updateInteractionBounds(selectedShapes: Set<AbstractShape>): void {
-        throw new Error("Method not implemented.");
+        const bounds = mapNotNull(selectedShapes, (shape) => {
+            if (shape instanceof Rectangle || shape instanceof Text) {
+                return ScalableInteractionBound.of(shape.id, shape.bound);
+            }
+            if (shape instanceof Line) {
+                return LineInteractionBound.of(shape.id, shape.edges);
+            }
+            return null;
+        });
+        this.workspace.drawInteractionBounds(bounds);
+        this.requestRedraw();
     }
 }
 
