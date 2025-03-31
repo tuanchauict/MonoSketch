@@ -29,8 +29,8 @@ export class ScalableInteractionBound implements InteractionBound {
     static of(targetedShapeId: string, shapeBound: Rect): ScalableInteractionBound {
         const left = shapeBound.left - 0.25;
         const top = shapeBound.top - 0.25;
-        const right = shapeBound.right + 0.25;
-        const bottom = shapeBound.bottom + 0.25;
+        const right = shapeBound.right + 1.0 + 0.25;
+        const bottom = shapeBound.bottom + 1.0 + 0.25;
         const horizontalMiddle = (left + right) / 2;
         const verticalMiddle = (top + bottom) / 2;
 
