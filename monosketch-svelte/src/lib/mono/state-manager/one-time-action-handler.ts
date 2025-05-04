@@ -379,7 +379,28 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedLineStrokeDashPattern(dash: number, gap: number, offset: number) {
+        const line = this.singleSelectedShape() as Line | null;
+        if (line === null) {
+            const currentDefaultDashPattern = ShapeExtraManager.defaultLineExtra.dashPattern;
+            const newDefaultDashPattern = currentDefaultDashPattern.copy({
+                dash: dash ?? currentDefaultDashPattern.dash,
+                gap: gap ?? currentDefaultDashPattern.gap,
+                offset: offset ?? currentDefaultDashPattern.offset
+            });
+            ShapeExtraManager.setDefaultValues({ lineDashPattern: newDefaultDashPattern });
+            return;
+        }
 
+        const currentExtra = line.extra;
+        const currentPattern = currentExtra.dashPattern;
+        const newPattern = currentPattern.copy({
+            dash: dash ?? currentPattern.dash,
+            gap: gap ?? currentPattern.gap,
+            offset: offset ?? currentPattern.offset
+        });
+
+        const newExtra = currentExtra.copy({ dashPattern: newPattern });
+        this.environment.shapeManager.execute(new ChangeExtra(line, newExtra));
     }
 
     private setSelectedLineStrokeCornerExtra(isRoundedCorner: boolean) {
