@@ -49,7 +49,7 @@ export class AddLineMouseCommand implements MouseCommand {
         mousePointer: MousePointerDown,
     ): Line {
         const edgeDirection = environment.getEdgeDirection(mousePointer.boardCoordinate);
-        const direction = edgeDirection ? Direction.normalizedDirection(edgeDirection) : Direction.HORIZONTAL;
+        const direction = edgeDirection !== null ? Direction.normalizedDirection(edgeDirection) : Direction.HORIZONTAL;
 
         const line = Line.fromPoints(
             {
@@ -83,7 +83,8 @@ export class AddLineMouseCommand implements MouseCommand {
 
         const endPoint = this.adjustEndPoint(line.startPoint.point, point, isStraightLineMode);
         const edgeDirection = environment.getEdgeDirection(point);
-        const direction = edgeDirection ? Direction.normalizedDirection(edgeDirection) : line.getDirection(LineAnchor.END);
+        const direction =
+            edgeDirection !== null ? Direction.normalizedDirection(edgeDirection) : line.getDirection(LineAnchor.END);
 
         const anchorPointUpdate = {
             anchor: LineAnchor.END,

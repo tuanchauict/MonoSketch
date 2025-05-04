@@ -10,7 +10,6 @@ import { ShapeZoneAddressManager } from "$mono/shape/searcher/shape-zone-address
 import { ZoneOwnersManager } from "$mono/shape/searcher/zone-address";
 import type { ShapeManager } from "$mono/shape/shape-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
-import { Rectangle } from "$mono/shape/shape/rectangle";
 
 /**
  * A model class which optimizes shapes retrieval from a point.
@@ -87,7 +86,7 @@ export class ShapeSearcher {
         const shape = this.zoneOwnersManager.getPotentialOwners(point)
             .map(ownerId => this.shapeManager.getShape(ownerId))
             .filter((shape): shape is AbstractShape => shape !== null)
-            .filter(shape => shape instanceof Text || shape instanceof Rectangle)
+            .filter(shape => shape.canHaveConnectors)
             .filter(shape => shape.contains(point) && !shape.isVertex(point))
             .find(shape =>
                 shape.bound.left === point.left ||
@@ -95,12 +94,10 @@ export class ShapeSearcher {
                 shape.bound.top === point.top ||
                 shape.bound.bottom === point.top,
             );
-
         if (!shape) {
             return null;
         }
-        return shape.bound.left === point.left || shape.bound.right === point.left
-            ? Direction.VERTICAL
-            : Direction.HORIZONTAL;
+        const isVertical = shape.bound.left === point.left || shape.bound.right === point.left;
+        return isVertical ? Direction.VERTICAL : Direction.HORIZONTAL;
     }
 }
