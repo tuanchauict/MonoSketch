@@ -1,9 +1,11 @@
-import type { Point } from "$libs/graphics-geo/point";
+import  { type Point } from "$libs/graphics-geo/point";
 import { Rect } from "$libs/graphics-geo/rect";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
 import { RectangleExtra, type ShapeExtra } from "$mono/shape/extra/shape-extra";
 import { SerializableRectangle } from "$mono/shape/serialization/shapes";
 import { AbstractShape } from "$mono/shape/shape/abstract-shape";
+import { types } from "sass";
+import Error = types.Error;
 
 /**
  * A rectangle shape.
@@ -71,6 +73,10 @@ export class Rectangle extends AbstractShape {
             this.boundInner = newBound;
             return isUpdated;
         });
+    }
+
+    get canHaveConnectors(): boolean {
+        return true;
     }
 
     toSerializableShape(isIdIncluded: boolean): SerializableRectangle {

@@ -121,6 +121,10 @@ export class Text extends AbstractShape {
         });
     }
 
+    get canHaveConnectors(): boolean {
+        return true;
+    }
+
     toSerializableShape(isIdIncluded: boolean): AbstractSerializableShape {
         return SerializableText.create({
             id: this.id,

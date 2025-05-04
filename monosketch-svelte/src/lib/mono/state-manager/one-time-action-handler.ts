@@ -3,10 +3,12 @@
  */
 
 import { Flow, LifecycleOwner } from "$libs/flow";
+import { Point } from "$libs/graphics-geo/point";
+import { Rect } from "$libs/graphics-geo/rect";
 import { singleOrNull } from "$libs/sequence";
 import type { OneTimeActionType } from "$mono/action-manager/one-time-actions";
 import type { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager";
-import { ChangeExtra } from "$mono/shape/command/general-shape-commands";
+import { ChangeBound, ChangeExtra } from "$mono/shape/command/general-shape-commands";
 import { ChangeOrder, type ChangeOrderType } from "$mono/shape/command/shape-manager-commands";
 import { MakeTextEditable, UpdateTextEditingMode } from "$mono/shape/command/text-commands";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
@@ -14,12 +16,14 @@ import { TextAlign, type TextHorizontalAlign, TextVerticalAlign } from "$mono/sh
 import type { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import type { Line } from "$mono/shape/shape/line";
+import { Rectangle } from "$mono/shape/shape/rectangle";
 import { Text } from "$mono/shape/shape/text";
 import { ClipboardManager } from "$mono/state-manager/clipboard-manager";
 import type { CommandEnvironment } from "$mono/state-manager/command-environment";
 import { EditTextShapeHelper } from "$mono/state-manager/command/text/edit-text-shape-helper";
 import { FileRelatedActionsHelper } from "$mono/state-manager/onetimeaction/file-related-action-helper";
 import type { StateHistoryManager } from "$mono/state-manager/state-history-manager";
+import { moveShapes, updateConnectors } from "$mono/state-manager/utils/UpdateShapeBoundHelper";
 import type { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-manager";
 
@@ -203,15 +207,57 @@ export class OneTimeActionHandler {
     }
 
     private moveSelectedShapes(offsetRow: number, offsetCol: number) {
-
+        const offset = Point.of(offsetCol, offsetRow);
+        moveShapes(
+            this.environment,
+            Array.from(this.environment.getSelectedShapes()),
+            true,
+            (shape) => shape.bound.position.plus(offset),
+        );
+        this.environment.updateInteractionBounds();
     }
 
     private setSelectedShapeBound(newLeft: number, newTop: number, newWidth: number, newHeight: number) {
-
+        const singleShape = this.singleSelectedShape();
+        if (singleShape === null) {
+            return;
+        }
+        const newBound = Rect.byLTWH(
+            newLeft ?? singleShape.bound.left,
+            newTop ?? singleShape.bound.top,
+            newWidth ?? singleShape.bound.width,
+            newHeight ?? singleShape.bound.height,
+        );
+        updateConnectors(this.environment, singleShape, newBound, true);
+        this.environment.shapeManager.execute(new ChangeBound(singleShape, newBound));
+        this.environment.updateInteractionBounds();
     }
 
     private setSelectedShapeFillExtra(isEnabled: boolean, newFillStyleId: string | null) {
+        const singleShape = this.singleSelectedShape();
+        if (singleShape === null) {
+            ShapeExtraManager.setDefaultValues({ isFillEnabled: isEnabled, fillStyleId: newFillStyleId ?? undefined });
+            return;
+        }
 
+        const currentRectangleExtra = singleShape instanceof Text ? singleShape.extra.boundExtra :
+            (singleShape instanceof Rectangle ? singleShape.extra : null);
+        if (currentRectangleExtra === null) {
+            return;
+        }
+
+        const newIsFillEnabled = isEnabled ?? currentRectangleExtra.isFillEnabled;
+        const newFillStyle = ShapeExtraManager.getRectangleFillStyle(
+            newFillStyleId ?? undefined,
+            currentRectangleExtra.userSelectedFillStyle,
+        );
+        const rectangleExtra = currentRectangleExtra.copy({
+            isFillEnabled: newIsFillEnabled,
+            userSelectedFillStyle: newFillStyle,
+        });
+        const newExtra =
+            singleShape instanceof Text ? singleShape.extra.copy({ boundExtra: rectangleExtra }) : rectangleExtra;
+        this.environment.shapeManager.execute(new ChangeExtra(singleShape, newExtra));
     }
 
     private setSelectedShapeBorderExtra(isEnabled: boolean, newBorderStyleId: string | null) {

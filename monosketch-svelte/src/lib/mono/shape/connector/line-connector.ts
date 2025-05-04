@@ -8,7 +8,6 @@ import type { Rect } from "$libs/graphics-geo/rect";
 import type { Identifier } from "$mono/shape/collection/identifier";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import type { LineAnchor } from "$mono/shape/shape/linehelper";
-import { Rectangle } from "$mono/shape/shape/rectangle";
 
 /**
  * A [Identifier] of Line's connector.
@@ -64,8 +63,7 @@ class ShapeConnectorUseCaseImpl {
     }
 
     private canConnect(point: Point, shape: AbstractShape): boolean {
-        const canHaveConnector = shape instanceof Rectangle || shape instanceof Text;
-        if (!canHaveConnector) {
+        if (!shape.canHaveConnectors) {
             return false;
         }
         return this.detectAround(point, shape.bound).some(Boolean);
