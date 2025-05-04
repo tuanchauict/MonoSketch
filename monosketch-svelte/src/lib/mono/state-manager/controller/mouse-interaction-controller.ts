@@ -78,30 +78,33 @@ export class MouseInteractionController {
     }
 
     private detectHoverShape(mousePointer: MousePointer): void {
-        const [hoverShape, type] = (() => {
-            switch (this.currentRetainableActionType) {
-                case RetainableActionType.ADD_LINE: {
-                    const hoverShape = this.lineConnectHoverShapeManager.getHoverShape(this.environment, mousePointer.boardCoordinate);
-                    return [hoverShape, ShapeFocusType.LINE_CONNECTING];
-                }
-                case RetainableActionType.IDLE: {
-                    const hoverShape = !this.isOnInteractionPoint(mousePointer)
-                        ? this.hoverShapeManager.getHoverShape(this.environment, mousePointer.boardCoordinate)
-                        : null;
-                    return [hoverShape, ShapeFocusType.SELECT_MODE_HOVER];
-                }
-                case RetainableActionType.ADD_RECTANGLE:
-                case RetainableActionType.ADD_TEXT:
-                    return [null, null];
-            }
-        })();
-
-        if (!hoverShape) {
+        const hoverShapeAndType = this.getHoverShapeAndType(mousePointer);
+        if (!hoverShapeAndType) {
             return;
         }
+        const [hoverShape, type] = hoverShapeAndType;
 
         this.environment.setFocusingShape(hoverShape, type);
         this.requestRedraw();
+    }
+
+    private getHoverShapeAndType(mousePointer: MousePointer): [AbstractShape | null, ShapeFocusType] | null {
+        switch (this.currentRetainableActionType) {
+            case RetainableActionType.ADD_LINE: {
+                const hoverShape =
+                    this.lineConnectHoverShapeManager.getHoverShape(this.environment, mousePointer.boardCoordinate);
+                return [hoverShape, ShapeFocusType.LINE_CONNECTING];
+            }
+            case RetainableActionType.IDLE: {
+                const hoverShape = !this.isOnInteractionPoint(mousePointer)
+                    ? this.hoverShapeManager.getHoverShape(this.environment, mousePointer.boardCoordinate)
+                    : null;
+                return [hoverShape, ShapeFocusType.SELECT_MODE_HOVER];
+            }
+            case RetainableActionType.ADD_RECTANGLE:
+            case RetainableActionType.ADD_TEXT:
+                return null;
+        }
     }
 
     private findTargetedShape(mousePointer: MousePointer): AbstractShape | null {
