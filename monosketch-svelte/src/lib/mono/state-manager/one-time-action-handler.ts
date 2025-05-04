@@ -12,7 +12,12 @@ import { ChangeBound, ChangeExtra } from "$mono/shape/command/general-shape-comm
 import { ChangeOrder, type ChangeOrderType } from "$mono/shape/command/shape-manager-commands";
 import { MakeTextEditable, UpdateTextEditingMode } from "$mono/shape/command/text-commands";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
-import { TextAlign, type TextHorizontalAlign, TextVerticalAlign } from "$mono/shape/extra/style";
+import {
+    RectangleBorderCornerPattern,
+    TextAlign,
+    type TextHorizontalAlign,
+    TextVerticalAlign,
+} from "$mono/shape/extra/style";
 import type { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import type { Line } from "$mono/shape/shape/line";
@@ -327,7 +332,25 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedShapeBorderCornerExtra(isRoundedCorner: boolean) {
+        const singleShape = this.singleSelectedShape();
+        const rectangleExtra = singleShape instanceof Text ? singleShape.extra.boundExtra :
+            (singleShape instanceof Rectangle ? singleShape.extra : null);
 
+        if (singleShape === null || rectangleExtra === null) {
+            ShapeExtraManager.setDefaultValues({ isBorderRoundedCorner: isRoundedCorner });
+            return;
+        }
+
+        const newCorner = isRoundedCorner
+            ? RectangleBorderCornerPattern.ENABLED
+            : RectangleBorderCornerPattern.DISABLED;
+
+        const newRectangleExtra = rectangleExtra.copy({ corner: newCorner });
+
+        const newExtra =
+            singleShape instanceof Text ? singleShape.extra.copy({ boundExtra: newRectangleExtra }) : newRectangleExtra;
+
+        this.environment.shapeManager.execute(new ChangeExtra(singleShape, newExtra));
     }
 
     private setSelectedLineStrokeExtra(isEnabled: boolean, newStrokeStyleId: string | null) {
