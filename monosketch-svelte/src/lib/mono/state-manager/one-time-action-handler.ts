@@ -354,7 +354,28 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedLineStrokeExtra(isEnabled: boolean, newStrokeStyleId: string | null) {
+        const line = this.singleSelectedShape() as Line | null;
+        if (line === null) {
+            ShapeExtraManager.setDefaultValues({
+                isLineStrokeEnabled: isEnabled,
+                lineStrokeStyleId: newStrokeStyleId ?? undefined,
+            });
+            return;
+        }
 
+        const currentLineExtra = line.extra;
+        const newIsEnabled = isEnabled ?? currentLineExtra.isStrokeEnabled;
+        const newStrokeStyle = ShapeExtraManager.getLineStrokeStyle(
+            newStrokeStyleId ?? undefined,
+            currentLineExtra.userSelectedStrokeStyle,
+        );
+
+        const newExtra = currentLineExtra.copy({
+            isStrokeEnabled: newIsEnabled,
+            userSelectedStrokeStyle: newStrokeStyle,
+        });
+
+        this.environment.shapeManager.execute(new ChangeExtra(line, newExtra));
     }
 
     private setSelectedLineStrokeDashPattern(dash: number, gap: number, offset: number) {
