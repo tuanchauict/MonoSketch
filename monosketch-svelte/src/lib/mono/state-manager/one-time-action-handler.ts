@@ -261,7 +261,35 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedShapeBorderExtra(isEnabled: boolean, newBorderStyleId: string | null) {
+        const singleShape = this.singleSelectedShape();
+        if (singleShape === null) {
+            ShapeExtraManager.setDefaultValues({
+                isBorderEnabled: isEnabled,
+                borderStyleId: newBorderStyleId ?? undefined,
+            });
+            return;
+        }
 
+        const currentRectangleExtra = singleShape instanceof Text ? singleShape.extra.boundExtra :
+            (singleShape instanceof Rectangle ? singleShape.extra : null);
+        if (currentRectangleExtra === null) {
+            return;
+        }
+
+        const newIsBorderEnabled = isEnabled ?? currentRectangleExtra.isBorderEnabled;
+        const newBorderStyle = ShapeExtraManager.getRectangleBorderStyle(
+            newBorderStyleId ?? undefined,
+            currentRectangleExtra.userSelectedBorderStyle,
+        );
+
+        const rectangleExtra = currentRectangleExtra.copy({
+            isBorderEnabled: newIsBorderEnabled,
+            userSelectedBorderStyle: newBorderStyle,
+        });
+
+        const newExtra =
+            singleShape instanceof Text ? singleShape.extra.copy({ boundExtra: rectangleExtra }) : rectangleExtra;
+        this.environment.shapeManager.execute(new ChangeExtra(singleShape, newExtra));
     }
 
     private setSelectedShapeBorderDashPatternExtra(dash: number, gap: number, offset: number) {
