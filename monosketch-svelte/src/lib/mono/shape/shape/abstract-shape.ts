@@ -101,6 +101,13 @@ export abstract class AbstractShape extends ShapeIdentifier implements Comparabl
     }
 
     /**
+     * Returns true if the shape can have connectors.
+     */
+    get canHaveConnectors(): boolean {
+        return false;
+    }
+
+    /**
      * Returns true if the shape is the same type to [other] and has the same id and version code to the [other].
      * @param other
      */
