@@ -218,7 +218,7 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedShapeBound(newLeft: number, newTop: number, newWidth: number, newHeight: number) {
-        const singleShape = singleOrNull(this.environment.getSelectedShapes())
+        const singleShape = this.singleSelectedShape();
         if (singleShape === null) {
             return;
         }
@@ -234,7 +234,7 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedShapeFillExtra(isEnabled: boolean, newFillStyleId: string | null) {
-        const singleShape = singleOrNull(this.environment.getSelectedShapes());
+        const singleShape = this.singleSelectedShape();
         if (singleShape === null) {
             ShapeExtraManager.setDefaultValues({ isFillEnabled: isEnabled, fillStyleId: newFillStyleId ?? undefined });
             return;
