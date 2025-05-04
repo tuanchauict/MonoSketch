@@ -146,6 +146,20 @@ export class StraightStrokeDashPattern {
         return `${this.dash}|${this.gap}|${this.offset}`;
     }
 
+    /**
+     * Creates a copy of this dash pattern with optional parameter updates.
+     * @param params Optional parameters to override in the new instance.
+     * @returns A new StraightStrokeDashPattern instance.
+     */
+    copy(
+        {
+            dash = this.dash,
+            gap = this.gap,
+            offset = this.offset,
+        }: Partial<StraightStrokeDashPattern> = {}): StraightStrokeDashPattern {
+        return new StraightStrokeDashPattern(dash, gap, offset);
+    }
+
     static readonly SOLID = new StraightStrokeDashPattern(1, 0, 0);
 
     static fromSerializableValue(value: string): StraightStrokeDashPattern {
@@ -248,10 +262,11 @@ export class TextAlign implements Comparable {
         );
     }
 
-    copy({
-        horizontalAlign = this.horizontalAlign,
-        verticalAlign = this.verticalAlign,
-    }: Partial<TextAlign> = {}): TextAlign {
+    copy(
+        {
+            horizontalAlign = this.horizontalAlign,
+            verticalAlign = this.verticalAlign,
+        }: Partial<TextAlign> = {}): TextAlign {
         return new TextAlign(horizontalAlign, verticalAlign);
     }
 }

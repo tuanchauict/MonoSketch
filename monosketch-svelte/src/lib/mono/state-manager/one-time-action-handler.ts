@@ -12,7 +12,12 @@ import { ChangeBound, ChangeExtra } from "$mono/shape/command/general-shape-comm
 import { ChangeOrder, type ChangeOrderType } from "$mono/shape/command/shape-manager-commands";
 import { MakeTextEditable, UpdateTextEditingMode } from "$mono/shape/command/text-commands";
 import { ShapeExtraManager } from "$mono/shape/extra/extra-manager";
-import { TextAlign, type TextHorizontalAlign, TextVerticalAlign } from "$mono/shape/extra/style";
+import {
+    RectangleBorderCornerPattern,
+    TextAlign,
+    type TextHorizontalAlign,
+    TextVerticalAlign,
+} from "$mono/shape/extra/style";
 import type { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import type { Line } from "$mono/shape/shape/line";
@@ -261,23 +266,141 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedShapeBorderExtra(isEnabled: boolean, newBorderStyleId: string | null) {
+        const singleShape = this.singleSelectedShape();
+        if (singleShape === null) {
+            ShapeExtraManager.setDefaultValues({
+                isBorderEnabled: isEnabled,
+                borderStyleId: newBorderStyleId ?? undefined,
+            });
+            return;
+        }
 
+        const currentRectangleExtra = singleShape instanceof Text ? singleShape.extra.boundExtra :
+            (singleShape instanceof Rectangle ? singleShape.extra : null);
+        if (currentRectangleExtra === null) {
+            return;
+        }
+
+        const newIsBorderEnabled = isEnabled ?? currentRectangleExtra.isBorderEnabled;
+        const newBorderStyle = ShapeExtraManager.getRectangleBorderStyle(
+            newBorderStyleId ?? undefined,
+            currentRectangleExtra.userSelectedBorderStyle,
+        );
+
+        const rectangleExtra = currentRectangleExtra.copy({
+            isBorderEnabled: newIsBorderEnabled,
+            userSelectedBorderStyle: newBorderStyle,
+        });
+
+        const newExtra =
+            singleShape instanceof Text ? singleShape.extra.copy({ boundExtra: rectangleExtra }) : rectangleExtra;
+        this.environment.shapeManager.execute(new ChangeExtra(singleShape, newExtra));
     }
 
     private setSelectedShapeBorderDashPatternExtra(dash: number, gap: number, offset: number) {
+        const singleShape = this.singleSelectedShape();
+        if (singleShape === null) {
+            const currentDefaultDashPattern = ShapeExtraManager.defaultRectangleExtra.dashPattern;
+            const newDefaultDashPattern = currentDefaultDashPattern.copy({
+                dash: dash ?? currentDefaultDashPattern.dash,
+                gap: gap ?? currentDefaultDashPattern.gap,
+                offset: offset ?? currentDefaultDashPattern.offset,
+            });
+            ShapeExtraManager.setDefaultValues({ borderDashPattern: newDefaultDashPattern });
+            return;
+        }
 
+        const rectangleExtra = singleShape instanceof Text ? singleShape.extra.boundExtra :
+            (singleShape instanceof Rectangle ? singleShape.extra : null);
+        if (rectangleExtra === null) {
+            return;
+        }
+
+        const currentPattern = rectangleExtra.dashPattern;
+        const newPattern = currentPattern.copy({
+            dash: dash ?? currentPattern.dash,
+            gap: gap ?? currentPattern.gap,
+            offset: offset ?? currentPattern.offset,
+        });
+
+        const newRectangleExtra = rectangleExtra.copy({ dashPattern: newPattern });
+
+        const newExtra =
+            singleShape instanceof Text ? singleShape.extra.copy({ boundExtra: newRectangleExtra }) : newRectangleExtra;
+
+        this.environment.shapeManager.execute(new ChangeExtra(singleShape, newExtra));
     }
 
     private setSelectedShapeBorderCornerExtra(isRoundedCorner: boolean) {
+        const singleShape = this.singleSelectedShape();
+        const rectangleExtra = singleShape instanceof Text ? singleShape.extra.boundExtra :
+            (singleShape instanceof Rectangle ? singleShape.extra : null);
 
+        if (singleShape === null || rectangleExtra === null) {
+            ShapeExtraManager.setDefaultValues({ isBorderRoundedCorner: isRoundedCorner });
+            return;
+        }
+
+        const newCorner = isRoundedCorner
+            ? RectangleBorderCornerPattern.ENABLED
+            : RectangleBorderCornerPattern.DISABLED;
+
+        const newRectangleExtra = rectangleExtra.copy({ corner: newCorner });
+
+        const newExtra =
+            singleShape instanceof Text ? singleShape.extra.copy({ boundExtra: newRectangleExtra }) : newRectangleExtra;
+
+        this.environment.shapeManager.execute(new ChangeExtra(singleShape, newExtra));
     }
 
     private setSelectedLineStrokeExtra(isEnabled: boolean, newStrokeStyleId: string | null) {
+        const line = this.singleSelectedShape() as Line | null;
+        if (line === null) {
+            ShapeExtraManager.setDefaultValues({
+                isLineStrokeEnabled: isEnabled,
+                lineStrokeStyleId: newStrokeStyleId ?? undefined,
+            });
+            return;
+        }
 
+        const currentLineExtra = line.extra;
+        const newIsEnabled = isEnabled ?? currentLineExtra.isStrokeEnabled;
+        const newStrokeStyle = ShapeExtraManager.getLineStrokeStyle(
+            newStrokeStyleId ?? undefined,
+            currentLineExtra.userSelectedStrokeStyle,
+        );
+
+        const newExtra = currentLineExtra.copy({
+            isStrokeEnabled: newIsEnabled,
+            userSelectedStrokeStyle: newStrokeStyle,
+        });
+
+        this.environment.shapeManager.execute(new ChangeExtra(line, newExtra));
     }
 
     private setSelectedLineStrokeDashPattern(dash: number, gap: number, offset: number) {
+        const line = this.singleSelectedShape() as Line | null;
+        if (line === null) {
+            const currentDefaultDashPattern = ShapeExtraManager.defaultLineExtra.dashPattern;
+            const newDefaultDashPattern = currentDefaultDashPattern.copy({
+                dash: dash ?? currentDefaultDashPattern.dash,
+                gap: gap ?? currentDefaultDashPattern.gap,
+                offset: offset ?? currentDefaultDashPattern.offset
+            });
+            ShapeExtraManager.setDefaultValues({ lineDashPattern: newDefaultDashPattern });
+            return;
+        }
 
+        const currentExtra = line.extra;
+        const currentPattern = currentExtra.dashPattern;
+        const newPattern = currentPattern.copy({
+            dash: dash ?? currentPattern.dash,
+            gap: gap ?? currentPattern.gap,
+            offset: offset ?? currentPattern.offset
+        });
+
+        const newExtra = currentExtra.copy({ dashPattern: newPattern });
+        this.environment.shapeManager.execute(new ChangeExtra(line, newExtra));
     }
 
     private setSelectedLineStrokeCornerExtra(isRoundedCorner: boolean) {
