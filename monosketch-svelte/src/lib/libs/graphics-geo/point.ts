@@ -87,7 +87,7 @@ export enum Direction {
 
 export namespace Direction {
     export function normalizedDirection(direction: Direction): Direction {
-        return direction === Direction.HORIZONTAL ? Direction.HORIZONTAL : Direction.VERTICAL;
+        return direction === Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
     }
 }
 

@@ -69,7 +69,7 @@ export class LineInteractionMouseCommand implements MouseCommand {
         justMoveAnchor: boolean,
     ): void {
         const edgeDirection = environment.getEdgeDirection(point);
-        const direction = edgeDirection ? Direction.normalizedDirection(edgeDirection) :
+        const direction = edgeDirection !== null ? Direction.normalizedDirection(edgeDirection) :
             this.shape.getDirection(interactionPoint.anchor);
 
         const anchorPointUpdate = {

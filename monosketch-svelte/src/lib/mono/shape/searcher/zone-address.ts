@@ -20,12 +20,12 @@ export class ZoneAddressFactory {
     private static addressMap: Map<number, Map<number, ZoneAddress>> = new Map();
 
     static {
-        for (let left = -4; left <= 20; left++) {
+        for (let top = -4; top <= 20; top++) {
             const columnMap = new Map<number, ZoneAddress>();
-            for (let top = -4; top <= 20; top++) {
-                columnMap.set(top, { row: top, column: left });
+            for (let left = -4; left <= 20; left++) {
+                columnMap.set(left, { row: top, column: left });
             }
-            this.addressMap.set(left, columnMap);
+            this.addressMap.set(top, columnMap);
         }
     }
 
