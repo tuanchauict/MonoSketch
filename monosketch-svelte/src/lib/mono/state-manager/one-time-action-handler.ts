@@ -293,7 +293,37 @@ export class OneTimeActionHandler {
     }
 
     private setSelectedShapeBorderDashPatternExtra(dash: number, gap: number, offset: number) {
+        const singleShape = this.singleSelectedShape();
+        if (singleShape === null) {
+            const currentDefaultDashPattern = ShapeExtraManager.defaultRectangleExtra.dashPattern;
+            const newDefaultDashPattern = currentDefaultDashPattern.copy({
+                dash: dash ?? currentDefaultDashPattern.dash,
+                gap: gap ?? currentDefaultDashPattern.gap,
+                offset: offset ?? currentDefaultDashPattern.offset,
+            });
+            ShapeExtraManager.setDefaultValues({ borderDashPattern: newDefaultDashPattern });
+            return;
+        }
 
+        const rectangleExtra = singleShape instanceof Text ? singleShape.extra.boundExtra :
+            (singleShape instanceof Rectangle ? singleShape.extra : null);
+        if (rectangleExtra === null) {
+            return;
+        }
+
+        const currentPattern = rectangleExtra.dashPattern;
+        const newPattern = currentPattern.copy({
+            dash: dash ?? currentPattern.dash,
+            gap: gap ?? currentPattern.gap,
+            offset: offset ?? currentPattern.offset,
+        });
+
+        const newRectangleExtra = rectangleExtra.copy({ dashPattern: newPattern });
+
+        const newExtra =
+            singleShape instanceof Text ? singleShape.extra.copy({ boundExtra: newRectangleExtra }) : newRectangleExtra;
+
+        this.environment.shapeManager.execute(new ChangeExtra(singleShape, newExtra));
     }
 
     private setSelectedShapeBorderCornerExtra(isRoundedCorner: boolean) {
