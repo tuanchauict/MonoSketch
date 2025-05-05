@@ -1,8 +1,7 @@
 <script lang="ts">
     import { WorkspaceViewController } from '$mono/workspace/workspace-view-controller';
-    import { getContext, onDestroy, onMount } from 'svelte';
-    import type { AppContext } from '$app/app-context';
-    import { APP_CONTEXT } from '$mono/common/constant';
+    import { onDestroy, onMount } from 'svelte';
+    import { getAppContext } from '$mono/common/constant';
     import TooltipTarget from "$ui/modal/tooltip/TooltipTarget.svelte";
     import { TooltipDirection } from "$ui/modal/tooltip/model";
     import { AXIS_X_HEIGHT, AXIS_Y_WIDTH } from "$mono/workspace/canvas/axis-canvas-view-controller";
@@ -16,7 +15,7 @@
     let interactionCanvas: HTMLCanvasElement;
     let selectionCanvas: HTMLCanvasElement;
 
-    const appContext = getContext<AppContext>(APP_CONTEXT);
+    const appContext = getAppContext();
 
     let workspaceViewController: WorkspaceViewController;
     onMount(() => {

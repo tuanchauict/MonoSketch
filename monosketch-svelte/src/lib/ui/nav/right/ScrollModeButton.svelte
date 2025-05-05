@@ -4,14 +4,13 @@
     import { ScrollMode } from '$mono/ui-state-manager/states';
     import AppIcon from '$ui/nav/common/AppIcon.svelte';
     import { scrollModeToContentMap } from '$ui/nav/right/model';
-    import { getContext, onMount } from 'svelte';
+    import { onMount } from 'svelte';
     import { LifecycleOwner } from 'lib/libs/flow';
-    import { APP_CONTEXT } from '$mono/common/constant';
-    import type { AppContext } from '$app/app-context';
+    import { getAppContext } from '$mono/common/constant';
     import { UiStatePayload } from "$mono/ui-state-manager/ui-state-payload";
 
     let scrollMode: ScrollMode = ScrollMode.BOTH;
-    const appContext = getContext<AppContext>(APP_CONTEXT);
+    const appContext = getAppContext();
 
     onMount(() => {
         const lifecycleOwner = LifecycleOwner.start();

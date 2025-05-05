@@ -20,8 +20,9 @@ export class AppContext {
     appLifecycleOwner = new LifecycleOwner();
     appUiStateManager = new AppUiStateManager(this.appLifecycleOwner);
 
-    monoBoard: MonoBoard = new MonoBoard();
-    shapeManager = new ShapeManager();
+    readonly monoBoard: MonoBoard = new MonoBoard();
+    readonly shapeManager = new ShapeManager();
+    readonly selectedShapeManager = new SelectedShapeManager();
 
     actionManager = new ActionManager(this.appLifecycleOwner);
 
@@ -46,7 +47,7 @@ export class AppContext {
         );
 
         this.mainStateManager?.onStart(this.appLifecycleOwner);
-        this.browserManager.startObserveStateChange(this.shapeManager.rootIdFlow, this.appLifecycleOwner,);
+        this.browserManager.startObserveStateChange(this.shapeManager.rootIdFlow, this.appLifecycleOwner);
     };
 
     setWorkspace(workspace: Workspace) {
@@ -76,7 +77,7 @@ export class AppContext {
         this.mainStateManager = new MainStateManager(
             this.monoBoard,
             this.shapeManager,
-            new SelectedShapeManager(),
+            this.selectedShapeManager,
             new MonoBitmapManager(),
             this.workspace,
             this.workspaceDao,

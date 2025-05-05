@@ -1,18 +1,17 @@
 <script lang="ts">
-    import { getContext, onDestroy, onMount, setContext } from 'svelte';
-    import { AppContext } from '$app/app-context';
-    import { APP_CONTEXT } from '$mono/common/constant';
-    import { Flow, LifecycleOwner } from 'lib/libs/flow';
+    import { onDestroy, onMount, setContext } from 'svelte';
+    import { getAppContext } from '$mono/common/constant';
+    import { LifecycleOwner } from 'lib/libs/flow';
     import Footer from "./Footer.svelte";
     import ShapeToolBody from "$ui/pannel/shapetool/ShapeToolBody.svelte";
     import { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
     import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants.js";
 
-    const appContext = getContext<AppContext>(APP_CONTEXT);
+    const appContext = getAppContext();
     const lifecycleOwner = new LifecycleOwner();
 
     setContext(SHAPE_TOOL_VIEWMODEL, new ShapeToolViewModel(
-        new Flow(new Set()), // TODO: Replace with real flow
+        appContext.selectedShapeManager.selectedShapesFlow,
         appContext.shapeManager.versionFlow,
         appContext.actionManager
     ));

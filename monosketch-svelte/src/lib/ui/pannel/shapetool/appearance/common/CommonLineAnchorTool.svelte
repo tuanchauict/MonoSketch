@@ -1,15 +1,13 @@
 <script lang="ts">
     import Tool from './Tool.svelte';
     import CloudItem from './CloudItem.svelte';
-    import type { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
-    import { getContext } from "svelte";
-    import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
+    import { getShapeToolViewModel } from "$ui/pannel/shapetool/constants";
 
     export let title: string;
     export let selectedId: string | null;
     export let onItemSelect: (id: string | null) => void;
 
-    let viewModel: ShapeToolViewModel = getContext(SHAPE_TOOL_VIEWMODEL);
+    let viewModel = getShapeToolViewModel();
 </script>
 
 <Tool {title} available="{true}">

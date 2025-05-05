@@ -95,16 +95,16 @@ export class RectangleAppearanceDataController {
 }
 
 function createFillAppearanceVisibilityState(extra: IRectangleExtra | null): CloudItemSelectionState | null {
-    return extra == null ? null : { isChecked: extra.isFillEnabled, selectedId: extra.userSelectedFillStyle.id };
+    return extra === null ? null : { isChecked: extra.isFillEnabled, selectedId: extra.userSelectedFillStyle.id };
 }
 
 function createBorderState(extra: IRectangleExtra | null): CloudItemSelectionState | null {
-    return extra == null ? null : { isChecked: extra.isBorderEnabled, selectedId: extra.userSelectedBorderStyle.id };
+    return extra === null ? null : { isChecked: extra.isBorderEnabled, selectedId: extra.userSelectedBorderStyle.id };
 }
 
 function createBorderRoundedCornerState(extra: IRectangleExtra | null): boolean | null {
-    if (extra == null) {
+    if (extra === null) {
         return null;
     }
-    return extra.isBorderEnabled ? extra.corner == RectangleBorderCornerPattern.ENABLED : null;
+    return extra.isBorderEnabled ? extra.corner === RectangleBorderCornerPattern.ENABLED : null;
 }
