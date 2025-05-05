@@ -1,13 +1,12 @@
 <script lang="ts">
     import NumberTextField from '../../common/NumberTextField.svelte';
     import Section from '../../common/Section.svelte';
-    import type { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
     import { LifecycleOwner } from "$libs/flow";
-    import { getContext, onDestroy, onMount } from "svelte";
-    import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
+    import { onDestroy, onMount } from "svelte";
+    import { getShapeToolViewModel } from "$ui/pannel/shapetool/constants";
     import { OneTimeAction } from "$mono/action-manager/one-time-actions";
 
-    let viewModel: ShapeToolViewModel = getContext(SHAPE_TOOL_VIEWMODEL);
+    let viewModel = getShapeToolViewModel();
 
     const lifecycleOwner = new LifecycleOwner();
 

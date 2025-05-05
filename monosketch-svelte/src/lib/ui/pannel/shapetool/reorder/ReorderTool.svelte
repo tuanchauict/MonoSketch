@@ -2,13 +2,11 @@
     import Section from '../../common/Section.svelte';
     import Icon from './Icon.svelte';
     import { ButtonContent, ChangeOrderTypes } from './model';
-    import { getContext } from "svelte";
-    import { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
-    import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
+    import { getShapeToolViewModel } from "$ui/pannel/shapetool/constants";
     import { OneTimeAction } from "$mono/action-manager/one-time-actions";
     import type { ChangeOrderType } from "$mono/shape/command/shape-manager-commands";
 
-    let viewModel = getContext<ShapeToolViewModel>(SHAPE_TOOL_VIEWMODEL);
+    let viewModel = getShapeToolViewModel();
 
     function onClick(icon: ChangeOrderType) {
         viewModel.update(OneTimeAction.ReorderShape(icon));

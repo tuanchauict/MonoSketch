@@ -3,9 +3,7 @@
     import CloudItem from './CloudItem.svelte';
     import RoundedCornerButton from './RoundedCornerButton.svelte';
     import DashPattern from './DashPattern.svelte';
-    import type { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
-    import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
-    import { getContext } from "svelte";
+    import { getShapeToolViewModel } from "$ui/pannel/shapetool/constants";
     import { PredefinedStraightStrokeStyle } from "$mono/shape/extra/predefined-styles";
     import type { StrokeDashPattern } from "$ui/pannel/shapetool/viewmodel/models";
 
@@ -20,7 +18,7 @@
     export let onCornerRounded: (rounded: boolean) => void;
     export let onDashPatternChange: (dashPattern: StrokeDashPattern) => void;
 
-    let viewModel: ShapeToolViewModel = getContext(SHAPE_TOOL_VIEWMODEL);
+    let viewModel = getShapeToolViewModel();
 
     function onRoundedCornerButtonClick() {
         onCornerRounded(!cornerRounded);

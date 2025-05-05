@@ -1,13 +1,12 @@
 <script lang="ts">
     import CommonBorderTool from './common/CommonBorderTool.svelte';
-    import { getContext, onDestroy, onMount } from "svelte";
-    import { ShapeToolViewModel } from "$ui/pannel/shapetool/viewmodel/shape-tool-viewmodel";
-    import { SHAPE_TOOL_VIEWMODEL } from "$ui/pannel/shapetool/constants";
+    import { onDestroy, onMount } from "svelte";
+    import { getShapeToolViewModel } from "$ui/pannel/shapetool/constants";
     import { LifecycleOwner } from "$libs/flow";
     import type { StrokeDashPattern } from "$ui/pannel/shapetool/viewmodel/models";
     import { OneTimeAction } from "$mono/action-manager/one-time-actions";
 
-    let viewModel = getContext<ShapeToolViewModel>(SHAPE_TOOL_VIEWMODEL);
+    let viewModel = getShapeToolViewModel();
     let lifecycleOwner = new LifecycleOwner();
 
     let selectedStrokeItem = viewModel.shapeBorderTypeFlow.value;
