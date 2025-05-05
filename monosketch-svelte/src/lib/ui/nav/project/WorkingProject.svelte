@@ -1,13 +1,12 @@
 <script lang="ts">
     import WorkingProjectView from './WorkingProjectView.svelte';
     import { LifecycleOwner } from '$libs/flow';
-    import { getContext, onMount } from 'svelte';
-    import type { ProjectDataViewModel } from "$ui/nav/project/project-data-viewmodel";
-    import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
+    import { onMount } from 'svelte';
     import { getAppContext } from "$mono/common/constant";
+    import { getProjectDataViewModel } from "$ui/nav/project/constants";
 
     const appContext = getAppContext();
-    const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
+    const projectDataViewModel = getProjectDataViewModel();
 
     let projectId = '';
     let projectName = '';

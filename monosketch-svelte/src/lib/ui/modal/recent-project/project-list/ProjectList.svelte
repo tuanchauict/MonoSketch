@@ -1,15 +1,14 @@
 <script lang="ts">
-import ProjectRow from './ProjectRow.svelte';
-import { ProjectAction, type ProjectItem } from '$ui/nav/project/model';
-import { getContext, onDestroy, onMount } from 'svelte';
-import { LifecycleOwner } from '$libs/flow';
-import { BrowserManager } from "$mono/window/browser-manager";
-import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
-import type { ProjectDataViewModel } from "$ui/nav/project/project-data-viewmodel";
+    import ProjectRow from './ProjectRow.svelte';
+    import { ProjectAction, type ProjectItem } from '$ui/nav/project/model';
+    import { onDestroy, onMount } from 'svelte';
+    import { LifecycleOwner } from '$libs/flow';
+    import { BrowserManager } from "$mono/window/browser-manager";
+    import { getProjectDataViewModel } from "$ui/nav/project/constants";
 
-export let dismiss: () => void;
+    export let dismiss: () => void;
 
-const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
+const projectDataViewModel = getProjectDataViewModel();
 
 let projectList: ProjectItem[] = [];
 let openingId: string = '';

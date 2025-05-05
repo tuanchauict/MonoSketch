@@ -1,13 +1,11 @@
 <script lang="ts">
     import MenuItem from '../common/MenuItem.svelte';
     import SvgIcon from '../../../common/SvgIcon.svelte';
-    import { type ProjectDataViewModel } from '$ui/nav/project/project-data-viewmodel';
-    import { getContext } from "svelte";
-    import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
+    import { getProjectDataViewModel } from "$ui/nav/project/constants";
 
     export let dismiss: () => void;
 
-    const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
+    const projectDataViewModel = getProjectDataViewModel();
 
     function createNewProject() {
         projectDataViewModel.newProject();
