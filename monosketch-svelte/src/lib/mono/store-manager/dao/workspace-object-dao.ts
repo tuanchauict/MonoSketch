@@ -95,6 +95,11 @@ export class WorkspaceObjectDao {
         return parseFloat(storedValue);
     }
 
+    updateLastOpened() {
+        this.objectDocument.set(StoreKeys.OBJECT_LAST_OPENED, Date.now().toString());
+        this.workspaceDocument.set(StoreKeys.LAST_MODIFIED_PROJECT_ID, this.objectId);
+    }
+
     removeSelf(): void {
         const storeKeys = [
             StoreKeys.OBJECT_OFFSET,

@@ -146,7 +146,7 @@ export class MainStateManager {
     replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void {
         const currentRoot = this.shapeManager.root;
         if (currentRoot.id !== newRoot.id) {
-            this.workspaceDao.getObject(newRoot.id).lastModifiedTimestampMillis = Date.now();
+            this.workspaceDao.getObject(newRoot.id).updateLastOpened();
             this.workspace.setDrawingOffset(
                 this.workspaceDao.getObject(newRoot.id).offset,
             );

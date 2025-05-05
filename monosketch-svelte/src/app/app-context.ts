@@ -47,7 +47,7 @@ export class AppContext {
         );
 
         this.mainStateManager?.onStart(this.appLifecycleOwner);
-        this.browserManager.startObserveStateChange(this.shapeManager.rootIdFlow, this.appLifecycleOwner,);
+        this.browserManager.startObserveStateChange(this.shapeManager.rootIdFlow, this.appLifecycleOwner);
     };
 
     setWorkspace(workspace: Workspace) {
