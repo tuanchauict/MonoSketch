@@ -7,11 +7,10 @@ import { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager"
 import { SelectedShapeManager } from "$mono/shape/selected-shape-manager";
 import { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import { ShapeManager } from "$mono/shape/shape-manager";
-import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { MainStateManager } from "$mono/state-manager/main-state-manager";
 import { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import { BrowserManager } from "$mono/window/browser-manager";
-import { Flow, LifecycleOwner } from 'lib/libs/flow';
+import { LifecycleOwner } from 'lib/libs/flow';
 import { AppUiStateManager } from '$mono/ui-state-manager/app-ui-state-manager';
 
 /**
@@ -21,8 +20,9 @@ export class AppContext {
     appLifecycleOwner = new LifecycleOwner();
     appUiStateManager = new AppUiStateManager(this.appLifecycleOwner);
 
-    monoBoard: MonoBoard = new MonoBoard();
-    shapeManager = new ShapeManager();
+    readonly monoBoard: MonoBoard = new MonoBoard();
+    readonly shapeManager = new ShapeManager();
+    readonly selectedShapeManager = new SelectedShapeManager();
 
     actionManager = new ActionManager(this.appLifecycleOwner);
 
@@ -77,7 +77,7 @@ export class AppContext {
         this.mainStateManager = new MainStateManager(
             this.monoBoard,
             this.shapeManager,
-            new SelectedShapeManager(),
+            this.selectedShapeManager,
             new MonoBitmapManager(),
             this.workspace,
             this.workspaceDao,
@@ -87,9 +87,5 @@ export class AppContext {
             this.browserManager.rootIdFromUrl,
         );
         // TODO: Replicate from MonoSketchApplication
-    }
-
-    get selectedShapesFlow(): Flow<Set<AbstractShape>> {
-        return this.mainStateManager!.selectedShapesFlow;
     }
 }

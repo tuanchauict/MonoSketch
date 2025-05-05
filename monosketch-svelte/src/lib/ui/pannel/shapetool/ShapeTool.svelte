@@ -12,7 +12,7 @@
     const lifecycleOwner = new LifecycleOwner();
 
     setContext(SHAPE_TOOL_VIEWMODEL, new ShapeToolViewModel(
-        appContext.selectedShapesFlow,
+        appContext.selectedShapeManager.selectedShapesFlow,
         appContext.shapeManager.versionFlow,
         appContext.actionManager
     ));
