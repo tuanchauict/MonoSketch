@@ -1,15 +1,14 @@
 <script lang="ts">
-import { getContext, onMount } from 'svelte';
-import { APP_CONTEXT } from '$mono/common/constant';
-import { AppContext } from '$app/app-context';
-import { LifecycleOwner } from 'lib/libs/flow';
-import ThemeModeIcon from '$ui/nav/right/ThemeModeIcon.svelte';
-import { ThemeMode } from '$mono/ui-state-manager/states';
-import { UiStatePayload } from "$mono/ui-state-manager/ui-state-payload";
+    import { onMount } from 'svelte';
+    import { getAppContext } from '$mono/common/constant';
+    import { LifecycleOwner } from 'lib/libs/flow';
+    import ThemeModeIcon from '$ui/nav/right/ThemeModeIcon.svelte';
+    import { ThemeMode } from '$mono/ui-state-manager/states';
+    import { UiStatePayload } from "$mono/ui-state-manager/ui-state-payload";
 
-let themeMode: ThemeMode;
+    let themeMode: ThemeMode;
 
-const appContext = getContext<AppContext>(APP_CONTEXT);
+const appContext = getAppContext();
 
 onMount(() => {
     const lifecycleOwner = LifecycleOwner.start();

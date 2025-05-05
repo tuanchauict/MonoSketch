@@ -6,11 +6,9 @@
     import KeyboardShortcutModal from "$ui/modal/keyboard-shortcut/KeyboardShortcutModal.svelte";
     import { MainMenuAction } from "$ui/modal/menu/main-dropdown/model";
     import { UiStatePayload } from "$mono/ui-state-manager/ui-state-payload";
-    import { getContext } from "svelte";
-    import type { AppContext } from "$app/app-context";
-    import { APP_CONTEXT } from "$mono/common/constant";
+    import { getAppContext } from "$mono/common/constant";
 
-    const appContext = getContext<AppContext>(APP_CONTEXT);
+    const appContext = getAppContext();
 
     let targetView: HTMLElement | undefined;
     let targetBounds: Rect | undefined;

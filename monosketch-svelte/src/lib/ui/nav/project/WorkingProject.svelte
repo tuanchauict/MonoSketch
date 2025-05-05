@@ -4,10 +4,9 @@
     import { getContext, onMount } from 'svelte';
     import type { ProjectDataViewModel } from "$ui/nav/project/project-data-viewmodel";
     import { PROJECT_CONTEXT } from "$ui/nav/project/constants";
-    import { APP_CONTEXT } from "$mono/common/constant";
-    import { AppContext } from "$app/app-context";
+    import { getAppContext } from "$mono/common/constant";
 
-    const appContext = getContext<AppContext>(APP_CONTEXT);
+    const appContext = getAppContext();
     const projectDataViewModel = getContext<ProjectDataViewModel>(PROJECT_CONTEXT);
 
     let projectId = '';
