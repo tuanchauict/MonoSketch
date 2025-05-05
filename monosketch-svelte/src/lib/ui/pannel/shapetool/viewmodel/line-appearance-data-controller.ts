@@ -98,23 +98,23 @@ export class LineAppearanceDataController {
 }
 
 function createStrokeState(extra: ILineExtra | null): CloudItemSelectionState | null {
-    return extra == null ? null : { isChecked: extra.isStrokeEnabled, selectedId: extra.userSelectedStrokeStyle.id };
+    return extra === null ? null : { isChecked: extra.isStrokeEnabled, selectedId: extra.userSelectedStrokeStyle.id };
 }
 
 function createStrokeRoundedCornerState(extra: ILineExtra | null): boolean | null {
-    if (extra == null) {
+    if (extra === null) {
         return null;
     }
     return extra.isStrokeEnabled ? extra.isRoundedCorner : null;
 }
 
 function createStartHeadState(extra: ILineExtra | null): CloudItemSelectionState | null {
-    return extra == null ? null : {
+    return extra === null ? null : {
         isChecked: extra.isStartAnchorEnabled,
         selectedId: extra.userSelectedStartAnchor.id,
     };
 }
 
 function createEndHeadState(extra: ILineExtra | null): CloudItemSelectionState | null {
-    return extra == null ? null : { isChecked: extra.isEndAnchorEnabled, selectedId: extra.userSelectedEndAnchor.id };
+    return extra === null ? null : { isChecked: extra.isEndAnchorEnabled, selectedId: extra.userSelectedEndAnchor.id };
 }
