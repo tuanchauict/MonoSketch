@@ -13,9 +13,7 @@
     const appContext = getAppContext();
 
     let isFormatPanelVisible = appContext.appUiStateManager.shapeFormatPanelVisibilityFlow.value;
-    $: toggleFormatPannelVisibilityText = isFormatPanelVisible
-            ? 'Hide Format panel'
-            : 'Show Format panel';
+    $: toggleFormatPannelVisibilityText = isFormatPanelVisible ? 'Hide Format panel' : 'Show Format panel';
 
     function onFontSizeChange(isIncreased: boolean) {
         if (isIncreased) {
