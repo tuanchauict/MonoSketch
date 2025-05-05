@@ -110,6 +110,10 @@ export class MainStateManager {
         return this.workspace.windowBoardBoundFlow.value ?? Rect.ZERO;
     }
 
+    get selectedShapesFlow(): Flow<Set<AbstractShape>> {
+        return this.selectedShapeManager.selectedShapesFlow;
+    }
+
     onStart(lifecycleOwner: LifecycleOwner): void {
         this.workspace.drawingOffsetPointPxFlow.observe(lifecycleOwner, (offsetPointPx) => {
             this.workspaceDao.getObject(this.shapeManager.root.id).offset = offsetPointPx;

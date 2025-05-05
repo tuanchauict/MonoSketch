@@ -7,10 +7,11 @@ import { MonoBitmapManager } from "$mono/monobitmap/manager/mono-bitmap-manager"
 import { SelectedShapeManager } from "$mono/shape/selected-shape-manager";
 import { ShapeClipboardManager } from "$mono/shape/shape-clipboard-manager";
 import { ShapeManager } from "$mono/shape/shape-manager";
+import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { MainStateManager } from "$mono/state-manager/main-state-manager";
 import { WorkspaceDao } from "$mono/store-manager/dao/workspace-dao";
 import { BrowserManager } from "$mono/window/browser-manager";
-import { LifecycleOwner } from 'lib/libs/flow';
+import { Flow, LifecycleOwner } from 'lib/libs/flow';
 import { AppUiStateManager } from '$mono/ui-state-manager/app-ui-state-manager';
 
 /**
@@ -86,5 +87,9 @@ export class AppContext {
             this.browserManager.rootIdFromUrl,
         );
         // TODO: Replicate from MonoSketchApplication
+    }
+
+    get selectedShapesFlow(): Flow<Set<AbstractShape>> {
+        return this.mainStateManager!.selectedShapesFlow;
     }
 }
