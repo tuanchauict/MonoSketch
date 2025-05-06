@@ -36,8 +36,11 @@ export abstract class AbstractSerializableShape {
      */
     abstract type: string;
 
+    /**
+     * The id of this shape after adjusting the [isIdTemporary] flag.
+     */
     get actualId(): string | null {
-        return this.id ?? null;
+        return !this.isIdTemporary ? (this.id ?? null) : null;
     }
 
     protected constructor() {
