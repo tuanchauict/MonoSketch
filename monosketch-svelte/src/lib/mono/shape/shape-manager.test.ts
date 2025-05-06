@@ -162,23 +162,23 @@ describe('ShapeManagerTest', () => {
         addShape(shape2);
         addShape(shape3);
 
-        target.execute(new ChangeOrder(shape3, ChangeOrderType.BACK));
-        expect(target.root.itemArray).toEqual([shape1, shape2, shape3]);
-
         target.execute(new ChangeOrder(shape1, ChangeOrderType.BACK));
-        expect(target.root.itemArray).toEqual([shape2, shape3, shape1]);
-
-        target.execute(new ChangeOrder(shape1, ChangeOrderType.FRONT));
         expect(target.root.itemArray).toEqual([shape1, shape2, shape3]);
 
-        target.execute(new ChangeOrder(shape3, ChangeOrderType.FRONT));
+        target.execute(new ChangeOrder(shape3, ChangeOrderType.BACK));
         expect(target.root.itemArray).toEqual([shape3, shape1, shape2]);
 
+        target.execute(new ChangeOrder(shape2, ChangeOrderType.FRONT));
+        expect(target.root.itemArray).toEqual([shape3, shape1, shape2]);
+
+        target.execute(new ChangeOrder(shape3, ChangeOrderType.FRONT));
+        expect(target.root.itemArray).toEqual([shape1, shape2, shape3]);
+
         target.execute(new ChangeOrder(shape1, ChangeOrderType.FORWARD));
-        expect(target.root.itemArray).toEqual([shape1, shape3, shape2]);
+        expect(target.root.itemArray).toEqual([shape2, shape1, shape3]);
 
         target.execute(new ChangeOrder(shape3, ChangeOrderType.BACKWARD));
-        expect(target.root.itemArray).toEqual([shape1, shape2, shape3]);
+        expect(target.root.itemArray).toEqual([shape2, shape3, shape1]);
     });
 
     test('testRecursiveVersionUpdate', () => {
