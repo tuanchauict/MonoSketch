@@ -30,7 +30,7 @@ export class ClipboardManager {
         });
         this.shapeClipboardManager.clipboardShapeFlow.observe(
             lifecycleOwner,
-            this.pasteShapes.bind(this),
+            (clipboardObject) => this.pasteShapes(clipboardObject),
         );
     }
 
@@ -50,8 +50,8 @@ export class ClipboardManager {
         }
         this.environment.clearSelectedShapes();
         const bound = this.environment.getWindowBound();
-        const left = bound.left + bound.width / 5;
-        const top = bound.top + bound.height / 5;
+        const left = bound.left + Math.floor(bound.width / 5);
+        const top = bound.top + Math.floor(bound.height / 5);
         this.insertShapes(left, top, clipboardObject);
     }
 
