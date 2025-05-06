@@ -197,14 +197,14 @@ export class PainterBoard {
         return this.matrix[rowIndex][columnIndex];
     };
 
-    private isApplicable = (pixel: Pixel, visual: Char): boolean => {
-        if (pixel.isTransparent) {
+    private isApplicable(currentPixel: Pixel, toBeVisual: Char): boolean {
+        if (currentPixel.isTransparent) {
             return true;
         }
-        if (pixel.visualChar === visual) {
+        if (currentPixel.visualChar === toBeVisual) {
             return true;
         }
-        return !isConnectableChar(pixel.visualChar);
+        return !isConnectableChar(toBeVisual);
     };
 
     toString = (): string => {
