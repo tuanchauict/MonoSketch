@@ -72,7 +72,7 @@ export class ShapeToolViewModel {
     constructor(
         selectedShapesFlow: Flow<Set<AbstractShape>>,
         shapeManagerVersionFlow: Flow<number>,
-        actionManager: ActionManager,
+        private readonly actionManager: ActionManager,
     ) {
         this.shapesFlow = Flow.combine2(
             selectedShapesFlow,
@@ -133,8 +133,8 @@ export class ShapeToolViewModel {
     }
 
     update(action: OneTimeActionType) {
-        // TODO: Handle action
         console.log("update action", action);
+        this.actionManager.setOneTimeAction(action);
     }
 
     private createTextAlignFlow(

@@ -27,6 +27,7 @@ import { Group } from "$mono/shape/shape/group";
 import { Line } from "$mono/shape/shape/line";
 import { Rectangle } from "$mono/shape/shape/rectangle";
 import { Text } from "$mono/shape/shape/text";
+import { ClipboardManager } from "$mono/state-manager/clipboard-manager";
 import { type CommandEnvironment, EditingMode } from "$mono/state-manager/command-environment";
 import { MouseInteractionController } from "$mono/state-manager/controller/mouse-interaction-controller";
 import { OneTimeActionHandler } from "$mono/state-manager/one-time-action-handler";
@@ -51,6 +52,8 @@ export class MainStateManager {
 
     private readonly redrawRequestMutableFlow: Flow<Unit> = new Flow(unit);
     private readonly mouseInteractionController: MouseInteractionController;
+
+    private readonly clipboardManager: ClipboardManager;
 
     constructor(
         private readonly mainBoard: MonoBoard,
@@ -90,6 +93,8 @@ export class MainStateManager {
 
         this.workingParentGroup = shapeManager.root;
 
+        this.clipboardManager = new ClipboardManager(this.commandEnvironment, shapeClipboardManager);
+
         this.oneTimeActionHandler = new OneTimeActionHandler(
             this.commandEnvironment,
             this.bitmapManager,
@@ -97,6 +102,7 @@ export class MainStateManager {
             this.stateHistoryManager,
             appUiStateManager,
             this.workspaceDao,
+            this.clipboardManager
         );
 
         this.mouseInteractionController = new MouseInteractionController(
@@ -141,6 +147,8 @@ export class MainStateManager {
         this.selectedShapeManager.selectedShapesFlow.observe(lifecycleOwner, (selectedShapes) => {
             this.updateInteractionBounds(selectedShapes);
         });
+
+        this.clipboardManager.observe(lifecycleOwner);
     }
 
     replaceRoot(newRoot: Group, newShapeConnector: ShapeConnector): void {

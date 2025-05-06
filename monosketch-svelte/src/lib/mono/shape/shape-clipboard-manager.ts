@@ -42,6 +42,7 @@ export class ShapeClipboardManager {
         const clipboardObject = json ? ClipboardObject.fromJson(json) : null;
         if (clipboardObject && clipboardObject.shapes.length > 0) {
             this.clipboardShapeMutableFlow.value = clipboardObject;
+            return;
         }
 
         this.clipboardShapeMutableFlow.value = ClipboardObject.create([this.createTextShapeFromText(text)], []);

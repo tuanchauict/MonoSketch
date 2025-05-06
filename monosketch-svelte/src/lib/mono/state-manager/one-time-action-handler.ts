@@ -37,7 +37,6 @@ import type { AppUiStateManager } from "$mono/ui-state-manager/app-ui-state-mana
  */
 export class OneTimeActionHandler {
     private readonly fileRelatedActionsHelper: FileRelatedActionsHelper;
-    private readonly clipboardManager: ClipboardManager;
 
     constructor(
         private readonly environment: CommandEnvironment,
@@ -46,6 +45,7 @@ export class OneTimeActionHandler {
         private readonly stateHistoryManager: StateHistoryManager,
         private readonly uiStateManger: AppUiStateManager,
         private readonly workspaceDao: WorkspaceDao,
+        private readonly clipboardManager: ClipboardManager,
     ) {
         this.fileRelatedActionsHelper = new FileRelatedActionsHelper(
             environment,
@@ -53,7 +53,6 @@ export class OneTimeActionHandler {
             shapeClipboardManager,
             workspaceDao,
         );
-        this.clipboardManager = new ClipboardManager(environment, shapeClipboardManager);
     }
 
     observe(lifecycleOwner: LifecycleOwner, oneTimeActionFlow: Flow<OneTimeActionType>) {
