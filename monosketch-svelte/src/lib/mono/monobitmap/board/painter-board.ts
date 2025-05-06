@@ -38,7 +38,7 @@ export class PainterBoard {
      * position won't be overwritten.
      */
     fill(board: PainterBoard) {
-        if (this.matrix.length == 0 || this.matrix[0].length == 0) {
+        if (this.matrix.length === 0 || this.matrix[0].length === 0) {
             return;
         }
 

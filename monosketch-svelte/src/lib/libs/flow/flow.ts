@@ -34,7 +34,7 @@ class ThrottleObserver<T> implements Observer<T> {
         if (this.timeoutId !== undefined) {
             return;
         }
-        if (this.timeout == 0) {
+        if (this.timeout === 0) {
             this.timeoutId = requestAnimationFrame(this.timeoutTick);
         } else {
             this.timeoutId = setTimeout(this.timeoutTick, this.timeout);
@@ -117,10 +117,10 @@ export class Flow<T> {
         flows: Array<Flow<unknown>>,
         transform: (values: Array<unknown>) => R,
     ): Flow<R> {
-        if (flows.length == 0) {
+        if (flows.length === 0) {
             throw new Error('flows must not be empty');
         }
-        if (flows.length == 1) {
+        if (flows.length === 1) {
             console.warn('You are combining a single flow. Use flow.map instead.');
             // @ts-expect-error : Allow unsafe call to transform.
             return flows[0].map(transform);

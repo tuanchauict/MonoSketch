@@ -195,7 +195,7 @@ const isNumbersMonotonic = (a: number, b: number, c: number): boolean =>
     (b >= a && b <= c) || (b <= a && b >= c);
 
 const isPointsOnSameStraightLine = (p1: DirectedPoint, p2: DirectedPoint): boolean =>
-    p1.left == p2.left || p1.top == p2.top;
+    p1.left === p2.left || p1.top === p2.top;
 
 const toRightAngleDirection = (direction: Direction): Direction => {
     return direction === Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
