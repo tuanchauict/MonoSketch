@@ -38,7 +38,7 @@ export class PainterBoard {
      * position won't be overwritten.
      */
     fill(board: PainterBoard) {
-        if (this.matrix.length == 0 || this.matrix[0].length == 0) {
+        if (this.matrix.length === 0 || this.matrix[0].length === 0) {
             return;
         }
 
@@ -197,14 +197,14 @@ export class PainterBoard {
         return this.matrix[rowIndex][columnIndex];
     };
 
-    private isApplicable = (pixel: Pixel, visual: Char): boolean => {
-        if (pixel.isTransparent) {
+    private isApplicable(currentPixel: Pixel, toBeVisual: Char): boolean {
+        if (currentPixel.isTransparent) {
             return true;
         }
-        if (pixel.visualChar === visual) {
+        if (currentPixel.visualChar === toBeVisual) {
             return true;
         }
-        return !isConnectableChar(pixel.visualChar);
+        return !isConnectableChar(toBeVisual);
     };
 
     toString = (): string => {

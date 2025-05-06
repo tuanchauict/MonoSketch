@@ -63,5 +63,7 @@ module.exports = {
             "caughtErrorsIgnorePattern": "^_"
         }],
         "eol-last": ["error", "always"],
+        // always enforce === and !==
+        "eqeqeq": "error",
     }
 }

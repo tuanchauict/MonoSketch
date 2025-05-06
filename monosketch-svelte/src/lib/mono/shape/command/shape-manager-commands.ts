@@ -139,8 +139,8 @@ export enum ChangeOrderType {
 }
 
 const ChangeOrderTypeToMoveActionType: Record<ChangeOrderType, MoveActionType> = {
-    [ChangeOrderType.FORWARD]: MoveActionType.DOWN,
-    [ChangeOrderType.BACKWARD]: MoveActionType.UP,
-    [ChangeOrderType.FRONT]: MoveActionType.BOTTOM,
-    [ChangeOrderType.BACK]: MoveActionType.TOP,
+    [ChangeOrderType.FORWARD]: MoveActionType.UP,
+    [ChangeOrderType.BACKWARD]: MoveActionType.DOWN,
+    [ChangeOrderType.FRONT]: MoveActionType.TOP,
+    [ChangeOrderType.BACK]: MoveActionType.BOTTOM,
 };

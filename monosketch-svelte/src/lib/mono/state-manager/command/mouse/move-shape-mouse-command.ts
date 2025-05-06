@@ -39,7 +39,7 @@ export class MoveShapeMouseCommand implements MouseCommand {
         });
         environment.updateInteractionBounds();
 
-        const isDone = mouseType === MousePointerType.UP || mouseType == MousePointerType.IDLE;
+        const isDone = mouseType === MousePointerType.UP || mouseType === MousePointerType.IDLE;
         return isDone ? MouseCommand.CommandResultType.DONE : MouseCommand.CommandResultType.WORKING;
     }
 

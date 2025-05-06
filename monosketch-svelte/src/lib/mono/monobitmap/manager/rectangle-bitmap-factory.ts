@@ -16,22 +16,22 @@ export class RectangleBitmapFactory {
     static toBitmap(size: Size, extra: RectangleExtra): MonoBitmap.Bitmap {
         const bitmapBuilder = new MonoBitmap.Builder(size.width, size.height);
 
-        const fillDrawable = extra.fillStyle?.drawable;
+        const fillDrawable = extra.fillStyle?.drawable ?? null;
         const strokeStyle = extra.strokeStyle;
 
-        if (fillDrawable == null && strokeStyle == null) {
+        if (fillDrawable === null && strokeStyle === null) {
             // Draw a half transparent character for selection.
             // Half transparent is not displayed on the canvas but makes the shape selectable.
             this.drawBorder(bitmapBuilder, size, PredefinedStraightStrokeStyle.NO_STROKE, extra.dashPattern);
             return bitmapBuilder.toBitmap();
         }
 
-        if (fillDrawable != null) {
+        if (fillDrawable) {
             bitmapBuilder.fillBitmap(0, 0, fillDrawable.toBitmap(size.width, size.height));
         }
 
-        const isStrokeAllowed = fillDrawable == null || (size.width > 1 && size.height > 1);
-        if (isStrokeAllowed && strokeStyle != null) {
+        const isStrokeAllowed = fillDrawable === null || (size.width > 1 && size.height > 1);
+        if (isStrokeAllowed && strokeStyle !== null) {
             this.drawBorder(bitmapBuilder, size, strokeStyle, extra.dashPattern);
         }
 
@@ -44,7 +44,7 @@ export class RectangleBitmapFactory {
         strokeStyle: StraightStrokeStyle,
         dashPattern: StraightStrokeDashPattern,
     ) {
-        if (size.width == 1 && size.height == 1) {
+        if (size.width === 1 && size.height === 1) {
             bitmapBuilder.put(0, 0, '□', '□');
             return;
         }
@@ -63,10 +63,10 @@ export class RectangleBitmapFactory {
         const right = size.width - 1;
         const bottom = size.height - 1;
 
-        if (size.width == 1) {
+        if (size.width === 1) {
             return [PointChar.verticalLine(left, top - 1, bottom, strokeStyle.vertical)];
         }
-        if (size.height == 1) {
+        if (size.height === 1) {
             return [PointChar.horizontalLine(left - 1, right, top, strokeStyle.horizontal)];
         }
         return [

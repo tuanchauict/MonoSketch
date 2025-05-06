@@ -59,7 +59,7 @@ export class RectangleAppearanceDataController {
                 this.borderDashPatternFlow,
                 this.borderRoundedCornerFlow,
             ],
-            (array) => array.some((item) => item != null),
+            (array) => array.some((item) => item !== null),
         );
     }
 

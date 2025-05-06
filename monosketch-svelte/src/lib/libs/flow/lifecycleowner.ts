@@ -21,16 +21,16 @@ export class LifecycleOwner {
     }
 
     get isActive(): boolean {
-        return this.state == LifecycleState.STARTED;
+        return this.state === LifecycleState.STARTED;
     }
 
     addObserver(observer: LifecycleObserver) {
-        if (this.state == LifecycleState.STOPPED) {
+        if (this.state === LifecycleState.STOPPED) {
             return;
         }
 
         this.observers.push(observer);
-        if (this.state == LifecycleState.STARTED) {
+        if (this.state === LifecycleState.STARTED) {
             observer.onStart?.();
         }
     }
@@ -40,7 +40,7 @@ export class LifecycleOwner {
      * Do not override this method, override onStartInternal instead.
      */
     onStart() {
-        if (this.state == LifecycleState.STARTED) {
+        if (this.state === LifecycleState.STARTED) {
             return;
         }
 
@@ -58,7 +58,7 @@ export class LifecycleOwner {
      * Do not override this method, override onStopInternal instead.
      */
     onStop() {
-        if (this.state == LifecycleState.STOPPED) {
+        if (this.state === LifecycleState.STOPPED) {
             return;
         }
 
