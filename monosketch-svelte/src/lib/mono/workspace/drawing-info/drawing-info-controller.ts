@@ -51,8 +51,8 @@ const getCellSizePx = (
     context.font = font;
     context.textAlign = 'left';
     context.textBaseline = 'middle';
-    const cWidth = Math.floor(fontSize * 0.63);
-    const cHeight = fontSize * 1.312;
+    const cWidth = Math.floor(fontSize * 0.6275);
+    const cHeight = Math.floor(fontSize * 1.314);
     return SizeF.of(cWidth, cHeight);
 };
 
