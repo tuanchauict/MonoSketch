@@ -77,7 +77,7 @@ export class DrawingInfo {
      * 1. Multiply the board column by the cell width.
      * 2. Add the left offset.
      */
-    toXPx = (column: number): number => floor(this.offsetPx.left + this.cellSizePx.width * column);
+    toXPx = (column: number): number => this.offsetPx.left + this.cellSizePx.width * column;
 
     /**
      * Converts the board row to pixel Y coordinate.
@@ -85,7 +85,7 @@ export class DrawingInfo {
      * 1. Multiply the board row by the cell height.
      * 2. Add the top offset.
      */
-    toYPx = (row: number): number => floor(this.offsetPx.top + this.cellSizePx.height * row);
+    toYPx = (row: number): number => this.offsetPx.top + this.cellSizePx.height * row;
 
     /**
      * Converts the screen Y coordinate (pixel) to the board row.
