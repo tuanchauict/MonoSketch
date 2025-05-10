@@ -28,7 +28,6 @@ export class MouseEventObserver {
     private readonly mouseDoubleClickDetector = new MouseDoubleClickDetector();
 
     constructor(
-        lifecycleOwner: LifecycleOwner,
         container: HTMLElement,
         private drawingInfoFlow: Flow<DrawingInfo>,
         private scrollModeFlow: Flow<ScrollMode>,
