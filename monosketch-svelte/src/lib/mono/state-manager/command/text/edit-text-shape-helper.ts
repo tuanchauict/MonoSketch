@@ -76,22 +76,23 @@ class EditTextModal {
             return;
         }
 
-        this.component = new EditTextModalComponent(
-            {
-                target: modalContainer,
-                props: {
-                    initialText: this.initialText,
-                    onTextChange: this.onTextChange,
-                    onDismiss: () => {
-                        this.dismiss();
+        const position = { left, top, width, height };
+        // Suspend the focus to the next frame to let the environment cleans up the previous event (like ENTER key)
+        window.requestAnimationFrame(() => {
+            this.component = new EditTextModalComponent(
+                {
+                    target: modalContainer,
+                    props: {
+                        ...position,
+                        initialText: this.initialText,
+                        onTextChange: this.onTextChange,
+                        onDismiss: () => {
+                            this.dismiss();
+                        },
                     },
-                    left,
-                    top,
-                    width,
-                    height,
                 },
-            },
-        );
+            );
+        });
     }
 
     setOnDismiss(onDismiss: () => void) {
