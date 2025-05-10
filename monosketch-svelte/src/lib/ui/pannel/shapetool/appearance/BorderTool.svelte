@@ -12,7 +12,7 @@
     let selectedStrokeItem = viewModel.shapeBorderTypeFlow.value;
     let cornerRounded = viewModel.shapeBorderRoundedCornerFlow.value;
 
-    let dashPattern: StrokeDashPattern | null | undefined = viewModel.shapeBorderDashTypeFlow.value;
+    let dashPattern: StrokeDashPattern | null = viewModel.shapeBorderDashTypeFlow.value ?? null;
 
     function onItemSelect(id: string | null) {
         viewModel.update(OneTimeAction.ChangeShapeBorderExtra({ newBorderStyleId: id, isEnabled: id !== null }));
@@ -47,11 +47,11 @@
     });
 </script>
 
-{#if selectedStrokeItem && cornerRounded !== undefined && dashPattern !== undefined}
+{#if selectedStrokeItem && cornerRounded !== undefined && dashPattern !== null}
     <CommonBorderTool
             title="Border"
             {onItemSelect}
-            selectedId="{selectedStrokeItem.selectedId}"
+            selectedId="{selectedStrokeItem.isChecked ? selectedStrokeItem.selectedId : null}"
             {cornerRounded}
             onCornerRounded="{onCornerRoundedChange}"
             {dashPattern}

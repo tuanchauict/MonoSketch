@@ -50,7 +50,7 @@
     <CommonBorderTool
             title="Stroke"
             {onItemSelect}
-            selectedId="{selectedStrokeItem.selectedId}"
+            selectedId="{selectedStrokeItem.isChecked ? selectedStrokeItem.selectedId : null}"
             {cornerRounded}
             onCornerRounded="{onCornerRoundedChange}"
             {dashPattern}
