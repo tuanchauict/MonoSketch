@@ -11,8 +11,8 @@
     let viewModel = getShapeToolViewModel();
     let lifecycleOwner = new LifecycleOwner();
 
-    let horizontalAlign: TextHorizontalAlign | null | undefined = viewModel.textAlignFlow.value?.horizontalAlign;
-    let verticalAlign: TextVerticalAlign | null | undefined = viewModel.textAlignFlow.value?.verticalAlign;
+    let horizontalAlign: TextHorizontalAlign | null = viewModel.textAlignFlow.value?.horizontalAlign ?? null;
+    let verticalAlign: TextVerticalAlign | null = viewModel.textAlignFlow.value?.verticalAlign ?? null;
 
     function onHorizontalChange(type: TextHorizontalAlign) {
         horizontalAlign = type;
@@ -25,7 +25,7 @@
     }
 
     function notifyChange() {
-        if (!verticalAlign || !horizontalAlign) {
+        if (verticalAlign === null || horizontalAlign === null) {
             return;
         }
         viewModel.update(OneTimeAction.TextAlignment({

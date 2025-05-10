@@ -47,17 +47,19 @@ export class AxisCanvasViewController extends BaseCanvasViewController {
 
         const xAxisHeight = AXIS_X_HEIGHT;
         const yAxisWidth = AXIS_Y_WIDTH;
+        const canvasWidth = canvasSizePx.width + yAxisWidth;
+        const canvasHeight = canvasSizePx.height + xAxisHeight;
 
         const path = new Path2D();
 
         context.lineWidth = 1.0;
         context.fillStyle = themeManager.getThemedColorCode(ThemeColors.AxisBackground);
-        context.fillRect(0, 0, yAxisWidth, canvasSizePx.height);
+        context.fillRect(0, xAxisHeight, yAxisWidth, canvasHeight);
 
         context.fillStyle = themeManager.getThemedColorCode(ThemeColors.AxisText);
         context.textAlign = 'right';
 
-        this.addHLine(path, 0, xAxisHeight, canvasSizePx.width);
+        this.addHLine(path, 0, xAxisHeight, canvasWidth);
 
         for (const row of drawingInfo.boardRowRange) {
             const text = `${row}`;
@@ -67,12 +69,12 @@ export class AxisCanvasViewController extends BaseCanvasViewController {
         }
 
         context.fillStyle = themeManager.getThemedColorCode(ThemeColors.AxisBackground);
-        context.fillRect(0, 0, canvasSizePx.width, xAxisHeight);
+        context.fillRect(0, 0, canvasWidth, xAxisHeight);
 
         context.fillStyle = themeManager.getThemedColorCode(ThemeColors.AxisText);
         context.textAlign = 'left';
 
-        this.addVLine(path, yAxisWidth, 0, canvasSizePx.height);
+        this.addVLine(path, yAxisWidth, xAxisHeight, canvasWidth);
 
         for (const column of drawingInfo.boardColumnRange) {
             if (column % 20 !== 0) {

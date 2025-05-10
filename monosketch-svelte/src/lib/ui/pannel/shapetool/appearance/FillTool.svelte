@@ -10,13 +10,15 @@
     let viewModel = getShapeToolViewModel();
     let lifecycleOwner = new LifecycleOwner();
 
-    let shapeFillToolSelectionState: CloudItemSelectionState | null | undefined = viewModel.shapeFillTypeFlow.value;
+    let shapeFillToolSelectionState: CloudItemSelectionState | null = viewModel.shapeFillTypeFlow.value ?? null;
+
+    $: selectedId = shapeFillToolSelectionState?.isChecked ? shapeFillToolSelectionState.selectedId : null;
 
     onMount(() => {
         lifecycleOwner.onStart();
 
         viewModel.shapeFillTypeFlow.observe(lifecycleOwner, (value) => {
-            shapeFillToolSelectionState = value;
+            shapeFillToolSelectionState = value ?? null;
         });
     });
 
@@ -34,7 +36,7 @@
             <!-- Disable-item -->
             <CloudItem
                     id="{null}"
-                    selected="{shapeFillToolSelectionState.selectedId === null}"
+                    selected="{selectedId === null}"
                     useDashBorder="{true}"
                     onSelect="{onItemSelect}">×
             </CloudItem>
@@ -42,7 +44,7 @@
             {#each viewModel.fillOptions as option}
                 <CloudItem
                         id="{option.id}"
-                        selected="{option.id === shapeFillToolSelectionState.selectedId}"
+                        selected="{option.id === selectedId}"
                         onSelect="{onItemSelect}">{option.name}</CloudItem
                 >
             {/each}

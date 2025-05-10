@@ -10,6 +10,8 @@
 
     let anchorItem = viewModel.lineEndHeadFlow.value;
 
+    $: selectedId = anchorItem?.isChecked ? anchorItem.selectedId : null;
+
     function onItemSelect(id: string | null) {
         viewModel.update(OneTimeAction.ChangeLineEndAnchorExtra({ newHeadId: id, isEnabled: id !== null }));
     }
@@ -27,5 +29,5 @@
     });
 </script>
 {#if anchorItem}
-    <CommonLineAnchorTool title="End head" selectedId="{anchorItem.selectedId}" {onItemSelect}/>
+    <CommonLineAnchorTool title="End head" selectedId="{selectedId}" {onItemSelect}/>
 {/if}

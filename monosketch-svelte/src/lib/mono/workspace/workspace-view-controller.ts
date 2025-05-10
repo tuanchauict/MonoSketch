@@ -53,7 +53,6 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         );
 
         this.mouseEventObserver = new MouseEventObserver(
-            this,
             this.container,
             this.drawingInfoController.drawingInfoFlow,
             this.appContext.appUiStateManager.scrollModeFlow,
@@ -75,8 +74,6 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
     get mousePointerFlow(): Flow<MousePointer> {
         return this.mouseEventObserver.mousePointerFlow;
     };
-
-
 
     protected onStartInternal() {
         WindowViewModel.windowSizeUpdateEventFlow.observe(this, () => {
@@ -119,7 +116,6 @@ export class WorkspaceViewController extends LifecycleOwner implements Workspace
         );
         this.mouseEventObserver.observeEvents(this, shiftKeyStateFlow);
     };
-
 
     getDrawingInfo(): DrawingInfo {
         return this.drawingInfoController.drawingInfoFlow.value!;

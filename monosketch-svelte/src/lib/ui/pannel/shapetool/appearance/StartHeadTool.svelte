@@ -8,7 +8,9 @@
     let viewModel = getShapeToolViewModel();
     let lifecycleOwner = new LifecycleOwner();
 
-    let anchorItem = viewModel.lineStartHeadFlow.value;
+    let anchorItem = viewModel.lineStartHeadFlow.value ?? null;
+
+    $: selectedId = anchorItem?.isChecked ? anchorItem.selectedId : null;
 
     function onItemSelect(id: string | null) {
         viewModel.update(OneTimeAction.ChangeLineStartAnchorExtra({ newHeadId: id, isEnabled: id !== null }));
@@ -28,5 +30,5 @@
 </script>
 
 {#if anchorItem}
-    <CommonLineAnchorTool title="Start head" selectedId="{anchorItem.selectedId}" {onItemSelect}/>
+    <CommonLineAnchorTool title="Start head" selectedId="{selectedId}" {onItemSelect}/>
 {/if}

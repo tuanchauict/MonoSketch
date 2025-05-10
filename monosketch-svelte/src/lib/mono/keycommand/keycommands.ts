@@ -110,6 +110,7 @@ const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.ENTER_EDIT_MODE,
+        keyCodes: [Key.ENTER],
     },
     {
         ...KeyCommandOptionsDefaults,
