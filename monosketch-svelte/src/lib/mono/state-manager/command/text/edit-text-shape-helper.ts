@@ -3,6 +3,7 @@ import { ChangeBound } from "$mono/shape/command/general-shape-commands";
 import { ChangeText } from "$mono/shape/command/text-commands";
 import type { Text } from "$mono/shape/shape/text";
 import type { CommandEnvironment } from "$mono/state-manager/command-environment";
+import EditTextModalComponent from "$ui/modal/EditTextModal.svelte";
 
 /**
  * A helper class to show edit text dialog for targeted text shape.
@@ -12,7 +13,8 @@ export class EditTextShapeHelper {
         environment: CommandEnvironment,
         textShape: Text,
         isFreeText: boolean,
-        onFinish: (text: string) => void = () => {}
+        onFinish: (text: string) => void = () => {
+        },
     ) {
         const contentBound = textShape.contentBound;
 
@@ -36,7 +38,7 @@ export class EditTextShapeHelper {
             environment.toXPx(contentBound.left),
             environment.toYPx(contentBound.top),
             environment.toWidthPx(contentWidth),
-            environment.toHeightPx(contentHeight)
+            environment.toHeightPx(contentHeight),
         );
     }
 
@@ -55,17 +57,41 @@ export class EditTextShapeHelper {
     }
 }
 
-// TODO: (TASK) This is a fake implementation of EditTextModal
-//  Create a svelte component for this
 class EditTextModal {
-    private onDismiss: () => void = () => {};
+    private component: EditTextModalComponent | null = null;
 
-    constructor(initialText: string, onTextChange: (newText: string) => void) {
-        throw new Error("Not implemented");
+    private onDismiss: () => void = () => {
+    };
+
+    constructor(private initialText: string, private onTextChange: (newText: string) => void) {
+        const modalContainer = document.querySelector("#edit-text-modal");
+        if (!modalContainer) {
+            throw new Error("Modal container not found");
+        }
     }
 
     show(left: number, top: number, width: number, height: number) {
-        throw new Error("Not implemented");
+        const modalContainer = document.querySelector("#edit-text-modal");
+        if (!modalContainer) {
+            return;
+        }
+
+        this.component = new EditTextModalComponent(
+            {
+                target: modalContainer,
+                props: {
+                    initialText: this.initialText,
+                    onTextChange: this.onTextChange,
+                    onDismiss: () => {
+                        this.dismiss();
+                    },
+                    left,
+                    top,
+                    width,
+                    height,
+                },
+            },
+        );
     }
 
     setOnDismiss(onDismiss: () => void) {
@@ -73,7 +99,10 @@ class EditTextModal {
     }
 
     dismiss() {
-        this.onDismiss();
-        throw new Error("Not implemented");
+        if (this.component) {
+            this.component.$destroy();
+            this.component = null;
+            this.onDismiss();
+        }
     }
 }

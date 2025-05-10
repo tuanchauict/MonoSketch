@@ -1,12 +1,20 @@
+:root {
+  --monospace-font: 'Jetbrains Mono', Menlo, 'Courier New', Courier, monospace;
+  --ui-text-font: 'Roboto', Arial, serif;
+
+  --nav-height: 48px;
+  --canvas-left: 33px;
+  --canvas-top: 18px;
+}
+
 // Font
-$monospaceFont: 'Jetbrains Mono', Menlo, 'Courier New', Courier, monospace;
-$uiTextFont: 'Roboto', Arial, serif;
+$monospaceFont: var(--monospace-font);
+$uiTextFont: var(--ui-text-font);
 
 // Size
-$nav-height: 48px;
-
-$canvas-left: 33px;
-$canvas-top: 18px;
+$nav-height: var(--nav-height);
+$canvas-left: var(--canvas-left);
+$canvas-top: var(--canvas-top);
 
 // Index
 $keyboard-shortcuts-zindex: 200;
