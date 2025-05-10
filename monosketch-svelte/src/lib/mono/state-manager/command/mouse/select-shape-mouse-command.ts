@@ -32,7 +32,10 @@ class SelectShapeMouseCommandImpl implements MouseCommand {
                     mousePointer.boardCoordinate.left,
                     mousePointer.boardCoordinate.top,
                 );
-                const shapes = area.width > 0 && area.height > 0 ? environment.getAllShapesInZone(area) : [];
+                // 1 cell is empty
+                const isEmpty = area.width * area.height === 1;
+                // Only select shapes if the area is not empty, otherwise, this is a click event
+                const shapes = !isEmpty ? environment.getAllShapesInZone(area) : [];
                 if (!mousePointer.isWithShiftKey) {
                     environment.clearSelectedShapes();
                 }
