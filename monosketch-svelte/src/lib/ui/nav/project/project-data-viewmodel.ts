@@ -70,6 +70,12 @@ export class ProjectDataViewModel {
         this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.RenameCurrentProject(name));
     }
 
+
+
+    exportSelectedShapes() {
+        this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.ExportSelectedShapes);
+    }
+
     private getProject(id: string): ProjectItem {
         const objectDao = this.appContext.workspaceDao.getObject(id);
         return {
