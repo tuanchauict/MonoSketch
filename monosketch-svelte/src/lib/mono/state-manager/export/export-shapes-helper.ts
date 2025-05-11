@@ -8,6 +8,7 @@ import { MonoBoard } from "$mono/monobitmap/board";
 import { HighlightType } from "$mono/monobitmap/board/pixel";
 import type { AbstractShape } from "$mono/shape/shape/abstract-shape";
 import { Group } from "$mono/shape/shape/group";
+import ExportShapesModalComponent from "$ui/modal/export/ExportShapesModal.svelte";
 
 /**
  * A helper class for exporting selected shapes.
@@ -38,7 +39,7 @@ export class ExportShapesHelper {
         const text = exportingBoard.toStringInBound(window);
         if (isModalRequired) {
             // TODO: Show modal
-            // new ExportShapesModal().show(text);
+            ExportShapesModal.show(text);
         } else {
             this.setClipboardText(text);
         }
@@ -56,4 +57,28 @@ export class ExportShapesHelper {
             }
         }
     }
+}
+
+const ExportShapesModal = {
+    show: (text: string) => {
+        const targetElement = document.getElementById('export-text-modal');
+        if (!targetElement) {
+            console.error('Export text modal container not found');
+            return;
+        }
+
+        // Clear any existing content
+        targetElement.innerHTML = '';
+
+        const modal = new ExportShapesModalComponent({
+            target: targetElement,
+            props: {
+                text,
+                onDismiss: () => {
+                    modal.$destroy();
+                    targetElement.innerHTML = '';
+                },
+            },
+        });
+    },
 }
