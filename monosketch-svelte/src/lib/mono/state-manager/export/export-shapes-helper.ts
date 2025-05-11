@@ -38,8 +38,7 @@ export class ExportShapesHelper {
 
         const text = exportingBoard.toStringInBound(window);
         if (isModalRequired) {
-            // TODO: Show modal
-            ExportShapesModal.show(text);
+            showExportShapesModal(text);
         } else {
             this.setClipboardText(text);
         }
@@ -59,26 +58,24 @@ export class ExportShapesHelper {
     }
 }
 
-const ExportShapesModal = {
-    show: (text: string) => {
-        const targetElement = document.getElementById('export-text-modal');
-        if (!targetElement) {
-            console.error('Export text modal container not found');
-            return;
-        }
+function showExportShapesModal(text: string) {
+    const targetElement = document.getElementById('export-text-modal');
+    if (!targetElement) {
+        console.error('Export text modal container not found');
+        return;
+    }
 
-        // Clear any existing content
-        targetElement.innerHTML = '';
+    // Clear any existing content
+    targetElement.innerHTML = '';
 
-        const modal = new ExportShapesModalComponent({
-            target: targetElement,
-            props: {
-                text,
-                onDismiss: () => {
-                    modal.$destroy();
-                    targetElement.innerHTML = '';
-                },
+    const modal = new ExportShapesModalComponent({
+        target: targetElement,
+        props: {
+            text,
+            onDismiss: () => {
+                modal.$destroy();
+                targetElement.innerHTML = '';
             },
-        });
-    },
+        },
+    });
 }
