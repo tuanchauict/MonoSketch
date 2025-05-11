@@ -19,7 +19,7 @@
     }
 
     function exportText() {
-        console.log('exportText');
+        projectDataViewModel.exportSelectedShapes();
     }
 </script>
 
