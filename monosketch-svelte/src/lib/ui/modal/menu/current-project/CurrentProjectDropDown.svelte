@@ -15,7 +15,7 @@
     }
 
     function saveAs() {
-        console.log('saveAs');
+        projectDataViewModel.saveCurrentShapesToFile();
     }
 
     function exportText() {
