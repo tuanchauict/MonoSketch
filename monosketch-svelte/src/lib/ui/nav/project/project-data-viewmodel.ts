@@ -70,7 +70,9 @@ export class ProjectDataViewModel {
         this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.RenameCurrentProject(name));
     }
 
-
+    saveCurrentShapesToFile() {
+        this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.SaveShapesAs);
+    }
 
     exportSelectedShapes() {
         this.appContext.actionManager.setOneTimeAction(OneTimeAction.ProjectAction.ExportSelectedShapes);
