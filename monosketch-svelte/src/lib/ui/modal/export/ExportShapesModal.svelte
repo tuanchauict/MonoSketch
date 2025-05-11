@@ -13,8 +13,13 @@
 
     let isVisible = false;
 
+    $: console.log(isVisible);
+
     onMount(() => {
-        isVisible = true;
+        // Delay the visibility change to allow CSS transition to take effect
+        window.requestAnimationFrame(() => {
+            isVisible = true;
+        });
     });
 
     function onBackgroundClick(event: MouseEvent) {
@@ -32,7 +37,7 @@
 </script>
 
 <div class="modal" class:in={isVisible} class:out={!isVisible}>
-    <div class="background" on:click={onBackgroundClick}></div>
+    <div aria-label="Close modal" class="background" on:click={onBackgroundClick} role="presentation"></div>
 
     <div class="body">
         <CloseButton onClick="{dismiss}"/>
@@ -49,7 +54,17 @@
         top: 0;
         bottom: 0;
         backdrop-filter: blur(2px);
-        z-index: 1000;
+
+        opacity: 0;
+        transition: opacity 0.3s ease;
+
+        &.in {
+            opacity: 1;
+        }
+
+        &.out {
+            opacity: 0;
+        }
     }
 
     .background {
@@ -72,6 +87,18 @@
 
         background: var(--exporttext-container-bg);
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        padding: 16px;
+
+        transform: translateY(50px);
+        transition: transform 0.3s ease, opacity 0.2s ease-in-out;
+
+        .in & {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .out & {
+            transform: translateY(50px);
+            opacity: 0;
+        }
     }
 </style>

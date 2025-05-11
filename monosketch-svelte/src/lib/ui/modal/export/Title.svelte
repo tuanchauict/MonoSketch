@@ -8,9 +8,11 @@
     span {
         font-size: 18px;
         font-weight: bold;
-        margin-bottom: 16px;
+        margin: 16px 0 20px;
         text-align: center;
         display: block;
         width: 100%;
+        color: var(--modal-title-color);
+        font-family: var(--monospace-font);
     }
 </style>
