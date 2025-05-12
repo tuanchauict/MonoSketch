@@ -377,7 +377,8 @@ export class Line extends AbstractShape {
                 newJointPoints[startPointIndex + 1] = newEdge.endPoint;
             }
 
-            const isUpdated = this.jointPoints !== newJointPoints;
+            const isUpdated = !isTwoJointPointsEqual(this.jointPoints, newJointPoints);
+
             this.jointPoints = isReduceRequired ? LineHelper.reduce(newJointPoints) : newJointPoints;
             this.confirmedJointPoints = this.jointPoints;
 
@@ -414,4 +415,8 @@ export class Line extends AbstractShape {
             return edgeBound.isOverlapped(rect);
         });
     }
+}
+
+function isTwoJointPointsEqual(a: Point[], b: Point[]): boolean {
+    return a.length === b.length && a.every((v, i) => v.equals(b[i]));
 }
