@@ -69,7 +69,7 @@ export class Rectangle extends AbstractShape {
 
     setBound(newBound: Rect): void {
         this.update(() => {
-            const isUpdated = this.bound !== newBound;
+            const isUpdated = !this.bound.equals(newBound);
             this.boundInner = newBound;
             return isUpdated;
         });
