@@ -25,18 +25,16 @@ export function moveShapes(
 
     // lineId -> headCount of selected shapes.
     const lineIdToHeadCountMap = dataProvider.allConnectors.reduce(
-        (sum: Map<string, number>, connector: LineConnector) => {
-            sum.set(
-                connector.lineId,
-                1 + (sum.get(connector.lineId) || 0),
-            );
+        (sum, connector) => {
+            const count = sum.get(connector.lineId) || 0;
+            sum.set(connector.lineId, count + 1);
             return sum;
         },
         new Map<string, number>(),
     );
 
     const lineIdToTotalConnectorCount = dataProvider.selectedLines.reduce(
-        (map: Map<string, number>, line: Line) => {
+        (map, line) => {
             map.set(line.id, countNumberOfConnections(environment, line.id));
             return map;
         },
@@ -47,7 +45,9 @@ export function moveShapes(
     // Move non line shapes.
     for (const shape of dataProvider.selectedNonLineShapes) {
         const newBound = dataProvider.updatePosition(shape);
-        if (!newBound) continue;
+        if (!newBound) {
+            continue;
+        }
 
         // Update line which has 1 head connected and the other head is not connected.
         for (const connector of environment.shapeManager.shapeConnector.getConnectors(shape)) {
@@ -55,7 +55,7 @@ export function moveShapes(
             // - the of the connector has only 1 head connected in selected shape
             // - the line is not selected or is selected but has 2 connectors
             // TODO: This logic is too complicated
-            const totalConnectorCount = lineIdToTotalConnectorCount.get(connector.lineId) || 2;
+            const totalConnectorCount = lineIdToTotalConnectorCount.get(connector.lineId) ?? 2;
             const shouldUpdateLineAnchor =
                 (lineIdToHeadCountMap.get(connector.lineId) === 1) &&
                 totalConnectorCount === 2;
@@ -84,11 +84,13 @@ export function moveShapes(
 
     for (const lineId of lineIds) {
         const line = environment.shapeManager.getShape(lineId) as Line | null;
-        if (!line) continue;
+        if (!line) {
+            continue;
+        }
 
         const oldBound = line.bound;
         const newBound = dataProvider.updatePosition(line);
-        if (!newBound || newBound === oldBound) {
+        if (!newBound || newBound.equals(oldBound)) {
             continue;
         }
 
@@ -209,10 +211,15 @@ class MoveShapeDataProvider {
 
     /**
      * Updates the position of a shape based on the new position calculator.
+     *
+     * Returns new bound if the position is changed, otherwise returns null.
      */
     public updatePosition(shape: AbstractShape): Rect | null {
         const newPosition = this.newPositionCalculator(shape);
         if (!newPosition) {
+            return null;
+        }
+        if (newPosition.equals(shape.bound.position)) {
             return null;
         }
 
