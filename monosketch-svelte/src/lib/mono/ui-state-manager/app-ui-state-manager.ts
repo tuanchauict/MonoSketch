@@ -39,7 +39,7 @@ export class AppUiStateManager {
     ) {
         const workspaceFont = new FontFace(
             'JetBrainsMono-Regular',
-            `url('/src/assets/fonts/JetBrainsMono-Regular.woff2')`,
+            `url('/fonts/JetBrainsMono-Regular.woff2')`,
         );
         workspaceFont.load().then(() => {
             document.fonts.add(workspaceFont);
