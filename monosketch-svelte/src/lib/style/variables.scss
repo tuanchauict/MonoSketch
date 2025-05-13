@@ -1,0 +1,28 @@
+:root {
+  --monospace-font: 'Jetbrains Mono', Menlo, 'Courier New', Courier, monospace;
+  --ui-text-font: 'Roboto', Arial, serif;
+
+  --nav-height: 48px;
+  --canvas-left: 33px;
+  --canvas-top: 18px;
+}
+
+// Font
+$monospaceFont: var(--monospace-font);
+$uiTextFont: var(--ui-text-font);
+
+// Size
+$nav-height: var(--nav-height);
+$canvas-left: var(--canvas-left);
+$canvas-top: var(--canvas-top);
+
+// Index
+$keyboard-shortcuts-zindex: 200;
+$export-text-zindex: 201;
+$edit-text-zindex: 202;
+$dropdown-menu-zindex: 203;
+$rename-project-modal-zindex: 205;
+$all-projects-modal-zindex: 500;
+$remove-project-modal-zindex: 501;
+
+$tooltip-zindex: 10000;
