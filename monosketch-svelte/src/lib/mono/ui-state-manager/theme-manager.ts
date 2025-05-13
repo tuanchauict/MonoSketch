@@ -23,9 +23,9 @@ export class ThemeManager {
      * The return is the hex code of RGB or RGBA, the same to the hex code used in CSS.
      */
     getThemedColorCode(color: ThemeColor): string {
-        return this._themeModeFlow.value === ThemeMode.LIGHT
-            ? color.lightColorCode
-            : color.darkColorCode;
+        return this._themeModeFlow.value === ThemeMode.DARK
+            ? color.darkColorCode
+            : color.lightColorCode;
     }
 
     setTheme(themeMode: ThemeMode): void {
