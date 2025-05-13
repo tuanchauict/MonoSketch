@@ -2,24 +2,33 @@
  * An object to contains all handling key-codes.
  */
 export class Key {
-    static readonly ESC = 27;
-    static readonly SHIFT = 16;
-    static readonly ENTER = 13;
-    static readonly BACKSPACE = 8;
-    static readonly DELETE = 46;
-    static readonly ARROW_LEFT = 37;
-    static readonly ARROW_UP = 38;
-    static readonly ARROW_RIGHT = 39;
-    static readonly ARROW_DOWN = 40;
-    static readonly A = 65;
-    static readonly C = 67;
-    static readonly D = 68;
-    static readonly L = 76;
-    static readonly R = 82;
-    static readonly T = 84;
-    static readonly V = 86;
-    static readonly X = 88;
-    static readonly Z = 90;
+    static readonly ESC: KeyMap = { key: ['Escape'], keyCode: 27 };
+    static readonly SHIFT: KeyMap = { key: ['Shift'], keyCode: 16 };
+    static readonly ENTER: KeyMap = { key: ['Enter'], keyCode: 13 };
+    static readonly BACKSPACE: KeyMap = { key: ['Backspace'], keyCode: 8 };
+    static readonly DELETE: KeyMap = { key: ['Delete'], keyCode: 46 };
+    static readonly ARROW_LEFT: KeyMap = { key: ['ArrowLeft'], keyCode: 37 };
+    static readonly ARROW_UP: KeyMap = { key: ['ArrowUp'], keyCode: 38 };
+    static readonly ARROW_RIGHT: KeyMap = { key: ['ArrowRight'], keyCode: 39 };
+    static readonly ARROW_DOWN: KeyMap = { key: ['ArrowDown'], keyCode: 40 };
+    static readonly A: KeyMap = { key: ['a', 'A'], keyCode: 65 };
+    static readonly C: KeyMap = { key: ['c', 'C'], keyCode: 67 };
+    static readonly D: KeyMap = { key: ['d', 'D'], keyCode: 68 };
+    static readonly L: KeyMap = { key: ['l', 'L'], keyCode: 76 };
+    static readonly R: KeyMap = { key: ['r', 'R'], keyCode: 82 };
+    static readonly T: KeyMap = { key: ['t', 'T'], keyCode: 84 };
+    static readonly V: KeyMap = { key: ['v', 'V'], keyCode: 86 };
+    static readonly X: KeyMap = { key: ['x', 'X'], keyCode: 88 };
+    static readonly Z: KeyMap = { key: ['z', 'Z'], keyCode: 90 };
+}
+
+export function getKeyFromEvent(e: KeyboardEvent): KeyMap | undefined {
+    return Object.values(Key).find(keyMap => keyMap.key.includes(e.key));
+}
+
+export interface KeyMap {
+    key: string[]; // Using array to support multiple key variations (e.g. 'a' and 'A')
+    keyCode: number;
 }
 
 interface MetaKeyState {
@@ -74,7 +83,7 @@ export enum KeyCommandType {
 
 export interface KeyCommand {
     command: KeyCommandType;
-    keyCodes: Key[];
+    keys: KeyMap[];
     commandKeyState: MetaKeyState;
     shiftKeyState: MetaKeyState;
     isKeyEventPropagationAllowed: boolean;
