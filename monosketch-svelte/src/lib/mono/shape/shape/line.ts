@@ -372,11 +372,11 @@ export class Line extends AbstractShape {
                 newJointPoints[startPointIndex] = newEdge.startPoint;
                 newJointPoints.splice(startPointIndex + 1, 0, newEdge.endPoint);
             } else {
-                const startPointIndex = newJointPoints.findIndex(p => p.equals(edge.startPoint));
+                // Use === instead of equals() to check if two points are the same object
+                const startPointIndex = newJointPoints.findIndex(p => p === edge.startPoint);
                 newJointPoints[startPointIndex] = newEdge.startPoint;
                 newJointPoints[startPointIndex + 1] = newEdge.endPoint;
             }
-
             const isUpdated = !isTwoJointPointsEqual(this.jointPoints, newJointPoints);
 
             this.jointPoints = isReduceRequired ? LineHelper.reduce(newJointPoints) : newJointPoints;
