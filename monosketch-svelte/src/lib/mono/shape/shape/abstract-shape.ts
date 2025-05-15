@@ -125,12 +125,14 @@ export abstract class AbstractShape extends ShapeIdentifier implements Comparabl
      * Generates a new version code which is different from [excludedValue].
      */
     static nextVersionCode(excludedValue: number = 0): number {
-        let nextCode = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+        let nextCode = Math.floor(Math.random() * MAX_INT);
         // The probability of a new number is equal to old number is low, therefore, this loop
         // is short.
         while (nextCode === excludedValue) {
-            nextCode = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+            nextCode = Math.floor(Math.random() * MAX_INT);
         }
         return nextCode;
     }
 }
+
+const MAX_INT = 2147483647;
