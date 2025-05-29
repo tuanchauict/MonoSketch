@@ -1,5 +1,5 @@
 import { Flow } from '$libs/flow';
-import { type KeyCommand, KeyCommandType } from './interface';
+import { getKeyFromEvent, type KeyCommand, KeyCommandType } from './interface';
 import { getCommandByType, getCommandByKey } from './keycommands';
 import { DEBUG_MODE } from '../build_environment';
 import { isCommandKeyOn } from '../common/platform';
@@ -17,10 +17,13 @@ export class KeyCommandController {
     }
 
     private updateKeyCommand = (e: KeyboardEvent) => {
-        // TODO: Resolve keyCode deprecated.
+        const keyMap = getKeyFromEvent(e);
+        if (!keyMap) {
+            return;
+        }
         const keyCommand =
             e.target === this.body
-                ? getCommandByKey(e.keyCode, isCommandKeyOn(e), e.shiftKey)
+                ? getCommandByKey(keyMap, isCommandKeyOn(e), e.shiftKey)
                 : getCommandByType(KeyCommandType.IDLE);
 
         if (!keyCommand.isKeyEventPropagationAllowed) {

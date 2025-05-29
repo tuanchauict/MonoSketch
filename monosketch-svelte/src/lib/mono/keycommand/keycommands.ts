@@ -1,8 +1,8 @@
-import { Key, type KeyCommand, KeyCommandType, MetaKeyState } from './interface';
+import { Key, type KeyCommand, KeyCommandType, type KeyMap, MetaKeyState } from './interface';
 
 const KeyCommandOptionsDefaults: KeyCommand = {
     command: KeyCommandType.IDLE,
-    keyCodes: [],
+    keys: [],
     commandKeyState: MetaKeyState.ANY,
     shiftKeyState: MetaKeyState.ANY,
     isKeyEventPropagationAllowed: true,
@@ -18,46 +18,46 @@ const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.SELECT_ALL,
-        keyCodes: [Key.A],
+        keys: [Key.A],
         commandKeyState: MetaKeyState.ON,
         isKeyEventPropagationAllowed: false,
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.DESELECTION,
-        keyCodes: [Key.ESC],
+        keys: [Key.ESC],
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.DELETE,
-        keyCodes: [Key.DELETE, Key.BACKSPACE],
+        keys: [Key.DELETE, Key.BACKSPACE],
     },
 
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.MOVE_LEFT,
-        keyCodes: [Key.ARROW_LEFT],
+        keys: [Key.ARROW_LEFT],
         shiftKeyState: MetaKeyState.OFF,
         isRepeatable: true,
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.MOVE_UP,
-        keyCodes: [Key.ARROW_UP],
+        keys: [Key.ARROW_UP],
         shiftKeyState: MetaKeyState.OFF,
         isRepeatable: true,
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.MOVE_RIGHT,
-        keyCodes: [Key.ARROW_RIGHT],
+        keys: [Key.ARROW_RIGHT],
         shiftKeyState: MetaKeyState.OFF,
         isRepeatable: true,
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.MOVE_DOWN,
-        keyCodes: [Key.ARROW_DOWN],
+        keys: [Key.ARROW_DOWN],
         shiftKeyState: MetaKeyState.OFF,
         isRepeatable: true,
     },
@@ -65,28 +65,28 @@ const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.FAST_MOVE_LEFT,
-        keyCodes: [Key.ARROW_LEFT],
+        keys: [Key.ARROW_LEFT],
         shiftKeyState: MetaKeyState.ON,
         isRepeatable: true,
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.FAST_MOVE_UP,
-        keyCodes: [Key.ARROW_UP],
+        keys: [Key.ARROW_UP],
         shiftKeyState: MetaKeyState.ON,
         isRepeatable: true,
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.FAST_MOVE_RIGHT,
-        keyCodes: [Key.ARROW_RIGHT],
+        keys: [Key.ARROW_RIGHT],
         shiftKeyState: MetaKeyState.ON,
         isRepeatable: true,
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.FAST_MOVE_DOWN,
-        keyCodes: [Key.ARROW_DOWN],
+        keys: [Key.ARROW_DOWN],
         shiftKeyState: MetaKeyState.ON,
         isRepeatable: true,
     },
@@ -94,17 +94,17 @@ const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.ADD_RECTANGLE,
-        keyCodes: [Key.R],
+        keys: [Key.R],
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.ADD_TEXT,
-        keyCodes: [Key.T],
+        keys: [Key.T],
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.ADD_LINE,
-        keyCodes: [Key.L],
+        keys: [Key.L],
     },
 
     {
@@ -115,27 +115,27 @@ const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.SELECTION_MODE,
-        keyCodes: [Key.V],
+        keys: [Key.V],
         commandKeyState: MetaKeyState.OFF,
     },
 
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.COPY,
-        keyCodes: [Key.C],
+        keys: [Key.C],
         commandKeyState: MetaKeyState.ON,
         shiftKeyState: MetaKeyState.OFF,
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.CUT,
-        keyCodes: [Key.X],
+        keys: [Key.X],
         commandKeyState: MetaKeyState.ON,
     },
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.DUPLICATE,
-        keyCodes: [Key.D],
+        keys: [Key.D],
         commandKeyState: MetaKeyState.ON,
         isKeyEventPropagationAllowed: false,
     },
@@ -143,7 +143,7 @@ const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.COPY_TEXT,
-        keyCodes: [Key.C],
+        keys: [Key.C],
         commandKeyState: MetaKeyState.ON,
         shiftKeyState: MetaKeyState.ON,
         isKeyEventPropagationAllowed: false,
@@ -152,7 +152,7 @@ const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.UNDO,
-        keyCodes: [Key.Z],
+        keys: [Key.Z],
         commandKeyState: MetaKeyState.ON,
         shiftKeyState: MetaKeyState.OFF,
         isRepeatable: true,
@@ -160,7 +160,7 @@ const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.REDO,
-        keyCodes: [Key.Z],
+        keys: [Key.Z],
         commandKeyState: MetaKeyState.ON,
         shiftKeyState: MetaKeyState.ON,
         isRepeatable: true,
@@ -169,7 +169,7 @@ const KeyCommands: KeyCommand[] = [
     {
         ...KeyCommandOptionsDefaults,
         command: KeyCommandType.SHIFT_KEY,
-        keyCodes: [Key.SHIFT],
+        keys: [Key.SHIFT],
     },
 ];
 
@@ -182,19 +182,19 @@ function initKeyToKeyCommandMap() {
     }
 
     for (const keyCommand of KeyCommands) {
-        for (const keyCode of keyCommand.keyCodes) {
-            const keyCommands = KeyCodeToKeyCommandMap.get(keyCode);
+        for (const key of keyCommand.keys) {
+            const keyCommands = KeyCodeToKeyCommandMap.get(key);
             if (keyCommands) {
                 keyCommands.push(keyCommand);
             } else {
-                KeyCodeToKeyCommandMap.set(keyCode, [keyCommand]);
+                KeyCodeToKeyCommandMap.set(key, [keyCommand]);
             }
         }
     }
 }
 
 export function getCommandByKey(
-    key: Key,
+    key: KeyMap,
     hasCommandKey: boolean,
     hasShiftKey: boolean,
 ): KeyCommand {
