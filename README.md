@@ -1,15 +1,20 @@
+# MonoSketch
+
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)][apache2.0]
-[![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat&logo=kotlin&logoColor=white)][KotlinJS] 
+[![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat&logo=kotlin&logoColor=white)][KotlinJS]
 [![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=flat&logo=SASS&logoColor=white)][sass]
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/tuanchauict/monosketch)](https://github.com/tuanchauict/MonoSketch/releases)
 [![Twitter Follow](https://img.shields.io/twitter/follow/MonoSketchApp)](https://twitter.com/MonoSketchApp)
 
-> This project is under rewritten to TypeScript, check out [`port-to-js`](https://github.com/tuanchauict/MonoSketch/tree/port-to-js) branch or PR https://github.com/tuanchauict/MonoSketch/pull/584 for more detail
+A powerful, client-side-only web-based tool for creating ASCII diagrams and text-based visualizations. Perfect for documentation, technical diagrams, and creative text art.
 
-# What is it?
+**Try it now at [app.monosketch.io][app]**
 
-Mono Sketch is a client-side-only web-based sketch tool for drawing *ASCII diagrams*. You can use
-the app at [app.monosketch.io][app].
+> **Note:** This project is being rewritten in TypeScript. Check out the [`port-to-js`](https://github.com/tuanchauict/MonoSketch/tree/port-to-js) branch or [PR #584](https://github.com/tuanchauict/MonoSketch/pull/584) for details.
+
+## Overview
+
+MonoSketch is a fully client-side ASCII diagram editor that runs entirely in your browser. No server-side processing, no data uploaded to the cloud - your work stays on your device. Create technical diagrams, flowcharts, circuit diagrams, and more using only ASCII characters.
 
 ```
         +10-15V                0,047R                                        
@@ -50,87 +55,105 @@ Capacitor      │         │           │3                  C│    │    �
                                                   GND                        
 ```
 
-# Features
+## Features
 
-## Supporting features
+### Drawing Tools
+- **Rectangle** - Create bordered and filled rectangular shapes
+- **Text** - Add text labels and annotations
+- **Line** - Draw connecting lines with various styles
 
-Draw tools:
+### Shape Styling
+- **Fill** - Fill shapes with characters
+- **Border** - Multiple border styles and characters
+- **Line decorations** - Add arrows and other heads to line ends
+- **Rounded corners** - Soften rectangular shapes
 
-- Rectangle
-- Text
-- Line
+### Editing Capabilities
+- **Infinite canvas** - Unlimited scrolling in all directions
+- **Autosave** - Never lose your work
+- **Multiple projects** - Organize your diagrams
+- **Standard operations** - Copy, Cut, Paste, Duplicate
+- **Layer management** - Move shapes and change their stacking order
+- **Dark mode** - Easy on the eyes
+- **Smart snapping** - Connect lines to shapes automatically
 
-Shape formats:
+### Export Options
+- Export selected shapes or entire diagrams
+- Quick text copy with keyboard shortcuts:
+  - macOS: `Cmd + Shift + C`
+  - Windows/Linux: `Ctrl + Shift + C`
 
-- Fill
-- Border
-- Line start/end heads
-- Rounded corner
-
-Editing:
-
-- Infinity scroll, no limitation for 4 directions
-- Autosave
-- Multiple projects
-- Copy / Cut / Paste / Duplicate
-- Move and change shapes' order
-- Dark mode
-- Line snapping: connect a line to a shape
-
-Exporting:
-
-- Export selected shapes
-- Copy as text (`cmd + shift + C` or `ctrl + shift + C`)
-
-## Future features
+## Roadmap
 
 ### Grouping
+Group shapes together for easier manipulation and organization. Includes a shape tree panel for managing complex diagrams with nested structures.
 
-> Group is added as a kind of shape but until now, there are no features that are applying Group
-> except for rendering. Besides, the shape tool does not work with groups or multiple selected
-> shapes. This project aims to make the tool able to work with Group and also add a Shape tree on
-> the left of the tool.
+### Paint Tool
+Freehand drawing with custom characters, plus expanded options for fills, borders, and line decorations.
 
-### Paint tool
+### Sharing & Collaboration
+- Open files from URLs
+- Share to GitHub Gist
+- Import/export capabilities
 
-> Currently, Mono Sketch provides only three tools: Rectangle, Text, and Line. One tool that is also
-> used frequently when drawing with ASCII is paint - draw with a specific character. This project
-> also aims to provide richer options of Fill, Border, Line Start/End head
+## Contributing
 
-### Sharing
+Contributions are welcome! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated.
 
-> Allow opening files from a url, share to gist, etc.
+### Technology Stack
+- **[Kotlin/JS][KotlinJS]** - The entire application is written in Kotlin, compiled to JavaScript
+- **[SASS]** - CSS preprocessing
+- **[Tailwind CSS][tailwind]** - Utility-first CSS framework
+- **Gradle** - Build system
 
-# Contributing
+### Prerequisites
+- **Java** - Required for Gradle and Kotlin compilation
+- **Python 3.11+** (optional) - For alternative development server
+- **[Pipenv]** (optional) - If using Python development server
 
-This project is fully written with [KotlinJS] and SASS
-for CSS. There is no environment setup required except for Java.
+### Development Setup
 
-To run debug:
+#### Option 1: Gradle (Recommended)
 
+Run development build with hot reload:
 ```bash
 ./gradlew browserDevelopmentRun --continuous -Dorg.gradle.parallel=false
 ```
 
-Or with production configuration
-
+Run production build:
 ```bash
 ./gradlew browserProductionRun --continuous -Dorg.gradle.parallel=false
 ```
 
-* `-Dorg.gradle.parallel=false` is a workaround for a bug on KotlinJS build with `--continuous`.
+**Note:** The `-Dorg.gradle.parallel=false` flag is a workaround for a KotlinJS build issue with `--continuous` mode.
 
-**Run with Python**
+#### Option 2: Python Development Server
 
-This is an alternative to `browserDevelopmentRun` for running the app for development (sometimes,
-the Gradle does not reload when the code is updated).
-
-Requirements: [Pipenv].
+Alternative approach when Gradle hot reload is not working properly:
 
 ```bash
+# Install dependencies
 pipenv install
+
+# Run development server
 pipenv run dev
 ```
+
+### How to Contribute
+
+1. **Fork the repository** and create a new branch for your feature or bug fix
+2. **Make your changes** following the existing code style
+3. **Test your changes** thoroughly
+4. **Submit a pull request** with a clear description of your changes
+
+### Getting Help
+
+- Open an [issue](https://github.com/tuanchauict/MonoSketch/issues) for bug reports or feature requests
+- Follow [@MonoSketchApp](https://twitter.com/MonoSketchApp) on Twitter for updates
+
+## License
+
+This project is licensed under the [Apache License 2.0][apache2.0].
 
 [apache2.0]: https://opensource.org/licenses/Apache-2.0
 
@@ -141,3 +164,5 @@ pipenv run dev
 [Pipenv]: https://pipenv.pypa.io/en/latest/
 
 [sass]: https://sass-lang.com/
+
+[tailwind]: https://tailwindcss.com/
