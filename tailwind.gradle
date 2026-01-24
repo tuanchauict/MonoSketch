@@ -43,44 +43,8 @@ task compileTailwind(type: Exec) {
     outputs.file("${buildDir}/processedResources/js/main/tailwind.css")
 }
 
-// Merge Tailwind CSS into main.css after both are compiled
-task mergeTailwindCss {
-    description = 'Merge Tailwind CSS into main.css'
-    group = 'build'
-
-    dependsOn compileTailwind, compileSass
-
-    doLast {
-        def outputDir = file("${buildDir}/processedResources/js/main")
-        def tailwindFile = file("${outputDir}/tailwind.css")
-        def mainCssFile = file("${outputDir}/main.css")
-        def tempFile = file("${outputDir}/main.css.temp")
-
-        if (tailwindFile.exists() && mainCssFile.exists()) {
-            // Create temp file with Tailwind first, then main.css content
-            tempFile.withWriter { writer ->
-                writer.write(tailwindFile.text)
-                writer.write('\n')
-                writer.write(mainCssFile.text)
-            }
-
-            // Replace main.css with merged content
-            mainCssFile.delete()
-            tempFile.renameTo(mainCssFile)
-
-            // Remove standalone tailwind.css
-            tailwindFile.delete()
-
-            logger.lifecycle("Merged tailwind.css into main.css")
-        }
-    }
-}
-
-// Make sure Tailwind compiles before SASS
-compileSass.dependsOn(compileTailwind)
-
-// Make sure merge happens before resources are processed
-processResources.dependsOn(mergeTailwindCss)
+// Make sure Tailwind compiles before resources are processed
+processResources.dependsOn(compileTailwind)
 
 // Run Tailwind after npm install (handled by Kotlin/JS plugin)
 compileTailwind.shouldRunAfter(tasks.findByName('kotlinNpmInstall'))
