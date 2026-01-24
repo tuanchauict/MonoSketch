@@ -7,7 +7,7 @@ jobs:
   automerge:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ vars.ALPHA_BRANCH }}
       - name: Environment detector
@@ -21,7 +21,7 @@ jobs:
           git fetch origin main:main
           git reset --hard main
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           title: "[Auto merge][${{ steps.vars.outputs.branch }} -> ${{ vars.ALPHA_BRANCH }}] Update alpha release"
           branch: auto-merge-alpha-release

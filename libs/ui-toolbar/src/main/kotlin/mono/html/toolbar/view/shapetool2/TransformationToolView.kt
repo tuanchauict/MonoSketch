@@ -26,7 +26,7 @@ internal fun TransformationToolView(
     Section("TRANSFORM") {
         Div(
             attrs = {
-                classes("transform-grid")
+                classes("flex", "flex-wrap")
             }
         ) {
             NumberCell("X", bound.left) {
@@ -53,7 +53,7 @@ private fun NumberCell(
     isEnabled: Boolean = true,
     onValueChange: (Int?) -> Unit
 ) {
-    Div(attrs = { classes("cell") }) {
+    Div(attrs = { classes("w-1/2", "pr-2", "pb-3", "even:pr-0", "even:pl-2") }) {
         NumberTextField(
             title,
             value,

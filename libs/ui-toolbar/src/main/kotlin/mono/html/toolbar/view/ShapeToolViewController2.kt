@@ -5,19 +5,13 @@
 package mono.html.toolbar.view
 
 import mono.actionmanager.ActionManager
-import mono.html.toolbar.view.shapetool2.AppearanceToolView
-import mono.html.toolbar.view.shapetool2.FooterView
-import mono.html.toolbar.view.shapetool2.IndicatorView
-import mono.html.toolbar.view.shapetool2.ReorderSectionView
+import mono.html.toolbar.view.shapetool2.ShapeToolContentView
 import mono.html.toolbar.view.shapetool2.ShapeToolViewModel
-import mono.html.toolbar.view.shapetool2.TextToolView
-import mono.html.toolbar.view.shapetool2.TransformationToolView
 import mono.html.toolbar.view.utils.CssClass
 import mono.html.toolbar.view.utils.bindClass
 import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.shape.shape.AbstractShape
-import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.renderComposable
 import org.w3c.dom.HTMLElement
 
@@ -41,29 +35,7 @@ class ShapeToolViewController2(
             container.bindClass(CssClass.HIDE, !it)
         }
         renderComposable(container) {
-            Div(
-                attrs = { classes("shape-tools__body") }
-            ) {
-                ReorderSectionView(
-                    isVisible = viewModel.reorderToolVisibilityState.value,
-                    actionManager::setOneTimeAction
-                )
-                TransformationToolView(
-                    viewModel.singleShapeBoundState.value,
-                    viewModel.singleShapeResizeableState.value,
-                    actionManager::setOneTimeAction
-                )
-                AppearanceToolView(
-                    viewModel,
-                    actionManager::setOneTimeAction
-                )
-                TextToolView(
-                    viewModel.textAlignState.value,
-                    actionManager::setOneTimeAction
-                )
-                IndicatorView(isVisible = !viewModel.hasAnyToolState.value)
-            }
-            FooterView()
+            ShapeToolContentView(viewModel, actionManager::setOneTimeAction)
         }
     }
 }

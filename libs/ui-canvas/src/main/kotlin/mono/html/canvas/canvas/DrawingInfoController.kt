@@ -177,6 +177,6 @@ internal class DrawingInfoController(container: HTMLDivElement) {
 
     companion object {
         const val DEFAULT_FONT = "'Jetbrains Mono'"
-        private const val CLASS_NAME = "drawing-info"
+        private const val CLASS_NAME = "drawing-info absolute top-0 left-0"
     }
 }

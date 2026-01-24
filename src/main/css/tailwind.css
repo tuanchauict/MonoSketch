@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+ * Custom utility classes that bridge Tailwind with existing SCSS variables
+ * You can add @layer components or @layer utilities here for custom classes
+ */
+
+@layer utilities {
+  /* Layout utilities using existing SCSS variable values */
+  .h-nav {
+    height: 48px;
+  }
+  
+  .top-nav {
+    top: 48px;
+  }
+  
+  .w-shape-tools {
+    width: 250px;
+  }
+  
+  .right-shape-tools {
+    right: 250px;
+  }
+}
+
+@layer components {
+  /* Add reusable component classes here */
+}

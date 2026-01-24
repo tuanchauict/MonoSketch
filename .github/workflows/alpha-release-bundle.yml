@@ -19,7 +19,7 @@ jobs:
       SRC_GIT_SHA: ${{ needs.build.outputs.git-sha }}
     steps:
       - name: Get built artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with: 
           name: alpha-release-artifact
           path: distributions

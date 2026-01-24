@@ -25,7 +25,7 @@ internal fun MouseActionGroup(
 ) {
     Div(
         attrs = {
-            classes("main-mouse-actions")
+            classes("flex", "h-full", "ml-2")
         }
     ) {
         for (action in MouseActionType.values()) {
@@ -46,7 +46,7 @@ private fun MouseActionButton(
 ) {
     Div(
         attrs = {
-            classes("action-button-container")
+            classes("flex", "items-center", "justify-center")
 
             tooltip(actionType.title)
 
@@ -55,7 +55,21 @@ private fun MouseActionButton(
     ) {
         Div(
             attrs = {
-                classes("action-button", "selected" to isSelected)
+                classes(
+                    "flex",
+                    "items-center",
+                    "justify-center",
+                    "w-[42px]",
+                    "h-8",
+                    "rounded-md",
+                    "ml-1.5",
+                    "border",
+                    "cursor-pointer",
+                    "select-none",
+                    "hover:bg-[var(--nav-action-hover-bg)]",
+                    "border-transparent" to !isSelected,
+                    "border-[var(--nav-action-selected-border)]" to isSelected
+                )
             }
         ) {
             Svg(

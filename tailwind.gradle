@@ -1,0 +1,50 @@
+// Tailwind CSS build task
+task compileTailwind(type: Exec) {
+    description = 'Compile Tailwind CSS'
+    group = 'build'
+
+    workingDir projectDir
+    commandLine 'npm', 'run', 'tailwind:build'
+
+    // Check if tailwindcss is installed, if not, install dependencies
+    doFirst {
+        def nodeModulesDir = file("${projectDir}/node_modules")
+        def tailwindcssPath = file("${projectDir}/node_modules/.bin/tailwindcss")
+
+        if (!nodeModulesDir.exists() || !tailwindcssPath.exists()) {
+            logger.lifecycle("Tailwind CSS not found. Installing npm dependencies...")
+            exec {
+                workingDir projectDir
+                commandLine 'npm', 'install'
+            }
+        }
+    }
+
+    inputs.files(
+        fileTree("${projectDir}/src/main/css"),
+        file("${projectDir}/tailwind.config.js"),
+        fileTree("${projectDir}/src/main/kotlin"),
+        fileTree("${projectDir}/src/main/resources"),
+        fileTree("${projectDir}/app/src/main/kotlin")
+    )
+    // Scan libs source directories individually to avoid build directories
+    rootProject.subprojects.each { subproject ->
+        if (subproject.projectDir.parentFile.name == 'libs') {
+            def srcMain = file("${subproject.projectDir}/src/main/kotlin")
+            def srcJsMain = file("${subproject.projectDir}/src/jsMain/kotlin")
+            if (srcMain.exists()) {
+                inputs.files(fileTree(srcMain))
+            }
+            if (srcJsMain.exists()) {
+                inputs.files(fileTree(srcJsMain))
+            }
+        }
+    }
+    outputs.file("${buildDir}/processedResources/js/main/tailwind.css")
+}
+
+// Make sure Tailwind compiles before resources are processed
+processResources.dependsOn(compileTailwind)
+
+// Run Tailwind after npm install (handled by Kotlin/JS plugin)
+compileTailwind.shouldRunAfter(tasks.findByName('kotlinNpmInstall'))

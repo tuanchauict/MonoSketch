@@ -17,22 +17,40 @@ internal fun Section(
     hasBorderTop: Boolean = true,
     content: ContentBuilder<HTMLDivElement>
 ) {
+    val hasTitle = title.isNotEmpty()
     Div(
         attrs = {
             classes(
                 "section",
-                "notitle" to title.isEmpty(),
-                "border-top" to hasBorderTop
+                "flex",
+                "flex-col",
+                "px-2.5",
+                "py-2.5" to hasTitle,
+                "py-1" to !hasTitle,
+                "text-[var(--shapetool-section-content-color)]",
+                "border-t-[0.75px]" to hasBorderTop,
+                "border-t-[var(--shapetool-section-divider-color)]" to hasBorderTop
             )
         }
     ) {
-        if (title.isNotEmpty()) {
-            Div(attrs = { classes("section-title") }) {
+        if (hasTitle) {
+            Div(
+                attrs = {
+                    classes(
+                        "font-medium",
+                        "text-[11px]",
+                        "text-[var(--shapetool-section-title-color)]",
+                        "mb-2.5",
+                        "select-none",
+                        "tracking-wider"
+                    )
+                }
+            ) {
                 Text(title)
             }
         }
 
-        Div(attrs = { classes("section-body") }) {
+        Div(attrs = { classes("flex", "flex-col", "w-full") }) {
             content()
         }
     }

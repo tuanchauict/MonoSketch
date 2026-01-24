@@ -11,7 +11,7 @@ import org.w3c.dom.HTMLElement
 
 internal enum class CssClass(val value: String) {
     DISABLED("disabled"),
-    HIDE("hide"),
+    HIDE("hidden"),
     SELECTED("selected")
 }
 

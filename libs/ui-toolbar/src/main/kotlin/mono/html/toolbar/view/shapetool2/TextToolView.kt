@@ -36,7 +36,7 @@ internal fun TextToolView(
     }
     Section("TEXT") {
         Div(
-            attrs = { classes("tool-text") }
+            attrs = { classes("flex", "flex-col") }
         ) {
             val selectedAlignment = when (textAlign.horizontalAlign) {
                 TextAlign.HorizontalAlign.LEFT -> HORIZONTAL_LEFT
@@ -72,12 +72,21 @@ private fun Group(
     selectedIcon: TextAlignmentIconType,
     setOneTimeAction: (OneTimeActionType) -> Unit
 ) {
-    Div(attrs = { classes("row") }) {
-        Span(attrs = { classes("tool-title") }) {
+    Div(attrs = { classes("flex", "items-center", "pb-2") }) {
+        Span(
+            attrs = {
+                classes(
+                    "w-[60px]",
+                    "text-xs",
+                    "select-none",
+                    "text-[var(--shapetool-tool-title-color)]"
+                )
+            }
+        ) {
             Text(label)
         }
 
-        Div(attrs = { classes("comp-option-cloud-layout") }) {
+        Div(attrs = { classes("flex", "flex-wrap", "gap-[7px]") }) {
             for (icon in icons) {
                 Icon(icon.iconPath, icon == selectedIcon) {
                     setOneTimeAction(icon.toTextAlignment())
@@ -95,7 +104,28 @@ private fun Icon(
 ) {
     Div(
         attrs = {
-            classes("cloud-item", "selected" to isSelected)
+            classes(
+                "flex",
+                "justify-center",
+                "items-center",
+                "rounded",
+                "cursor-pointer",
+                "p-[3px]",
+                // Base border
+                "border",
+                "border-[var(--comp-option-cloud-border-color)]",
+                // Hover state
+                "hover:border-transparent",
+                "hover:outline",
+                "hover:outline-[1.5px]",
+                "hover:outline-[var(--comp-option-cloud-border-color)]",
+                // Conditional: selected
+                "border-transparent" to isSelected,
+                "outline" to isSelected,
+                "outline-[1.5px]" to isSelected,
+                "outline-[var(--comp-option-cloud-border-selected-color)]" to isSelected,
+                "text-[var(--comp-option-cloud-border-selected-color)]" to isSelected
+            )
 
             onClick { onSelect() }
         }

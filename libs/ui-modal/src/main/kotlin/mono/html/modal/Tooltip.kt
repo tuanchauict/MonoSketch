@@ -98,14 +98,18 @@ private class Tooltip {
     ) {
         val anchorPositionRect = anchorView.getBoundingClientRect()
 
-        val arrow = body.Div("mono-tooltip tooltip-arrow") {
+        val arrow = body.Div("") {
             ArrowIcon(position)
         }
+        arrow.className = "fixed z-tooltip text-[var(--tooltip-bg)] flex"
 
         arrowView = arrow
-        bodyView = body.Span("mono-tooltip tooltip-body", text) {
+        bodyView = body.Span("", text) {
             style("visibility" to "hidden")
         }
+        bodyView?.className =
+            "fixed z-tooltip bg-[var(--tooltip-bg)] text-[var(--tooltip-color)] " +
+            "pt-0.5 px-2 pb-px rounded text-[11px] font-mono"
         post {
             arrow.adjustArrowPosition(anchorPositionRect, position)
             bodyView?.adjustTooltipBodyPosition(
@@ -155,14 +159,16 @@ private class Tooltip {
             TooltipPosition.LEFT -> {
                 style(
                     "left" to (arrowPositionRect.left - clientWidth).px,
-                    "top" to (anchorPositionRect.centerYPx - halfHeightPx).px
+                    "top" to (anchorPositionRect.centerYPx - halfHeightPx).px,
+                    "visibility" to "visible"
                 )
             }
 
             TooltipPosition.RIGHT -> {
                 style(
                     "left" to arrowPositionRect.right.px,
-                    "top" to (anchorPositionRect.centerYPx - halfHeightPx).px
+                    "top" to (anchorPositionRect.centerYPx - halfHeightPx).px,
+                    "visibility" to "visible"
                 )
             }
 
@@ -170,7 +176,8 @@ private class Tooltip {
                 val leftPx = (anchorPositionRect.centerXPx - halfWidthPx)
                 style(
                     "top" to (arrowPositionRect.top - clientHeight + 0.5).px,
-                    "left" to leftPx.coerceIn(0.0, leftMost.toDouble()).px
+                    "left" to leftPx.coerceIn(0.0, leftMost.toDouble()).px,
+                    "visibility" to "visible"
                 )
             }
 
@@ -178,7 +185,8 @@ private class Tooltip {
                 val leftPx = (anchorPositionRect.centerXPx - halfWidthPx)
                 style(
                     "top" to arrowPositionRect.bottom.px,
-                    "left" to leftPx.coerceIn(4.0, leftMost.toDouble()).px
+                    "left" to leftPx.coerceIn(4.0, leftMost.toDouble()).px,
+                    "visibility" to "visible"
                 )
             }
         }

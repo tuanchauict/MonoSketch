@@ -46,3 +46,4 @@ kotlin {
 
 apply(from = "ktlint.gradle")
 apply(from = "sass.gradle")
+apply(from = "tailwind.gradle")

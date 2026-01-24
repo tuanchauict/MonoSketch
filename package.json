@@ -1,0 +1,14 @@
+{
+  "name": "monosketch-tailwind",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "tailwind:build": "tailwindcss -i ./src/main/css/tailwind.css -o ./build/processedResources/js/main/tailwind.css --minify",
+    "tailwind:watch": "tailwindcss -i ./src/main/css/tailwind.css -o ./build/processedResources/js/main/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32"
+  }
+}

@@ -28,7 +28,7 @@ internal fun ReorderSectionView(
         return
     }
     Section(hasBorderTop = false) {
-        Div(attrs = { classes("tool-reorder") }) {
+        Div(attrs = { classes("flex", "justify-around", "px-3") }) {
             for (icon in ReorderIconType.values()) {
                 Icon(icon, setOneTimeAction)
             }
@@ -40,7 +40,13 @@ internal fun ReorderSectionView(
 private fun Icon(iconType: ReorderIconType, setOneTimeAction: (OneTimeActionType) -> Unit) {
     Div(
         attrs = {
-            classes("icon")
+            classes(
+                "p-2",
+                "rounded",
+                "cursor-pointer",
+                "select-none",
+                "hover:bg-[var(--shapetool-reorder-hover-bg)]"
+            )
             tooltip(iconType.title, TooltipPosition.TOP)
 
             onClick { setOneTimeAction(OneTimeActionType.ReorderShape(iconType.changeOrderType)) }

@@ -181,9 +181,9 @@ class CanvasViewController(
     fun toHeightPx(height: Double) = drawingInfo.toHeightPx(height)
 
     companion object {
-        private const val CLASS_NAME_GRID = "grid-canvas"
-        private const val CLASS_NAME_BOARD = "board-canvas"
-        private const val CLASS_NAME_INTERACTION = "interaction-canvas"
-        private const val CLASS_NAME_SELECTION = "selection-canvas"
+        private const val CLASS_NAME_GRID = "grid-canvas absolute top-0 left-0"
+        private const val CLASS_NAME_BOARD = "board-canvas absolute top-0 left-0"
+        private const val CLASS_NAME_INTERACTION = "interaction-canvas absolute top-0 left-0"
+        private const val CLASS_NAME_SELECTION = "selection-canvas absolute top-0 left-0"
     }
 }

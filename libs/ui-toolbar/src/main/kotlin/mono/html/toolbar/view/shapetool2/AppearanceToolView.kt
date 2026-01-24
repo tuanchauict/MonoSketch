@@ -17,11 +17,6 @@ import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.ui.compose.components.Icons
 import mono.ui.compose.ext.classes
-import org.jetbrains.compose.web.css.background
-import org.jetbrains.compose.web.css.height
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.ContentBuilder
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
@@ -54,7 +49,7 @@ internal fun AppearanceToolView(
             "Border",
             isAvailable = viewModel.shapeBorderTypeState.value != null
         ) {
-            Div(attrs = { classes("border-row") }) {
+            Div(attrs = { classes("flex", "flex-row", "items-center", "justify-start", "gap-4") }) {
                 OptionsCloud(
                     viewModel.strokeOptions,
                     Characters.NBSP,
@@ -79,7 +74,7 @@ internal fun AppearanceToolView(
             "Stroke",
             isAvailable = viewModel.lineStrokeTypeState.value != null
         ) {
-            Div(attrs = { classes("border-row") }) {
+            Div(attrs = { classes("flex", "flex-row", "items-center", "justify-start", "gap-4") }) {
                 OptionsCloud(
                     viewModel.strokeOptions,
                     Characters.NBSP,
@@ -138,9 +133,18 @@ private fun Tool(
         return
     }
     Div(
-        attrs = { classes("tool-appearance") }
+        attrs = { classes("flex", "flex-col", "mb-4") }
     ) {
-        Span(attrs = { classes("tool-title") }) {
+        Span(
+            attrs = {
+                classes(
+                    "text-xs",
+                    "select-none",
+                    "mb-1",
+                    "text-[var(--shapetool-tool-title-color)]"
+                )
+            }
+        ) {
             Text(title)
         }
         content()
@@ -159,7 +163,7 @@ private fun OptionsCloud(
         return
     }
     Div(
-        attrs = { classes("comp-option-cloud-layout") }
+        attrs = { classes("flex", "flex-wrap", "gap-[7px]") }
     ) {
         Option(
             disabledStateText.toString(),
@@ -189,16 +193,37 @@ private fun Option(
     Div(
         attrs = {
             classes(
-                "cloud-item",
-                "dash-border" to isDashBorder,
-                "selected" to isSelected
+                "flex",
+                "justify-center",
+                "items-center",
+                "rounded",
+                "cursor-pointer",
+                "p-[3px]",
+                // Base border
+                "border",
+                "border-[var(--comp-option-cloud-border-color)]",
+                // Hover state
+                "hover:border-transparent",
+                "hover:outline",
+                "hover:outline-[1.5px]",
+                "hover:outline-[var(--comp-option-cloud-border-color)]",
+                // Conditional: dash border
+                "border-dashed" to isDashBorder,
+                "hover:outline-dashed" to isDashBorder,
+                // Conditional: selected
+                "border-transparent" to isSelected,
+                "outline" to isSelected,
+                "outline-[1.5px]" to isSelected,
+                "outline-[var(--comp-option-cloud-border-selected-color)]" to isSelected,
+                "text-[var(--comp-option-cloud-border-selected-color)]" to isSelected,
+                "outline-dashed" to (isSelected && isDashBorder)
             )
 
             onClick { onSelect() }
         }
     ) {
         Span(
-            attrs = { classes("monofont") }
+            attrs = { classes("font-mono", "text-lg") }
         ) {
             Text(text)
         }
@@ -216,7 +241,7 @@ private fun DashPattern(
     }
 
     Div(
-        attrs = { classes("comp-dash-layout") }
+        attrs = { classes("mt-2", "ml-2", "flex", "justify-between") }
     ) {
         DashInput("Dash", dashPattern.dash, 1) {
             setOneTimeAction(oneTimeActionFactory(it, null, null))
@@ -232,7 +257,7 @@ private fun DashPattern(
 
 @Composable
 private fun DashInput(name: String, value: Int, minValue: Int?, onValueChange: (Int?) -> Unit) {
-    Div(attrs = { classes("pattern") }) {
+    Div(attrs = { classes("flex", "items-center", "w-[30%]") }) {
         NumberTextField(name, value, minValue, isChildBound = true, onValueChange = onValueChange)
     }
 }
@@ -247,17 +272,32 @@ private fun RoundedCorner(
         return
     }
     Div(attrs = {
-        style {
-            width(1.px)
-            height(80.percent)
-            background("var(--shapetool-section-divider-color)")
-        }
+        classes("w-px", "h-4/5", "bg-[var(--shapetool-section-divider-color)]")
     })
 
-    Div(attrs = { classes("comp-option-cloud-layout") }) {
+    Div {
         Div(
             attrs = {
-                classes("cloud-item", "corner", "selected" to isRounded)
+                classes(
+                    // Base layout from cloud-item
+                    "flex",
+                    "justify-center",
+                    "items-center",
+                    "rounded",
+                    "cursor-pointer",
+                    // Corner-specific styles
+                    "border-none",
+                    "p-0.5",
+                    "opacity-75",
+                    // Hover state
+                    "hover:opacity-100",
+                    "hover:outline",
+                    "hover:outline-1",
+                    "hover:outline-[var(--text-input-border-color)]",
+                    // Conditional: selected
+                    "opacity-100" to isRounded,
+                    "outline-none" to isRounded
+                )
                 tooltip("Rounded corner", position = TooltipPosition.TOP)
 
                 onClick {
