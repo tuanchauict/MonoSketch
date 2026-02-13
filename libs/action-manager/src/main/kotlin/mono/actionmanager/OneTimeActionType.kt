@@ -25,6 +25,7 @@ sealed interface OneTimeActionType {
         data class RemoveProject(val projectId: String) : ProjectAction
         object SaveShapesAs : ProjectAction
         object OpenShapes : ProjectAction
+        object ImportMermaid : ProjectAction
     }
 
     /**

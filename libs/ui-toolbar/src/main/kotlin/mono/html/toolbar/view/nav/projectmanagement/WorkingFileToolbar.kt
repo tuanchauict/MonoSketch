@@ -89,6 +89,10 @@ private fun showWorkingFileMenu(anchor: Element, onItemSelected: (DropDownItemAc
         DropDownItem.Text(
             "Export Text",
             Forwarding(OneTimeActionType.ProjectAction.ExportSelectedShapes)
+        ),
+        DropDownItem.Text(
+            "Import Mermaid...",
+            Forwarding(OneTimeActionType.ProjectAction.ImportMermaid)
         )
     )
     DropDownMenu(anchor, items) {

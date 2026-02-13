@@ -15,6 +15,7 @@ val moduleMap = mapOf(
     "html-dsl" to "libs/html-dsl",
     "keycommand" to "libs/keycommand",
     "lifecycle" to "libs/lifecycle",
+    "mermaid-import" to "libs/mermaid-import",
     "livedata" to "libs/livedata",
     "monobitmap" to "libs/monobitmap",
     "monobitmap-manager" to "libs/monobitmap-manager",

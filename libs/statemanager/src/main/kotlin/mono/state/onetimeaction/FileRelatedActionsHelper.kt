@@ -8,6 +8,9 @@ import mono.actionmanager.OneTimeActionType
 import mono.bitmap.manager.MonoBitmapManager
 import mono.export.ExportShapesHelper
 import mono.html.modal.compose.showExitingProjectDialog
+import mono.mermaid.ImportMermaidModal
+import mono.mermaid.MermaidImporter
+import mono.shape.add
 import mono.shape.clipboard.ShapeClipboardManager
 import mono.shape.connector.ShapeConnector
 import mono.shape.serialization.Extra
@@ -58,6 +61,9 @@ internal class FileRelatedActionsHelper(
 
             OneTimeActionType.ProjectAction.ExportSelectedShapes ->
                 exportSelectedShapes(true)
+
+            OneTimeActionType.ProjectAction.ImportMermaid ->
+                importMermaid()
         }
     }
 
@@ -152,6 +158,21 @@ internal class FileRelatedActionsHelper(
         }
 
         replaceWorkspace(rootGroup)
+    }
+
+    private fun importMermaid() {
+        val modal = ImportMermaidModal()
+        modal.show { mermaidText ->
+            val parentId = environment.workingParentGroup.id
+            val shapes = MermaidImporter.import(mermaidText, parentId)
+            if (shapes == null) {
+                console.warn("Failed to import Mermaid diagram.")
+                return@show
+            }
+            for (shape in shapes) {
+                environment.shapeManager.add(shape)
+            }
+        }
     }
 
     fun exportSelectedShapes(isModalRequired: Boolean) {

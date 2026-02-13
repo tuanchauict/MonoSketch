@@ -91,6 +91,9 @@ private fun onProjectManagementActionClick(
             onActionSelected(OneTimeActionType.ProjectAction.NewProject)
             renameProject(projectNameState, onActionSelected)
         }
+
+        ProjectManagementActionItem.ImportMermaid ->
+            onActionSelected(OneTimeActionType.ProjectAction.ImportMermaid)
     }
 }
 

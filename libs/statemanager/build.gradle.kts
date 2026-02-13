@@ -18,6 +18,7 @@ dependencies {
     implementation(projects.commons)
     implementation(projects.exportShapesModal)
     implementation(projects.keycommand)
+    implementation(projects.mermaidImport)
     implementation(projects.lifecycle)
     implementation(projects.livedata)
     implementation(projects.monobitmap)

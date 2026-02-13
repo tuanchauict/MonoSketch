@@ -27,6 +27,9 @@ internal fun ProjectManagementSection(
         ManagementItem("Import from file...", { Icons.FileImport() }) {
             onActionClick(ProjectManagementActionItem.ImportFile)
         }
+        ManagementItem("Import Mermaid...", { Icons.FileImport() }) {
+            onActionClick(ProjectManagementActionItem.ImportMermaid)
+        }
     }
 
     Div(attrs = { classes("divider") })
@@ -60,4 +63,5 @@ private fun Icon(icon: @Composable () -> Unit) {
 sealed interface ProjectManagementActionItem {
     object NewProject : ProjectManagementActionItem
     object ImportFile : ProjectManagementActionItem
+    object ImportMermaid : ProjectManagementActionItem
 }
