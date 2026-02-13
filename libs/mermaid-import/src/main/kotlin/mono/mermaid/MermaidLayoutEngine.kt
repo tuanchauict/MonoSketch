@@ -78,7 +78,18 @@ object MermaidLayoutEngine {
             }
         }
 
-        // Position nodes layer by layer
+        // Build reverse adjacency (child -> list of parent IDs)
+        val parents = mutableMapOf<String, MutableList<String>>()
+        for (node in diagram.nodes) parents[node.id] = mutableListOf()
+        for (edge in diagram.edges) {
+            if (edge.toId in parents && edge.fromId in adjacency) {
+                parents[edge.toId]!!.add(edge.fromId)
+            }
+        }
+
+        // Position nodes layer by layer.
+        // For nodes with already-positioned parents, center under the average
+        // parent center. Otherwise pack left-to-right.
         val nodeSizes = diagram.nodes.associate { it.id to nodeSize(it) }
         val positioned = mutableListOf<PositionedNode>()
         val posMap = mutableMapOf<String, PositionedNode>()
@@ -86,14 +97,49 @@ object MermaidLayoutEngine {
 
         for (layer in layers) {
             val layerHeight = layer.maxOf { nodeSizes[it.id]!!.second }
-            var currentLeft = 0
-            for (node in layer) {
+
+            // First pass: compute ideal center for each node based on parents
+            val idealCenters = layer.map { node ->
+                val parentPositions = parents[node.id].orEmpty().mapNotNull { posMap[it]?.centerLeft }
+                if (parentPositions.isNotEmpty()) {
+                    parentPositions.average().toInt()
+                } else {
+                    -1 // no preference, will be packed
+                }
+            }
+
+            // Second pass: place nodes avoiding overlaps
+            val placements = mutableListOf<Pair<MermaidNode, Int>>() // node to left
+            for ((i, node) in layer.withIndex()) {
+                val (w, _) = nodeSizes[node.id]!!
+                val idealCenter = idealCenters[i]
+                val idealLeft = if (idealCenter >= 0) {
+                    max(idealCenter - w / 2, 0)
+                } else {
+                    0
+                }
+
+                // Find the leftmost position >= idealLeft that doesn't overlap previous nodes
+                val minLeft = if (placements.isEmpty()) {
+                    idealLeft
+                } else {
+                    val prevNode = placements.last().first
+                    val prevLeft = placements.last().second
+                    val prevWidth = nodeSizes[prevNode.id]!!.first
+                    val afterPrev = prevLeft + prevWidth + H_GAP
+                    max(idealLeft, afterPrev)
+                }
+
+                placements.add(node to minLeft)
+            }
+
+            for ((node, left) in placements) {
                 val (w, h) = nodeSizes[node.id]!!
-                val p = PositionedNode(node, currentLeft, currentTop, w, h)
+                val p = PositionedNode(node, left, currentTop, w, h)
                 positioned.add(p)
                 posMap[node.id] = p
-                currentLeft += w + H_GAP
             }
+
             currentTop += layerHeight + V_GAP
         }
 
