@@ -72,11 +72,15 @@ internal fun AppearanceToolView(
 
         Tool(
             "Shadow",
-            isAvailable = viewModel.shapeShadowEnabledState.value != null
+            isAvailable = viewModel.shapeShadowTypeState.value != null
         ) {
-            ShadowToggle(
-                viewModel.shapeShadowEnabledState.value
-            ) { setOneTimeAction(OneTimeActionType.ChangeShapeShadowExtra(it)) }
+            OptionsCloud(
+                viewModel.shadowOptions,
+                '×',
+                viewModel.shapeShadowTypeState.value,
+                OneTimeActionType::ChangeShapeShadowExtra,
+                setOneTimeAction
+            )
         }
 
         Tool(
@@ -319,44 +323,3 @@ private fun RoundedCorner(
     }
 }
 
-@Composable
-private fun ShadowToggle(
-    isEnabled: Boolean?,
-    onValueChange: (Boolean) -> Unit
-) {
-    if (isEnabled == null) {
-        return
-    }
-    Div(attrs = { classes("flex", "flex-row", "items-center", "gap-2") }) {
-        Div(
-            attrs = {
-                classes(
-                    "flex",
-                    "justify-center",
-                    "items-center",
-                    "rounded",
-                    "cursor-pointer",
-                    "p-[3px]",
-                    "border",
-                    "border-[var(--comp-option-cloud-border-color)]",
-                    "hover:border-transparent",
-                    "hover:outline",
-                    "hover:outline-[1.5px]",
-                    "hover:outline-[var(--comp-option-cloud-border-color)]",
-                    "border-transparent" to isEnabled,
-                    "outline" to isEnabled,
-                    "outline-[1.5px]" to isEnabled,
-                    "outline-[var(--comp-option-cloud-border-selected-color)]" to isEnabled,
-                    "text-[var(--comp-option-cloud-border-selected-color)]" to isEnabled
-                )
-                onClick { onValueChange(!isEnabled) }
-            }
-        ) {
-            Span(
-                attrs = { classes("font-mono", "text-lg") }
-            ) {
-                Text("░")
-            }
-        }
-    }
-}

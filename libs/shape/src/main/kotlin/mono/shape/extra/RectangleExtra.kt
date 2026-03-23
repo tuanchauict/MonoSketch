@@ -8,6 +8,7 @@ import mono.shape.ShapeExtraManager
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.RectangleBorderCornerPattern
 import mono.shape.extra.style.RectangleFillStyle
+import mono.shape.extra.style.ShadowStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.serialization.SerializableRectangle
@@ -22,7 +23,7 @@ data class RectangleExtra(
     val userSelectedBorderStyle: StraightStrokeStyle,
     val dashPattern: StraightStrokeDashPattern,
     val corner: RectangleBorderCornerPattern,
-    val isShadowEnabled: Boolean = false
+    val userSelectedShadowId: String? = null
 ) : ShapeExtra() {
     constructor(
         isFillEnabled: Boolean,
@@ -31,7 +32,7 @@ data class RectangleExtra(
         userSelectedBorderStyle: StraightStrokeStyle,
         dashPattern: StraightStrokeDashPattern,
         isRoundedCorner: Boolean,
-        isShadowEnabled: Boolean = false
+        userSelectedShadowId: String? = null
     ) : this(
         isFillEnabled,
         userSelectedFillStyle,
@@ -43,10 +44,16 @@ data class RectangleExtra(
         } else {
             RectangleBorderCornerPattern.DISABLED
         },
-        isShadowEnabled
+        userSelectedShadowId
     )
 
     val isRoundedCorner: Boolean = corner == RectangleBorderCornerPattern.ENABLED
+
+    val isShadowEnabled: Boolean
+        get() = userSelectedShadowId != null
+
+    val shadowStyle: ShadowStyle?
+        get() = ShapeExtraManager.getShadowStyle(userSelectedShadowId)
 
     val fillStyle: RectangleFillStyle?
         get() = if (isFillEnabled) userSelectedFillStyle else null
@@ -65,7 +72,7 @@ data class RectangleExtra(
         ShapeExtraManager.getRectangleBorderStyle(serializableExtra.userSelectedBorderStyleId),
         StraightStrokeDashPattern.fromSerializableValue(serializableExtra.dashPattern),
         RectangleBorderCornerPattern.fromSerializableValue(serializableExtra.corner),
-        isShadowEnabled = serializableExtra.isShadowEnabled
+        userSelectedShadowId = serializableExtra.userSelectedShadowId
     )
 
     fun toSerializableExtra(): SerializableRectangle.SerializableExtra =
@@ -76,6 +83,6 @@ data class RectangleExtra(
             userSelectedBorderStyleId = userSelectedBorderStyle.id,
             dashPattern = dashPattern.toSerializableValue(),
             corner = corner.toSerializableValue(),
-            isShadowEnabled = isShadowEnabled
+            userSelectedShadowId = userSelectedShadowId
         )
 }

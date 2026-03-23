@@ -58,14 +58,14 @@ class MonoBitmapManager {
             is Text -> shape.extra.boundExtra
             else -> return null
         }
-        if (!extra.isShadowEnabled) return null
+        val shadowStyle = extra.shadowStyle ?: return null
 
         val cached = idToShadowBitmapMap[shape.id]
             ?.takeIf { it.versionCode == shape.versionCode }
             ?.bitmap
         if (cached != null) return cached
 
-        val bitmap = RectangleBitmapFactory.toShadowBitmap(shape.bound.size)
+        val bitmap = RectangleBitmapFactory.toShadowBitmap(shape.bound.size, shadowStyle.char)
         idToShadowBitmapMap[shape.id] = VersionizedBitmap(shape.versionCode, bitmap)
         return bitmap
     }

@@ -42,19 +42,19 @@ object RectangleBitmapFactory {
         return bitmapBuilder.toBitmap()
     }
 
-    fun toShadowBitmap(size: Size): MonoBitmap {
+    fun toShadowBitmap(size: Size, shadowChar: Char): MonoBitmap {
         val w = size.width
         val h = size.height
         val builder = MonoBitmap.Builder(w + 1, h + 1)
 
         // Right edge shadow (skip top-right corner at row=0)
         for (r in 1..h) {
-            builder.put(row = r, column = w, visualChar = '░', directionChar = '░')
+            builder.put(row = r, column = w, visualChar = shadowChar, directionChar = shadowChar)
         }
 
         // Bottom edge shadow (skip bottom-left corner at col=0)
         for (c in 1..w) {
-            builder.put(row = h, column = c, visualChar = '░', directionChar = '░')
+            builder.put(row = h, column = c, visualChar = shadowChar, directionChar = shadowChar)
         }
 
         return builder.toBitmap()

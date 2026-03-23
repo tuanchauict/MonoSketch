@@ -84,8 +84,8 @@ internal class ShapeToolViewModel(
     val shapeBorderRoundedCornerState: State<Boolean?> =
         rectangleAppearanceDataController.borderRoundedCornerLiveData.toState(lifecycleOwner)
 
-    val shapeShadowEnabledState: State<Boolean?> =
-        rectangleAppearanceDataController.shadowEnabledLiveData.toState(lifecycleOwner)
+    val shapeShadowTypeState: State<CloudItemSelectionState?> =
+        rectangleAppearanceDataController.shadowToolStateLiveData.toState(lifecycleOwner)
 
     val lineStrokeTypeState: State<CloudItemSelectionState?> =
         lineAppearanceDataController.strokeToolStateLiveData.toState(lifecycleOwner)
@@ -130,6 +130,10 @@ internal class ShapeToolViewModel(
 
     val headOptions: List<AppearanceOptionItem> =
         ShapeExtraManager.getAllPredefinedAnchorChars()
+            .map { AppearanceOptionItem(it.id, it.displayName) }
+
+    val shadowOptions: List<AppearanceOptionItem> =
+        ShapeExtraManager.getAllPredefinedShadowStyles()
             .map { AppearanceOptionItem(it.id, it.displayName) }
 
     private fun createTextAlignLiveData(

@@ -77,7 +77,8 @@ sealed interface OneTimeActionType {
     ) : OneTimeActionType
 
     data class ChangeShapeShadowExtra(
-        val isEnabled: Boolean
+        val isEnabled: Boolean? = null,
+        val newShadowStyleId: String? = null
     ) : OneTimeActionType
 
     data class ChangeLineStrokeExtra(

@@ -63,7 +63,7 @@ data class SerializableRectangle(
         @SerialName("rc")
         val corner: String = "",
         @SerialName("sh")
-        val isShadowEnabled: Boolean = false
+        val userSelectedShadowId: String? = null
     )
 }
 

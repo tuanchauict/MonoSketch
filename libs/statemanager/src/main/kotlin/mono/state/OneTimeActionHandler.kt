@@ -108,7 +108,7 @@ internal class OneTimeActionHandler(
                     setSelectedShapeBorderCornerExtra(it.isRoundedCorner)
 
                 is OneTimeActionType.ChangeShapeShadowExtra ->
-                    setSelectedShapeShadowExtra(it.isEnabled)
+                    setSelectedShapeShadowExtra(it.isEnabled, it.newShadowStyleId)
 
                 is OneTimeActionType.ChangeLineStrokeExtra ->
                     setSelectedLineStrokeExtra(it.isEnabled, it.newStrokeStyleId)
@@ -360,7 +360,7 @@ internal class OneTimeActionHandler(
         environment.shapeManager.execute(ChangeExtra(singleShape, newExtra))
     }
 
-    private fun setSelectedShapeShadowExtra(isEnabled: Boolean) {
+    private fun setSelectedShapeShadowExtra(isEnabled: Boolean?, newShadowStyleId: String?) {
         val singleShape = environment.getSelectedShapes().singleOrNull()
         val rectangleExtra = when (singleShape) {
             is Rectangle -> singleShape.extra
@@ -371,10 +371,16 @@ internal class OneTimeActionHandler(
             null -> null
         }
         if (singleShape == null || rectangleExtra == null) {
-            ShapeExtraManager.setDefaultValues(isShadowEnabled = isEnabled)
+            val shadowId = if (isEnabled == false) null else newShadowStyleId
+            ShapeExtraManager.setDefaultValues(shadowStyleId = shadowId)
             return
         }
-        val newRectangleExtra = rectangleExtra.copy(isShadowEnabled = isEnabled)
+        val newShadowId = when {
+            isEnabled == false -> null
+            newShadowStyleId != null -> newShadowStyleId
+            else -> rectangleExtra.userSelectedShadowId
+        }
+        val newRectangleExtra = rectangleExtra.copy(userSelectedShadowId = newShadowId)
         val newExtra = when (singleShape) {
             is Rectangle -> newRectangleExtra
             is Text -> singleShape.extra.copy(boundExtra = newRectangleExtra)
