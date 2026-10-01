@@ -117,15 +117,17 @@ Contributions are welcome! Whether you're fixing bugs, adding features, or impro
 
 Run development build with hot reload:
 ```bash
-./gradlew browserDevelopmentRun --continuous -Dorg.gradle.parallel=false
+./gradlew jsBrowserDevelopmentRun --continuous -Dorg.gradle.parallel=false
 ```
 
 Run production build:
 ```bash
-./gradlew browserProductionRun --continuous -Dorg.gradle.parallel=false
+./gradlew jsBrowserProductionRun --continuous -Dorg.gradle.parallel=false
 ```
 
 **Note:** The `-Dorg.gradle.parallel=false` flag is a workaround for a KotlinJS build issue with `--continuous` mode.
+
+**Note:** If you're behind a proxy that blocks direct access to `nodejs.org`/`yarnpkg.com`, pass `-PuseSystemNodeJs=true` to use your locally installed Node.js/Yarn instead of letting Gradle download them.
 
 #### Option 2: Python Development Server
 
