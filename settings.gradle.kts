@@ -19,6 +19,7 @@ val moduleMap = mapOf(
     "monobitmap" to "libs/monobitmap",
     "monobitmap-manager" to "libs/monobitmap-manager",
     "monoboard" to "libs/monoboard",
+    "scoped-css" to "libs/scoped-css",
     "shape" to "libs/shape",
     "shape-clipboard" to "libs/shape-clipboard",
     "shape-interaction-bound" to "libs/shape-interaction-bound",
