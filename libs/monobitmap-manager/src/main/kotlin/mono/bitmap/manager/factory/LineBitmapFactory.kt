@@ -25,10 +25,12 @@ object LineBitmapFactory {
 
         val dashPattern = lineExtra.dashPattern
         val strokeStyle = lineExtra.strokeStyle ?: PredefinedStraightStrokeStyle.NO_STROKE
+        var position = 0
         createCharPoints(jointPoints, strokeStyle)
             .forEachIndexed { index, pointChar ->
-                val visualChar = if (dashPattern.isGap(index)) ' ' else pointChar.char
+                val visualChar = if (dashPattern.isGap(position)) ' ' else pointChar.char
                 bitmapBuilder.put(pointChar.top, pointChar.left, visualChar, pointChar.char)
+                position += pointChar.distance
             }
 
         val startAnchor = lineExtra.startAnchor
