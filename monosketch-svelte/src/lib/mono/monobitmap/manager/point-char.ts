@@ -8,7 +8,7 @@ import { range } from "$libs/sequence";
  * A class representing a char at a point for generating bitmap.
  */
 export class PointChar {
-    constructor(public left: number, public top: number, public char: string) {
+    constructor(public left: number, public top: number, public char: string, public distance: number = 1) {
     }
 
     static point(left: number, top: number, char: string): PointChar[] {
@@ -30,6 +30,6 @@ export class PointChar {
         }
         const delta = beginExclusive < endExclusive ? 1 : -1;
         const begin = beginExclusive + delta;
-        return Array.from(range(begin, endExclusive, delta), (top, _) => new PointChar(left, top, char));
+        return Array.from(range(begin, endExclusive, delta), (top, _) => new PointChar(left, top, char, 2));
     }
 }

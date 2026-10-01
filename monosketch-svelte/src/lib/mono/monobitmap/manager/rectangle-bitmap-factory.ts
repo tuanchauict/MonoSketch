@@ -51,9 +51,11 @@ export class RectangleBitmapFactory {
 
         const pointChars = this.getBorderPointChars(size, strokeStyle);
 
+        let position = 0;
         pointChars.flat().forEach((pointChar, index) => {
-            const visualChar = dashPattern.isGap(index) ? ' ' : pointChar.char;
+            const visualChar = dashPattern.isGap(position) ? ' ' : pointChar.char;
             bitmapBuilder.put(pointChar.top, pointChar.left, visualChar, pointChar.char);
+            position += 1;
         });
     }
 
