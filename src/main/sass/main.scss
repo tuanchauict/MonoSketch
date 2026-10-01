@@ -5,3 +5,6 @@
 @import 'style/shared';
 @import 'style/header/style';
 @import 'style/modal/style';
+
+// Colocated styles declared with `css("""...""")` in Kotlin sources. See scoped-css.gradle.
+@import 'scoped';
