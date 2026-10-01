@@ -6,5 +6,13 @@
 @import 'style/header/style';
 @import 'style/modal/style';
 
+// Helpers (variables, mixins, placeholders, keyframes) available to the scoped styles below.
+@import 'style/variables';
+@import 'style/theme-utils';
+@import 'style/commons';
+@import 'style/animation';
+@import 'style/modal/commons';
+@import 'style/modal/theme-colors';
+
 // Colocated styles declared with `css("""...""")` in Kotlin sources. See scoped-css.gradle.
 @import 'scoped';
