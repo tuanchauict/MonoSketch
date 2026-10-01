@@ -11,7 +11,7 @@ SERVE_DIR = f"{ROOT}/build/dev"
 
 
 def compile_code():
-    subprocess.run(["sh", "gradlew", "browserDevExeDis"])
+    subprocess.run(["sh", "gradlew", "jsBrowserDevelopmentExecutableDistribution"])
     prepare_for_serve()
 
 
