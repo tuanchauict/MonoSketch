@@ -16,15 +16,15 @@ import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.renderComposable
 
 private val renameProjectModal = css(
-    $$"""
+    """
     position: fixed;
-    z-index: $rename-project-modal-zindex;
+    z-index: var(--rename-project-modal-zindex);
     background-color: var(--modal-container-bg);
     border-radius: 4px;
 
     .rename-project-input {
         border-radius: 3px;
-        font-family: $monospaceFont;
+        font-family: var(--monospace-font);
         padding: 4px 8px;
         border: 2px solid var(--text-input-border-color);
 

@@ -34,7 +34,7 @@ private val dialogBackground = css(
 )
 
 private val dialogContainer = css(
-    $$"""
+    """
     background: var(--modal-container-bg);
     border: 1px solid var(--mainmenu-divider-color);
     min-width: 350px;
@@ -42,7 +42,7 @@ private val dialogContainer = css(
     border-radius: 5px;
     padding: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-    font-family: $monospaceFont;
+    font-family: var(--monospace-font);
 
     display: flex;
     flex-direction: column;

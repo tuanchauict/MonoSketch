@@ -1,4 +1,3 @@
-@import '../variables';
 
 %common-modal-container-position {
     position: fixed;
@@ -17,7 +16,7 @@
     text-align: center;
     font-weight: 300;
     font-size: 18px;
-    font-family: $monospaceFont;
+    font-family: var(--monospace-font);
     color: var(--modal-title-color);
 }
 

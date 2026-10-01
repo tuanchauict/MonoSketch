@@ -21,12 +21,12 @@ import mono.scopedcss.css
 import org.w3c.dom.Element
 
 private val keyboardShortcuts = css(
-    $$"""
+    """
     @extend %common-modal-container-position;
     @extend %common-modal-container-color;
 
     height: 230px;
-    z-index: $keyboard-shortcuts-zindex;
+    z-index: var(--keyboard-shortcuts-zindex);
     """
 )
 
@@ -37,12 +37,12 @@ private val closeButton = css(
 )
 
 private val content = css(
-    $$"""
+    """
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    font-family: $monospaceFont;
+    font-family: var(--monospace-font);
     color: var(--modal-content-color);
     """
 )

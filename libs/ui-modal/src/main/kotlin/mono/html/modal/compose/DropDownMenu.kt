@@ -17,15 +17,15 @@ import org.jetbrains.compose.web.dom.Ul
 import org.w3c.dom.Element
 
 private val dropDownMenu = css(
-    $$"""
+    """
     min-width: 180px;
-    z-index: $dropdown-menu-zindex;
+    z-index: var(--dropdown-menu-zindex);
     background: var(--modal-container-bg);
     border-radius: 6px;
     border: 1px solid var(--mainmenu-divider-color);
     padding: 6px 0;
     position: fixed;
-    font-family: $monospaceFont;
+    font-family: var(--monospace-font);
 
     ul {
         list-style: none;

@@ -20,14 +20,14 @@ import mono.scopedcss.css
 import org.w3c.dom.Element
 
 private val exportText = css(
-    $$"""
+    """
     position: fixed;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
     backdrop-filter: blur(2px);
-    z-index: $export-text-zindex;
+    z-index: var(--export-text-zindex);
     """
 )
 
@@ -83,7 +83,7 @@ private val closeButton = css(
 )
 
 private val contentContainer = css(
-    $$"""
+    """
     height: calc(100% - 24px - 16px - 20px);
     color: var(--exporttext-content-color);
 
@@ -96,7 +96,7 @@ private val contentContainer = css(
         line-height: 18px;
         outline: none;
         overflow: scroll;
-        font-family: $monospaceFont;
+        font-family: var(--monospace-font);
     }
     """
 )

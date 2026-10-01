@@ -36,9 +36,8 @@ task extractScopedCss {
         }
 
         def callPattern = Pattern.compile(/\bcss\(/)
-        def literalPattern = Pattern.compile(/css\(\s*(\$\$)?"""(.*?)"""\s*\)/, Pattern.DOTALL)
-        def singleDollarTemplate = Pattern.compile(/\$[A-Za-z_{]/)
-        def doubleDollarTemplate = Pattern.compile(/\$\$[A-Za-z_{]/)
+        def literalPattern = Pattern.compile(/css\(\s*"""(.*?)"""\s*\)/, Pattern.DOTALL)
+        def templatePattern = Pattern.compile(/\$[A-Za-z_{]/)
 
         // class name -> [source, location], in source order: by file path, then by position in the file
         def blocks = new LinkedHashMap<String, Map>()
@@ -59,12 +58,10 @@ task extractScopedCss {
                     errors << "$location: css() must be called with a raw string literal (\"\"\"...\"\"\")."
                     continue
                 }
-                def isMultiDollar = literal.group(1) != null
-                def body = literal.group(2)
-                def template = isMultiDollar ? doubleDollarTemplate : singleDollarTemplate
-                if (template.matcher(body).find()) {
+                def body = literal.group(1)
+                if (templatePattern.matcher(body).find()) {
                     errors << "$location: string templates are not allowed in css()." +
-                        (isMultiDollar ? '' : ' Use css(\$\$"""...""") to write SCSS variables.')
+                        ' Use CSS custom properties (var(--name)) for shared values.'
                     continue
                 }
                 def className = scopedClassName(body)

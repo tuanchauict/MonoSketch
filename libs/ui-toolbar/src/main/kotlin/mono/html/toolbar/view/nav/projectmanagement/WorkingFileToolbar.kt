@@ -25,13 +25,13 @@ import org.w3c.dom.Element
 private const val WORKING_PROJECT_ID = "working-project"
 
 private val currentProject = css(
-    $$"""
-    $max-text-width: 210px;
+    """
+    --max-text-width: 210px;
 
     display: flex;
     align-items: center;
     height: 100%;
-    width: $max-text-width + 31px;
+    width: calc(var(--max-text-width) + 31px);
 
     .file-info-container {
         display: flex;
@@ -45,7 +45,7 @@ private val currentProject = css(
 
         border-radius: 6px;
         padding: 8px 4px 8px 8px;
-        font-family: $monospaceFont;
+        font-family: var(--monospace-font);
         cursor: pointer;
 
         &:hover {
@@ -54,7 +54,7 @@ private val currentProject = css(
 
         .title {
             font-size: 14px;
-            max-width: $max-text-width;
+            max-width: var(--max-text-width);
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;

@@ -29,14 +29,14 @@ private typealias ProjectManagementAction = (ProjectManagementActionItem) -> Uni
 private typealias ProjectSelectAction = (ProjectItem, isRemoved: Boolean) -> Unit
 
 private val recentProjectModal = css(
-    $$"""
-    $modal-width: 500px;
+    """
+    --modal-width: 500px;
 
     position: fixed;
     top: 0;
-    left: calc(50% - $modal-width / 2);
-    width: $modal-width;
-    z-index: $all-projects-modal-zindex;
+    left: calc(50% - var(--modal-width) / 2);
+    width: var(--modal-width);
+    z-index: var(--all-projects-modal-zindex);
     outline: none;
 
     display: flex;
@@ -44,23 +44,23 @@ private val recentProjectModal = css(
 )
 
 private val modalContainer = css(
-    $$"""
+    """
     margin-top: 6px;
-    background: $modal-container-bg;
+    background: var(--modal-container-bg);
     border-radius: 6px;
-    border: 1px solid $modal-container-border-color;
+    border: 1px solid var(--mainmenu-divider-color);
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
     padding: 8px 0;
     width: 100%;
     flex-grow: 0;
 
-    color: $modal-content-text-color;
-    font-family: $monospaceFont;
+    color: var(--modal-content-color);
+    font-family: var(--monospace-font);
     """
 )
 
 private val filterContainer = css(
-    $$"""
+    """
     width: 100%;
     margin-bottom: 8px;
     padding: 0px 6px;
@@ -70,14 +70,14 @@ private val filterContainer = css(
         padding: 6px 8px;
         border-radius: 3px;
         outline: none;
-        border: 1px solid $modal-text-field-border;
+        border: 1px solid var(--text-input-border-color);
         background: none;
-        color: $modal-text-field-color;
-        font-family: $monospaceFont;
+        color: var(--text-input-value-color);
+        font-family: var(--monospace-font);
 
         &:hover,
         &:focus {
-            border-color: $modal-text-field-focus-border;
+            border-color: var(--text-input-border-focus-color);
         }
     }
     """
@@ -94,17 +94,17 @@ internal val projectList = css(
 )
 
 private val noItem = css(
-    $$"""
+    """
     height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: $modal-indicator-color;
+    color: var(--shapetool-indicator-color);
     """
 )
 
 internal val projectItem = css(
-    $$"""
+    """
     height: 26px;
     padding: 0 6px;
     margin-top: 2px;
@@ -117,7 +117,7 @@ internal val projectItem = css(
 
     &.normal {
         &:hover {
-            background: $modal-item-hover-bg;
+            background: var(--mainmenu-item-hover-bg);
 
             .actions {
                 display: flex;

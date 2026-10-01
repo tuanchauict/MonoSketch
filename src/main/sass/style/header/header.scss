@@ -1,14 +1,10 @@
-@import '../variables';
 @import '../commons';
-
-$conten-color: var(--header-color);
-$bg-color: var(--header-bg);
 
 #main-nav {
     display: flex;
     justify-content: space-between;
-    background: $bg-color;
-    color: $conten-color;
+    background: var(--header-bg);
+    color: var(--header-color);
 }
 
 #nav-brand {
@@ -21,15 +17,15 @@ $bg-color: var(--header-bg);
         a {
             font-size: 22px;
             letter-spacing: 0.2px;
-            font-family: $monospaceFont;
+            font-family: var(--monospace-font);
             font-weight: 400;
             line-height: 18px;
             text-decoration: none;
-            color: $conten-color;
+            color: var(--header-color);
 
             &:hover,
             &:active {
-                color: $conten-color;
+                color: var(--header-color);
             }
         }
     }

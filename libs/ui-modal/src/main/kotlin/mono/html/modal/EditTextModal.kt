@@ -21,23 +21,23 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.KeyboardEvent
 
 private val editTextModal = css(
-    $$"""
+    """
     position: absolute;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: $edit-text-zindex;
+    z-index: var(--edit-text-zindex);
     background-color: #00000000;
     color: var(--workspace-edittext-color);
     """
 )
 
 private val editTextContainer = css(
-    $$"""
+    """
     position: absolute;
-    left: $canvas-left;
-    top: ($canvas-top + $nav-height);
+    left: var(--canvas-left);
+    top: calc(var(--canvas-top) + var(--nav-height));
     right: 0;
     bottom: 0;
     """
@@ -50,14 +50,14 @@ private val editTextAreaContainer = css(
 )
 
 private val editTextArea = css(
-    $$"""
+    """
     position: absolute;
     left: 1px;
     top: 1.3px;
     width: 100%;
     height: 100%;
 
-    font-family: $monospaceFont;
+    font-family: var(--monospace-font);
     font-size: 13px;
     line-height: 17.1px;
     letter-spacing: 0.2px;

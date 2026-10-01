@@ -17,8 +17,8 @@ import org.intellij.lang.annotations.Language
  * the sources for calls to this function, wraps each body in `.<class-name> { ... }` and compiles
  * it together with `main.scss`. Both sides derive the class name from the content of [source], so
  * they always agree. Consequently, [source] must be a raw string literal passed directly to this
- * function, without string templates. To use SCSS variables, use a multi-dollar string:
- * `css($$"""height: $nav-height;""")`.
+ * function, without string templates. Use CSS custom properties for shared values:
+ * `css("""height: var(--nav-height);""")`.
  */
 fun css(@Language("SCSS") source: String): String = scopedClassName(source)
 
