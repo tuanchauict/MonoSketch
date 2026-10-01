@@ -27,38 +27,6 @@ private val toolbarContainer = css(
     &.add-space-right {
         margin-right: 4px;
     }
-
-    .app-icon-container {
-        display: flex;
-        align-items: center;
-        height: 100%;
-    }
-
-    .app-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        width: 34px;
-        height: 34px;
-        cursor: pointer;
-
-        &:hover {
-            background: var(--nav-action-hover-bg);
-        }
-    }
-
-    .theme-dark-mode {
-        :root.dark & {
-            display: none;
-        }
-    }
-
-    .theme-light-mode {
-        :root.light & {
-            display: none;
-        }
-    }
     """
 )
 
