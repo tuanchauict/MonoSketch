@@ -4,9 +4,8 @@
 @import 'style/variables';
 @import 'style/theme';
 
-// Helpers (mixins, keyframes) available to the scoped styles below.
-@import 'style/theme-utils';
+/* Keyframes used by the scoped styles below. */
 @import 'style/animation';
 
-// Colocated styles declared with `css("""...""")` in Kotlin sources. See scoped-css.gradle.
+/* Colocated styles declared with `css("""...""")` in Kotlin sources. See scoped-css.gradle. */
 @import 'scoped';

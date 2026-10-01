@@ -1,75 +1,77 @@
-@import './theme-utils';
-
-$themeMap: (
-    // Header overall
-    --header-bg: (#2c2c2c, #2c2c2c),
-    --header-color: (#FFF, #FFF),
-    // Header - App action icon
-    --nav-action-hover-bg: (#1c1c1c, #1c1c1c),
-    --nav-action-selected-border: (#fff, #fff),
-
-    // Tooltip
-    --tooltip-bg: (#000000DD, #000000DD),
-    --tooltip-color: (#fff, #fff),
-
-    // Workspace
-    --workspace-bg-color: (#FFF, #121212),
-    --workspace-edittext-color: (#000, #fff),
-
-    // Shape tool - Overall
-    --shapetool-bg-color: (#FAFAFA, #1f1f1f),
-    --shapetool-main-divider-color: (#BBB, #616161),
-    // Shape tool - Text Input component
-    --text-input-border-color: (#E6E6E6, #565656),
-    --text-input-border-focus-color: (#027fe6, #e8b32f),
-    --text-input-label-color: (#6b6a6a, #9f9f9f),
-    --text-input-value-color: (#000, #FFF),
-    // Shape tool - Option cloud
-    --comp-option-cloud-border-color: (#bbb, #f0f0f0),
-    --comp-option-cloud-border-selected-color: (#027fe6, #ffb800),
-    // Shape tool - Footer
-    --shapetool-footer-color: (#aaa, #aaa),
-    --shapetool-footer-hover-color: (#888, #888),
-    --shapetool-footer-active-color: (#999, #999),
-    // Shape tool - Indicator
-    --shapetool-indicator-color: (#888, #888),
-    // Shape tool - Section
-    --shapetool-section-divider-color: (#bbb, #6d6d6d),
-    --shapetool-section-title-color: (#6d6d6d, #eaeaea),
-    --shapetool-section-content-color: (#000, #F0F0F0),
-    // Shape tool - Tool
-    --shapetool-tool-title-color: (#1f1f1f, #e0e0e0),
-    --shapetool-tool-subtitle-color: (#a0a0a0, #979797),
-    // Shape tool - Reorder
-    --shapetool-reorder-hover-bg: (#efefef, #333333),
-
-    // Common modal
-    --modal-background-bg: (rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.3)),
-    --modal-container-bg: (#f3f3f3, #313131),
-    --modal-close-button-color: (#666, #FFFFFF),
-    --modal-title-color: (rgba(0, 0, 0, 0.68), #FFF),
-    --modal-content-color: (#000, #FFFFFF),
-    --modal-action-color: (#037de1, #c08b03),
-    --modal-action-hover-color: (#2598f7, #dfa104),
-    --modal-action-pressed-color: (#0360ac, #8e6601),
-
-    // Keyboard shortcuts
-    --keyboard-content-key-bg: (#fff, #262626),
-    --keyboard-content-key-border-color: (rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15)),
-    --keyboard-content-key-color: (rgba(0, 0, 0, 0.54), rgba(255, 255, 255, 0.88)),
-
-    // Main dropdown menu
-    --mainmenu-divider-color:(#bdbdbd, #6b6b6b),
-    --mainmenu-item-color:(rgb(36, 41, 47), #fff),
-    --mainmenu-item-hover-bg:(#e7e6e6, #414141),
-    --mainmenu-item-action-hover-bg:(#dcdcdc, #565555),
-
-    // Export text
-    --exporttext-container-bg: (#fff, #151515),
-    --exporttext-content-color: (#000, #fff),
-);
-
-// Apply the theme values
 :root {
-    @include theme($themeMap);
+    color-scheme: light;
+}
+
+:root.dark {
+    color-scheme: dark;
+}
+
+/* Theme colors: each value is light-dark(<light>, <dark>), resolved by the root's color-scheme. */
+:root {
+    /* Header overall */
+    --header-bg: light-dark(#2c2c2c, #2c2c2c);
+    --header-color: light-dark(#FFF, #FFF);
+    /* Header - App action icon */
+    --nav-action-hover-bg: light-dark(#1c1c1c, #1c1c1c);
+    --nav-action-selected-border: light-dark(#fff, #fff);
+
+    /* Tooltip */
+    --tooltip-bg: light-dark(#000000DD, #000000DD);
+    --tooltip-color: light-dark(#fff, #fff);
+
+    /* Workspace */
+    --workspace-bg-color: light-dark(#FFF, #121212);
+    --workspace-edittext-color: light-dark(#000, #fff);
+
+    /* Shape tool - Overall */
+    --shapetool-bg-color: light-dark(#FAFAFA, #1f1f1f);
+    --shapetool-main-divider-color: light-dark(#BBB, #616161);
+    /* Shape tool - Text Input component */
+    --text-input-border-color: light-dark(#E6E6E6, #565656);
+    --text-input-border-focus-color: light-dark(#027fe6, #e8b32f);
+    --text-input-label-color: light-dark(#6b6a6a, #9f9f9f);
+    --text-input-value-color: light-dark(#000, #FFF);
+    /* Shape tool - Option cloud */
+    --comp-option-cloud-border-color: light-dark(#bbb, #f0f0f0);
+    --comp-option-cloud-border-selected-color: light-dark(#027fe6, #ffb800);
+    /* Shape tool - Footer */
+    --shapetool-footer-color: light-dark(#aaa, #aaa);
+    --shapetool-footer-hover-color: light-dark(#888, #888);
+    --shapetool-footer-active-color: light-dark(#999, #999);
+    /* Shape tool - Indicator */
+    --shapetool-indicator-color: light-dark(#888, #888);
+    /* Shape tool - Section */
+    --shapetool-section-divider-color: light-dark(#bbb, #6d6d6d);
+    --shapetool-section-title-color: light-dark(#6d6d6d, #eaeaea);
+    --shapetool-section-content-color: light-dark(#000, #F0F0F0);
+    /* Shape tool - Tool */
+    --shapetool-tool-title-color: light-dark(#1f1f1f, #e0e0e0);
+    --shapetool-tool-subtitle-color: light-dark(#a0a0a0, #979797);
+    /* Shape tool - Reorder */
+    --shapetool-reorder-hover-bg: light-dark(#efefef, #333333);
+
+    /* Common modal */
+    --modal-background-bg: light-dark(rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.3));
+    --modal-container-bg: light-dark(#f3f3f3, #313131);
+    --modal-close-button-color: light-dark(#666, #FFFFFF);
+    --modal-title-color: light-dark(rgba(0, 0, 0, 0.68), #FFF);
+    --modal-content-color: light-dark(#000, #FFFFFF);
+    --modal-action-color: light-dark(#037de1, #c08b03);
+    --modal-action-hover-color: light-dark(#2598f7, #dfa104);
+    --modal-action-pressed-color: light-dark(#0360ac, #8e6601);
+
+    /* Keyboard shortcuts */
+    --keyboard-content-key-bg: light-dark(#fff, #262626);
+    --keyboard-content-key-border-color: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15));
+    --keyboard-content-key-color: light-dark(rgba(0, 0, 0, 0.54), rgba(255, 255, 255, 0.88));
+
+    /* Main dropdown menu */
+    --mainmenu-divider-color: light-dark(#bdbdbd, #6b6b6b);
+    --mainmenu-item-color: light-dark(rgb(36, 41, 47), #fff);
+    --mainmenu-item-hover-bg: light-dark(#e7e6e6, #414141);
+    --mainmenu-item-action-hover-bg: light-dark(#dcdcdc, #565555);
+
+    /* Export text */
+    --exporttext-container-bg: light-dark(#fff, #151515);
+    --exporttext-content-color: light-dark(#000, #fff);
 }

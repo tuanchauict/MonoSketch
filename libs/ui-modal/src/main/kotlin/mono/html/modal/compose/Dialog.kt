@@ -51,14 +51,10 @@ private val dialogContainer = css(
 
 private val dialogContent = css(
     """
-    @include scoped-theme((
-        --contentText: (#5e5d62, #f2f2f2),
-    ));
-
     font-size: 14px;
     line-height: 1.4;
     margin: 0 8px 8px;
-    color: var(--contentText);
+    color: light-dark(#5e5d62, #f2f2f2);
 
     &.no-title {
         font-size: 16px;
@@ -93,51 +89,42 @@ private val actionButton = css(
     padding: 4px 8px;
 
     &.primary {
-        @include scoped-theme((
-            --primary-action-color: (#007bff, #cc8108),
-            --primary-action-hover-color: (#328ced, #daa113),
-            --primary-action-pressed-color: (#0062cc, #ab7a08),
-        ));
-
-        background: var(--primary-action-color);
+        background: light-dark(#007bff, #cc8108);
         color: white;
 
         &:hover {
-            background: var(--primary-action-hover-color);
+            background: light-dark(#328ced, #daa113);
         }
 
         &:active {
-            background: var(--primary-action-pressed-color);
+            background: light-dark(#0062cc, #ab7a08);
         }
     }
 
     &.primary.danger {
-        @include scoped-theme((
-            --primary-action-color: (#E53935, #E53935),
-            --primary-action-hover-color: (#FF5252, #FF5252),
-            --primary-action-pressed-color: (#C62828, #C62828),
-        ));
+        background: #E53935;
+
+        &:hover {
+            background: #FF5252;
+        }
+
+        &:active {
+            background: #C62828;
+        }
     }
 
     &.secondary {
-        @include scoped-theme((
-            --secondary-action-border-color: (#D9D8DC, #74727a),
-            --secondary-action-text-color: (#323136, #e0dce9),
-            --secondary-action-hover-color: (#6c757d, #3e3d43),
-            --secondary-action-pressed-color: (#424950, #262628),
-        ));
-
-        border-color: var(--secondary-action-border-color);
-        color: var(--secondary-action-text-color);
+        border-color: light-dark(#D9D8DC, #74727a);
+        color: light-dark(#323136, #e0dce9);
 
         &:hover {
-            background-color: var(--secondary-action-hover-color);
+            background-color: light-dark(#6c757d, #3e3d43);
             color: white;
             border-color: transparent;
         }
 
         &:active {
-            background-color: var(--secondary-action-pressed-color);
+            background-color: light-dark(#424950, #262628);
             color: white;
             border-color: transparent;
         }
