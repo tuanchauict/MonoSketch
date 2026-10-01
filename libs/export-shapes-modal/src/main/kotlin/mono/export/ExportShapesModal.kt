@@ -103,13 +103,13 @@ private val contentContainer = css(
 
 private val copyButton = css(
     """
-    @extend %common-button;
-
     position: absolute;
     left: 8px;
     bottom: 4px;
     padding: 8px;
     color: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    user-select: none;
 
     &:hover {
         color: rgba(0, 0, 0, 0.6);
