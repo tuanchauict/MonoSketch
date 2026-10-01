@@ -13,7 +13,7 @@ task compileTailwind(type: Exec) {
 
         if (!nodeModulesDir.exists() || !tailwindcssPath.exists()) {
             logger.lifecycle("Tailwind CSS not found. Installing npm dependencies...")
-            exec {
+            project.exec {
                 workingDir projectDir
                 commandLine 'npm', 'install'
             }
