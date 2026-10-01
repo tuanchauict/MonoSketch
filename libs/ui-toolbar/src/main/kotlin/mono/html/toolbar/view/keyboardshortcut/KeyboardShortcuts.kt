@@ -22,8 +22,12 @@ import org.w3c.dom.Element
 
 private val keyboardShortcuts = css(
     """
-    @extend %common-modal-container-position;
-    @extend %common-modal-container-color;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--modal-container-bg);
+    color: var(--modal-content-color);
 
     height: 230px;
     z-index: var(--keyboard-shortcuts-zindex);
@@ -32,7 +36,14 @@ private val keyboardShortcuts = css(
 
 private val closeButton = css(
     """
-    @extend %common-modal-close-button;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 15px;
+    cursor: pointer;
+    color: var(--modal-close-button-color);
+    vertical-align: middle;
+    line-height: 16px;
     """
 )
 
@@ -49,7 +60,12 @@ private val content = css(
 
 private val contentTitle = css(
     """
-    @extend %common-modal-title;
+    margin: 16px 0 20px;
+    text-align: center;
+    font-weight: 300;
+    font-size: 18px;
+    font-family: var(--monospace-font);
+    color: var(--modal-title-color);
     """
 )
 

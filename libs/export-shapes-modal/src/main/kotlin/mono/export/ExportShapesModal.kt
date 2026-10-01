@@ -50,7 +50,10 @@ private val background = css(
 
 private val modal = css(
     """
-    @extend %common-modal-container-position;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
     display: flex;
     flex-direction: column;
@@ -69,7 +72,12 @@ private val modal = css(
 
 private val title = css(
     """
-    @extend %common-modal-title;
+    margin: 16px 0 20px;
+    text-align: center;
+    font-weight: 300;
+    font-size: 18px;
+    font-family: var(--monospace-font);
+    color: var(--modal-title-color);
 
     display: block;
     width: 100%;
@@ -78,7 +86,14 @@ private val title = css(
 
 private val closeButton = css(
     """
-    @extend %common-modal-close-button;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 15px;
+    cursor: pointer;
+    color: var(--modal-close-button-color);
+    vertical-align: middle;
+    line-height: 16px;
     """
 )
 
