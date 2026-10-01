@@ -9,4 +9,6 @@ compileSass {
     style = compressed
 }
 
-processResources.dependsOn(compileSass)
+tasks.named('jsProcessResources').configure {
+    dependsOn(compileSass)
+}

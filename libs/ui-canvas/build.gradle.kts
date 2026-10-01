@@ -3,36 +3,47 @@
  */
 
 plugins {
-    kotlin("js")
+    kotlin("multiplatform")
 }
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(projects.commons)
-    implementation(projects.graphicsgeo)
-    implementation(projects.htmlDsl)
-    implementation(projects.lifecycle)
-    implementation(projects.livedata)
-    implementation(projects.monoboard)
-    implementation(projects.shapeInteractionBound)
-    implementation(projects.uiAppStateManager)
-    implementation(projects.uiModal)
-    implementation(projects.uiTheme)
-
-    testImplementation(libs.kotlin.test.js)
-}
-
-val compilerType: org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType by ext
 kotlin {
-    js(compilerType) {
+    js {
         browser {
             testTask {
                 useKarma {
                     useChromeHeadless()
                 }
+            }
+        }
+    }
+
+    sourceSets {
+        named("jsMain") {
+            kotlin.srcDir("src/main/kotlin")
+
+            dependencies {
+                implementation(projects.commons)
+                implementation(projects.graphicsgeo)
+                implementation(projects.htmlDsl)
+                implementation(projects.lifecycle)
+                implementation(projects.livedata)
+                implementation(projects.monoboard)
+                implementation(projects.shapeInteractionBound)
+                implementation(projects.uiAppStateManager)
+                implementation(projects.uiModal)
+                implementation(projects.uiTheme)
+            }
+        }
+
+        named("jsTest") {
+            kotlin.srcDir("src/test/kotlin")
+
+            dependencies {
+                implementation(libs.kotlin.test.js)
             }
         }
     }
