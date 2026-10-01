@@ -10,10 +10,58 @@ import androidx.compose.runtime.Composable
 import kotlinx.browser.document
 import mono.html.px
 import mono.html.style
+import mono.scopedcss.css
 import org.jetbrains.compose.web.dom.Li
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.dom.Ul
 import org.w3c.dom.Element
+
+private val dropDownMenu = css(
+    $$"""
+    min-width: 180px;
+    z-index: $dropdown-menu-zindex;
+    background: var(--modal-container-bg);
+    border-radius: 6px;
+    border: 1px solid var(--mainmenu-divider-color);
+    padding: 6px 0;
+    position: fixed;
+    font-family: $monospaceFont;
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    """
+)
+
+private val dropDownDivider = css(
+    """
+    border-top: 1px solid var(--mainmenu-divider-color);
+    margin: 8px 0;
+    """
+)
+
+private val dropDownItem = css(
+    """
+    padding: 5px 8px 5px 16px;
+    margin: 0;
+    cursor: pointer;
+    overflow: hidden;
+    color: var(--mainmenu-item-color);
+    white-space: nowrap;
+    font-size: 14px;
+    line-height: 21px;
+
+    &:hover {
+        background: var(--mainmenu-item-hover-bg);
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+    """
+)
 
 /**
  * Show drop down menu at the bottom of the anchor, horizontal center aligned with the anchor.
@@ -25,7 +73,7 @@ fun DropDownMenu(
 ) {
     NoBackgroundModal(
         attrs = {
-            classes("drop-down-menu")
+            classes(dropDownMenu)
 
             ref {
                 it.adjustPosition(anchor)
@@ -56,14 +104,14 @@ fun DropDownMenu(
 
 @Composable
 private fun Divider() {
-    Li(attrs = { classes("drop-down-divider") })
+    Li(attrs = { classes(dropDownDivider) })
 }
 
 @Composable
 private fun Item(item: DropDownItem.Text, onClick: (DropDownItem) -> Unit) {
     Li(
         attrs = {
-            classes("drop-down-item")
+            classes(dropDownItem)
             onClick { onClick(item) }
         }
     ) {

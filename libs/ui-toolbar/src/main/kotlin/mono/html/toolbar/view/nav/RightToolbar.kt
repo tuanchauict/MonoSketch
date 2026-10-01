@@ -194,18 +194,60 @@ private fun showDropDownMenu(
     }
 }
 
+private val changeFontItem = css(
+    """
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    """
+)
+
+private val changeFontButton = css(
+    """
+    width: 50%;
+    height: 28px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-bottom: 2px;
+    color: var(--mainmenu-item-color);
+    user-select: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    &:hover {
+        background: var(--mainmenu-item-hover-bg);
+    }
+
+    &:active {
+        background: var(--mainmenu-item-action-hover-bg);
+    }
+
+    &.increase {
+        font-size: 18px;
+    }
+
+    &.decrease {
+        font-size: 14px;
+        padding-bottom: 2px;
+    }
+    """
+)
+
 @Composable
 private fun ChangeFontItemContent(
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     Div(
         attrs = {
-            classes("action-font-size-container")
+            classes(changeFontItem)
         }
     ) {
         Div(
             attrs = {
-                classes("action-font-size", "decrease")
+                classes(changeFontButton, "decrease")
                 onClick { onActionSelected(AppSettingAction.ChangeFontSize(false)) }
             }
         ) {
@@ -214,7 +256,7 @@ private fun ChangeFontItemContent(
 
         Div(
             attrs = {
-                classes("action-font-size", "increase")
+                classes(changeFontButton, "increase")
                 onClick { onActionSelected(AppSettingAction.ChangeFontSize(true)) }
             }
         ) {
