@@ -20,9 +20,11 @@ export class LineBitmapFactory {
 
         const dashPattern = lineExtra.dashPattern;
         const strokeStyle = lineExtra.strokeStyle ?? PredefinedStraightStrokeStyle.NO_STROKE;
+        let position = 0;
         this.createCharPoints(jointPoints, strokeStyle).forEach((pointChar, index) => {
-            const visualChar = dashPattern.isGap(index) ? ' ' : pointChar.char;
+            const visualChar = dashPattern.isGap(position) ? ' ' : pointChar.char;
             bitmapBuilder.put(pointChar.top, pointChar.left, visualChar, pointChar.char);
+            position += pointChar.distance;
         });
 
         const startAnchor = lineExtra.startAnchor;
@@ -68,7 +70,7 @@ export class LineBitmapFactory {
 
     private static createPointChar(p0: Point, p1: Point, strokeStyle: StraightStrokeStyle): PointChar {
         const char = isHorizontal(p0, p1) ? strokeStyle.horizontal : strokeStyle.vertical;
-        return new PointChar(p0.left, p0.top, char);
+        return new PointChar(p0.left, p0.top, char, isHorizontal(p0, p1) ? 1 : 2);
     }
 
 
