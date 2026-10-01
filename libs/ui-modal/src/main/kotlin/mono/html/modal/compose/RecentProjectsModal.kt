@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import mono.browser.manager.BrowserManager
 import mono.html.modal.TooltipPosition
 import mono.html.modal.tooltip
+import mono.scopedcss.css
 import mono.ui.compose.components.Icons
 import mono.ui.compose.ext.classes
 import mono.ui.compose.ext.onConsumeClick
@@ -27,6 +28,163 @@ import org.w3c.dom.Element
 private typealias ProjectManagementAction = (ProjectManagementActionItem) -> Unit
 private typealias ProjectSelectAction = (ProjectItem, isRemoved: Boolean) -> Unit
 
+private val recentProjectModal = css(
+    $$"""
+    $modal-width: 500px;
+
+    position: fixed;
+    top: 0;
+    left: calc(50% - $modal-width / 2);
+    width: $modal-width;
+    z-index: $all-projects-modal-zindex;
+    outline: none;
+
+    display: flex;
+    """
+)
+
+private val modalContainer = css(
+    $$"""
+    margin-top: 6px;
+    background: $modal-container-bg;
+    border-radius: 6px;
+    border: 1px solid $modal-container-border-color;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+    padding: 8px 0;
+    width: 100%;
+    flex-grow: 0;
+
+    color: $modal-content-text-color;
+    font-family: $monospaceFont;
+    """
+)
+
+private val filterContainer = css(
+    $$"""
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 0px 6px;
+
+    input[type="text"] {
+        width: 100%;
+        padding: 6px 8px;
+        border-radius: 3px;
+        outline: none;
+        border: 1px solid $modal-text-field-border;
+        background: none;
+        color: $modal-text-field-color;
+        font-family: $monospaceFont;
+
+        &:hover,
+        &:focus {
+            border-color: $modal-text-field-focus-border;
+        }
+    }
+    """
+)
+
+internal val projectList = css(
+    """
+    width: 100%;
+    min-height: 50px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 0px 6px;
+    """
+)
+
+private val noItem = css(
+    $$"""
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $modal-indicator-color;
+    """
+)
+
+internal val projectItem = css(
+    $$"""
+    height: 26px;
+    padding: 0 6px;
+    margin-top: 2px;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+
+    &.normal {
+        &:hover {
+            background: $modal-item-hover-bg;
+
+            .actions {
+                display: flex;
+            }
+        }
+
+        &:active {
+            opacity: 0.8;
+        }
+
+        .actions {
+            display: none;
+        }
+    }
+
+    &.removing {
+        background: #E53935;
+        color: white;
+    }
+    """
+)
+
+internal val projectNameContainer = css(
+    """
+    display: flex;
+    align-items: center;
+    """
+)
+
+internal val projectIcon = css(
+    """
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    opacity: 0.7;
+    """
+)
+
+internal val projectName = css(
+    """
+    display: flex;
+    align-items: center;
+    """
+)
+
+private val projectActions = css(
+    """
+    display: flex;
+    align-items: center;
+    """
+)
+
+private val projectAction = css(
+    """
+    opacity: 0.7;
+    padding: 3px;
+    margin-left: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+        opacity: 1;
+    }
+    """
+)
+
 class ProjectItem(val id: String, val name: String, val isOpening: Boolean)
 
 fun showRecentProjectsModal(
@@ -36,7 +194,7 @@ fun showRecentProjectsModal(
 ) {
     NoBackgroundModal(
         attrs = {
-            classes("recent-project-modal")
+            classes(recentProjectModal)
         }
     ) {
         ModalContent(onManagementAction, projectItems, onProjectSelect, dismiss)
@@ -52,7 +210,7 @@ private fun ModalContent(
 ) {
     Div(
         attrs = {
-            classes("container")
+            classes(modalContainer)
         }
     ) {
         val filter = remember { mutableStateOf("") }
@@ -94,7 +252,7 @@ private fun ModalContent(
 private fun FilterInput(onChange: (String) -> Unit) {
     Div(
         attrs = {
-            classes("filter-container")
+            classes(filterContainer)
         }
     ) {
         Input(type = InputType.Text) {
@@ -127,7 +285,7 @@ private fun ProjectList(
 
     if (filteredProjects.isNotEmpty()) {
         Div(
-            attrs = { classes("list") }
+            attrs = { classes(projectList) }
         ) {
             for (project in filteredProjects) {
                 val isRemoveConfirming = project.id == requestingRemoveProjectId
@@ -136,7 +294,7 @@ private fun ProjectList(
         }
     } else {
         Div(
-            attrs = { classes("no-item") }
+            attrs = { classes(noItem) }
         ) {
             Span {
                 Text("Not found")
@@ -154,7 +312,7 @@ private fun ProjectContent(
     Div(
         attrs = {
             classes(
-                "item",
+                projectItem,
                 "removing" to isRemoveConfirming,
                 "normal" to !isRemoveConfirming
             )
@@ -174,9 +332,9 @@ private fun ProjectContent(
 
 @Composable
 private fun DeleteConfirmName(name: String) {
-    Div(attrs = { classes("name-container", "delete-confirm") }) {
+    Div(attrs = { classes(projectNameContainer) }) {
         Icon { Icons.Warning() }
-        Span(attrs = { classes("name") }) {
+        Span(attrs = { classes(projectName) }) {
             Text("""Delete "$name"?""")
         }
     }
@@ -184,11 +342,11 @@ private fun DeleteConfirmName(name: String) {
 
 @Composable
 private fun ProjectName(name: String, isOpening: Boolean) {
-    Div(attrs = { classes("name-container") }) {
+    Div(attrs = { classes(projectNameContainer) }) {
         Icon {
             if (isOpening) Icons.FolderOpen() else Icons.Folder()
         }
-        Span(attrs = { classes("name") }) {
+        Span(attrs = { classes(projectName) }) {
             Text(name)
         }
     }
@@ -196,7 +354,7 @@ private fun ProjectName(name: String, isOpening: Boolean) {
 
 @Composable
 private fun Icon(icon: ContentBuilder<Element>) {
-    Span(attrs = { classes("icon") }) { icon() }
+    Span(attrs = { classes(projectIcon) }) { icon() }
 }
 
 @Composable
@@ -205,7 +363,7 @@ private fun Actions(
     item: ProjectItem,
     onAction: (Action) -> Unit
 ) {
-    Div(attrs = { classes("actions") }) {
+    Div(attrs = { classes(projectActions, "actions") }) {
         if (!isRemoveConfirming) {
             ActionOpenInNewTab(item, onAction)
             ActionRemoveProjectRequest(item, onAction)
@@ -219,7 +377,7 @@ private fun Actions(
 private fun ActionOpenInNewTab(project: ProjectItem, onAction: (Action) -> Unit) {
     Div(
         attrs = {
-            classes("action")
+            classes(projectAction)
             tooltip("Open in new tab", TooltipPosition.TOP)
 
             onConsumeClick {
@@ -235,7 +393,7 @@ private fun ActionOpenInNewTab(project: ProjectItem, onAction: (Action) -> Unit)
 private fun ActionRemoveProjectRequest(project: ProjectItem, onAction: (Action) -> Unit) {
     Div(
         attrs = {
-            classes("action")
+            classes(projectAction)
             tooltip("Delete", TooltipPosition.TOP)
             onConsumeClick { onAction(Action.RequestRemove(project)) }
         }
@@ -248,7 +406,7 @@ private fun ActionRemoveProjectRequest(project: ProjectItem, onAction: (Action) 
 private fun ActionRemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> Unit) {
     Div(
         attrs = {
-            classes("action")
+            classes(projectAction)
             tooltip("Confirm", TooltipPosition.TOP)
             onConsumeClick {
                 onAction(Action.RemoveConfirm(item))
@@ -259,7 +417,7 @@ private fun ActionRemoveProjectConfirm(item: ProjectItem, onAction: (Action) -> 
     }
     Div(
         attrs = {
-            classes("action")
+            classes(projectAction)
             tooltip("Cancel", TooltipPosition.TOP)
             onConsumeClick {
                 onAction(Action.SuspendRemove)

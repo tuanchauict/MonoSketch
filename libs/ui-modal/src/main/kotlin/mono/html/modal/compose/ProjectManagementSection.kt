@@ -7,10 +7,21 @@
 package mono.html.modal.compose
 
 import androidx.compose.runtime.Composable
+import mono.scopedcss.css
 import mono.ui.compose.components.Icons
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
+
+private val divider = css(
+    """
+    height: 1px;
+    width: 100%;
+    padding: 0 16px;
+    background: var(--mainmenu-divider-color);
+    margin: 8px 0 6px;
+    """
+)
 
 @Composable
 internal fun ProjectManagementSection(
@@ -20,7 +31,7 @@ internal fun ProjectManagementSection(
     if (isFiltering) {
         return
     }
-    Div(attrs = { classes("list") }) {
+    Div(attrs = { classes(projectList) }) {
         ManagementItem("New project", { Icons.NewFile() }) {
             onActionClick(ProjectManagementActionItem.NewProject)
         }
@@ -29,20 +40,20 @@ internal fun ProjectManagementSection(
         }
     }
 
-    Div(attrs = { classes("divider") })
+    Div(attrs = { classes(divider) })
 }
 
 @Composable
 private fun ManagementItem(title: String, icon: @Composable () -> Unit, onActionClick: () -> Unit) {
     Div(
         attrs = {
-            classes("item", "normal")
+            classes(projectItem, "normal")
             onClick { onActionClick() }
         }
     ) {
-        Div(attrs = { classes("name-container") }) {
+        Div(attrs = { classes(projectNameContainer) }) {
             Icon { icon() }
-            Span(attrs = { classes("name") }) {
+            Span(attrs = { classes(projectName) }) {
                 Text(title)
             }
         }
@@ -51,7 +62,7 @@ private fun ManagementItem(title: String, icon: @Composable () -> Unit, onAction
 
 @Composable
 private fun Icon(icon: @Composable () -> Unit) {
-    Span(attrs = { classes("icon") }) { icon() }
+    Span(attrs = { classes(projectIcon) }) { icon() }
 }
 
 /**
