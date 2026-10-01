@@ -25,7 +25,7 @@ kotlin {
     }
 
     sourceSets {
-        val jsMain by getting {
+        named("jsMain") {
             kotlin.srcDir("src/main/kotlin")
 
             dependencies {
@@ -40,7 +40,7 @@ kotlin {
             }
         }
 
-        val jsTest by getting {
+        named("jsTest") {
             kotlin.srcDir("src/test/kotlin")
 
             dependencies {

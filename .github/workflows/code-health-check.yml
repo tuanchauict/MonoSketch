@@ -23,7 +23,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - run: ./gradlew test --continue
+      - run: ./gradlew allTests --continue
       - name: Clean up test result
         if: failure()
         run: sh tools/devops/remove_success_test_report

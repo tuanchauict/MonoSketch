@@ -5,13 +5,13 @@
 #
 
 remove_test_result_for_success() {
-    path="$1/build/reports/tests/test"
+    path="$1/build/reports/tests/allTests"
     index_file="$path/index.html"
     if [ ! -f "$index_file" ]; then
         echo "[$1] DO NOT contain test result. SKIP"
         return
     fi
-    test_successful_check=$(cat "$index_file" | grep '<div class="infoBox failures" id="successRate">')
+    test_successful_check=$(cat "$index_file" | grep '<div class="infoBox failures successRate">')
     if [ -z "$test_successful_check" ]; then
         echo "[$1] SUCCESS -> REMOVE TEST RESULT $path"
         rm -rf "$path"

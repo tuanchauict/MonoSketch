@@ -56,7 +56,7 @@ kotlin {
     }
 
     sourceSets {
-        val jsMain by getting {
+        named("jsMain") {
             kotlin.srcDir("src/main/kotlin")
             resources.srcDir("src/main/resources")
 
@@ -66,7 +66,7 @@ kotlin {
             }
         }
 
-        val jsTest by getting {
+        named("jsTest") {
             dependencies {
                 implementation(libs.kotlin.test.js)
             }
