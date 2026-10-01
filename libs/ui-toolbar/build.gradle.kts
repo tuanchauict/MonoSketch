@@ -35,6 +35,7 @@ kotlin {
                 implementation(projects.htmlDsl)
                 implementation(projects.lifecycle)
                 implementation(projects.livedata)
+                implementation(projects.scopedCss)
                 implementation(projects.shape)
                 implementation(projects.storeDao)
                 implementation(projects.uiAppStateManager)
