@@ -44,7 +44,9 @@ task compileTailwind(type: Exec) {
 }
 
 // Make sure Tailwind compiles before resources are processed
-processResources.dependsOn(compileTailwind)
+tasks.named('jsProcessResources').configure {
+    dependsOn(compileTailwind)
+}
 
 // Run Tailwind after npm install (handled by Kotlin/JS plugin)
 compileTailwind.shouldRunAfter(tasks.findByName('kotlinNpmInstall'))

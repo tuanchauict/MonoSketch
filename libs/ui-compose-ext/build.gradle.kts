@@ -4,16 +4,17 @@
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.compose")
     id("org.jetbrains.compose")
 }
 
 repositories {
+    google()
     mavenCentral()
 }
 
-val compilerType: org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType by ext
 kotlin {
-    js(compilerType) {
+    js {
         browser {
             testTask {
                 useKarma {
@@ -28,6 +29,8 @@ kotlin {
             kotlin.srcDir("src/main/kotlin")
 
             dependencies {
+                implementation(projects.lifecycle)
+                implementation(projects.livedata)
                 implementation(projects.uiTheme)
 
                 implementation(compose.html.core)
