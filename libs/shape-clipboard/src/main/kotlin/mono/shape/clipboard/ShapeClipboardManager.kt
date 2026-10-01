@@ -84,7 +84,7 @@ class ShapeClipboardManager(private val body: HTMLElement) {
         setClipboardText(Json.encodeToString(clipboardObject))
 
     fun setClipboardText(text: String) {
-        TextArea(body, classes = "hidden", content = text) {
+        TextArea(body, classes = "sr-only", content = text) {
             select()
             document.execCommand("copy")
             remove()

@@ -165,7 +165,7 @@ internal class ExportShapesModal {
             val textContent = Pre(text = content) {
                 setAttributes("contenteditable" to true)
             }
-            val textBox = TextArea(classes = "hidden", content = content)
+            val textBox = TextArea(classes = "sr-only", content = content)
             CopyButton {
                 textBox.value = textContent.innerText
                 textBox.select()
