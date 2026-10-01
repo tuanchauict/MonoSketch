@@ -16,6 +16,7 @@ import kotlinx.browser.window
 import mono.common.Cancelable
 import mono.common.setTimeout
 import mono.html.Div
+import mono.scopedcss.css
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.left
@@ -29,6 +30,12 @@ import org.jetbrains.compose.web.renderComposable
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
+
+private val noBackgroundModal = css(
+    """
+    outline: none;
+    """
+)
 
 /**
  * Show a modal without background
@@ -79,7 +86,7 @@ private fun ModalContainer(
     var cancelable: Cancelable? by remember { mutableStateOf(null) }
     Div(
         attrs = {
-            classes("no-background-modal")
+            classes(noBackgroundModal)
             tabIndex(-1)
 
             onFocusIn { cancelable?.cancel() }
