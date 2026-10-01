@@ -40,7 +40,8 @@ task extractScopedCss {
         def singleDollarTemplate = Pattern.compile(/\$[A-Za-z_{]/)
         def doubleDollarTemplate = Pattern.compile(/\$\$[A-Za-z_{]/)
 
-        def blocks = new TreeMap<String, Map>() // class name -> [source, location]
+        // class name -> [source, location], in source order: by file path, then by position in the file
+        def blocks = new LinkedHashMap<String, Map>()
         def errors = []
 
         sources.files.sort { it.path }.each { File file ->
