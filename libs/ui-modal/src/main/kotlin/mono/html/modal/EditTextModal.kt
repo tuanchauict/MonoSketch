@@ -15,9 +15,58 @@ import mono.html.setAttributes
 import mono.html.setOnFocusOut
 import mono.html.setOnMouseWheelListener
 import mono.html.styleOf
+import mono.scopedcss.css
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.KeyboardEvent
+
+private val editTextModal = css(
+    $$"""
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: $edit-text-zindex;
+    background-color: #00000000;
+    color: var(--workspace-edittext-color);
+    """
+)
+
+private val editTextContainer = css(
+    $$"""
+    position: absolute;
+    left: $canvas-left;
+    top: ($canvas-top + $nav-height);
+    right: 0;
+    bottom: 0;
+    """
+)
+
+private val editTextAreaContainer = css(
+    """
+    position: absolute;
+    """
+)
+
+private val editTextArea = css(
+    $$"""
+    position: absolute;
+    left: 1px;
+    top: 1.3px;
+    width: 100%;
+    height: 100%;
+
+    font-family: $monospaceFont;
+    font-size: 13px;
+    line-height: 17.1px;
+    letter-spacing: 0.2px;
+
+    &:focus {
+        outline: none;
+    }
+    """
+)
 
 /**
  * A modal for edit text.
@@ -36,9 +85,9 @@ class EditTextModal(
         widthPx: Double,
         heightPx: Double
     ) {
-        root = document.body?.Div("modal-edit-text") {
-            Div("modal-edit-text-container") {
-                Div("modal-edit-text-area-container") {
+        root = document.body?.Div(editTextModal) {
+            Div(editTextContainer) {
+                Div(editTextAreaContainer) {
                     setAttributes(
                         "style" to styleOf(
                             "left" to (leftPx - 1).px,
@@ -66,7 +115,7 @@ class EditTextModal(
     }
 
     private fun Element.initTextArea() {
-        val textArea = Div("modal-edit-text-area") {
+        val textArea = Div(editTextArea) {
             setAttributes("contenteditable" to true)
         }
 
