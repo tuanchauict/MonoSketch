@@ -22,18 +22,23 @@ repositories {
     mavenCentral()
 }
 
-// Use the system-installed Node.js/Yarn instead of downloading them, so the build
-// works without direct network access to nodejs.org / github.com release assets.
+// On a machine behind a TLS-intercepting corporate proxy that can't reach
+// nodejs.org/yarnpkg.com directly, pass -PuseSystemNodeJs=true to use a
+// locally installed Node.js/Yarn instead of letting the Kotlin/JS plugin
+// download them. CI and any machine with normal internet access should
+// leave this off so it gets the pinned, known-good versions.
 // Every subproject declares its own js {} target, so this must apply to all of them.
-allprojects {
-    plugins.withType<NodeJsPlugin> {
-        extensions.configure<NodeJsEnvSpec> {
-            download.set(false)
+if (providers.gradleProperty("useSystemNodeJs").getOrElse("false").toBoolean()) {
+    allprojects {
+        plugins.withType<NodeJsPlugin> {
+            extensions.configure<NodeJsEnvSpec> {
+                download.set(false)
+            }
         }
-    }
-    plugins.withType<YarnPlugin> {
-        extensions.configure<YarnRootEnvSpec> {
-            download.set(false)
+        plugins.withType<YarnPlugin> {
+            extensions.configure<YarnRootEnvSpec> {
+                download.set(false)
+            }
         }
     }
 }

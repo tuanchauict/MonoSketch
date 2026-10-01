@@ -127,6 +127,8 @@ Run production build:
 
 **Note:** The `-Dorg.gradle.parallel=false` flag is a workaround for a KotlinJS build issue with `--continuous` mode.
 
+**Note:** If you're behind a proxy that blocks direct access to `nodejs.org`/`yarnpkg.com`, pass `-PuseSystemNodeJs=true` to use your locally installed Node.js/Yarn instead of letting Gradle download them.
+
 #### Option 2: Python Development Server
 
 Alternative approach when Gradle hot reload is not working properly:
