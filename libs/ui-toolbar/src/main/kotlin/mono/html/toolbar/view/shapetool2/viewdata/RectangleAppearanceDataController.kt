@@ -56,12 +56,15 @@ internal class RectangleAppearanceDataController(
         createBorderDashPatternLiveData()
     val borderRoundedCornerLiveData: LiveData<Boolean?> =
         createBorderRoundedCornerLiveData()
+    val shadowToolStateLiveData: LiveData<CloudItemSelectionState?> =
+        createShadowToolStateLiveData()
 
     val hasAnyVisibleToolLiveData: LiveData<Boolean> = combineLiveData(
         fillToolStateLiveData,
         borderToolStateLiveData,
         borderDashPatternLiveData,
-        borderRoundedCornerLiveData
+        borderRoundedCornerLiveData,
+        shadowToolStateLiveData
     ) { list -> list.any { it != null } }
 
     private fun createFillAppearanceVisibilityLiveData(): LiveData<CloudItemSelectionState?> {
@@ -94,11 +97,20 @@ internal class RectangleAppearanceDataController(
         return selectedOrDefault(selectedLiveData, defaultLiveData)
     }
 
+    private fun createShadowToolStateLiveData(): LiveData<CloudItemSelectionState?> {
+        val selectedLiveData = singleRectExtraLiveData.map { it?.toShadowState() }
+        val defaultLiveData = defaultRectangleExtraLiveData.map { it?.toShadowState() }
+        return selectedOrDefault(selectedLiveData, defaultLiveData)
+    }
+
     private fun RectangleExtra.toFillAppearanceVisibilityState(): CloudItemSelectionState =
         CloudItemSelectionState(isFillEnabled, userSelectedFillStyle.id)
 
     private fun RectangleExtra.toBorderState(): CloudItemSelectionState =
         CloudItemSelectionState(isBorderEnabled, userSelectedBorderStyle.id)
+
+    private fun RectangleExtra.toShadowState(): CloudItemSelectionState =
+        CloudItemSelectionState(isShadowEnabled, userSelectedShadowId)
 
     private fun <T> selectedOrDefault(
         selectedLiveData: LiveData<T?>,

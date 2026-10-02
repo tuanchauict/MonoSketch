@@ -175,6 +175,10 @@ class MainStateManager(
             return
         }
         val bitmap = bitmapManager.getBitmap(shape) ?: return
+        val shadowBitmap = bitmapManager.getShadowBitmap(shape)
+        if (shadowBitmap != null) {
+            mainBoard.fill(shape.bound.position, shadowBitmap, Highlight.NO)
+        }
         val highlight = when {
             shape is Text && shape.isTextEditing -> Highlight.TEXT_EDITING
             shape in environment.getSelectedShapes() -> Highlight.SELECTED

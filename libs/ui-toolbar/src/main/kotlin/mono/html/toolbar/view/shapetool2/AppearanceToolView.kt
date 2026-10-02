@@ -71,6 +71,19 @@ internal fun AppearanceToolView(
         }
 
         Tool(
+            "Shadow",
+            isAvailable = viewModel.shapeShadowTypeState.value != null
+        ) {
+            OptionsCloud(
+                viewModel.shadowOptions,
+                '×',
+                viewModel.shapeShadowTypeState.value,
+                OneTimeActionType::ChangeShapeShadowExtra,
+                setOneTimeAction
+            )
+        }
+
+        Tool(
             "Stroke",
             isAvailable = viewModel.lineStrokeTypeState.value != null
         ) {
@@ -309,3 +322,4 @@ private fun RoundedCorner(
         }
     }
 }
+

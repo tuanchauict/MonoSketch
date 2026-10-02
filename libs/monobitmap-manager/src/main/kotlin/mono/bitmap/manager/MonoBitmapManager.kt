@@ -21,6 +21,7 @@ import mono.shape.shape.Text
  */
 class MonoBitmapManager {
     private val idToBitmapMap: MutableMap<String, VersionizedBitmap> = mutableMapOf()
+    private val idToShadowBitmapMap: MutableMap<String, VersionizedBitmap> = mutableMapOf()
 
     fun getBitmap(shape: AbstractShape): MonoBitmap? {
         val cachedBitmap = getCacheBitmap(shape)
@@ -48,6 +49,24 @@ class MonoBitmapManager {
             is MockShape -> null // Only for testing.
         } ?: return null
         idToBitmapMap[shape.id] = VersionizedBitmap(shape.versionCode, bitmap)
+        return bitmap
+    }
+
+    fun getShadowBitmap(shape: AbstractShape): MonoBitmap? {
+        val extra = when (shape) {
+            is Rectangle -> shape.extra
+            is Text -> shape.extra.boundExtra
+            else -> return null
+        }
+        val shadowStyle = extra.shadowStyle ?: return null
+
+        val cached = idToShadowBitmapMap[shape.id]
+            ?.takeIf { it.versionCode == shape.versionCode }
+            ?.bitmap
+        if (cached != null) return cached
+
+        val bitmap = RectangleBitmapFactory.toShadowBitmap(shape.bound.size, shadowStyle.char)
+        idToShadowBitmapMap[shape.id] = VersionizedBitmap(shape.versionCode, bitmap)
         return bitmap
     }
 

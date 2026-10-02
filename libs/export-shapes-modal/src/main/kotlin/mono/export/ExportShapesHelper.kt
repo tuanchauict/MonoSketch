@@ -16,6 +16,7 @@ import mono.shape.shape.Group
  */
 class ExportShapesHelper(
     private val getBitmap: (AbstractShape) -> MonoBitmap?,
+    private val getShadowBitmap: (AbstractShape) -> MonoBitmap?,
     private val setClipboardText: (String) -> Unit
 ) {
 
@@ -25,9 +26,9 @@ class ExportShapesHelper(
         }
 
         val left = shapes.minOf { it.bound.left }
-        val right = shapes.maxOf { it.bound.right }
+        val right = shapes.maxOf { it.bound.right } + 1
         val top = shapes.minOf { it.bound.top }
-        val bottom = shapes.maxOf { it.bound.bottom }
+        val bottom = shapes.maxOf { it.bound.bottom } + 1
         val window = Rect.byLTRB(left, top, right, bottom)
 
         val exportingBoard = MonoBoard().apply { clearAndSetWindow(window) }
@@ -48,6 +49,10 @@ class ExportShapesHelper(
                 continue
             }
             val bitmap = getBitmap(shape) ?: continue
+            val shadowBitmap = getShadowBitmap(shape)
+            if (shadowBitmap != null) {
+                board.fill(shape.bound.position, shadowBitmap, Highlight.NO)
+            }
             board.fill(shape.bound.position, bitmap, Highlight.NO)
         }
     }

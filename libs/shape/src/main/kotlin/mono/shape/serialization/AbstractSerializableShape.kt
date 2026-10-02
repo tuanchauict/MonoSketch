@@ -61,7 +61,9 @@ data class SerializableRectangle(
         @SerialName("du")
         val dashPattern: String,
         @SerialName("rc")
-        val corner: String = ""
+        val corner: String = "",
+        @SerialName("sh")
+        val userSelectedShadowId: String? = null
     )
 }
 

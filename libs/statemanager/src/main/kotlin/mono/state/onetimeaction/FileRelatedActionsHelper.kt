@@ -33,6 +33,7 @@ internal class FileRelatedActionsHelper(
     private val fileMediator: FileMediator = FileMediator()
     private val exportShapesHelper = ExportShapesHelper(
         bitmapManager::getBitmap,
+        bitmapManager::getShadowBitmap,
         shapeClipboardManager::setClipboardText
     )
 

@@ -10,9 +10,11 @@ import mono.shape.extra.LineExtra
 import mono.shape.extra.RectangleExtra
 import mono.shape.extra.manager.predefined.PredefinedAnchorChar
 import mono.shape.extra.manager.predefined.PredefinedRectangleFillStyle
+import mono.shape.extra.manager.predefined.PredefinedShadowStyle
 import mono.shape.extra.manager.predefined.PredefinedStraightStrokeStyle
 import mono.shape.extra.style.AnchorChar
 import mono.shape.extra.style.RectangleFillStyle
+import mono.shape.extra.style.ShadowStyle
 import mono.shape.extra.style.StraightStrokeDashPattern
 import mono.shape.extra.style.StraightStrokeStyle
 import mono.shape.extra.style.TextAlign
@@ -77,7 +79,8 @@ object ShapeExtraManager {
         endHeadAnchorCharId: String? = null,
 
         textHorizontalAlign: TextAlign.HorizontalAlign? = null,
-        textVerticalAlign: TextAlign.VerticalAlign? = null
+        textVerticalAlign: TextAlign.VerticalAlign? = null,
+        shadowStyleId: String? = UNCHANGED_SHADOW
     ) {
         defaultRectangleExtra = RectangleExtra(
             isFillEnabled ?: defaultRectangleExtra.isFillEnabled,
@@ -85,7 +88,12 @@ object ShapeExtraManager {
             isBorderEnabled ?: defaultRectangleExtra.isBorderEnabled,
             getRectangleBorderStyle(borderStyleId),
             borderDashPattern ?: defaultRectangleExtra.dashPattern,
-            isRoundedCorner = isBorderRoundedCorner ?: defaultRectangleExtra.isRoundedCorner
+            isRoundedCorner = isBorderRoundedCorner ?: defaultRectangleExtra.isRoundedCorner,
+            userSelectedShadowId = if (shadowStyleId == UNCHANGED_SHADOW) {
+                defaultRectangleExtra.userSelectedShadowId
+            } else {
+                shadowStyleId
+            }
         )
 
         defaultLineExtra = LineExtra(
@@ -144,4 +152,15 @@ object ShapeExtraManager {
 
     fun getAllPredefinedAnchorChars(): List<AnchorChar> =
         PredefinedAnchorChar.PREDEFINED_ANCHOR_CHARS
+
+    fun getShadowStyle(id: String?): ShadowStyle? =
+        PredefinedShadowStyle.PREDEFINED_STYLE_MAP[id]
+
+    fun getAllPredefinedShadowStyles(): List<ShadowStyle> =
+        PredefinedShadowStyle.PREDEFINED_STYLES
+
+    /**
+     * Sentinel value to distinguish "no change" from "set to null (disable shadow)".
+     */
+    private const val UNCHANGED_SHADOW = "__unchanged__"
 }

@@ -76,6 +76,11 @@ sealed interface OneTimeActionType {
         val isRoundedCorner: Boolean
     ) : OneTimeActionType
 
+    data class ChangeShapeShadowExtra(
+        val isEnabled: Boolean? = null,
+        val newShadowStyleId: String? = null
+    ) : OneTimeActionType
+
     data class ChangeLineStrokeExtra(
         val isEnabled: Boolean? = null,
         val newStrokeStyleId: String? = null
