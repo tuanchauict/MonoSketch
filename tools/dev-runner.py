@@ -50,7 +50,7 @@ prepare_for_serve()
 
 server = livereload.Server()
 server.watch(f"{ROOT}/**/src/main/**/*.kt", compile_code, delay='forever', delay_exe=2.5)
-server.watch(f"{ROOT}/**/src/main/**/*.scss", compile_code, delay='forever', delay_exe=2.5)
+server.watch(f"{ROOT}/**/src/main/**/*.css", compile_code, delay='forever', delay_exe=2.5)
 server.watch(f"{SERVE_DIR}/**/*", lambda x: None)
 server.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")
 server.serve(root=SERVE_DIR, port=8000, open_url_delay=None)

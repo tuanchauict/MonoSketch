@@ -1,0 +1,40 @@
+// Bundles `src/main/css/main.css` into `main.css` of the processed resources by inlining its local
+// `@import '<file>.css';` rules. Files resolve from `src/main/css` first, then from the generated
+// scoped CSS directory (see scoped-css.gradle). `@import url(...)` rules are kept as-is.
+// Nesting is left to the browser (native CSS nesting).
+
+def cssSourceDir = file('src/main/css')
+def scopedCssDir = layout.buildDirectory.dir('generated/scoped-css').get().asFile
+
+task bundleMainCss {
+    description = 'Bundle main.css by inlining its local @import rules'
+    group = 'build'
+    dependsOn 'extractScopedCss'
+
+    def entryFile = new File(cssSourceDir, 'main.css')
+    def outputFile = layout.buildDirectory.file('processedResources/js/main/main.css').get().asFile
+
+    inputs.files(fileTree(cssSourceDir) { exclude 'tailwind.css' }).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.dir(scopedCssDir).withPathSensitivity(PathSensitivity.RELATIVE)
+    outputs.file(outputFile)
+
+    doLast {
+        def importPattern = ~/(?m)^@import\s+'([^']+\.css)';\s*$/
+        def resolve = { String name ->
+            def file = [new File(cssSourceDir, name), new File(scopedCssDir, name)].find { it.isFile() }
+            if (file == null) {
+                throw new GradleException("main.css: cannot resolve @import '$name'.")
+            }
+            file
+        }
+        def bundled = entryFile.getText('UTF-8').replaceAll(importPattern) { _, String name ->
+            resolve(name).getText('UTF-8').trim()
+        }
+        outputFile.parentFile.mkdirs()
+        outputFile.setText(bundled, 'UTF-8')
+    }
+}
+
+tasks.named('jsProcessResources').configure {
+    dependsOn(bundleMainCss)
+}

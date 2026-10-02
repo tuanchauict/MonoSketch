@@ -1,11 +1,12 @@
 @import url('/fonts/stylesheet.css');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
 
-@import 'style/variables';
-@import 'style/theme';
+/* Local imports below are inlined at build time by the bundleMainCss task. See css.gradle. */
+@import 'variables.css';
+@import 'theme.css';
 
 /* Keyframes used by the scoped styles below. */
-@import 'style/animation';
+@import 'animation.css';
 
 /* Colocated styles declared with `css("""...""")` in Kotlin sources. See scoped-css.gradle. */
-@import 'scoped';
+@import 'scoped.css';

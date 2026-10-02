@@ -31,7 +31,7 @@ module.exports = {
     },
   },
   plugins: [],
-  // Prefix Tailwind classes to avoid conflicts with existing SCSS
+  // Prefix Tailwind classes to avoid conflicts with existing styles
   // Remove this if you want standard Tailwind classes
   // prefix: 'tw-',
 }
