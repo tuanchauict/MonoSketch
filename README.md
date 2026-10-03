@@ -10,7 +10,7 @@ A powerful, client-side-only web-based tool for creating ASCII diagrams and text
 
 **Try it now at [app.monosketch.io][app]**
 
-> **Note:** This project is being rewritten in TypeScript. Check out the [`port-to-js`](https://github.com/tuanchauict/MonoSketch/tree/port-to-js) branch or [PR #584](https://github.com/tuanchauict/MonoSketch/pull/584) for details.
+> **Note:** The TypeScript port has been discontinued due to performance issues. The Kotlin code on `main` remains the active codebase. If you want to see the TypeScript version, check out the [`port-to-js`](https://github.com/tuanchauict/MonoSketch/tree/port-to-js) branch.
 
 ## Overview
 
@@ -99,6 +99,8 @@ Freehand drawing with custom characters, plus expanded options for fills, border
 ## Contributing
 
 Contributions are welcome! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated.
+
+See the [documentation](docs/README.md) for the architecture, module reference, build system, and known issues.
 
 ### Technology Stack
 - **[Kotlin/JS][KotlinJS]** - The entire application is written in Kotlin, compiled to JavaScript
