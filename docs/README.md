@@ -37,17 +37,3 @@ MonoSketch is a web application that you use to draw diagrams with ASCII and Uni
 | [CI and release](ci-and-release.md) | GitHub Actions workflows and the release procedure. |
 | [Contributing](contributing.md) | How to send a change to the project. |
 | [Known issues](known-issues.md) | Problems in the current code. |
-
-## Writing style
-
-These documents use Simplified Technical English (ASD-STE100). Obey these rules when you change a document:
-
-- Write one topic in one file.
-- Write short sentences. Use a maximum of 20 words in an instruction and 25 words in a description.
-- Write one instruction in one sentence.
-- Use the active voice.
-- Use the imperative form for instructions. For example, write "Run the command", not "You should run the command".
-- Use the simple present tense for descriptions.
-- Use one word for one meaning. For example, this documentation always uses "shape", "board", "canvas" and "project" with the meanings in [Overview](overview.md#terms).
-- Use tables and numbered lists for procedures and reference data.
-- Use the names from the code (class, file and module names) exactly as they are.

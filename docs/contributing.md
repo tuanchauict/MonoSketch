@@ -55,7 +55,7 @@ The documentation is in `docs/`. Each file covers one topic. [README.md](README.
 
 When you change the behavior of the code, update the related document in the same pull request.
 
-Write the documentation in Simplified Technical English. Refer to [Writing style](README.md#writing-style).
+Write the documentation in Simplified Technical English (ASD-STE100).
 
 ## License
 
