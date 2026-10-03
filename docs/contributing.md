@@ -2,7 +2,7 @@
 
 This document describes how to report a bug and how to send a change.
 
-**Note:** the project is being rewritten in TypeScript. Refer to the [`port-to-js`](https://github.com/tuanchauict/MonoSketch/tree/port-to-js) branch and [PR #584](https://github.com/tuanchauict/MonoSketch/pull/584). Before you start a large change in the Kotlin code, ask in an issue.
+**Note:** send changes for the Kotlin code on `main`. The port to TypeScript stopped. Refer to [Project status](overview.md#project-status).
 
 ## Report a bug
 

@@ -59,7 +59,9 @@ This documentation uses these terms with one meaning only:
 
 ## Project status
 
-The project is being rewritten in TypeScript. Refer to the `port-to-js` branch and [PR #584](https://github.com/tuanchauict/MonoSketch/pull/584). This documentation is about the Kotlin code on the `main` branch.
+The Kotlin code on the `main` branch is the active code. This documentation is about that code.
+
+A port to TypeScript was started, but it stopped because of performance problems. The TypeScript version is in the [`port-to-js`](https://github.com/tuanchauict/MonoSketch/tree/port-to-js) branch.
 
 ## License
 
