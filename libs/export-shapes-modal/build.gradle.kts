@@ -33,6 +33,7 @@ kotlin {
                 implementation(projects.livedata)
                 implementation(projects.monobitmap)
                 implementation(projects.monoboard)
+                implementation(projects.scopedCss)
                 implementation(projects.shape)
 
                 implementation(libs.kotlin.stdlib.js)

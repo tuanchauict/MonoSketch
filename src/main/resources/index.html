@@ -19,13 +19,14 @@
 
 <body class="w-full h-full m-0 p-0 font-ui bg-[var(--workspace-bg-color)]">
 
-<nav id="main-nav" class="fixed h-nav left-0 right-0 top-0">
-    <div id="nav-brand">
-        <h2 class="main-title">
-            <a href="https://monosketch.io" target="_blank">MonoSketch</a>
+<nav id="main-nav" class="fixed h-nav left-0 right-0 top-0 flex justify-between bg-[var(--header-bg)] text-[var(--header-color)]">
+    <div id="nav-brand" class="flex flex-row items-center pl-4">
+        <h2 class="m-0">
+            <a href="https://monosketch.io" target="_blank"
+               class="font-mono text-[22px] font-normal leading-[18px] tracking-[0.2px] no-underline">MonoSketch</a>
         </h2>
     </div>
-    <div id="nav-toolbar"></div>
+    <div id="nav-toolbar" class="flex flex-row items-center grow justify-between px-2"></div>
 </nav>
 
 <main id="workspace" class="fixed top-nav left-0 right-0 bottom-0 bg-[var(--workspace-bg-color)]">

@@ -18,12 +18,20 @@ import mono.lifecycle.LifecycleOwner
 import mono.livedata.LiveData
 import mono.livedata.MutableLiveData
 import mono.livedata.combineLiveData
+import mono.scopedcss.css
 import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.appstate.AppUiStateManager
 import mono.ui.appstate.state.ScrollMode
 import mono.ui.compose.ext.toState
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.renderComposable
+
+private val navSection = css(
+    """
+    display: flex;
+    height: 100%;
+    """
+)
 
 /**
  * A view controller to manage toolbar.
@@ -54,11 +62,11 @@ class NavBarViewController(
     init {
         val currentProjectState = currentRootIdLiveData.toState(lifecycleOwner)
         renderComposable("nav-toolbar") {
-            Div {
+            Div(attrs = { classes(navSection) }) {
                 MouseActionGroup(selectedMouseActionState, actionManager::setRetainableAction)
             }
 
-            Div {
+            Div(attrs = { classes(navSection) }) {
                 ToolbarContainer {
                     ProjectManagerIcon(
                         currentProjectState.value,

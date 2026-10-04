@@ -76,4 +76,5 @@ kotlin {
 
 apply(from = "ktlint.gradle")
 apply(from = "sass.gradle")
+apply(from = "scoped-css.gradle")
 apply(from = "tailwind.gradle")

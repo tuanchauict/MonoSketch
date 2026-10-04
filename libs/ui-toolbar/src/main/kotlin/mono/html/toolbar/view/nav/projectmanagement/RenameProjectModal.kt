@@ -10,9 +10,31 @@ import mono.common.post
 import mono.html.Div
 import mono.html.px
 import mono.html.style
+import mono.scopedcss.css
 import org.jetbrains.compose.web.attributes.InputType.Text
 import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.renderComposable
+
+private val renameProjectModal = css(
+    """
+    position: fixed;
+    z-index: var(--rename-project-modal-zindex);
+    background-color: var(--modal-container-bg);
+    border-radius: 4px;
+
+    .rename-project-input {
+        border-radius: 3px;
+        font-family: var(--monospace-font);
+        padding: 4px 8px;
+        border: 2px solid var(--text-input-border-color);
+
+        &:focus {
+            outline: none;
+            border-color: var(--text-input-border-focus-color);
+        }
+    }
+    """
+)
 
 internal fun showRenameProjectModal(
     initName: String,
@@ -20,7 +42,7 @@ internal fun showRenameProjectModal(
     onDismiss: (String) -> Unit
 ) {
     val anchor = document.querySelector(anchorSelector) ?: return
-    val modal = document.body?.Div("rename-project-modal") {
+    val modal = document.body?.Div(renameProjectModal) {
         val anchorRect = anchor.getBoundingClientRect()
         style(
             "left" to anchorRect.left.px,

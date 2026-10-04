@@ -8,6 +8,7 @@ package mono.html.modal.compose
 
 import androidx.compose.runtime.Composable
 import kotlinx.browser.document
+import mono.scopedcss.css
 import mono.ui.compose.ext.classes
 import mono.ui.compose.ext.onConsumeClick
 import org.jetbrains.compose.web.dom.ContentBuilder
@@ -17,6 +18,119 @@ import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
 import org.w3c.dom.Element
 import mono.html.Div as MonoDiv
+
+private val dialogBackground = css(
+    """
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--modal-background-bg);
+    """
+)
+
+private val dialogContainer = css(
+    """
+    background: var(--modal-container-bg);
+    border: 1px solid var(--mainmenu-divider-color);
+    min-width: 350px;
+    max-width: 450px;
+    border-radius: 5px;
+    padding: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    font-family: var(--monospace-font);
+
+    display: flex;
+    flex-direction: column;
+    """
+)
+
+private val dialogContent = css(
+    """
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0 8px 8px;
+    color: light-dark(#5e5d62, #f2f2f2);
+
+    &.no-title {
+        font-size: 16px;
+    }
+    """
+)
+
+private val dialogActions = css(
+    """
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    """
+)
+
+private val dialogTitle = css(
+    """
+    font-size: 19px;
+    margin: 4px 8px 8px;
+    color: var(--modal-title-color);
+    """
+)
+
+private val actionButton = css(
+    """
+    margin-left: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    padding: 4px 8px;
+
+    &.primary {
+        background: light-dark(#007bff, #cc8108);
+        color: white;
+
+        &:hover {
+            background: light-dark(#328ced, #daa113);
+        }
+
+        &:active {
+            background: light-dark(#0062cc, #ab7a08);
+        }
+    }
+
+    &.primary.danger {
+        background: #E53935;
+
+        &:hover {
+            background: #FF5252;
+        }
+
+        &:active {
+            background: #C62828;
+        }
+    }
+
+    &.secondary {
+        border-color: light-dark(#D9D8DC, #74727a);
+        color: light-dark(#323136, #e0dce9);
+
+        &:hover {
+            background-color: light-dark(#6c757d, #3e3d43);
+            color: white;
+            border-color: transparent;
+        }
+
+        &:active {
+            background-color: light-dark(#424950, #262628);
+            color: white;
+            border-color: transparent;
+        }
+    }
+    """
+)
 
 class DialogAction(val name: String, val isDanger: Boolean = false, val action: () -> Unit)
 
@@ -83,7 +197,7 @@ fun Dialog(
     composition.setContent {
         Div(
             attrs = {
-                classes("dialog-bg")
+                classes(dialogBackground)
                 onConsumeClick { dismiss() }
             }
         ) {
@@ -102,7 +216,7 @@ private fun DialogContainer(
 ) {
     Div(
         attrs = {
-            classes("dialog-container")
+            classes(dialogContainer)
             onConsumeClick {
                 // Do nothing, just block the dismiss event
             }
@@ -111,13 +225,13 @@ private fun DialogContainer(
         Title(title)
         Div(
             attrs = {
-                classes("dialog-content", "no-title" to title.isBlank())
+                classes(dialogContent, "no-title" to title.isBlank())
             }
         ) { content() }
 
         if (primaryAction != null || secondaryAction != null) {
             Div(
-                attrs = { classes("dialog-actions") }
+                attrs = { classes(dialogActions) }
             ) {
                 ActionButton(secondaryAction, "secondary", dismiss)
                 ActionButton(primaryAction, "primary", dismiss)
@@ -131,7 +245,7 @@ private fun Title(title: String) {
     if (title.isBlank()) {
         return
     }
-    H2(attrs = { classes("dialog-title") }) {
+    H2(attrs = { classes(dialogTitle) }) {
         Text(title)
     }
 }
@@ -143,7 +257,7 @@ private fun ActionButton(action: DialogAction?, className: String, dismiss: () -
     }
     Div(
         attrs = {
-            classes("dialog-action", className, "danger" to action.isDanger)
+            classes(actionButton, className, "danger" to action.isDanger)
             onClick {
                 action.action()
                 dismiss()

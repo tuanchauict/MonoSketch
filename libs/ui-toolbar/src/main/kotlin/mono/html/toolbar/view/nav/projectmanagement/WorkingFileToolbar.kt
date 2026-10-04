@@ -15,6 +15,7 @@ import mono.html.modal.compose.DropDownMenu
 import mono.html.toolbar.view.nav.projectmanagement.DropDownItemAction.Forwarding
 import mono.html.toolbar.view.nav.projectmanagement.DropDownItemAction.NewProject
 import mono.html.toolbar.view.nav.projectmanagement.DropDownItemAction.Rename
+import mono.scopedcss.css
 import mono.ui.compose.components.Icons
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
@@ -22,6 +23,51 @@ import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.Element
 
 private const val WORKING_PROJECT_ID = "working-project"
+
+private val currentProject = css(
+    """
+    --max-text-width: 210px;
+
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: calc(var(--max-text-width) + 31px);
+
+    .file-info-container {
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
+    .file-info {
+        display: flex;
+        align-items: center;
+
+        border-radius: 6px;
+        padding: 8px 4px 8px 8px;
+        font-family: var(--monospace-font);
+        cursor: pointer;
+
+        &:hover {
+            background: var(--nav-action-hover-bg);
+        }
+
+        .title {
+            font-size: 14px;
+            max-width: var(--max-text-width);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .menu-down-icon {
+            display: flex;
+            margin-left: 4px;
+            padding-top: 4px;
+        }
+    }
+    """
+)
 
 @Composable
 internal fun WorkingFileToolbar(
@@ -48,7 +94,7 @@ internal fun WorkingFileToolbar(
 private fun CurrentProject(title: String, showProjectMenu: (Element) -> Unit) {
     Div(
         attrs = {
-            classes("working-file-container")
+            classes(currentProject)
         }
     ) {
         Div(attrs = {

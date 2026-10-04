@@ -12,6 +12,7 @@ import mono.actionmanager.OneTimeActionType.AppSettingAction
 import mono.html.modal.compose.DropDownItem
 import mono.html.modal.compose.DropDownMenu
 import mono.html.modal.tooltip
+import mono.scopedcss.css
 import mono.ui.appstate.AppUiStateManager
 import mono.ui.appstate.AppUiStateManager.UiStatePayload.ChangeScrollMode
 import mono.ui.appstate.state.ScrollMode
@@ -26,6 +27,22 @@ import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
+
+private val themeLightModeIcon = css(
+    """
+    :root.light & {
+        display: none;
+    }
+    """
+)
+
+private val themeDarkModeIcon = css(
+    """
+    :root.dark & {
+        display: none;
+    }
+    """
+)
 
 @Composable
 internal fun ScrollModeButton(
@@ -42,7 +59,7 @@ internal fun ScrollModeButton(
     }
     Div(
         attrs = {
-            classes("app-icon")
+            classes(appIcon)
             tooltip("Scroll mode")
 
             onClick {
@@ -68,15 +85,15 @@ internal fun ScrollModeButton(
 @Composable
 internal fun ThemeIcons() {
     // The theme icon visibility is controlled by the global theme mode at root
-    // along with the class name (theme-light-mode, theme-dark-mode)
+    // along with the class name (themeLightModeIcon, themeDarkModeIcon)
     ThemeIcon(
-        "theme-light-mode",
+        themeLightModeIcon,
         ThemeMode.LIGHT,
         "Light mode",
         "M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM8.5 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm5-5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm-11 0a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9.743-4.036a.5.5 0 1 1-.707-.707.5.5 0 0 1 .707.707zm-7.779 7.779a.5.5 0 1 1-.707-.707.5.5 0 0 1 .707.707zm7.072 0a.5.5 0 1 1 .707-.707.5.5 0 0 1-.707.707zM3.757 4.464a.5.5 0 1 1 .707-.707.5.5 0 0 1-.707.707z" // ktlint-disable max-line-length
     )
     ThemeIcon(
-        "theme-dark-mode",
+        themeDarkModeIcon,
         ThemeMode.DARK,
         "Dark mode",
         "M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm.5-9.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm5-5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm-11 0a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9.743-4.036a.5.5 0 1 1-.707-.707.5.5 0 0 1 .707.707zm-7.779 7.779a.5.5 0 1 1-.707-.707.5.5 0 0 1 .707.707zm7.072 0a.5.5 0 1 1 .707-.707.5.5 0 0 1-.707.707zM3.757 4.464a.5.5 0 1 1 .707-.707.5.5 0 0 1-.707.707z" // ktlint-disable max-line-length
@@ -92,7 +109,7 @@ private fun ThemeIcon(
 ) {
     Div(
         attrs = {
-            classes("app-icon", className)
+            classes(appIcon, className)
             tooltip(tooltipText)
 
             onClick { ThemeManager.getInstance().setTheme(nextMode) }
@@ -114,11 +131,11 @@ internal fun AppMenuIcon(
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     Div(
-        attrs = { classes("app-icon-container") }
+        attrs = { classes(appIconContainer) }
     ) {
         Div(
             attrs = {
-                classes("app-icon")
+                classes(appIcon)
                 onClick {
                     val target = it.currentTarget.unsafeCast<HTMLElement>()
                     val parentNode = target.parentElement ?: return@onClick
@@ -177,18 +194,60 @@ private fun showDropDownMenu(
     }
 }
 
+private val changeFontItem = css(
+    """
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    """
+)
+
+private val changeFontButton = css(
+    """
+    width: 50%;
+    height: 28px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-bottom: 2px;
+    color: var(--mainmenu-item-color);
+    user-select: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    &:hover {
+        background: var(--mainmenu-item-hover-bg);
+    }
+
+    &:active {
+        background: var(--mainmenu-item-action-hover-bg);
+    }
+
+    &.increase {
+        font-size: 18px;
+    }
+
+    &.decrease {
+        font-size: 14px;
+        padding-bottom: 2px;
+    }
+    """
+)
+
 @Composable
 private fun ChangeFontItemContent(
     onActionSelected: (OneTimeActionType) -> Unit
 ) {
     Div(
         attrs = {
-            classes("action-font-size-container")
+            classes(changeFontItem)
         }
     ) {
         Div(
             attrs = {
-                classes("action-font-size", "decrease")
+                classes(changeFontButton, "decrease")
                 onClick { onActionSelected(AppSettingAction.ChangeFontSize(false)) }
             }
         ) {
@@ -197,7 +256,7 @@ private fun ChangeFontItemContent(
 
         Div(
             attrs = {
-                classes("action-font-size", "increase")
+                classes(changeFontButton, "increase")
                 onClick { onActionSelected(AppSettingAction.ChangeFontSize(true)) }
             }
         ) {

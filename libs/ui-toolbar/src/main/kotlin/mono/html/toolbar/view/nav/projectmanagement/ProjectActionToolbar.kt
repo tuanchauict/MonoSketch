@@ -13,6 +13,8 @@ import mono.html.modal.compose.ProjectItem
 import mono.html.modal.compose.ProjectManagementActionItem
 import mono.html.modal.compose.showRecentProjectsModal
 import mono.html.modal.tooltip
+import mono.html.toolbar.view.nav.appIcon
+import mono.html.toolbar.view.nav.appIconContainer
 import mono.store.dao.workspace.WorkspaceDao
 import mono.ui.compose.components.Icons
 import org.jetbrains.compose.web.css.Color
@@ -28,12 +30,12 @@ internal fun ProjectManagerIcon(
 ) {
     Div(
         attrs = {
-            classes("app-icon-container")
+            classes(appIconContainer)
         }
     ) {
         Div(
             attrs = {
-                classes("app-icon")
+                classes(appIcon)
                 style {
                     color(Color("#f0f0f0"))
                 }

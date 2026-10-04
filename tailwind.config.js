@@ -12,23 +12,16 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        mono: ["'Jetbrains Mono'", 'Menlo', "'Courier New'", 'Courier', 'monospace'],
+        mono: 'var(--monospace-font)',
         ui: ["'Roboto'", 'Arial', 'serif'],
       },
       spacing: {
-        'nav': '48px',
+        'nav': 'var(--nav-height)',
         'shape-tools': '250px',
-        'canvas-left': '33px',
-        'canvas-top': '18px',
+        'canvas-left': 'var(--canvas-left)',
+        'canvas-top': 'var(--canvas-top)',
       },
       zIndex: {
-        'keyboard-shortcuts': '200',
-        'export-text': '201',
-        'edit-text': '202',
-        'dropdown-menu': '203',
-        'rename-project': '205',
-        'all-projects': '500',
-        'remove-project': '501',
         'tooltip': '10000',
       },
       colors: {

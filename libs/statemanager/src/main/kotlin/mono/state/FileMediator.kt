@@ -22,7 +22,7 @@ internal class FileMediator {
     fun saveFile(filename: String, jsonString: String) {
         document.body?.run {
             val fileBlob = Blob(arrayOf(jsonString))
-            val node = A(classes = "hidden") {
+            val node = A(classes = "sr-only") {
                 href = URL.Companion.createObjectURL(fileBlob)
                 setAttributes("download" to "$filename.$EXTENSION")
             }
@@ -33,7 +33,7 @@ internal class FileMediator {
 
     fun openFile(onFileLoadedAction: (String) -> Unit) {
         document.body?.run {
-            val fileInput = Input(InputType.FILE, classes = "hidden") {
+            val fileInput = Input(InputType.FILE, classes = "sr-only") {
                 setAttributes("accept" to ".$EXTENSION")
             }
             fileInput.onchange = {
