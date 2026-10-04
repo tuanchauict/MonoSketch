@@ -28,13 +28,13 @@ object LineBitmapFactory {
 
         val hasVerticalSegment = jointPoints.zipWithNext { p0, p1 -> isHorizontal(p0, p1) }.contains(false)
 
-        var position = 0f
+        var position = 0
         createCharPoints(jointPoints, strokeStyle)
             .forEachIndexed { index, pointChar ->
-                val pos = if (hasVerticalSegment) position.toInt() else index
+                val pos = if (hasVerticalSegment) (position ushr 1) else index
                 val visualChar = if (dashPattern.isGap(pos)) ' ' else pointChar.char
                 bitmapBuilder.put(pointChar.top, pointChar.left, visualChar, pointChar.char)
-                position += pointChar.distance * 0.5f
+                position += pointChar.distance
             }
 
         val startAnchor = lineExtra.startAnchor

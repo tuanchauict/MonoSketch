@@ -85,18 +85,18 @@ object RectangleBitmapFactory {
             )
         }
 
-        var position = 0f
+        var position = 0
         pointChars
             .flatMap { it }
             .forEachIndexed { index, pointChar ->
-                val visualChar = if (dashPattern.isGap(position.toInt())) ' ' else pointChar.char
+                val visualChar = if (dashPattern.isGap(position ushr 1)) ' ' else pointChar.char
                 put(
                     row = pointChar.top,
                     column = pointChar.left,
                     visualChar = visualChar,
                     directionChar = pointChar.char
                 )
-                position += pointChar.distance * 0.5f
+                position += pointChar.distance
             }
     }
 }
