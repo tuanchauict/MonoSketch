@@ -9,7 +9,7 @@ import kotlin.math.abs
 /**
  * A class representing a char at a point for generating bitmap.
  */
-class PointChar private constructor(val left: Int, val top: Int, val char: Char) {
+class PointChar private constructor(val left: Int, val top: Int, val char: Char, val distance: Int = 1) {
 
     companion object {
         fun point(left: Int, top: Int, char: Char): Sequence<PointChar> =
@@ -44,7 +44,7 @@ class PointChar private constructor(val left: Int, val top: Int, val char: Char)
             val begin = beginExclusive + delta
             val end = endExclusive - delta
             val range = if (begin > end) begin downTo end else begin..end
-            return range.asSequence().map { PointChar(left, it, char) }
+            return range.asSequence().map { PointChar(left, it, char, 2) }
         }
     }
 }
