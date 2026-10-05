@@ -12,7 +12,6 @@ plugins {
     kotlin("plugin.serialization") version "2.4.20"
     kotlin("plugin.compose") version "2.4.20" apply false
     id("org.jetbrains.compose") version "1.11.1" apply false
-    id("io.miret.etienne.sass") version "1.4.0"
 }
 
 group = "com.monosketch"
@@ -75,6 +74,6 @@ kotlin {
 }
 
 apply(from = "ktlint.gradle")
-apply(from = "sass.gradle")
+apply(from = "css.gradle")
 apply(from = "scoped-css.gradle")
 apply(from = "tailwind.gradle")

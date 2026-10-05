@@ -2,7 +2,6 @@
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)][apache2.0]
 [![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat&logo=kotlin&logoColor=white)][KotlinJS]
-[![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=flat&logo=SASS&logoColor=white)][sass]
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/tuanchauict/monosketch)](https://github.com/tuanchauict/MonoSketch/releases)
 [![Twitter Follow](https://img.shields.io/twitter/follow/MonoSketchApp)](https://twitter.com/MonoSketchApp)
 
@@ -102,7 +101,6 @@ Contributions are welcome! Whether you're fixing bugs, adding features, or impro
 
 ### Technology Stack
 - **[Kotlin/JS][KotlinJS]** - The entire application is written in Kotlin, compiled to JavaScript
-- **[SASS]** - CSS preprocessing
 - **[Tailwind CSS][tailwind]** - Utility-first CSS framework
 - **Gradle** - Build system
 
@@ -164,7 +162,5 @@ This project is licensed under the [Apache License 2.0][apache2.0].
 [KotlinJS]: https://kotlinlang.org/docs/js-overview.html
 
 [Pipenv]: https://pipenv.pypa.io/en/latest/
-
-[sass]: https://sass-lang.com/
 
 [tailwind]: https://tailwindcss.com/
